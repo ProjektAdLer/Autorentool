@@ -7,7 +7,7 @@ using Presentation.Components.Dialogues;
 namespace IntegrationTest.Dialogues;
 
 [TestFixture]
-public class GenericInfoDialogIt : MudBlazorTestFixture<GenericInfoDialog>
+public class GenericInfoDialogIt : MudDialogTestFixture<GenericInfoDialog>
 {
     [Test]
     public async Task Render_RendersParametersCorrectly()

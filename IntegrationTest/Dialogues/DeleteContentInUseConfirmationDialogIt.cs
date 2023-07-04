@@ -1,10 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using MudBlazor;
-using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.LearningElement;
@@ -15,7 +12,7 @@ using TestHelpers;
 namespace IntegrationTest.Dialogues;
 
 [TestFixture]
-public class DeleteContentInUseConfirmationDialogIt : MudBlazorTestFixture<DeleteContentInUseConfirmationDialog>
+public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<DeleteContentInUseConfirmationDialog>
 {
 
     [Test]

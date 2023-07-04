@@ -7,7 +7,7 @@ using Presentation.Components.Dialogues;
 namespace IntegrationTest.Dialogues;
 
 [TestFixture]
-public class GenericCancellationConfirmationDialogIt : MudBlazorTestFixture<GenericCancellationConfirmationDialog>
+public class GenericCancellationConfirmationDialogIt : MudDialogTestFixture<GenericCancellationConfirmationDialog>
 {
     [Test]
     public async Task Render_RendersParametersCorrectly()

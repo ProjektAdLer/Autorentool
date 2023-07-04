@@ -7,7 +7,7 @@ using Presentation.Components.Dialogues;
 namespace IntegrationTest.Dialogues;
 
 [TestFixture]
-public class UnsavedWorldDialogIt : MudBlazorTestFixture<UnsavedWorldDialog>
+public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
 {
     [Test]
     public void Render_RendersParametersCorrectly()
