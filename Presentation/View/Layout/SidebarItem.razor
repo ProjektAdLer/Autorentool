@@ -6,7 +6,7 @@
 @code {
 #pragma warning disable CS8618 - injected by framework n.stich
     [CascadingParameter]
-    public Sidebar? Sidebar { get; set; }
+    public ISidebar Sidebar { get; set; }
 
     [Parameter]
     public RenderFragment SidebarContent { get; set; }
@@ -20,11 +20,14 @@
         get => _isActive;
         set
         {
-            if(_isActive == value) return;
+            if (_isActive == value) return;
             _isActive = value;
             NotifySidebar();
         }
     }
+
+    [Parameter]
+    public EventCallback<bool> RequestIsActiveToggle { get; set; }
 
     /// <summary>
     /// Sets this as current item in sidebar when IsActive is true,
@@ -33,12 +36,9 @@
     private void NotifySidebar()
     {
         if (Sidebar == null) return;
-        if(IsActive) Sidebar.SetSidebarItem(this);
+        if (IsActive) Sidebar.SetSidebarItem(this);
         else if (Sidebar.CurrentItem == this) Sidebar.ClearSidebarItem();
     }
-
-    [Parameter]
-    public EventCallback<bool> RequestIsActiveToggle { get; set; }
 
 #pragma warning restore CS8618
 
@@ -51,12 +51,12 @@
     private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-adlergrey-100";
     private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-lg";
 
-    private string RoundedInFocus() => Sidebar?.SidebarSide switch
+    private string RoundedInFocus() => Sidebar?.Side switch
     {
         Side.Left => "rounded-l-lg",
         Side.Right => "rounded-r-lg",
         _ => throw new ArgumentOutOfRangeException()
-        };
+    };
 
     private bool _isActive;
 }
