@@ -56,8 +56,11 @@ public class CreateDsl : ICreateDsl
         _listAllLearningElements = new List<ILearningElementPe>();
     }
 
-    //Search through all LearningElements and look for duplicates. 
-    //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
+    /// <summary>
+    /// Searches for duplicate learning element names in a list of learning spaces. If duplicates are found, their names are incremented.
+    /// </summary>
+    /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
+    /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
     public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
     {
         var dictionaryIncrementedElementNames = new Dictionary<string, string>();
@@ -159,12 +162,8 @@ public class CreateDsl : ICreateDsl
         return _currentConditionSpace;
     }
 
-    /// <summary>
-    /// Reads the LearningWorld Entity and creates an DSL Document with the given information.
-    /// </summary>
-    /// <param name="learningWorld">The learning world to be written to the DSL document</param>
-    /// <exception cref="ArgumentOutOfRangeException">The world contains an element whos content type is not supported.</exception>
-    /// Information about the learningWorld, topics, spaces and elements
+
+    /// <inheritdoc cref="ICreateDsl.WriteLearningWorld"/>
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
@@ -206,7 +205,7 @@ public class CreateDsl : ICreateDsl
             LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new List<int>()));
             topicId++;
         }
-        
+
         var learningElementId = 0;
 
         foreach (var space in ListLearningSpaces)
@@ -214,7 +213,7 @@ public class CreateDsl : ICreateDsl
             _listLearningSpaceElements = new List<int?>();
             _booleanAlgebraRequirements = "";
             _currentConditionSpace = "";
-            
+
             if (space.AssignedTopic != null)
             {
                 var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.TopicName == space.AssignedTopic.Name);
@@ -251,21 +250,23 @@ public class CreateDsl : ICreateDsl
                         FileContentPe { Type: "h5p" } => "h5p",
                         FileContentPe { Type: "pdf" } => "pdf",
                         LinkContentPe => "video",
-                        _ => throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl."),
+                        _ => throw new ArgumentException(
+                            "The given LearningContent Type is not supported - in CreateDsl."),
                     };
                     var url = element.LearningContent is LinkContentPe link ? link.Link : "";
 
                     learningElementId += 1;
-    
+
                     var learningElementJson = new LearningElementJson(learningElementId,
                         element.Id.ToString(), element.Name, url, elementCategory, elementType,
-                        learningSpaceId, element.Points, element.ElementModel.ToString(), element.Description, element.Goals.Split("\n"));
-    
+                        learningSpaceId, element.Points, element.ElementModel.ToString(), element.Description,
+                        element.Goals.Split("\n"));
+
                     if (element.LearningContent is not LinkContentPe)
                     {
                         ElementsWithFileContent.Add(element);
                     }
-    
+
                     _listLearningSpaceElements.Add(learningElementId);
 
                     LearningWorldJson.Elements.Add(learningElementJson);

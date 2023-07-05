@@ -72,10 +72,11 @@ public class XmlLabelFactory : IXmlLabelFactory
         
     }
     
+    /// <inheritdoc cref="IXmlLabelFactory.CreateLabelFactory"/>
     public void CreateLabelFactory()
     {
         var spaceAndWorldAttributesLabelList = ReadDsl.GetElementsOrderedList();
-        var videoLinkLabelList = ReadDsl.GetLabelsList();
+        var videoLinkLabelList = ReadDsl.GetLabelElementList();
 
         var labelList = videoLinkLabelList;
         labelList.AddRange(spaceAndWorldAttributesLabelList);
@@ -83,7 +84,10 @@ public class XmlLabelFactory : IXmlLabelFactory
         LabelSetParameters(labelList);
     }
 
-    public void LabelSetParameters(List<LearningElementJson> labelList)
+    /// <summary>
+    /// Sets the parameters for each label in the provided list.
+    /// </summary>
+    private void LabelSetParameters(List<LearningElementJson> labelList)
     {
         foreach (var label in labelList)
         {
@@ -100,7 +104,10 @@ public class XmlLabelFactory : IXmlLabelFactory
         }
     }
 
-    public void LabelSetParametersWorldAttributes()
+    /// <summary>
+    /// Sets the parameters for world attribute labels, creating files and serializing data.
+    /// </summary>
+    private void LabelSetParametersWorldAttributes()
     {
         CreateActivityFolder(LabelId);
         
@@ -155,7 +162,7 @@ public class XmlLabelFactory : IXmlLabelFactory
      /// Creates a label folder in the activity folder. Each activity needs an folder.
      /// </summary>
      /// <param name="moduleId"></param>
-     public void CreateActivityFolder(string moduleId)
+     private void CreateActivityFolder(string moduleId)
      {
          var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
          _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_"+moduleId));
