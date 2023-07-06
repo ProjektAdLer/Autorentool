@@ -38,7 +38,7 @@
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IValidator<TEntity> Validator { get; set; }
+    private IValidationWrapper<TEntity> Validator { get; set; }
 
     [Inject]
     private ISnackbar Snackbar { get; set; }
@@ -77,11 +77,7 @@
     private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
     {
         var modelEntity = FormDataContainer.GetMappedEntity();
-        var result = await Validator.ValidateAsync(
-            ValidationContext<TEntity>.CreateWithOptions(modelEntity,
-                x => x.IncludeProperties(propertyName))
-            );
-        return result.IsValid ? Enumerable.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
+        return await Validator.ValidateAsync(modelEntity, propertyName);
     };
 
     public void Reset()

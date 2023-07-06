@@ -127,6 +127,7 @@ public class Startup
     private void ConfigureValidation(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
+        services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningSpaceNamesProvider>(p =>

@@ -16,23 +16,19 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateWorldForm.General.Field.Name.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                               For="@(() => FormModel.Shortname)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateWorldForm.General.Field.Shortname.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                               For="@(() => FormModel.Authors)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateWorldForm.General.Field.Authors.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                               For="@(() => FormModel.Language)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateWorldForm.General.Field.Language.Text"]/>
             </div>
         </Collapsable>
@@ -42,18 +38,16 @@
                 <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
@@ -68,19 +62,22 @@
 
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IStringLocalizer<CreateWorldForm> Localizer { get; set; }
+    internal IStringLocalizer<CreateWorldForm> Localizer { get; set; }
 
     [Inject]
-    private IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
+    internal IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 
     [Inject]
-    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    internal IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
 
     [Inject]
-    private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+    internal IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 #pragma warning restore CS8618
     [Parameter]
     public EventCallback OnSubmitted { get; set; }
+    
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
