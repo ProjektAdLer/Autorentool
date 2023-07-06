@@ -11,6 +11,7 @@ using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
+using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -26,6 +27,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
     private LearningWorldFormModel FormModel { get; set; }
     private LearningWorld Entity { get; set; }
+    const string expected = "test";
 
     [SetUp]
     public void Setup()
@@ -55,19 +57,15 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     }
 
     [Test]
-    public async Task ChangeFieldValues_ChangesContainerValues()
+    public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-        
+
         systemUnderTest.FindComponents<Collapsable>()[1].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
-        
-        const string expected = "test";
-        // Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-        //     (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == expected
-        //         ? Enumerable.Empty<string>()
-        //         : new[] { "Must be test" });
+
+        ConfigureValidatorAllMembersTest();
 
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Shortname, Is.EqualTo(""));
@@ -75,6 +73,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         Assert.That(FormModel.Language, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
         Assert.That(FormModel.Goals, Is.EqualTo(""));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
 
 
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
@@ -83,6 +83,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             var input = mudInput.Find("input");
             input.Change(expected);
         }
+
         foreach (var mudInput in mudInputs.Skip(4))
         {
             var input = mudInput.Find("textarea");
@@ -95,6 +96,82 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         Assert.That(FormModel.Language, Is.EqualTo(expected));
         Assert.That(FormModel.Description, Is.EqualTo(expected));
         Assert.That(FormModel.Goals, Is.EqualTo(expected));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.True);
+    }
+
+    [Test]
+    public void ResetButtonClicked_ResetsForm()
+    {
+        var systemUnderTest = GetRenderedComponent();
+        
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+        
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.Change(expected);
+        
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(expected));
+        
+        var resetButton = systemUnderTest.FindComponent<DefaultResetButton>();
+        resetButton.Find("button").Click();
+        
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+    }
+
+    [Test]
+    public async Task SubmitButtonClicked_SubmitsIfFormValid()
+    {
+        var callbackCalled = false;
+        var callback = EventCallback.Factory.Create(this, () => callbackCalled = true);
+        var systemUnderTest = GetRenderedComponent(callback);
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+        
+        ConfigureValidatorNameIsTest();
+        
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
+        
+        var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
+        submitButton.Find("button").Click();
+        Assert.That(callbackCalled, Is.False);
+        WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.Change(expected);
+        
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(expected));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.True);
+        
+        submitButton.Find("button").Click();
+        Assert.That(callbackCalled, Is.True);
+        WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    private void ConfigureValidatorNameIsTest()
+    {
+        Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
+            {
+                if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
+                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == expected
+                    ? Enumerable.Empty<string>()
+                    : new[] { "Must be test" };
+            }
+        );
+    }
+
+    private void ConfigureValidatorAllMembersTest()
+    {
+        Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
+            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == expected
+                ? Enumerable.Empty<string>()
+                : new[] { "Must be test" }
+        );
     }
 
     private IRenderedComponent<CreateWorldForm> GetRenderedComponent(EventCallback? onSubmitted = null)
