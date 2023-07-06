@@ -102,7 +102,7 @@ public class BaseFormUt
         var formModel = new TestForm();
         var onValidSubmitCallCounter = 0;
         var snackbarMessage = "MySnackbarMessage";
-        var onValidSubmit = EventCallback.Factory.Create<TestForm>(this, (receivedFormModel) =>
+        var onValidSubmit = EventCallback.Factory.Create<TestForm>(this, receivedFormModel =>
         {
             Assert.That(receivedFormModel, Is.EqualTo(formModel));
             onValidSubmitCallCounter++;
@@ -117,6 +117,28 @@ public class BaseFormUt
         
         Assert.That(onValidSubmitCallCounter, Is.EqualTo(1));
         _snackbar.Received(1).Add(Arg.Is(snackbarMessage));
+    }
+
+    [Test]
+    public async Task SubmitAsync_ThrowsException_ShowsMessageAsMudAlert()
+    {
+        var formModel = new TestForm();
+        var onValidSubmit =
+            EventCallback.Factory.Create<TestForm>(this, _ => throw new Exception("The message"));
+        var formModelContainer = Substitute.For<IFormDataContainer<TestForm, TestEntity>>();
+        formModelContainer.FormModel.Returns(formModel);
+        
+        var systemUnderTest = GetRenderedComponent(onValidSubmit, formDataContainer: formModelContainer);
+
+        Assert.That(() => systemUnderTest.Find("div.form-error-message"), Throws.TypeOf<ElementNotFoundException>());
+        
+        await systemUnderTest.Instance.SubmitAsync();
+        systemUnderTest.Render();
+        
+        Assert.That(() => systemUnderTest.Find("div.form-error-message"), Throws.Nothing);
+        var mudAlert = systemUnderTest.FindComponent<Stub<MudAlert>>();
+        Assert.That(mudAlert.Instance.Parameters["ChildContent"], Is.Not.Null);
+        Assert.That(systemUnderTest.Instance.SubmitErrorMessage, Is.EqualTo("An error has occured trying to submit the form: The message"));
     }
 
 

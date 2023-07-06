@@ -19,7 +19,7 @@
         @Fields
         @if (SubmitErrorMessage != null)
         {
-            <div class="mt-2">
+            <div class="mt-2 form-error-message">
                 <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
             </div>
         }
@@ -66,7 +66,7 @@
     private MudForm _form;
 #pragma warning restore CS8618
 
-    private string? SubmitErrorMessage { get; set; }
+    internal string? SubmitErrorMessage { get; set; }
 
     //Wrapper function around ValidateAsync to only validate a given property
     //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
@@ -103,8 +103,4 @@
         }
     }
 
-    internal async Task Validate()
-    {
-        await _form.Validate();
-    }
 }
