@@ -20,14 +20,14 @@ namespace PresentationTest.Components.Forms;
 public class BaseFormUt
 {
     private TestContext _testContext;
-    private IValidator<TestEntity> _validator;
+    private IValidationWrapper<TestEntity> _validator;
     private ISnackbar _snackbar;
 
     [SetUp]
     public void Setup()
     {
         _testContext = new TestContext();
-        _validator = Substitute.For<IValidator<TestEntity>>();
+        _validator = Substitute.For<IValidationWrapper<TestEntity>>();
         _snackbar = Substitute.For<ISnackbar>();
         _testContext.Services.AddSingleton(_validator);
         _testContext.Services.AddSingleton(_snackbar);
