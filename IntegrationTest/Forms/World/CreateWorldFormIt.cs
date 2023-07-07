@@ -24,7 +24,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
     private LearningWorldFormModel FormModel { get; set; }
     private LearningWorld Entity { get; set; }
-    const string expected = "test";
+    private const string Expected = "test";
 
     [SetUp]
     public void Setup()
@@ -78,21 +78,21 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         foreach (var mudInput in mudInputs.Take(4))
         {
             var input = mudInput.Find("input");
-            input.Change(expected);
+            input.Change(Expected);
         }
 
         foreach (var mudInput in mudInputs.Skip(4))
         {
             var input = mudInput.Find("textarea");
-            input.Change(expected);
+            input.Change(Expected);
         }
 
-        Assert.That(FormModel.Name, Is.EqualTo(expected));
-        Assert.That(FormModel.Shortname, Is.EqualTo(expected));
-        Assert.That(FormModel.Authors, Is.EqualTo(expected));
-        Assert.That(FormModel.Language, Is.EqualTo(expected));
-        Assert.That(FormModel.Description, Is.EqualTo(expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(expected));
+        Assert.That(FormModel.Name, Is.EqualTo(Expected));
+        Assert.That(FormModel.Shortname, Is.EqualTo(Expected));
+        Assert.That(FormModel.Authors, Is.EqualTo(Expected));
+        Assert.That(FormModel.Language, Is.EqualTo(Expected));
+        Assert.That(FormModel.Description, Is.EqualTo(Expected));
+        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
@@ -106,9 +106,9 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
-        input.Change(expected);
+        input.Change(Expected);
         
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(expected));
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         
         var resetButton = systemUnderTest.FindComponent<DefaultResetButton>();
         resetButton.Find("button").Click();
@@ -138,9 +138,9 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
-        input.Change(expected);
+        input.Change(Expected);
         
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(expected));
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
         
@@ -155,7 +155,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == expected
+                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                     ? Enumerable.Empty<string>()
                     : new[] { "Must be test" };
             }
@@ -165,7 +165,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == expected
+            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                 ? Enumerable.Empty<string>()
                 : new[] { "Must be test" }
         );

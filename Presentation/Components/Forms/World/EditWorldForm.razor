@@ -19,22 +19,18 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
                               DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                               For="@(() => FormModel.Shortname)"
-                              Immediate="true"
                               DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                               For="@(() => FormModel.Authors)"
-                              Immediate="true"
                               DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                               For="@(() => FormModel.Language)"
-                              Immediate="true"
                               DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]/>
             </div>
@@ -46,7 +42,6 @@
                 <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
                               DebounceInterval="DebounceInterval"
@@ -54,7 +49,6 @@
                 <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
                               DebounceInterval="DebounceInterval"
@@ -90,9 +84,6 @@
     [Parameter, EditorRequired]
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback OnNewButtonClicked { get; set; }
-    
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 #pragma warning restore CS8618
@@ -139,6 +130,5 @@
     {
         await MapIntoContainer();
     }
-
 
 }
