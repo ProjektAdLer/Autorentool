@@ -1,10 +1,7 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Bunit;
 using BusinessLogic.Entities;
-using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
@@ -17,7 +14,7 @@ using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using TestHelpers;
 
-namespace IntegrationTest.Forms;
+namespace IntegrationTest.Forms.World;
 
 [TestFixture]
 public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, LearningWorldFormModel, LearningWorld>

@@ -9,4 +9,11 @@ public static class FormModelProvider
     {
         return new LearningWorldFormModel();
     }
+
+    public static TForm Get<TForm>() where TForm : class, new() =>
+        (typeof(TForm).Name switch
+        {
+            nameof(LearningWorldFormModel) => GetLearningWorld() as TForm,
+            _ => throw new ArgumentOutOfRangeException()
+        })!;
 }

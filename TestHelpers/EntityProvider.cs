@@ -108,4 +108,13 @@ public static class EntityProvider
         world.LearningSpaces.Add(space);
         return world;
     }
+
+    public static TEntity Get<TEntity>() where TEntity : class =>
+        (typeof(TEntity).Name switch
+        {
+            nameof(LearningWorld) => GetLearningWorld() as TEntity,
+            nameof(LearningSpace) => GetLearningSpace() as TEntity,
+            nameof(LearningElement) => GetLearningElement() as TEntity,
+            _ => throw new ArgumentOutOfRangeException()
+        })!;
 }
