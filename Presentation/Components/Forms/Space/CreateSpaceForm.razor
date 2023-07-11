@@ -8,8 +8,6 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @using Shared
-@implements IDisposable
-@implements IAsyncDisposable
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
@@ -25,12 +23,11 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]/>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
                      @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
@@ -40,13 +37,12 @@
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                                  Min="1"
                                  For="@(() => FormModel.RequiredPoints)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"/>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]
                      @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
@@ -61,33 +57,31 @@
                 </MudSelect>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]
                      @bind-Collapsed="_collapsedGoals">
-                <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">
-                        @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
-                    </MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">
+                    @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
+                </MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
-                    <MudText Typo="Typo.caption">
-                        @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]
-                    </MudText>
+                <MudText Typo="Typo.caption">
+                    @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]
+                </MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
-        
+
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -98,17 +92,17 @@
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
+    internal ILearningWorldPresenter LearningWorldPresenter { get; set; }
 
     [Inject]
-    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    internal IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
 
     [Inject]
-    private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
-    
-    [Inject]
-    private IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
-    
+    internal IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
 #pragma warning restore CS8618
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -124,32 +118,9 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        if (SelectedViewModelsProvider.LearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
-    }
-
-    protected override void OnInitialized()
-    {
-        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
-        base.OnInitialized();
-    }
-
-    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
-    {
-        await InvokeAsync(StateHasChanged);
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        Dispose();
-        return ValueTask.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
+            model.Goals, (int)model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
     }
 
 }
