@@ -141,24 +141,39 @@
             </div>
             <div class="w-full min-h-[90px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
                 <nav class="bg-gray-300">
-                    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 relative flex h-10 items-center justify-between">
-                        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                            <div class="hidden sm:ml-6 sm:block">
-                                <div class="flex space-x-4">
-                                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                                    <button href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">Lernelemente</button>
-                                    @* Fontawesome: Flag *@
-                                    <button href="#" class="text-gray-400 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Deco Objekte</button>
-                                    @* Fontawesome: Fan *@
-                                    <button href="#" class="text-gray-400 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Themes</button>
-                                    @* Fontawesome: Earth oder feather? *@
-                                    @* Gibt es einen einfacheren weg zwischen 2 styles zu switchen als if else construct? *@
-                                    @* Frage zu den Methoden unten zum setten von styles. *@
-                                </div>
+                    <div class="relative flex mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 h-8 items-center justify-between">
+                        <div class="items-stretch justify-start hidden sm:ml-6 sm:block">
+                            <div class="flex space-x-4">
+                                <button
+                                    class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
+                                    @onclick="() => _menuFocus = MenuFocus.LearningElements">
+                                    <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+                                    Lernelemente
+                                </button>
+                                @*Flag *@
+                                <button
+                                    class="@GetMenuStyleString(MenuFocus.DecoObjects) rounded-md px-2 py-1 text-sm font-medium"
+                                    @onclick="() => _menuFocus = MenuFocus.DecoObjects">
+                                    Deco Objekte
+                                </button>
+                                @*Fan *@
+                                <button
+                                    class="@GetMenuStyleString(MenuFocus.Doors) rounded-md px-2 py-1 text-sm font-medium"
+                                    @onclick="() => _menuFocus = MenuFocus.Doors">
+                                    Türen
+                                </button>
+                                <button
+                                    class="@GetMenuStyleString(MenuFocus.Windows) rounded-md px-2 py-1 text-sm font-medium"
+                                    @onclick="() => _menuFocus = MenuFocus.Windows">
+                                    Fenster
+                                </button>
                             </div>
                         </div>
                     </div>
                 </nav>
+                <div>
+                    Menu Inhalt
+                </div>
             </div>
         </section>
     }
@@ -179,6 +194,24 @@
     [Inject]
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 #pragma warning restore CS8618
+
+    // Menu Button Stuff
+
+    private enum MenuFocus
+    {
+        LearningElements,
+        DecoObjects,
+        Doors,
+        Windows
+    }
+
+    private MenuFocus _menuFocus;
+
+    private string GetMenuStyleString(MenuFocus buttonType)
+    {
+        return buttonType == _menuFocus ? "bg-gray-900 text-white " : "text-gray-400 hover:bg-gray-700 hover:text-white ";
+    }
+
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
