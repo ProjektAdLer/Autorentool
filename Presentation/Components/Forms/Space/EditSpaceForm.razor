@@ -26,14 +26,13 @@
     <Fields>
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label=@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              DebounceInterval="DebounceInterval"
+                              Label=@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]/>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudText Typo="Typo.caption">
@@ -42,8 +41,7 @@
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                                  Min="1"
                                  For="@(() => FormModel.RequiredPoints)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"/>
             </div>
@@ -54,7 +52,7 @@
                 <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
@@ -68,34 +66,33 @@
                 </MudSelect>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
-                    <div class="rounded-lg w-4/4 px-4">
-                        <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                                      For="@(() => FormModel.Description)"
-                                      Immediate="true"
-                                      Lines="3"
-                                      Variant="Variant.Outlined"
-                                      DebounceInterval="300"
-                                      Class="pb-4 mt-0"/>
-                        <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                                      For="@(() => FormModel.Goals)"
-                                      Immediate="true"
-                                      Lines="3"
-                                      Variant="Variant.Outlined"
-                                      DebounceInterval="300"
-                                      Class="pb-2 mt-0"/>
-                    </div>
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="DebounceInterval"
+                              Class="pb-4 mt-0"/>
+                <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="DebounceInterval"
+                              Class="pb-2 mt-0"/>
+            </div>
         </Collapsable>
-        
+
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" 
-                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" 
-                       OnClick="OnResetAsync"></MudIconButton>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
+                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
+                       OnClick="OnResetAsync">
+        </MudIconButton>
     </FooterButtons>
 </BaseForm>
 
@@ -109,7 +106,7 @@
 
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<EditSpaceForm> Localizer { get; set; }
 #pragma warning restore CS8618
@@ -120,6 +117,9 @@
 
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
 #pragma warning restore CS8618
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -127,17 +127,17 @@
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
-    private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
-    private bool _collapsedTheme = true;
     private bool _collapsedFloorplan = false;
+    private bool _collapsedTheme = true;
+    private bool _collapsedGoals = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints!, model.Theme);
+            model.Goals, (int)model.RequiredPoints!, model.Theme);
     }
 
     private async Task MapIntoContainer()
