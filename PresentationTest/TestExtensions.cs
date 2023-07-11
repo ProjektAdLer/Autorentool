@@ -112,7 +112,8 @@ public static class TestExtensions
     /// <returns>A component of type <typeparamref name="T"/> in <paramref name="fragment"/> which contains the provided <paramref name="markup"/></returns>
     public static IRenderedComponent<T> FindComponentWithMarkup<T>(this IRenderedFragment fragment, string markup)
         where T : IComponent =>
-        fragment.FindComponentsWithMarkup<T>(markup).First();
+        fragment.FindComponentsWithMarkup<T>(markup).FirstOrDefault() ??
+        throw new ElementNotFoundException($"Component {typeof(T).Name}, markup {markup}.");
 
     /// <summary>
     /// Will either find all components of type <typeparamref name="T"/> on the fragment, which contain the provided <paramref name="markup"/>,
