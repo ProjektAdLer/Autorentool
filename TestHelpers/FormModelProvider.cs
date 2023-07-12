@@ -14,12 +14,18 @@ public static class FormModelProvider
     {
         return new LearningSpaceFormModel();
     }
+    
+    public static LearningElementFormModel GetLearningElement()
+    {
+        return new LearningElementFormModel();
+    }
 
     public static TForm Get<TForm>() where TForm : class, new() =>
         (typeof(TForm).Name switch
         {
             nameof(LearningWorldFormModel) => GetLearningWorld() as TForm,
             nameof(LearningSpaceFormModel) => GetLearningSpace() as TForm,
+            nameof(LearningElementFormModel) => GetLearningElement() as TForm,
             _ => throw new ArgumentOutOfRangeException()
         })!;
 }

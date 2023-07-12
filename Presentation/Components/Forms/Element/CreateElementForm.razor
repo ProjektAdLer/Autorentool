@@ -1,5 +1,3 @@
-@implements IDisposable
-@implements IAsyncDisposable
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -31,8 +29,7 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
                               Class="pb-4"/>
 
@@ -41,8 +38,7 @@
                                  Min="1"
                                  Max="1000"
                                  For="@(() => FormModel.Points)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -52,13 +48,13 @@
                                  Min="0"
                                  Max="1000"
                                  For="@(() => FormModel.Workload)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
 
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                           Immediate="false"
                            Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
                            For="@(() => FormModel.Difficulty)">
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">@Localizer["CreateElementForm.Difficulty.Easy"]</MudSelectItem>
@@ -123,18 +119,16 @@
                 <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
@@ -149,43 +143,44 @@
 @code {
 #pragma warning disable CS8618 - injected by framework
     [Inject]
-    private ILearningWorldPresenter WorldPresenter { get; set; }
+    internal ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject]
-    private ILearningSpacePresenter SpacePresenter { get; set; }
+    internal ILearningSpacePresenter SpacePresenter { get; set; }
 
     [Inject]
-    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject]
-    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+    internal IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
     [Inject]
-    private IElementModelHandler ElementModelHandler { get; set; }
+    internal IElementModelHandler ElementModelHandler { get; set; }
 
     [Inject]
-    private IStringLocalizer<CreateElementForm> Localizer { get; set; }
+    internal IStringLocalizer<CreateElementForm> Localizer { get; set; }
 
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
 #pragma warning restore CS8618
-        public EventCallback OnSubmitted { get; set; }
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
-    private bool _collapsedGoals = true;
     private bool _collapsedElementModel = true;
+    private bool _collapsedGoals = true;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        if (SelectedViewModelsProvider.LearningWorld == null)
-            throw new InvalidOperationException("No learning world selected.");
-    //check content for not null again even though validation ensures that LearningContent is not null
-    //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
+        //check content for not null again even though validation ensures that LearningContent is not null
+        //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
@@ -204,32 +199,10 @@
 
     protected override void OnInitialized()
     {
-        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
         if (SelectedViewModelsProvider.LearningContent == null) return;
         FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
         SelectedViewModelsProvider.SetLearningContent(null, null);
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-    }
-
-    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
-    {
-        await InvokeAsync(StateHasChanged);
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        Dispose();
-        return ValueTask.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

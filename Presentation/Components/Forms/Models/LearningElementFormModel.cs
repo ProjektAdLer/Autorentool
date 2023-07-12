@@ -15,6 +15,7 @@ public class LearningElementFormModel
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
+        ElementModel = ElementModel.l_random;
         Workload = 0;
         Points = 1;
         LearningContent = null;

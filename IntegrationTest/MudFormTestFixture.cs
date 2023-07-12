@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
@@ -11,6 +12,7 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
 {
     protected ISnackbar Snackbar { get; set; }
     protected IValidationWrapper<TEntity> Validator { get; set; }
+    protected IMapper Mapper { get; set; }
     protected IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
     protected TEntity Entity { get; set; }
     protected TForm FormModel { get; set; }
@@ -20,14 +22,15 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
     {
         Snackbar = Substitute.For<ISnackbar>();
         Validator = Substitute.For<IValidationWrapper<TEntity>>();
-        Context.AddLocalizerForTest<TComponent>();
-        FormDataContainer = Substitute.For<IFormDataContainer<TForm, TEntity>>();
+        Mapper = Substitute.For<IMapper>();
         FormModel = FormModelProvider.Get<TForm>();
+        FormDataContainer = new FormDataContainer<TForm, TEntity>(Mapper, FormModel);
         Entity = EntityProvider.Get<TEntity>();
-        FormDataContainer.FormModel.Returns(FormModel);
-        FormDataContainer.GetMappedEntity().Returns(Entity);
+        Mapper.Map<TForm, TEntity>(FormModel).Returns(Entity);
         Context.Services.AddSingleton(Snackbar);
         Context.Services.AddSingleton(Validator);
+        Context.Services.AddSingleton(Mapper);
         Context.Services.AddSingleton(FormDataContainer);
+        Context.AddLocalizerForTest<TComponent>();
     }
 }
