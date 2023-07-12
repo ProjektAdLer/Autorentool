@@ -89,10 +89,11 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         var systemUnderTest = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+        Mapper.ClearReceivedCalls();
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("reset-form").Find("button").Click();
 
-        Mapper.Received(2).Map(vm, FormDataContainer.FormModel);
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
     [Test]
@@ -130,7 +131,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
 
-        Assert.That(FormModel.Name, Is.EqualTo(Expected));
+        systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)), TimeSpan.FromSeconds(2));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
@@ -170,6 +171,8 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
+        
+        Mapper.ClearReceivedCalls();
         
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 

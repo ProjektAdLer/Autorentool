@@ -29,8 +29,7 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
                               Class="pb-4"/>
 
@@ -39,8 +38,7 @@
                                  Min="1"
                                  Max="1000"
                                  For="@(() => FormModel.Points)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -50,8 +48,7 @@
                                  Min="0"
                                  Max="1000"
                                  For="@(() => FormModel.Workload)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -122,18 +119,16 @@
                 <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
@@ -141,29 +136,31 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
+                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
+                       OnClick="OnResetAsync"></MudIconButton>
     </FooterButtons>
 </BaseForm>
 
 @code {
 #pragma warning disable CS8618
     [Inject]
-    private ILearningWorldPresenter WorldPresenter { get; set; }
+    internal ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject]
-    private IMapper Mapper { get; set; }
+    internal IMapper Mapper { get; set; }
 
     [Inject]
-    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+    internal IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
     [Inject]
-    private IElementModelHandler ElementModelHandler { get; set; }
+    internal IElementModelHandler ElementModelHandler { get; set; }
 
     [Inject]
-    private IStringLocalizer<EditElementForm> Localizer { get; set; }
+    internal IStringLocalizer<EditElementForm> Localizer { get; set; }
 
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Parameter, EditorRequired]
     public ILearningElementViewModel ElementToEdit { get; set; }
@@ -171,8 +168,11 @@
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
 
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action TriggerMasterLayoutStateHasChanged { get; set; }
+    internal Action TriggerMasterLayoutStateHasChanged { get; set; }
 #pragma warning restore CS8618
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;

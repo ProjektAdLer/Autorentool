@@ -82,10 +82,11 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         var systemUnderTest = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+        Mapper.ClearReceivedCalls();
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("reset-form").Find("button").Click();
 
-        Mapper.Received(2).Map(vm, FormDataContainer.FormModel);
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
     [Test]
@@ -163,6 +164,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
 
+        Mapper.ClearReceivedCalls();
+        
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(1).EditLearningWorld(Expected, Expected, Expected, Expected,

@@ -14,26 +14,26 @@ using Presentation.Components.Forms.Element;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.SelectedViewModels;
+using PresentationTest;
 using Shared;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.Element;
 
 [TestFixture]
-public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, LearningElementFormModel, LearningElement>
+public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningElementFormModel, LearningElement>
 {
+    
     public ILearningWorldPresenter WorldPresenter { get; set; }
     public ILearningSpacePresenter SpacePresenter { get; set; }
-    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
     public IElementModelHandler ElementModelHandler { get; set; }
     public IPresentationLogic PresentationLogic { get; set; }
     public ILearningContentViewModel[] LearningContentViewModels { get; set; }
 
     private const string Expected = "test";
-
     [SetUp]
     public void Setup()
     {
@@ -42,43 +42,55 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             { ViewModelProvider.GetFileContent(), ViewModelProvider.GetLinkContent() };
         WorldPresenter.GetAllContent().Returns(LearningContentViewModels);
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(SpacePresenter);
-        Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
     }
-
-
+    
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
-        var onSubmitted = EventCallback.Factory.Create(this, () => { });
+        var vm = ViewModelProvider.GetLearningElement();
+        var onNewClicked = EventCallback.Empty;
+        var masterLayoutStateHasChanged = () => { };
 
-        var systemUnderTest = GetRenderedComponent(onSubmitted);
+        var systemUnderTest = GetRenderedComponent(vm, onNewClicked, masterLayoutStateHasChanged);
 
         Assert.That(systemUnderTest.Instance.WorldPresenter, Is.EqualTo(WorldPresenter));
-        Assert.That(systemUnderTest.Instance.SpacePresenter, Is.EqualTo(SpacePresenter));
-        Assert.That(systemUnderTest.Instance.SelectedViewModelsProvider, Is.EqualTo(SelectedViewModelsProvider));
+        Assert.That(systemUnderTest.Instance.FormDataContainer, Is.EqualTo(FormDataContainer));
         Assert.That(systemUnderTest.Instance.ElementModelHandler, Is.EqualTo(ElementModelHandler));
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
-        Assert.That(systemUnderTest.Instance.OnSubmitted, Is.EqualTo(onSubmitted));
+        Assert.That(systemUnderTest.Instance.OnNewButtonClicked, Is.EqualTo(onNewClicked));
         Assert.That(systemUnderTest.Instance.DebounceInterval, Is.EqualTo(0));
+        Assert.That(systemUnderTest.Instance.TriggerMasterLayoutStateHasChanged, Is.EqualTo(masterLayoutStateHasChanged));
     }
 
     [Test]
-    public void Initialize_SelectedViewModelsProviderContentSet_SetsInFormModelAndResetsProvider()
+    public void OnParametersSet_CallsMapper()
     {
-        SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
+        var vm = ViewModelProvider.GetLearningElement();
         
-        var systemUnderTest = GetRenderedComponent();
+        var systemUnderTest = GetRenderedComponent(vm);
         
-        Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels.First()));
-        SelectedViewModelsProvider.Received(1).SetLearningContent(null, null);
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+    }
+
+    [Test]
+    public void ResetButton_Clicked_RemapsIntoContainer()
+    {
+        var vm = ViewModelProvider.GetLearningElement();
+        
+        var systemUnderTest = GetRenderedComponent(vm);
+        
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+        Mapper.ClearReceivedCalls();
+        
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("reset-form").Find("button").Click();
+        
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
     [Test]
@@ -114,93 +126,30 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
-    public void ResetButtonClicked_ResetsForm()
+    public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
-
-        var mudTextField = systemUnderTest.FindComponent<MudTextField<string>>();
-        mudTextField.Find("input").Change(Expected);
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
-
-        var resetButton = systemUnderTest.FindComponent<DefaultResetButton>();
-        resetButton.Find("button").Click();
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
-    }
-
-    [Test]
-    public async Task SubmitButtonClicked_SubmitsIfFormValid()
-    {
-        var callbackCalledCount = 0;
-        var callback = EventCallback.Factory.Create(this, () => callbackCalledCount++);
-        var systemUnderTest = GetFormWithPopoverProvider(callback);
+        var vm = ViewModelProvider.GetLearningElement();
+        var systemUnderTest = GetFormWithPopoverProvider(vm);
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
-        //await systemUnderTest.InvokeAsync(() => systemUnderTest);
-
-        ConfigureValidatorAllMembers();
-
-        Assert.That(FormModel.Name, Is.EqualTo(""));
-        Assert.That(FormModel.Description, Is.EqualTo(""));
-        Assert.That(FormModel.Goals, Is.EqualTo(""));
-        Assert.That(FormModel.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.None));
-        Assert.That(FormModel.ElementModel, Is.EqualTo(ElementModel.l_random));
-        Assert.That(FormModel.Workload, Is.EqualTo(0));
-        Assert.That(FormModel.Points, Is.EqualTo(1));
-        Assert.That(FormModel.LearningContent, Is.EqualTo(null));
-        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
-        Assert.That(mudForm.Instance.IsValid, Is.False);
-
-        var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
-        submitButton.Find("button").Click();
-        WorldPresenter.DidNotReceiveWithAnyArgs().CreateUnplacedLearningElement(Arg.Any<string>(),
-            Arg.Any<ILearningContentViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<ElementModel>(), Arg.Any<int>(), Arg.Any<int>());
-        SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Arg.Any<string>(),
-            Arg.Any<ILearningContentViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<ElementModel>(), Arg.Any<int>(), Arg.Any<int>());
-        Assert.That(callbackCalledCount, Is.EqualTo(0));
-
+        
         ChangeFields(systemUnderTest, popover);
+        
         AssertFieldsSet(systemUnderTest);
-        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
-        Assert.That(mudForm.Instance.IsValid, Is.True);
+        
+        Mapper.ClearReceivedCalls();
+        
+        systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        WorldPresenter.ClearReceivedCalls();
-        SpacePresenter.ClearReceivedCalls();
-
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(-1);
-        submitButton.Find("button").Click();
-        WorldPresenter.Received().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
-        SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
-        Assert.That(callbackCalledCount, Is.EqualTo(1));
-
-        ChangeFields(systemUnderTest, popover);
-        AssertFieldsSet(systemUnderTest);
-        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
-        Assert.That(mudForm.Instance.IsValid, Is.True);
-
-        WorldPresenter.ClearReceivedCalls();
-        SpacePresenter.ClearReceivedCalls();
-
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(0);
-        submitButton.Find("button").Click();
-        WorldPresenter.DidNotReceive().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
-        SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
-        Assert.That(callbackCalledCount, Is.EqualTo(2));
+        WorldPresenter.Received(1).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
+            LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123, LearningContentViewModels[0]);
+        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
-
+    
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
     {
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
@@ -231,9 +180,8 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         mudSelect.Find("div.mud-input-control").Click();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
-        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
+        tableSelect.FindAll("tbody tr")[0].Click();
     }
-
 
     private void ConfigureValidatorAllMembers()
     {
@@ -254,27 +202,44 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             }
         );
     }
-
-    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null)
+    
+    private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,
+        EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null)
     {
-        onSubmitted ??= EventCallback.Empty;
-        return Context.RenderComponent<CreateElementForm>(p =>
+        vm ??= ViewModelProvider.GetLearningElement();
+        onNewClicked ??= EventCallback.Empty;
+        masterLayoutStateHasChanged ??= () => { };
+        return Context.RenderComponent<EditElementForm>(p =>
         {
-            p.Add(c => c.OnSubmitted, onSubmitted.Value);
+            p.Add(c => c.ElementToEdit, vm);
+            p.Add(c => c.OnNewButtonClicked, onNewClicked.Value);
             p.Add(c => c.DebounceInterval, 0);
+            p.AddCascadingValue("TriggerMasterLayoutStateHasChanged", masterLayoutStateHasChanged);
         });
     }
-
-    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null)
+    
+    private IRenderedFragment GetFormWithPopoverProvider(ILearningElementViewModel? vm = null,
+        EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null)
     {
-        onSubmitted ??= EventCallback.Empty;
-        return Context.Render(builder =>
+        vm ??= ViewModelProvider.GetLearningElement();
+        onNewClicked ??= EventCallback.Empty;
+        masterLayoutStateHasChanged ??= () => { };
+        RenderFragment innerFrag = builder =>
         {
             builder.OpenComponent<MudPopoverProvider>(0);
             builder.CloseComponent();
-            builder.OpenComponent<CreateElementForm>(1);
-            builder.AddAttribute(2, nameof(CreateElementForm.OnSubmitted), onSubmitted);
+            builder.OpenComponent<EditElementForm>(1);
+            builder.AddAttribute(2, nameof(EditElementForm.ElementToEdit), vm);
             builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
+            builder.AddAttribute(4, nameof(EditElementForm.OnNewButtonClicked), onNewClicked.Value);
+            builder.CloseComponent();
+        };
+        return Context.Render(builder =>
+        {
+            builder.OpenComponent<CascadingValue<Action>>(0);
+            builder.AddAttribute(1, "Value", masterLayoutStateHasChanged);
+            builder.AddAttribute(2, "ChildContent", innerFrag);
+            builder.AddAttribute(3, "Name", "TriggerMasterLayoutStateHasChanged");
             builder.CloseComponent();
         });
     }
