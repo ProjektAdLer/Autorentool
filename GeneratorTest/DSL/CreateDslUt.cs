@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
-using PersistEntities.LearningContent;
 using Shared;
 using TestHelpers;
 
@@ -138,7 +137,7 @@ public class CreateDslUt
             PersistEntityProvider.GetLearningSpace(name: "Space3", learningSpaceLayout: mockLearningSpaceLayout3);
 
 
-        var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
+        var mockSpaces = new List<LearningSpacePe> { mockSpace1, mockSpace2, mockSpace3 };
 
         var mockFileSystem = new MockFileSystem();
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
@@ -244,13 +243,13 @@ public class CreateDslUt
             outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
-            new List<IObjectInPathWayPe> {space1, space2}, null);
-        space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
-        space2.InBoundObjects = new List<IObjectInPathWayPe>() {condition1};
-        space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
-        space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
-        var learningSpaces = new List<LearningSpacePe> {space1, space2, space3, space4};
-        var topics = new List<TopicPe>() {topic1, topic2};
+            new List<IObjectInPathWayPe> { space1, space2 }, null);
+        space1.OutBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
+        space2.InBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
+        space2.OutBoundObjects = new List<IObjectInPathWayPe>() { space3 };
+        space3.InBoundObjects = new List<IObjectInPathWayPe>() { space2 };
+        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3, space4 };
+        var topics = new List<TopicPe>() { topic1, topic2 };
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
@@ -259,7 +258,7 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsSpace1 = new List<LearningElementPe> {ele1, ele2, ele4, ele5};
+        var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
         var learningElementsSpace2 = new List<LearningElementPe>();
 
         //Act
@@ -321,7 +320,7 @@ public class CreateDslUt
                 }
             }
         };
-        var learningSpaces = new List<LearningSpacePe> {space1};
+        var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
             learningSpaces);
@@ -337,7 +336,110 @@ public class CreateDslUt
         catch (Exception e)
         {
             //Assert
-            Assert.That(e.Message, Is.EqualTo("The given LearningContent Type is not supported - in CreateDsl."));
+            Assert.That(e.Message,
+                Is.EqualTo(
+                    "The given LearningContent Type of element a is not supported (Parameter 'LearningContent')"));
+        }
+    }
+
+    [Test]
+    public void WriteLearningWorld_UnsupportedFloorPlanNameExceptionThrown()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+
+        const string name = "space1";
+        const string shortname = "s1";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Desktop\\test";
+
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>())
+        {
+            LearningSpaceLayout =
+            {
+                FloorPlanName = (FloorPlanEnum)999 // ungültiger FloorPlanName
+            }
+        };
+
+        var learningSpaces = new List<LearningSpacePe> { space1 };
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+            learningSpaces);
+
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+
+        //Act
+        try
+        {
+            systemUnderTest.WriteLearningWorld(learningWorld);
+            Assert.Fail("FloorPlanName Exception was not thrown");
+        }
+        catch (Exception e)
+        {
+            //Assert
+            Assert.That(e.Message,
+                Is.EqualTo("The FloorPlanName 999 of space ff is not supported (Parameter 'FloorPlanName')"));
+        }
+    }
+
+    [Test]
+    public void WriteLearningWorld_InvalidLearningContentTypeExceptionThrown()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+
+        const string name = "ele1";
+        const string shortname = "e1";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Desktop\\test";
+
+        var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
+
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>())
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = new Dictionary<int, ILearningElementPe>
+                {
+                    {
+                        0,
+                        ele1
+                    }
+                }
+            }
+        };
+
+        var learningSpaces = new List<LearningSpacePe> { space1 };
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+            learningSpaces);
+
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+
+        //Act
+        try
+        {
+            systemUnderTest.WriteLearningWorld(learningWorld);
+            Assert.Fail("Learning Content Exception was not thrown");
+        }
+        catch (Exception e)
+        {
+            //Assert
+            Assert.That(e.Message,
+                Is.EqualTo(
+                    "The given LearningContent of element a is either FileContent or LinkContent (Parameter 'LearningContent')"));
         }
     }
 }

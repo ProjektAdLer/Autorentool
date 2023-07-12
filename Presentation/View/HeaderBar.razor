@@ -177,27 +177,39 @@
         if (world == null) return;
 
         if (!IsLearningWorldValid(world)) return;
-        
+
         try
         {
-            _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
+            _filepath = await PresentationLogic.ConstructBackupAsync(world);
             Snackbar.Add(Localizer["Export.SnackBar.Message", _filepath], Severity.Success);
-
-            if (await PresentationLogic.IsLmsConnected())
-            {
-                await UploadLearningWorld();
-            }
-            else
-            {
-                await ShowNotLoggedInDialog();
-            }
-
-            _popoverOpen = true;
         }
         catch (OperationCanceledException)
         {
             Snackbar.Add(Localizer["ExportCanceled.Snackbar.Message"], Severity.Warning);
         }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
+            return;
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
+            return;
+        }
+
+        if (await PresentationLogic.IsLmsConnected())
+        {
+            await UploadLearningWorld();
+        }
+        else
+        {
+            await ShowNotLoggedInDialog();
+        }
+
+        _popoverOpen = true;
+
+
         StateHasChanged();
     }
 
@@ -215,7 +227,7 @@
         {
             if (!space.ContainedLearningElements.Any())
             {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message",space.Name]} </li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
             }
             if (space.Points < space.RequiredPoints)
             {
@@ -288,13 +300,12 @@
             };
             parameters = new DialogParameters
             {
-                {"Progress", progress}
+                { "Progress", progress }
             };
 
             await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
-            
+
             PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
-            
         }
     }
 

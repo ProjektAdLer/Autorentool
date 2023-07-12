@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.ErrorManagement;
 using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
@@ -143,11 +144,11 @@ public class Startup
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
-        services.AddSingleton<IPresentationLogic, PresentationLogic>();
+        services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
-        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
+        services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
         services.AddScoped<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
@@ -159,6 +160,8 @@ public class Startup
     private void ConfigureBusinessLogic(IServiceCollection services)
     {
         services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
+        services.AddSingleton<IErrorManager, ErrorManager>();
+
     }
 
     private void ConfigureDataAccess(IServiceCollection services)

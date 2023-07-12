@@ -3,6 +3,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -40,6 +41,65 @@ public class BusinessLogicUt
         systemUnderTest.ConstructBackup(null!, "foobar");
 
         mockWorldGenerator.Received().ConstructBackup(null!, "foobar");
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsArgumentOutOfRangeException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new ArgumentOutOfRangeException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
+        }
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsInvalidOperationException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new InvalidOperationException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (InvalidOperationException)
+        {
+            // Überprüfen Sie, ob die Methode LogAndRethrowError aufgerufen wurde, wenn eine InvalidOperationException ausgelöst wurde
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
+        }
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsFileNotFoundException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new FileNotFoundException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (FileNotFoundException)
+        {
+            // Überprüfen Sie, ob die Methode LogAndRethrowError aufgerufen wurde, wenn eine FileNotFoundException ausgelöst wurde
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<FileNotFoundException>());
+        }
     }
 
     [Test]
@@ -593,16 +653,17 @@ public class BusinessLogicUt
         IDataAccess? fakeDataAccess = null,
         IWorldGenerator? worldGenerator = null,
         ICommandStateManager? commandStateManager = null,
-        IBackendAccess? apiAccess = null)
+        IBackendAccess? apiAccess = null,
+        IErrorManager? errorManager = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         apiAccess ??= Substitute.For<IBackendAccess>();
-
+        errorManager ??= Substitute.For<IErrorManager>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess);
+            commandStateManager, apiAccess, errorManager);
     }
 }

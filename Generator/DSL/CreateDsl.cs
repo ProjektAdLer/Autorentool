@@ -225,7 +225,8 @@ public class CreateDsl : ICreateDsl
                 FloorPlanEnum.R_20X20_6L => 5,
                 FloorPlanEnum.R_20X30_8L => 7,
                 FloorPlanEnum.L_32X31_10L => 9,
-                _ => 0
+                _ => throw new ArgumentOutOfRangeException(nameof(space.LearningSpaceLayout.FloorPlanName),
+                    $"The FloorPlanName {space.LearningSpaceLayout.FloorPlanName} of space {space.Name} is not supported")
             };
 
             for (int i = 0; i <= maxSlotNumber; i++)
@@ -237,7 +238,8 @@ public class CreateDsl : ICreateDsl
                     {
                         FileContentPe fileContent => fileContent.Type,
                         LinkContentPe => "url",
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
+                            $"The given LearningContent of element {element.Name} is either FileContent or LinkContent")
                     };
                     var elementCategory = element.LearningContent switch
                     {
@@ -250,8 +252,8 @@ public class CreateDsl : ICreateDsl
                         FileContentPe { Type: "h5p" } => "h5p",
                         FileContentPe { Type: "pdf" } => "pdf",
                         LinkContentPe => "video",
-                        _ => throw new ArgumentException(
-                            "The given LearningContent Type is not supported - in CreateDsl."),
+                        _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
+                            $"The given LearningContent Type of element {element.Name} is not supported")
                     };
                     var url = element.LearningContent is LinkContentPe link ? link.Link : "";
 
@@ -341,6 +343,11 @@ public class CreateDsl : ICreateDsl
                 var castedFileContent = (FileContentPe)learningElement.LearningContent;
                 _fileSystem.File.Copy(castedFileContent.Filepath,
                     _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FileNotFoundException(
+                    $"The Content {learningElement.LearningContent.Name} of the LearningElement {learningElement.Name} could not be found at Path {((FileContentPe)learningElement.LearningContent).Filepath}.");
             }
             catch (Exception)
             {

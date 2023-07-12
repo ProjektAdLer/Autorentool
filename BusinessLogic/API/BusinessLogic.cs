@@ -2,6 +2,7 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Shared;
 using Shared.Command;
@@ -16,18 +17,21 @@ public class BusinessLogic : IBusinessLogic
         IDataAccess dataAccess,
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
-        IBackendAccess backendAccess)
+        IBackendAccess backendAccess,
+        IErrorManager errorManager)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         WorldGenerator = worldGenerator;
         CommandStateManager = commandStateManager;
         BackendAccess = backendAccess;
+        ErrorManager = errorManager;
     }
 
 
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
+    internal IErrorManager ErrorManager { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
     public IApplicationConfiguration Configuration { get; }
@@ -76,7 +80,22 @@ public class BusinessLogic : IBusinessLogic
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        WorldGenerator.ConstructBackup(learningWorld, filepath);
+        try
+        {
+            WorldGenerator.ConstructBackup(learningWorld, filepath);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
