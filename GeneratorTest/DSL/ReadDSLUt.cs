@@ -1,5 +1,7 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GeneratorTest.DSL;
@@ -12,6 +14,7 @@ public class ReadDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
+        var mockLogger = Substitute.For<ILogger<ReadDsl>>();
 
         var topicsJson = new TopicJson(1, "A", new List<int> { 1, 2 });
         var topicsList = new List<TopicJson>() { topicsJson };
@@ -46,7 +49,7 @@ public class ReadDslUt
 
 
         //Act
-        var systemUnderTest = new ReadDsl(mockFileSystem);
+        var systemUnderTest = new ReadDsl(mockFileSystem, mockLogger);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
         var listSpace = systemUnderTest.GetSectionList();
@@ -86,6 +89,7 @@ public class ReadDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
+        var mockLogger = Substitute.For<ILogger<ReadDsl>>();
 
         var topicsJson = new TopicJson(1, "A",
             new List<int> { 1, 2 });
@@ -100,7 +104,7 @@ public class ReadDslUt
 
 
         //Act
-        var systemUnderTest = new ReadDsl(mockFileSystem);
+        var systemUnderTest = new ReadDsl(mockFileSystem, mockLogger);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
         var listSpace = systemUnderTest.GetSectionList();

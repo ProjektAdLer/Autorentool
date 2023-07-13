@@ -7,6 +7,7 @@ using Bunit.Rendering;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using MudBlazor;
 using NSubstitute;
 using NSubstitute.Core;
@@ -38,6 +39,7 @@ public class HeaderBarUt
     private ISnackbar _snackbar;
     private IDialogService _dialogService;
     private IErrorService _errorService;
+    private ILogger _logger;
 
     [SetUp]
     public void Setup()
@@ -61,6 +63,7 @@ public class HeaderBarUt
         _snackbar = Substitute.For<ISnackbar>();
         _dialogService = Substitute.For<IDialogService>();
         _errorService = Substitute.For<IErrorService>();
+        _logger = Substitute.For<ILogger>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
@@ -68,6 +71,7 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_snackbar);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_errorService);
+        _testContext.Services.AddSingleton(_logger);
     }
 
     private static string FormatStringLocalizerValue(CallInfo ci)

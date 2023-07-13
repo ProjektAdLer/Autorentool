@@ -343,21 +343,17 @@ public class CreateDsl : ICreateDsl
                 var castedFileContent = (FileContentPe)learningElement.LearningContent;
                 _fileSystem.File.Copy(castedFileContent.Filepath,
                     _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
+                Logger.LogTrace($"Copied file from {castedFileContent.Filepath} to XMLFilesForExport");
             }
             catch (FileNotFoundException)
             {
                 throw new FileNotFoundException(
                     $"The Content {learningElement.LearningContent.Name} of the LearningElement {learningElement.Name} could not be found at Path {((FileContentPe)learningElement.LearningContent).Filepath}.");
             }
-            catch (Exception)
-            {
-                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
-                throw;
-            }
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
-        Logger.LogDebug("Generated DSL Document: {JsonFile}", jsonFile);
+        Logger.LogTrace("Generated DSL Document: {JsonFile} at {Path}", jsonFile, _dslPath);
         return _dslPath;
     }
 }

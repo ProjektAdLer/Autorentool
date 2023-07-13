@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Shared;
 
 
@@ -15,14 +16,16 @@ public class ReadDsl : IReadDsl
     private LearningWorldJson _learningWorldJson;
     private readonly IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
+    private ILogger<ReadDsl> _logger;
 
 
 #pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
-    public ReadDsl(IFileSystem fileSystem)
+    public ReadDsl(IFileSystem fileSystem, ILogger<ReadDsl> logger)
 #pragma warning restore CS8618
     {
         Initialize();
         _fileSystem = fileSystem;
+        _logger = logger;
     }
 
     private void Initialize()
@@ -92,6 +95,8 @@ public class ReadDsl : IReadDsl
                 _listH5PElements.Add(element);
             }
         }
+
+        _logger.LogTrace("Found {count} H5P elements", _listH5PElements.Count);
     }
 
     /// <summary>
@@ -108,6 +113,8 @@ public class ReadDsl : IReadDsl
                 _listResourceElements.Add(resource);
             }
         }
+
+        _logger.LogTrace("Found {count} resource elements", _listResourceElements.Count);
     }
 
     /// <summary>
@@ -122,6 +129,8 @@ public class ReadDsl : IReadDsl
                 _listLabelElements.Add(label);
             }
         }
+
+        _logger.LogTrace("Found {count} label elements", _listLabelElements.Count);
     }
 
     /// <summary>
@@ -130,7 +139,11 @@ public class ReadDsl : IReadDsl
     private void GetWorldAttributes(DocumentRootJson documentRootJson)
     {
         // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
-        if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "") return;
+        if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "")
+        {
+            _logger.LogTrace("No world description and goals found");
+            return;
+        }
 
         var lastId = documentRootJson.World.Elements.Count + 1;
 
@@ -155,6 +168,8 @@ public class ReadDsl : IReadDsl
                 _listUrlElements.Add(url);
             }
         }
+
+        _logger.LogTrace("Found {count} URL elements", _listUrlElements.Count);
     }
 
     /// <summary>

@@ -131,6 +131,9 @@
 
     [Inject]
     IErrorService ErrorService { get; set; }
+    
+    [Inject]
+    private ILogger<HeaderBar> Logger { get; set; }
 
     private string _filepath = "";
 
@@ -239,6 +242,7 @@
 
         errorString.Append("</ul>");
 
+        Logger.LogError("LearningWorld is not valid" + errorString);
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
     }
