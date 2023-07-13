@@ -4,7 +4,7 @@ namespace Presentation.Components.Forms;
 
 public class ValidationWrapper<TEntity> : IValidationWrapper<TEntity>
 {
-    public IValidator<TEntity> Validator { get; }
+    private IValidator<TEntity> Validator { get; }
 
     public ValidationWrapper(IValidator<TEntity> validator)
     {
