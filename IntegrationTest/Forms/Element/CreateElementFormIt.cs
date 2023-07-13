@@ -74,9 +74,9 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_SelectedViewModelsProviderContentSet_SetsInFormModelAndResetsProvider()
     {
         SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels.First()));
         SelectedViewModelsProvider.Received(1).SetLearningContent(null, null);
     }
@@ -194,10 +194,15 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
         SelectedViewModelsProvider.ActiveSlotInSpace.Returns(0);
         submitButton.Find("button").Click();
-        WorldPresenter.DidNotReceive().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
-        SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
-            Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123);
+        submitButton.WaitForAssertion(() =>
+            WorldPresenter.DidNotReceive().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0],
+                Expected,
+                Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
+            TimeSpan.FromSeconds(2));
+        submitButton.WaitForAssertion(() =>
+            SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
+                Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
+            TimeSpan.FromSeconds(2));
         Assert.That(callbackCalledCount, Is.EqualTo(2));
     }
 
