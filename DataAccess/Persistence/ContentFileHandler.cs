@@ -79,6 +79,8 @@ public class ContentFileHandler : IContentFileHandler
     public void SaveLink(LinkContentPe linkContent)
     {
         var links = GetAllLinks();
+        if (links.Contains(linkContent)) return;
+        if (links.Any(l => l.Name == linkContent.Name)) linkContent.Name += " (1)";
         links.Add(linkContent);
         OverwriteLinksFile(links);
     }

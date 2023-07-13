@@ -93,13 +93,13 @@
             try
             {
                 await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
+                Snackbar.Add(SnackbarMessage);
+                Reset();
             }
             catch (Exception e)
             {
                 SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
             }
-            Snackbar.Add(SnackbarMessage);
-            Reset();
         }
     }
 

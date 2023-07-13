@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
@@ -54,13 +55,13 @@ public class ContentFilesContainerUt
         var component = GetRenderedComponent();
         
         var contentFilesViewComponent = component.FindComponent<ContentFilesView>();
-        var contentFilesContainerCascadingValue = component.FindComponent<CascadingValue<ContentFilesContainer>>().Instance;
+        var contentFilesContainerCascadingValue = component.FindComponent<CascadingValue<Func<Task>>>().Instance;
         
         Assert.Multiple(() =>
         {
             Assert.That(component.HasComponent<Stub<ContentFilesAdd>>());
             Assert.That(contentFilesViewComponent.Instance, Is.Not.Null);
-            Assert.That(contentFilesContainerCascadingValue.Value, Is.EqualTo(component.Instance));
+            Assert.That(contentFilesContainerCascadingValue.Value, Is.Not.Null);
         });
     }
 

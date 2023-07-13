@@ -115,6 +115,7 @@ public static class EntityProvider
             nameof(LearningWorld) => GetLearningWorld() as TEntity,
             nameof(LearningSpace) => GetLearningSpace() as TEntity,
             nameof(LearningElement) => GetLearningElement() as TEntity,
+            nameof(LinkContent) => GetLinkContent() as TEntity,
             _ => throw new ArgumentOutOfRangeException()
         })!;
 }

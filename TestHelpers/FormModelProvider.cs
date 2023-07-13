@@ -19,6 +19,11 @@ public static class FormModelProvider
     {
         return new LearningElementFormModel();
     }
+    
+    public static LinkContentFormModel GetLinkContent()
+    {
+        return new LinkContentFormModel();
+    }
 
     public static TForm Get<TForm>() where TForm : class, new() =>
         (typeof(TForm).Name switch
@@ -26,6 +31,7 @@ public static class FormModelProvider
             nameof(LearningWorldFormModel) => GetLearningWorld() as TForm,
             nameof(LearningSpaceFormModel) => GetLearningSpace() as TForm,
             nameof(LearningElementFormModel) => GetLearningElement() as TForm,
+            nameof(LinkContentFormModel) => GetLinkContent() as TForm,
             _ => throw new ArgumentOutOfRangeException()
         })!;
 }
