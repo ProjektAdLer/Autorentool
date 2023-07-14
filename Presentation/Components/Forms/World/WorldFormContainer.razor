@@ -1,4 +1,3 @@
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
 @using System.ComponentModel
 <MudCard Class="overflow-auto">
@@ -8,15 +7,16 @@
     }
     else
     {
-        <EditWorldForm WorldToEdit="WorldPresenter.LearningWorldVm" OnNewButtonClicked="OnForceNew"/>
+        <EditWorldForm WorldToEdit="WorldPresenter.LearningWorldVm"/>
     }
 </MudCard>
+
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich 
+#pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     public ILearningWorldPresenter WorldPresenter { get; set; }
 #pragma warning restore CS8618
-    
+
     private bool _editOverwritten = false;
 
     protected override void OnInitialized()
@@ -33,7 +33,7 @@
 
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName != nameof(WorldPresenter.LearningWorldVm)) return;
+        if (e.PropertyName != nameof(WorldPresenter.LearningWorldVm)) return;
         _editOverwritten = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -43,4 +43,5 @@
     {
         _editOverwritten = true;
     }
+
 }
