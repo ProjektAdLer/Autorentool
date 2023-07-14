@@ -24,6 +24,7 @@ using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Shared;
+using Shared.Exceptions;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View;
@@ -49,7 +50,6 @@ public class HeaderBarUt
         _testContext.ComponentFactories.AddStub<CultureSelector>();
         _testContext.ComponentFactories.AddStub<LmsLoginButton>();
         _testContext.ComponentFactories.AddStub<MudPopover>();
-        _testContext.ComponentFactories.AddStub<MudIconButton>();
         _testContext.ComponentFactories.AddStub<MudDivider>();
         _testContext.ComponentFactories.AddStub<MudMenu>();
         _testContext.ComponentFactories.AddStub<MudMenuItem>();
@@ -193,11 +193,6 @@ public class HeaderBarUt
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
 
-    private IRenderedComponent<HeaderBar> GetRenderedComponent()
-    {
-        return _testContext.RenderComponent<HeaderBar>();
-    }
-
     [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
@@ -254,4 +249,60 @@ public class HeaderBarUt
 
         _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
     }
+    
+    [Test]
+    public void UndoButton_Clicked_CallsPresentationLogic()
+    {
+        _presentationLogic.CanUndo.Returns(true);
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("undo")
+            .Find("button").Click();
+
+        _presentationLogic.Received().UndoCommand();
+    }
+    
+    [Test]
+    public void UndoButton_Clicked_UndoCommandThrowsUndoException_ErrorServiceCalled()
+    {
+        _presentationLogic.CanUndo.Returns(true);
+        _presentationLogic.When(x => x.UndoCommand()).Do(x => throw new UndoException());
+        var systemUnderTest = GetRenderedComponent();
+        
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("undo")
+            .Find("button").Click();
+
+        _errorService.Received().SetError("An error occurred while attempting to undo the last action", Arg.Any<string>());
+    }
+
+    [Test]
+    public void RedoButton_Clicked_CallsPresentationLogic()
+    {
+        _presentationLogic.CanRedo.Returns(true);
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("redo")
+            .Find("button").Click();
+
+        _presentationLogic.Received().RedoCommand();
+    }
+
+    [Test]
+    public void RedoButton_Clicked_RedoCommandThrowsRedoException_ErrorServiceCalled()
+    {
+        _presentationLogic.CanRedo.Returns(true);
+        _presentationLogic.When(x => x.RedoCommand()).Do(x => throw new RedoException());
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("redo")
+            .Find("button").Click();
+
+        _errorService.Received().SetError("An error occurred while attempting to redo the last undone action", Arg.Any<string>());
+    }
+
+    private IRenderedComponent<HeaderBar> GetRenderedComponent()
+    {
+        return _testContext.RenderComponent<HeaderBar>();
+    }
+
 }

@@ -183,14 +183,9 @@ public class BusinessLogicUt
             errorManager: mockErrorManager
         );
 
-        try
-        {
-            systemUnderTest.UndoCommand();
-        }
-        catch (InvalidOperationException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
-        }
+        systemUnderTest.UndoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowUndoError(Arg.Any<InvalidOperationException>());
     }
 
     [Test]
@@ -205,14 +200,9 @@ public class BusinessLogicUt
             errorManager: mockErrorManager
         );
 
-        try
-        {
-            systemUnderTest.UndoCommand();
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
-        }
+        systemUnderTest.UndoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowUndoError(Arg.Any<ArgumentOutOfRangeException>());
     }
 
     [Test]
@@ -252,14 +242,9 @@ public class BusinessLogicUt
             errorManager: mockErrorManager
         );
 
-        try
-        {
-            systemUnderTest.RedoCommand();
-        }
-        catch (InvalidOperationException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
-        }
+        systemUnderTest.RedoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowRedoError(Arg.Any<InvalidOperationException>());
     }
 
     [Test]
@@ -274,14 +259,9 @@ public class BusinessLogicUt
             errorManager: mockErrorManager
         );
 
-        try
-        {
-            systemUnderTest.RedoCommand();
-        }
-        catch (ApplicationException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ApplicationException>());
-        }
+        systemUnderTest.RedoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowRedoError(Arg.Any<ApplicationException>());
     }
 
 

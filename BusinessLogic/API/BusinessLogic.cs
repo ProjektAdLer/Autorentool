@@ -76,11 +76,11 @@ public class BusinessLogic : IBusinessLogic
         }
         catch (InvalidOperationException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowUndoError(e);
         }
         catch (ArgumentOutOfRangeException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowUndoError(e);
         }
     }
 
@@ -95,11 +95,11 @@ public class BusinessLogic : IBusinessLogic
         }
         catch (InvalidOperationException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowRedoError(e);
         }
         catch (ApplicationException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowRedoError(e);
         }
     }
 
