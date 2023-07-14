@@ -26,13 +26,9 @@
         </section>
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded-lg">
             <MudGrid Class="flex justify-center overflow-auto h-96 shrink" Spacing="2">
-                @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
+                @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds().Concat(MyLearningWorldsProvider.GetSavedLearningWorlds()))
                 {
-                    <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnCloseWorld="OnCloseWorldAsync" IsLoaded="true"/>
-                }
-                @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
-                {
-                    <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnCloseWorld="OnCloseWorldAsync" IsLoaded="false"/>
+                    <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnCloseWorld="OnCloseWorldAsync"/>
                 }
             </MudGrid>
         </section>
