@@ -10,11 +10,12 @@
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
+                        Class="close-button"
                         Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent Class="flex justify-center">
-            <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
+            <MudButton Size="Size.Large" @onclick="OnOpenButtonPressed" Class="open-button">
                 @Localizer["LearningWorldCard.Button.Open.Text"]
             </MudButton>
         </MudCardContent>
@@ -24,7 +25,7 @@
 @code {
 
     [Inject]
-    private IStringLocalizer<LearningWorldCard> Localizer { get; set; }
+    internal IStringLocalizer<LearningWorldCard> Localizer { get; set; }
 
     [Parameter]
     public SavedLearningWorldPath? LearningWorldPath { get; set; }
@@ -35,13 +36,17 @@
     [Parameter, EditorRequired]
     public EventCallback<SavedLearningWorldPath> OnCloseWorld { get; set; }
 
-
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnOpenLearningWorld.Message"]);
         if (LearningWorldPath == null) throw new ApplicationException(Localizer["ApplicationException.LearningWorldPath.Message"]);
         if (!OnCloseWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnCloseWorld.Message"]);
+    }
+
+    private void OnOpenButtonPressed()
+    {
+        OnOpenLearningWorld.InvokeAsync(LearningWorldPath);
     }
 
     private void OnCloseButtonPressed()
