@@ -77,7 +77,6 @@ public class BusinessLogicUt
         }
         catch (InvalidOperationException)
         {
-            // Überprüfen Sie, ob die Methode LogAndRethrowError aufgerufen wurde, wenn eine InvalidOperationException ausgelöst wurde
             mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
         }
     }
@@ -97,7 +96,6 @@ public class BusinessLogicUt
         }
         catch (FileNotFoundException)
         {
-            // Überprüfen Sie, ob die Methode LogAndRethrowError aufgerufen wurde, wenn eine FileNotFoundException ausgelöst wurde
             mockErrorManager.Received().LogAndRethrowError(Arg.Any<FileNotFoundException>());
         }
     }
@@ -172,6 +170,50 @@ public class BusinessLogicUt
 
         mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
+    
+    [Test]
+    public void CallUndoCommand_UndoThrowsInvalidOperationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Undo()).Do(x => throw new InvalidOperationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        try
+        {
+            systemUnderTest.UndoCommand();
+        }
+        catch (InvalidOperationException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
+        }
+    }
+
+    [Test]
+    public void CallUndoCommand_UndoThrowsArgumentOutOfRangeException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Undo()).Do(x => throw new ArgumentOutOfRangeException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        try
+        {
+            systemUnderTest.UndoCommand();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
+        }
+    }
 
     [Test]
     public void CallRedoCommand_CallsCommandStateManager()
@@ -197,6 +239,51 @@ public class BusinessLogicUt
 
         mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
+    
+    [Test]
+    public void CallRedoCommand_RedoThrowsInvalidOperationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Redo()).Do(x => throw new InvalidOperationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        try
+        {
+            systemUnderTest.RedoCommand();
+        }
+        catch (InvalidOperationException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
+        }
+    }
+
+    [Test]
+    public void CallRedoCommand_RedoThrowsApplicationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Redo()).Do(x => throw new ApplicationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        try
+        {
+            systemUnderTest.RedoCommand();
+        }
+        catch (ApplicationException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ApplicationException>());
+        }
+    }
+
 
     [Test]
     public void SaveLearningWorld_CallsDataAccess()

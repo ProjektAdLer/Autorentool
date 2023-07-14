@@ -57,25 +57,50 @@ public class BusinessLogic : IBusinessLogic
         DataAccess.SaveLink(linkContent);
     }
 
+    /// <inheritdoc cref="IBusinessLogic.ExecuteCommand" />
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
         OnCommandUndoRedoOrExecute?.Invoke(this,
             new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
     }
-
+    
+    /// <inheritdoc cref="IBusinessLogic.UndoCommand" />
     public void UndoCommand()
     {
-        var command = CommandStateManager.Undo();
-        OnCommandUndoRedoOrExecute?.Invoke(this,
-            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
+        try
+        {
+            var command = CommandStateManager.Undo();
+            OnCommandUndoRedoOrExecute?.Invoke(this,
+                new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
+    /// <inheritdoc cref="IBusinessLogic.RedoCommand" />
     public void RedoCommand()
     {
-        var command = CommandStateManager.Redo();
-        OnCommandUndoRedoOrExecute?.Invoke(this,
-            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
+        try
+        {
+            var command = CommandStateManager.Redo();
+            OnCommandUndoRedoOrExecute?.Invoke(this,
+                new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (ApplicationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)

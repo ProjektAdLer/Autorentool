@@ -109,11 +109,13 @@ public class PresentationLogic : IPresentationLogic
         return filepath;
     }
 
+    /// <inheritdoc cref="IPresentationLogic.UndoCommand"/>
     public void UndoCommand()
     {
         BusinessLogic.UndoCommand();
     }
 
+    /// <inheritdoc cref="IPresentationLogic.RedoCommand"/>
     public void RedoCommand()
     {
         BusinessLogic.RedoCommand();

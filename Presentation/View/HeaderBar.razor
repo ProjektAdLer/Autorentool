@@ -170,7 +170,18 @@
 
     private void OnClickUndo()
     {
-        PresentationLogic.UndoCommand();
+        try
+        {
+            PresentationLogic.UndoCommand();
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to undo the last action", e.Message);
+        }
+        catch (ArgumentException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to undo the last action", e.Message);
+        }
     }
 
     private async void ExportLearningWorld()
@@ -315,7 +326,18 @@
 
     private void OnClickRedo()
     {
-        PresentationLogic.RedoCommand();
+        try
+        {
+            PresentationLogic.RedoCommand();
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to redo the last undone action", e.Message);
+        }
+        catch (ApplicationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to redo the last undone action", e.Message);
+        }
     }
 
     private async Task TrySaveAsync()

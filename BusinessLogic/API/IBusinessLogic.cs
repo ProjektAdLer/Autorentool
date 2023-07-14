@@ -14,12 +14,19 @@ public interface IBusinessLogic
     bool CanRedo { get; }
 
     /// <summary>
-    ///     Executes a given command.
+    /// Executes a given command.
     /// </summary>
     /// <param name="command">Command to be executed.</param>
     void ExecuteCommand(ICommand command);
-
+    
+    /// <summary>
+    /// Calls the method to undo the last executed command.
+    /// </summary>
     void UndoCommand();
+    
+    /// <summary>
+    /// Calls the method to redo the last undone command.
+    /// </summary>
     void RedoCommand();
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
