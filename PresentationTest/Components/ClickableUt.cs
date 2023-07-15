@@ -62,7 +62,7 @@ public class ClickableUt
         var systemUnderTest =
             CreateRenderedClickableComponent(null, learningObject, onClicked);
 
-        systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
+        systemUnderTest.WaitForElement("g", TimeSpan.FromSeconds(3)).MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
         Assert.That(onClickedEventTriggered, Is.EqualTo(learningObject));

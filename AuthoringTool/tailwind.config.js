@@ -106,6 +106,7 @@ module.exports = {
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
+                formerror: "rgb(244,67,54)"
             },
             fontFamily: {
                 'sans': ['Roboto']

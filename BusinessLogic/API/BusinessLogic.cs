@@ -2,6 +2,7 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Shared;
 using Shared.Command;
@@ -16,18 +17,21 @@ public class BusinessLogic : IBusinessLogic
         IDataAccess dataAccess,
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
-        IBackendAccess backendAccess)
+        IBackendAccess backendAccess,
+        IErrorManager errorManager)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         WorldGenerator = worldGenerator;
         CommandStateManager = commandStateManager;
         BackendAccess = backendAccess;
+        ErrorManager = errorManager;
     }
 
 
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
+    internal IErrorManager ErrorManager { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
     public IApplicationConfiguration Configuration { get; }
@@ -53,30 +57,70 @@ public class BusinessLogic : IBusinessLogic
         DataAccess.SaveLink(linkContent);
     }
 
+    /// <inheritdoc cref="IBusinessLogic.ExecuteCommand" />
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
         OnCommandUndoRedoOrExecute?.Invoke(this,
             new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
     }
-
+    
+    /// <inheritdoc cref="IBusinessLogic.UndoCommand" />
     public void UndoCommand()
     {
-        var command = CommandStateManager.Undo();
-        OnCommandUndoRedoOrExecute?.Invoke(this,
-            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
+        try
+        {
+            var command = CommandStateManager.Undo();
+            OnCommandUndoRedoOrExecute?.Invoke(this,
+                new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowUndoError(e);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowUndoError(e);
+        }
     }
 
+    /// <inheritdoc cref="IBusinessLogic.RedoCommand" />
     public void RedoCommand()
     {
-        var command = CommandStateManager.Redo();
-        OnCommandUndoRedoOrExecute?.Invoke(this,
-            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
+        try
+        {
+            var command = CommandStateManager.Redo();
+            OnCommandUndoRedoOrExecute?.Invoke(this,
+                new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowRedoError(e);
+        }
+        catch (ApplicationException e)
+        {
+            ErrorManager.LogAndRethrowRedoError(e);
+        }
     }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        WorldGenerator.ConstructBackup(learningWorld, filepath);
+        try
+        {
+            WorldGenerator.ConstructBackup(learningWorld, filepath);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)

@@ -37,7 +37,15 @@ public interface IPresentationLogic
 
     bool CanUndo { get; }
     bool CanRedo { get; }
+    
+    /// <summary>
+    /// Calls the business logic method to undo the last executed command.
+    /// </summary>
     void UndoCommand();
+    
+    /// <summary>
+    /// Calls the business logic method to redo the last undone command.
+    /// </summary>
     void RedoCommand();
 
     /// <summary>

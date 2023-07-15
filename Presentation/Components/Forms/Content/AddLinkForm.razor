@@ -11,13 +11,11 @@
     <Fields>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
-                      Immediate="true"
-                      DebounceInterval="300"
+                      DebounceInterval="DebounceInterval"
                       Label=@Localizer["AddLinkForm.Field.Name.Text"]/>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
                       For="@(() => FormModel.Link)"
-                      Immediate="true"
-                      DebounceInterval="300"
+                      DebounceInterval="DebounceInterval"
                       Label=@Localizer["AddLinkForm.Field.Link.Text"]/>
     </Fields>
     <FooterButtons>
@@ -25,28 +23,35 @@
         <DefaultResetButton/>
     </FooterButtons>
 </BaseForm>
-@code {
-    
-    [Inject]
-    private IFormDataContainer<LinkContentFormModel, LinkContent> FormDataContainer { get; set; }
-    [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
-    [Inject]
-    private IMapper Mapper { get; set; }
-    [Inject]
-    private IStringLocalizer<AddLinkForm> Localizer { get; set; }
 
-    [CascadingParameter]
-    public ContentFilesContainer ContentFilesContainer { get; set; }
-    
+@code {
+
+    [Inject]
+    internal IFormDataContainer<LinkContentFormModel, LinkContent> FormDataContainer { get; set; }
+
+    [Inject]
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+    [Inject]
+    internal IMapper Mapper { get; set; }
+
+    [Inject]
+    internal IStringLocalizer<AddLinkForm> Localizer { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
+    [CascadingParameter(Name = "RerenderContentContainer")]
+    public Func<Task> RerenderContentContainer { get; set; }
+
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LinkContentFormModel FormModel => FormDataContainer.FormModel;
 
-    private void OnValidSubmit(LinkContentFormModel model)
+    private async Task OnValidSubmit(LinkContentFormModel model)
     {
         PresentationLogic.SaveLink(Mapper.Map<LinkContentViewModel>(model));
-        ContentFilesContainer.RerenderAsync();
+        await RerenderContentContainer();
     }
 
 }

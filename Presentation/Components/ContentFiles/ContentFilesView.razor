@@ -9,7 +9,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
-        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+        <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>
@@ -53,10 +53,12 @@
         </MudTd>
         <MudTd Class="px-1.5">
             <MudIconButton Icon="@Icons.Material.Filled.Create"
+                           Class="create-element-with-content"
                            OnClick="() => NewElementWithContent(context)"/>
         </MudTd>
         <MudTd Class="px-1.5">
             <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                           Class="show-content-preview"
                            OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
         </MudTd>
         @if (_showFilepath)
@@ -88,30 +90,31 @@
 
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Inject]
-    private IDialogService DialogService { get; set; }
+    internal IDialogService DialogService { get; set; }
 
     [Inject]
-    private IMediator Mediator { get; set; }
+    internal IMediator Mediator { get; set; }
 
     [Inject]
-    private IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
+    internal IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
 
     [Inject]
-    private IStringLocalizer<ContentFilesView> Localizer { get; set; }
+    internal IStringLocalizer<ContentFilesView> Localizer { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
 
-    private string? _searchString;
+    internal string? SearchString { get; set; }
+
     private bool _showFilepath;
 
     private object TypeSortBy(ILearningContentViewModel content) =>
         content is FileContentViewModel fc ? fc.Type : "Link";
 
     private bool Filter(ILearningContentViewModel element) =>
-        FilterInternal(element, _searchString);
+        FilterInternal(element, SearchString);
 
     private bool FilterInternal(ILearningContentViewModel element, string? searchString)
     {

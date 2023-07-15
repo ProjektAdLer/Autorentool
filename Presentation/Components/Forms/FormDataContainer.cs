@@ -10,6 +10,13 @@ public class FormDataContainer<TForm, TEntity> : IFormDataContainer<TForm, TEnti
         Mapper = mapper;
     }
 
+    public FormDataContainer(IMapper mapper, TForm formModel)
+    {
+        FormModel = formModel;
+        Mapper = mapper;
+    }
+    
+
     public TForm FormModel { get; set; }
     private IMapper Mapper { get; }
 

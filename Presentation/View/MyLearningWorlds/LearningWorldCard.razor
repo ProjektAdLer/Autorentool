@@ -3,77 +3,19 @@
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
         <MudCardHeader Class="flex justify-center items-center break-word w-full">
-            @*<CardHeaderAvatar>
-                @switch (_cardType)
-                {
-                    case CardType.IsLoaded:
-                    {
-                        <MudAvatar Color="@Color.Secondary">L</MudAvatar>
-                        break;
-                    }
-            
-                    case CardType.IsSaved:
-                    {
-                        <MudAvatar Color="@Color.Primary">S</MudAvatar>
-                        break;
-                    }
-                }
-            </CardHeaderAvatar>*@
             <CardHeaderContent>
-                @switch (_cardType)
-                {
-                    case CardType.IsLoaded:
-                    {
-                        <MudText Class="break-all">
-                            @LearningWorldPath!.Name
-                        </MudText>
-                        break;
-                    }
-
-                    case CardType.IsSaved:
-                    {
-                        <MudText Class="break-all">
-                            @LearningWorldPath!.Name
-                        </MudText>
-                        break;
-                    }
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                <MudText Class="break-all">
+                    @LearningWorldPath!.Name
+                </MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
+                        Class="close-button"
                         Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
             </CardHeaderActions>
-            @* @switch (_cardType) *@
-            @* { *@
-            @*     case CardType.IsLoaded: *@
-            @*     { *@
-            @*         <MudAvatar Color="@Color.Secondary">L</MudAvatar> *@
-            @*         <MudText> *@
-            @*             @LearningWorldPath!.Name *@
-            @*         </MudText> *@
-            @*         break; *@
-            @*     } *@
-            @* *@
-            @*     case CardType.IsSaved: *@
-            @*     { *@
-            @*         <MudAvatar Color="@Color.Primary">S</MudAvatar> *@
-            @*         <MudText> *@
-            @*             @LearningWorldPath!.Name *@
-            @*         </MudText> *@
-            @*         <MudButton @onclick="() => OnDeleteFromSaved.InvokeAsync(LearningWorldPath)"> *@
-            @*             <MudIcon Icon="@Icons.Material.Filled.Close"></MudIcon> *@
-            @*         </MudButton> *@
-            @*         break; *@
-            @*     } *@
-            @* *@
-            @*     default: *@
-            @*         throw new ArgumentOutOfRangeException(); *@
-            @* } *@
         </MudCardHeader>
         <MudCardContent Class="flex justify-center">
-            <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
+            <MudButton Size="Size.Large" @onclick="OnOpenButtonPressed" Class="open-button">
                 @Localizer["LearningWorldCard.Button.Open.Text"]
             </MudButton>
         </MudCardContent>
@@ -83,7 +25,7 @@
 @code {
 
     [Inject]
-    private IStringLocalizer<LearningWorldCard> Localizer { get; set; }
+    internal IStringLocalizer<LearningWorldCard> Localizer { get; set; }
 
     [Parameter]
     public SavedLearningWorldPath? LearningWorldPath { get; set; }
@@ -91,13 +33,8 @@
     [Parameter]
     public EventCallback<SavedLearningWorldPath> OnOpenLearningWorld { get; set; }
 
-    [Parameter]
-    public bool IsLoaded { get; set; }
-
     [Parameter, EditorRequired]
     public EventCallback<SavedLearningWorldPath> OnCloseWorld { get; set; }
-
-    private CardType _cardType;
 
     protected override void OnParametersSet()
     {
@@ -105,14 +42,11 @@
         if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnOpenLearningWorld.Message"]);
         if (LearningWorldPath == null) throw new ApplicationException(Localizer["ApplicationException.LearningWorldPath.Message"]);
         if (!OnCloseWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnCloseWorld.Message"]);
-
-        _cardType = IsLoaded ? CardType.IsLoaded : CardType.IsSaved;
     }
 
-    private enum CardType
+    private void OnOpenButtonPressed()
     {
-        IsLoaded,
-        IsSaved
+        OnOpenLearningWorld.InvokeAsync(LearningWorldPath);
     }
 
     private void OnCloseButtonPressed()

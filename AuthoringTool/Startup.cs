@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.ErrorManagement;
 using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
@@ -23,6 +24,7 @@ using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
+using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
@@ -126,6 +128,7 @@ public class Startup
     private void ConfigureValidation(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
+        services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
@@ -141,21 +144,24 @@ public class Startup
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
-        services.AddSingleton<IPresentationLogic, PresentationLogic>();
+        services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
-        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
+        services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
         services.AddScoped<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
+        services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
     {
         services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
+        services.AddSingleton<IErrorManager, ErrorManager>();
+
     }
 
     private void ConfigureDataAccess(IServiceCollection services)

@@ -1,4 +1,4 @@
-name: Run tests
+name: Manual build
 on: workflow_dispatch
 
 jobs:
@@ -10,10 +10,9 @@ jobs:
         with:
           submodules: 'true'
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: |
-            6.x
+          dotnet-version: '7.0.304'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v2
@@ -58,10 +57,9 @@ jobs:
         with:
           submodules: 'true'
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: |
-            6.x
+          dotnet-version: '7.0.304'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v2
@@ -106,10 +104,9 @@ jobs:
         with:
           submodules: 'true'
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: |
-            6.x
+          dotnet-version: '7.0.304'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v2

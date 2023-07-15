@@ -27,6 +27,7 @@ public class LmsLoginDialogUt
     public void Setup()
     {
         _context = new TestContext();
+        _context.AddMudBlazorTestServices();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _dialogService = Substitute.For<IDialogService>();
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();

@@ -19,7 +19,6 @@
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["EditSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <HeaderButtons>
-
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard"
                    OnClick="async () => await OnNewButtonClicked.InvokeAsync()">
             @Localizer["EditSpaceForm.Button.New.Text"]
@@ -35,8 +34,7 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]
                               />
             </div>
@@ -50,8 +48,7 @@
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                                  Min="1"
                                  For="@(() => FormModel.RequiredPoints)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"/>
             </div>
@@ -82,18 +79,16 @@
                 <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
@@ -102,7 +97,7 @@
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
-                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue"
+                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
                        OnClick="OnResetAsync">
         </MudIconButton>
     </FooterButtons>
@@ -129,6 +124,9 @@
 
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
 #pragma warning restore CS8618
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -137,10 +135,10 @@
 
     private bool _advancedChecked = false;
     private bool _collapsedGeneral = false;
-    private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
-    private bool _collapsedTheme = true;
     private bool _collapsedFloorplan = false;
+    private bool _collapsedTheme = true;
+    private bool _collapsedGoals = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)

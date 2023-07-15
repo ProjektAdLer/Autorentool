@@ -6,6 +6,8 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditElementForm.Header.Text"]</h2>
@@ -27,8 +29,7 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
                               Class="pb-4"/>
 
@@ -37,8 +38,7 @@
                                  Min="1"
                                  Max="1000"
                                  For="@(() => FormModel.Points)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -48,8 +48,7 @@
                                  Min="0"
                                  Max="1000"
                                  For="@(() => FormModel.Workload)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
+                                 DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -68,18 +67,36 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
-            <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                           Label=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text"]
-                           For="@(() => FormModel.LearningContent)">
-                    @foreach (var learningContent in WorldPresenter.GetAllContent())
-                    {
-                        <MudSelectItem Value="@(learningContent)"/>
-                    }
-                </MudSelect>
-            </div>
+            <TableSelect
+                @bind-Value="FormDataContainer.FormModel.LearningContent"
+                For="@(() => FormModel.LearningContent)"
+                Elements="WorldPresenter.GetAllContent()"
+                FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                <HeaderContent>
+                    <MudTh></MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd Class="px-1.5">
+                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                    </MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Type">
+                        @if (context is FileContentViewModel fileContentContext)
+                        {
+                            @fileContentContext.Type
+                        }
+                        else
+                        {
+                            <span>Link</span>
+                        }
+                    </MudTd>
+                </RowTemplate>
+            </TableSelect>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudText Class="break-words" Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
@@ -102,18 +119,16 @@
                 <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
-                              Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
-                              DebounceInterval="300"
+                              DebounceInterval="DebounceInterval"
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
@@ -121,26 +136,31 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
+                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
+                       OnClick="OnResetAsync"></MudIconButton>
     </FooterButtons>
 </BaseForm>
 
 @code {
 #pragma warning disable CS8618
     [Inject]
-    private ILearningWorldPresenter WorldPresenter { get; set; }
+    internal ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject]
-    private IMapper Mapper { get; set; }
+    internal IMapper Mapper { get; set; }
 
     [Inject]
-    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+    internal IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
     [Inject]
-    private IElementModelHandler ElementModelHandler { get; set; }
-    
+    internal IElementModelHandler ElementModelHandler { get; set; }
+
     [Inject]
-    private IStringLocalizer<EditElementForm> Localizer { get; set; }
+    internal IStringLocalizer<EditElementForm> Localizer { get; set; }
+
+    [Inject]
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Parameter, EditorRequired]
     public ILearningElementViewModel ElementToEdit { get; set; }
@@ -148,8 +168,11 @@
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
 
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action TriggerMasterLayoutStateHasChanged { get; set; }
+    internal Action TriggerMasterLayoutStateHasChanged { get; set; }
 #pragma warning restore CS8618
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;

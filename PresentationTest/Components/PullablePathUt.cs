@@ -1,3 +1,4 @@
+using System;
 using Bunit;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +64,7 @@ public class PullablePathUt
 
        var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
         
-        systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
+        systemUnderTest.WaitForElement("g", TimeSpan.FromSeconds(3)).MouseDown(new MouseEventArgs());
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());

@@ -3,6 +3,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -40,6 +41,63 @@ public class BusinessLogicUt
         systemUnderTest.ConstructBackup(null!, "foobar");
 
         mockWorldGenerator.Received().ConstructBackup(null!, "foobar");
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsArgumentOutOfRangeException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new ArgumentOutOfRangeException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
+        }
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsInvalidOperationException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new InvalidOperationException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (InvalidOperationException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
+        }
+    }
+
+    [Test]
+    public void ConstructBackup_ThrowsFileNotFoundException_LogAndRethrowErrorCalled()
+    {
+        var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new FileNotFoundException(); });
+
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
+
+        try
+        {
+            systemUnderTest.ConstructBackup(null!, "foobar");
+        }
+        catch (FileNotFoundException)
+        {
+            mockErrorManager.Received().LogAndRethrowError(Arg.Any<FileNotFoundException>());
+        }
     }
 
     [Test]
@@ -112,6 +170,40 @@ public class BusinessLogicUt
 
         mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
+    
+    [Test]
+    public void CallUndoCommand_UndoThrowsInvalidOperationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Undo()).Do(x => throw new InvalidOperationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        systemUnderTest.UndoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowUndoError(Arg.Any<InvalidOperationException>());
+    }
+
+    [Test]
+    public void CallUndoCommand_UndoThrowsArgumentOutOfRangeException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Undo()).Do(x => throw new ArgumentOutOfRangeException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        systemUnderTest.UndoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowUndoError(Arg.Any<ArgumentOutOfRangeException>());
+    }
 
     [Test]
     public void CallRedoCommand_CallsCommandStateManager()
@@ -137,6 +229,41 @@ public class BusinessLogicUt
 
         mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
+    
+    [Test]
+    public void CallRedoCommand_RedoThrowsInvalidOperationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Redo()).Do(x => throw new InvalidOperationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        systemUnderTest.RedoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowRedoError(Arg.Any<InvalidOperationException>());
+    }
+
+    [Test]
+    public void CallRedoCommand_RedoThrowsApplicationException_ErrorManagerCalled()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.When(x => x.Redo()).Do(x => throw new ApplicationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(
+            commandStateManager: mockCommandStateManager,
+            errorManager: mockErrorManager
+        );
+
+        systemUnderTest.RedoCommand();
+        
+        mockErrorManager.Received().LogAndRethrowRedoError(Arg.Any<ApplicationException>());
+    }
+
 
     [Test]
     public void SaveLearningWorld_CallsDataAccess()
@@ -593,16 +720,17 @@ public class BusinessLogicUt
         IDataAccess? fakeDataAccess = null,
         IWorldGenerator? worldGenerator = null,
         ICommandStateManager? commandStateManager = null,
-        IBackendAccess? apiAccess = null)
+        IBackendAccess? apiAccess = null,
+        IErrorManager? errorManager = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         apiAccess ??= Substitute.For<IBackendAccess>();
-
+        errorManager ??= Substitute.For<IErrorManager>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess);
+            commandStateManager, apiAccess, errorManager);
     }
 }

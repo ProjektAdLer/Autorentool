@@ -12,4 +12,9 @@
       <ProjectReference Include="..\Presentation\Presentation.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="bunit.web" Version="1.21.9" />
+      <PackageReference Include="NSubstitute" Version="4.4.0" />
+    </ItemGroup>
+
 </Project>

@@ -1,7 +1,9 @@
 @using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
-        @Localizer["UnsavedWorldDialog.Content.Text", WorldName]
+        <MudText>
+            @Localizer["UnsavedWorldDialog.Content.Text", WorldName]
+        </MudText>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Yes">@Localizer["UnsavedWorldDialog.Button.Yes"]</MudButton>

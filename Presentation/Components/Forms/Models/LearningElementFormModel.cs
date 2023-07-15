@@ -15,6 +15,7 @@ public class LearningElementFormModel
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
+        ElementModel = ElementModel.l_random;
         Workload = 0;
         Points = 1;
         LearningContent = null;
@@ -35,11 +36,13 @@ public class LearningElementFormModel
         set
         {
             if (Equals(value, _learningContent)) return;
-            if (_learningContent is LinkContentViewModel && value is LinkContentViewModel) return;
-            if (_learningContent is FileContentViewModel lC && value is FileContentViewModel vC &&
-                lC.Type == vC.Type) return;
-            
+            var learningContentIsSameType =
+                (_learningContent is LinkContentViewModel && value is LinkContentViewModel) ||
+                (_learningContent is FileContentViewModel lC && value is FileContentViewModel vC &&
+                 lC.Type == vC.Type);
+
             _learningContent = value;
+            if (learningContentIsSameType) return;
             ElementModel = ElementModelHandler.GetElementModelRandom();
         }
     }

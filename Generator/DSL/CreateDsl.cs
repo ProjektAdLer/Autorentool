@@ -56,8 +56,11 @@ public class CreateDsl : ICreateDsl
         _listAllLearningElements = new List<ILearningElementPe>();
     }
 
-    //Search through all LearningElements and look for duplicates. 
-    //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
+    /// <summary>
+    /// Searches for duplicate learning element names in a list of learning spaces. If duplicates are found, their names are incremented.
+    /// </summary>
+    /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
+    /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
     public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
     {
         var dictionaryIncrementedElementNames = new Dictionary<string, string>();
@@ -159,12 +162,8 @@ public class CreateDsl : ICreateDsl
         return _currentConditionSpace;
     }
 
-    /// <summary>
-    /// Reads the LearningWorld Entity and creates an DSL Document with the given information.
-    /// </summary>
-    /// <param name="learningWorld">The learning world to be written to the DSL document</param>
-    /// <exception cref="ArgumentOutOfRangeException">The world contains an element whos content type is not supported.</exception>
-    /// Information about the learningWorld, topics, spaces and elements
+
+    /// <inheritdoc cref="ICreateDsl.WriteLearningWorld"/>
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
@@ -206,7 +205,7 @@ public class CreateDsl : ICreateDsl
             LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new List<int>()));
             topicId++;
         }
-        
+
         var learningElementId = 0;
 
         foreach (var space in ListLearningSpaces)
@@ -214,7 +213,7 @@ public class CreateDsl : ICreateDsl
             _listLearningSpaceElements = new List<int?>();
             _booleanAlgebraRequirements = "";
             _currentConditionSpace = "";
-            
+
             if (space.AssignedTopic != null)
             {
                 var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.TopicName == space.AssignedTopic.Name);
@@ -226,7 +225,8 @@ public class CreateDsl : ICreateDsl
                 FloorPlanEnum.R_20X20_6L => 5,
                 FloorPlanEnum.R_20X30_8L => 7,
                 FloorPlanEnum.L_32X31_10L => 9,
-                _ => 0
+                _ => throw new ArgumentOutOfRangeException(nameof(space.LearningSpaceLayout.FloorPlanName),
+                    $"The FloorPlanName {space.LearningSpaceLayout.FloorPlanName} of space {space.Name} is not supported")
             };
 
             for (int i = 0; i <= maxSlotNumber; i++)
@@ -238,11 +238,12 @@ public class CreateDsl : ICreateDsl
                     {
                         FileContentPe fileContent => fileContent.Type,
                         LinkContentPe => "url",
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
+                            $"The given LearningContent of element {element.Name} is either FileContent or LinkContent")
                     };
                     var elementCategory = element.LearningContent switch
                     {
-                        FileContentPe { Type: "png" or "jpg" or "bmp" or "webp" } => "image",
+                        FileContentPe { Type: "png" or "jpg" or "bmp" or "webp" or "jpeg" } => "image",
                         FileContentPe
                         {
                             Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
@@ -251,21 +252,23 @@ public class CreateDsl : ICreateDsl
                         FileContentPe { Type: "h5p" } => "h5p",
                         FileContentPe { Type: "pdf" } => "pdf",
                         LinkContentPe => "video",
-                        _ => throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl."),
+                        _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
+                            $"The given LearningContent Type of element {element.Name} is not supported")
                     };
                     var url = element.LearningContent is LinkContentPe link ? link.Link : "";
 
                     learningElementId += 1;
-    
+
                     var learningElementJson = new LearningElementJson(learningElementId,
                         element.Id.ToString(), element.Name, url, elementCategory, elementType,
-                        learningSpaceId, element.Points, element.ElementModel.ToString(), element.Description, element.Goals.Split("\n"));
-    
+                        learningSpaceId, element.Points, element.ElementModel.ToString(), element.Description,
+                        element.Goals.Split("\n"));
+
                     if (element.LearningContent is not LinkContentPe)
                     {
                         ElementsWithFileContent.Add(element);
                     }
-    
+
                     _listLearningSpaceElements.Add(learningElementId);
 
                     LearningWorldJson.Elements.Add(learningElementJson);
@@ -340,16 +343,17 @@ public class CreateDsl : ICreateDsl
                 var castedFileContent = (FileContentPe)learningElement.LearningContent;
                 _fileSystem.File.Copy(castedFileContent.Filepath,
                     _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
+                Logger.LogTrace($"Copied file from {castedFileContent.Filepath} to XMLFilesForExport");
             }
-            catch (Exception)
+            catch (FileNotFoundException)
             {
-                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
-                throw;
+                throw new FileNotFoundException(
+                    $"The Content {learningElement.LearningContent.Name} of the LearningElement {learningElement.Name} could not be found at Path {((FileContentPe)learningElement.LearningContent).Filepath}.");
             }
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
-        Logger.LogDebug("Generated DSL Document: {JsonFile}", jsonFile);
+        Logger.LogTrace("Generated DSL Document: {JsonFile} at {Path}", jsonFile, _dslPath);
         return _dslPath;
     }
 }

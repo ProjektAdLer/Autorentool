@@ -1,11 +1,11 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
 @using Shared
-@using Presentation.PresentationLogic.LearningElement
-@using System.Text
 @using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.SelectedViewModels
+@using System.Text
+@using Presentation.PresentationLogic.LearningElement
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
@@ -62,7 +62,6 @@
                 </div>
             </section>
         }
-
         <div class="w-full min-h-[400px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
             @*style="width: 90%; height: 400px; border: 2px solid;"*@
             <div class="layout-shadow w-full h-full">
@@ -343,24 +342,6 @@
         Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
         LearningSpaceP.SetLearningSpaceLayout(floorPlan);
         InvokeAsync(StateHasChanged);
-    }
-
-    private Task RightClickedDropItem(MouseEventArgs mouseEventArgs, ILearningElementViewModel item)
-    {
-        LearningSpaceP.RightClickedLearningElement(item);
-        return Task.CompletedTask;
-    }
-
-    private Task DeleteRightClickedLearningElement(ILearningElementViewModel item)
-    {
-        LearningSpaceP.DeleteLearningElement(item);
-        return Task.CompletedTask;
-    }
-
-    private Task EditRightClickedLearningElement(ILearningElementViewModel item)
-    {
-        LearningSpaceP.ClickedLearningElement(item);
-        return Task.CompletedTask;
     }
 
     private string GetCornerPointsString(IFloorPlanViewModel floorPlan)

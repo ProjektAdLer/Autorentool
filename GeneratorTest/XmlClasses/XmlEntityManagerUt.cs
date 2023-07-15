@@ -8,7 +8,6 @@ using NUnit.Framework;
 
 namespace GeneratorTest.XmlClasses;
 
-
 [TestFixture]
 public class XmlEntityManagerUt
 {
@@ -24,7 +23,7 @@ public class XmlEntityManagerUt
         var mockSectionFactory = Substitute.For<IXmlSectionFactory>();
         var mockLabelFactory = Substitute.For<IXmlLabelFactory>();
         var mockUrlFactory = Substitute.For<IXmlUrlFactory>();
-        
+
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
@@ -32,38 +31,38 @@ public class XmlEntityManagerUt
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_1"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_2"));
-        
+
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
-        
-        var topicsJson = new TopicJson(1, "Topic",  new List<int>(){1});
-        var topicsList = new List<TopicJson>(){topicsJson};
+
+        var topicsJson = new TopicJson(1, "Topic", new List<int>() { 1 });
+        var topicsList = new List<TopicJson>() { topicsJson };
         var learningSpacesJson1 = new LearningSpaceJson(1, "", "space1",
-            new List<int?>() {1, 2}, 0, "","");
+            new List<int?>() { 1, 2 }, 0, "", "");
         var learningSpacesJson2 = new LearningSpaceJson(1, "", "space2",
-            new List<int?>() {3, 4}, 0, "","");
-        var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
+            new List<int?>() { 3, 4 }, 0, "", "");
+        var learningSpacesList = new List<LearningSpaceJson>() { learningSpacesJson1, learningSpacesJson2 };
         var learningElementJson1 = new LearningElementJson(1,
-            "","", "", "", "h5p", 0, 2, "");
+            "", "", "", "", "h5p", 0, 2, "");
         var learningElementJson2 = new LearningElementJson(2,
             "", "", "", "", "json", 0, 3, "");
-        var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
-        var learningWorldJson = new LearningWorldJson( "world", "", topicsList, learningSpacesList, learningElementList);
-        
-        var mockLabelsElementJson = new LearningElementJson(2, "","", "", "", "mp4", 1, 2, "");
-        
-        var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
-        
-        mockReadDsl.GetLabelsList().Returns(labelJsonList);
+        var learningElementList = new List<LearningElementJson>() { learningElementJson1, learningElementJson2 };
+        var learningWorldJson = new LearningWorldJson("world", "", topicsList, learningSpacesList, learningElementList);
+
+        var mockLabelsElementJson = new LearningElementJson(2, "", "", "", "", "mp4", 1, 2, "");
+
+        var labelJsonList = new List<LearningElementJson> { mockLabelsElementJson };
+
+        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetSectionList().Returns(learningSpacesList);
         mockReadDsl.GetElementsOrderedList().Returns(learningElementList);
-        mockReadDsl.GetLabelsList().Returns(labelJsonList);
-        
+        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
+
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlEntityManager();
-        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory, 
-            mockBackupFactory, mockSectionFactory, mockLabelFactory,mockUrlFactory);
+        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory,
+            mockBackupFactory, mockSectionFactory, mockLabelFactory, mockUrlFactory);
 
         // Assert
         Assert.Multiple(() =>
@@ -73,6 +72,5 @@ public class XmlEntityManagerUt
             mockCourseFactory.Received().CreateXmlCourseFactory();
             mockBackupFactory.Received().CreateXmlBackupFactory();
         });
-        
     }
 }
