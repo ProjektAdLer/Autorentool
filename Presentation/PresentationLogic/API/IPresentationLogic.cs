@@ -28,21 +28,31 @@ public interface IPresentationLogic
     bool RunningElectron { get; }
 
     /// <summary>
-    /// 
+    /// Asynchronously constructs a backup for a Learning World.
     /// </summary>
-    /// <param name="learningWorldViewModel"></param>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-    /// <returns>Filepath to the new backup file</returns>
+    /// <param name="learningWorldViewModel">The Learning World view model to backup.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. 
+    /// The task result contains the file path of the backup.</returns>
+    /// <remarks>
+    /// This method prompts the user to select a file for saving the backup, and then constructs the backup using the selected file path.
+    /// </remarks>
     Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
 
+    /// <summary>
+    /// Whether or not undo can be run.
+    /// </summary>
     bool CanUndo { get; }
+
+    /// <summary>
+    /// Whether or not undo can be run.
+    /// </summary>
     bool CanRedo { get; }
-    
+
     /// <summary>
     /// Calls the business logic method to undo the last executed command.
     /// </summary>
     void UndoCommand();
-    
+
     /// <summary>
     /// Calls the business logic method to redo the last undone command.
     /// </summary>
@@ -129,15 +139,15 @@ public interface IPresentationLogic
     /// <summary>
     /// Creates a new learning space in the given learning world with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
-    /// <param name="name"></param>
-    /// <param name="description"></param>
-    /// <param name="goals"></param>
-    /// <param name="requiredPoints"></param>
-    /// <param name="theme"></param>
-    /// <param name="positionX"></param>
-    /// <param name="positionY"></param>
-    /// <param name="topicVm"></param>
+    /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Space.</param>
+    /// <param name="name">The name of the Learning Space.</param>
+    /// <param name="description">The description of the Learning Space.</param>
+    /// <param name="goals">The goals of the Learning Space.</param>
+    /// <param name="requiredPoints">The points required to access the Learning Space.</param>
+    /// <param name="theme">The theme of the Learning Space.</param>
+    /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
+    /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
+    /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
@@ -145,13 +155,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
     /// </summary>
-    /// <param name="learningSpaceVm">Learning space to edit.</param>
-    /// <param name="name"></param>
-    /// <param name="description"></param>
-    /// <param name="goals"></param>
-    /// <param name="requiredPoints"></param>
-    /// <param name="theme"></param>
-    /// <param name="topicVm"></param>
+    /// <param name="learningSpaceVm">The Learning Space view model to edit.</param>
+    /// <param name="name">The new name of the Learning Space.</param>
+    /// <param name="description">The new description of the Learning Space.</param>
+    /// <param name="goals">The new goals of the Learning Space.</param>
+    /// <param name="requiredPoints">The new points required to access the Learning Space.</param>
+    /// <param name="theme">The new theme of the Learning Space.</param>
+    /// <param name="topicVm">The new topic associated with the Learning Space. Can be null.</param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
         string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
 
@@ -331,11 +341,14 @@ public interface IPresentationLogic
         ILearningElementViewModel learningElementVm);
 
     /// <summary>
-    /// 
+    /// Switches the slot of a Learning Element within a Learning Space.
     /// </summary>
-    /// <param name="learningSpaceVm"></param>
-    /// <param name="learningElementVm"></param>
-    /// <param name="newSlotIndex"></param>
+    /// <param name="learningSpaceVm">The Learning Space view model in which the Learning Element resides.</param>
+    /// <param name="learningElementVm">The Learning Element view model to switch the slot of.</param>
+    /// <param name="newSlotIndex">The new slot index to place the Learning Element at.</param>
+    /// <remarks>
+    /// If the active slot in the Learning Space is the new slot index, it will be set to -1.
+    /// </remarks>
     void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
         int newSlotIndex);
 
@@ -382,9 +395,15 @@ public interface IPresentationLogic
     /// Open the given content file of the learning element in the desktop's default manner.
     /// </summary>
     /// <param name="learningElementVm">Element which contains the content file to be opened.</param>
-    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the LearningContent of the Learning Element is not of type FileContentViewModel or LinkContentViewModel.</exception>
     Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm);
 
+    /// <summary>
+    /// Loads a Learning Content view model from a given stream.
+    /// </summary>
+    /// <param name="name">The name of the Learning Content.</param>
+    /// <param name="stream">The stream containing the data for the Learning Content.</param>
+    /// <returns>The loaded Learning Content view model.</returns>
     ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
 
     /// <summary>
@@ -400,13 +419,58 @@ public interface IPresentationLogic
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
     public void RemoveContent(ILearningContentViewModel content);
 
+    /// <summary>
+    /// Loads a Learning World view model into the authoring tool workspace.
+    /// </summary>
+    /// <param name="authoringToolWorkspaceVm">The authoring tool workspace view model to load into.</param>
+    /// <param name="stream">The stream containing the data for the Learning World.</param>
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
+
+    /// <summary>
+    /// Loads a Learning Space view model into a Learning World.
+    /// </summary>
+    /// <param name="learningWorldVm">The Learning World view model to load into.</param>
+    /// <param name="stream">The stream containing the data for the Learning Space.</param>
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
+
+    /// <summary>
+    /// Loads a Learning Element view model into a Learning Space at a specified slot index.
+    /// </summary>
+    /// <param name="parentSpaceVm">The parent Learning Space view model to load into.</param>
+    /// <param name="slotIndex">The index at which to load the Learning Element.</param>
+    /// <param name="stream">The stream containing the data for the Learning Element.</param>
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
+
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
-    void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
+
+    /// <summary>
+    /// Drags an object in the pathway from its old position to its current position.
+    /// </summary>
+    /// <param name="objectInPathWayVm">The view model of the object in the pathway to be moved. The object's new position is determined by its current 'PositionX' and 'PositionY' properties.</param>
+    /// <param name="oldPositionX">The old X-coordinate of the object's position.</param>
+    /// <param name="oldPositionY">The old Y-coordinate of the object's position.</param>
+    void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm, double oldPositionX, double oldPositionY);
+
+    /// <summary>
+    /// Drags a Learning Element from its old position to its current position.
+    /// </summary>
+    /// <param name="learningElementVm">The view model of the Learning Element to be moved. The element's new position is determined by its current 'PositionX' and 'PositionY' properties.</param>
+    /// <param name="oldPositionX">The old X-coordinate of the element's position.</param>
+    /// <param name="oldPositionY">The old Y-coordinate of the element's position.</param>
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
+
+    /// <summary>
+    /// Asynchronously shows the content of a Learning Content view model.
+    /// </summary>
+    /// <param name="content">The Learning Content view model to display. It must be either a FileContentViewModel or a LinkContentViewModel.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentViewModel or LinkContentViewModel.</exception>
     Task ShowLearningContentAsync(ILearningContentViewModel content);
+
+    /// <summary>
+    /// Saves a link associated with a LinkContentViewModel.
+    /// </summary>
+    /// <param name="linkContentVm">The LinkContentViewModel containing the link to save.</param>
     void SaveLink(LinkContentViewModel linkContentVm);
 
     /// <summary>
@@ -414,12 +478,31 @@ public interface IPresentationLogic
     /// </summary>
     void OpenContentFilesFolder();
 
+    /// <summary>
+    /// Creates an unplaced Learning Element with the specified properties in a Learning World.
+    /// </summary>
+    /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Element.</param>
+    /// <param name="name">The name of the Learning Element.</param>
+    /// <param name="learningContentVm">The learning content view model associated with the Learning Element.</param>
+    /// <param name="description">The description of the Learning Element.</param>
+    /// <param name="goals">The goals of the Learning Element.</param>
+    /// <param name="difficulty">The difficulty level of the Learning Element.</param>
+    /// <param name="elementModel">The element model of the Learning Element.</param>
+    /// <param name="workload">The workload of the Learning Element.</param>
+    /// <param name="points">The points awarded for completing the Learning Element.</param>
+    /// <param name="positionX">The X-coordinate of the Learning Element's position. Default is 0.</param>
+    /// <param name="positionY">The Y-coordinate of the Learning Element's position. Default is 0.</param>
     void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name,
         ILearningContentViewModel learningContentVm, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
         double positionX = 0D,
         double positionY = 0D);
 
+    /// <summary>
+    /// Asynchronously retrieves the save path for a Learning World.
+    /// </summary>
+    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. 
+    /// The task result contains the file path for the Learning World.</returns>
     Task<string> GetWorldSavePath();
     IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
     void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
