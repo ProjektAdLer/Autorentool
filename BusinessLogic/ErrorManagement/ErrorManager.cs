@@ -35,4 +35,12 @@ public class ErrorManager : IErrorManager
 
         throw new RedoException(exception.Message, exception);
     }
+
+    /// <inheritdoc cref="IErrorManager.LogAndRethrowGeneratorError" />
+    public void LogAndRethrowGeneratorError(Exception exception)
+    {
+        _logger.LogError(exception, "an error has occurred during generator operation: {message}", exception.Message);
+
+        throw new GeneratorException(exception.Message, exception);
+    }
 }

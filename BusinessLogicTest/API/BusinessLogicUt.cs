@@ -53,15 +53,9 @@ public class BusinessLogicUt
         mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new ArgumentOutOfRangeException(); });
 
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
-
-        try
-        {
-            systemUnderTest.ConstructBackup(null!, "foobar");
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
-        }
+        
+        systemUnderTest.ConstructBackup(null!, "foobar");
+        mockErrorManager.Received().LogAndRethrowGeneratorError(Arg.Any<ArgumentOutOfRangeException>());
     }
 
     [Test]
@@ -72,15 +66,10 @@ public class BusinessLogicUt
         mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new InvalidOperationException(); });
 
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
-
-        try
-        {
-            systemUnderTest.ConstructBackup(null!, "foobar");
-        }
-        catch (InvalidOperationException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<InvalidOperationException>());
-        }
+        
+        systemUnderTest.ConstructBackup(null!, "foobar");
+        
+        mockErrorManager.Received().LogAndRethrowGeneratorError(Arg.Any<InvalidOperationException>());
     }
 
     [Test]
@@ -91,15 +80,10 @@ public class BusinessLogicUt
         mockWorldGenerator.When(wg => wg.ConstructBackup(null!, "foobar")).Do(x => { throw new FileNotFoundException(); });
 
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator, errorManager: mockErrorManager);
-
-        try
-        {
-            systemUnderTest.ConstructBackup(null!, "foobar");
-        }
-        catch (FileNotFoundException)
-        {
-            mockErrorManager.Received().LogAndRethrowError(Arg.Any<FileNotFoundException>());
-        }
+        
+        systemUnderTest.ConstructBackup(null!, "foobar");
+        
+        mockErrorManager.Received().LogAndRethrowGeneratorError(Arg.Any<FileNotFoundException>());
     }
 
     [Test]

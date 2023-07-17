@@ -6,10 +6,6 @@ public class UndoException : Exception
     {
     }
     
-    public UndoException(string message) : base(message)
-    {
-    }
-    
     public UndoException(string message, Exception inner) : base(message, inner)
     {
     }

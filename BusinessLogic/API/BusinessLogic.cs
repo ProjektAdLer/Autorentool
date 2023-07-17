@@ -122,15 +122,15 @@ public class BusinessLogic : IBusinessLogic
         }
         catch (ArgumentOutOfRangeException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
         catch (InvalidOperationException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
         catch (FileNotFoundException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
     }
 

@@ -213,7 +213,7 @@ public class HeaderBarUt
     }
 
     [Test]
-    public void ExportButton_Clicked_ConstructBackupThrowsArgumentOutOfRangeException_ErrorServiceCalled()
+    public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
         var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 1);
@@ -222,7 +222,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.ConstructBackupAsync(world).Throws(new ArgumentOutOfRangeException());
+        _presentationLogic.ConstructBackupAsync(world).Throws(new GeneratorException());
         var systemUnderTest = GetRenderedComponent();
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
@@ -231,25 +231,6 @@ public class HeaderBarUt
         _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
     }
 
-    [Test]
-    public void ExportButton_Clicked_ConstructBackupThrowsFileNotFoundException_ErrorServiceCalled()
-    {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
-        var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 1);
-        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
-        space.LearningSpaceLayout.LearningElements.Add(0, element);
-        world.LearningSpaces.Add(space);
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.ConstructBackupAsync(world).Throws(new FileNotFoundException());
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        button.Click();
-
-        _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
-    }
-    
     [Test]
     public void UndoButton_Clicked_CallsPresentationLogic()
     {

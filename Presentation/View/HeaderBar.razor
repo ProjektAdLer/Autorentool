@@ -189,13 +189,9 @@
         catch (OperationCanceledException)
         {
             Snackbar.Add(Localizer["ExportCanceled.Snackbar.Message"], Severity.Warning);
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
             return;
         }
-        catch (FileNotFoundException e)
+        catch (GeneratorException e)
         {
             ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
             return;
