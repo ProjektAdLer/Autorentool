@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.ErrorManagement;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -35,12 +36,13 @@ public class BusinessLogicUt
     public void ConstructBackup_CallsWorldGenerator()
     {
         var mockWorldGenerator = Substitute.For<IWorldGenerator>();
+        var world = EntityProvider.GetLearningWorld();
 
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: mockWorldGenerator);
 
-        systemUnderTest.ConstructBackup(null!, "foobar");
+        systemUnderTest.ConstructBackup(world, "foobar");
 
-        mockWorldGenerator.Received().ConstructBackup(null!, "foobar");
+        mockWorldGenerator.Received().ConstructBackup(world, "foobar");
     }
 
     [Test]
@@ -721,7 +723,8 @@ public class BusinessLogicUt
         IWorldGenerator? worldGenerator = null,
         ICommandStateManager? commandStateManager = null,
         IBackendAccess? apiAccess = null,
-        IErrorManager? errorManager = null)
+        IErrorManager? errorManager = null,
+        ILogger<BusinessLogic.API.BusinessLogic>? logger = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
@@ -729,8 +732,9 @@ public class BusinessLogicUt
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         apiAccess ??= Substitute.For<IBackendAccess>();
         errorManager ??= Substitute.For<IErrorManager>();
+        logger ??= Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess, errorManager);
+            commandStateManager, apiAccess, errorManager, logger);
     }
 }

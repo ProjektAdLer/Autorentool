@@ -30,11 +30,12 @@ public class CachingMapperIt
     public void CreateWorldThenUndoAndRedo_ViewModelShouldStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory());
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -64,11 +65,12 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceThenUndoAndRedo_CheckIfWorldViewModelStaysTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory());
 
@@ -119,11 +121,12 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceAndElementThenUndoAndRedo_CheckIfAllViewModelsStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory(),
             elementCommandFactory: new ElementCommandFactory());
