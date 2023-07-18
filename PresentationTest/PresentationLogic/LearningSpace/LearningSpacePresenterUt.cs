@@ -351,7 +351,7 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningElement_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = new SelectedViewModelsProvider(Substitute.For<IOnUndoRedo>());
+        var selectedViewModelsProvider = new SelectedViewModelsProvider(Substitute.For<IOnUndoRedo>(), Substitute.For<ILogger<SelectedViewModelsProvider>>());
         selectedViewModelsProvider.SetLearningElement(null, null);
 
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);

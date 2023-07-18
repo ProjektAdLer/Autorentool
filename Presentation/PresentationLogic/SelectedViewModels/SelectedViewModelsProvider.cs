@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using BusinessLogic.Commands;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
+using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.SelectedViewModels;
@@ -18,12 +20,16 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
+    
+    private ILogger<SelectedViewModelsProvider> _logger { get; }
 
-    public SelectedViewModelsProvider(IOnUndoRedo onUndoRedo)
+    public SelectedViewModelsProvider(IOnUndoRedo onUndoRedo, ILogger<SelectedViewModelsProvider> logger)
     {
         _onUndoRedo = onUndoRedo;
         _onUndoRedo.OnUndo += OnUndo;
         _onUndoRedo.OnRedo += OnRedo;
+        
+        _logger = logger;
     }
 
     private void OnRedo(ICommand obj)
@@ -109,6 +115,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         if (command is not null)
             _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveSlotInSpace, s => ActiveSlotInSpace = s));
         ActiveSlotInSpace = slot;
+        _logger.LogTrace("ActiveSlotInSpace set to {slot}", slot);
         _redoStack.Clear();
     }
 
@@ -118,6 +125,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningWorldViewModelStackEntry(command, LearningWorld, lw => LearningWorld = lw));
         LearningWorld = learningWorld;
+        _logger.LogTrace("LearningWorld set to {learningWorld} with id {id}", learningWorld?.Name, learningWorld?.Id);
         SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
@@ -129,6 +137,16 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(new SelectedLearningObjectInPathWayViewModelStackEntry(command, LearningObjectInPathWay,
                 obj => LearningObjectInPathWay = obj));
         LearningObjectInPathWay = learningObjectInPathWay;
+
+        _logger.LogTrace(learningObjectInPathWay switch
+        {
+            null => "LearningObjectInPathWay set to null",
+            LearningPathwayViewModel learningPathwayViewModel => $"LearningObjectInPathWay set to {learningPathwayViewModel.Id}",
+            PathWayConditionViewModel pathWayConditionViewModel => $"LearningObjectInPathWay set to {pathWayConditionViewModel.Id}",
+            LearningSpaceViewModel learningSpaceViewModel => $"LearningObjectInPathWay set to space {learningSpaceViewModel.Name} with id {learningSpaceViewModel.Id}",
+            _ => "LearningObjectInPathWay set to an unrecognized object type"
+        });
+        
         SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
@@ -139,6 +157,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningElementViewModelStackEntry(command, LearningElement, le => LearningElement = le));
         LearningElement = learningElement;
+        _logger.LogTrace("LearningElement set to {learningElement} with id {id}", learningElement?.Name, learningElement?.Id);
         SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
@@ -149,6 +168,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningContentViewModelStackEntry(command, LearningContent, lc => LearningContent = lc));
         LearningContent = content;
+        _logger.LogTrace("LearningContent set to {learningContent}", content?.Name);
         _redoStack.Clear();
     }
 

@@ -112,13 +112,14 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
+    /// <inheritdoc cref="IBusinessLogic.ConstructBackup" />
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
         try
         {
             WorldGenerator.ConstructBackup(learningWorld, filepath);
-            Logger.LogTrace("Constructed backup for learning world: {learningWorldName} at path: {filepath}",
-                learningWorld.Name, filepath);
+            Logger.LogTrace("Constructed backup for learning world: {learningWorldName} with id {learningWorldId} at path: {filepath}",
+                learningWorld.Name, learningWorld.Id, filepath);
         }
         catch (ArgumentOutOfRangeException e)
         {
@@ -137,54 +138,54 @@ public class BusinessLogic : IBusinessLogic
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
         DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
-        Logger.LogTrace("Saved learning world: {learningWorldName} at path: {filepath}", learningWorld.Name, filepath);
+        Logger.LogTrace("Saved learning world: {learningWorldName} with id {learningWorldId} at path: {filepath}", learningWorld.Name, learningWorld.Id, filepath);
     }
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
         var world = DataAccess.LoadLearningWorld(filepath);
-        Logger.LogTrace("Loaded learning world {name} from path: {filepath}", world, filepath);
+        Logger.LogTrace("Loaded learning world {name} with id {learningWorldId} from path: {filepath}", world.Name, world.Id, filepath);
         return world;
     }
 
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
         DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
-        Logger.LogTrace("Saved learning space: {learningSpaceName} at path: {filepath}", learningSpace.Name, filepath);
+        Logger.LogTrace("Saved learning space: {learningSpaceName} with id {learningSpaceId} at path: {filepath}", learningSpace.Name, learningSpace.Id, filepath);
     }
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
         var space = DataAccess.LoadLearningSpace(filepath);
-        Logger.LogTrace("Loaded learning space {name} from path: {filepath}", space, filepath);
+        Logger.LogTrace("Loaded learning space {name} with id {learningSpaceId} from path: {filepath}", space.Name, space.Id, filepath);
         return space;
     }
 
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
         DataAccess.SaveLearningElementToFile(learningElement, filepath);
-        Logger.LogTrace("Saved learning element: {learningElementName} at path: {filepath}", learningElement.Name,
+        Logger.LogTrace("Saved learning element: {learningElementName} with id {learningElementId} at path: {filepath}", learningElement.Name, learningElement.Id,
             filepath);
     }
 
     public LearningElement LoadLearningElement(string filepath)
     {
         var learningElement = DataAccess.LoadLearningElement(filepath);
-        Logger.LogTrace("Loaded learning element {name} from path: {filepath}", learningElement, filepath);
+        Logger.LogTrace("Loaded learning element {name} with id {learningElementId} from path: {filepath}", learningElement.Name, learningElement.Id, filepath);
         return learningElement;
     }
 
     public ILearningContent LoadLearningContent(string filepath)
     {
         var content = DataAccess.LoadLearningContent(filepath);
-        Logger.LogTrace("Loaded learning content {name} from path: {filepath}", content, filepath);
+        Logger.LogTrace("Loaded learning content {name} from path: {filepath}", content.Name, filepath);
         return content;
     }
 
     public ILearningContent LoadLearningContent(string name, Stream stream)
     {
         var content = DataAccess.LoadLearningContent(name, stream);
-        Logger.LogTrace("Loaded learning content {name} from stream: {stream}", content, stream);
+        Logger.LogTrace("Loaded learning content {name} from stream: {stream}", content.Name, stream);
         return content;
     }
 
@@ -208,34 +209,35 @@ public class BusinessLogic : IBusinessLogic
 
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
     {
+        var oldId = savedLearningWorldPath.Id;
         DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-        Logger.LogTrace("Updated id of saved learning world path: {name} to id: {id}", savedLearningWorldPath.Name, id);
+        Logger.LogTrace("Updated id of saved learning world path: {name} from {oldId} to {id}", savedLearningWorldPath.Name, oldId, id);
     }
 
     public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
         DataAccess.RemoveSavedLearningWorldPath(savedLearningWorldPath);
-        Logger.LogTrace("Removed saved learning world path: {name} at path: {path}", savedLearningWorldPath.Name, savedLearningWorldPath.Path);
+        Logger.LogTrace("Removed saved learning world path: {name} with id {pathId} at path: {path}", savedLearningWorldPath.Name, savedLearningWorldPath.Id, savedLearningWorldPath.Path);
     }
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {
         var world = DataAccess.LoadLearningWorld(stream);
-        Logger.LogTrace("Loaded learning world {name} from stream: {stream}", world, stream);
+        Logger.LogTrace("Loaded learning world {name} with id {learningWorldId} from stream: {stream}", world.Name, world.Id, stream);
         return world;
     }
 
     public LearningSpace LoadLearningSpace(Stream stream)
     {
         var space = DataAccess.LoadLearningSpace(stream);
-        Logger.LogTrace("Loaded learning space {name} from stream: {stream}", space, stream);
+        Logger.LogTrace("Loaded learning space {name} with id {learningSpaceId} from stream: {stream}", space.Name, space.Id, stream);
         return space;
     }
 
     public LearningElement LoadLearningElement(Stream stream)
     {
         var learningElement = DataAccess.LoadLearningElement(stream);
-        Logger.LogTrace("Loaded learning element {name} from stream: {stream}", learningElement, stream);
+        Logger.LogTrace("Loaded learning element {name} with id {learningElementId} from stream: {stream}", learningElement.Name, learningElement.Id, stream);
         return learningElement;
     }
 

@@ -268,6 +268,8 @@ public class BusinessLogicUt
     public void LoadLearningWorld_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
+        var world = EntityProvider.GetLearningWorld();
+        mockDataAccess.LoadLearningWorld("foobar").Returns(world);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -307,6 +309,8 @@ public class BusinessLogicUt
     public void LoadLearningSpace_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
+        var space = EntityProvider.GetLearningSpace();
+        mockDataAccess.LoadLearningSpace("foobar").Returns(space);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -346,6 +350,8 @@ public class BusinessLogicUt
     public void LoadLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
+        var element = EntityProvider.GetLearningElement();
+        mockDataAccess.LoadLearningElement("foobar").Returns(element);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -479,6 +485,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
+        var learningWorld = EntityProvider.GetLearningWorld();
+        mockDataAccess.LoadLearningWorld(stream).Returns(learningWorld);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -507,6 +515,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
+        var space = EntityProvider.GetLearningSpace();
+        mockDataAccess.LoadLearningSpace(stream).Returns(space);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -535,6 +545,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
+        var element = EntityProvider.GetLearningElement();
+        mockDataAccess.LoadLearningElement(stream).Returns(element);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
