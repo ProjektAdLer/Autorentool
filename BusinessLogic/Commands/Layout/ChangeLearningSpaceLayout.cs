@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.FloorPlans;
 using Shared;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
@@ -11,17 +12,19 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
     public LearningWorld LearningWorld { get; }
     internal FloorPlanEnum FloorPlanName { get; }
     internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<LayoutCommandFactory> Logger { get; }
     private IMemento? _mementoSpaceLayout;
     private IMemento? _mementoSpace;
     private IMemento? _mementoWorld;
 
     public ChangeLearningSpaceLayout(ILearningSpace learningSpace, LearningWorld learningWorld,
-        FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction)
+        FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction, ILogger<LayoutCommandFactory> logger)
     {
         LearningSpace = learningSpace;
         LearningWorld = learningWorld;
         FloorPlanName = floorPlanName;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -60,6 +63,8 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
             newLearningElementDictionary.ToDictionary(kvP => kvP.Key, kvP => kvP.Value);
         LearningSpace.LearningSpaceLayout.FloorPlanName = FloorPlanName;
         
+        Logger.LogTrace("Changed LearningSpaceLayout for {LearningSpaceName} ({LearningSpaceId}) to {FloorPlan} in {LearningWorldName} ({LearningWorldId})", LearningSpace.Name, LearningSpace.Id, FloorPlanName.ToString(), LearningWorld.Name ,LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
@@ -83,9 +88,15 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningWorld.RestoreMemento(_mementoWorld);
+
+        Logger.LogTrace("Undone ChangeLearningSpaceLayout for {LearningSpaceName} ({LearningSpaceId}) in {LearningWorldName} ({LearningWorldId})", LearningSpace.Name, LearningSpace.Id, LearningWorld.Name ,LearningWorld.Id);
         
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing ChangeLearningSpaceLayout");
+        Execute();
+    }
 }

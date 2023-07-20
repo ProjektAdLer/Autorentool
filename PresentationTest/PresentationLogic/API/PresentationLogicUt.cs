@@ -398,19 +398,20 @@ public class PresentationLogicUt
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
         var learningWorldVm = ViewModelProvider.GetLearningWorld();
         var learningWorldEntity = EntityProvider.GetLearningWorld();
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
         const FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L;
         learningWorldEntity.LearningSpaces.Add(learningSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm).Returns(learningWorldEntity);
         mockLayoutCommandFactory
             .GetChangeCommand(learningSpaceEntity, learningWorldEntity, floorPlan,
-                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>(),logger)
             .Returns(mockCommand);
         var spaceSub = Substitute.For<ILearningSpace>();
         spaceSub.Id.Returns(learningSpaceVm.Id);
         learningWorldEntity.LearningSpaces.Add(spaceSub);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            layoutCommandFactory: mockLayoutCommandFactory);
+            layoutCommandFactory: mockLayoutCommandFactory, layoutCommandFactoryLogger: logger);
 
         systemUnderTest.ChangeLearningSpaceLayout(learningSpaceVm, learningWorldVm, floorPlan);
 
@@ -608,6 +609,7 @@ public class PresentationLogicUt
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
         var learningElementEntity = EntityProvider.GetLearningElement();
         var learningWorldEntity = EntityProvider.GetLearningWorld();
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
         mockMapper
             .Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm)
             .Returns(learningWorldEntity);
@@ -619,11 +621,11 @@ public class PresentationLogicUt
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
             .GetPlaceFromUnplacedCommand(learningWorldEntity, learningSpaceEntity,
-                learningElementEntity, 1, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+                learningElementEntity, 1, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>(), logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider,layoutCommandFactoryLogger: logger);
 
         systemUnderTest.DragLearningElementFromUnplaced(learningWorldVm, learningSpaceVm, learningElementVm, 1);
 
@@ -646,6 +648,7 @@ public class PresentationLogicUt
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
         var learningElementEntity = EntityProvider.GetLearningElement();
         var learningWorldEntity = EntityProvider.GetLearningWorld();
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
         mockMapper
             .Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm)
             .Returns(learningWorldEntity);
@@ -657,11 +660,11 @@ public class PresentationLogicUt
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
             .GetRemoveCommand(learningWorldEntity, learningSpaceEntity,
-                learningElementEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+                learningElementEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>(), logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider, layoutCommandFactoryLogger: logger);
 
         systemUnderTest.DragLearningElementToUnplaced(learningWorldVm, learningSpaceVm, learningElementVm);
 
@@ -681,6 +684,7 @@ public class PresentationLogicUt
         var learningElementVm = ViewModelProvider.GetLearningElement();
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
         var learningElementEntity = EntityProvider.GetLearningElement();
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         mockMapper
             .Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm)
@@ -690,11 +694,11 @@ public class PresentationLogicUt
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
             .GetPlaceFromLayoutCommand(learningSpaceEntity, learningElementEntity, 4,
-                Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
+                Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>(), logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            layoutCommandFactory: mockLayoutCommandFactory);
+            layoutCommandFactory: mockLayoutCommandFactory,layoutCommandFactoryLogger: logger);
 
         systemUnderTest.SwitchLearningElementSlot(learningSpaceVm, learningElementVm, 4);
 

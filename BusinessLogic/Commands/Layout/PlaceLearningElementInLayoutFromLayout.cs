@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
@@ -12,16 +13,18 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningSpace> MappingAction { get; }
+    private ILogger<LayoutCommandFactory> Logger { get; }
     private IMemento? _mementoLayout;
     private IMemento? _mementoSpace;
 
     public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newSlotIndex,
-        Action<LearningSpace> mappingAction)
+        Action<LearningSpace> mappingAction, ILogger<LayoutCommandFactory> logger)
     {
         ParentSpace = parentSpace;
         LearningElement = ParentSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
         NewSlotIndex = newSlotIndex;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -43,6 +46,8 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
         else 
             ParentSpace.LearningSpaceLayout.LearningElements.Remove(oldSlotIndex);
 
+        Logger.LogTrace("Placed LearningElement {LearningElementName} ({LearningElementId}) from slot {OldSlotIndex} to {NewSlotIndex} of ParentSpace {ParentSpaceName}({ParentSpaceId})", LearningElement.Name, LearningElement.Id, oldSlotIndex, NewSlotIndex, ParentSpace.Name ,ParentSpace.Id);
+
         MappingAction.Invoke(ParentSpace);
     }
 
@@ -61,8 +66,14 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoLayout);
         ParentSpace.RestoreMemento(_mementoSpace);
 
+        Logger.LogTrace("Undone placement of LearningElement {LearningElementName} ({LearningElementId}). Restored ParentSpace {ParentSpaceName} ({ParentSpaceId}) and LearningSpaceLayout to previous state", LearningElement.Name, LearningElement.Id, ParentSpace.Name ,ParentSpace.Id);
+        
         MappingAction.Invoke(ParentSpace);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing PlaceLearningElementInLayoutFromLayout");
+        Execute();
+    }
 }

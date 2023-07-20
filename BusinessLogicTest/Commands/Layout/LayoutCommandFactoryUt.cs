@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -24,9 +26,10 @@ public class LayoutCommandFactoryTests
         var learningWorld = EntityProvider.GetLearningWorld();
         var floorPlanName = FloorPlanEnum.R_20X20_6L;
         Action<LearningWorld> mappingAction = world => { };
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
         // Act
-        var result = _factory.GetChangeCommand(learningSpace, learningWorld, floorPlanName, mappingAction);
+        var result = _factory.GetChangeCommand(learningSpace, learningWorld, floorPlanName, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<ChangeLearningSpaceLayout>());
@@ -49,9 +52,10 @@ public class LayoutCommandFactoryTests
         parentSpace.LearningSpaceLayout.LearningElements.Add(0, learningElement);
         var newSlotIndex = 1;
         Action<LearningSpace> mappingAction = space => { };
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
         // Act
-        var result = _factory.GetPlaceFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
+        var result = _factory.GetPlaceFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<PlaceLearningElementInLayoutFromLayout>());
@@ -76,9 +80,10 @@ public class LayoutCommandFactoryTests
         learningWorld.UnplacedLearningElements.Add(learningElement);
         var newSlotIndex = 1;
         Action<LearningWorld> mappingAction = world => { };
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
         // Act
-        var result = _factory.GetPlaceFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex, mappingAction);
+        var result = _factory.GetPlaceFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<PlaceLearningElementInLayoutFromUnplaced>());
@@ -103,9 +108,10 @@ public class LayoutCommandFactoryTests
         var learningElement = EntityProvider.GetLearningElement();
         learningSpace.LearningSpaceLayout.LearningElements.Add(0, learningElement);
         Action<LearningWorld> mappingAction = world => { };
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
         // Act
-        var result = _factory.GetRemoveCommand(learningWorld, learningSpace, learningElement, mappingAction);
+        var result = _factory.GetRemoveCommand(learningWorld, learningSpace, learningElement, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<RemoveLearningElementFromLayout>());

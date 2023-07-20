@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
@@ -13,18 +14,20 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<LayoutCommandFactory> Logger { get; }
     private IMemento? _mementoWorld;
     private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
 
     public PlaceLearningElementInLayoutFromUnplaced(LearningWorld learningWorld, LearningSpace learningSpace,
-        ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction)
+        ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction, ILogger<LayoutCommandFactory> logger)
     {
         LearningWorld = learningWorld;
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
         LearningElement = LearningWorld.UnplacedLearningElements.First(x => x.Id == learningElement.Id);
         NewSlotIndex = newSlotIndex;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -54,6 +57,8 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
 
         LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
 
+        Logger.LogTrace("Placed LearningElement {LearningElementName} ({LearningElementId}) from UnplacedLearningElements to slot {NewSlotIndex} of LearningSpace {LearningSpaceName}({LearningSpaceId}) in LearningWorld {LearningWorldName} ({LearningWorldId})", LearningElement.Name, LearningElement.Id, NewSlotIndex, LearningSpace.Name, LearningSpace.Id, LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
@@ -76,8 +81,14 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
+        Logger.LogTrace("Undone placement of LearningElement {LearningElementName} ({LearningElementId}) from UnplacedLearningElements. Restored LearningWorld {LearningWorldName} ({LearningWorldId}), LearningSpace {LearningSpaceName} ({LearningSpaceId}) and LearningSpaceLayout to previous state", LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id, LearningSpace.Name, LearningSpace.Id);
+        
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing PlaceLearningElementInLayoutFromUnplaced");
+        Execute();
+    }
 }

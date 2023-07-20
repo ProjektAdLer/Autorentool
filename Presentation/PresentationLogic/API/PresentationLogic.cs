@@ -332,7 +332,7 @@ public class PresentationLogic : IPresentationLogic
 
         learningSpaceVm.AssignedTopic = null;
         var command = LayoutCommandFactory.GetChangeCommand(spaceEntity, worldEntity, floorPlanName,
-            world => { CMapper.Map(world, learningWorldVm); });
+            world => { CMapper.Map(world, learningWorldVm); }, LayoutLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -582,7 +582,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = LayoutCommandFactory.GetPlaceFromUnplacedCommand(worldEntity, spaceEntity, elementEntity,
             newSlotIndex,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), LayoutLogger);
         BusinessLogic.ExecuteCommand(command);
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
@@ -600,7 +600,7 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = LayoutCommandFactory.GetRemoveCommand(worldEntity, spaceEntity, elementEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), LayoutLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -612,7 +612,7 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = LayoutCommandFactory.GetPlaceFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
-            space => CMapper.Map(space, learningSpaceVm));
+            space => CMapper.Map(space, learningSpaceVm), LayoutLogger);
         BusinessLogic.ExecuteCommand(command);
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)

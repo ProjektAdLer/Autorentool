@@ -1,6 +1,7 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -20,12 +21,13 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         };
         var element = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements[0] = element;
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
 
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -55,11 +57,12 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         parent.LearningSpaceLayout.LearningElements[0] = element1;
         parent.LearningSpaceLayout.LearningElements[2] = element2;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new PlaceLearningElementInLayoutFromLayout(parent, element1, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element1, 2, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -89,11 +92,12 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         var element = EntityProvider.GetLearningElement(parent: parent);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction, logger);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -110,11 +114,12 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         var element = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -166,11 +171,12 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         parent.LearningSpaceLayout.LearningElements[0] = element1;
         parent.LearningSpaceLayout.LearningElements[2] = element2;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new PlaceLearningElementInLayoutFromLayout(parent, element1, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element1, 2, mappingAction, logger);
 
         Assert.Multiple(() =>
         {

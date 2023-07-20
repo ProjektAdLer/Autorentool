@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -19,11 +21,12 @@ public class RemoveLearningElementFromLayoutUt
         var element = EntityProvider.GetLearningElement(false);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -56,11 +59,12 @@ public class RemoveLearningElementFromLayoutUt
         var element = EntityProvider.GetLearningElement();
         space.LearningSpaceLayout.LearningElements[2] = element;
 
-
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
+        
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction, logger);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -80,11 +84,12 @@ public class RemoveLearningElementFromLayoutUt
         var element = EntityProvider.GetLearningElement(false);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,logger);
 
         Assert.Multiple(() =>
         {

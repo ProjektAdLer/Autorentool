@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -37,8 +39,9 @@ public class ChangeLearningSpaceLayoutUt
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { });
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { }, logger);
 
         Assert.Multiple(() =>
         {
@@ -99,8 +102,9 @@ public class ChangeLearningSpaceLayoutUt
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
+        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { });
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { }, logger);
 
         Assert.Multiple(() =>
         {
