@@ -1,7 +1,8 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
-using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
@@ -20,8 +21,9 @@ public class DragLearningElementUt
         var element = EntityProvider.GetLearningElement(unsavedChanges: false, positionX: newPositionX, positionY: newPositionY);
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -53,7 +55,7 @@ public class DragLearningElementUt
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -70,8 +72,9 @@ public class DragLearningElementUt
         var element = EntityProvider.GetLearningElement(unsavedChanges: false, positionX: newPositionX, positionY: newPositionY);
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

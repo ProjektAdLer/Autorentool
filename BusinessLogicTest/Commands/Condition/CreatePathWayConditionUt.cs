@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -18,8 +20,9 @@ public class CreatePathWayConditionUt
         var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
         
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction, logger);
         
         Assert.IsEmpty(world.PathWayConditions);
         Assert.IsFalse(actionWasInvoked);
@@ -52,8 +55,9 @@ public class CreatePathWayConditionUt
         ConditionEnum condition = ConditionEnum.And;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
         
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction, logger);
         
         Assert.That(world.PathWayConditions.Count, Is.EqualTo(1));
         Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
@@ -109,8 +113,9 @@ public class CreatePathWayConditionUt
         ConditionEnum condition = ConditionEnum.And;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
 
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction, logger);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("Previous pathway is null"));
@@ -131,8 +136,9 @@ public class CreatePathWayConditionUt
         ConditionEnum condition = ConditionEnum.And;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
 
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction, logger);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("Previous in bound object is null"));
@@ -150,7 +156,7 @@ public class CreatePathWayConditionUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -170,8 +176,9 @@ public class CreatePathWayConditionUt
         var positionY = 5;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
         
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction, logger);
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);

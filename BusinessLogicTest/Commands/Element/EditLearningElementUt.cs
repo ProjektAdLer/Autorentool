@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -33,9 +35,10 @@ public class EditLearningElementUt
         var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction);
+            workload, points, newContent, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -89,7 +92,7 @@ public class EditLearningElementUt
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, content, mappingAction);
+            workload, points, content, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -121,9 +124,10 @@ public class EditLearningElementUt
         var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction);
+            workload, points, newContent, mappingAction, logger);
 
         Assert.Multiple(() =>
         {

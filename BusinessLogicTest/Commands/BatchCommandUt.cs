@@ -3,6 +3,8 @@ using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -23,11 +25,14 @@ public class BatchCommandUt
         Action<LearningWorld> mappingAction1 = _ => actionWasInvoked1 = true;
         Action<LearningWorld> mappingAction2 = _ => actionWasInvoked2 = true;
         Action<LearningWorld> mappingAction3 = _ => actionWasInvoked3 = true;
+        var spaceCommandFactoryLogger = Substitute.For<SpaceCommandFactory>();
+        var topicCommandFactoryLogger = Substitute.For<TopicCommandFactory>();
+        var conditionCommandFactoryLogger = Substitute.For<ILogger<ConditionCommandFactory>>();
 
         var command1 = new CreateLearningSpace(world, "a", "b", "c", 2, Theme.Campus,
             0, 0, null, mappingAction: mappingAction1);
         var command2 = new CreateTopic(world, name, mappingAction2);
-        var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3);
+        var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3, conditionCommandFactoryLogger);
         
         var batchCommand = new BatchCommand(new List<IUndoCommand>(){command1, command2, command3});
 

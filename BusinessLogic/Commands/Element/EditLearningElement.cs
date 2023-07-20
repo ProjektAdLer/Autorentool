@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using Shared;
+using Microsoft.Extensions.Logging;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
@@ -19,11 +20,13 @@ public class EditLearningElement : IEditLearningElement
     internal int Points { get; }
     internal ILearningContent LearningContent { get; }
     internal Action<LearningElement> MappingAction { get; }
+    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
-    
+
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
-        int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction)
+        int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction,
+        ILogger<ElementCommandFactory> logger)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
@@ -36,13 +39,18 @@ public class EditLearningElement : IEditLearningElement
         Points = points;
         LearningContent = learningContent;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
     {
         _memento = LearningElement.GetMemento();
 
-        if(AnyChange()) LearningElement.UnsavedChanges = true;
+        Logger.LogTrace(
+            "Editing LearningElement {id}. Previous Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
+            LearningElement.Id,LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description, LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points, LearningElement.LearningContent.Name);
+        
+        if (AnyChange()) LearningElement.UnsavedChanges = true;
         LearningElement.Name = ElementName;
         LearningElement.Parent = ParentSpace;
         LearningElement.Description = Description;
@@ -53,10 +61,14 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.Points = Points;
         LearningElement.LearningContent = LearningContent;
         
+        Logger.LogTrace(
+            "Edited LearningElement {id}. Updated Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
+            LearningElement.Id,LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description, LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points, LearningElement.LearningContent.Name);
+
         MappingAction.Invoke(LearningElement);
     }
 
-    private bool AnyChange() => 
+    private bool AnyChange() =>
         LearningElement.Name != ElementName ||
         LearningElement.Parent != ParentSpace ||
         LearningElement.Description != Description ||
@@ -73,11 +85,17 @@ public class EditLearningElement : IEditLearningElement
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         LearningElement.RestoreMemento(_memento);
+
+        Logger.LogTrace("Undone edit of LearningElement {LearningElementName} ({LearningElementId})", LearningElement.Name, LearningElement.Id);
 
         MappingAction.Invoke(LearningElement);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing EditLearningElement");
+        Execute();
+    }
 }

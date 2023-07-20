@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -19,8 +21,9 @@ public class DeleteLearningElementInSpaceUt
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -56,8 +59,9 @@ public class DeleteLearningElementInSpaceUt
         };
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DeleteLearningElementInSpace(element1, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element1, space, mappingAction, logger);
         
         Assert.That(space.ContainedLearningElements, Does.Contain(element1));
         Assert.Multiple(() =>
@@ -86,7 +90,7 @@ public class DeleteLearningElementInSpaceUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -111,8 +115,9 @@ public class DeleteLearningElementInSpaceUt
         };
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DeleteLearningElementInSpace(element1, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element1, space, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

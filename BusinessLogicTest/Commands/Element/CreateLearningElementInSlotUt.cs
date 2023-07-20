@@ -1,6 +1,8 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -16,10 +18,11 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
-            testParameter.PositionY, mappingAction);
+            testParameter.PositionY, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
@@ -58,8 +61,9 @@ public class CreateLearningElementInSlotUt
         var element = new LearningElement(testParameter.Name, testParameter.Content, testParameter.Description,
             testParameter.Goals, testParameter.Difficulty, testParameter.ElementModel, testParameter.SpaceParent,
             workload: testParameter.Workload, points: testParameter.Points, positionX: 1, positionY: 2);
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, element, mappingAction);
+        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, element, mappingAction, logger);
 
         Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -82,10 +86,11 @@ public class CreateLearningElementInSlotUt
         var spaceParent = testParameter.SpaceParent;
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
         var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.Content,
             testParameter.Description, testParameter.Goals, testParameter.Difficulty, testParameter.ElementModel,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
-            mappingAction);
+            mappingAction, logger);
         var element2 = EntityProvider.GetLearningElement(unsavedChanges: false, append: "2");
         spaceParent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
@@ -151,7 +156,7 @@ public class CreateLearningElementInSlotUt
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
-            testParameter.PositionY, mappingAction);
+            testParameter.PositionY, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));

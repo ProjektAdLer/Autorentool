@@ -39,7 +39,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, name, learningContent, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningElementInSlot>());
@@ -71,7 +71,7 @@ public class ElementCommandFactoryUt
         Action<LearningSpace> mappingAction = space => { };
 
         // Act
-        var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, learningElement, mappingAction);
+        var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, learningElement, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningElementInSlot>());
@@ -104,7 +104,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateUnplacedCommand(learningWorld, name, learningContent, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateUnplacedLearningElement>());
@@ -134,7 +134,7 @@ public class ElementCommandFactoryUt
         Action<LearningSpace> mappingAction = space => { };
 
         // Act
-        var result = _factory.GetDeleteInSpaceCommand(learningElement, parentSpace, mappingAction);
+        var result = _factory.GetDeleteInSpaceCommand(learningElement, parentSpace, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningElementInSpace>());
@@ -153,7 +153,7 @@ public class ElementCommandFactoryUt
         Action<LearningWorld> mappingAction = world => { };
 
         // Act
-        var result = _factory.GetDeleteInWorldCommand(learningElement, parentWorld, mappingAction);
+        var result = _factory.GetDeleteInWorldCommand(learningElement, parentWorld, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningElementInWorld>());
@@ -179,7 +179,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetDragCommand(learningElement, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction);
+            mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DragLearningElement>());
@@ -213,7 +213,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetEditCommand(learningElement, parentSpace, name, description, goals, difficulty,
-            elementModel, workload, points, learningContent, mappingAction);
+            elementModel, workload, points, learningContent, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningElement>());
@@ -244,7 +244,7 @@ public class ElementCommandFactoryUt
         Action<LearningSpace> mappingAction = space => { };
 
         // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, filepath, businessLogic, mappingAction);
+        var result = _factory.GetLoadCommand(parentSpace, slotIndex, filepath, businessLogic, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningElement>());
@@ -269,7 +269,7 @@ public class ElementCommandFactoryUt
         Action<LearningSpace> mappingAction = space => { };
 
         // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, stream, businessLogic, mappingAction);
+        var result = _factory.GetLoadCommand(parentSpace, slotIndex, stream, businessLogic, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningElement>());
@@ -293,7 +293,7 @@ public class ElementCommandFactoryUt
         var filepath = "/path/to/file";
 
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningElement, filepath);
+        var result = _factory.GetSaveCommand(businessLogic, learningElement, filepath, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningElement>());

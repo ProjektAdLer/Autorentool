@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -27,8 +29,9 @@ public class DeletePathWayConditionUt
         world.LearningPathways.Add(new LearningPathway(pathWayCondition1, pathWayCondition2));
         pathWayCondition1.OutBoundObjects.Add(pathWayCondition2);
         pathWayCondition2.InBoundObjects.Add(pathWayCondition1);
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
 
-        var command = new DeletePathWayCondition(world, pathWayCondition1, mappingAction);
+        var command = new DeletePathWayCondition(world, pathWayCondition1, mappingAction, logger);
         
         Assert.That(world.PathWayConditions, Does.Contain(pathWayCondition1));
         Assert.IsFalse(actionWasInvoked);
@@ -48,7 +51,7 @@ public class DeletePathWayConditionUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeletePathWayCondition(world,pathWayCondition, mappingAction);
+        var command = new DeletePathWayCondition(world,pathWayCondition, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -66,8 +69,9 @@ public class DeletePathWayConditionUt
         world.PathWayConditions.Add(pathWayCondition1);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
         
-        var command = new DeletePathWayCondition(world, pathWayCondition, mappingAction);
+        var command = new DeletePathWayCondition(world, pathWayCondition, mappingAction, logger);
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
         Assert.IsFalse(actionWasInvoked);

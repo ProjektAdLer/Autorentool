@@ -36,6 +36,14 @@ public class PresentationLogic : IPresentationLogic
         ISelectedViewModelsProvider selectedViewModelsProvider,
         IServiceProvider serviceProvider,
         ILogger<PresentationLogic> logger,
+        ILogger<ConditionCommandFactory> conditionLogger,
+        ILogger<ElementCommandFactory> elementLogger,
+        ILogger<LayoutCommandFactory> layoutLogger,
+        ILogger<PathwayCommandFactory> pathwayLogger,
+        ILogger<SpaceCommandFactory> spaceLogger,
+        ILogger<TopicCommandFactory> topicLogger,
+        ILogger<WorldCommandFactory> worldLogger,
+        ILogger<BatchCommandFactory> batchLogger,
         IHybridSupportWrapper hybridSupportWrapper,
         IShellWrapper shellWrapper,
         IConditionCommandFactory conditionCommandFactory,
@@ -48,6 +56,14 @@ public class PresentationLogic : IPresentationLogic
         IBatchCommandFactory batchCommandFactory)
     {
         Logger = logger;
+        ConditionLogger = conditionLogger;
+        ElementLogger = elementLogger;
+        LayoutLogger = layoutLogger;
+        PathwayLogger = pathwayLogger;
+        SpaceLogger = spaceLogger;
+        TopicLogger = topicLogger;
+        WorldLogger = worldLogger;
+        BatchLogger = batchLogger;
         Configuration = configuration;
         BusinessLogic = businessLogic;
         Mapper = mapper;
@@ -67,6 +83,14 @@ public class PresentationLogic : IPresentationLogic
     }
 
     internal ILogger<PresentationLogic> Logger { get; }
+    internal ILogger<ConditionCommandFactory> ConditionLogger { get; }
+    internal ILogger<ElementCommandFactory> ElementLogger { get; }
+    internal ILogger<LayoutCommandFactory> LayoutLogger { get; }
+    internal ILogger<PathwayCommandFactory> PathwayLogger { get; }
+    internal ILogger<SpaceCommandFactory> SpaceLogger { get; }
+    internal ILogger<TopicCommandFactory> TopicLogger { get; }
+    internal ILogger<WorldCommandFactory> WorldLogger { get; }
+    internal ILogger<BatchCommandFactory> BatchLogger { get; }
     private readonly IElectronDialogManager? _dialogManager;
 
     private const string WorldFileEnding = "awf";
@@ -368,7 +392,7 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = ConditionCommandFactory.GetCreateCommand(worldEntity, condition, positionX, positionY,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), ConditionLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -381,8 +405,7 @@ public class PresentationLogic : IPresentationLogic
         var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
 
         var command = ConditionCommandFactory.GetCreateCommand(worldEntity, condition, sourceObjectEntity,
-            targetObjectEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            targetObjectEntity, world => CMapper.Map(world, learningWorldVm), ConditionLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -392,7 +415,7 @@ public class PresentationLogic : IPresentationLogic
         var pathWayConditionEntity = Mapper.Map<PathWayCondition>(pathWayConditionVm);
 
         var command = ConditionCommandFactory.GetEditCommand(pathWayConditionEntity, newCondition,
-            condition => CMapper.Map(condition, pathWayConditionVm));
+            condition => CMapper.Map(condition, pathWayConditionVm), ConditionLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -404,7 +427,7 @@ public class PresentationLogic : IPresentationLogic
         var pathWayConditionEntity = Mapper.Map<PathWayCondition>(pathWayConditionVm);
 
         var command = ConditionCommandFactory.GetDeleteCommand(worldEntity, pathWayConditionEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), ConditionLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
@@ -493,7 +516,7 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, elementEntity,
-            parent => CMapper.Map(parent, parentSpaceVm));
+            parent => CMapper.Map(parent, parentSpaceVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
@@ -512,7 +535,7 @@ public class PresentationLogic : IPresentationLogic
         var command = ElementCommandFactory.GetCreateUnplacedCommand(learningWorldEntity, name, contentEntity,
             description, goals,
             difficulty, elementModel, workload, points, positionX, positionY,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -528,7 +551,7 @@ public class PresentationLogic : IPresentationLogic
         var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, name, contentEntity,
             description,
             goals, difficulty, elementModel, workload, points, positionX, positionY,
-            parent => CMapper.Map(parent, parentSpaceVm));
+            parent => CMapper.Map(parent, parentSpaceVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -545,7 +568,7 @@ public class PresentationLogic : IPresentationLogic
             : null;
         var command = ElementCommandFactory.GetEditCommand(elementEntity, parentSpaceEntity, name, description,
             goals, difficulty, elementModel, workload, points, contentEntity,
-            element => CMapper.Map(element, learningElementVm));
+            element => CMapper.Map(element, learningElementVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -606,7 +629,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = ElementCommandFactory.GetDragCommand(elementEntity, oldPositionX, oldPositionY,
             elementEntity.PositionX, elementEntity.PositionY,
-            space => CMapper.Map(space, learningElementVm));
+            space => CMapper.Map(space, learningElementVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -618,7 +641,7 @@ public class PresentationLogic : IPresentationLogic
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
         var command = ElementCommandFactory.GetDeleteInSpaceCommand(elementEntity, parentSpaceEntity,
-            parent => CMapper.Map(parent, parentSpaceVm));
+            parent => CMapper.Map(parent, parentSpaceVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(null, command);
@@ -632,7 +655,7 @@ public class PresentationLogic : IPresentationLogic
         var parentWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = ElementCommandFactory.GetDeleteInWorldCommand(elementEntity, parentWorldEntity,
-            parent => CMapper.Map(parent, learningWorldVm));
+            parent => CMapper.Map(parent, learningWorldVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(null, command);
@@ -645,7 +668,7 @@ public class PresentationLogic : IPresentationLogic
         var filepath =
             await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
-        var command = ElementCommandFactory.GetSaveCommand(BusinessLogic, elementEntity, filepath);
+        var command = ElementCommandFactory.GetSaveCommand(BusinessLogic, elementEntity, filepath, ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -657,7 +680,7 @@ public class PresentationLogic : IPresentationLogic
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var command = ElementCommandFactory.GetLoadCommand(parentSpaceEntity, slotIndex, filepath, BusinessLogic,
-            parent => CMapper.Map(parent, parentSpaceVm));
+            parent => CMapper.Map(parent, parentSpaceVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(parentSpaceVm.ContainedLearningElements.Last(), command);
@@ -742,7 +765,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var command = ElementCommandFactory.GetLoadCommand(parentSpaceEntity, slotIndex, stream, BusinessLogic,
-            parent => CMapper.Map(parent, parentSpaceVm));
+            parent => CMapper.Map(parent, parentSpaceVm), ElementLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 

@@ -28,7 +28,7 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, condition, positionX, positionY, mappingAction);
+        var result = _factory.GetCreateCommand(learningWorld, condition, positionX, positionY, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreatePathWayCondition>());
@@ -58,7 +58,8 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, condition, sourceObject, targetObject, mappingAction);
+        var result = _factory.GetCreateCommand(learningWorld, condition, sourceObject, targetObject, mappingAction,
+            null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreatePathWayCondition>());
@@ -83,7 +84,7 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, pathWayCondition, mappingAction);
+        var result = _factory.GetDeleteCommand(learningWorld, pathWayCondition, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeletePathWayCondition>());
@@ -106,7 +107,7 @@ public class ConditionCommandFactoryUt
         Action<PathWayCondition> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditCommand(pathWayCondition, condition, mappingAction);
+        var result = _factory.GetEditCommand(pathWayCondition, condition, mappingAction, null!);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditPathWayCondition>());

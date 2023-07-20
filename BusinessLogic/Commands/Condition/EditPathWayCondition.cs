@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 using Shared;
 
 namespace BusinessLogic.Commands.Condition;
@@ -9,13 +10,16 @@ public class EditPathWayCondition : IEditPathWayCondition
     internal PathWayCondition PathWayCondition { get; }
     internal ConditionEnum Condition { get; }
     internal Action<PathWayCondition> MappingAction { get; }
+    private ILogger<ConditionCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition, Action<PathWayCondition> mappingAction)
+    public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition, 
+        Action<PathWayCondition> mappingAction, ILogger<ConditionCommandFactory> logger)
     {
         PathWayCondition = pathWayCondition;
         Condition = condition;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -23,6 +27,8 @@ public class EditPathWayCondition : IEditPathWayCondition
         _memento = PathWayCondition.GetMemento();
 
         PathWayCondition.Condition = Condition;
+
+        Logger.LogTrace("Edited PathWayCondition {PathWayConditionId} to condition {Condition}", PathWayCondition.Id, Condition);
         
         MappingAction.Invoke(PathWayCondition);
     }
@@ -35,9 +41,15 @@ public class EditPathWayCondition : IEditPathWayCondition
         }
         
         PathWayCondition.RestoreMemento(_memento);
+
+        Logger.LogTrace("Undone edit of PathWayCondition {PathWayConditionId}. Restored to previous condition", PathWayCondition.Id);
         
         MappingAction.Invoke(PathWayCondition);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing EditPathWayCondition");
+        Execute();
+    }
 }

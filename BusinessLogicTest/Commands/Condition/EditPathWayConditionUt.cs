@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -15,8 +17,9 @@ public class EditPathWayConditionUt
         var condition = ConditionEnum.Or;
         bool actionWasInvoked = false;
         Action<PathWayCondition> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
 
-        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction);
+        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -41,7 +44,7 @@ public class EditPathWayConditionUt
         bool actionWasInvoked = false;
         Action<PathWayCondition> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction);
+        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -55,8 +58,9 @@ public class EditPathWayConditionUt
         var condition = ConditionEnum.Or;
         bool actionWasInvoked = false;
         Action<PathWayCondition> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ConditionCommandFactory>>();
         
-        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction);
+        var command = new EditPathWayCondition(pathWayCondition, condition, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

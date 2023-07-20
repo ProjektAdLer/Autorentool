@@ -69,7 +69,6 @@ public class BusinessLogic : IBusinessLogic
         CommandStateManager.Execute(command);
         OnCommandUndoRedoOrExecute?.Invoke(this,
             new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
-        Logger.LogTrace("Executed command: {commandName}", command.Name);
     }
 
     /// <inheritdoc cref="IBusinessLogic.UndoCommand" />
@@ -80,7 +79,6 @@ public class BusinessLogic : IBusinessLogic
             var command = CommandStateManager.Undo();
             OnCommandUndoRedoOrExecute?.Invoke(this,
                 new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
-            Logger.LogTrace("Undone command: {commandName}", command.Name);
         }
         catch (InvalidOperationException e)
         {
@@ -100,7 +98,6 @@ public class BusinessLogic : IBusinessLogic
             var command = CommandStateManager.Redo();
             OnCommandUndoRedoOrExecute?.Invoke(this,
                 new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
-            Logger.LogTrace("Redone command: {commandName}", command.Name);
         }
         catch (InvalidOperationException e)
         {

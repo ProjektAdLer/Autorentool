@@ -1,7 +1,8 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
-using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
@@ -18,8 +19,9 @@ public class DeleteLearningElementInWorldUt
         world.UnplacedLearningElements = new List<ILearningElement>() { element } ;
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new DeleteLearningElementInWorld(element, world, mappingAction);
+        var command = new DeleteLearningElementInWorld(element, world, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -72,7 +74,7 @@ public class DeleteLearningElementInWorldUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInWorld(element, world, mappingAction);
+        var command = new DeleteLearningElementInWorld(element, world, mappingAction, null!);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         

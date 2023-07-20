@@ -1,7 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -23,8 +23,9 @@ public class LoadLearningElementUt
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new LoadLearningElement(space, 0, filepath, mockBusinessLogic, mappingAction);
+        var command = new LoadLearningElement(space, 0, filepath, mockBusinessLogic, mappingAction, logger);
 
         Assert.That(space.ContainedLearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
@@ -46,7 +47,7 @@ public class LoadLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new LoadLearningElement(space, 0, "element", mockBusinessLogic, mappingAction);
+        var command = new LoadLearningElement(space, 0, "element", mockBusinessLogic, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -71,7 +72,8 @@ public class LoadLearningElementUt
                 0, element2
             }
         };
-        var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction);
+        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
+        var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction, logger);
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
