@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Pathway;
 
@@ -12,9 +13,10 @@ public class DragObjectInPathWay : IDragObjectInPathWay
     internal double NewPositionY { get; }
     internal Action<IObjectInPathWay> MappingAction { get; }
     private IMemento? _memento;
+    private ILogger<PathwayCommandFactory> Logger { get; }
 
     public DragObjectInPathWay(IObjectInPathWay learningObject, double oldPositionX, double oldPositionY, 
-        double newPositionX, double newPositionY, Action<IObjectInPathWay> mappingAction)
+        double newPositionX, double newPositionY, Action<IObjectInPathWay> mappingAction, ILogger<PathwayCommandFactory> logger)
     {
         LearningObject = learningObject;
         OldPositionX = oldPositionX;
@@ -22,6 +24,7 @@ public class DragObjectInPathWay : IDragObjectInPathWay
         NewPositionX = newPositionX;
         NewPositionY = newPositionY;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -34,6 +37,8 @@ public class DragObjectInPathWay : IDragObjectInPathWay
         LearningObject.PositionX = NewPositionX;
         LearningObject.PositionY = NewPositionY;
         
+        Logger.LogTrace("Dragged LearningObject {LearningObjectId} (from position ({OldPositionX}, {OldPositionY}) to position ({NewPositionX}, {NewPositionY})", LearningObject.Id, OldPositionX, OldPositionY, NewPositionX, NewPositionY);
+
         MappingAction.Invoke(LearningObject);
     }
 
@@ -50,6 +55,8 @@ public class DragObjectInPathWay : IDragObjectInPathWay
         
         LearningObject.RestoreMemento(_memento);
         
+        Logger.LogTrace("Undone dragging of LearningObject {LearningObjectId}. Restored position to ({OldPositionX}, {OldPositionY})", LearningObject.Id, OldPositionX, OldPositionY);
+
         MappingAction.Invoke(LearningObject);
     }
 

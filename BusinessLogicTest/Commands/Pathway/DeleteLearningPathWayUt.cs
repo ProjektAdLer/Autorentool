@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -48,8 +50,10 @@ public class DeleteLearningPathWayUt
         
         world.LearningPathways.Add(pathway1);
         world.LearningPathways.Add(pathway2);
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new DeleteLearningPathWay(world, pathway2, mappingAction);
+        var command = new DeleteLearningPathWay(world, pathway2, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -82,7 +86,9 @@ public class DeleteLearningPathWayUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new DeleteLearningPathWay(world, pathWay, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new DeleteLearningPathWay(world, pathWay, mappingAction, logger);
     
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -114,7 +120,9 @@ public class DeleteLearningPathWayUt
         
         world.LearningPathways.Add(pathway);
         
-        var command = new DeleteLearningPathWay(world, pathway, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new DeleteLearningPathWay(world, pathway, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -22,8 +24,10 @@ public class DragObjectInPathWayUt
         };
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -57,8 +61,10 @@ public class DragObjectInPathWayUt
         };
         var actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new DragObjectInPathWay(pathWayCondition, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragObjectInPathWay(pathWayCondition, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -89,8 +95,10 @@ public class DragObjectInPathWayUt
         var space = new LearningSpace("a", "d", "e", 5, Theme.Campus, null, positionX: newPositionX, positionY: newPositionY);
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -110,8 +118,10 @@ public class DragObjectInPathWayUt
         };
         var actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
+        var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

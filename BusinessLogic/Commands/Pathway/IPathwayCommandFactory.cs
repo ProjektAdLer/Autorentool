@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Pathway;
 
@@ -11,17 +12,19 @@ public interface IPathwayCommandFactory
     /// Creates a command to create a learning pathway.
     /// </summary>
     ICreateLearningPathWay GetCreateCommand(LearningWorld learningWorld, IObjectInPathWay sourceObject,
-        IObjectInPathWay targetObject, Action<LearningWorld> mappingAction);
+        IObjectInPathWay targetObject, Action<LearningWorld> mappingAction, ILogger<PathwayCommandFactory> logger);
 
     /// <summary>
     /// Creates a command to delete a learning pathway.
     /// </summary>
     IDeleteLearningPathWay GetDeleteCommand
-        (LearningWorld learningWorld, LearningPathway learningPathway, Action<LearningWorld> mappingAction);
+    (LearningWorld learningWorld, LearningPathway learningPathway, Action<LearningWorld> mappingAction,
+        ILogger<PathwayCommandFactory> logger);
 
     /// <summary>
     /// Creates a command to drag a learning pathway.
     /// </summary>
     IDragObjectInPathWay GetDragCommand(IObjectInPathWay learningObject, double oldPositionX, double oldPositionY,
-        double newPositionX, double newPositionY, Action<IObjectInPathWay> mappingAction);
+        double newPositionX, double newPositionY, Action<IObjectInPathWay> mappingAction,
+        ILogger<PathwayCommandFactory> logger);
 }

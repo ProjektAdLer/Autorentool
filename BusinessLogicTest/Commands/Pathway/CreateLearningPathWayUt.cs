@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -49,7 +51,9 @@ public class CreateLearningPathWayUt
         world.LearningPathways.Add(pathway1);
         world.LearningPathways.Add(pathway2);
 
-        var command = new CreateLearningPathWay(world, pathWayCondition, space2, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+
+        var command = new CreateLearningPathWay(world, pathWayCondition, space2, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -85,7 +89,9 @@ public class CreateLearningPathWayUt
         var pathway = new LearningPathway(space1, space2);
         world.LearningPathways.Add(pathway);
         
-        var command = new CreateLearningPathWay(world, space1, space2, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new CreateLearningPathWay(world, space1, space2, mappingAction, logger);
         
         command.Execute();
         
@@ -105,8 +111,10 @@ public class CreateLearningPathWayUt
         world.LearningSpaces.Add(space);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new CreateLearningPathWay(world, space, space, mappingAction);
+        var command = new CreateLearningPathWay(world, space, space, mappingAction, logger);
         
         command.Execute();
         
@@ -132,8 +140,10 @@ public class CreateLearningPathWayUt
         world.LearningPathways.Add(pathway);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
-        var command = new CreateLearningPathWay(world, space2, space1, mappingAction);
+        var command = new CreateLearningPathWay(world, space2, space1, mappingAction, logger);
         
         command.Execute();
         
@@ -174,7 +184,9 @@ public class CreateLearningPathWayUt
         world.LearningPathways.Add(pathway2);
         world.LearningPathways.Add(pathway3);
         
-        var command = new CreateLearningPathWay(world, space4, space1, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new CreateLearningPathWay(world, space4, space1, mappingAction, logger);
         
         command.Execute();
         
@@ -197,7 +209,9 @@ public class CreateLearningPathWayUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningPathWay(world, space1, space2, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new CreateLearningPathWay(world, space1, space2, mappingAction, logger);
     
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         
@@ -228,7 +242,9 @@ public class CreateLearningPathWayUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningPathWay(world, space1, space2, mappingAction);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        
+        var command = new CreateLearningPathWay(world, space1, space2, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

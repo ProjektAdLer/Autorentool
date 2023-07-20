@@ -427,15 +427,16 @@ public class PresentationLogicUt
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
         mockMapper.Map<IObjectInPathWay>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
         mockPathwayCommandFactory.GetDragCommand(learningSpaceEntity, 5, 6,
                 learningSpaceEntity.PositionX, learningSpaceEntity.PositionY,
-                Arg.Any<Action<IObjectInPathWay>>())
+                Arg.Any<Action<IObjectInPathWay>>(),logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            pathwayCommandFactory: mockPathwayCommandFactory);
+            pathwayCommandFactory: mockPathwayCommandFactory, pathwayCommandFactoryLogger: logger);
 
         systemUnderTest.DragObjectInPathWay(learningSpaceVm, 5, 6);
 
@@ -801,6 +802,7 @@ public class PresentationLogicUt
         var learningWorldEntity = EntityProvider.GetLearningWorld();
         var sourceSpaceEntity = EntityProvider.GetLearningSpace();
         var targetSpaceEntity = EntityProvider.GetLearningSpace();
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
@@ -809,11 +811,11 @@ public class PresentationLogicUt
         mockMapper.Map<IObjectInPathWay>(targetSpaceVm)
             .Returns(targetSpaceEntity);
         mockPathwayCommandFactory.GetCreateCommand(learningWorldEntity, sourceSpaceEntity, targetSpaceEntity,
-                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>(), logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            pathwayCommandFactory: mockPathwayCommandFactory);
+            pathwayCommandFactory: mockPathwayCommandFactory,pathwayCommandFactoryLogger: logger);
 
         systemUnderTest.CreateLearningPathWay(learningWorldVm, sourceSpaceVm, targetSpaceVm);
 
@@ -835,6 +837,7 @@ public class PresentationLogicUt
         var pathWayEntity =
             EntityProvider.GetLearningPathway(EntityProvider.GetLearningSpace(), EntityProvider.GetLearningSpace());
         learningWorldEntity.LearningPathways.Add(pathWayEntity);
+        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
 
 
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
@@ -842,11 +845,11 @@ public class PresentationLogicUt
         mockMapper.Map<LearningPathway>(Arg.Any<LearningPathwayViewModel>())
             .Returns(pathWayEntity);
         mockPathwayCommandFactory.GetDeleteCommand(learningWorldEntity, pathWayEntity,
-                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>(), logger)
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            pathwayCommandFactory: mockPathwayCommandFactory);
+            pathwayCommandFactory: mockPathwayCommandFactory, pathwayCommandFactoryLogger: logger);
 
         systemUnderTest.DeleteLearningPathWay(learningWorldVm, pathWayVm);
 

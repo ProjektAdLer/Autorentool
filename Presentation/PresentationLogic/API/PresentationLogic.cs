@@ -344,7 +344,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = PathwayCommandFactory.GetDragCommand(objectInPathWayEntity, oldPositionX, oldPositionY,
             objectInPathWayEntity.PositionX,
-            objectInPathWayEntity.PositionY, space => CMapper.Map(space, objectInPathWayVm));
+            objectInPathWayEntity.PositionY, space => CMapper.Map(space, objectInPathWayVm), PathwayLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -492,7 +492,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = PathwayCommandFactory.GetCreateCommand(learningWorldEntity, sourceObjectEntity,
             targetObjectEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), PathwayLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -504,7 +504,7 @@ public class PresentationLogic : IPresentationLogic
         var learningPathWayEntity = Mapper.Map<BusinessLogic.Entities.LearningPathway>(learningPathWayVm);
 
         var command = PathwayCommandFactory.GetDeleteCommand(learningWorldEntity, learningPathWayEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), PathwayLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
