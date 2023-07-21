@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.Topic;
@@ -18,8 +20,9 @@ public class CreateTopicUt
         var name = "topic1";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
         
-        var command = new CreateTopic(world, name, mappingAction);
+        var command = new CreateTopic(world, name, mappingAction, logger);
         
         Assert.IsEmpty(world.Topics);
         Assert.IsFalse(actionWasInvoked);
@@ -43,8 +46,9 @@ public class CreateTopicUt
         world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
         
-        var command = new CreateTopic(world, name, mappingAction);
+        var command = new CreateTopic(world, name, mappingAction, logger);
         
         Assert.That(world.Topics, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);
@@ -71,8 +75,9 @@ public class CreateTopicUt
         var name = "topic1";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
-        var command = new CreateTopic(world, name, mappingAction);
+        var command = new CreateTopic(world, name, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -87,8 +92,9 @@ public class CreateTopicUt
         var name = "topic1";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
         
-        var command = new CreateTopic(world, name, mappingAction);
+        var command = new CreateTopic(world, name, mappingAction, logger);
         
         Assert.That(world.Topics, Has.Count.EqualTo(0));
         Assert.IsFalse(actionWasInvoked);

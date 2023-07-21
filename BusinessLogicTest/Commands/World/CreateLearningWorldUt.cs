@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -19,9 +21,10 @@ public class CreateLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, logger);
 
         Assert.IsEmpty(workspace.LearningWorlds);
         Assert.IsFalse(actionWasInvoked);
@@ -48,8 +51,9 @@ public class CreateLearningWorldUt
         var world1 = new LearningWorld("Foo", "", "", "", "", "");
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { });
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { }, logger);
         
         systemUnderTest.Execute();
         Assert.That(workspace.LearningWorlds.Last().Name, Is.EqualTo("Foo(2)"));
@@ -62,8 +66,9 @@ public class CreateLearningWorldUt
         var world = new LearningWorld("n", "sn", "a", "l", "d", "g");
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new CreateLearningWorld(workspace, world, mappingAction);
+        var command = new CreateLearningWorld(workspace, world, mappingAction, logger);
 
         Assert.IsEmpty(workspace.LearningWorlds);
         Assert.IsFalse(actionWasInvoked);
@@ -87,9 +92,10 @@ public class CreateLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, logger);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -111,9 +117,10 @@ public class CreateLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, logger);
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);

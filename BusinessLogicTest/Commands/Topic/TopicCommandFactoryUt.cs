@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -23,9 +25,10 @@ public class TopicCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var name = "Topic 1";
         Action<LearningWorld> mappingAction = world => { };
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, mappingAction);
+        var result = _factory.GetCreateCommand(learningWorld, name, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateTopic>());
@@ -46,9 +49,10 @@ public class TopicCommandFactoryUt
         var topic = EntityProvider.GetTopic();
         learningWorld.Topics.Add(topic);
         Action<LearningWorld> mappingAction = world => { };
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, topic, mappingAction);
+        var result = _factory.GetDeleteCommand(learningWorld, topic, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteTopic>());
@@ -68,9 +72,10 @@ public class TopicCommandFactoryUt
         var topic = EntityProvider.GetTopic();
         var name = "Topic 2";
         Action<BusinessLogic.Entities.Topic> mappingAction = t => { };
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
         // Act
-        var result = _factory.GetEditCommand(topic, name, mappingAction);
+        var result = _factory.GetEditCommand(topic, name, mappingAction, logger);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditTopic>());

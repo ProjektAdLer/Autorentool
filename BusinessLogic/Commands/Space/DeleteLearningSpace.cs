@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -8,14 +9,16 @@ public class DeleteLearningSpace : IDeleteLearningSpace
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
     internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<SpaceCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public DeleteLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace,
-        Action<LearningWorld> mappingAction)
+    public DeleteLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace, 
+        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger)
     {
         LearningWorld = learningWorld;
         LearningSpace = learningSpace;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -39,6 +42,8 @@ public class DeleteLearningSpace : IDeleteLearningSpace
         }
         LearningWorld.LearningSpaces.Remove(space);
 
+        Logger.LogTrace("Deleted LearningSpace {LearningSpaceName} ({LearningSpaceId})", LearningSpace.Name, LearningSpace.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
@@ -51,8 +56,14 @@ public class DeleteLearningSpace : IDeleteLearningSpace
 
         LearningWorld.RestoreMemento(_memento);
 
+        Logger.LogTrace("Undone deletion of LearningSpace {LearningSpaceName} ({LearningSpaceId})", LearningSpace.Name, LearningSpace.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing DeleteLearningSpace");
+        Execute();
+    }
 }

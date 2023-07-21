@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.World;
 
@@ -14,9 +15,11 @@ public class EditLearningWorld : IEditLearningWorld
     internal string Goals { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
+    private ILogger<WorldCommandFactory> Logger { get; }
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
-        string authors, string language, string description, string goals, Action<LearningWorld> mappingAction)
+        string authors, string language, string description, string goals, Action<LearningWorld> mappingAction,
+        ILogger<WorldCommandFactory> logger)
     {
         LearningWorld = learningWorld;
         WorldName = name;
@@ -26,11 +29,16 @@ public class EditLearningWorld : IEditLearningWorld
         Description = description;
         Goals = goals;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
     {
         _memento ??= LearningWorld.GetMemento();
+
+        Logger.LogTrace(
+            "Editing LearningWorld {name} ({id}). Previous Name: {name}, Shortname: {shortname}, Authors: {authors}, Language: {language}, Description: {description}, Goals: {goals}",
+            LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals);
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
         LearningWorld.Name = WorldName;
@@ -39,6 +47,11 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Language = Language;
         LearningWorld.Description = Description;
         LearningWorld.Goals = Goals;
+
+        Logger.LogTrace(
+            "Edited LearningWorld {name} ({id}). Updated Name: {name}, Shortname: {shortname}, Authors: {authors}, Language: {language}, Description: {description}, Goals: {goals}",
+            LearningWorld.Name, LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
+            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals);
 
         MappingAction.Invoke(LearningWorld);
     }
@@ -50,7 +63,7 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Language != Language ||
         LearningWorld.Description != Description ||
         LearningWorld.Goals != Goals;
-    
+
 
     public void Undo()
     {
@@ -61,8 +74,14 @@ public class EditLearningWorld : IEditLearningWorld
 
         LearningWorld.RestoreMemento(_memento);
 
+        Logger.LogTrace("Undone edit of LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing EditLearningWorld");
+        Execute();
+    }
 }

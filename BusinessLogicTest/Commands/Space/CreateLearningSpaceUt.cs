@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -25,8 +27,9 @@ public class CreateLearningSpaceUt
         world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, theme, positionX, positionY, topic, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, theme, positionX, positionY, topic, mappingAction,logger);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -56,8 +59,9 @@ public class CreateLearningSpaceUt
         var space = new LearningSpace("z","w","v", 5, Theme.Campus);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new CreateLearningSpace(world, space, mappingAction);
+        var command = new CreateLearningSpace(world, space, mappingAction, logger);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -81,8 +85,9 @@ public class CreateLearningSpaceUt
         var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX, positionY, topic, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX, positionY, topic, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -106,8 +111,9 @@ public class CreateLearningSpaceUt
         var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
         
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX, positionY, topic, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX, positionY, topic, mappingAction, logger);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);

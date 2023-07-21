@@ -16,10 +16,11 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
 
     public CreateUnplacedLearningElement(LearningWorld learningWorld, string name,
         ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX, double positionY,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
+        double positionY,
         Action<LearningWorld> mappingAction, ILogger<ElementCommandFactory> logger)
     {
-        LearningElement = new LearningElement(name,  learningContent, description, goals,
+        LearningElement = new LearningElement(name, learningContent, description, goals,
             difficulty, elementModel, null, workload, points, positionX, positionY);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
@@ -33,8 +34,13 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         LearningWorld.UnsavedChanges = true;
         LearningWorld.UnplacedLearningElements.Add(LearningElement);
 
-        Logger.LogTrace("Created unplaced LearningElement {LearningElementName} ({LearningElementId}) in LearningWorld {LearningWorldName} ({LearningWorldId})", LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id);
-        
+        Logger.LogTrace(
+            "Created unplaced LearningElement {LearningElementName} ({LearningElementId}) in LearningWorld {LearningWorldName} ({LearningWorldId}). Content: {Content}, Description: {Description}, Goals: {Goals}, Difficulty: {Difficulty}, ElementModel: {ElementModel}, Workload: {Workload}, Points: {Points}, PositionX: {PositionX}, PositionY: {PositionY}",
+            LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id,
+            LearningElement.LearningContent.Name, LearningElement.Description, LearningElement.Goals,
+            LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points,
+            LearningElement.PositionX, LearningElement.PositionY);
+
         MappingAction.Invoke(LearningWorld);
     }
 
@@ -44,11 +50,13 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         LearningWorld.RestoreMemento(_memento);
 
-        Logger.LogTrace("Undone creation of unplaced LearningElement {LearningElementName} ({LearningElementId}). Restored LearningWorld {LearningWorldName} ({LearningWorldId}) to previous state", LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id);
-        
+        Logger.LogTrace(
+            "Undone creation of unplaced LearningElement {LearningElementName} ({LearningElementId}). Restored LearningWorld {LearningWorldName} ({LearningWorldId}) to previous state",
+            LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 

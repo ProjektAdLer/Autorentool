@@ -1,4 +1,6 @@
 using BusinessLogic.Commands.Topic;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.Topic;
@@ -17,8 +19,9 @@ public class EditTopicUt
         var name = "NewTopic1";
         bool actionWasInvoked = false;
         Action<BusinessLogic.Entities.Topic> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
         
-        var command = new EditTopic(topic, name, mappingAction);
+        var command = new EditTopic(topic, name, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -62,8 +65,9 @@ public class EditTopicUt
         var name = "NewTopic1";
         bool actionWasInvoked = false;
         Action<BusinessLogic.Entities.Topic> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
-        var command = new EditTopic(topic, name, mappingAction);
+        var command = new EditTopic(topic, name, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));

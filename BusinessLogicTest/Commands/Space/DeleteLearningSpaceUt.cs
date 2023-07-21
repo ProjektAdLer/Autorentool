@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -33,6 +35,7 @@ public class DeleteLearningSpaceUt
         world.LearningSpaces.Add(space3);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
         
         world.LearningPathways.Add(new LearningPathway(space1, space2));
         space1.OutBoundObjects.Add(space2);
@@ -41,7 +44,7 @@ public class DeleteLearningSpaceUt
         space2.OutBoundObjects.Add(space3);
         space3.InBoundObjects.Add(space2);
 
-        var command = new DeleteLearningSpace(world, space2, mappingAction);
+        var command = new DeleteLearningSpace(world, space2, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -68,8 +71,9 @@ public class DeleteLearningSpaceUt
         var space = new LearningSpace("g", "j", "k", 5, Theme.Campus);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new DeleteLearningSpace(world,space, mappingAction);
+        var command = new DeleteLearningSpace(world,space, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         
@@ -99,8 +103,9 @@ public class DeleteLearningSpaceUt
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
         
-        var command = new DeleteLearningSpace(world, space1, mappingAction);
+        var command = new DeleteLearningSpace(world, space1, mappingAction, logger);
         
         Assert.Multiple(() =>
         {

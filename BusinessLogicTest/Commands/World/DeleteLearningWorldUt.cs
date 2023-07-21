@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -15,8 +17,9 @@ public class DeleteLearningWorldUt
         workspace.LearningWorlds.Add(world);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new DeleteLearningWorld(workspace, world, mappingAction);
+        var command = new DeleteLearningWorld(workspace, world, mappingAction, logger);
 
         Assert.That(workspace.LearningWorlds, Does.Contain(world));
         Assert.IsFalse(actionWasInvoked);
@@ -37,8 +40,9 @@ public class DeleteLearningWorldUt
         workspace.LearningWorlds.Add(world2);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new DeleteLearningWorld(workspace, world, mappingAction);
+        var command = new DeleteLearningWorld(workspace, world, mappingAction, logger);
 
         Assert.That(workspace.LearningWorlds.Count, Is.EqualTo(2));
         Assert.That(workspace.LearningWorlds, Does.Contain(world));
@@ -60,8 +64,9 @@ public class DeleteLearningWorldUt
         workspace.LearningWorlds.Add(world);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new DeleteLearningWorld(workspace, world, mappingAction);
+        var command = new DeleteLearningWorld(workspace, world, mappingAction, logger);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -79,8 +84,9 @@ public class DeleteLearningWorldUt
         workspace.LearningWorlds.Add(world2);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new DeleteLearningWorld(workspace, world, mappingAction);
+        var command = new DeleteLearningWorld(workspace, world, mappingAction, logger);
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
         Assert.IsFalse(actionWasInvoked);

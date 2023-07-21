@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.Topic;
@@ -22,7 +24,8 @@ public class DeleteTopicUt
         world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var command = new DeleteTopic(world, topic, mappingAction);
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
+        var command = new DeleteTopic(world, topic, mappingAction, logger);
         
         Assert.That(world.Topics, Does.Contain(topic));
         Assert.IsFalse(actionWasInvoked);
@@ -54,8 +57,9 @@ public class DeleteTopicUt
         world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
 
-        var command = new DeleteTopic(world, topic, mappingAction);
+        var command = new DeleteTopic(world, topic, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));

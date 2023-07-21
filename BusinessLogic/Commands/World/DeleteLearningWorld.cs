@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.World;
 
@@ -9,13 +10,15 @@ public class DeleteLearningWorld : IDeleteLearningWorld
     internal LearningWorld LearningWorld { get; }
     internal Action<AuthoringToolWorkspace> MappingAction { get; }
     private IMemento? Memento { get; set; }
+    private ILogger<WorldCommandFactory> Logger { get; }
 
     public DeleteLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
-        Action<AuthoringToolWorkspace> mappingAction)
+        Action<AuthoringToolWorkspace> mappingAction, ILogger<WorldCommandFactory> logger)
     {
         AuthoringToolWorkspace = authoringToolWorkspace;
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public void Execute()
@@ -25,6 +28,8 @@ public class DeleteLearningWorld : IDeleteLearningWorld
         var realLearningWorld = AuthoringToolWorkspace.LearningWorlds.First(lw => lw.Id == LearningWorld.Id);
 
         AuthoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
+
+        Logger.LogTrace("Deleted LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
 
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
@@ -38,8 +43,14 @@ public class DeleteLearningWorld : IDeleteLearningWorld
 
         AuthoringToolWorkspace.RestoreMemento(Memento);
 
+        Logger.LogTrace("Undone deletion of LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing DeleteLearningWorld");
+        Execute();
+    }
 }

@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -22,9 +24,11 @@ public class EditLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                logger);
 
         Assert.Multiple(() =>
         {
@@ -65,9 +69,11 @@ public class EditLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                logger);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -90,9 +96,11 @@ public class EditLearningWorldUt
         var goals = "g";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                logger);
 
         Assert.Multiple(() =>
         {

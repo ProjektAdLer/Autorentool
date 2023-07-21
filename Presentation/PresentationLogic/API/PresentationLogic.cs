@@ -159,7 +159,7 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, worldEntity,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -173,7 +173,7 @@ public class PresentationLogic : IPresentationLogic
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
             description, goals,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.Last(), command);
@@ -187,7 +187,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
             goals,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -200,7 +200,7 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
 
         var command = WorldCommandFactory.GetDeleteCommand(authoringToolWorkspaceEntity, worldEntity,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningWorld(null, command);
@@ -212,7 +212,7 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath);
+        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath, WorldLogger);
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         learningWorldViewModel.UnsavedChanges = false;
@@ -227,7 +227,7 @@ public class PresentationLogic : IPresentationLogic
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, filepath, BusinessLogic,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.LastOrDefault(), command);
@@ -249,7 +249,7 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, path, BusinessLogic,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
         var viewmodel = authoringToolWorkspaceVm.LearningWorlds.First(lw => lw.Id == command.LearningWorld!.Id);
         SelectedViewModelsProvider.SetLearningWorld(viewmodel, command);
@@ -289,7 +289,7 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
 
         var command = SpaceCommandFactory.GetCreateCommand(worldEntity, spaceEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpaceVm, command);
@@ -304,7 +304,7 @@ public class PresentationLogic : IPresentationLogic
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
         var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, goals, requiredPoints, theme,
-            positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
+            positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.Last(), command);
@@ -319,7 +319,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
             topicEntity,
-            space => CMapper.Map(space, learningSpaceVm));
+            space => CMapper.Map(space, learningSpaceVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -355,7 +355,7 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
 
         var command = SpaceCommandFactory.GetDeleteCommand(worldEntity, spaceEntity,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
@@ -367,7 +367,7 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
-        var command = SpaceCommandFactory.GetSaveCommand(BusinessLogic, spaceEntity, filepath);
+        var command = SpaceCommandFactory.GetSaveCommand(BusinessLogic, spaceEntity, filepath, SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -378,7 +378,7 @@ public class PresentationLogic : IPresentationLogic
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var command = SpaceCommandFactory.GetLoadCommand(worldEntity, filepath, BusinessLogic,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
@@ -440,7 +440,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command =
             TopicCommandFactory.GetCreateCommand(learningWorldEntity, name,
-                world => CMapper.Map(world, learningWorldVm));
+                world => CMapper.Map(world, learningWorldVm), TopicLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -449,7 +449,8 @@ public class PresentationLogic : IPresentationLogic
     {
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = TopicCommandFactory.GetEditCommand(topicEntity, newName, topic => CMapper.Map(topic, topicVm));
+        var command = TopicCommandFactory.GetEditCommand(topicEntity, newName, topic => CMapper.Map(topic, topicVm),
+            TopicLogger);
 
         BusinessLogic.ExecuteCommand(command);
     }
@@ -467,13 +468,13 @@ public class PresentationLogic : IPresentationLogic
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
-                    space => CMapper.Map(space, t.spaceVm)))
+                    space => CMapper.Map(space, t.spaceVm), SpaceLogger))
                 .Cast<IUndoCommand>()
                 .ToList();
 
         var deleteTopic =
             TopicCommandFactory.GetDeleteCommand(learningWorldEntity, topicEntity,
-                world => CMapper.Map(world, learningWorldVm));
+                world => CMapper.Map(world, learningWorldVm), TopicLogger);
 
         listOfCommands.Add(deleteTopic);
 
@@ -745,7 +746,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, stream, BusinessLogic,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm), WorldLogger);
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.Last(), command);
@@ -756,7 +757,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var command = SpaceCommandFactory.GetLoadCommand(worldEntity, stream, BusinessLogic,
-            world => CMapper.Map(world, learningWorldVm));
+            world => CMapper.Map(world, learningWorldVm), SpaceLogger);
         BusinessLogic.ExecuteCommand(command);
     }
 

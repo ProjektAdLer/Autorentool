@@ -1,6 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -20,8 +21,9 @@ public class LoadLearningWorldUt
         mockBusinessLogic.LoadLearningWorld(filepath).Returns(world);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new LoadLearningWorld(authoringToolWorkspace, filepath, mockBusinessLogic, mappingAction);
+        var command = new LoadLearningWorld(authoringToolWorkspace, filepath, mockBusinessLogic, mappingAction, logger);
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Is.Empty);
@@ -49,8 +51,9 @@ public class LoadLearningWorldUt
         mockBusinessLogic.LoadLearningWorld(stream).Returns(world);
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new LoadLearningWorld(authoringToolWorkspace, stream, mockBusinessLogic, mappingAction);
+        var command = new LoadLearningWorld(authoringToolWorkspace, stream, mockBusinessLogic, mappingAction, logger);
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Is.Empty);
@@ -74,8 +77,9 @@ public class LoadLearningWorldUt
         var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
-        var command = new LoadLearningWorld(authoringToolWorkspace,"space", mockBusinessLogic, mappingAction);
+        var command = new LoadLearningWorld(authoringToolWorkspace,"space", mockBusinessLogic, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -96,7 +100,8 @@ public class LoadLearningWorldUt
         mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(world);
         var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         authoringToolWorkspace.LearningWorlds.Add(world2);
-        var command = new LoadLearningWorld(authoringToolWorkspace, "space", mockBusinessLogic, mappingAction);
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        var command = new LoadLearningWorld(authoringToolWorkspace, "space", mockBusinessLogic, mappingAction, logger);
         
         Assert.That(authoringToolWorkspace.LearningWorlds, Has.Count.EqualTo(1));
         

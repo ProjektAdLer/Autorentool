@@ -1,6 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -21,8 +22,9 @@ public class LoadLearningSpaceUt
         mockBusinessLogic.LoadLearningSpace(filepath).Returns(space);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new LoadLearningSpace(world, filepath, mockBusinessLogic, mappingAction);
+        var command = new LoadLearningSpace(world, filepath, mockBusinessLogic, mappingAction, logger);
         
         Assert.That(world.LearningSpaces, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
@@ -42,8 +44,9 @@ public class LoadLearningSpaceUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new LoadLearningSpace(world,"space", mockBusinessLogic, mappingAction);
+        var command = new LoadLearningSpace(world,"space", mockBusinessLogic, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -62,7 +65,8 @@ public class LoadLearningSpaceUt
         var space2 = new LearningSpace("f", "i", "j", 6, Theme.Campus);
         world.LearningSpaces.Add(space2);
         mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(space);
-        var command = new LoadLearningSpace(world, "space", mockBusinessLogic, mappingAction);
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        var command = new LoadLearningSpace(world, "space", mockBusinessLogic, mappingAction, logger);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         

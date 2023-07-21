@@ -1,5 +1,7 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -24,8 +26,9 @@ public class EditLearningSpaceUt
         var theme = Theme.Campus;
         bool actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
@@ -64,8 +67,9 @@ public class EditLearningSpaceUt
         var topic = new BusinessLogic.Entities.Topic("abc");
         bool actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -87,8 +91,9 @@ public class EditLearningSpaceUt
         var topic = new BusinessLogic.Entities.Topic("abc");
         bool actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
         
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
         
         Assert.Multiple(() =>
         {
