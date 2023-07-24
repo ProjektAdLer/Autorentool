@@ -21,6 +21,7 @@ using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
 using Shared;
+using DraggableObjectInPathWay = Presentation.View.AdvancedLearningRoomGenerator.DraggableObjectInPathWay;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningWorld;

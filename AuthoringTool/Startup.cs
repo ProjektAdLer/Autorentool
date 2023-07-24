@@ -28,6 +28,7 @@ using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.AdvancedLearningSpaceGenerator;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
@@ -155,6 +156,7 @@ public class Startup
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
+        services.AddScoped<IAdvancedLearningSpaceEditorPresenter, AdvancedLearningSpaceEditorPresenter>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)

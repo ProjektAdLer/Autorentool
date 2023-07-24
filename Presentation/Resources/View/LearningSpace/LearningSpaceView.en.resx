@@ -64,4 +64,7 @@
     <data name="Error.ExceptionWrapper.LoadLearningElement.Message" xml:space="preserve">
         <value>Load learning element</value>
     </data>
+    <data name="LearningSpace.AdvancedSpaceTitle.Text" xml:space="preserve">
+        <value>Advanced Learning Space Editor</value>
+    </data>
 </root>

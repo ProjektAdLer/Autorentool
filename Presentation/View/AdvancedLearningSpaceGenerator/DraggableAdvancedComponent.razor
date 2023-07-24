@@ -1,0 +1,74 @@
+@using Presentation.PresentationLogic
+@using Presentation.Components
+@using Presentation.Components.RightClickMenu
+@using Presentation.PresentationLogic.AdvancedComponent
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Microsoft.AspNetCore.Components
+@using Presentation.PresentationLogic.AdvancedLearningSpaceGenerator
+
+<Draggable LearningObject="AdvancedComponent" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
+           OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
+           @bind-X="@AdvancedComponent.PositionX" @bind-Y="@AdvancedComponent.PositionY">
+    @if (AdvancedComponent == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
+    {
+        @((MarkupString)OnHoveredObjectShape)
+    }
+    @* Wird mit Cude überschrieben *@
+    @((MarkupString)String.Format(ObjectShape, ObjectStyle, ObjectName))
+    <Clickable OnClickedParam="AdvancedComponent" OnClicked="@OnClickedDeleteObject">
+        @((MarkupString)DeleteObjectButtonShape)
+    </Clickable>
+</Draggable>
+
+
+@ChildContent
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    // // Overwrite nullability warning below because we check in OnParametersSet -n.stich
+    [Parameter, EditorRequired]
+    public IAdvancedComponentViewModel AdvancedComponent { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public EventCallback<IAdvancedComponentViewModel> OnClickedDraggable { get; set; }
+    [Parameter]
+    public EventCallback<IAdvancedComponentViewModel> OnDoubleClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IAdvancedComponentViewModel> OnRightClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public DraggedEventArgs<IAdvancedComponentViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IAdvancedComponentViewModel> OnClickedDeleteObject { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired]
+    public IAdvancedLearningSpaceEditorPresenter AdvancedEditorPresenter { get; set; } = null!;
+
+    protected abstract string Text { get; }
+    
+    protected abstract string ObjectName { get; }
+    
+    protected abstract string OnHoveredObjectShape { get; }
+
+    protected abstract string ObjectShape { get; }
+    
+    protected abstract string ObjectStyleWhenSelected { get; }
+    
+    protected abstract string ObjectStyleWhenNotSelected { get; }
+    
+    private string ObjectStyle => Advanced Space Gen Presenter (hinterlegter selecteter raum) == AdvancedComponent ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
+
+    protected abstract string DeleteObjectButtonShape { get; }
+    
+    protected abstract List<RightClickMenuEntry> GetRightClickMenuEntries();
+    
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (AdvancedComponent is null)
+        {
+            throw new ArgumentNullException(nameof(AdvancedComponent));
+        }
+    }
+}
