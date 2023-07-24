@@ -135,54 +135,45 @@ public class BusinessLogic : IBusinessLogic
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
         DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
-        Logger.LogTrace("Saved learning world: {learningWorldName} with id {learningWorldId} at path: {filepath}", learningWorld.Name, learningWorld.Id, filepath);
     }
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
         var world = DataAccess.LoadLearningWorld(filepath);
-        Logger.LogTrace("Loaded learning world {name} with id {learningWorldId} from path: {filepath}", world.Name, world.Id, filepath);
         return world;
     }
 
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
         DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
-        Logger.LogTrace("Saved learning space: {learningSpaceName} with id {learningSpaceId} at path: {filepath}", learningSpace.Name, learningSpace.Id, filepath);
     }
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
         var space = DataAccess.LoadLearningSpace(filepath);
-        Logger.LogTrace("Loaded learning space {name} with id {learningSpaceId} from path: {filepath}", space.Name, space.Id, filepath);
         return space;
     }
 
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
         DataAccess.SaveLearningElementToFile(learningElement, filepath);
-        Logger.LogTrace("Saved learning element: {learningElementName} with id {learningElementId} at path: {filepath}", learningElement.Name, learningElement.Id,
-            filepath);
     }
 
     public LearningElement LoadLearningElement(string filepath)
     {
         var learningElement = DataAccess.LoadLearningElement(filepath);
-        Logger.LogTrace("Loaded learning element {name} with id {learningElementId} from path: {filepath}", learningElement.Name, learningElement.Id, filepath);
         return learningElement;
     }
 
     public ILearningContent LoadLearningContent(string filepath)
     {
         var content = DataAccess.LoadLearningContent(filepath);
-        Logger.LogTrace("Loaded learning content {name} from path: {filepath}", content.Name, filepath);
         return content;
     }
 
     public ILearningContent LoadLearningContent(string name, Stream stream)
     {
         var content = DataAccess.LoadLearningContent(name, stream);
-        Logger.LogTrace("Loaded learning content {name} from stream: {stream}", content.Name, stream);
         return content;
     }
 
@@ -194,54 +185,45 @@ public class BusinessLogic : IBusinessLogic
     public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
         DataAccess.AddSavedLearningWorldPath(savedLearningWorldPath);
-        Logger.LogTrace("Added saved learning world path: {name} at path: {path}", savedLearningWorldPath.Name, savedLearningWorldPath.Path);
     }
 
     public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
     {
         var savedLearningWorldPath = DataAccess.AddSavedLearningWorldPathByPathOnly(path);
-        Logger.LogTrace("Added saved learning world path at path: {path}", path);
         return savedLearningWorldPath;
     }
 
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
     {
-        var oldId = savedLearningWorldPath.Id;
         DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-        Logger.LogTrace("Updated id of saved learning world path: {name} from {oldId} to {id}", savedLearningWorldPath.Name, oldId, id);
     }
 
     public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
         DataAccess.RemoveSavedLearningWorldPath(savedLearningWorldPath);
-        Logger.LogTrace("Removed saved learning world path: {name} with id {pathId} at path: {path}", savedLearningWorldPath.Name, savedLearningWorldPath.Id, savedLearningWorldPath.Path);
     }
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {
         var world = DataAccess.LoadLearningWorld(stream);
-        Logger.LogTrace("Loaded learning world {name} with id {learningWorldId} from stream: {stream}", world.Name, world.Id, stream);
         return world;
     }
 
     public LearningSpace LoadLearningSpace(Stream stream)
     {
         var space = DataAccess.LoadLearningSpace(stream);
-        Logger.LogTrace("Loaded learning space {name} with id {learningSpaceId} from stream: {stream}", space.Name, space.Id, stream);
         return space;
     }
 
     public LearningElement LoadLearningElement(Stream stream)
     {
         var learningElement = DataAccess.LoadLearningElement(stream);
-        Logger.LogTrace("Loaded learning element {name} with id {learningElementId} from stream: {stream}", learningElement.Name, learningElement.Id, stream);
         return learningElement;
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
     {
         var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
-        Logger.LogTrace("Found suitable new save path: {path}", targetPath);
         return targetPath;
     }
 

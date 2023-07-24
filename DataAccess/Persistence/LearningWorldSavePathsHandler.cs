@@ -105,6 +105,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         _savedLearningWorldPaths.RemoveAll(x => x.Path == savedLearningWorldPath.Path);
         _savedLearningWorldPaths.FindAll(x => x.Id == savedLearningWorldPath.Id).ForEach(x => x.Id = Guid.Empty);
         _savedLearningWorldPaths.Add(savedLearningWorldPath);
+        _logger.LogTrace("Added saved learning world path {1} ({2}) at path {3}", savedLearningWorldPath.Name, savedLearningWorldPath.Id, savedLearningWorldPath.Path);
         SaveSavedLearningWorldPaths();
     }
 
@@ -130,6 +131,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         }
 
         SaveSavedLearningWorldPaths();
+        _logger.LogTrace("Updated id of saved learning world path {1} to {2}", savedLearningWorldPath.Name, id);
     }
 
     /// <inheritdoc cref="ILearningWorldSavePathsHandler.GetSavedLearningWorldPaths"/>
@@ -142,6 +144,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
         _savedLearningWorldPaths.Remove(_savedLearningWorldPaths.Find(x => x.Id == savedLearningWorldPath.Id)!);
+        _logger.LogTrace("Removed saved learning world path {1} ({2}) at path {3}", savedLearningWorldPath.Name, savedLearningWorldPath.Id, savedLearningWorldPath.Path);
         SaveSavedLearningWorldPaths();
     }
 }
