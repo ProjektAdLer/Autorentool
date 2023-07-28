@@ -30,7 +30,7 @@
         <value>Punkte:</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
-        <value>min.</value>
+        <value> min.</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
         <value>Neuer Lernraum</value>
