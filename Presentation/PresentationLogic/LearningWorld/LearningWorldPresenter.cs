@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
@@ -282,7 +283,18 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
+        try
+        {
+            await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while loading learning space", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while loading learning space", e.Message);
+        }
     }
 
     /// <summary>
@@ -297,8 +309,19 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
             throw new ApplicationException("SelectedLearningSpace is null");
 
-        await _presentationLogic.SaveLearningSpaceAsync(
-            (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
+        try
+        {
+            await _presentationLogic.SaveLearningSpaceAsync(
+                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while saving learning space", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while saving learning space", e.Message);
+        }
     }
 
     public void EditSelectedLearningSpace()
@@ -325,7 +348,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
+        try
+        {
+            _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
+        }
+        catch (ApplicationException e)
+        {
+            _errorService.SetError("Error while creating PathWayCondition", e.Message);
+        }
     }
 
     public void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition)
@@ -502,7 +532,22 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         SetSelectedLearningElement(learningElement);
-        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+        try
+        {
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
+        catch (IOException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
     }
 
     /// <summary>

@@ -6,6 +6,8 @@
 @using AutoMapper
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningContent
+@using System.Runtime.Serialization
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
@@ -37,6 +39,9 @@
 
     [Inject]
     internal IStringLocalizer<AddLinkForm> Localizer { get; set; }
+    
+    [Inject]
+    internal IErrorService ErrorService { get; set; }
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
@@ -50,7 +55,14 @@
 
     private async Task OnValidSubmit(LinkContentFormModel model)
     {
-        PresentationLogic.SaveLink(Mapper.Map<LinkContentViewModel>(model));
+        try
+        {
+            PresentationLogic.SaveLink(Mapper.Map<LinkContentViewModel>(model));
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("Error while adding link", e.Message);
+        }
         await RerenderContentContainer();
     }
 

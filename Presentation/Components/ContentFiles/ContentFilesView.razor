@@ -4,6 +4,7 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
 @using Microsoft.Extensions.Localization
+@using System.Runtime.Serialization
 <MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter">
     <ToolBarContent>
@@ -103,6 +104,9 @@
 
     [Inject]
     internal IStringLocalizer<ContentFilesView> Localizer { get; set; }
+    
+    [Inject]
+    internal IErrorService ErrorService { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
 
@@ -162,7 +166,24 @@
 
     //if not cancelled, delete content
         if (!result.Canceled)
-            PresentationLogic.RemoveContent(item);
+        {
+            try
+            {
+                PresentationLogic.RemoveContent(item);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                ErrorService.SetError("Error deleting content", e.Message);
+            }
+            catch (FileNotFoundException e)
+            {
+                ErrorService.SetError("Error deleting content", e.Message);
+            }
+            catch (SerializationException e)
+            {
+                ErrorService.SetError("Error deleting content", e.Message);
+            }
+        }
     }
 
     public async Task RerenderAsync()
@@ -172,7 +193,14 @@
 
     private void OpenContentFilesFolder()
     {
-        PresentationLogic.OpenContentFilesFolder();
+        try
+        {
+            PresentationLogic.OpenContentFilesFolder();
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorService.SetError("Error opening content files folder", e.Message);
+        }
     }
 
     private void NewElementWithContent(ILearningContentViewModel content)

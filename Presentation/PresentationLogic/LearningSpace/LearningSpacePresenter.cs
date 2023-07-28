@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using MudBlazor;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -18,13 +20,14 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 {
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
-        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
+        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger, IErrorService errorService)
     {
         _presentationLogic = presentationLogic;
         _mediator = mediator;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
         _logger = logger;
+        _errorService = errorService;
     }
 
     private readonly IPresentationLogic _presentationLogic;
@@ -34,6 +37,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private int _creationCounter = 0;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData _replaceLearningElementData = new();
+    private IErrorService _errorService;
 
     public ILearningSpaceViewModel? LearningSpaceVm
     {
@@ -195,7 +199,18 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm, slotIndex);
+        try
+        {
+            await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm, slotIndex);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while loading learning element", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while loading learning element", e.Message);
+        }
     }
 
     public void AddLearningElement(ILearningElementViewModel element, int slotIndex)
@@ -244,7 +259,18 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             case null:
                 throw new ApplicationException("SelectedLearningElement is null");
             case LearningElementViewModel learningElement:
-                await _presentationLogic.SaveLearningElementAsync(learningElement);
+                try
+                {
+                    await _presentationLogic.SaveLearningElementAsync(learningElement);
+                }
+                catch (SerializationException e)
+                {
+                    _errorService.SetError("Error while loading learning element", e.Message);
+                }
+                catch (InvalidOperationException e)
+                {
+                    _errorService.SetError("Error while loading learning element", e.Message);
+                }
                 break;
         }
     }
@@ -263,7 +289,22 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             case null:
                 throw new ApplicationException("SelectedLearningElement is null");
             case LearningElementViewModel learningElement:
-                await _presentationLogic.ShowLearningElementContentAsync(learningElement);
+                try
+                {
+                    await _presentationLogic.ShowLearningElementContentAsync(learningElement);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
+                catch (IOException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
+                catch (InvalidOperationException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
                 break;
         }
     }

@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Commands;
+﻿using System.Runtime.Serialization;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
@@ -52,15 +53,37 @@ public class BusinessLogic : IBusinessLogic
     /// <inheritdoc cref="IBusinessLogic.RemoveContent" />
     public void RemoveContent(ILearningContent content)
     {
-        DataAccess.RemoveContent(content);
-        Logger.LogTrace("Removed {type} : {name}", content.GetType(), content.Name);
+        try
+        {
+            DataAccess.RemoveContent(content);
+            Logger.LogTrace("Removed {type} : {name}", content.GetType(), content.Name);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     /// <inheritdoc cref="IBusinessLogic.SaveLink" />
     public void SaveLink(LinkContent linkContent)
     {
-        DataAccess.SaveLink(linkContent);
-        Logger.LogTrace("Saved link: {link} with name: {linkName}", linkContent.Link, linkContent.Name);
+        try
+        {
+            DataAccess.SaveLink(linkContent);
+            Logger.LogTrace("Saved link: {link} with name: {linkName}", linkContent.Link, linkContent.Name);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     /// <inheritdoc cref="IBusinessLogic.ExecuteCommand" />
@@ -134,35 +157,80 @@ public class BusinessLogic : IBusinessLogic
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
+        try
+        {
+            DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
-        var world = DataAccess.LoadLearningWorld(filepath);
-        return world;
+        try
+        {
+            var world = DataAccess.LoadLearningWorld(filepath);
+            return world;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
-        DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+        try
+        {
+            DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
-        var space = DataAccess.LoadLearningSpace(filepath);
-        return space;
+        try
+        {
+            var space = DataAccess.LoadLearningSpace(filepath);
+            return space;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
-        DataAccess.SaveLearningElementToFile(learningElement, filepath);
+        try
+        {
+            DataAccess.SaveLearningElementToFile(learningElement, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningElement LoadLearningElement(string filepath)
     {
-        var learningElement = DataAccess.LoadLearningElement(filepath);
-        return learningElement;
+        try
+        {
+            var learningElement = DataAccess.LoadLearningElement(filepath);
+            return learningElement;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public ILearningContent LoadLearningContent(string filepath)
@@ -173,8 +241,15 @@ public class BusinessLogic : IBusinessLogic
 
     public ILearningContent LoadLearningContent(string name, Stream stream)
     {
-        var content = DataAccess.LoadLearningContent(name, stream);
-        return content;
+        try
+        {
+            return DataAccess.LoadLearningContent(name, stream);
+        }
+        catch (IOException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
@@ -205,20 +280,42 @@ public class BusinessLogic : IBusinessLogic
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {
-        var world = DataAccess.LoadLearningWorld(stream);
-        return world;
+        try
+        {
+            return DataAccess.LoadLearningWorld(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public LearningSpace LoadLearningSpace(Stream stream)
     {
-        var space = DataAccess.LoadLearningSpace(stream);
-        return space;
+        try
+        {
+            return DataAccess.LoadLearningSpace(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
+        
     }
 
     public LearningElement LoadLearningElement(Stream stream)
     {
-        var learningElement = DataAccess.LoadLearningElement(stream);
-        return learningElement;
+        try
+        {
+            return DataAccess.LoadLearningElement(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

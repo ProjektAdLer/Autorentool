@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using System.Runtime.Serialization;
+using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace;
@@ -16,7 +17,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<AuthoringToolWorkspacePresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider,
-        IShutdownManager shutdownManager, IDialogService dialogService)
+        IShutdownManager shutdownManager, IDialogService dialogService, IErrorService errorService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
@@ -24,6 +25,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _logger = logger;
         _shutdownManager = shutdownManager;
         _dialogService = dialogService;
+        _errorService = errorService;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
@@ -38,6 +40,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly IShutdownManager _shutdownManager;
     private readonly IDialogService _dialogService;
+    private readonly IErrorService _errorService;
 
     public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
 
@@ -106,12 +109,34 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     public async Task LoadLearningWorldAsync()
     {
-        await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
+        try
+        {
+            await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while loading world", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while loading world", e.Message);
+        }
     }
 
     internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
     {
-        await _presentationLogic.SaveLearningWorldAsync(world);
+        try
+        {
+            await _presentationLogic.SaveLearningWorldAsync(world);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while saving world", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while saving world", e.Message);
+        }
     }
 
     public async Task SaveSelectedLearningWorldAsync()

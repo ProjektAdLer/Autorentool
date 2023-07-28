@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Runtime.Serialization;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -11,13 +12,15 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 {
     public MyLearningWorldsProvider(IPresentationLogic presentationLogic,
         IAuthoringToolWorkspacePresenter workspacePresenter, IFileSystem fileSystem,
-        ILogger<MyLearningWorldsProvider> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
+        ILogger<MyLearningWorldsProvider> logger, ISelectedViewModelsProvider selectedViewModelsProvider,
+        IErrorService errorService)
     {
         PresentationLogic = presentationLogic;
         WorkspacePresenter = workspacePresenter;
         FileSystem = fileSystem;
         Logger = logger;
         SelectedViewModelsProvider = selectedViewModelsProvider;
+        ErrorService = errorService;
     }
 
     internal ILogger<MyLearningWorldsProvider> Logger { get; }
@@ -27,6 +30,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     internal IFileSystem FileSystem { get; }
 
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
+    internal IErrorService ErrorService { get; }
     internal IAuthoringToolWorkspaceViewModel WorkspaceVm => WorkspacePresenter.AuthoringToolWorkspaceVm;
 
 
@@ -70,8 +74,20 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
         if (SavedPathExists(savedLearningWorldPath.Path))
         {
             Logger.LogDebug("Learning world {} is not loaded, but is saved", savedLearningWorldPath.Name);
-            PresentationLogic.LoadLearningWorldFromPath(WorkspaceVm,
-                savedLearningWorldPath.Path);
+            try
+            {
+                PresentationLogic.LoadLearningWorldFromPath(WorkspaceVm,
+                    savedLearningWorldPath.Path);
+            }
+            catch (SerializationException e)
+            {
+                ErrorService.SetError("Error while Loading learning world", e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                ErrorService.SetError("Error while Loading learning world", e.Message);
+            }
+            
             PresentationLogic.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath,
                 WorkspaceVm.LearningWorlds.Last().Id);
         }

@@ -5,6 +5,7 @@
 @using Presentation.Components.Dialogues
 @using BusinessLogic.Entities.LearningContent
 @using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -55,6 +56,9 @@
     
     [Inject]
     private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
+    
+    [Inject]
+    private IErrorService ErrorService { get; set; }
 
     [CascadingParameter]
     public ContentFilesContainer ContentFilesContainer { get; set; }
@@ -117,7 +121,14 @@
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
     //TODO: report when a file with same content already exists
-        PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+        try
+        {
+            PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+        }
+        catch (IOException e)
+        {
+            ErrorService.SetError("Error while loading content", e.Message);
+        }
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 

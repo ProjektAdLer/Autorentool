@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic;
@@ -464,6 +467,48 @@ public class LearningWorldPresenterUt
         await presentationLogic.Received().SaveLearningSpaceAsync(space);
     }
 
+    [Test]
+    public async Task SaveSelectedLearningSpace_SerializationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        world.LearningSpaces.Add(space);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
+        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
+            .Do(x => throw new SerializationException());
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task SaveSelectedLearningSpace_InvalidOperationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        world.LearningSpaces.Add(space);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
+        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
+            .Do(x => throw new InvalidOperationException());
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
+    }
+
     #endregion
 
     #region LoadLearningSpace
@@ -492,6 +537,38 @@ public class LearningWorldPresenterUt
         await systemUnderTest.LoadLearningSpaceAsync();
 
         await presentationLogic.Received().LoadLearningSpaceAsync(world);
+    }
+
+    [Test]
+    public async Task LoadLearningSpace_SerializationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        world.LearningSpaces.Add(space);
+        presentationLogic.LoadLearningSpaceAsync(world).Throws(new SerializationException());
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.LoadLearningSpaceAsync();
+        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task LoadLearningSpace_InvalidOperationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        world.LearningSpaces.Add(space);
+        presentationLogic.LoadLearningSpaceAsync(world).Throws(new InvalidOperationException());
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.LoadLearningSpaceAsync();
+        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
     }
 
     #endregion
@@ -628,6 +705,25 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.Or, 0, 0);
     }
 
+    [Test]
+    public void CreatePathWayCondition_ApplicationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        
+        systemUnderTest.LearningWorldVm = world;
+        presentationLogic.When(x => x.CreatePathWayCondition(world, ConditionEnum.Or, 0, 0))
+            .Do(x => throw new ApplicationException("Test"));
+        
+        systemUnderTest.CreatePathWayCondition();
+        errorService.Received().SetError("Error while creating PathWayCondition", "Test");
+    }
+    
     [Test]
     public void DeletePathWayCondition_CallsPresentationLogic()
     {
@@ -1065,6 +1161,69 @@ public class LearningWorldPresenterUt
         await systemUnderTest.ShowSelectedElementContentAsync(element);
         await presentationLogic.Received().ShowLearningElementContentAsync(element);
         selectedViewModelsProvider.Received().SetLearningElement(element, null);
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_ArgumentOutOfRangeException_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+        
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(x => throw new ArgumentOutOfRangeException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_IOException_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+        
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(x => throw new IOException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_InvalidOperationException_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+        
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(x => throw new InvalidOperationException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
     }
 
     [Test]

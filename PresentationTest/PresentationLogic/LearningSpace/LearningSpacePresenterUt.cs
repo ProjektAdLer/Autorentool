@@ -1,11 +1,15 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BusinessLogic.Commands;
+using BusinessLogic.ErrorManagement;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -439,6 +443,50 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().SaveLearningElementAsync(element);
     }
 
+    [Test]
+    public async Task SaveSelectedLearningElementAsync_SerializationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.SaveLearningElementAsync(element).Returns(Task.FromException(new SerializationException()));
+
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        errorService.Received().SetError("Error while loading learning element", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task SaveSelectedLearningElementAsync_InvalidOperationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.SaveLearningElementAsync(element).Returns(Task.FromException(new InvalidOperationException()));
+
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        errorService.Received().SetError("Error while loading learning element", Arg.Any<string>());
+    }
+
     #endregion
 
     #region ShowSelectedElementContent
@@ -491,6 +539,69 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().ShowLearningElementContentAsync(element);
     }
 
+    [Test]
+    public async Task ShowSelectedElementContentAsync_InvalidOperationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element).Returns(Task.FromException(new InvalidOperationException()));
+        
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_ArgumentOutOfRangeException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element).Returns(Task.FromException(new ArgumentOutOfRangeException()));
+        
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_IOException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+        
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element).Returns(Task.FromException(new IOException()));
+        
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
     #endregion
 
     #region LoadLearningElement
@@ -521,6 +632,38 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().LoadLearningElementAsync(space, 1);
     }
 
+    [Test]
+    public async Task LoadLearningElementAsync_SerializationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
+            .Do(x => throw new SerializationException("test"));
+        var space = ViewModelProvider.GetLearningSpace();
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.SetLearningSpace(space);
+        
+        await systemUnderTest.LoadLearningElementAsync(1);
+        errorService.Received(1).SetError("Error while loading learning element", "test");
+    }
+    
+    [Test]
+    public async Task LoadLearningElementAsync_InvalidOperationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
+            .Do(x => throw new InvalidOperationException("test"));
+        var space = ViewModelProvider.GetLearningSpace();
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.SetLearningSpace(space);
+        
+        await systemUnderTest.LoadLearningElementAsync(1);
+        errorService.Received(1).SetError("Error while loading learning element", "test");
+    }
+
     #endregion
 
     #endregion
@@ -528,12 +671,14 @@ public class LearningSpacePresenterUt
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         IMediator? mediator = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        ILogger<LearningSpacePresenter>? logger = null)
+        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         logger ??= Substitute.For<ILogger<LearningSpacePresenter>>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
-        return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger);
+        errorService ??= Substitute.For<IErrorService>();
+        return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger,
+            errorService);
     }
 }

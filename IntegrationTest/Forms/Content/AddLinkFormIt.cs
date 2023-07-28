@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bunit;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 using Presentation.Components.Forms.Content;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using TestHelpers;
 
@@ -20,14 +22,17 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
 {
     private IPresentationLogic PresentationLogic { get; set; }
     private IMapper Mapper { get; set; }
+    private IErrorService ErrorService { get; set; }
 
     [SetUp]
     public void SetUp()
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Mapper = Substitute.For<IMapper>();
+        ErrorService = Substitute.For<IErrorService>();
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(Mapper);
+        Context.Services.AddSingleton(ErrorService);
     }
 
     [Test]
@@ -39,6 +44,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
 
         Assert.That(systemUnderTest.Instance.FormDataContainer, Is.EqualTo(FormDataContainer));
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
+        Assert.That(systemUnderTest.Instance.ErrorService, Is.EqualTo(ErrorService));
         Assert.That(systemUnderTest.Instance.Mapper, Is.EqualTo(Mapper));
         Assert.That(systemUnderTest.Instance.DebounceInterval, Is.EqualTo(0));
         Assert.That(systemUnderTest.Instance.RerenderContentContainer, Is.EqualTo(rerenderContentContainer));
@@ -59,6 +65,23 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
         submitButton.Find("button").Click();
         
         PresentationLogic.Received(1).SaveLink(vm);
+    }
+    
+    [Test]
+    public void SubmitButtonClicked_SerializationException_ErrorServiceCalled()
+    {
+        var vm = ViewModelProvider.GetLinkContent();
+        var systemUnderTest = GetRenderedComponent();
+        PresentationLogic.When(x => x.SaveLink(Arg.Any<LinkContentViewModel>())).Do(x => throw new SerializationException());
+
+        var textFields = systemUnderTest.FindComponents<MudTextField<string>>();
+        textFields[0].Find("input").Change("name");
+        textFields[1].Find("input").Change("url");
+        
+        var submitButton = systemUnderTest.FindComponent<MudButton>();
+        submitButton.Find("button").Click();
+        
+        ErrorService.Received(1).SetError("Error while adding link",Arg.Any<string>());
     }
 
     private IRenderedComponent<AddLinkForm> GetRenderedComponent(Func<Task>? rerenderContentContainer = null)

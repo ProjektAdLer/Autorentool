@@ -28,9 +28,10 @@ public class MyLearningWorldsProviderUt
         var fileSystem = Substitute.For<IFileSystem>();
         var logger = Substitute.For<ILogger<MyLearningWorldsProvider>>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
 
         var systemUnderTest = new MyLearningWorldsProvider(presentationLogic, workspacePresenter, fileSystem, logger,
-            selectedViewModelsProvider);
+            selectedViewModelsProvider, errorService);
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.PresentationLogic, Is.EqualTo(presentationLogic));
@@ -39,6 +40,7 @@ public class MyLearningWorldsProviderUt
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
             Assert.That(systemUnderTest.SelectedViewModelsProvider, Is.EqualTo(selectedViewModelsProvider));
+            Assert.That(systemUnderTest.ErrorService, Is.EqualTo(errorService));
         });
     }
 
@@ -344,14 +346,15 @@ public class MyLearningWorldsProviderUt
     private MyLearningWorldsProvider CreateProviderForTesting(IPresentationLogic? presentationLogic = null,
         IAuthoringToolWorkspacePresenter? workspacePresenter = null, IFileSystem? fileSystem = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        ILogger<MyLearningWorldsProvider>? logger = null)
+        ILogger<MyLearningWorldsProvider>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         workspacePresenter ??= Substitute.For<IAuthoringToolWorkspacePresenter>();
         fileSystem ??= Substitute.For<IFileSystem>();
         logger ??= Substitute.For<ILogger<MyLearningWorldsProvider>>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
+        errorService ??= Substitute.For<IErrorService>();
         return new MyLearningWorldsProvider(presentationLogic, workspacePresenter, fileSystem, logger,
-            selectedViewModelsProvider);
+            selectedViewModelsProvider, errorService);
     }
 }

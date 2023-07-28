@@ -697,6 +697,7 @@ public class PresentationLogic : IPresentationLogic
         }
         catch (ArgumentOutOfRangeException)
         {
+            Logger.LogError("LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
             throw new ArgumentOutOfRangeException(nameof(learningElementVm),
                 "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
         }
@@ -718,6 +719,7 @@ public class PresentationLogic : IPresentationLogic
         if (error != "")
         {
             Logger.LogError("Could not open file in OS viewer: {Error}", error);
+            throw new IOException("Could not open file in OS viewer" + error);
         }
     }
 

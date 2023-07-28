@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
@@ -183,6 +184,38 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
         await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
     }
+    
+    [Test]
+    public async Task SaveLearningWorldAsync_SerializationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var errorService = Substitute.For<IErrorService>();
+        presentationLogic
+            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .Do(y => throw new SerializationException("test"));
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,errorService: errorService);
+
+        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        errorService.Received().SetError("Error while saving world", "test");
+    }
+    
+    [Test]
+    public async Task SaveLearningWorldAsync_InvalidOperationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var errorService = Substitute.For<IErrorService>();
+        presentationLogic
+            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .Do(y => throw new InvalidOperationException("test"));
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,errorService: errorService);
+
+        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        errorService.Received().SetError("Error while saving world", "test");
+    }
 
     [Test]
     public async Task SaveSelectedLearningWorldAsync_CallsPresentationLogic()
@@ -240,6 +273,46 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.LoadLearningWorldAsync();
         await presentationLogic.Received().LoadLearningWorldAsync(viewModel);
         Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld));
+    }
+    
+    [Test]
+    public async Task LoadLearningWorldAsync_SerializationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        presentationLogic
+            .When(x => x.LoadLearningWorldAsync(Arg.Any<IAuthoringToolWorkspaceViewModel>()))
+            .Do(y =>
+            {
+                throw new SerializationException("test");
+            });
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic, selectedViewModelsProvider: selectedViewModelsProvider, errorService: errorService);
+
+        await systemUnderTest.LoadLearningWorldAsync();
+        errorService.Received().SetError("Error while loading world", "test");
+    }
+    
+    [Test]
+    public async Task LoadLearningWorldAsync_InvalidOperationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        presentationLogic
+            .When(x => x.LoadLearningWorldAsync(Arg.Any<IAuthoringToolWorkspaceViewModel>()))
+            .Do(y =>
+            {
+                throw new InvalidOperationException("test");
+            });
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic, selectedViewModelsProvider: selectedViewModelsProvider, errorService: errorService);
+
+        await systemUnderTest.LoadLearningWorldAsync();
+        errorService.Received().SetError("Error while loading world", "test");
     }
 
     #endregion
@@ -334,7 +407,7 @@ public class AuthoringToolWorkspacePresenterUt
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILogger<AuthoringToolWorkspacePresenter>? logger = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IShutdownManager? shutdownManager = null,
-        IDialogService? dialogService = null)
+        IDialogService? dialogService = null, IErrorService? errorService = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
@@ -344,8 +417,9 @@ public class AuthoringToolWorkspacePresenterUt
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
         dialogService ??= Substitute.For<IDialogService>();
+        errorService ??= Substitute.For<IErrorService>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic,
-            learningSpacePresenter, logger, selectedViewModelsProvider, shutdownManager, dialogService);
+            learningSpacePresenter, logger, selectedViewModelsProvider, shutdownManager, dialogService, errorService);
     }
 
     private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,

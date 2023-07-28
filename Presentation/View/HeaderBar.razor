@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
+@using System.Runtime.Serialization
 @using System.Text
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -336,7 +337,22 @@
     private async Task TrySaveAsync()
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
-        await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+        try
+        {
+            await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to save the LearningWorld", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to save the LearningWorld", e.Message);
+        }
+        catch (OperationCanceledException e)
+        {
+            Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
+        }
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using BusinessLogic.API;
+﻿using System.Runtime.Serialization;
+using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
@@ -7,6 +8,7 @@ using BusinessLogic.ErrorManagement;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -30,6 +32,94 @@ public class BusinessLogicUt
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.DataAccess, Is.EqualTo(mockDataAccess));
         });
+    }
+    
+    [Test]
+    public void GetAllContent_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+        
+        systemUnderTest.GetAllContent();
+        dataAccess.Received().GetAllContent();
+    }
+
+    [Test]
+    public void RemoveContent_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+        var content = new FileContent("foo", "bar", "baz");
+        
+        systemUnderTest.RemoveContent(content);
+        dataAccess.Received().RemoveContent(content);
+    }
+    
+    [Test]
+    public void RemoveContent_ArgumentOutOfRangeException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(x => throw new ArgumentOutOfRangeException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess, errorManager:errorManager);
+        var content = new FileContent("foo", "bar", "baz");
+        
+        systemUnderTest.RemoveContent(content);
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());  
+    }
+    
+    [Test]
+    public void RemoveContent_FileNotFoundException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(x => throw new FileNotFoundException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess, errorManager:errorManager);
+        var content = new FileContent("foo", "bar", "baz");
+        
+        systemUnderTest.RemoveContent(content);
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<FileNotFoundException>());  
+    }
+    
+    [Test]
+    public void RemoveContent_SerializationException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(x => throw new SerializationException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess, errorManager:errorManager);
+        var content = new FileContent("foo", "bar", "baz");
+        
+        systemUnderTest.RemoveContent(content);
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());  
+    }
+    
+    [Test]
+    public void SaveLink_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+        var content = new LinkContent("foo", "bar");
+        
+        systemUnderTest.SaveLink(content);
+        dataAccess.Received().SaveLink(content);
+    }
+    
+    [Test]
+    public void SaveLink_SerializationException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.SaveLink(Arg.Any<LinkContent>()))
+            .Do(x => throw new SerializationException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess, errorManager:errorManager);
+        var content = new LinkContent("foo", "bar");
+        
+        systemUnderTest.SaveLink(content);
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());  
     }
 
     [Test]
@@ -263,6 +353,22 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().SaveLearningWorldToFile(learningWorld, "foobar");
     }
+    
+    [Test]
+    public void SaveLearningWorld_SerializationException_CallsErrorManager()
+    {
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.SaveLearningWorldToFile(Arg.Any<LearningWorld>(), Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.SaveLearningWorld(learningWorld, "foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+    }
 
     [Test]
     public void LoadLearningWorld_CallsDataAccess()
@@ -291,6 +397,21 @@ public class BusinessLogicUt
 
         Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
+    
+    [Test]  
+    public void LoadLearningWorld_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.LoadLearningWorld(Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.LoadLearningWorld("foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+    }
 
     [Test]
     public void SaveLearningSpace_CallsDataAccess()
@@ -303,6 +424,22 @@ public class BusinessLogicUt
         systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
 
         mockDataAccess.Received().SaveLearningSpaceToFile(learningSpace, "foobar");
+    }
+    
+    [Test]
+    public void SaveLearningSpace_SerializationException_CallsErrorManager()
+    {
+        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus);
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.SaveLearningSpaceToFile(Arg.Any<LearningSpace>(), Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
     }
 
     [Test]
@@ -332,6 +469,21 @@ public class BusinessLogicUt
 
         Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
+    
+    [Test]
+    public void LoadLearningSpace_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.LoadLearningSpace(Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.LoadLearningSpace("foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+    }
 
     [Test]
     public void SaveLearningElement_CallsDataAccess()
@@ -344,6 +496,22 @@ public class BusinessLogicUt
         systemUnderTest.SaveLearningElement(learningElement, "foobar");
 
         mockDataAccess.Received().SaveLearningElementToFile(learningElement, "foobar");
+    }
+    
+    [Test]
+    public void SaveLearningElement_SerializationException_CallsErrorManager()
+    {
+        var learningElement = EntityProvider.GetLearningElement();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.SaveLearningElementToFile(Arg.Any<LearningElement>(), Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.SaveLearningElement(learningElement, "foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
     }
 
     [Test]
@@ -372,6 +540,21 @@ public class BusinessLogicUt
         var learningElementActual = systemUnderTest.LoadLearningElement("foobar");
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
+    }
+    
+    [Test]
+    public void LoadLearningElement_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.When(x => x.LoadLearningElement(Arg.Any<string>()))
+            .Do(x => throw new SerializationException());
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.LoadLearningElement("foobar");
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
     }
 
     [Test]
@@ -509,6 +692,22 @@ public class BusinessLogicUt
 
         Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
+    
+    [Test]
+    public void LoadLearningWorldFromStream_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stream = Substitute.For<Stream>();
+        mockDataAccess.When(x => x.LoadLearningWorld(Arg.Any<Stream>()))
+            .Do(x => { throw new SerializationException(); });
+        
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+
+        systemUnderTest.LoadLearningWorld(stream);
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+    }
 
     [Test]
     public void LoadLearningSpaceFromStream_CallsDataAccess()
@@ -523,6 +722,22 @@ public class BusinessLogicUt
         systemUnderTest.LoadLearningSpace(stream);
 
         mockDataAccess.Received().LoadLearningSpace(stream);
+    }
+    
+    [Test]
+    public void LoadLearningSpaceFromStream_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stream = Substitute.For<Stream>();
+        mockDataAccess.When(x => x.LoadLearningSpace(Arg.Any<Stream>()))
+            .Do(x => { throw new SerializationException(); });
+        
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+        
+        systemUnderTest.LoadLearningSpace(stream);
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+        
     }
 
     [Test]
@@ -569,6 +784,22 @@ public class BusinessLogicUt
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
+    
+    [Test]
+    public void LoadLearningElementFromStream_SerializationException_CallsErrorManager()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stream = Substitute.For<Stream>();
+        mockDataAccess.When(x => x.LoadLearningElement(Arg.Any<Stream>()))
+            .Do(x => { throw new SerializationException(); });
+        
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
+        
+        systemUnderTest.LoadLearningElement(stream);
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
+        
+    }
 
     [Test]
     public void LoadLearningContentFromStream_CallsDataAccess()
@@ -596,6 +827,21 @@ public class BusinessLogicUt
         var learningElementActual = systemUnderTest.LoadLearningContent("filename.extension", stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void LoadLearningContentFromStream_IOException_CallsErrorManager()
+    {
+        var stream = Substitute.For<MemoryStream>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(x => { throw new IOException(); });
+        
+        var errorManager = Substitute.For<IErrorManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(null,fakeDataAccess: mockDataAccess, errorManager: errorManager);
+
+        systemUnderTest.LoadLearningContent("filename.extension", stream);
+
+        errorManager.Received().LogAndRethrowError(Arg.Any<IOException>());
     }
 
     [Test]
