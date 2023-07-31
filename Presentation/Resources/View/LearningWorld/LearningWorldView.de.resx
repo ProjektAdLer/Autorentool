@@ -39,7 +39,7 @@
         <value>Importiere Lernwelt</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Neuer Zustand</value>
+        <value>Neue Bedingung</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Lade Lernraum</value>

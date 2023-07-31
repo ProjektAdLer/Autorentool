@@ -42,7 +42,7 @@
         <value>This was successful!</value>
     </data>
     <data name="Header.Moodle.Text" xml:space="preserve">
-        <value>Login to moodle</value>
+        <value>Login to AdLer server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
         <value>Forgot password?</value>
@@ -54,6 +54,12 @@
         <value>Show password</value>
     </data>
     <data name="DialogContent.Button.Login.Title" xml:space="preserve">
-        <value>Login in moodle</value>
+        <value>Login to AdLer server</value>
+    </data>
+    <data name="DialogContent.Button.Logout.Title" xml:space="preserve">
+        <value>Logout from AdLer server</value>
+    </data>
+    <data name="DialogContent.Button.ForgotPassword.Title" xml:space="preserve">
+        <value>Forgot password?</value>
     </data>
 </root>
