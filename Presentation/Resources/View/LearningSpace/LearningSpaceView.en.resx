@@ -29,10 +29,10 @@
         <value>Selected learning element:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Workload:</value>
+        <value>Workload: </value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Points:</value>
+        <value>Points: </value>
     </data>
     <data name="LearningSpace.Button.DeleteLearningElement.Title" xml:space="preserve">
         <value>Delete learning element</value>
@@ -47,10 +47,10 @@
         <value>Replace Learning Element</value>
     </data>
     <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
-        <value>Theme:</value>
+        <value>Theme: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
-        <value>Goals:</value>
+        <value>Goals: </value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
         <value>Replace Learning Element</value>
