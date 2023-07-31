@@ -25,10 +25,10 @@
         <value>1.0</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
-        <value>Generiere 3D-Welt</value>
+        <value>Export der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Erstelle Lernwelt in Moodle und 3D Lern Umgebung</value>
+        <value>Exportiere die Moodle Lernwelt-Datei (.mbz)</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
