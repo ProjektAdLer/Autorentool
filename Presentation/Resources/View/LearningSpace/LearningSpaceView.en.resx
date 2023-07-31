@@ -34,15 +34,6 @@
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
         <value>Points: </value>
     </data>
-    <data name="LearningSpace.Button.DeleteLearningElement.Title" xml:space="preserve">
-        <value>Delete learning element</value>
-    </data>
-    <data name="LearningSpace.Button.SaveLearningElement.Title" xml:space="preserve">
-        <value>Save learning element</value>
-    </data>
-    <data name="LearningSpace.Button.ShowLearningElement.Title" xml:space="preserve">
-        <value>Show learning element</value>
-    </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
         <value>Replace Learning Element</value>
     </data>

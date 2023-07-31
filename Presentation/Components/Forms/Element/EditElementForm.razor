@@ -139,6 +139,10 @@
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
                        Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
                        OnClick="OnResetAsync"></MudIconButton>
+        <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync" title=@Localizer["EditElementForm.Button.ShowLearningElement.Title"]>
+            <img src="CustomIcons/learningelements-icon-nobg.png" alt="Show learning element" class="absolute opacity-50 w-8 h-8">
+            <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Class="absolute"></MudIcon>
+        </button>
     </FooterButtons>
 </BaseForm>
 
@@ -205,6 +209,11 @@
     private async Task OnResetAsync()
     {
         await MapIntoContainer();
+    }
+
+    private async Task ShowSelectedElementContentAsync()
+    {
+        await WorldPresenter.ShowSelectedElementContentAsync(ElementToEdit);
     }
 
 }

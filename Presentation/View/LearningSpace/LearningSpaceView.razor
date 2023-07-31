@@ -41,20 +41,6 @@
                     @ChildContent
                 </div>
             </div>
-            <div class="flex justify-start">
-                <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement" title=@Localizer["LearningSpace.Button.DeleteLearningElement.Title"]>
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Delete learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Delete" Class="absolute"></MudIcon>
-                </button>
-                <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync" title=@Localizer["LearningSpace.Button.SaveLearningElement.Title"]>
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Save learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Save" Class="absolute"></MudIcon>
-                </button>
-                <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync" title=@Localizer["LearningSpace.Button.ShowLearningElement.Title"]>
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Show learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Class="absolute"></MudIcon>
-                </button>
-            </div>
         </section>
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
@@ -145,25 +131,6 @@
 
     private bool _showingReplaceLearningElementDialog = false;
 
-
-    private void DeleteSelectedLearningElement()
-    {
-        LearningSpaceP.DeleteSelectedLearningElement();
-    }
-
-    private async Task LoadLearningElementAsync()
-    {
-    //TODO: Remove parameterless method and use the one with the parameter - AW
-        try
-        {
-            await LoadLearningElementAsync(0);
-        }
-        catch (Exception e)
-        {
-            ErrorState = new ExceptionWrapper("", e);
-        }
-    }
-
     private async Task LoadLearningElementAsync(int slotIndex)
     {
         try
@@ -181,46 +148,6 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    private async Task SaveSelectedLearningElementAsync()
-    {
-        try
-        {
-            await LearningSpaceP.SaveSelectedLearningElementAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.SaveLearningElement.Message"], exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    private async Task ShowSelectedElementContentAsync()
-    {
-        try
-        {
-            await LearningSpaceP.ShowSelectedElementContentAsync();
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.ShowLearningElementContent.Message"], exception);
-        }
-        finally
-        {
             await InvokeAsync(StateHasChanged);
         }
     }
