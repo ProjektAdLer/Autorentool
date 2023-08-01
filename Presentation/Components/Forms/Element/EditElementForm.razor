@@ -2,13 +2,12 @@
 @using Shared
 @using AutoMapper
 @using BusinessLogic.Entities
-@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Models
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningElement
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditElementForm.Header.Text"]</h2>
@@ -140,7 +139,7 @@
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.RemoveRedEye"
                        Class="btn-standard rounded"
                        OnClick="ShowSelectedElementContentAsync"
-                       title=@Localizer["EditElementForm.Button.ShowLearningElement.Title"]>
+                       title=@Localizer["EditElementForm.Button.ShowLearningElement.Title"].Value>
         </MudIconButton>
     </FooterButtons>
 </BaseForm>
