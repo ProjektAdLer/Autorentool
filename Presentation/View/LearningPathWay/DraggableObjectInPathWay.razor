@@ -21,6 +21,7 @@
     <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedDeleteObject">
         @((MarkupString)DeleteObjectButtonShape)
     </Clickable>
+    <title>@Title</title>
 </Draggable>
 
 <PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX 
@@ -66,6 +67,8 @@
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
     protected abstract string Text { get; }
+    
+    protected abstract string Title { get; }
     
     protected abstract string ObjectName { get; }
     

@@ -24,8 +24,8 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
             }
         }
     }
-    
-    
+
+    protected override string Title => "";
     
     protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:1";
     protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:1";

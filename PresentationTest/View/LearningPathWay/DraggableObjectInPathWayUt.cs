@@ -205,7 +205,8 @@ public class DraggableObjectInPathWay
             <g  ></g>
             <g>
               <text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>
-            </g>");
+            </g>
+            <title>foo bar super cool name</title>");
     }
     
     [Test]
@@ -240,7 +241,8 @@ public class DraggableObjectInPathWay
               <g  ></g>
               <g  >
                 <text font-size=""12"" transform=""translate(65,12)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>
-              </g>");
+              </g>
+              <title></title>");
     }
 
     [Test]
