@@ -1,5 +1,4 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -29,18 +28,18 @@ public class LearningWorldUt
         var topic2 = new Topic("topic2");
         var topic3 = new Topic("topic3");
         var topics = new List<Topic> { topic1, topic2, topic3 };
-        
+
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
             learningSpaces, pathWayConditions, pathWays, topics);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
-            Assert.That(systemUnderTest.Language, Is.EqualTo(language)); 
+            Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
@@ -51,8 +50,8 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
-    
-     [Test]
+
+    [Test]
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
         const string name = "asdf";
@@ -64,17 +63,18 @@ public class LearningWorldUt
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
-        var pathWayConditions = new List<PathWayCondition>{ pathWayCondition };
+        var pathWayConditions = new List<PathWayCondition> { pathWayCondition };
         var learningSpaces = new List<ILearningSpace> { space1 };
         var pathWay = new LearningPathway(space1, pathWayCondition);
         var pathWays = new List<LearningPathway> { pathWay };
         var topic1 = new Topic("topic1");
-        var topics = new List<Topic>{topic1};
+        var topics = new List<Topic> { topic1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces, pathWayConditions, pathWays, topics);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
+            learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
-        
+
         var nameChanged = "qwertz";
         var shortnameChanged = "uiop";
         var authorsChanged = "sdfg";
@@ -88,7 +88,7 @@ public class LearningWorldUt
         var pathWay2 = new LearningPathway(space2, condition2);
         var topic2 = new Topic("topic2");
 
-        
+
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Shortname = shortnameChanged;
         systemUnderTest.Authors = authorsChanged;
@@ -101,7 +101,7 @@ public class LearningWorldUt
         systemUnderTest.LearningPathways.Add(pathWay2);
         systemUnderTest.Topics.Add(topic2);
         systemUnderTest.UnplacedLearningElements.Add(newElement);
-        
+
 
         Assert.Multiple(() =>
         {
@@ -125,9 +125,9 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Topics[0], Is.EqualTo(topic1));
             Assert.That(systemUnderTest.Topics[1], Is.EqualTo(topic2));
         });
-        
+
         systemUnderTest.RestoreMemento(learningWorldMemento);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -160,18 +160,18 @@ public class LearningWorldUt
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var learningSpaces = new List<ILearningSpace> { space1 };
-        
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces);
+
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
+            learningSpaces);
 
 
         var mementoMock = new MementoMock();
-        
+
         var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.RestoreMemento(mementoMock));
         Assert.That(ex!.Message, Is.EqualTo("Incorrect IMemento implementation (Parameter 'memento')"));
     }
 
     private class MementoMock : IMemento
     {
-        
     }
 }

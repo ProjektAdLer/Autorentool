@@ -2,18 +2,11 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
 using Shared;
-using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
 
 public class CreateLearningElementInSlot : ICreateLearningElementInSlot
 {
-    public string Name => nameof(CreateLearningElementInSlot);
-    internal LearningSpace ParentSpace { get; }
-    internal int SlotIndex { get; }
-    internal LearningElement LearningElement { get; }
-    internal Action<LearningSpace> MappingAction { get; }
-    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
@@ -21,7 +14,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         ILearningContent learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
         double positionY,
-        Action<LearningSpace> mappingAction, ILogger<ElementCommandFactory> logger)
+        Action<LearningSpace> mappingAction, ILogger<CreateLearningElementInSlot> logger)
     {
         LearningElement = new LearningElement(name, learningContent, description, goals,
             difficulty, elementModel, parentSpace, workload: workload, points: points, positionX: positionX,
@@ -33,7 +26,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
     }
 
     public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, LearningElement learningElement,
-        Action<LearningSpace> mappingAction, ILogger<ElementCommandFactory> logger)
+        Action<LearningSpace> mappingAction, ILogger<CreateLearningElementInSlot> logger)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
@@ -41,6 +34,13 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningSpace ParentSpace { get; }
+    internal int SlotIndex { get; }
+    internal LearningElement LearningElement { get; }
+    internal Action<LearningSpace> MappingAction { get; }
+    private ILogger<CreateLearningElementInSlot> Logger { get; }
+    public string Name => nameof(CreateLearningElementInSlot);
 
     public void Execute()
     {

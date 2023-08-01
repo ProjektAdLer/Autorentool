@@ -1,14 +1,12 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 
 namespace BusinessLogicTest.Commands.Space;
 
 [TestFixture]
-
 public class EditLearningSpaceUt
 {
     [Test]
@@ -24,12 +22,12 @@ public class EditLearningSpaceUt
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
         var theme = Theme.Campus;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
-        
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+            mappingAction, new NullLogger<EditLearningSpace>());
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.False);
@@ -40,9 +38,9 @@ public class EditLearningSpaceUt
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
@@ -54,7 +52,7 @@ public class EditLearningSpaceUt
             Assert.That(space.UnsavedChanges, Is.True);
         });
     }
-    
+
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
@@ -65,17 +63,17 @@ public class EditLearningSpaceUt
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
-        
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+            mappingAction, new NullLogger<EditLearningSpace>());
+
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
         Assert.IsFalse(actionWasInvoked);
     }
-    
+
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
@@ -89,12 +87,12 @@ public class EditLearningSpaceUt
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
-        
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction, logger);
-        
+
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+            mappingAction, new NullLogger<EditLearningSpace>());
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.False);
@@ -105,9 +103,9 @@ public class EditLearningSpaceUt
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
@@ -119,9 +117,9 @@ public class EditLearningSpaceUt
             Assert.That(space.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
-        
+
         command.Undo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
@@ -131,12 +129,11 @@ public class EditLearningSpaceUt
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
-
         });
         actionWasInvoked = false;
-        
+
         command.Redo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);

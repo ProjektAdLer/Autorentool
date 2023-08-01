@@ -7,18 +7,13 @@ namespace BusinessLogic.Commands.Element;
 
 public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
 {
-    public string Name => nameof(CreateUnplacedLearningElement);
-    internal LearningWorld LearningWorld { get; }
-    internal LearningElement LearningElement { get; }
-    internal Action<LearningWorld> MappingAction { get; }
-    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
 
     public CreateUnplacedLearningElement(LearningWorld learningWorld, string name,
         ILearningContent learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
         double positionY,
-        Action<LearningWorld> mappingAction, ILogger<ElementCommandFactory> logger)
+        Action<LearningWorld> mappingAction, ILogger<CreateUnplacedLearningElement> logger)
     {
         LearningElement = new LearningElement(name, learningContent, description, goals,
             difficulty, elementModel, null, workload, points, positionX, positionY);
@@ -26,6 +21,12 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningWorld LearningWorld { get; }
+    internal LearningElement LearningElement { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<CreateUnplacedLearningElement> Logger { get; }
+    public string Name => nameof(CreateUnplacedLearningElement);
 
     public void Execute()
     {

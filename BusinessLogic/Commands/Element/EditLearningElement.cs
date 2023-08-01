@@ -1,32 +1,18 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
-using Shared;
 using Microsoft.Extensions.Logging;
-using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
+using Shared;
 
 namespace BusinessLogic.Commands.Element;
 
 public class EditLearningElement : IEditLearningElement
 {
-    public string Name => nameof(EditLearningElement);
-    internal LearningElement LearningElement { get; }
-    internal LearningSpace? ParentSpace { get; }
-    internal string ElementName { get; }
-    internal string Description { get; }
-    internal string Goals { get; }
-    internal LearningElementDifficultyEnum Difficulty { get; }
-    internal ElementModel ElementModel { get; }
-    internal int Workload { get; }
-    internal int Points { get; }
-    internal ILearningContent LearningContent { get; }
-    internal Action<LearningElement> MappingAction { get; }
-    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
 
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction,
-        ILogger<ElementCommandFactory> logger)
+        ILogger<EditLearningElement> logger)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
@@ -42,14 +28,30 @@ public class EditLearningElement : IEditLearningElement
         Logger = logger;
     }
 
+    internal LearningElement LearningElement { get; }
+    internal LearningSpace? ParentSpace { get; }
+    internal string ElementName { get; }
+    internal string Description { get; }
+    internal string Goals { get; }
+    internal LearningElementDifficultyEnum Difficulty { get; }
+    internal ElementModel ElementModel { get; }
+    internal int Workload { get; }
+    internal int Points { get; }
+    internal ILearningContent LearningContent { get; }
+    internal Action<LearningElement> MappingAction { get; }
+    private ILogger<EditLearningElement> Logger { get; }
+    public string Name => nameof(EditLearningElement);
+
     public void Execute()
     {
         _memento = LearningElement.GetMemento();
 
         Logger.LogTrace(
             "Editing LearningElement {id}. Previous Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
-            LearningElement.Id,LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description, LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points, LearningElement.LearningContent.Name);
-        
+            LearningElement.Id, LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description,
+            LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload,
+            LearningElement.Points, LearningElement.LearningContent.Name);
+
         if (AnyChange()) LearningElement.UnsavedChanges = true;
         LearningElement.Name = ElementName;
         LearningElement.Parent = ParentSpace;
@@ -60,12 +62,35 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.Workload = Workload;
         LearningElement.Points = Points;
         LearningElement.LearningContent = LearningContent;
-        
+
         Logger.LogTrace(
             "Edited LearningElement {id}. Updated Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
-            LearningElement.Id,LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description, LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points, LearningElement.LearningContent.Name);
+            LearningElement.Id, LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description,
+            LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload,
+            LearningElement.Points, LearningElement.LearningContent.Name);
 
         MappingAction.Invoke(LearningElement);
+    }
+
+    public void Undo()
+    {
+        if (_memento == null)
+        {
+            throw new InvalidOperationException("_memento is null");
+        }
+
+        LearningElement.RestoreMemento(_memento);
+
+        Logger.LogTrace("Undone edit of LearningElement {LearningElementName} ({LearningElementId})",
+            LearningElement.Name, LearningElement.Id);
+
+        MappingAction.Invoke(LearningElement);
+    }
+
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing EditLearningElement");
+        Execute();
     }
 
     private bool AnyChange() =>
@@ -78,24 +103,4 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.Workload != Workload ||
         LearningElement.Points != Points ||
         LearningElement.LearningContent != LearningContent;
-
-    public void Undo()
-    {
-        if (_memento == null)
-        {
-            throw new InvalidOperationException("_memento is null");
-        }
-
-        LearningElement.RestoreMemento(_memento);
-
-        Logger.LogTrace("Undone edit of LearningElement {LearningElementName} ({LearningElementId})", LearningElement.Name, LearningElement.Id);
-
-        MappingAction.Invoke(LearningElement);
-    }
-
-    public void Redo()
-    {
-        Logger.LogTrace("Redoing EditLearningElement");
-        Execute();
-    }
 }

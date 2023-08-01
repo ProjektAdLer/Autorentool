@@ -5,24 +5,25 @@ namespace BusinessLogic.Commands.Pathway;
 
 public class CreateLearningPathWay : ICreateLearningPathWay
 {
-    public string Name => nameof(CreateLearningPathWay);
-    public bool HasError { get; private set; }
-    internal LearningWorld LearningWorld { get; }
-    internal LearningPathway LearningPathway { get; }
-    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
-    private ILogger<PathwayCommandFactory> Logger { get; }
 
 
     public CreateLearningPathWay(LearningWorld learningWorld, IObjectInPathWay sourceObject,
         IObjectInPathWay targetObject,
-        Action<LearningWorld> mappingAction, ILogger<PathwayCommandFactory> logger)
+        Action<LearningWorld> mappingAction, ILogger<CreateLearningPathWay> logger)
     {
         LearningPathway = new LearningPathway(sourceObject, targetObject);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningWorld LearningWorld { get; }
+    internal LearningPathway LearningPathway { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<CreateLearningPathWay> Logger { get; }
+    public string Name => nameof(CreateLearningPathWay);
+    public bool HasError { get; private set; }
 
 
     public void Execute()
@@ -34,7 +35,8 @@ public class CreateLearningPathWay : ICreateLearningPathWay
                 LearningWorld.LearningPathways.Any(x => x.TargetObject.Id == LearningPathway.TargetObject.Id)))
         {
             HasError = true;
-            Logger.LogWarning("Warning: The learning pathway to create is either redundant, has the same source and target, or is circular.");
+            Logger.LogWarning(
+                "Warning: The learning pathway to create is either redundant, has the same source and target, or is circular.");
             return;
         }
 
@@ -42,10 +44,34 @@ public class CreateLearningPathWay : ICreateLearningPathWay
 
         LearningWorld.UnsavedChanges = true;
         LearningWorld.LearningPathways.Add(LearningPathway);
-        
-        Logger.LogTrace("Created LearningPathway from {SourceObjectId} to {TargetObjectId} in LearningWorld {LearningWorldName} {LearningWorldId}", LearningPathway.SourceObject.Id, LearningPathway.TargetObject.Id, LearningWorld.Name, LearningWorld.Id);
+
+        Logger.LogTrace(
+            "Created LearningPathway from {SourceObjectId} to {TargetObjectId} in LearningWorld {LearningWorldName} {LearningWorldId}",
+            LearningPathway.SourceObject.Id, LearningPathway.TargetObject.Id, LearningWorld.Name, LearningWorld.Id);
 
         MappingAction.Invoke(LearningWorld);
+    }
+
+    public void Undo()
+    {
+        if (_memento == null)
+        {
+            throw new InvalidOperationException("_memento is null");
+        }
+
+        LearningWorld.RestoreMemento(_memento);
+
+        Logger.LogTrace(
+            "Undone creation of LearningPathway from {SourceObjectId} to {TargetObjectId} in LearningWorld {LearningWorldName} {LearningWorldId}",
+            LearningPathway.SourceObject.Id, LearningPathway.TargetObject.Id, LearningWorld.Name, LearningWorld.Id);
+
+        MappingAction.Invoke(LearningWorld);
+    }
+
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing CreateLearningPathWay");
+        Execute();
     }
 
     private bool IsCircular(LearningPathway learningPathway)
@@ -84,25 +110,5 @@ public class CreateLearningPathWay : ICreateLearningPathWay
         }
 
         return isCircular;
-    }
-
-    public void Undo()
-    {
-        if (_memento == null)
-        {
-            throw new InvalidOperationException("_memento is null");
-        }
-
-        LearningWorld.RestoreMemento(_memento);
-        
-        Logger.LogTrace("Undone creation of LearningPathway from {SourceObjectId} to {TargetObjectId} in LearningWorld {LearningWorldName} {LearningWorldId}", LearningPathway.SourceObject.Id, LearningPathway.TargetObject.Id, LearningWorld.Name, LearningWorld.Id);
-
-        MappingAction.Invoke(LearningWorld);
-    }
-
-    public void Redo()
-    {
-        Logger.LogTrace("Redoing CreateLearningPathWay");
-        Execute();
     }
 }

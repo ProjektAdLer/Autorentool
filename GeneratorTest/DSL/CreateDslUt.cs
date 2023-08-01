@@ -35,7 +35,7 @@ public class CreateDslUt
             inboundObject5
         };
 
-        int incrementId = 1;
+        var incrementId = 1;
         foreach (var space in listLearningSpaces)
         {
             systemUnderTest.DictionarySpaceIdToGuid.Add(incrementId, space.Id);

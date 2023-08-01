@@ -11,22 +11,21 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<ILearningElementPe> ElementsWithFileContent;
-    public List<LearningSpacePe> ListLearningSpaces;
-    public List<TopicPe> ListTopics;
-    public LearningWorldJson LearningWorldJson;
-    public string Uuid;
-    public Dictionary<int, Guid> DictionarySpaceIdToGuid;
-    private List<int?> _listLearningSpaceElements;
-    private List<ILearningElementPe> _listAllLearningElements;
+    private string _author;
     private string _booleanAlgebraRequirements;
     private string _currentConditionSpace;
-    private string _author;
-    private string _language;
-    private IFileSystem _fileSystem;
     private string _dslPath;
+    private IFileSystem _fileSystem;
+    private string _language;
+    private List<ILearningElementPe> _listAllLearningElements;
+    private List<int?> _listLearningSpaceElements;
     private string _xmlFilesForExportPath;
-    private ILogger<CreateDsl> Logger { get; }
+    public Dictionary<int, Guid> DictionarySpaceIdToGuid;
+    public List<ILearningElementPe> ElementsWithFileContent;
+    public LearningWorldJson LearningWorldJson;
+    public List<LearningSpacePe> ListLearningSpaces;
+    public List<TopicPe> ListTopics;
+    public string Uuid;
 
     /// <summary>
     /// Read the PersistEntities and create a Dsl Document with a specified syntax.
@@ -42,125 +41,7 @@ public class CreateDsl : ICreateDsl
         Logger = logger;
     }
 
-    private void Initialize()
-    {
-        ElementsWithFileContent = new List<ILearningElementPe>();
-        ListLearningSpaces = new List<LearningSpacePe>();
-        ListTopics = new List<TopicPe>();
-        _listLearningSpaceElements = new List<int?>();
-        _booleanAlgebraRequirements = "";
-        DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
-        Guid guid = Guid.NewGuid();
-        Uuid = guid.ToString();
-        _currentConditionSpace = "";
-        _listAllLearningElements = new List<ILearningElementPe>();
-    }
-
-    /// <summary>
-    /// Searches for duplicate learning element names in a list of learning spaces. If duplicates are found, their names are incremented.
-    /// </summary>
-    /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
-    /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
-    public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
-    {
-        var dictionaryIncrementedElementNames = new Dictionary<string, string>();
-
-        //Get All LearningElements
-        foreach (var space in listLearningSpace)
-        {
-            foreach (var element in space.LearningSpaceLayout.ContainedLearningElements)
-            {
-                _listAllLearningElements.Add(element);
-            }
-        }
-
-        //Search for duplicates
-        var duplicateLearningElements = _listAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
-            .Select(x => x).ToList();
-
-        //To avoid duplicate names, we increment the name of the learning element.
-        //That happens in yet another loop, because we have to respect the Space -> Element hierarchy.
-        foreach (var duplicateElement in duplicateLearningElements)
-        {
-            foreach (var learningSpace in listLearningSpace)
-            {
-                foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
-                {
-                    if (element.Name == duplicateElement.Key)
-                    {
-                        string incrementedElementName;
-                        //Increment LearningElement names, if they are already in the dictionary
-                        if (dictionaryIncrementedElementNames.ContainsKey(element.Name))
-                        {
-                            incrementedElementName =
-                                StringHelper.IncrementName(dictionaryIncrementedElementNames[element.Name]);
-                            dictionaryIncrementedElementNames[element.Name] = incrementedElementName;
-                        }
-                        //If LearningElement ist not in the dictionary, increment the name and add it to the dictionary.
-                        else
-                        {
-                            incrementedElementName = StringHelper.IncrementName(element.Name);
-                            dictionaryIncrementedElementNames.Add(element.Name, incrementedElementName);
-                        }
-
-                        element.Name = incrementedElementName;
-                    }
-                }
-            }
-        }
-
-        return listLearningSpace;
-    }
-
-    /// <summary>
-    /// Takes a Condition and builds a boolean algebra string.
-    /// Method searches recursively for all conditions and their inbound Spaces.
-    /// </summary>
-    /// <param name="learningCondition"></param>
-    /// <returns>A string that describes a boolean algebra expression</returns>
-    public string DefineLogicalExpression(PathWayConditionPe learningCondition)
-    {
-        string condition = learningCondition.Condition.ToString();
-        if (condition == "And")
-        {
-            condition = "^";
-        }
-        else if (condition == "Or")
-        {
-            condition = "v";
-        }
-
-        foreach (var learningObject in learningCondition.InBoundObjects)
-        {
-            if (learningObject is LearningSpacePe)
-            {
-                _currentConditionSpace += "(";
-                string spaceId = DictionarySpaceIdToGuid.Where(x => x.Value == learningObject.Id)
-                    .Select(x => x.Key)
-                    .FirstOrDefault().ToString();
-                _currentConditionSpace += spaceId + ")" + condition;
-            }
-            else if (learningObject is PathWayConditionPe pathWayConditionPe)
-            {
-                //special case for nested conditions (conditions that are in conditions)
-                if (learningObject.InBoundObjects.Count == 1)
-                {
-                    DefineLogicalExpression(pathWayConditionPe);
-                }
-                else
-                {
-                    _currentConditionSpace += "(";
-                    DefineLogicalExpression(pathWayConditionPe);
-                    _currentConditionSpace += ")";
-                    _currentConditionSpace += condition;
-                }
-            }
-        }
-
-        _currentConditionSpace =
-            _currentConditionSpace.Substring(0, _currentConditionSpace.LastIndexOf(")", StringComparison.Ordinal) + 1);
-        return _currentConditionSpace;
-    }
+    private ILogger<CreateDsl> Logger { get; }
 
 
     /// <inheritdoc cref="ICreateDsl.WriteLearningWorld"/>
@@ -177,7 +58,7 @@ public class CreateDsl : ICreateDsl
 
         // Starting Value for Learning Space Ids, Learning Element Ids & Topic Ids in the DSL-Document
         var learningSpaceId = 1;
-        int topicId = 1;
+        var topicId = 1;
 
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(learningWorld.Name, learningWorld.Id.ToString(),
@@ -229,7 +110,7 @@ public class CreateDsl : ICreateDsl
                     $"The FloorPlanName {space.LearningSpaceLayout.FloorPlanName} of space {space.Name} is not supported")
             };
 
-            for (int i = 0; i <= maxSlotNumber; i++)
+            for (var i = 0; i <= maxSlotNumber; i++)
             {
                 if (space.LearningSpaceLayout.LearningElements.ContainsKey(i))
                 {
@@ -355,5 +236,125 @@ public class CreateDsl : ICreateDsl
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
         Logger.LogTrace("Generated DSL Document: {JsonFile} at {Path}", jsonFile, _dslPath);
         return _dslPath;
+    }
+
+    private void Initialize()
+    {
+        ElementsWithFileContent = new List<ILearningElementPe>();
+        ListLearningSpaces = new List<LearningSpacePe>();
+        ListTopics = new List<TopicPe>();
+        _listLearningSpaceElements = new List<int?>();
+        _booleanAlgebraRequirements = "";
+        DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
+        var guid = Guid.NewGuid();
+        Uuid = guid.ToString();
+        _currentConditionSpace = "";
+        _listAllLearningElements = new List<ILearningElementPe>();
+    }
+
+    /// <summary>
+    /// Searches for duplicate learning element names in a list of learning spaces. If duplicates are found, their names are incremented.
+    /// </summary>
+    /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
+    /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
+    public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
+    {
+        var dictionaryIncrementedElementNames = new Dictionary<string, string>();
+
+        //Get All LearningElements
+        foreach (var space in listLearningSpace)
+        {
+            foreach (var element in space.LearningSpaceLayout.ContainedLearningElements)
+            {
+                _listAllLearningElements.Add(element);
+            }
+        }
+
+        //Search for duplicates
+        var duplicateLearningElements = _listAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
+            .Select(x => x).ToList();
+
+        //To avoid duplicate names, we increment the name of the learning element.
+        //That happens in yet another loop, because we have to respect the Space -> Element hierarchy.
+        foreach (var duplicateElement in duplicateLearningElements)
+        {
+            foreach (var learningSpace in listLearningSpace)
+            {
+                foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+                {
+                    if (element.Name == duplicateElement.Key)
+                    {
+                        string incrementedElementName;
+                        //Increment LearningElement names, if they are already in the dictionary
+                        if (dictionaryIncrementedElementNames.ContainsKey(element.Name))
+                        {
+                            incrementedElementName =
+                                StringHelper.IncrementName(dictionaryIncrementedElementNames[element.Name]);
+                            dictionaryIncrementedElementNames[element.Name] = incrementedElementName;
+                        }
+                        //If LearningElement ist not in the dictionary, increment the name and add it to the dictionary.
+                        else
+                        {
+                            incrementedElementName = StringHelper.IncrementName(element.Name);
+                            dictionaryIncrementedElementNames.Add(element.Name, incrementedElementName);
+                        }
+
+                        element.Name = incrementedElementName;
+                    }
+                }
+            }
+        }
+
+        return listLearningSpace;
+    }
+
+    /// <summary>
+    /// Takes a Condition and builds a boolean algebra string.
+    /// Method searches recursively for all conditions and their inbound Spaces.
+    /// </summary>
+    /// <param name="learningCondition"></param>
+    /// <returns>A string that describes a boolean algebra expression</returns>
+    public string DefineLogicalExpression(PathWayConditionPe learningCondition)
+    {
+        var condition = learningCondition.Condition.ToString();
+        if (condition == "And")
+        {
+            condition = "^";
+        }
+        else if (condition == "Or")
+        {
+            condition = "v";
+        }
+
+        foreach (var learningObject in learningCondition.InBoundObjects)
+        {
+            if (learningObject is LearningSpacePe)
+            {
+                _currentConditionSpace += "(";
+                var spaceId = DictionarySpaceIdToGuid.Where(x => x.Value == learningObject.Id)
+                    .Select(x => x.Key)
+                    .FirstOrDefault().ToString();
+                _currentConditionSpace += spaceId + ")" + condition;
+            }
+            else if (learningObject is PathWayConditionPe pathWayConditionPe)
+            {
+                //special case for nested conditions (conditions that are in conditions)
+                if (learningObject.InBoundObjects.Count == 1)
+                {
+                    DefineLogicalExpression(pathWayConditionPe);
+                }
+                else
+                {
+                    _currentConditionSpace += "(";
+                    DefineLogicalExpression(pathWayConditionPe);
+                    _currentConditionSpace += ")";
+                    _currentConditionSpace += condition;
+                }
+            }
+        }
+
+        _currentConditionSpace =
+            _currentConditionSpace.Substring(0, _currentConditionSpace.LastIndexOf(")", StringComparison.Ordinal) + 1);
+        return _currentConditionSpace;
     }
 }

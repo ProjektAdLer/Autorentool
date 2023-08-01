@@ -6,20 +6,21 @@ namespace BusinessLogic.Commands.World;
 
 public class SaveLearningWorld : ISaveLearningWorld
 {
-    public string Name => nameof(SaveLearningWorld);
-    internal IBusinessLogic BusinessLogic { get; }
-    internal LearningWorld LearningWorld { get; }
-    internal string Filepath { get; }
-    private ILogger<WorldCommandFactory> Logger { get; }
-
-    public SaveLearningWorld(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath, ILogger<WorldCommandFactory> logger)
+    public SaveLearningWorld(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath,
+        ILogger<SaveLearningWorld> logger)
     {
         BusinessLogic = businessLogic;
         LearningWorld = learningWorld;
         Filepath = filepath;
         Logger = logger;
     }
-    
+
+    internal IBusinessLogic BusinessLogic { get; }
+    internal LearningWorld LearningWorld { get; }
+    internal string Filepath { get; }
+    private ILogger<SaveLearningWorld> Logger { get; }
+    public string Name => nameof(SaveLearningWorld);
+
     public void Execute()
     {
         BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);

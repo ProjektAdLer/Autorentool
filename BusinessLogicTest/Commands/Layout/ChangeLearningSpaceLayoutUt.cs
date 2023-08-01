@@ -1,7 +1,6 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -25,23 +24,23 @@ public class ChangeLearningSpaceLayoutUt
         var element8 = EntityProvider.GetLearningElement(unsavedChanges: false);
         var layout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>
         {
-            {0, element1},
-            {1, element2},
-            {2, element3},
-            {3, element4},
-            {4, element5},
-            {5, element6},
-            {6, element7},
-            {7, element8},
+            { 0, element1 },
+            { 1, element2 },
+            { 2, element3 },
+            { 3, element4 },
+            { 4, element5 },
+            { 5, element6 },
+            { 6, element7 },
+            { 7, element8 },
         }, FloorPlanEnum.R_20X30_8L);
         var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
-        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { }, logger);
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { },
+            new NullLogger<ChangeLearningSpaceLayout>());
 
         Assert.Multiple(() =>
         {
@@ -57,12 +56,12 @@ public class ChangeLearningSpaceLayoutUt
         {
             var expectedDict = new Dictionary<int, ILearningElement>
             {
-                {0, element1},
-                {1, element2},
-                {2, element3},
-                {3, element4},
-                {4, element5},
-                {5, element6},
+                { 0, element1 },
+                { 1, element2 },
+                { 2, element3 },
+                { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));
@@ -88,23 +87,23 @@ public class ChangeLearningSpaceLayoutUt
         var element8 = EntityProvider.GetLearningElement(unsavedChanges: false);
         var layout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>
         {
-            {0, element1},
-            {1, element2},
-            {2, element3},
-            {3, element4},
-            {4, element5},
-            {5, element6},
-            {6, element7},
-            {7, element8},
+            { 0, element1 },
+            { 1, element2 },
+            { 2, element3 },
+            { 3, element4 },
+            { 4, element5 },
+            { 5, element6 },
+            { 6, element7 },
+            { 7, element8 },
         }, FloorPlanEnum.R_20X30_8L);
         var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
-        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();   
 
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { }, logger);
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R_20X20_6L, _ => { },
+            new NullLogger<ChangeLearningSpaceLayout>());
 
         Assert.Multiple(() =>
         {
@@ -120,12 +119,12 @@ public class ChangeLearningSpaceLayoutUt
         {
             var expectedDict = new Dictionary<int, ILearningElement>
             {
-                {0, element1},
-                {1, element2},
-                {2, element3},
-                {3, element4},
-                {4, element5},
-                {5, element6},
+                { 0, element1 },
+                { 1, element2 },
+                { 2, element3 },
+                { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));
@@ -152,12 +151,12 @@ public class ChangeLearningSpaceLayoutUt
         {
             var expectedDict = new Dictionary<int, ILearningElement>
             {
-                {0, element1},
-                {1, element2},
-                {2, element3},
-                {3, element4},
-                {4, element5},
-                {5, element6},
+                { 0, element1 },
+                { 1, element2 },
+                { 2, element3 },
+                { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));

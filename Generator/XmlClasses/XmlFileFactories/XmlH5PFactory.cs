@@ -17,39 +17,21 @@ namespace Generator.XmlClasses.XmlFileFactories;
 public class XmlH5PFactory : IXmlH5PFactory
 {
     private readonly string _currWorkDir;
-    private readonly string _hardcodedPath = "XMLFilesForExport";
-    public string H5PElementId;
-    public string H5PElementUuid;
-    public string H5PElementName;
-    public string H5PElementParentSpaceString;
-    public string H5PElementType;
-    public string H5PElementDesc;
-    public float H5PElementPoints;
-    public string CurrentTime;
-    private List<FilesXmlFile> _filesXmlFilesList;
-    private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
-
-    public readonly IXmlFileManager FileManager;
-    public IFilesXmlFiles FilesXmlFiles { get; }
-    public IFilesXmlFile FilesXmlFileBlock1 { get; }
-    public IFilesXmlFile FilesXmlFileBlock2 { get; }
-    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
-    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
-    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    public IActivitiesH5PActivityXmlActivity ActivitiesH5PActivityXmlActivity { get; }
-    public IActivitiesH5PActivityXmlH5PActivity ActivitiesH5PActivityXmlH5PActivity { get; }
-    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
-    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
-    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
-    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
-    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
-    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
-    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
-    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
 
     private readonly IFileSystem _fileSystem;
+    private readonly string _hardcodedPath = "XMLFilesForExport";
+
+    public readonly IXmlFileManager FileManager;
+    private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
+    private List<FilesXmlFile> _filesXmlFilesList;
+    public string CurrentTime;
+    public string H5PElementDesc;
+    public string H5PElementId;
+    public string H5PElementName;
+    public string H5PElementParentSpaceString;
+    public float H5PElementPoints;
+    public string H5PElementType;
+    public string H5PElementUuid;
 
 
     public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
@@ -108,6 +90,25 @@ public class XmlH5PFactory : IXmlH5PFactory
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
     }
+
+    public IFilesXmlFiles FilesXmlFiles { get; }
+    public IFilesXmlFile FilesXmlFileBlock1 { get; }
+    public IFilesXmlFile FilesXmlFileBlock2 { get; }
+    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    public IActivitiesH5PActivityXmlActivity ActivitiesH5PActivityXmlActivity { get; }
+    public IActivitiesH5PActivityXmlH5PActivity ActivitiesH5PActivityXmlH5PActivity { get; }
+    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
+    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    public IReadDsl ReadDsl { get; }
 
     /// <inheritdoc cref="IXmlH5PFactory.CreateH5PFileFactory"/>
     public void CreateH5PFileFactory()
@@ -180,7 +181,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             ElementUuid = uuid
         };
 
-        FilesXmlFile file2 = (FilesXmlFile)file1.Clone();
+        var file2 = (FilesXmlFile)file1.Clone();
         file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
 
         _filesXmlFilesList.Add(file1);

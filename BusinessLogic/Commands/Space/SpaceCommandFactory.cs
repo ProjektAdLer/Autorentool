@@ -7,37 +7,47 @@ namespace BusinessLogic.Commands.Space;
 
 public class SpaceCommandFactory : ISpaceCommandFactory
 {
+    public SpaceCommandFactory(ILoggerFactory loggerFactory)
+    {
+        LoggerFactory = loggerFactory;
+    }
+
+    private ILoggerFactory LoggerFactory { get; }
+
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
         string goals,
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger) =>
+        Action<LearningWorld> mappingAction) =>
         new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, positionX, positionY,
-            topic, mappingAction, logger);
+            topic, mappingAction, LoggerFactory.CreateLogger<CreateLearningSpace>());
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, LearningSpace learningSpace,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger) =>
-        new CreateLearningSpace(learningWorld, learningSpace, mappingAction, logger);
+        Action<LearningWorld> mappingAction) =>
+        new CreateLearningSpace(learningWorld, learningSpace, mappingAction,
+            LoggerFactory.CreateLogger<CreateLearningSpace>());
 
     public IDeleteLearningSpace GetDeleteCommand(LearningWorld learningWorld, LearningSpace learningSpace,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger) =>
-        new DeleteLearningSpace(learningWorld, learningSpace, mappingAction, logger);
+        Action<LearningWorld> mappingAction) =>
+        new DeleteLearningSpace(learningWorld, learningSpace, mappingAction,
+            LoggerFactory.CreateLogger<DeleteLearningSpace>());
 
     public IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name, string description,
         string goals,
-        int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction,
-        ILogger<SpaceCommandFactory> logger) =>
+        int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction) =>
         new EditLearningSpace(learningSpace, name, description, goals, requiredPoints, theme, topic, mappingAction,
-            logger);
+            LoggerFactory.CreateLogger<EditLearningSpace>());
 
     public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger) =>
-        new LoadLearningSpace(learningWorld, filepath, businessLogic, mappingAction, logger);
+        Action<LearningWorld> mappingAction) =>
+        new LoadLearningSpace(learningWorld, filepath, businessLogic, mappingAction,
+            LoggerFactory.CreateLogger<LoadLearningSpace>());
 
     public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, Stream stream, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger) =>
-        new LoadLearningSpace(learningWorld, stream, businessLogic, mappingAction, logger);
+        Action<LearningWorld> mappingAction) =>
+        new LoadLearningSpace(learningWorld, stream, businessLogic, mappingAction,
+            LoggerFactory.CreateLogger<LoadLearningSpace>());
 
     public ISaveLearningSpace GetSaveCommand(IBusinessLogic businessLogic, LearningSpace learningSpace,
-        string filepath, ILogger<SpaceCommandFactory> logger) =>
-        new SaveLearningSpace(businessLogic, learningSpace, filepath, logger);
+        string filepath) =>
+        new SaveLearningSpace(businessLogic, learningSpace, filepath, LoggerFactory.CreateLogger<SaveLearningSpace>());
 }

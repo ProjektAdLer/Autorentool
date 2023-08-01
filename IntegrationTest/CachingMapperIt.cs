@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using ElectronWrapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
@@ -38,7 +39,7 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
@@ -74,7 +75,8 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -131,8 +133,9 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory(),
-            elementCommandFactory: new ElementCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()),
+            elementCommandFactory: new ElementCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -193,14 +196,6 @@ public class CachingMapperIt
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
-        ILogger<ConditionCommandFactory>? conditionLogger = null,
-        ILogger<ElementCommandFactory>? elementLogger = null,
-        ILogger<LayoutCommandFactory>? layoutLogger = null,
-        ILogger<PathwayCommandFactory>? pathwayLogger = null,
-        ILogger<SpaceCommandFactory>? spaceLogger = null,
-        ILogger<TopicCommandFactory>? topicLogger = null,
-        ILogger<WorldCommandFactory>? worldLogger = null,
-        ILogger<BatchCommandFactory>? batchLogger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
@@ -218,14 +213,6 @@ public class CachingMapperIt
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<PresentationLogic>>();
-        conditionLogger ??= Substitute.For<ILogger<ConditionCommandFactory>>();
-        elementLogger ??= Substitute.For<ILogger<ElementCommandFactory>>();
-        layoutLogger ??= Substitute.For<ILogger<LayoutCommandFactory>>();
-        pathwayLogger ??= Substitute.For<ILogger<PathwayCommandFactory>>();
-        spaceLogger ??= Substitute.For<ILogger<SpaceCommandFactory>>();
-        topicLogger ??= Substitute.For<ILogger<TopicCommandFactory>>();
-        worldLogger ??= Substitute.For<ILogger<WorldCommandFactory>>();
-        batchLogger ??= Substitute.For<ILogger<BatchCommandFactory>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
@@ -238,8 +225,7 @@ public class CachingMapperIt
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
 
         return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, conditionLogger, elementLogger,
-            layoutLogger, pathwayLogger, spaceLogger, topicLogger, worldLogger, batchLogger, hybridSupportWrapper,
+            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
             shellWrapper,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
             spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);

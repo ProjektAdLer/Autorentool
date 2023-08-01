@@ -1,7 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using TestHelpers;
@@ -11,13 +11,13 @@ namespace BusinessLogicTest.Commands.World;
 [TestFixture]
 public class WorldCommandFactoryUt
 {
-    private IWorldCommandFactory _factory = null!;
-
     [SetUp]
     public void SetUp()
     {
-        _factory = new WorldCommandFactory();
+        _factory = new WorldCommandFactory(new NullLoggerFactory());
     }
+
+    private IWorldCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithAuthoringToolWorkspaceAndParameters_ReturnsCreateLearningWorldCommand()
@@ -30,12 +30,11 @@ public class WorldCommandFactoryUt
         var language = "WorldLanguage";
         var description = "WorldDescription";
         var goals = "WorldGoals";
-        Action<AuthoringToolWorkspace> mappingAction = workspace => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals, mappingAction, logger);
+            description, goals, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -59,11 +58,10 @@ public class WorldCommandFactoryUt
         // Arrange
         var authoringToolWorkspace = EntityProvider.GetAuthoringToolWorkspace();
         var learningWorld = EntityProvider.GetLearningWorld();
-        Action<AuthoringToolWorkspace> mappingAction = workspace => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(authoringToolWorkspace, learningWorld, mappingAction, logger);
+        var result = _factory.GetCreateCommand(authoringToolWorkspace, learningWorld, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -82,11 +80,10 @@ public class WorldCommandFactoryUt
         // Arrange
         var authoringToolWorkspace = EntityProvider.GetAuthoringToolWorkspace();
         var learningWorld = EntityProvider.GetLearningWorld();
-        Action<AuthoringToolWorkspace> mappingAction = workspace => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(authoringToolWorkspace, learningWorld, mappingAction, logger);
+        var result = _factory.GetDeleteCommand(authoringToolWorkspace, learningWorld, mappingAction);
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningWorld>());
         var resultCasted = result as DeleteLearningWorld;
@@ -109,12 +106,11 @@ public class WorldCommandFactoryUt
         var language = "NewLanguage";
         var description = "NewDescription";
         var goals = "NewGoals";
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals, mappingAction, logger);
+            description, goals, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());
@@ -139,11 +135,10 @@ public class WorldCommandFactoryUt
         var authoringToolWorkspace = EntityProvider.GetAuthoringToolWorkspace();
         var filepath = "FilePath";
         var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<AuthoringToolWorkspace> mappingAction = workspace => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(authoringToolWorkspace, filepath, businessLogic, mappingAction, logger);
+        var result = _factory.GetLoadCommand(authoringToolWorkspace, filepath, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningWorld>());
@@ -166,11 +161,10 @@ public class WorldCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningWorld = EntityProvider.GetLearningWorld();
         businessLogic.LoadLearningWorld(Arg.Any<Stream>()).Returns(learningWorld);
-        Action<AuthoringToolWorkspace> mappingAction = workspace => { };
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
+        Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(authoringToolWorkspace, stream, businessLogic, mappingAction, logger);
+        var result = _factory.GetLoadCommand(authoringToolWorkspace, stream, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningWorld>());
@@ -191,9 +185,8 @@ public class WorldCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningWorld = EntityProvider.GetLearningWorld();
         var filepath = "FilePath";
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath, logger);
+        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningWorld>());

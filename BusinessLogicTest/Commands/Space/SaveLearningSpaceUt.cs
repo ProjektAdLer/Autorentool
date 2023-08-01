@@ -1,7 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -9,7 +9,6 @@ using Shared;
 namespace BusinessLogicTest.Commands.Space;
 
 [TestFixture]
-
 public class SaveLearningSpaceUt
 {
     [Test]
@@ -18,12 +17,11 @@ public class SaveLearningSpaceUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var space = new LearningSpace("a", "d", "e", 5, Theme.Campus);
         const string filepath = "c:\\temp\\test";
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
-        
-        var command = new SaveLearningSpace(mockBusinessLogic, space, filepath, logger);
-        
+
+        var command = new SaveLearningSpace(mockBusinessLogic, space, filepath, new NullLogger<SaveLearningSpace>());
+
         command.Execute();
-        
-        mockBusinessLogic.Received().SaveLearningSpace(space,filepath);
+
+        mockBusinessLogic.Received().SaveLearningSpace(space, filepath);
     }
 }

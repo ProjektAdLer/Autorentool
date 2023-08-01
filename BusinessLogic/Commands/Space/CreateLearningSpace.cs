@@ -6,16 +6,11 @@ namespace BusinessLogic.Commands.Space;
 
 public class CreateLearningSpace : ICreateLearningSpace
 {
-    public string Name => nameof(CreateLearningSpace);
-    internal LearningWorld LearningWorld { get; }
-    internal LearningSpace LearningSpace { get; }
-    internal Action<LearningWorld> MappingAction { get; }
-    private ILogger<SpaceCommandFactory> Logger { get; }
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string description, string goals,
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger)
+        Action<LearningWorld> mappingAction, ILogger<CreateLearningSpace> logger)
     {
         LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, null, positionX: positionX,
             positionY: positionY, assignedTopic: topic);
@@ -25,13 +20,19 @@ public class CreateLearningSpace : ICreateLearningSpace
     }
 
     public CreateLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace,
-        Action<LearningWorld> mappingAction, ILogger<SpaceCommandFactory> logger)
+        Action<LearningWorld> mappingAction, ILogger<CreateLearningSpace> logger)
     {
         LearningSpace = learningSpace;
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningWorld LearningWorld { get; }
+    internal LearningSpace LearningSpace { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<CreateLearningSpace> Logger { get; }
+    public string Name => nameof(CreateLearningSpace);
 
     public void Execute()
     {

@@ -8,7 +8,6 @@ namespace GeneratorTest.XmlClasses.Entities._activities.Lesson.xml;
 [TestFixture]
 public class ActivitiesLessonXmlActivityUt
 {
-    
     [Test]
     public void ActivitiesLessonXmlActivity_StandardConstructor_AllParametersSet()
     {
@@ -22,11 +21,11 @@ public class ActivitiesLessonXmlActivityUt
         lessonPages.Page = lessonPage;
         var lessonLesson = new ActivitiesLessonXmlLesson();
         lessonLesson.Pages = lessonPages;
-        
+
         //Act
         var systemUnderTest = new ActivitiesLessonXmlActivity();
         systemUnderTest.Lesson = lessonLesson;
-        
+
         //Assert
         Assert.Multiple(() =>
         {
@@ -36,7 +35,6 @@ public class ActivitiesLessonXmlActivityUt
             Assert.That(systemUnderTest.ModuleName, Is.EqualTo("lesson"));
             Assert.That(systemUnderTest.ContextId, Is.EqualTo("1"));
         });
-        
     }
 
     [Test]
@@ -45,9 +43,10 @@ public class ActivitiesLessonXmlActivityUt
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        string activityName = "lesson";
-        string moduleId = "1";
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", activityName + "_" + moduleId));
+        var activityName = "lesson";
+        var moduleId = "1";
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
+            activityName + "_" + moduleId));
 
         var lessonAnswer = new ActivitiesLessonXmlAnswer();
         var lessonAnswers = new ActivitiesLessonXmlAnswers();
@@ -68,7 +67,7 @@ public class ActivitiesLessonXmlActivityUt
         systemUnderTest.Serialize(activityName, moduleId);
 
         //Assert
-        var pathXmlFile = Path.Join(currWorkDir, "XMLFilesForExport", "activities", 
+        var pathXmlFile = Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             activityName + "_" + moduleId, "lesson.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }

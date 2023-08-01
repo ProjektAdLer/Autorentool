@@ -6,15 +6,10 @@ namespace BusinessLogic.Commands.Condition;
 
 public class EditPathWayCondition : IEditPathWayCondition
 {
-    public string Name => nameof(EditPathWayCondition);
-    internal PathWayCondition PathWayCondition { get; }
-    internal ConditionEnum Condition { get; }
-    internal Action<PathWayCondition> MappingAction { get; }
-    private ILogger<ConditionCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition, 
-        Action<PathWayCondition> mappingAction, ILogger<ConditionCommandFactory> logger)
+    public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition,
+        Action<PathWayCondition> mappingAction, ILogger<EditPathWayCondition> logger)
     {
         PathWayCondition = pathWayCondition;
         Condition = condition;
@@ -22,14 +17,21 @@ public class EditPathWayCondition : IEditPathWayCondition
         Logger = logger;
     }
 
+    internal PathWayCondition PathWayCondition { get; }
+    internal ConditionEnum Condition { get; }
+    internal Action<PathWayCondition> MappingAction { get; }
+    private ILogger<EditPathWayCondition> Logger { get; }
+    public string Name => nameof(EditPathWayCondition);
+
     public void Execute()
     {
         _memento = PathWayCondition.GetMemento();
 
         PathWayCondition.Condition = Condition;
 
-        Logger.LogTrace("Edited PathWayCondition {PathWayConditionId} to condition {Condition}", PathWayCondition.Id, Condition);
-        
+        Logger.LogTrace("Edited PathWayCondition {PathWayConditionId} to condition {Condition}", PathWayCondition.Id,
+            Condition);
+
         MappingAction.Invoke(PathWayCondition);
     }
 
@@ -39,11 +41,12 @@ public class EditPathWayCondition : IEditPathWayCondition
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         PathWayCondition.RestoreMemento(_memento);
 
-        Logger.LogTrace("Undone edit of PathWayCondition {PathWayConditionId}. Restored to previous condition", PathWayCondition.Id);
-        
+        Logger.LogTrace("Undone edit of PathWayCondition {PathWayConditionId}. Restored to previous condition",
+            PathWayCondition.Id);
+
         MappingAction.Invoke(PathWayCondition);
     }
 

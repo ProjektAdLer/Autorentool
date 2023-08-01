@@ -5,21 +5,21 @@ namespace BusinessLogic.Commands.World;
 
 public class DeleteLearningWorld : IDeleteLearningWorld
 {
-    public string Name => nameof(DeleteLearningWorld);
-    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
-    internal LearningWorld LearningWorld { get; }
-    internal Action<AuthoringToolWorkspace> MappingAction { get; }
-    private IMemento? Memento { get; set; }
-    private ILogger<WorldCommandFactory> Logger { get; }
-
     public DeleteLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
-        Action<AuthoringToolWorkspace> mappingAction, ILogger<WorldCommandFactory> logger)
+        Action<AuthoringToolWorkspace> mappingAction, ILogger<DeleteLearningWorld> logger)
     {
         AuthoringToolWorkspace = authoringToolWorkspace;
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
+    internal LearningWorld LearningWorld { get; }
+    internal Action<AuthoringToolWorkspace> MappingAction { get; }
+    private IMemento? Memento { get; set; }
+    private ILogger<DeleteLearningWorld> Logger { get; }
+    public string Name => nameof(DeleteLearningWorld);
 
     public void Execute()
     {

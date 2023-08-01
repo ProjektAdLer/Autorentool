@@ -1,7 +1,6 @@
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -10,13 +9,13 @@ namespace BusinessLogicTest.Commands.Topic;
 [TestFixture]
 public class TopicCommandFactoryUt
 {
-    private TopicCommandFactory _factory = null!;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new TopicCommandFactory();
+        _factory = new TopicCommandFactory(new NullLoggerFactory());
     }
+
+    private TopicCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithLearningWorldAndName_ReturnsCreateTopicCommand()
@@ -24,11 +23,10 @@ public class TopicCommandFactoryUt
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
         var name = "Topic 1";
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, mappingAction, logger);
+        var result = _factory.GetCreateCommand(learningWorld, name, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateTopic>());
@@ -48,11 +46,10 @@ public class TopicCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var topic = EntityProvider.GetTopic();
         learningWorld.Topics.Add(topic);
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, topic, mappingAction, logger);
+        var result = _factory.GetDeleteCommand(learningWorld, topic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteTopic>());
@@ -71,11 +68,10 @@ public class TopicCommandFactoryUt
         // Arrange
         var topic = EntityProvider.GetTopic();
         var name = "Topic 2";
-        Action<BusinessLogic.Entities.Topic> mappingAction = t => { };
-        var logger = Substitute.For<ILogger<TopicCommandFactory>>();
+        Action<BusinessLogic.Entities.Topic> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditCommand(topic, name, mappingAction, logger);
+        var result = _factory.GetEditCommand(topic, name, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditTopic>());

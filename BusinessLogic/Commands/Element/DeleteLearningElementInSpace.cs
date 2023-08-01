@@ -5,22 +5,23 @@ namespace BusinessLogic.Commands.Element;
 
 public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
 {
-    public string Name => nameof(DeleteLearningElementInSpace);
-    internal LearningElement LearningElement { get; }
-    internal LearningSpace ParentSpace { get; }
-    internal Action<LearningSpace> MappingAction { get; }
-    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
     public DeleteLearningElementInSpace(LearningElement learningElement, LearningSpace parentSpace,
-        Action<LearningSpace> mappingAction, ILogger<ElementCommandFactory> logger)
+        Action<LearningSpace> mappingAction, ILogger<DeleteLearningElementInSpace> logger)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningElement LearningElement { get; }
+    internal LearningSpace ParentSpace { get; }
+    internal Action<LearningSpace> MappingAction { get; }
+    private ILogger<DeleteLearningElementInSpace> Logger { get; }
+    public string Name => nameof(DeleteLearningElementInSpace);
 
     public void Execute()
     {
@@ -29,11 +30,13 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
 
         ParentSpace.UnsavedChanges = true;
         var kvP = ParentSpace.LearningSpaceLayout.LearningElements.First(x => x.Value.Id == LearningElement.Id);
-        
+
         ParentSpace.LearningSpaceLayout.LearningElements.Remove(kvP.Key);
 
-        Logger.LogTrace("Deleted LearningElement {LearningElementName} ({LearningElementId}) in LearningSpace {LearningSpaceName} ({LearningSpaceId})", LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
-        
+        Logger.LogTrace(
+            "Deleted LearningElement {LearningElementName} ({LearningElementId}) in LearningSpace {LearningSpaceName} ({LearningSpaceId})",
+            LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
+
         MappingAction.Invoke(ParentSpace);
     }
 
@@ -52,8 +55,10 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
         ParentSpace.RestoreMemento(_memento);
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
-        Logger.LogTrace("Undone deletion of LearningElement {LearningElementName} ({LearningElementId}) in LearningSpace {LearningSpaceName} ({LearningSpaceId}). Restored LearningSpace to previous state", LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
-        
+        Logger.LogTrace(
+            "Undone deletion of LearningElement {LearningElementName} ({LearningElementId}) in LearningSpace {LearningSpaceName} ({LearningSpaceId}). Restored LearningSpace to previous state",
+            LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
+
         MappingAction.Invoke(ParentSpace);
     }
 

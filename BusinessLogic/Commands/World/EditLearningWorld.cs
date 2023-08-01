@@ -5,21 +5,11 @@ namespace BusinessLogic.Commands.World;
 
 public class EditLearningWorld : IEditLearningWorld
 {
-    public string Name => nameof(EditLearningWorld);
-    internal LearningWorld LearningWorld { get; }
-    internal string WorldName { get; }
-    internal string Shortname { get; }
-    internal string Authors { get; }
-    internal string Language { get; }
-    internal string Description { get; }
-    internal string Goals { get; }
-    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
-    private ILogger<WorldCommandFactory> Logger { get; }
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
         string authors, string language, string description, string goals, Action<LearningWorld> mappingAction,
-        ILogger<WorldCommandFactory> logger)
+        ILogger<EditLearningWorld> logger)
     {
         LearningWorld = learningWorld;
         WorldName = name;
@@ -31,6 +21,17 @@ public class EditLearningWorld : IEditLearningWorld
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningWorld LearningWorld { get; }
+    internal string WorldName { get; }
+    internal string Shortname { get; }
+    internal string Authors { get; }
+    internal string Language { get; }
+    internal string Description { get; }
+    internal string Goals { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<EditLearningWorld> Logger { get; }
+    public string Name => nameof(EditLearningWorld);
 
     public void Execute()
     {
@@ -56,14 +57,6 @@ public class EditLearningWorld : IEditLearningWorld
         MappingAction.Invoke(LearningWorld);
     }
 
-    private bool AnyChanges() =>
-        LearningWorld.Name != WorldName ||
-        LearningWorld.Shortname != Shortname ||
-        LearningWorld.Authors != Authors ||
-        LearningWorld.Language != Language ||
-        LearningWorld.Description != Description ||
-        LearningWorld.Goals != Goals;
-
 
     public void Undo()
     {
@@ -84,4 +77,12 @@ public class EditLearningWorld : IEditLearningWorld
         Logger.LogTrace("Redoing EditLearningWorld");
         Execute();
     }
+
+    private bool AnyChanges() =>
+        LearningWorld.Name != WorldName ||
+        LearningWorld.Shortname != Shortname ||
+        LearningWorld.Authors != Authors ||
+        LearningWorld.Language != Language ||
+        LearningWorld.Description != Description ||
+        LearningWorld.Goals != Goals;
 }

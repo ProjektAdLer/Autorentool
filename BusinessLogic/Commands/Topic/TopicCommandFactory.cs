@@ -5,15 +5,19 @@ namespace BusinessLogic.Commands.Topic;
 
 public class TopicCommandFactory : ITopicCommandFactory
 {
-    public ICreateTopic GetCreateCommand(LearningWorld learningWorld, string name, Action<LearningWorld> mappingAction,
-        ILogger<TopicCommandFactory> logger)
-        => new CreateTopic(learningWorld, name, mappingAction, logger);
+    public TopicCommandFactory(ILoggerFactory loggerFactory)
+    {
+        LoggerFactory = loggerFactory;
+    }
 
-    public IDeleteTopic GetDeleteCommand(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction,
-        ILogger<TopicCommandFactory> logger)
-        => new DeleteTopic(learningWorld, topic, mappingAction, logger);
+    private ILoggerFactory LoggerFactory { get; }
 
-    public IEditTopic GetEditCommand(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction,
-        ILogger<TopicCommandFactory> logger)
-        => new EditTopic(topic, name, mappingAction, logger);
+    public ICreateTopic GetCreateCommand(LearningWorld learningWorld, string name, Action<LearningWorld> mappingAction)
+        => new CreateTopic(learningWorld, name, mappingAction, LoggerFactory.CreateLogger<CreateTopic>());
+
+    public IDeleteTopic GetDeleteCommand(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction)
+        => new DeleteTopic(learningWorld, topic, mappingAction, LoggerFactory.CreateLogger<DeleteTopic>());
+
+    public IEditTopic GetEditCommand(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction)
+        => new EditTopic(topic, name, mappingAction, LoggerFactory.CreateLogger<EditTopic>());
 }

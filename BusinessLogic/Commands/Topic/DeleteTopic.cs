@@ -5,14 +5,10 @@ namespace BusinessLogic.Commands.Topic;
 
 public class DeleteTopic : IDeleteTopic
 {
-    public string Name => nameof(DeleteTopic);
-    internal LearningWorld LearningWorld { get; }
-    internal Entities.Topic Topic { get; }
-    internal Action<LearningWorld> MappingAction { get; }
-    private ILogger<TopicCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public DeleteTopic(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction, ILogger<TopicCommandFactory> logger)
+    public DeleteTopic(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction,
+        ILogger<DeleteTopic> logger)
     {
         LearningWorld = learningWorld;
         Topic = LearningWorld.Topics.First(t => t.Id == topic.Id);
@@ -20,10 +16,16 @@ public class DeleteTopic : IDeleteTopic
         Logger = logger;
     }
 
+    internal LearningWorld LearningWorld { get; }
+    internal Entities.Topic Topic { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<DeleteTopic> Logger { get; }
+    public string Name => nameof(DeleteTopic);
+
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
-        
+
         LearningWorld.UnsavedChanges = true;
         LearningWorld.Topics.Remove(Topic);
 

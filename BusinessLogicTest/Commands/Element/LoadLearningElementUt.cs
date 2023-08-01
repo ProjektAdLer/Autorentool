@@ -1,7 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -21,11 +21,11 @@ public class LoadLearningElementUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
-        var command = new LoadLearningElement(space, 0, filepath, mockBusinessLogic, mappingAction, logger);
+        var command = new LoadLearningElement(space, 0, filepath, mockBusinessLogic, mappingAction,
+            new NullLogger<LoadLearningElement>());
 
         Assert.That(space.ContainedLearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
@@ -44,7 +44,7 @@ public class LoadLearningElementUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var space = new LearningSpace("a", "d", "e", 3, Theme.Campus);
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new LoadLearningElement(space, 0, "element", mockBusinessLogic, mappingAction, null!);
@@ -61,7 +61,7 @@ public class LoadLearningElementUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         var element = EntityProvider.GetLearningElement(parent: space);
         var element2 = EntityProvider.GetLearningElement(parent: space, append: "2");
@@ -72,8 +72,8 @@ public class LoadLearningElementUt
                 0, element2
             }
         };
-        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
-        var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction, logger);
+        var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction,
+            new NullLogger<LoadLearningElement>());
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));

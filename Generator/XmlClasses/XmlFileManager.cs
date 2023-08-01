@@ -6,19 +6,19 @@ namespace Generator.XmlClasses;
 
 public class XmlFileManager : IXmlFileManager
 {
-    private string _fileSize;
-    private string _fileCheckSum;
-    public List<FilesXmlFile> FilesXmlFilesList ;
     private readonly IFileSystem _fileSystem;
+    private string _fileCheckSum;
+    private string _fileSize;
+    public List<FilesXmlFile> FilesXmlFilesList;
 
     public XmlFileManager(IFileSystem? fileSystem = null)
     {
         _fileSize = "";
         _fileCheckSum = "";
-        _fileSystem = fileSystem?? new FileSystem();
+        _fileSystem = fileSystem ?? new FileSystem();
         FilesXmlFilesList = new List<FilesXmlFile>();
     }
-    
+
     public List<FilesXmlFile> GetXmlFilesList()
     {
         return FilesXmlFilesList;
@@ -28,17 +28,17 @@ public class XmlFileManager : IXmlFileManager
     {
         FilesXmlFilesList = list;
     }
-    
+
     /// <summary>
     /// Calculates the SHA1 Hash value for the file
     /// </summary>
     public void CalculateHashCheckSumAndFileSize(string filepath)
     {
-        byte[] byteFile = _fileSystem.File.ReadAllBytes(filepath);
-        
-        SHA1 sha1Hash =  SHA1.Create();
+        var byteFile = _fileSystem.File.ReadAllBytes(filepath);
+
+        var sha1Hash = SHA1.Create();
         var comp = sha1Hash.ComputeHash(byteFile);
-        string hashCheckSum = string.Concat(comp.Select(b => b.ToString("x2")));
+        var hashCheckSum = string.Concat(comp.Select(b => b.ToString("x2")));
 
         _fileCheckSum = hashCheckSum;
         _fileSize = byteFile.Length.ToString();
@@ -48,7 +48,7 @@ public class XmlFileManager : IXmlFileManager
     {
         return _fileCheckSum;
     }
-    
+
     public string GetFileSize()
     {
         return _fileSize;
@@ -63,15 +63,16 @@ public class XmlFileManager : IXmlFileManager
     public void CreateFolderAndFiles(string filepath, string hashCheckSum)
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        string hashFolderName = hashCheckSum.Substring(0, 2);
+        var hashFolderName = hashCheckSum.Substring(0, 2);
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
-        
-        string fileDestination = Path.Join(currWorkDir,"XMLFilesForExport", "files", hashFolderName.Substring(0, 2),
+
+        var fileDestination = Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName.Substring(0, 2),
             hashCheckSum);
         if (!_fileSystem.File.Exists(fileDestination))
         {
             _fileSystem.File.Copy(filepath, fileDestination);
         }
+
         _fileSystem.File.Delete(filepath);
     }
 }

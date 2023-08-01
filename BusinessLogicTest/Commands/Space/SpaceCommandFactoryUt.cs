@@ -1,23 +1,24 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
+
 [TestFixture]
 public class SpaceCommandFactoryUt
 {
-    private SpaceCommandFactory _factory = null!;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new SpaceCommandFactory();
+        _factory = new SpaceCommandFactory(new NullLoggerFactory());
     }
+
+    private SpaceCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithLearningWorldAndParameters_ReturnsCreateLearningSpaceCommand()
@@ -32,12 +33,11 @@ public class SpaceCommandFactoryUt
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme,
-            positionX, positionY, topic, mappingAction, logger);
+            positionX, positionY, topic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningSpace>());
@@ -62,11 +62,10 @@ public class SpaceCommandFactoryUt
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
         var learningSpace = EntityProvider.GetLearningSpace();
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, learningSpace, mappingAction, logger);
+        var result = _factory.GetCreateCommand(learningWorld, learningSpace, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningSpace>());
@@ -85,11 +84,10 @@ public class SpaceCommandFactoryUt
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
         var learningSpace = EntityProvider.GetLearningSpace();
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, learningSpace, mappingAction, logger);
+        var result = _factory.GetDeleteCommand(learningWorld, learningSpace, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningSpace>());
@@ -113,12 +111,11 @@ public class SpaceCommandFactoryUt
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
-        Action<ILearningSpace> mappingAction = space => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<ILearningSpace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, theme,
-            topic, mappingAction, logger);
+            topic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningSpace>());
@@ -142,11 +139,10 @@ public class SpaceCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var filepath = "path/to/file";
         var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(learningWorld, filepath, businessLogic, mappingAction, logger);
+        var result = _factory.GetLoadCommand(learningWorld, filepath, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningSpace>());
@@ -169,11 +165,10 @@ public class SpaceCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningSpace = EntityProvider.GetLearningSpace();
         businessLogic.LoadLearningSpace(Arg.Any<Stream>()).Returns(learningSpace);
-        Action<LearningWorld> mappingAction = world => { };
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(learningWorld, stream, businessLogic, mappingAction, logger);
+        var result = _factory.GetLoadCommand(learningWorld, stream, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningSpace>());
@@ -195,10 +190,9 @@ public class SpaceCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningSpace = EntityProvider.GetLearningSpace();
         var filepath = "path/to/file";
-        var logger = Substitute.For<ILogger<SpaceCommandFactory>>();
 
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningSpace, filepath, logger);
+        var result = _factory.GetSaveCommand(businessLogic, learningSpace, filepath);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningSpace>());

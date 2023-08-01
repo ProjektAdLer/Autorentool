@@ -8,17 +8,16 @@ namespace GeneratorTest.XmlClasses.Entities._activities.Resource.xml;
 [TestFixture]
 public class ActivitiesResourceXmlActivityUt
 {
-
     [Test]
     public void ActivitiesResourceXmlActivity_StandardConstructor_AllParametersSet()
     {
         // Arrange
         var resource = new ActivitiesResourceXmlResource();
-        
+
         // Act
         var systemUnderTest = new ActivitiesResourceXmlActivity();
         systemUnderTest.Resource = resource;
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -29,16 +28,17 @@ public class ActivitiesResourceXmlActivityUt
             Assert.That(systemUnderTest.ContextId, Is.EqualTo(""));
         });
     }
-    
+
     [Test]
     public void ActivitiesResourceXmlActivity_Serialize_XmlFileWritten()
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        string activityName = "resource";
-        string moduleId = "1";
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", activityName + "_" + moduleId));
+        var activityName = "resource";
+        var moduleId = "1";
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
+            activityName + "_" + moduleId));
 
         var resource = new ActivitiesResourceXmlResource();
         var systemUnderTest = new ActivitiesResourceXmlActivity();
@@ -49,9 +49,8 @@ public class ActivitiesResourceXmlActivityUt
         systemUnderTest.Serialize(activityName, moduleId);
 
         //Assert
-        var pathXmlFile = Path.Join(currWorkDir, "XMLFilesForExport", "activities", 
+        var pathXmlFile = Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             activityName + "_" + moduleId, "resource.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-
 }

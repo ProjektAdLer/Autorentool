@@ -1,7 +1,6 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -35,10 +34,9 @@ public class EditLearningElementUt
         var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction, logger);
+            workload, points, newContent, mappingAction, new NullLogger<EditLearningElement>());
 
         Assert.Multiple(() =>
         {
@@ -124,10 +122,9 @@ public class EditLearningElementUt
         var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<ElementCommandFactory>>();
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction, logger);
+            workload, points, newContent, mappingAction, new NullLogger<EditLearningElement>());
 
         Assert.Multiple(() =>
         {

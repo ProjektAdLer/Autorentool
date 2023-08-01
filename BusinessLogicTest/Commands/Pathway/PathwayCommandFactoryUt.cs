@@ -1,7 +1,6 @@
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -10,13 +9,13 @@ namespace BusinessLogicTest.Commands.Pathway;
 [TestFixture]
 public class PathwayCommandFactoryUt
 {
-    private PathwayCommandFactory _factory;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new PathwayCommandFactory();
+        _factory = new PathwayCommandFactory(new NullLoggerFactory());
     }
+
+    private PathwayCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithLearningWorldAndSourceObjectAndTargetObject_ReturnsCreateLearningPathWayCommand()
@@ -25,12 +24,10 @@ public class PathwayCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var sourceObject = EntityProvider.GetLearningSpace();
         var targetObject = EntityProvider.GetLearningSpace();
-        Action<LearningWorld> mappingAction = world => { };
-        
-        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, sourceObject, targetObject, mappingAction, logger);
+        var result = _factory.GetCreateCommand(learningWorld, sourceObject, targetObject, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningPathWay>());
@@ -48,12 +45,10 @@ public class PathwayCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var learningPathway = EntityProvider.GetLearningPathway();
         learningWorld.LearningPathways.Add(learningPathway);
-        Action<LearningWorld> mappingAction = world => { };
-        
-        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, learningPathway, mappingAction, logger);
+        var result = _factory.GetDeleteCommand(learningWorld, learningPathway, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningPathWay>());
@@ -75,13 +70,11 @@ public class PathwayCommandFactoryUt
         var oldPositionY = 0.0;
         var newPositionX = 10.0;
         var newPositionY = 20.0;
-        Action<IObjectInPathWay> mappingAction = obj => { };
+        Action<IObjectInPathWay> mappingAction = _ => { };
 
-        var logger = Substitute.For<ILogger<PathwayCommandFactory>>();
-        
         // Act
         var result = _factory.GetDragCommand(learningObject, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction, logger);
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DragObjectInPathWay>());

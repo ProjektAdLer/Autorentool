@@ -1,7 +1,6 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -15,18 +14,16 @@ public class RemoveLearningElementFromLayoutUt
     public void DragLearningElementFromSlotToUnplaced_Execute_MovesLearningElementToUnplaced()
     {
         var world = EntityProvider.GetLearningWorld();
-        var space = EntityProvider.GetLearningSpace(false);
+        var space = EntityProvider.GetLearningSpace();
         world.LearningSpaces.Add(space);
-        var content = EntityProvider.GetFileContent();
-        var element = EntityProvider.GetLearningElement(false);
+        var element = EntityProvider.GetLearningElement();
         space.LearningSpaceLayout.LearningElements[2] = element;
-
-        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction, logger);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,
+            new NullLogger<RemoveLearningElementFromLayout>());
 
         Assert.Multiple(() =>
         {
@@ -55,16 +52,14 @@ public class RemoveLearningElementFromLayoutUt
         var world = EntityProvider.GetLearningWorld();
         var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
         world.LearningSpaces.Add(space);
-        var content = EntityProvider.GetFileContent();
         var element = EntityProvider.GetLearningElement();
         space.LearningSpaceLayout.LearningElements[2] = element;
 
-        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
-        
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction, logger);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,
+            new NullLogger<RemoveLearningElementFromLayout>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -78,18 +73,16 @@ public class RemoveLearningElementFromLayoutUt
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
         var world = EntityProvider.GetLearningWorld();
-        var space = EntityProvider.GetLearningSpace(false, floorPlan: FloorPlanEnum.R_20X20_6L);
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
         world.LearningSpaces.Add(space);
-        var content = EntityProvider.GetFileContent();
-        var element = EntityProvider.GetLearningElement(false);
+        var element = EntityProvider.GetLearningElement();
         space.LearningSpaceLayout.LearningElements[2] = element;
-
-        var logger = Substitute.For<ILogger<LayoutCommandFactory>>();
 
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,logger);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,
+            new NullLogger<RemoveLearningElementFromLayout>());
 
         Assert.Multiple(() =>
         {

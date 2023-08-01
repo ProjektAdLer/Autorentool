@@ -1,23 +1,16 @@
 ﻿using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace BusinessLogic.Commands.Element;
 
 public class DragLearningElement : IDragLearningElement
 {
-    public string Name => nameof(DragLearningElement);
-    internal LearningElement LearningElement { get; }
-    internal double OldPositionX { get; }
-    internal double OldPositionY { get; }
-    internal double NewPositionX { get; }
-    internal double NewPositionY { get; }
     internal readonly Action<LearningElement> MappingAction;
-    private ILogger<ElementCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public DragLearningElement(LearningElement learningElement, double oldPositionX, double oldPositionY, 
-        double newPositionX, double newPositionY, Action<LearningElement> mappingAction, ILogger<ElementCommandFactory> logger)
+    public DragLearningElement(LearningElement learningElement, double oldPositionX, double oldPositionY,
+        double newPositionX, double newPositionY, Action<LearningElement> mappingAction,
+        ILogger<DragLearningElement> logger)
     {
         LearningElement = learningElement;
         OldPositionX = oldPositionX;
@@ -27,6 +20,14 @@ public class DragLearningElement : IDragLearningElement
         MappingAction = mappingAction;
         Logger = logger;
     }
+
+    internal LearningElement LearningElement { get; }
+    internal double OldPositionX { get; }
+    internal double OldPositionY { get; }
+    internal double NewPositionX { get; }
+    internal double NewPositionY { get; }
+    private ILogger<DragLearningElement> Logger { get; }
+    public string Name => nameof(DragLearningElement);
 
     public void Execute()
     {
@@ -38,14 +39,12 @@ public class DragLearningElement : IDragLearningElement
         LearningElement.PositionX = NewPositionX;
         LearningElement.PositionY = NewPositionY;
 
-        Logger.LogTrace("Executed drag of LearningElement {LearningElementName} ({LearningElementId}).Old position: ({OldPositionX}, {OldPositionY}) New position: ({NewPositionX}, {NewPositionY})", LearningElement.Name, LearningElement.Id, OldPositionX, OldPositionY, NewPositionX, NewPositionY);
-        
+        Logger.LogTrace(
+            "Executed drag of LearningElement {LearningElementName} ({LearningElementId}).Old position: ({OldPositionX}, {OldPositionY}) New position: ({NewPositionX}, {NewPositionY})",
+            LearningElement.Name, LearningElement.Id, OldPositionX, OldPositionY, NewPositionX, NewPositionY);
+
         MappingAction.Invoke(LearningElement);
     }
-    
-    private bool AnyChange() => 
-        Math.Abs(LearningElement.PositionX - NewPositionX) > 0.01 ||
-        Math.Abs(LearningElement.PositionY - NewPositionY) > 0.01;
 
     public void Undo()
     {
@@ -53,11 +52,13 @@ public class DragLearningElement : IDragLearningElement
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         LearningElement.RestoreMemento(_memento);
 
-        Logger.LogTrace("Undone drag of LearningElement {LearningElementName} ({LearningElementId}). Restored position from ({NewPositionX}, {NewPositionY}) to: ({OldPositionX}, {OldPositionY})", LearningElement.Name, LearningElement.Id, NewPositionX, NewPositionY, OldPositionX, OldPositionY);
-        
+        Logger.LogTrace(
+            "Undone drag of LearningElement {LearningElementName} ({LearningElementId}). Restored position from ({NewPositionX}, {NewPositionY}) to: ({OldPositionX}, {OldPositionY})",
+            LearningElement.Name, LearningElement.Id, NewPositionX, NewPositionY, OldPositionX, OldPositionY);
+
         MappingAction.Invoke(LearningElement);
     }
 
@@ -66,4 +67,8 @@ public class DragLearningElement : IDragLearningElement
         Logger.LogTrace("Redoing DragLearningElement");
         Execute();
     }
+
+    private bool AnyChange() =>
+        Math.Abs(LearningElement.PositionX - NewPositionX) > 0.01 ||
+        Math.Abs(LearningElement.PositionY - NewPositionY) > 0.01;
 }

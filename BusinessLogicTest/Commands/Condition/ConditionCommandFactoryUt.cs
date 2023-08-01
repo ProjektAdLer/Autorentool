@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -9,13 +10,13 @@ namespace BusinessLogicTest.Commands.Condition;
 [TestFixture]
 public class ConditionCommandFactoryUt
 {
-    private ConditionCommandFactory _factory = null!;
-
     [SetUp]
     public void SetUp()
     {
-        _factory = new ConditionCommandFactory();
+        _factory = new ConditionCommandFactory(new NullLoggerFactory());
     }
+
+    private ConditionCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithCoordinates_ReturnsCreatePathWayCondition()
@@ -28,7 +29,7 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, condition, positionX, positionY, mappingAction, null!);
+        var result = _factory.GetCreateCommand(learningWorld, condition, positionX, positionY, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreatePathWayCondition>());
@@ -58,8 +59,7 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, condition, sourceObject, targetObject, mappingAction,
-            null!);
+        var result = _factory.GetCreateCommand(learningWorld, condition, sourceObject, targetObject, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreatePathWayCondition>());
@@ -84,7 +84,7 @@ public class ConditionCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteCommand(learningWorld, pathWayCondition, mappingAction, null!);
+        var result = _factory.GetDeleteCommand(learningWorld, pathWayCondition, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeletePathWayCondition>());
@@ -107,7 +107,7 @@ public class ConditionCommandFactoryUt
         Action<PathWayCondition> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditCommand(pathWayCondition, condition, mappingAction, null!);
+        var result = _factory.GetEditCommand(pathWayCondition, condition, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditPathWayCondition>());

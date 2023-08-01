@@ -5,14 +5,9 @@ namespace BusinessLogic.Commands.Topic;
 
 public class EditTopic : IEditTopic
 {
-    public string Name => nameof(EditTopic);
-    internal Entities.Topic Topic { get; }
-    internal string TopicName { get; }
-    internal Action<Entities.Topic> MappingAction { get; }
-    private ILogger<TopicCommandFactory> Logger { get; }
     private IMemento? _memento;
 
-    public EditTopic(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction, ILogger<TopicCommandFactory> logger)
+    public EditTopic(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction, ILogger<EditTopic> logger)
     {
         Topic = topic;
         TopicName = name;
@@ -20,12 +15,18 @@ public class EditTopic : IEditTopic
         Logger = logger;
     }
 
+    internal Entities.Topic Topic { get; }
+    internal string TopicName { get; }
+    internal Action<Entities.Topic> MappingAction { get; }
+    private ILogger<EditTopic> Logger { get; }
+    public string Name => nameof(EditTopic);
+
     public void Execute()
     {
         _memento = Topic.GetMemento();
 
         Logger.LogTrace(
-            "Editing Topic {id}. Previous Name: {PreviousName}", 
+            "Editing Topic {id}. Previous Name: {PreviousName}",
             Topic.Id, Topic.Name
         );
 
@@ -33,7 +34,7 @@ public class EditTopic : IEditTopic
         Topic.Name = TopicName;
 
         Logger.LogTrace(
-            "Edited Topic {id}. Updated Name: {UpdatedName}", 
+            "Edited Topic {id}. Updated Name: {UpdatedName}",
             Topic.Id, Topic.Name
         );
 
@@ -46,11 +47,11 @@ public class EditTopic : IEditTopic
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         Topic.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undone editing of Topic {id}. Restored Name: {RestoredName}", 
+            "Undone editing of Topic {id}. Restored Name: {RestoredName}",
             Topic.Id, Topic.Name
         );
 

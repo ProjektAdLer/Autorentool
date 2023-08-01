@@ -1,6 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -11,13 +12,13 @@ namespace BusinessLogicTest.Commands.Element;
 [TestFixture]
 public class ElementCommandFactoryUt
 {
-    private ElementCommandFactory _factory = null!;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new ElementCommandFactory();
+        _factory = new ElementCommandFactory(new NullLoggerFactory());
     }
+
+    private ElementCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateInSlotCommand_WithLearningSpaceAndParameters_ReturnsCreateLearningElementInSlotCommand()
@@ -35,11 +36,11 @@ public class ElementCommandFactoryUt
         var points = 100;
         var positionX = 0.5;
         var positionY = 0.5;
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, name, learningContent, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, mappingAction, null!);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningElementInSlot>());
@@ -68,10 +69,10 @@ public class ElementCommandFactoryUt
         var parentSpace = EntityProvider.GetLearningSpace();
         var slotIndex = 1;
         var learningElement = EntityProvider.GetLearningElement();
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, learningElement, mappingAction, null!);
+        var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, learningElement, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningElementInSlot>());
@@ -100,11 +101,11 @@ public class ElementCommandFactoryUt
         var points = 100;
         var positionX = 0.5;
         var positionY = 0.5;
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateUnplacedCommand(learningWorld, name, learningContent, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, mappingAction, null!);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateUnplacedLearningElement>());
@@ -131,10 +132,10 @@ public class ElementCommandFactoryUt
         // Arrange
         var learningElement = EntityProvider.GetLearningElement();
         var parentSpace = EntityProvider.GetLearningSpace();
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteInSpaceCommand(learningElement, parentSpace, mappingAction, null!);
+        var result = _factory.GetDeleteInSpaceCommand(learningElement, parentSpace, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningElementInSpace>());
@@ -150,10 +151,10 @@ public class ElementCommandFactoryUt
         // Arrange
         var learningElement = EntityProvider.GetLearningElement();
         var parentWorld = EntityProvider.GetLearningWorld();
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetDeleteInWorldCommand(learningElement, parentWorld, mappingAction, null!);
+        var result = _factory.GetDeleteInWorldCommand(learningElement, parentWorld, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningElementInWorld>());
@@ -175,11 +176,11 @@ public class ElementCommandFactoryUt
         var oldPositionY = 0.3;
         var newPositionX = 0.4;
         var newPositionY = 0.5;
-        Action<LearningElement> mappingAction = element => { };
+        Action<LearningElement> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetDragCommand(learningElement, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction, null!);
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<DragLearningElement>());
@@ -209,11 +210,11 @@ public class ElementCommandFactoryUt
         var workload = 20;
         var points = 200;
         var learningContent = EntityProvider.GetLinkContent();
-        Action<LearningElement> mappingAction = element => { };
+        Action<LearningElement> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningElement, parentSpace, name, description, goals, difficulty,
-            elementModel, workload, points, learningContent, mappingAction, null!);
+            elementModel, workload, points, learningContent, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningElement>());
@@ -241,10 +242,10 @@ public class ElementCommandFactoryUt
         var slotIndex = 1;
         var filepath = "/path/to/file";
         var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, filepath, businessLogic, mappingAction, null!);
+        var result = _factory.GetLoadCommand(parentSpace, slotIndex, filepath, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningElement>());
@@ -266,10 +267,10 @@ public class ElementCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningElement = EntityProvider.GetLearningElement();
         businessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(learningElement);
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, stream, businessLogic, mappingAction, null!);
+        var result = _factory.GetLoadCommand(parentSpace, slotIndex, stream, businessLogic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<LoadLearningElement>());
@@ -293,7 +294,7 @@ public class ElementCommandFactoryUt
         var filepath = "/path/to/file";
 
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningElement, filepath, null!);
+        var result = _factory.GetSaveCommand(businessLogic, learningElement, filepath);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningElement>());
