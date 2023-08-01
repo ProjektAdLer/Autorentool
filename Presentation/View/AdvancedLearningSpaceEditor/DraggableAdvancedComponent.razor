@@ -10,11 +10,11 @@
 <Draggable LearningObject="AdvancedComponent" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@AdvancedComponent.PositionX" @bind-Y="@AdvancedComponent.PositionY">
-    @if (AdvancedComponent == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
+    @if (AdvancedComponent == AdvancedPositioningService.OnHoveredAdvancedObject)
     {
         @((MarkupString)OnHoveredObjectShape)
     }
-    @* Wird mit Cude überschrieben *@
+    @* Wird mit Code überschrieben *@
     @((MarkupString)String.Format(ObjectShape, ObjectStyle, ObjectName))
     <Clickable OnClickedParam="AdvancedComponent" OnClicked="@OnClickedDeleteObject">
         @((MarkupString)DeleteObjectButtonShape)
@@ -44,6 +44,8 @@
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired]
     public IAdvancedLearningSpaceEditorPresenter AdvancedEditorPresenter { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public IAdvancedLearningSpaceEditorPresenter AdvancedPositioningService { get; set; } = null!;
 
     protected abstract string Text { get; }
     

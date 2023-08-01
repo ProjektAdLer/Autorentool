@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.View.AdvancedLearningSpaceEditor;
 
 namespace Presentation.View.AdvancedLearningSpaceGenerator;
 

@@ -9,11 +9,11 @@
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
-
     <div class="mx-2 rounded-lg">
         <div class="flex justify-center p-2">
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!LearningSpaceP.LearningSpaceVm.AdvancedMode)?@Localizer["LearningSpace.Title.Text"] : @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
-            </div></div>
+            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!LearningSpaceP.LearningSpaceVm.AdvancedMode) ? @Localizer["LearningSpace.Title.Text"] : @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
+        </div>
+    </div> 
 
 
     <div class="p-2 flex justify-start space-x-2">
@@ -22,7 +22,6 @@
     </div>
     @if (!LearningSpaceP.LearningSpaceVm.AdvancedMode)
     {
-
         @if (SelectedViewModelsProvider?.LearningObjectInPathWay != null)
         {
             <section class="p-2 gap-1 flex flex-col justify-start">
@@ -97,80 +96,8 @@
         </div>
     }
     else
-
     {
-        <section class="p-2 gap-1 flex flex-col justify-start">
-            <div class="gap-8 flex justify-between items-start">
-                <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
-                    <h3 class="text-base text-adlerblue-600 space-theme">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
-                    </h3>
-                    @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
-                    <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
-                    </h3>
-                </label>
-                <div class="min-w-max">
-                    <h3 class="text-base text-adlerblue-600 space-workload">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span>
-                    </h3>
-                    <h3 class="text-base text-adlerblue-600 space-points">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
-                    </h3>
-                    @ChildContent
-                </div>
-            </div>
-
-            <div class="w-full min-h-[300px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
-                @*style="width: 90%; height: 400px; border: 2px solid;"*@
-                <div class="layout-shadow w-full h-full">
-                    <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
-                        <AdvancedLearningSpaceEditorView/>
-
-
-                        Raum content
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="w-full min-h-[90px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
-                <nav class="bg-gray-300">
-                    <div class="relative flex mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 h-8 items-center justify-between">
-                        <div class="items-stretch justify-start hidden sm:ml-6 sm:block">
-                            <div class="flex space-x-4">
-                                <button
-                                    class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
-                                    @onclick="() => _menuFocus = MenuFocus.LearningElements">
-                                    <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-                                    Lernelemente
-                                </button>
-                                @*Flag *@
-                                <button
-                                    class="@GetMenuStyleString(MenuFocus.DecoObjects) rounded-md px-2 py-1 text-sm font-medium"
-                                    @onclick="() => _menuFocus = MenuFocus.DecoObjects">
-                                    Deco Objekte
-                                </button>
-                                @*Fan *@
-                                <button
-                                    class="@GetMenuStyleString(MenuFocus.Doors) rounded-md px-2 py-1 text-sm font-medium"
-                                    @onclick="() => _menuFocus = MenuFocus.Doors">
-                                    Türen
-                                </button>
-                                <button
-                                    class="@GetMenuStyleString(MenuFocus.Windows) rounded-md px-2 py-1 text-sm font-medium"
-                                    @onclick="() => _menuFocus = MenuFocus.Windows">
-                                    Fenster
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                <div>
-                    Menu Inhalt
-                </div>
-            </div>
-        </section>
+        <AdvancedLearningSpaceEditorView/>
     }
 }
 @if (LearningSpaceP.ReplaceLearningElementDialogOpen && _showingReplaceLearningElementDialog == false)
@@ -189,23 +116,6 @@
     [Inject]
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 #pragma warning restore CS8618
-
-    // Menu Button Stuff
-
-    private enum MenuFocus
-    {
-        LearningElements,
-        DecoObjects,
-        Doors,
-        Windows
-    }
-
-    private MenuFocus _menuFocus;
-
-    private string GetMenuStyleString(MenuFocus buttonType)
-    {
-        return buttonType == _menuFocus ? "bg-gray-900 text-white " : "text-gray-400 hover:bg-gray-700 hover:text-white ";
-    }
 
 
     [Parameter]
