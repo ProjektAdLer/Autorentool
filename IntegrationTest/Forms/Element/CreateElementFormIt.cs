@@ -114,24 +114,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
-    public void ResetButtonClicked_ResetsForm()
-    {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
-
-        var mudTextField = systemUnderTest.FindComponent<MudTextField<string>>();
-        mudTextField.Find("input").Change(Expected);
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
-
-        var resetButton = systemUnderTest.FindComponent<DefaultResetButton>();
-        resetButton.Find("button").Click();
-
-        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
-    }
-
-    [Test]
     public async Task SubmitButtonClicked_SubmitsIfFormValid()
     {
         var callbackCalledCount = 0;

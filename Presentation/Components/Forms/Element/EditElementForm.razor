@@ -7,6 +7,7 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -136,9 +137,6 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        @*<MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
-                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
-                       OnClick="OnResetAsync"></MudIconButton>*@
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.RemoveRedEye"
                        Class="btn-standard rounded"
                        OnClick="ShowSelectedElementContentAsync"
@@ -204,11 +202,6 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        await MapIntoContainer();
-    }
-
-    private async Task OnResetAsync()
-    {
         await MapIntoContainer();
     }
 
