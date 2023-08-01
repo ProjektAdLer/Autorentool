@@ -11,28 +11,28 @@
 @if (LearningWorldP?.LearningWorldVm != null)
 {
     <div class="flex flex-col">
-        <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] mb-2">
+        <article class="flex flex-col justify-content w-[250px] mb-2">
             <section class="bg-white rounded-lg p-2">
                 <div class="flex justify-start items-center space-x-2 py-1">
                     <img src="CustomIcons/world-icon-nobg.png" alt="world" class="opacity-50 w-7 h-7"> 
                     <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
                 </div>
                 <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span></h3>
-                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["OverView.Workload.TimeScale"] </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+                <h3 class="text-base text-adlerblue-600">@LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600">@Localizer["OverView.Workload.TimeScale"] </span></h3>
             </section>
         </article>
-        <section class="flex bg-white rounded-lg w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] grow overflow-scroll pt-2">
+        <section class="flex bg-white rounded-lg w-[250px] grow pt-2">
             <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @bind-SelectedValue="SelectedValue">
        
                 @if(LearningWorldP.LearningWorldVm.LearningSpaces.Count > 0)
                 {
                     @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                     {
-                        <div class="text-adlergrey-700 text-lg">
-                            <MudTreeViewItem Class="overflow-hidden" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
+                        <div class="text-adlergrey-700 text-lg w-[250px]">
+                            <MudTreeViewItem Class="break-words w-[250px]" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
                                 @foreach (var element in learningSpace.ContainedLearningElements)
                                 {
-                                    <MudTreeViewItem Class="overflow-hidden" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                    <MudTreeViewItem Class="break-words w-[250px]" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
                                 }
                             </MudTreeViewItem>
                         </div>
