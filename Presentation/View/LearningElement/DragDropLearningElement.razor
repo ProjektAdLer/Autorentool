@@ -4,10 +4,10 @@
 @using BusinessLogic.Entities.LearningContent
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.SelectedViewModels
-<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
+<MudMenu Class="p-1" ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
-            <section class="gap-1 flex flex-col justify-start">
+            <section class="flex flex-col justify-start">
                 <MudCardContent Class="relative flex w-24 h-12 p-0">
                     <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
