@@ -35,7 +35,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
                 .ToList().ForEach(x =>
                 {
                     LearningWorld.LearningPathways.Remove(x);
-                    Logger.LogTrace("Removed LearningPathway from {source} to {target}", x.SourceObject.Id,
+                    Logger.LogTrace("Removed LearningPathway from {Source} to {Target}", x.SourceObject.Id,
                         x.TargetObject.Id);
                 });
         }
@@ -47,7 +47,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
                 .ToList().ForEach(x =>
                 {
                     LearningWorld.LearningPathways.Remove(x);
-                    Logger.LogTrace("Removed LearningPathway from {source} to {target}", x.SourceObject.Id,
+                    Logger.LogTrace("Removed LearningPathway from {Source} to {Target}", x.SourceObject.Id,
                         x.TargetObject.Id);
                 });
         }

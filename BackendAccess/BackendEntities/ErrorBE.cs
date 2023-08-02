@@ -2,7 +2,8 @@
 
 public class ErrorBE
 {
-    public string Title { get; init; }
-    public string Detail { get; init; }
-    public int Status { get; init; }
+#pragma warning disable CS8618 - used in deserialization - n.stich
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
+    public string Detail { get; }
+#pragma warning restore CS8618
 }

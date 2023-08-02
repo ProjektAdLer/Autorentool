@@ -187,6 +187,7 @@ public class CommandStateManagerUt
         ExecuteCommandAfterRedoingAnCommand_TriggersRemovedCommandsFromStacksWithRemainingCommandsInStacks_AllCommandTypes()
     {
         var learningElement = EntityProvider.GetLearningElement();
+        learningElement.LearningContent = EntityProvider.GetFileContent();
         var learningSpace = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X30_8L);
         var learningWorld = EntityProvider.GetLearningWorld();
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());

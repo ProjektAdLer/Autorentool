@@ -21,6 +21,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace IntegrationTest;
 
@@ -153,7 +154,8 @@ public class CachingMapperIt
         var spaceVm = worldVm.LearningSpaces.First();
 
         systemUnderTest.CreateLearningElementInSlot(spaceVm, 0, "l",
-            null!, "o", "p", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 2, 3);
+            ViewModelProvider.GetLinkContent(), "o", "p", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 2, 3);
 
         Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 

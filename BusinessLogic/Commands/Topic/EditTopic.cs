@@ -26,7 +26,7 @@ public class EditTopic : IEditTopic
         _memento = Topic.GetMemento();
 
         Logger.LogTrace(
-            "Editing Topic {id}. Previous Name: {PreviousName}",
+            "Editing Topic {Id}. Previous Name: {PreviousName}",
             Topic.Id, Topic.Name
         );
 
@@ -34,7 +34,7 @@ public class EditTopic : IEditTopic
         Topic.Name = TopicName;
 
         Logger.LogTrace(
-            "Edited Topic {id}. Updated Name: {UpdatedName}",
+            "Edited Topic {Id}. Updated Name: {UpdatedName}",
             Topic.Id, Topic.Name
         );
 
@@ -51,7 +51,7 @@ public class EditTopic : IEditTopic
         Topic.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undone editing of Topic {id}. Restored Name: {RestoredName}",
+            "Undone editing of Topic {Id}. Restored Name: {RestoredName}",
             Topic.Id, Topic.Name
         );
 

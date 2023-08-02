@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinessLogic.Entities;
 using BusinessLogic.Validation;
 using BusinessLogic.Validation.Validators;
 using FluentValidation;
@@ -22,7 +20,7 @@ public class ValidationWrapperIt
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
         var validator = new LearningWorldValidator(namesProvider);
         var entity = EntityProvider.GetLearningWorld();
-        
+
         var sut = GetSystemUnderTest(validator);
 
         Assert.That(await sut.ValidateAsync(entity, "Name"), Is.Empty);
@@ -33,8 +31,8 @@ public class ValidationWrapperIt
     public async Task LearningWorld_WithLearningWorldValidator_InvalidEntity_GivesErrors()
     {
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
-        namesProvider.WorldNames.Returns(new[]{(new Guid(), "a")});
-        namesProvider.WorldShortnames.Returns(new[]{(new Guid(), "b")});
+        namesProvider.WorldNames.Returns(new[] { (new Guid(), "a") });
+        namesProvider.WorldShortnames.Returns(new[] { (new Guid(), "b") });
         var validator = new LearningWorldValidator(namesProvider);
         var entity = EntityProvider.GetLearningWorld();
 
@@ -47,7 +45,7 @@ public class ValidationWrapperIt
         Assert.That(shortnameErrors, Has.Length.EqualTo(1));
         Assert.That(shortnameErrors, Does.Contain("Already in use."));
     }
-    
+
     private ValidationWrapper<T> GetSystemUnderTest<T>(IValidator<T> validator)
     {
         return new(validator);

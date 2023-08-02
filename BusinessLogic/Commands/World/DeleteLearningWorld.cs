@@ -29,7 +29,7 @@ public class DeleteLearningWorld : IDeleteLearningWorld
 
         AuthoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
 
-        Logger.LogTrace("Deleted LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
+        Logger.LogTrace("Deleted LearningWorld {Name} ({Id})", LearningWorld.Name, LearningWorld.Id);
 
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
@@ -43,7 +43,7 @@ public class DeleteLearningWorld : IDeleteLearningWorld
 
         AuthoringToolWorkspace.RestoreMemento(Memento);
 
-        Logger.LogTrace("Undone deletion of LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
+        Logger.LogTrace("Undone deletion of LearningWorld {Name} ({Id})", LearningWorld.Name, LearningWorld.Id);
 
         MappingAction.Invoke(AuthoringToolWorkspace);
     }

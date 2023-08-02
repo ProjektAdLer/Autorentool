@@ -29,14 +29,32 @@ public class CreateLearningPathWay : ICreateLearningPathWay
     public void Execute()
     {
         if (LearningWorld.LearningPathways.Any(x =>
-                x.SourceObject == LearningPathway.SourceObject && x.TargetObject == LearningPathway.TargetObject)
-            || LearningPathway.SourceObject.Id == LearningPathway.TargetObject.Id || IsCircular(LearningPathway)
-            || (LearningPathway.TargetObject is LearningSpace &&
-                LearningWorld.LearningPathways.Any(x => x.TargetObject.Id == LearningPathway.TargetObject.Id)))
+                x.SourceObject == LearningPathway.SourceObject && x.TargetObject == LearningPathway.TargetObject))
         {
             HasError = true;
-            Logger.LogWarning(
-                "Warning: The learning pathway to create is either redundant, has the same source and target, or is circular.");
+            Logger.LogWarning("LearningPathway already exists in world");
+            return;
+        }
+
+        if (LearningPathway.SourceObject.Id == LearningPathway.TargetObject.Id)
+        {
+            HasError = true;
+            Logger.LogWarning("LearningPathway source equals target");
+            return;
+        }
+
+        if (IsCircular(LearningPathway))
+        {
+            HasError = true;
+            Logger.LogWarning("LearningPathway is circular");
+            return;
+        }
+
+        if (LearningPathway.TargetObject is LearningSpace &&
+            LearningWorld.LearningPathways.Any(x => x.TargetObject.Id == LearningPathway.TargetObject.Id))
+        {
+            HasError = true;
+            Logger.LogWarning("Space already has a path going into it");
             return;
         }
 

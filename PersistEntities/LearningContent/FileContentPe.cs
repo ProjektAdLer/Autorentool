@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace PersistEntities.LearningContent;
 
 public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
@@ -9,16 +11,16 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Filepath = filepath;
     }
 
+    /// <summary>
+    /// Private constructor for Serialization only.
+    /// </summary>
+    [UsedImplicitly]
     private FileContentPe()
     {
         Name = "";
         Type = "";
         Filepath = "";
     }
-
-    public string Type { get; set; }
-    public string Filepath { get; set; }
-    public string Name { get; set; }
 
     public bool Equals(FileContentPe? other)
     {
@@ -27,16 +29,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         return Type == other.Type && Filepath == other.Filepath && Name == other.Name;
     }
 
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((FileContentPe)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Type, Filepath, Name);
-    }
+    public string Type { get; set; }
+    public string Filepath { get; set; }
+    public string Name { get; set; }
 }

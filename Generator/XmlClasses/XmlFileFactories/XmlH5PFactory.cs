@@ -140,7 +140,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementFileType;
             H5PElementDesc = h5PElement.ElementDescription ?? "";
-            H5PElementPoints = (float)h5PElement.ElementMaxScore;
+            H5PElementPoints = h5PElement.ElementMaxScore;
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.ElementName + "." + h5PElement.ElementFileType));

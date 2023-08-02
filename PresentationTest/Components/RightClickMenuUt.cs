@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
-using Presentation.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -21,13 +20,6 @@ namespace PresentationTest.Components;
 [TestFixture]
 public class RightClickMenuUt
 {
-#pragma warning disable CS8618
-    private TestContext _testContext;
-    private IMouseService _mouseService;
-    private IStringLocalizer<RightClickMenu<ILearningElementViewModel>> _eleLocalizer;
-    private IStringLocalizer<RightClickMenu<ILearningSpaceViewModel>> _spaceLocalizer;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -63,17 +55,19 @@ public class RightClickMenuUt
                     onClose.Target ?? throw new InvalidOperationException("onClose.Target is null"), onClose)));
         });
     }
-    
+
     [Test]
-    public void OnParametersSet_WithILearningSpaceViewModel_RightClickMenuInitialized(){
+    public void OnParametersSet_WithILearningSpaceViewModel_RightClickMenuInitialized()
+    {
         var learningObject = Substitute.For<ILearningSpaceViewModel>();
         var menuEntries = new List<RightClickMenuEntry>();
         var onClose = () => { };
 
-        var systemUnderTest = _testContext.RenderComponent<RightClickMenu<ILearningSpaceViewModel>>(parameters => parameters
-            .Add(p => p.LearningObject, learningObject)
-            .Add(p => p.MenuEntries, menuEntries)
-            .Add(p => p.OnClose, onClose)
+        var systemUnderTest = _testContext.RenderComponent<RightClickMenu<ILearningSpaceViewModel>>(parameters =>
+            parameters
+                .Add(p => p.LearningObject, learningObject)
+                .Add(p => p.MenuEntries, menuEntries)
+                .Add(p => p.OnClose, onClose)
         );
 
         Assert.Multiple(() =>
@@ -93,7 +87,7 @@ public class RightClickMenuUt
         Assert.Throws<ArgumentNullException>(() =>
             CreateRenderedRightClickMenu<ILearningElementViewModel>(null!, new List<RightClickMenuEntry>(), () => { }));
     }
-    
+
     [Test]
     public void OnParametersSet_WithUnsupportedType_ThrowsException()
     {
@@ -101,7 +95,8 @@ public class RightClickMenuUt
 
         Assert.Throws<ArgumentException>(() =>
         {
-            _testContext.Services.AddSingleton(Substitute.For<IStringLocalizer<RightClickMenu<IDisplayableLearningObject>>>());
+            _testContext.Services.AddSingleton(Substitute
+                .For<IStringLocalizer<RightClickMenu<IDisplayableLearningObject>>>());
             _testContext.RenderComponent<RightClickMenu<IDisplayableLearningObject>>(parameters => parameters
                 .Add(p => p.LearningObject, learningObject)
                 .Add(p => p.MenuEntries, new List<RightClickMenuEntry>())
@@ -109,14 +104,14 @@ public class RightClickMenuUt
             );
         });
     }
-    
+
     [Test]
     public void MenuEntryClicked_InvokesCallback()
     {
         var learningObject = Substitute.For<ILearningElementViewModel>();
         const string onOpenText = "Open";
         var onOpenClicked = Substitute.For<Action>();
-        var menuEntries = new List<RightClickMenuEntry>(){new RightClickMenuEntry(onOpenText, onOpenClicked)};
+        var menuEntries = new List<RightClickMenuEntry>() { new RightClickMenuEntry(onOpenText, onOpenClicked) };
 
         var systemUnderTest =
             CreateRenderedRightClickMenu(learningObject, menuEntries);
@@ -155,4 +150,10 @@ public class RightClickMenuUt
             .Add(p => p.OnClose, onClose)
         );
     }
+#pragma warning disable CS8618
+    private TestContext _testContext;
+    private IMouseService _mouseService;
+    private IStringLocalizer<RightClickMenu<ILearningElementViewModel>> _eleLocalizer;
+    private IStringLocalizer<RightClickMenu<ILearningSpaceViewModel>> _spaceLocalizer;
+#pragma warning restore CS8618
 }

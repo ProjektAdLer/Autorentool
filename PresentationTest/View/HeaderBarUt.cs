@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Bunit;
@@ -32,16 +31,6 @@ namespace PresentationTest.View;
 [TestFixture]
 public class HeaderBarUt
 {
-    private TestContext _testContext;
-    private IPresentationLogic _presentationLogic;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IMediator _mediator;
-    private IStringLocalizer<HeaderBar> _stringLocalizer;
-    private ISnackbar _snackbar;
-    private IDialogService _dialogService;
-    private IErrorService _errorService;
-    private ILogger _logger;
-
     [SetUp]
     public void Setup()
     {
@@ -73,6 +62,16 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_logger);
     }
+
+    private TestContext _testContext;
+    private IPresentationLogic _presentationLogic;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IMediator _mediator;
+    private IStringLocalizer<HeaderBar> _stringLocalizer;
+    private ISnackbar _snackbar;
+    private IDialogService _dialogService;
+    private IErrorService _errorService;
+    private ILogger _logger;
 
     private static string FormatStringLocalizerValue(CallInfo ci)
     {
@@ -242,18 +241,19 @@ public class HeaderBarUt
 
         _presentationLogic.Received().UndoCommand();
     }
-    
+
     [Test]
     public void UndoButton_Clicked_UndoCommandThrowsUndoException_ErrorServiceCalled()
     {
         _presentationLogic.CanUndo.Returns(true);
         _presentationLogic.When(x => x.UndoCommand()).Do(x => throw new UndoException());
         var systemUnderTest = GetRenderedComponent();
-        
+
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("undo")
             .Find("button").Click();
 
-        _errorService.Received().SetError("An error occurred while attempting to undo the last action", Arg.Any<string>());
+        _errorService.Received()
+            .SetError("An error occurred while attempting to undo the last action", Arg.Any<string>());
     }
 
     [Test]
@@ -278,12 +278,12 @@ public class HeaderBarUt
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("redo")
             .Find("button").Click();
 
-        _errorService.Received().SetError("An error occurred while attempting to redo the last undone action", Arg.Any<string>());
+        _errorService.Received().SetError("An error occurred while attempting to redo the last undone action",
+            Arg.Any<string>());
     }
 
     private IRenderedComponent<HeaderBar> GetRenderedComponent()
     {
         return _testContext.RenderComponent<HeaderBar>();
     }
-
 }

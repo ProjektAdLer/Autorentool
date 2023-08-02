@@ -1,7 +1,7 @@
 ﻿@using Microsoft.Extensions.Localization
 @using Presentation.View
 @using AuthoringTool.View.Shared
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] {typeof(MasterLayout).Assembly}">
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(MasterLayout).Assembly }">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
@@ -16,6 +16,8 @@
 
 @code
 {
+#pragma warning disable CS8618 - injected by Blazor - n.stich
     [Inject]
     private IStringLocalizer<App> Localizer { get; set; }
+#pragma warning restore CS8618
 }

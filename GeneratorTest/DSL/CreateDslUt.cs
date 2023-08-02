@@ -47,15 +47,13 @@ public class CreateDslUt
             inboundObject3,
             inboundObject4
         };
-        var inboundObject6 = new PathWayConditionPe(ConditionEnum.And, 0, 0, inboundObjectList1,
-            null);
+        var inboundObject6 = new PathWayConditionPe(ConditionEnum.And, 0, 0, inboundObjectList1);
 
         var inboundObjectList2 = new List<IObjectInPathWayPe>
         {
             inboundObject5
         };
-        var inboundObject7 = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjectList2,
-            null);
+        var inboundObject7 = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjectList2);
 
         var inboundObjects = new List<IObjectInPathWayPe>
         {
@@ -72,7 +70,7 @@ public class CreateDslUt
             inboundObject7
         };
 
-        var pathwayConditionPe = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjects, null);
+        var pathwayConditionPe = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjects);
 
         //Act
         var stringUnderTest = systemUnderTest.DefineLogicalExpression(pathwayConditionPe);
@@ -243,7 +241,7 @@ public class CreateDslUt
             outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
-            new List<IObjectInPathWayPe> { space1, space2 }, null);
+            new List<IObjectInPathWayPe> { space1, space2 });
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
         space2.InBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
         space2.OutBoundObjects = new List<IObjectInPathWayPe>() { space3 };
@@ -273,7 +271,7 @@ public class CreateDslUt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.WorldName, Is.EqualTo(learningWorld.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
@@ -305,8 +303,8 @@ public class CreateDslUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: content1);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
@@ -358,8 +356,8 @@ public class CreateDslUt
         const string goals = "learn very many things";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
@@ -406,8 +404,8 @@ public class CreateDslUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =

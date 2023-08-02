@@ -3,20 +3,19 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-
 namespace Generator.DSL;
 
 public class ReadDsl : IReadDsl
 {
-    private List<LearningElementJson> _listH5PElements;
-    private List<LearningElementJson> _listResourceElements;
-    private List<LearningElementJson> _listLabelElements;
-    private List<LearningElementJson> _listUrlElements;
-    private List<LearningElementJson> _listAllElementsOrdered;
-    private LearningWorldJson _learningWorldJson;
     private readonly IFileSystem _fileSystem;
-    private DocumentRootJson _rootJson;
+    private LearningWorldJson _learningWorldJson;
+    private List<LearningElementJson> _listAllElementsOrdered;
+    private List<LearningElementJson> _listH5PElements;
+    private List<LearningElementJson> _listLabelElements;
+    private List<LearningElementJson> _listResourceElements;
+    private List<LearningElementJson> _listUrlElements;
     private ILogger<ReadDsl> _logger;
+    private DocumentRootJson _rootJson;
 
 
 #pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
@@ -26,19 +25,6 @@ public class ReadDsl : IReadDsl
         Initialize();
         _fileSystem = fileSystem;
         _logger = logger;
-    }
-
-    private void Initialize()
-    {
-        _learningWorldJson = new LearningWorldJson("Value",
-            "", new List<TopicJson>(),
-            new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
-        _listH5PElements = new List<LearningElementJson>();
-        _listResourceElements = new List<LearningElementJson>();
-        _listLabelElements = new List<LearningElementJson>();
-        _listUrlElements = new List<LearningElementJson>();
-        _listAllElementsOrdered = new List<LearningElementJson>();
     }
 
     /// <inheritdoc cref="IReadDsl.ReadLearningWorld"/>
@@ -69,125 +55,10 @@ public class ReadDsl : IReadDsl
         SetLearningWorld(_rootJson);
     }
 
-    /// <summary>
-    /// Sets the learning world object using the provided DocumentRootJson object.
-    /// </summary>
-    private void SetLearningWorld(DocumentRootJson? documentRootJson)
-    {
-        if (documentRootJson != null) _learningWorldJson = documentRootJson.World;
-    }
-
     /// <inheritdoc cref="IReadDsl.GetLearningWorld"/>
     public LearningWorldJson GetLearningWorld()
     {
         return _learningWorldJson;
-    }
-
-    /// <summary>
-    /// Extracts H5P elements from the provided DocumentRootJson object and adds them to the H5P elements list.
-    /// </summary>
-    private void GetH5PElements(DocumentRootJson documentRootJson)
-    {
-        foreach (var element in documentRootJson.World.Elements)
-        {
-            if (element.ElementFileType == "h5p")
-            {
-                _listH5PElements.Add(element);
-            }
-        }
-
-        _logger.LogTrace("Found {count} H5P elements", _listH5PElements.Count);
-    }
-
-    /// <summary>
-    /// Extracts resource elements (e.g., pdf, json, jpg, etc.) from the provided DocumentRootJson object and adds them to the resource elements list.
-    /// </summary>
-    private void GetResourceElements(DocumentRootJson documentRootJson)
-    {
-        foreach (var resource in documentRootJson.World.Elements)
-        {
-            if (resource.ElementFileType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "webp" or "bmp" or "txt"
-                or "c"
-                or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
-            {
-                _listResourceElements.Add(resource);
-            }
-        }
-
-        _logger.LogTrace("Found {count} resource elements", _listResourceElements.Count);
-    }
-
-    /// <summary>
-    /// Extracts label elements from the provided DocumentRootJson object and adds them to the label elements list.
-    /// </summary>
-    private void GetLabelElements(DocumentRootJson documentRootJson)
-    {
-        foreach (var label in documentRootJson.World.Elements)
-        {
-            if (label.ElementFileType is "label")
-            {
-                _listLabelElements.Add(label);
-            }
-        }
-
-        _logger.LogTrace("Found {count} label elements", _listLabelElements.Count);
-    }
-
-    /// <summary>
-    /// Retrieves world attributes from the provided DocumentRootJson object and adds them to the ordered elements list.
-    /// </summary>
-    private void GetWorldAttributes(DocumentRootJson documentRootJson)
-    {
-        // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
-        if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "")
-        {
-            _logger.LogTrace("No world description and goals found");
-            return;
-        }
-
-        var lastId = documentRootJson.World.Elements.Count + 1;
-
-        var worldAttributes = new LearningElementJson(lastId, "",
-            documentRootJson.World.WorldDescription, "",
-            "World Attributes", "label", 0,
-            0, "", documentRootJson.World.WorldDescription,
-            documentRootJson.World.WorldGoals);
-
-        _listAllElementsOrdered.Add(worldAttributes);
-    }
-
-    /// <summary>
-    /// Extracts URL elements from the provided DocumentRootJson object and adds them to the URL elements list.
-    /// </summary>
-    private void GetUrlElements(DocumentRootJson documentRootJson)
-    {
-        foreach (var url in documentRootJson.World.Elements)
-        {
-            if (url.ElementFileType is "url")
-            {
-                _listUrlElements.Add(url);
-            }
-        }
-
-        _logger.LogTrace("Found {count} URL elements", _listUrlElements.Count);
-    }
-
-    /// <summary>
-    /// Extracts ordered elements from the provided DocumentRootJson object and adds them to the ordered elements list.
-    /// </summary>
-    private void GetElementsOrdered(DocumentRootJson? documentRootJson)
-    {
-        if (documentRootJson != null)
-        {
-            foreach (var space in documentRootJson.World.Spaces)
-            {
-                foreach (var elementInSpace in space.SpaceSlotContents)
-                {
-                    if (elementInSpace != null)
-                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
-                }
-            }
-        }
     }
 
     /// <inheritdoc cref="IReadDsl.GetH5PElementsList"/>
@@ -228,5 +99,133 @@ public class ReadDsl : IReadDsl
     public List<LearningElementJson> GetElementsOrderedList()
     {
         return _listAllElementsOrdered;
+    }
+
+    private void Initialize()
+    {
+        _learningWorldJson = new LearningWorldJson("Value",
+            "", new List<TopicJson>(),
+            new List<LearningSpaceJson>(), new List<LearningElementJson>());
+        _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
+        _listH5PElements = new List<LearningElementJson>();
+        _listResourceElements = new List<LearningElementJson>();
+        _listLabelElements = new List<LearningElementJson>();
+        _listUrlElements = new List<LearningElementJson>();
+        _listAllElementsOrdered = new List<LearningElementJson>();
+    }
+
+    /// <summary>
+    /// Sets the learning world object using the provided DocumentRootJson object.
+    /// </summary>
+    private void SetLearningWorld(DocumentRootJson? documentRootJson)
+    {
+        if (documentRootJson != null) _learningWorldJson = documentRootJson.World;
+    }
+
+    /// <summary>
+    /// Extracts H5P elements from the provided DocumentRootJson object and adds them to the H5P elements list.
+    /// </summary>
+    private void GetH5PElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var element in documentRootJson.World.Elements)
+        {
+            if (element.ElementFileType == "h5p")
+            {
+                _listH5PElements.Add(element);
+            }
+        }
+
+        _logger.LogTrace("Found {Count} H5P elements", _listH5PElements.Count);
+    }
+
+    /// <summary>
+    /// Extracts resource elements (e.g., pdf, json, jpg, etc.) from the provided DocumentRootJson object and adds them to the resource elements list.
+    /// </summary>
+    private void GetResourceElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var resource in documentRootJson.World.Elements)
+        {
+            if (resource.ElementFileType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "webp" or "bmp" or "txt"
+                or "c"
+                or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
+            {
+                _listResourceElements.Add(resource);
+            }
+        }
+
+        _logger.LogTrace("Found {Count} resource elements", _listResourceElements.Count);
+    }
+
+    /// <summary>
+    /// Extracts label elements from the provided DocumentRootJson object and adds them to the label elements list.
+    /// </summary>
+    private void GetLabelElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var label in documentRootJson.World.Elements)
+        {
+            if (label.ElementFileType is "label")
+            {
+                _listLabelElements.Add(label);
+            }
+        }
+
+        _logger.LogTrace("Found {Count} label elements", _listLabelElements.Count);
+    }
+
+    /// <summary>
+    /// Retrieves world attributes from the provided DocumentRootJson object and adds them to the ordered elements list.
+    /// </summary>
+    private void GetWorldAttributes(DocumentRootJson documentRootJson)
+    {
+        // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
+        if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "")
+        {
+            _logger.LogTrace("No world description and goals found");
+            return;
+        }
+
+        var lastId = documentRootJson.World.Elements.Count + 1;
+
+        var worldAttributes = new LearningElementJson(lastId, "",
+            documentRootJson.World.WorldDescription, "",
+            "World Attributes", "label", 0,
+            0, "", documentRootJson.World.WorldDescription,
+            documentRootJson.World.WorldGoals);
+
+        _listAllElementsOrdered.Add(worldAttributes);
+    }
+
+    /// <summary>
+    /// Extracts URL elements from the provided DocumentRootJson object and adds them to the URL elements list.
+    /// </summary>
+    private void GetUrlElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var url in documentRootJson.World.Elements)
+        {
+            if (url.ElementFileType is "url")
+            {
+                _listUrlElements.Add(url);
+            }
+        }
+
+        _logger.LogTrace("Found {Count} URL elements", _listUrlElements.Count);
+    }
+
+    /// <summary>
+    /// Extracts ordered elements from the provided DocumentRootJson object and adds them to the ordered elements list.
+    /// </summary>
+    private void GetElementsOrdered(DocumentRootJson? documentRootJson)
+    {
+        if (documentRootJson != null)
+        {
+            foreach (var space in documentRootJson.World.Spaces)
+            {
+                foreach (var elementInSpace in space.SpaceSlotContents)
+                {
+                    if (elementInSpace != null)
+                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
+                }
+            }
+        }
     }
 }

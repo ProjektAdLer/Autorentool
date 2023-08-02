@@ -1,7 +1,7 @@
-﻿@namespace AuthoringTool.Pages
-@using Microsoft.AspNetCore.Components.Web
+﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Localization
+@namespace AuthoringTool.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IStringLocalizer<LayoutModel> Localizer
 
@@ -16,9 +16,11 @@
     @* ReSharper disable once Html.PathError - n.stich *@
     <link href="css/site.css" rel="stylesheet"/>
     <link href="css/Presentation.global.css" rel="stylesheet"/>
+    @* ReSharper disable Html.PathError *@
     <link href="AuthoringTool.styles.css" rel="stylesheet"/>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
+    @* ReSharper restore Html.PathError *@
     <link href="css/output.css" rel="stylesheet"/>
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
     <title>@Localizer["Header.Title"]</title>

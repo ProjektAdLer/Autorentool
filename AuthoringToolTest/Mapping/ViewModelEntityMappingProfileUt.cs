@@ -115,7 +115,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, content, Description, Goals,
-            Difficulty, ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
+            Difficulty, ElementModel.l_h5p_slotmachine_1, workload: Workload, points: Points, positionX: PositionX,
             positionY: PositionY);
         var destination = new LearningElementViewModel("",
             new FileContentViewModel("", "", Filepath), "", "", LearningElementDifficultyEnum.None,
@@ -146,7 +146,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX,
             positionY: PositionY);
         var destination = new LearningSpaceViewModel("", "", "", Theme.Campus);
@@ -241,7 +241,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX,
             positionY: PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
@@ -265,7 +265,7 @@ public class ViewModelEntityMappingProfileUt
         destination.LearningSpaces = new List<ILearningSpaceViewModel>()
         {
             new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, NewRequiredPoints,
-                null, positionX: NewPositionX, positionY: NewPositionY)
+                positionX: NewPositionX, positionY: NewPositionY)
         };
 
         systemUnderTest.Map(destination, source);
@@ -303,7 +303,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {GetTestableNewSpaceViewModel()};
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>() { GetTestableNewSpaceViewModel() };
 
         systemUnderTest.Map(destination, source);
 
@@ -353,8 +353,8 @@ public class ViewModelEntityMappingProfileUt
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
         var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {spaceVm1};
-        destination.PathWayConditions = new List<PathWayConditionViewModel>() {pathWayConditionVm};
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>() { spaceVm1 };
+        destination.PathWayConditions = new List<PathWayConditionViewModel>() { pathWayConditionVm };
         destination.LearningPathWays = new List<ILearningPathWayViewModel>();
         destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, pathWayConditionVm));
 
@@ -399,7 +399,7 @@ public class ViewModelEntityMappingProfileUt
 
         var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, SavePath,
             true,
-            new List<ILearningSpaceViewModel> {space});
+            new List<ILearningSpaceViewModel> { space });
 
 
         var systemUnderTest = CreateTestableMapper();
@@ -431,7 +431,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var world1 = new LearningWorld("world1", Shortname, Authors, Language, Description, Goals);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals);
-        var source = new AuthoringToolWorkspace(new List<ILearningWorld> {world1, world2});
+        var source = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
         var destination = new AuthoringToolWorkspaceViewModel();
 
         systemUnderTest.Map(source, destination);
@@ -467,8 +467,6 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
         });
     }
-
-    #region testable Content/Element/Space/World
 
     private static FileContent GetTestableContent()
     {
@@ -515,10 +513,6 @@ public class ViewModelEntityMappingProfileUt
         space.LearningSpaceLayout.PutElement(0, element);
         return space;
     }
-
-    #endregion
-
-    #region static test methods
 
     private static void TestWorld(object destination, bool useNewFields)
     {
@@ -696,8 +690,6 @@ public class ViewModelEntityMappingProfileUt
                 throw new NotImplementedException();
         }
     }
-
-    #endregion
 
     private static IMapper CreateTestableMapper()
     {

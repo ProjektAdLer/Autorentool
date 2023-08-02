@@ -4,7 +4,6 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using PersistEntities;
 using PersistEntities.LearningContent;
-using Shared;
 
 namespace AuthoringTool.Mapping;
 
@@ -13,12 +12,6 @@ namespace AuthoringTool.Mapping;
 /// </summary>
 public class EntityPersistEntityMappingProfile : Profile
 {
-    public static Action<IMapperConfigurationExpression> Configure => cfg =>
-    {
-        cfg.AddProfile(new EntityPersistEntityMappingProfile());
-        cfg.AddCollectionMappersOnce();
-    };
-
     private EntityPersistEntityMappingProfile()
     {
         DisableConstructorMapping();
@@ -31,6 +24,12 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
     }
+
+    public static Action<IMapperConfigurationExpression> Configure => cfg =>
+    {
+        cfg.AddProfile(new EntityPersistEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
+    };
 
     private void CreateTopicMap()
     {
@@ -57,7 +56,8 @@ public class EntityPersistEntityMappingProfile : Profile
             .AfterMap(MapSpaceLayoutElements);
     }
 
-    private void MapSpaceLayoutElements(LearningSpaceLayout source, LearningSpaceLayoutPe destination, ResolutionContext ctx)
+    private void MapSpaceLayoutElements(LearningSpaceLayout source, LearningSpaceLayoutPe destination,
+        ResolutionContext ctx)
     {
         var sourceNewElements = source.LearningElements
             .Where(x => !SameIdAtSameIndex(destination, x))
@@ -76,13 +76,14 @@ public class EntityPersistEntityMappingProfile : Profile
                 .First(x => x.Key == key && x.Value.Id == value.Id);
             ctx.Mapper.Map(sourceElement.Value, value);
         }
-        
+
         destination.LearningElements = sourceNewElements
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
 
-    private void MapSpaceLayoutElements(LearningSpaceLayoutPe source, LearningSpaceLayout destination, ResolutionContext ctx)
+    private void MapSpaceLayoutElements(LearningSpaceLayoutPe source, LearningSpaceLayout destination,
+        ResolutionContext ctx)
     {
         var sourceNewElements = source.LearningElements
             .Where(x => !SameIdAtSameIndex(destination, x))
@@ -101,7 +102,7 @@ public class EntityPersistEntityMappingProfile : Profile
                 .First(x => x.Key == key && x.Value.Id == value.Id);
             ctx.Mapper.Map(sourceElement.Value, value);
         }
-        
+
         destination.LearningElements = sourceNewElements
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
@@ -111,7 +112,7 @@ public class EntityPersistEntityMappingProfile : Profile
         SameIdAtSameIndex(ILearningSpaceLayoutPe destination, KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
-    private static bool 
+    private static bool
         SameIdAtSameIndex(ILearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
@@ -195,15 +196,15 @@ public class EntityPersistEntityMappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldPe>()
             .ForMember(x => x.ObjectsInPathWaysPe, opt => opt.Ignore())
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.SourceObject?.Id);
-                    pathWay.TargetObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.TargetObject?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.SourceObject.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.TargetObject.Id);
                 }
             })
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var objectInPathWayPe in d.ObjectsInPathWaysPe)
                 {
@@ -217,15 +218,15 @@ public class EntityPersistEntityMappingProfile : Profile
             })
             .ReverseMap()
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
-                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject.Id);
                 }
             })
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var objectInPathWay in d.ObjectsInPathWays)
                 {

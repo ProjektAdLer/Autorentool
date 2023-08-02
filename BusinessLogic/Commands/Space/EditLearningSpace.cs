@@ -39,7 +39,7 @@ public class EditLearningSpace : IEditLearningSpace
         _memento = LearningSpace.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningSpace {id}. Previous Values: Name {PreviousName}, Description {PreviousDescription}, Goals {PreviousGoals}, RequiredPoints {PreviousRequiredPoints}, Theme {PreviousTheme}, Topic {PreviousTopic}",
+            "Editing LearningSpace {Id}. Previous Values: Name {PreviousName}, Description {PreviousDescription}, Goals {PreviousGoals}, RequiredPoints {PreviousRequiredPoints}, Theme {PreviousTheme}, Topic {PreviousTopic}",
             LearningSpace.Id, LearningSpace.Name, LearningSpace.Description, LearningSpace.Goals,
             LearningSpace.RequiredPoints, LearningSpace.Theme, LearningSpace.AssignedTopic?.Name);
 
@@ -53,7 +53,7 @@ public class EditLearningSpace : IEditLearningSpace
         LearningSpace.Theme = Theme;
 
         Logger.LogTrace(
-            "Edited LearningSpace {id}. Updated Values: Name {UpdatedName}, Description {UpdatedDescription}, Goals {UpdatedGoals}, RequiredPoints {UpdatedRequiredPoints}, Theme {UpdatedTheme}, Topic {UpdatedTopic}",
+            "Edited LearningSpace {Id}. Updated Values: Name {UpdatedName}, Description {UpdatedDescription}, Goals {UpdatedGoals}, RequiredPoints {UpdatedRequiredPoints}, Theme {UpdatedTheme}, Topic {UpdatedTopic}",
             LearningSpace.Id, LearningSpace.Name, LearningSpace.Description, LearningSpace.Goals,
             LearningSpace.RequiredPoints, LearningSpace.Theme, LearningSpace.AssignedTopic?.Name);
 

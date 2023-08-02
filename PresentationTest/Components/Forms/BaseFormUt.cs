@@ -1,11 +1,7 @@
 using System;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
@@ -19,10 +15,6 @@ namespace PresentationTest.Components.Forms;
 [TestFixture]
 public class BaseFormUt
 {
-    private TestContext _testContext;
-    private IValidationWrapper<TestEntity> _validator;
-    private ISnackbar _snackbar;
-
     [SetUp]
     public void Setup()
     {
@@ -37,6 +29,10 @@ public class BaseFormUt
         //_testContext.ComponentFactories.AddStub<MudForm>();
         _testContext.ComponentFactories.AddStub<MudAlert>();
     }
+
+    private TestContext _testContext;
+    private IValidationWrapper<TestEntity> _validator;
+    private ISnackbar _snackbar;
 
     [Test]
     public void Constructor_SetsParameters()
@@ -112,9 +108,9 @@ public class BaseFormUt
 
         var systemUnderTest = GetRenderedComponent(onValidSubmit, formDataContainer: formModelContainer,
             snackbarMessage: snackbarMessage);
-        
+
         await systemUnderTest.Instance.SubmitAsync();
-        
+
         Assert.That(onValidSubmitCallCounter, Is.EqualTo(1));
         _snackbar.Received(1).Add(Arg.Is(snackbarMessage));
     }
@@ -127,18 +123,19 @@ public class BaseFormUt
             EventCallback.Factory.Create<TestForm>(this, _ => throw new Exception("The message"));
         var formModelContainer = Substitute.For<IFormDataContainer<TestForm, TestEntity>>();
         formModelContainer.FormModel.Returns(formModel);
-        
+
         var systemUnderTest = GetRenderedComponent(onValidSubmit, formDataContainer: formModelContainer);
 
         Assert.That(() => systemUnderTest.Find("div.form-error-message"), Throws.TypeOf<ElementNotFoundException>());
-        
+
         await systemUnderTest.Instance.SubmitAsync();
         systemUnderTest.Render();
-        
+
         Assert.That(() => systemUnderTest.Find("div.form-error-message"), Throws.Nothing);
         var mudAlert = systemUnderTest.FindComponent<Stub<MudAlert>>();
         Assert.That(mudAlert.Instance.Parameters["ChildContent"], Is.Not.Null);
-        Assert.That(systemUnderTest.Instance.SubmitErrorMessage, Is.EqualTo("An error has occured trying to submit the form: The message"));
+        Assert.That(systemUnderTest.Instance.SubmitErrorMessage,
+            Is.EqualTo("An error has occured trying to submit the form: The message"));
     }
 
 

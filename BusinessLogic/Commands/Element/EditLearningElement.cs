@@ -47,7 +47,7 @@ public class EditLearningElement : IEditLearningElement
         _memento = LearningElement.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningElement {id}. Previous Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
+            "Editing LearningElement {Id}. Previous Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
             LearningElement.Id, LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description,
             LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload,
             LearningElement.Points, LearningElement.LearningContent.Name);
@@ -64,7 +64,7 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.LearningContent = LearningContent;
 
         Logger.LogTrace(
-            "Edited LearningElement {id}. Updated Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
+            "Edited LearningElement {Id}. Updated Values: Name {PreviousName}, Parent {PreviousParentName}, Description {PreviousDescription}, Goals {PreviousGoals}, Difficulty {PreviousDifficulty}, ElementModel {PreviousElementModel}, Workload {PreviousWorkload}, Points {PreviousPoints}, LearningContent {PreviousLearningContent}",
             LearningElement.Id, LearningElement.Name, LearningElement.Parent?.Name, LearningElement.Description,
             LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload,
             LearningElement.Points, LearningElement.LearningContent.Name);

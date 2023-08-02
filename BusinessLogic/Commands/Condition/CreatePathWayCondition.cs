@@ -61,12 +61,12 @@ public class CreatePathWayCondition : ICreatePathWayCondition
             LearningWorld.LearningPathways.Add(new LearningPathway(SourceObject, PathWayCondition));
             LearningWorld.LearningPathways.Add(new LearningPathway(previousInBoundObject, PathWayCondition));
             LearningWorld.LearningPathways.Add(new LearningPathway(PathWayCondition, TargetObject));
-            Logger.LogTrace("Removed LearningPathway from {target} to {source}", previousPathWay.SourceObject.Id,
+            Logger.LogTrace("Removed LearningPathway from {Target} to {Source}", previousPathWay.SourceObject.Id,
                 previousPathWay.TargetObject.Id);
-            Logger.LogTrace("Created LearningPathway from {source} to {target}", SourceObject.Id, PathWayCondition.Id);
-            Logger.LogTrace("Created LearningPathway from {source} to {target}", previousInBoundObject.Id,
+            Logger.LogTrace("Created LearningPathway from {Source} to {Target}", SourceObject.Id, PathWayCondition.Id);
+            Logger.LogTrace("Created LearningPathway from {Source} to {Target}", previousInBoundObject.Id,
                 PathWayCondition.Id);
-            Logger.LogTrace("Created LearningPathway from {source} to {target}", PathWayCondition.Id, TargetObject.Id);
+            Logger.LogTrace("Created LearningPathway from {Source} to {Target}", PathWayCondition.Id, TargetObject.Id);
         }
 
         MappingAction.Invoke(LearningWorld);

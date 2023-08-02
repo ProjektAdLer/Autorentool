@@ -24,7 +24,7 @@ public class SaveLearningWorld : ISaveLearningWorld
     public void Execute()
     {
         BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);
-        Logger.LogTrace("Saved LearningWorld {name} ({id}) to {path}.", LearningWorld.Name, LearningWorld.Id, Filepath);
+        Logger.LogTrace("Saved LearningWorld {Name} ({Id}) to {Path}", LearningWorld.Name, LearningWorld.Id, Filepath);
         ResetWorldUnsavedChangesState();
     }
 

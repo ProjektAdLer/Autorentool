@@ -1,12 +1,10 @@
-﻿using System;
-using Bunit;
+﻿using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -19,13 +17,6 @@ namespace PresentationTest.View.LearningSpace;
 [TestFixture]
 public class LearningSpaceViewUt
 {
-#pragma warning disable CS8618 // set in setup - n.stich
-    private TestContext _ctx;
-    private ILearningSpacePresenter _learningSpacePresenter;
-    private ISelectedViewModelsProvider _mediator;
-    private IStringLocalizer<LearningSpaceView> _localizer;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -101,7 +92,8 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         var elementName = systemUnderTest.Find("h3.space-theme");
-        elementName.MarkupMatches(@"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceTheme.Text</span>Campus</h3>");
+        elementName.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceTheme.Text</span>Campus</h3>");
         var elementDescription = systemUnderTest.Find("h3.space-goals");
         elementDescription.MarkupMatches(
             @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceGoals.Text</span></h3>");
@@ -116,7 +108,8 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
         Assert.Multiple(() =>
         {
-            Assert.That(() => systemUnderTest.Find("label.learning-object-info"), Throws.TypeOf<ElementNotFoundException>());
+            Assert.That(() => systemUnderTest.Find("label.learning-object-info"),
+                Throws.TypeOf<ElementNotFoundException>());
             Assert.That(() => systemUnderTest.Find("button.btn.btn-primary.edit-learning-object"),
                 Throws.TypeOf<ElementNotFoundException>());
             Assert.That(() => systemUnderTest.Find("button.btn.btn-primary.delete-learning-object"),
@@ -128,10 +121,16 @@ public class LearningSpaceViewUt
 
     private IRenderedComponent<LearningSpaceView> GetLearningSpaceViewForTesting(RenderFragment? childContent = null)
     {
-        childContent ??= delegate {  };
+        childContent ??= delegate { };
         return _ctx.RenderComponent<LearningSpaceView>(
             parameters => parameters
                 .Add(p => p.ChildContent, childContent)
         );
     }
+#pragma warning disable CS8618 // set in setup - n.stich
+    private TestContext _ctx;
+    private ILearningSpacePresenter _learningSpacePresenter;
+    private ISelectedViewModelsProvider _mediator;
+    private IStringLocalizer<LearningSpaceView> _localizer;
+#pragma warning restore CS8618
 }

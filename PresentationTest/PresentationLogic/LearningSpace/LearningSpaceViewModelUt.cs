@@ -22,7 +22,7 @@ public class LearningSpaceViewModelUt
         var requiredPoints = 10;
         var positionX = 20;
         var positionY = 30;
-        var topic = new Presentation.PresentationLogic.Topic.TopicViewModel("topic1", false);
+        var topic = new Presentation.PresentationLogic.Topic.TopicViewModel("topic1");
         var ele1 = ViewModelProvider.GetLearningElement();
         var ele2 = ViewModelProvider.GetLearningElement("2");
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
@@ -43,9 +43,10 @@ public class LearningSpaceViewModelUt
             LearningElements = learningElements
         };
 
-        var systemUnderTest = new LearningSpaceViewModel(name, description, goals, Theme.Campus, requiredPoints, 
-            learningSpaceLayoutVm, positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects, outBoundObjects: outBoundObjects, assignedTopic: topic);
-        
+        var systemUnderTest = new LearningSpaceViewModel(name, description, goals, Theme.Campus, requiredPoints,
+            learningSpaceLayoutVm, positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
+            outBoundObjects: outBoundObjects, assignedTopic: topic);
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -62,7 +63,6 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 32));
             Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 62));
         });
-        
     }
 
     [Test]
@@ -72,17 +72,17 @@ public class LearningSpaceViewModelUt
         var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
-    
+
     [Test]
     public void Workload_ReturnsCorrectWorkload()
     {
-
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus,
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
         var element1 = ViewModelProvider.GetLearningElement(workload: 6);
         var element2 = ViewModelProvider.GetLearningElement("2", workload: 14);
-        
+
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
-        
+
         systemUnderTest.LearningSpaceLayout.PutElement(0, element1);
         Assert.That(systemUnderTest.Workload, Is.EqualTo(6));
 
@@ -92,17 +92,17 @@ public class LearningSpaceViewModelUt
         systemUnderTest.LearningSpaceLayout.RemoveElement(0);
         Assert.That(systemUnderTest.Workload, Is.EqualTo(14));
     }
-    
+
     [Test]
     public void Points_ReturnsCorrectSum()
     {
-
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus,
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
         var element1 = ViewModelProvider.GetLearningElement(points: 7);
         var element2 = ViewModelProvider.GetLearningElement("2", points: 15);
-        
+
         Assert.That(systemUnderTest.Points, Is.EqualTo(0));
-        
+
         systemUnderTest.LearningSpaceLayout.PutElement(0, element1);
         Assert.That(systemUnderTest.Points, Is.EqualTo(7));
 

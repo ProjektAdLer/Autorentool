@@ -39,9 +39,7 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
         var kvP = ParentSpace.LearningSpaceLayout.LearningElements
             .First(kvP => kvP.Value.Equals(LearningElement));
         var oldSlotIndex = kvP.Key;
-        var replacedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.ContainsKey(NewSlotIndex)
-            ? ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex]
-            : null;
+        ParentSpace.LearningSpaceLayout.LearningElements.TryGetValue(NewSlotIndex, out var replacedLearningElement);
         ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
         if (replacedLearningElement != null)
             ParentSpace.LearningSpaceLayout.LearningElements[oldSlotIndex] = replacedLearningElement;

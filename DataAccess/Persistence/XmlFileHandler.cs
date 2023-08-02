@@ -1,7 +1,5 @@
 using System.IO.Abstractions;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using Microsoft.Extensions.Logging;
 
 namespace DataAccess.Persistence;
@@ -9,10 +7,9 @@ namespace DataAccess.Persistence;
 /// <inheritdoc cref="IXmlFileHandler{T}"/>
 public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() constraint for default ctor
 {
-    private readonly ILogger<XmlFileHandler<T>> _logger;
     private readonly IFileSystem _fileSystem;
+    private readonly ILogger<XmlFileHandler<T>> _logger;
     private readonly DataContractSerializer _serializer;
-    private readonly DataContractSerializerSettings _settings;
 
     /// <summary>
     /// Default constructor, no FileSystem mocking.
@@ -20,7 +17,9 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     /// <param name="logger">Logger for log output.</param>
     /// <exception cref="InvalidOperationException">Thrown when class T is either not serializable or doesn't have a
     /// parameterless constructor (necessary for XmlSerializer deserialization).</exception>
-    public XmlFileHandler(ILogger<XmlFileHandler<T>> logger) : this(logger, new FileSystem()) { }
+    public XmlFileHandler(ILogger<XmlFileHandler<T>> logger) : this(logger, new FileSystem())
+    {
+    }
 
     /// <summary>
     /// Testable constructor with insertable IFileSystem for mocking.
@@ -33,7 +32,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     {
         _logger = logger;
         _fileSystem = fileSystem;
-        _settings = new DataContractSerializerSettings
+        var settings = new DataContractSerializerSettings
         {
             PreserveObjectReferences = true
         };
@@ -43,13 +42,14 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         {
             typeT = typeT.GetGenericArguments()[0];
         }
+
         if (typeT.GetCustomAttributesData().All(ca => ca.AttributeType != typeof(DataContractAttribute)))
         {
             throw new InvalidOperationException($"Type {typeT.Name} is not serializable.");
         }
-        
+
         //Create actual serializer once for performance
-        _serializer = new DataContractSerializer(typeof(T), _settings);
+        _serializer = new DataContractSerializer(typeof(T), settings);
     }
 
     /// <inheritdoc cref="IXmlFileHandler{T}.SaveToDisk"/>
@@ -63,7 +63,8 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         }
         catch (Exception e)
         {
-            _logger.LogError("Couldn\'t serialize {Name} object into file at {Filepath}: {EMessage}", typeof(T).Name, filepath, e.Message);
+            _logger.LogError("Couldn\'t serialize {Name} object into file at {Filepath}: {EMessage}", typeof(T).Name,
+                filepath, e.Message);
             throw new SerializationException($"Couldn't serialize {typeof(T).Name} object into file at {filepath}.", e);
         }
     }
@@ -86,8 +87,10 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         }
         catch (Exception e)
         {
-            _logger.LogError("Couldn\'t deserialize file at {Filepath} into {Name} object: {EMessage}", filepath, typeof(T).Name, e.Message);
-            throw new SerializationException($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object.", e);
+            _logger.LogError("Couldn\'t deserialize file at {Filepath} into {Name} object: {EMessage}", filepath,
+                typeof(T).Name, e.Message);
+            throw new SerializationException($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object.",
+                e);
         }
         finally
         {
@@ -98,6 +101,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     /// <inheritdoc cref="IXmlFileHandler{T}.LoadFromStream"/>
     public T LoadFromStream(Stream stream)
     {
-        return _serializer.ReadObject(stream) as T ?? throw new SerializationException($"Cast result to type {typeof(T).Name} null.");
+        return _serializer.ReadObject(stream) as T ??
+               throw new SerializationException($"Cast result to type {typeof(T).Name} null.");
     }
 }

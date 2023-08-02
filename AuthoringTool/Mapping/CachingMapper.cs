@@ -14,6 +14,11 @@ namespace AuthoringTool.Mapping;
 
 public class CachingMapper : ICachingMapper
 {
+    private readonly Dictionary<Guid, object> _cache;
+    private readonly ILogger<CachingMapper> _logger;
+
+    private readonly IMapper _mapper;
+
     public CachingMapper(IMapper mapper, ICommandStateManager commandStateManager, ILogger<CachingMapper> logger)
     {
         _mapper = mapper;
@@ -22,14 +27,11 @@ public class CachingMapper : ICachingMapper
         _cache = new Dictionary<Guid, object>();
     }
 
-    private readonly IMapper _mapper;
-    private readonly ILogger<CachingMapper> _logger;
-
-    private readonly Dictionary<Guid, object> _cache;
     internal IReadOnlyDictionary<Guid, object> ReadOnlyCache => _cache;
 
     public void Map<TSource, TDestination>(TSource entity, TDestination viewModel)
     {
+        _logger.LogTrace("Logging {TSource} to {TDestination}", typeof(TSource).Name, typeof(TDestination).Name);
         switch (entity, viewModel)
         {
             case (AuthoringToolWorkspace s, IAuthoringToolWorkspaceViewModel d):
@@ -55,6 +57,7 @@ public class CachingMapper : ICachingMapper
 
     private void RemoveUnusedKeys(IEnumerable<Guid> usedKeys)
     {
+        _logger.LogTrace("Cleaning unused keys from cache");
         var unusedKeys = _cache.Keys.Except(usedKeys).ToList();
         foreach (var key in unusedKeys)
         {
@@ -65,16 +68,14 @@ public class CachingMapper : ICachingMapper
     private T Cache<T>(T viewModel)
     {
         var key = CacheIfNotCached(viewModel);
-        return (T) _cache[key];
+        return (T)_cache[key];
     }
 
     private Guid CacheIfNotCached<T>(T viewModel)
     {
         var key = GetKeyFromViewModel(viewModel);
-        if (!_cache.ContainsKey(key))
-        {
-            _cache[key] = viewModel!; // viewModel is checked for null in GetKeyFromViewModel
-        }
+        if (_cache.TryAdd(key, viewModel!)) // viewModel is checked for null in GetKeyFromViewModel
+            _logger.LogTrace("Cached {ViewModel} with key {Key}", viewModel.GetType().Name, key);
 
         return key;
     }
@@ -96,10 +97,8 @@ public class CachingMapper : ICachingMapper
 
     private T Get<T>(Guid id)
     {
-        if (_cache.ContainsKey(id))
-        {
-            return (T) _cache[id];
-        }
+        if (_cache.TryGetValue(id, out var value))
+            return (T)value;
 
         throw new ApplicationException(
             "No cached object found. Check if the object is cached before calling this method.");
@@ -156,11 +155,13 @@ public class CachingMapper : ICachingMapper
         {
             var newLearningElementsInSpaceEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
                 .Where(kvP =>
-                    learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).ContainedLearningElements.All(l => kvP.Value.Id != l.Id));
+                    learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).ContainedLearningElements
+                        .All(l => kvP.Value.Id != l.Id));
             //for all elements in entity that are not in view model, check cache and insert to view model
             foreach (var e in newLearningElementsInSpaceEntity.Where(e => _cache.ContainsKey(e.Value.Id)))
             {
-                learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout.PutElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
+                learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout
+                    .PutElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
             }
         }
 
@@ -194,14 +195,14 @@ public class CachingMapper : ICachingMapper
         var newLearningElementsInEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
             .Where(kvP => !SameIdAtSameIndex(learningSpaceVm.LearningSpaceLayout, kvP));
         //for all elements in entity that are not in view model, check cache and insert to view model
-        foreach (var e in newLearningElementsInEntity.Where(e => _cache.ContainsKey(e.Value!.Id)))
+        foreach (var e in newLearningElementsInEntity.Where(e => _cache.ContainsKey(e.Value.Id)))
         {
-            learningSpaceVm.LearningSpaceLayout.PutElement(e.Key, Get<LearningElementViewModel>(e.Value!.Id));
+            learningSpaceVm.LearningSpaceLayout.PutElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
         }
 
         //call automapper
         _mapper.Map(learningSpaceEntity, learningSpaceVm);
-        
+
         CacheLearningSpaceContent(learningSpaceVm);
 
         if (learningSpaceVm.AssignedTopic != null && _cache.ContainsKey(learningSpaceVm.AssignedTopic.Id))
@@ -213,7 +214,7 @@ public class CachingMapper : ICachingMapper
         topicVm = Cache(topicVm);
         _mapper.Map(topic, topicVm);
     }
-    
+
     private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);

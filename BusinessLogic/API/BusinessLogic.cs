@@ -40,7 +40,7 @@ public class BusinessLogic : IBusinessLogic
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
     public IApplicationConfiguration Configuration { get; }
-    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
+    public event EventHandler<CommandUndoRedoOrExecuteArgs>? OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
 
@@ -56,7 +56,7 @@ public class BusinessLogic : IBusinessLogic
         try
         {
             DataAccess.RemoveContent(content);
-            Logger.LogTrace("Removed {type} : {name}", content.GetType(), content.Name);
+            Logger.LogTrace("Removed {Type} : {Name}", content.GetType(), content.Name);
         }
         catch (ArgumentOutOfRangeException e)
         {
@@ -78,7 +78,7 @@ public class BusinessLogic : IBusinessLogic
         try
         {
             DataAccess.SaveLink(linkContent);
-            Logger.LogTrace("Saved link: {link} with name: {linkName}", linkContent.Link, linkContent.Name);
+            Logger.LogTrace("Saved link: {Link} with name: {LinkName}", linkContent.Link, linkContent.Name);
         }
         catch (SerializationException e)
         {
@@ -138,7 +138,8 @@ public class BusinessLogic : IBusinessLogic
         try
         {
             WorldGenerator.ConstructBackup(learningWorld, filepath);
-            Logger.LogTrace("Constructed backup for learning world: {learningWorldName} with id {learningWorldId} at path: {filepath}",
+            Logger.LogTrace(
+                "Constructed backup for learning world: {LearningWorldName} with id {LearningWorldId} at path: {Filepath}",
                 learningWorld.Name, learningWorld.Id, filepath);
         }
         catch (ArgumentOutOfRangeException e)
@@ -302,7 +303,6 @@ public class BusinessLogic : IBusinessLogic
             ErrorManager.LogAndRethrowError(e);
             return null!;
         }
-        
     }
 
     public LearningElement LoadLearningElement(Stream stream)
@@ -362,14 +362,14 @@ public class BusinessLogic : IBusinessLogic
         {
             var token = await BackendAccess.GetUserTokenAsync(username, password);
             Configuration[IApplicationConfiguration.BackendToken] = token.Token;
-            Logger.LogTrace("Logged in user: {username}", username);
+            Logger.LogTrace("Logged in user: {Username}", username);
         }
-        catch (BackendInvalidLoginException e)
+        catch (BackendInvalidLoginException)
         {
             Logout();
             throw;
         }
-        catch (BackendInvalidUrlException e)
+        catch (BackendInvalidUrlException)
         {
             Logout();
             throw;
@@ -393,7 +393,7 @@ public class BusinessLogic : IBusinessLogic
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
         BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
             filepath, atfPath, progress);
-        Logger.LogTrace("Uploaded learning world to backend from backupPath: {path}", filepath);
+        Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
     }
 
     #endregion

@@ -1,11 +1,9 @@
-@using Presentation.Components.Forms.Content
-@using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.ElectronNET
-@using Presentation.Components.Dialogues
-@using BusinessLogic.Entities.LearningContent
-@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Microsoft.Extensions.Localization
+@using BusinessLogic.Entities.LearningContent
+@using Presentation.Components.Forms
+@using Presentation.Components.Forms.Content
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -53,10 +51,10 @@
 
     [Inject]
     private ILogger<ContentFilesAdd> Logger { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
-    
+
     [Inject]
     private IErrorService ErrorService { get; set; }
 
@@ -78,7 +76,7 @@
             ToggleSpinner();
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
 
-            var files = obj.GetMultipleFiles(10);
+            var files = obj.GetMultipleFiles();
             Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
 
             foreach (var file in files)

@@ -35,6 +35,8 @@
 
 @code
 {
+#pragma warning disable CS8618 - injected by Blazor - n.stich
     [Inject]
     private IStringLocalizer<NavMenu> Localizer { get; set; }
+#pragma warning restore CS8618
 }

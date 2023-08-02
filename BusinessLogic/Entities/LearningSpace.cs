@@ -25,9 +25,12 @@ public class LearningSpace : ILearningSpace
         PositionX = 0;
         PositionY = 0;
     }
+
     public LearningSpace(string name, string description,
-        string goals, int requiredPoints, Theme theme, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
-        double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null,
+        string goals, int requiredPoints, Theme theme, LearningSpaceLayout? learningSpaceLayout = null,
+        double positionX = 0,
+        double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null,
+        List<IObjectInPathWay>? outBoundSpaces = null,
         Topic? assignedTopic = null)
     {
         Id = Guid.NewGuid();
@@ -38,7 +41,8 @@ public class LearningSpace : ILearningSpace
         Theme = theme;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
-            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L);
+                              ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(),
+                                  FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         AssignedTopic = assignedTopic;
@@ -52,7 +56,7 @@ public class LearningSpace : ILearningSpace
     public string Description { get; set; }
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
-    
+
     public Theme Theme { get; set; }
 
     public bool UnsavedChanges
@@ -75,7 +79,8 @@ public class LearningSpace : ILearningSpace
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, LearningSpaceLayout, InBoundObjects, 
+        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, LearningSpaceLayout,
+            InBoundObjects,
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
 
@@ -85,6 +90,7 @@ public class LearningSpace : ILearningSpace
         {
             throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
         }
+
         Name = learningSpaceMemento.Name;
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
@@ -119,11 +125,13 @@ public class LearningSpace : ILearningSpace
             PositionY = positionY;
             UnsavedChanges = unsavedChanges;
         }
-        
+
         internal string Name { get; }
         internal string Description { get; }
         internal string Goals { get; }
         internal int RequiredPoints { get; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future
         internal Theme Theme { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }

@@ -25,8 +25,10 @@ public class LearningWorld : ILearningWorld, IOriginator
         UnsavedChanges = false;
         UnplacedLearningElements = new List<ILearningElement>();
     }
+
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string savePath = "", List<ILearningSpace> learningSpaces = null, List<PathWayCondition>? pathWayConditions = null,
+        string goals, string savePath = "", List<ILearningSpace>? learningSpaces = null,
+        List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
     {
         Id = Guid.NewGuid();
@@ -45,12 +47,16 @@ public class LearningWorld : ILearningWorld, IOriginator
         UnplacedLearningElements = new List<ILearningElement>();
     }
 
+    public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces)
+        .Concat(PathWayConditions).Concat(LearningPathways).ToList();
+
     public Guid Id { get; private set; }
     public List<ILearningSpace> LearningSpaces { get; set; }
     public List<PathWayCondition> PathWayConditions { get; set; }
-    public List<IObjectInPathWay> ObjectsInPathWays => new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
-    public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces).
-        Concat(PathWayConditions).Concat(LearningPathways).ToList();
+
+    public List<IObjectInPathWay> ObjectsInPathWays =>
+        new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
+
     public List<LearningPathway> LearningPathways { get; set; }
     public List<Topic> Topics { get; set; }
     public string Name { get; set; }
@@ -59,7 +65,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
-    public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
+    public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
     public string SavePath { get; set; }
 
     public bool UnsavedChanges
@@ -77,7 +83,8 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath, LearningSpaces,
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath,
+            LearningSpaces,
             PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges, UnplacedLearningElements);
     }
 
@@ -87,6 +94,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         {
             throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
         }
+
         Name = learningWorldMemento.Name;
         Shortname = learningWorldMemento.Shortname;
         Authors = learningWorldMemento.Authors;
@@ -105,8 +113,10 @@ public class LearningWorld : ILearningWorld, IOriginator
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, string savePath, List<ILearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
-            List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges, IEnumerable<ILearningElement> unplacedLearningElements)
+            string description, string goals, string savePath, List<ILearningSpace> learningSpaces,
+            List<PathWayCondition> pathWayConditions,
+            List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
+            IEnumerable<ILearningElement> unplacedLearningElements)
         {
             Name = name;
             Shortname = shortname;
@@ -123,10 +133,10 @@ public class LearningWorld : ILearningWorld, IOriginator
             UnplacedLearningElements = unplacedLearningElements.ToList();
         }
 
-        internal List<ILearningSpace> LearningSpaces { get;  }
-        internal List<PathWayCondition> PathWayConditions { get;  }
-        internal List<LearningPathway> LearningPathways { get;  }
-        internal List<Topic> Topics { get;  }
+        internal List<ILearningSpace> LearningSpaces { get; }
+        internal List<PathWayCondition> PathWayConditions { get; }
+        internal List<LearningPathway> LearningPathways { get; }
+        internal List<Topic> Topics { get; }
         internal string Name { get; }
         internal string Shortname { get; }
         internal string Authors { get; }

@@ -53,7 +53,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         Logger.LogTrace(
             "Created LearningElement {LearningElementName} ({LearningElementId}) in slot {SlotIndex} of ParentSpace {ParentSpaceName}({ParentSpaceId}). LearningContent: {LearningContent}, Description: {Description}, Goals: {Goals}, Difficulty: {Difficulty}, ElementModel: {ElementModel}, Workload: {Workload}, Points: {Points}",
             LearningElement.Name, LearningElement.Id, SlotIndex, ParentSpace.Name, ParentSpace.Id,
-            LearningElement.LearningContent?.Name, LearningElement.Description, LearningElement.Goals,
+            LearningElement.LearningContent.Name, LearningElement.Description, LearningElement.Goals,
             LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload, LearningElement.Points);
 
         MappingAction.Invoke(ParentSpace);

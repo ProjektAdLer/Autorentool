@@ -6,9 +6,11 @@
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
-@Body 
+@Body
 
 @code {
+#pragma warning disable CS8618 - injected by Blazor - n.stich
     [Inject]
     internal IStringLocalizer<MainLayout> Localizer { get; set; }
+#pragma warning restore CS8618
 }

@@ -12,7 +12,7 @@ public class CreateLearningSpace : ICreateLearningSpace
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction, ILogger<CreateLearningSpace> logger)
     {
-        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, null, positionX: positionX,
+        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, positionX: positionX,
             positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;

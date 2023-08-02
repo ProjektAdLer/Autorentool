@@ -38,7 +38,7 @@ public class EditLearningWorld : IEditLearningWorld
         _memento ??= LearningWorld.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningWorld {name} ({id}). Previous Name: {name}, Shortname: {shortname}, Authors: {authors}, Language: {language}, Description: {description}, Goals: {goals}",
+            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}",
             LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals);
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
@@ -50,8 +50,8 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Goals = Goals;
 
         Logger.LogTrace(
-            "Edited LearningWorld {name} ({id}). Updated Name: {name}, Shortname: {shortname}, Authors: {authors}, Language: {language}, Description: {description}, Goals: {goals}",
-            LearningWorld.Name, LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
+            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}",
+            LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
             LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals);
 
         MappingAction.Invoke(LearningWorld);
@@ -67,7 +67,7 @@ public class EditLearningWorld : IEditLearningWorld
 
         LearningWorld.RestoreMemento(_memento);
 
-        Logger.LogTrace("Undone edit of LearningWorld {name} ({id}).", LearningWorld.Name, LearningWorld.Id);
+        Logger.LogTrace("Undone edit of LearningWorld {Name} ({Id})", LearningWorld.Name, LearningWorld.Id);
 
         MappingAction.Invoke(LearningWorld);
     }

@@ -28,14 +28,6 @@ namespace PresentationTest.View.LearningWorld;
 [TestFixture]
 public class LearningWorldViewUt
 {
-#pragma warning disable CS8618 // set in setup - n.stich
-    private TestContext _ctx;
-    private IMouseService _mouseService;
-    private ILearningWorldPresenter _worldPresenter;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IStringLocalizer<LearningWorldView> _localizer;
-#pragma warning restore CS8618
-    
     [SetUp]
     public void Setup()
     {
@@ -60,7 +52,7 @@ public class LearningWorldViewUt
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.MouseService, Is.EqualTo(_mouseService));
@@ -78,7 +70,7 @@ public class LearningWorldViewUt
             builder.AddContent(2, "foobar");
             builder.CloseElement();
         };
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting(childContent);
 
         Assert.That(systemUnderTest.FindOrFail("div.barbaz").TextContent, Is.EqualTo("foobar"));
@@ -92,15 +84,16 @@ public class LearningWorldViewUt
         learningWorld.Workload.Returns(42);
         learningWorld.Points.Returns(9);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var h3 = systemUnderTest.FindAllOrFail("h3").ToList();
         h3[0].MarkupMatches(
             @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></h3>");
-        h3[1].MarkupMatches(@"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
+        h3[1].MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
     }
-    
+
     [Test]
     public void Render_LearningSpaceInWorld_CorrectDraggableForEachSpace()
     {
@@ -118,11 +111,12 @@ public class LearningWorldViewUt
         learningWorld.LearningPathWays.Returns(learningPathWays);
         learningWorld.PathWayConditions.Returns(pathWayConditions);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningSpace>>().ToList();
-        var draggablePathWayConditions = systemUnderTest.FindComponentsOrFail<Stub<DraggablePathWayCondition>>().ToList();
+        var draggablePathWayConditions =
+            systemUnderTest.FindComponentsOrFail<Stub<DraggablePathWayCondition>>().ToList();
         var pathWays = systemUnderTest.FindComponentsOrFail<Stub<PathWay>>().ToList();
 
         Assert.Multiple(() =>
@@ -145,7 +139,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseMove(mouseEventArgs);
-        
+
         _mouseService.Received().FireMove(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -157,7 +151,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseUp(mouseEventArgs);
-        
+
         _mouseService.Received().FireUp(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -169,7 +163,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseLeave(mouseEventArgs);
-        
+
         _mouseService.Received().FireOut(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -184,7 +178,7 @@ public class LearningWorldViewUt
             await ((EventCallback<MouseEventArgs>)addSpaceButton.Instance.Parameters["onclick"]).InvokeAsync(null));
         _worldPresenter.Received().AddNewLearningSpace();
     }
-    
+
     [Test]
     public async Task AddConditionButton_Clicked_CallsAddNewPathWayCondition()
     {
@@ -194,14 +188,14 @@ public class LearningWorldViewUt
             ((string)btn.Instance.Parameters["Class"]).Contains("add-condition"));
         await addConditionButton.InvokeAsync(async () =>
             await ((EventCallback<MouseEventArgs>)addConditionButton.Instance.Parameters["onclick"]).InvokeAsync(null));
-        _worldPresenter.Received().CreatePathWayCondition(ConditionEnum.Or);
+        _worldPresenter.Received().CreatePathWayCondition();
     }
-    
+
     [Test]
     public async Task LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
     {
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
             ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
         await loadSpaceButton.InvokeAsync(async () =>
@@ -213,9 +207,9 @@ public class LearningWorldViewUt
     public async Task LoadSpaceButton_Clicked_OperationCancelledExceptionCaught()
     {
         _worldPresenter.LoadLearningSpaceAsync().Throws<OperationCanceledException>();
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
             ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
         await loadSpaceButton.InvokeAsync(async () =>
@@ -228,4 +222,11 @@ public class LearningWorldViewUt
         return _ctx.RenderComponent<LearningWorldView>(parameters => parameters
             .Add(p => p.ChildContent, childContent));
     }
+#pragma warning disable CS8618 // set in setup - n.stich
+    private TestContext _ctx;
+    private IMouseService _mouseService;
+    private ILearningWorldPresenter _worldPresenter;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IStringLocalizer<LearningWorldView> _localizer;
+#pragma warning restore CS8618
 }

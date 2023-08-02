@@ -22,8 +22,9 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, elementModel, null, workload: workload, points: points, positionX: positionX, positionY: positionY);
-        
+        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, elementModel,
+            workload: workload, points: points, positionX: positionX, positionY: positionY);
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -40,7 +41,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
-    
+
     [Test]
     public void NormalConstructor_InitializesAllProperties()
     {
@@ -57,8 +58,9 @@ public class LearningElementUt
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-             difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
-        
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX,
+            positionY: positionY);
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -74,7 +76,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
     }
-    
+
     [Test]
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
@@ -91,10 +93,11 @@ public class LearningElementUt
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX,
+            positionY: positionY);
 
         var learningElementMemento = systemUnderTest.GetMemento();
-        
+
         var nameChanged = "qwertz";
         var contentChanged = EntityProvider.GetFileContent(append: "changed");
         var descriptionChanged = "changed description";
@@ -130,9 +133,9 @@ public class LearningElementUt
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
         });
-        
+
         systemUnderTest.RestoreMemento(learningElementMemento);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -164,16 +167,16 @@ public class LearningElementUt
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX,
+            positionY: positionY);
 
         var mementoMock = new MementoMock();
-        
+
         var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.RestoreMemento(mementoMock));
         Assert.That(ex!.Message, Is.EqualTo("Incorrect IMemento implementation (Parameter 'memento')"));
     }
 
     private class MementoMock : IMemento
     {
-        
     }
 }

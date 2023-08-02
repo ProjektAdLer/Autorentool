@@ -1,4 +1,3 @@
-@using System.ComponentModel
 @using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
@@ -15,7 +14,7 @@
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<ReplaceLearningElementDialog> Localizer { get; set; }
 
@@ -23,9 +22,10 @@
     {
         MudDialog.Close(DialogResult.Ok(true));
     }
-    
-    void Cancel() 
+
+    void Cancel()
     {
         MudDialog.Close(DialogResult.Cancel());
     }
+
 }

@@ -17,10 +17,8 @@ public class UserWebApiServices : IUserWebApiServices
 {
     private readonly HttpClient _client;
     private readonly IFileSystem _fileSystem;
-    private readonly ProgressMessageHandler _progressMessageHandler;
     private readonly ILogger<UserWebApiServices> _logger;
-    
-    private IProgress<int>? ProgressReporter { get; set; }
+    private readonly ProgressMessageHandler _progressMessageHandler;
 
     public UserWebApiServices(IApplicationConfiguration configuration, ProgressMessageHandler progressMessageHandler,
         IHttpClientFactory httpClientFactory, ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
@@ -32,6 +30,8 @@ public class UserWebApiServices : IUserWebApiServices
         _fileSystem = fileSystem;
     }
 
+    private IProgress<int>? ProgressReporter { get; set; }
+
     public IApplicationConfiguration Configuration { get; }
 
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
@@ -39,8 +39,8 @@ public class UserWebApiServices : IUserWebApiServices
     {
         var parameters = new Dictionary<string, string>
         {
-            {"username", username},
-            {"password", password}
+            { "username", username },
+            { "password", password }
         };
 
         try
@@ -73,11 +73,11 @@ public class UserWebApiServices : IUserWebApiServices
                     throw;
             }
         }
-        catch (UriFormatException e)
+        catch (UriFormatException)
         {
             throw new BackendInvalidUrlException("Invalid URL.");
         }
-        catch (NotSupportedException e)
+        catch (NotSupportedException)
         {
             throw new BackendInvalidUrlException("Invalid URL. Does the URL start with 'http://' or 'https://'?");
         }
@@ -87,7 +87,7 @@ public class UserWebApiServices : IUserWebApiServices
     {
         var parameters = new Dictionary<string, string>
         {
-            {"WebServiceToken", token}
+            { "WebServiceToken", token }
         };
 
         return await SendHttpGetRequestAsync<UserInformationBE>("/Users/UserData",
@@ -104,8 +104,8 @@ public class UserWebApiServices : IUserWebApiServices
 
         var headers = new Dictionary<string, string>
         {
-            {"token", token},
-            {"Accept", "text/plain"}
+            { "token", token },
+            { "Accept", "text/plain" }
         };
         var content = new MultipartFormDataContent();
         content.Add(new StreamContent(_fileSystem.File.OpenRead(backupPath)),

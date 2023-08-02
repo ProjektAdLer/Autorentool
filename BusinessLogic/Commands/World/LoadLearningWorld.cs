@@ -48,7 +48,7 @@ public class LoadLearningWorld : ILoadLearningWorld
 
         LearningWorld.SavePath = Filepath;
 
-        Logger.LogTrace("Loaded LearningWorld {name} ({id}) from {path}.", LearningWorld.Name, LearningWorld.Id,
+        Logger.LogTrace("Loaded LearningWorld {Name} ({Id}) from {Path}", LearningWorld.Name, LearningWorld.Id,
             Filepath);
 
         MappingAction.Invoke(Workspace);

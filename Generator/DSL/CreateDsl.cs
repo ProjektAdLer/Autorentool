@@ -112,9 +112,8 @@ public class CreateDsl : ICreateDsl
 
             for (var i = 0; i <= maxSlotNumber; i++)
             {
-                if (space.LearningSpaceLayout.LearningElements.ContainsKey(i))
+                if (space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
                 {
-                    var element = space.LearningSpaceLayout.LearningElements[i];
                     var elementType = element.LearningContent switch
                     {
                         FileContentPe fileContent => fileContent.Type,
@@ -224,7 +223,7 @@ public class CreateDsl : ICreateDsl
                 var castedFileContent = (FileContentPe)learningElement.LearningContent;
                 _fileSystem.File.Copy(castedFileContent.Filepath,
                     _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
-                Logger.LogTrace($"Copied file from {castedFileContent.Filepath} to XMLFilesForExport");
+                Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", castedFileContent.Filepath);
             }
             catch (FileNotFoundException)
             {

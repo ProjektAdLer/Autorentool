@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Shared;
 
 public sealed class ObservableDictionary<TKey, TValue> : IObservableDictionary<TKey, TValue> where TKey : notnull
 {
     private readonly IDictionary<TKey, TValue> _dictionary;
+
     public ObservableDictionary()
     {
         _dictionary = new Dictionary<TKey, TValue>();
     }
+
     public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
     {
         _dictionary = dictionary;
@@ -45,6 +48,7 @@ public sealed class ObservableDictionary<TKey, TValue> : IObservableDictionary<T
 
     public int Count => _dictionary.Count;
     public bool IsReadOnly => _dictionary.IsReadOnly;
+
     public void Add(TKey key, TValue value)
     {
         _dictionary.Add(key, value);
@@ -61,11 +65,13 @@ public sealed class ObservableDictionary<TKey, TValue> : IObservableDictionary<T
             return false;
         var removed = _dictionary.Remove(key);
         if (removed)
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new KeyValuePair<TKey,TValue>(key, value)));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
+                new KeyValuePair<TKey, TValue>(key, value!)));
         return removed;
     }
 
-    public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) =>
+        _dictionary.TryGetValue(key, out value);
 
     public TValue this[TKey key]
     {
@@ -77,7 +83,7 @@ public sealed class ObservableDictionary<TKey, TValue> : IObservableDictionary<T
             if (keyExists)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
-                    new KeyValuePair<TKey, TValue>(key, value), new KeyValuePair<TKey,TValue>(key, previousValue)));
+                    new KeyValuePair<TKey, TValue>(key, value), new KeyValuePair<TKey, TValue>(key, previousValue!)));
             }
             else
             {
