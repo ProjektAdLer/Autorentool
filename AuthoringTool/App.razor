@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.View
 @using AuthoringTool.View.Shared
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(MasterLayout).Assembly }">
@@ -16,8 +17,8 @@
 
 @code
 {
-#pragma warning disable CS8618 - injected by Blazor - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<App> Localizer { get; set; }
-#pragma warning restore CS8618
+
 }

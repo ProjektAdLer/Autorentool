@@ -1,7 +1,7 @@
-@using System.Globalization
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
 @using MudBlazor.Utilities
-
 <section class="flex flex-row justify-center drop-shadow p-1">
     <div dir="ltr" class="flex justify-center items-center">
         <button title=@Localizer["Localizer.German.Short.Text.Hover"]
@@ -11,8 +11,10 @@
                 @Localizer["Localizer.German.Short.Text"]
             </p>
         </button>
+        @* ReSharper disable Html.PathError *@
         <img src="CustomIcons/german-flag-long.png" alt="german-flag-icon"
              class="@GermanImageClass.Build()">
+        @* ReSharper restore Html.PathError *@
     </div>
     <div dir="rtl" class="flex justify-center items-center">
         <button title=@Localizer["Localizer.English.Short.Text.Hover"]
@@ -22,18 +24,22 @@
                 @Localizer["Localizer.English.Short.Text"]
             </p>
         </button>
+        @* ReSharper disable Html.PathError *@
         <img src="CustomIcons/great-britain-flag.png" alt="great-britain-flag-icon"
              class="@EnglishImageClass.Build()">
+        @* ReSharper restore Html.PathError *@
     </div>
 </section>
 
 @code
 {
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public INavigationManagerWrapper Navigation { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IStringLocalizer<CultureSelector> Localizer { get; set; }
+
 
     private CultureInfo[] _supportedCultures =
     {

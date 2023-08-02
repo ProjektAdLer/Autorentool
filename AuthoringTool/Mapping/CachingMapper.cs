@@ -65,16 +65,16 @@ public class CachingMapper : ICachingMapper
         }
     }
 
-    private T Cache<T>(T viewModel)
+    private T Cache<T>(T viewModel) where T : notnull
     {
         var key = CacheIfNotCached(viewModel);
         return (T)_cache[key];
     }
 
-    private Guid CacheIfNotCached<T>(T viewModel)
+    private Guid CacheIfNotCached<T>(T viewModel) where T : notnull
     {
         var key = GetKeyFromViewModel(viewModel);
-        if (_cache.TryAdd(key, viewModel!)) // viewModel is checked for null in GetKeyFromViewModel
+        if (_cache.TryAdd(key, viewModel)) // viewModel is checked for null in GetKeyFromViewModel
             _logger.LogTrace("Cached {ViewModel} with key {Key}", viewModel.GetType().Name, key);
 
         return key;

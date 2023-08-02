@@ -1,11 +1,14 @@
+@using System.Diagnostics.CodeAnalysis
 <div class="@GetSide p-1 h-[95%]">
     @ChildContent
 </div>
 
 @code {
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public Side Side { get; set; }
 
     private string GetSide => Side switch 
@@ -13,6 +16,6 @@
         Side.Left => "left",
         Side.Right => "right",
         _ => throw new ArgumentOutOfRangeException(nameof(Side))
-    };
+        };
 
 }

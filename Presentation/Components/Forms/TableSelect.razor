@@ -1,5 +1,6 @@
 @typeparam T
 @using MudBlazor.Utilities
+@using System.Diagnostics.CodeAnalysis
 @inherits MudBaseInput<T>
 <div class="flex flex-col items-center">
     @if (Error)
@@ -25,27 +26,27 @@
 
 @code {
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IEnumerable<T> Elements { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public Func<T, IEnumerable<string>> FilterFuncSearchableStrings { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment HeaderContent { get; set; }
-    
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment<T> RowTemplate { get; set; }
 
 
     private MudTable<T>? _mudTable;
     private string? _searchString;
-    
+
     private string TableClasses => CssBuilder.Empty().AddClass("border-2 border-formerror rounded-lg shadow-lg", () => Error).Build();
 
     private void RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
     {
-        if (tableRowClickEventArgs.Item.Equals(Value))
+        if (tableRowClickEventArgs.Item != null && tableRowClickEventArgs.Item.Equals(Value))
         {
             DeselectRow();
         }
@@ -85,4 +86,5 @@
     {
         return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString));
     }
+
 }

@@ -1,17 +1,15 @@
-@using Presentation.PresentationLogic.LearningSpace
-@using System.ComponentModel
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View
 @using Presentation.View.LearningElement
-
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningElement
 <MudCard Class="overflow-auto">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
-        <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
+        <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
     }
     else
     {
@@ -38,23 +36,26 @@
 </div>
 
 @code {
-#pragma warning disable CS8618
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningWorldPresenter WorldPresenter { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IMediator Mediator { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action TriggerMasterLayoutStateHasChanged { get; set; }
-    
-    [Inject]
-    private IStringLocalizer<ElementFormContainer> Localizer { get; set; }
-#pragma warning restore CS8618
+    private Action? TriggerMasterLayoutStateHasChanged { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<ElementFormContainer> Localizer { get; set; }
+
+    private void InvokeMasterLayoutStateHasChanged()
+    {
+        if (TriggerMasterLayoutStateHasChanged != null) InvokeAsync(TriggerMasterLayoutStateHasChanged);
+    }
 
     protected override void OnParametersSet()
     {
@@ -64,7 +65,7 @@
 
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName == nameof(SelectedViewModelsProvider.LearningElement))
+        if (e.PropertyName == nameof(SelectedViewModelsProvider.LearningElement))
             Mediator.OverwriteElementEdit = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -73,6 +74,7 @@
     {
         Mediator.OverwriteElementEdit = true;
         SelectedViewModelsProvider.SetLearningElement(null, null);
-        InvokeAsync(TriggerMasterLayoutStateHasChanged);
+        InvokeMasterLayoutStateHasChanged();
     }
+
 }

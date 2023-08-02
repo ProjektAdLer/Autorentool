@@ -10,10 +10,6 @@ namespace PresentationTest.Components;
 [TestFixture]
 public class CloseAppButtonUt
 {
-#pragma warning disable CS8618
-    private Bunit.TestContext _context;
-    private IShutdownManager _shutdownManager;
-#pragma warning restore CS8618
     [SetUp]
     public void Setup()
     {
@@ -21,6 +17,9 @@ public class CloseAppButtonUt
         _shutdownManager = Substitute.For<IShutdownManager>();
         _context.Services.AddSingleton(_shutdownManager);
     }
+
+    private Bunit.TestContext _context;
+    private IShutdownManager _shutdownManager;
 
     [Test]
     public void OnClick_CallsShutdownManager()

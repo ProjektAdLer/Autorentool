@@ -2,7 +2,7 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Shared
 @using Microsoft.Extensions.Localization
-
+@using System.Diagnostics.CodeAnalysis
 <div class="flex flex-col justify-center py-2 w-full rounded-lg bg-adlergrey-100">
     <div class="flex flex-row justify-evenly">
         @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
@@ -22,19 +22,18 @@
 @code {
 
     // LearningSpacePresenter is injected and LearningSpaceViewModel is required to be set by the parent component
-#pragma warning disable CS8618
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningSpacePresenter LearningSpacePresenter { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IStringLocalizer<SpaceLayoutSelection> Localizer { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IStringLocalizer<FloorPlanEnum> FloorPlanLocalizer { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningSpaceViewModel LearningSpaceViewModel { get; set; }
-#pragma warning restore CS8618
 
 
     private FloorPlanEnum SelectedFloorPlan => LearningSpaceViewModel.LearningSpaceLayout.FloorPlanName;

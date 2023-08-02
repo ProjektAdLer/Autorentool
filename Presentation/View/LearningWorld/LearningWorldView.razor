@@ -1,26 +1,26 @@
 ﻿@page "/LearningWorldViewRedesign"
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.View.LearningSpace
-@using Presentation.View.LearningPathWay
-@using Size = MudBlazor.Size
-@using Color = MudBlazor.Color
-@using System.ComponentModel
-@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningPathway
-@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningPathWay
 @using Direction = Shared.Direction
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 @ChildContent
 
 <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] h-full grow">
     <section class="bg-white rounded-lg p-2">
         <div class="flex justify-start items-center space-x-2 py-1">
-        <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7"> 
-        <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
+            <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7">
+            <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span></h3>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+        <h3 class="text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
+        </h3>
+        <h3 class="text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points
+        </h3>
     </section>
     <section class="flex flex-row gap-2 justify-center">
         <div class="flex grow justify-between">
@@ -36,7 +36,7 @@
                 <img src="CustomIcons/new-condition-icon-nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
             </MudButton>
-            </div>
+        </div>
     </section>
     @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
@@ -99,23 +99,24 @@
 </article>
 
 @code {
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-#pragma warning disable CS8618 // injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IMouseService MouseService { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningWorldPresenter LearningWorldP { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LearningWorldView> Localizer { get; set; }
-#pragma warning restore CS8618
-    
+
+
     private ExceptionWrapper? ErrorState { get; set; }
 
     protected override void OnParametersSet()
@@ -126,12 +127,12 @@
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
     }
-    
+
     private void AddNewLearningSpace()
     {
         LearningWorldP.AddNewLearningSpace();
     }
-    
+
     private void AddNewPathWayCondition()
     {
         LearningWorldP.CreatePathWayCondition();
@@ -162,7 +163,7 @@
             await InvokeAsync(StateHasChanged);
         }
     }
-    
+
     private async Task SaveLearningWorldAsync()
     {
         try
@@ -232,7 +233,7 @@
         }
         TriggerStateHasChanged();
     }
-    
+
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         TriggerStateHasChanged();

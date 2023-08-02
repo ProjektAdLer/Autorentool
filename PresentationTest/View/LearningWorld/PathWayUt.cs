@@ -16,13 +16,6 @@ namespace PresentationTest.View.LearningWorld;
 [TestFixture]
 public class PathWayUt
 {
-#pragma warning disable CS8618 // set in setup - n.stich
-    private TestContext _ctx;
-    private IMouseService _mouseService;
-    private ILearningWorldPresenter _positioningService;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-#pragma warning restore CS8618
-    
     [SetUp]
     public void Setup()
     {
@@ -33,7 +26,12 @@ public class PathWayUt
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
-    
+
+    private TestContext _ctx;
+    private IMouseService _mouseService;
+    private ILearningWorldPresenter _positioningService;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
@@ -41,9 +39,9 @@ public class PathWayUt
         double y1 = 20;
         double x2 = 30;
         double y2 = 50;
-        
+
         var systemUnderTest = GetPathWayForTesting(x1, y1, x2, y2);
-        
+
         Assert.That(systemUnderTest.Instance.Direction1, Is.EqualTo(Direction.Right));
         Assert.That(systemUnderTest.Instance.Direction2, Is.EqualTo(Direction.Left));
         Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
@@ -51,9 +49,9 @@ public class PathWayUt
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x2));
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y2));
     }
-    
-    private IRenderedComponent<PathWay> GetPathWayForTesting( double x1 = 0, double y1 = 0, double x2 = 0,
-        double y2 = 0, ILearningPathWayViewModel? pathWay =null, Action<ILearningPathWayViewModel>? onClicked = null)
+
+    private IRenderedComponent<PathWay> GetPathWayForTesting(double x1 = 0, double y1 = 0, double x2 = 0,
+        double y2 = 0, ILearningPathWayViewModel? pathWay = null, Action<ILearningPathWayViewModel>? onClicked = null)
     {
         onClicked ??= _ => { };
         return _ctx.RenderComponent<PathWay>(parameters => parameters

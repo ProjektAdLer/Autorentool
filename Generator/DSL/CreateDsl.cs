@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Text.Json;
 using Generator.WorldExport;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ public class CreateDsl : ICreateDsl
     private string _xmlFilesForExportPath;
     public Dictionary<int, Guid> DictionarySpaceIdToGuid;
     public List<ILearningElementPe> ElementsWithFileContent;
-    public LearningWorldJson LearningWorldJson;
+    public LearningWorldJson? LearningWorldJson;
     public List<LearningSpacePe> ListLearningSpaces;
     public List<TopicPe> ListTopics;
     public string Uuid;
@@ -32,19 +33,22 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="fileSystem"></param>
     /// <param name="logger"></param>
-#pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public CreateDsl(IFileSystem fileSystem, ILogger<CreateDsl> logger)
-#pragma warning restore CS8618
     {
         Initialize();
         _fileSystem = fileSystem;
         Logger = logger;
+        _author = "";
+        _dslPath = "";
+        _language = "";
+        _xmlFilesForExportPath = "";
     }
 
     private ILogger<CreateDsl> Logger { get; }
 
 
     /// <inheritdoc cref="ICreateDsl.WriteLearningWorld"/>
+    [MemberNotNull(nameof(_author), nameof(_language), nameof(LearningWorldJson))]
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
@@ -237,6 +241,9 @@ public class CreateDsl : ICreateDsl
         return _dslPath;
     }
 
+    [MemberNotNull(nameof(ElementsWithFileContent), nameof(ListLearningSpaces), nameof(ListTopics),
+        nameof(_listLearningSpaceElements), nameof(_booleanAlgebraRequirements), nameof(DictionarySpaceIdToGuid),
+        nameof(Uuid), nameof(_currentConditionSpace), nameof(_listAllLearningElements))]
     private void Initialize()
     {
         ElementsWithFileContent = new List<ILearningElementPe>();

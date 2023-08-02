@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using MudBlazor;
@@ -16,28 +17,30 @@ using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
+public sealed class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
+    private readonly IErrorService _errorService;
+    private readonly IMediator _mediator;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private ILearningSpaceViewModel? _learningSpaceVm;
+    private ReplaceLearningElementData? _replaceLearningElementData;
+
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
-        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger, IErrorService errorService)
+        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger,
+        IErrorService errorService)
     {
+        Logger = logger;
         _presentationLogic = presentationLogic;
         _mediator = mediator;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
-        _logger = logger;
         _errorService = errorService;
     }
 
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly IMediator _mediator;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly ILogger<LearningSpacePresenter> _logger;
-    private int _creationCounter = 0;
-    private ILearningSpaceViewModel? _learningSpaceVm;
-    private ReplaceLearningElementData _replaceLearningElementData = new();
-    private IErrorService _errorService;
+    private ILogger<LearningSpacePresenter> Logger { get; }
 
     public ILearningSpaceViewModel? LearningSpaceVm
     {
@@ -45,11 +48,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         private set => SetField(ref _learningSpaceVm, value);
     }
 
-    public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
+        Logger.LogDebug("LearningSpace set to {Name}", space.Name);
     }
 
     public void EditLearningSpace(string name, string description, string goals,
@@ -80,17 +83,27 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
     #region LearningElement
 
+    [MemberNotNull(nameof(_replaceLearningElementData))]
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel dropItem, int slotId)
     {
-        _replaceLearningElementData = new ReplaceLearningElementData
-        {
-            LearningWorldVm = learningWorldVm,
-            DropItem = dropItem,
-            SlotId = slotId
-        };
+        _replaceLearningElementData = new ReplaceLearningElementData(learningWorldVm, dropItem, slotId);
         ReplaceLearningElementDialogOpen = true;
     }
 
@@ -101,7 +114,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         if (closeResult.Canceled) return;
 
-        _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData.LearningWorldVm, LearningSpaceVm,
+        _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData!.LearningWorldVm,
+            LearningSpaceVm,
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
@@ -271,6 +285,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 {
                     _errorService.SetError("Error while loading learning element", e.Message);
                 }
+
                 break;
         }
     }
@@ -305,30 +320,24 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 {
                     _errorService.SetError("Error while showing learning element content", e.Message);
                 }
+
                 break;
         }
     }
 
     #endregion
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
 }
 
 internal class ReplaceLearningElementData
 {
+    public ReplaceLearningElementData(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId)
+    {
+        LearningWorldVm = learningWorldVm;
+        DropItem = dropItem;
+        SlotId = slotId;
+    }
+
     internal ILearningWorldViewModel LearningWorldVm { get; init; }
     public ILearningElementViewModel DropItem { get; init; }
     public int SlotId { get; init; }

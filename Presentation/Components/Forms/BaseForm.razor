@@ -1,9 +1,6 @@
-@using Microsoft.AspNetCore.Components
-@using FluentValidation
-@using Severity = MudBlazor.Severity
-@using AutoMapper
 @typeparam TForm where TForm : new()
 @typeparam TEntity
+@using System.Diagnostics.CodeAnalysis
 @implements IBaseForm
 
 <MudCardActions Class="flex flex-col justify-center items-center">
@@ -36,23 +33,23 @@
 
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IValidationWrapper<TEntity> Validator { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISnackbar Snackbar { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<TForm> OnValidSubmit { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string SnackbarMessage { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment Fields { get; set; }
 
     [Parameter]
@@ -60,11 +57,10 @@
 
     [Parameter, EditorRequired]
     public RenderFragment? FooterButtons { get; set; }
-#pragma warning restore CS8618
 
-#pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich
-    private MudForm _form;
-#pragma warning restore CS8618
+
+    private MudForm? _form;
+
 
     internal string? SubmitErrorMessage { get; set; }
 
@@ -74,7 +70,7 @@
     //for example for T=string for text inputs, T=int for number inputs etc.
     //By the way, this information is not written anywhere in the documentation and I had to dive pretty deep into the
     //framework to find this out :) - n.stich
-    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (_, propertyName) =>
     {
         var modelEntity = FormDataContainer.GetMappedEntity();
         return await Validator.ValidateAsync(modelEntity, propertyName);
@@ -87,6 +83,7 @@
 
     public async Task SubmitAsync()
     {
+        if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
         if (_form.IsValid)
         {

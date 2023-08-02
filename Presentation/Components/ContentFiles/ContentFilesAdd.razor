@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.Entities.LearningContent
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
@@ -43,23 +44,25 @@
 
 @code {
 
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<ContentFilesAdd> Logger { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IErrorService ErrorService { get; set; }
 
     [CascadingParameter]
-    public ContentFilesContainer ContentFilesContainer { get; set; }
+    public ContentFilesContainer? ContentFilesContainer { get; set; }
+
 
     private string DragClass { get; set; } = "";
     private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
@@ -91,6 +94,7 @@
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
+            if (ContentFilesContainer is null) throw new InvalidOperationException("ContentFilesContainer cascading parameter not set");
             await ContentFilesContainer.RerenderAsync();
             ToggleSpinner();
             ClearDragClass();

@@ -26,7 +26,7 @@ public class ActivitiesInforefXmlInforefUt
         //Act
         systemUnderTest.Fileref = fileref;
         systemUnderTest.GradeItemref = gradeItemref;
-        
+
         Assert.Multiple(() =>
         {
             //Assert
@@ -41,12 +41,12 @@ public class ActivitiesInforefXmlInforefUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000"));
-        
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "h5pactivity_1000"));
+
         var list = new List<ActivitiesInforefXmlFile>
         {
-            new ActivitiesInforefXmlFile(),
-            new ActivitiesInforefXmlFile()
+            new(),
+            new()
         };
         list[0].Id = XmlEntityManager.GetFileIdBlock1().ToString();
         list[1].Id = (XmlEntityManager.GetFileIdBlock2().ToString());
@@ -60,13 +60,13 @@ public class ActivitiesInforefXmlInforefUt
         var systemUnderTest = new ActivitiesInforefXmlInforef();
         systemUnderTest.Fileref = fileref;
         systemUnderTest.GradeItemref = gradeItemref;
-        
+
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         systemUnderTest.Serialize("h5pactivity", "1000");
-        
+
         //Assert
-        var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000", "inforef.xml");
+        var path = Path.Join(currWorkDir, "XMLFilesForExport", "activities", "h5pactivity_1000", "inforef.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
 }

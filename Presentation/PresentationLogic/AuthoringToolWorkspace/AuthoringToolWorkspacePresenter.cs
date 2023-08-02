@@ -2,7 +2,6 @@
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 
@@ -14,12 +13,19 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     IAuthoringToolWorkspacePresenterToolboxInterface, IDisposable, IAsyncDisposable
 {
+    private readonly IDialogService _dialogService;
+    private readonly IErrorService _errorService;
+    private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private readonly IShutdownManager _shutdownManager;
+
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<AuthoringToolWorkspacePresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider,
-        IShutdownManager shutdownManager, IDialogService dialogService, IErrorService errorService)
+        IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
+        ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
+        IDialogService dialogService, IErrorService errorService)
     {
-        _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
         _logger = logger;
@@ -32,19 +38,22 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
     }
 
-    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
 
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IShutdownManager _shutdownManager;
-    private readonly IDialogService _dialogService;
-    private readonly IErrorService _errorService;
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
 
     public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
 
     public event Action? OnForceViewUpdate;
+
+    public void Dispose()
+    {
+        _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
+    }
 
 
     #region LearningWorld
@@ -171,7 +180,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         //show mudblazor dialog asking if user wants to save unsaved worlds
         var parameters = new DialogParameters
         {
-            {nameof(UnsavedWorldDialog.WorldName), world.Name}
+            { nameof(UnsavedWorldDialog.WorldName), world.Name }
         };
         var options = new DialogOptions
         {
@@ -190,15 +199,4 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     }
 
     #endregion
-
-    public void Dispose()
-    {
-        _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        Dispose();
-        return ValueTask.CompletedTask;
-    }
 }

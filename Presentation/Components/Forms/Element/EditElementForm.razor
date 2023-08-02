@@ -7,6 +7,7 @@
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -145,26 +146,26 @@
 </BaseForm>
 
 @code {
-#pragma warning disable CS8618
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ILearningWorldPresenter WorldPresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IMapper Mapper { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IElementModelHandler ElementModelHandler { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<EditElementForm> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel ElementToEdit { get; set; }
 
     [Parameter, EditorRequired]
@@ -174,8 +175,8 @@
     public int DebounceInterval { get; set; } = 300;
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    internal Action TriggerMasterLayoutStateHasChanged { get; set; }
-#pragma warning restore CS8618
+    internal Action? TriggerMasterLayoutStateHasChanged { get; set; }
+
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
@@ -189,7 +190,7 @@
         WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
             model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, model.LearningContent!);
-        TriggerMasterLayoutStateHasChanged();
+        TriggerMasterLayoutStateHasChanged?.Invoke();
     }
 
     private async Task MapIntoContainer()

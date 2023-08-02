@@ -20,10 +20,6 @@ namespace IntegrationTest.Forms.Content;
 [TestFixture]
 public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormModel, LinkContent>
 {
-    private IPresentationLogic PresentationLogic { get; set; }
-    private IMapper Mapper { get; set; }
-    private IErrorService ErrorService { get; set; }
-
     [SetUp]
     public void SetUp()
     {
@@ -34,6 +30,10 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
         Context.Services.AddSingleton(Mapper);
         Context.Services.AddSingleton(ErrorService);
     }
+
+    private IPresentationLogic PresentationLogic { get; set; }
+    private IMapper Mapper { get; set; }
+    private IErrorService ErrorService { get; set; }
 
     [Test]
     public void Render_SetsParametersAndInjectsDependencies()
@@ -60,28 +60,29 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
         var textFields = systemUnderTest.FindComponents<MudTextField<string>>();
         textFields[0].Find("input").Change("name");
         textFields[1].Find("input").Change("url");
-        
+
         var submitButton = systemUnderTest.FindComponent<MudButton>();
         submitButton.Find("button").Click();
-        
+
         PresentationLogic.Received(1).SaveLink(vm);
     }
-    
+
     [Test]
     public void SubmitButtonClicked_SerializationException_ErrorServiceCalled()
     {
         var vm = ViewModelProvider.GetLinkContent();
         var systemUnderTest = GetRenderedComponent();
-        PresentationLogic.When(x => x.SaveLink(Arg.Any<LinkContentViewModel>())).Do(x => throw new SerializationException());
+        PresentationLogic.When(x => x.SaveLink(Arg.Any<LinkContentViewModel>()))
+            .Do(_ => throw new SerializationException());
 
         var textFields = systemUnderTest.FindComponents<MudTextField<string>>();
         textFields[0].Find("input").Change("name");
         textFields[1].Find("input").Change("url");
-        
+
         var submitButton = systemUnderTest.FindComponent<MudButton>();
         submitButton.Find("button").Click();
-        
-        ErrorService.Received(1).SetError("Error while adding link",Arg.Any<string>());
+
+        ErrorService.Received(1).SetError("Error while adding link", Arg.Any<string>());
     }
 
     private IRenderedComponent<AddLinkForm> GetRenderedComponent(Func<Task>? rerenderContentContainer = null)

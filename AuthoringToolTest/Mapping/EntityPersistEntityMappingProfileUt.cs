@@ -277,7 +277,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
-            new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
+            new(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
                 positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };

@@ -1,26 +1,26 @@
 @using Presentation.PresentationLogic.LearningSpace
-@using System.ComponentModel
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View
-
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 <MudCard Class="overflow-auto">
-@if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
-{
-    <CreateSpaceForm/>
-}
-else
-{
-    <EditSpaceForm SpaceToEdit="SpacePresenter.LearningSpaceVm" OnNewButtonClicked="OnForceNew"/>
-}
+    @if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
+    {
+        <CreateSpaceForm/>
+    }
+    else
+    {
+        <EditSpaceForm SpaceToEdit="SpacePresenter.LearningSpaceVm" OnNewButtonClicked="OnForceNew"/>
+    }
 </MudCard>
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich 
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningSpacePresenter SpacePresenter { get; set; }
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-#pragma warning restore CS8618
+
 
     //indicates if the edit state has been overwritten by either pressing reset in the edit form
     //or by pressing the "Create new space" button

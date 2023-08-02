@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 <MudCard Class="overflow-auto">
     @if (WorldPresenter.LearningWorldVm == null || _editOverwritten)
     {
@@ -12,10 +13,10 @@
 </MudCard>
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningWorldPresenter WorldPresenter { get; set; }
-#pragma warning restore CS8618
+
 
     private bool _editOverwritten = false;
 

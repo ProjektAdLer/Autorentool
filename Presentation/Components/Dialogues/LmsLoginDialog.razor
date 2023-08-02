@@ -1,11 +1,14 @@
 @using Presentation.PresentationLogic.API
 @using Shared.Configuration
-@using BusinessLogic.ErrorManagement.BackendAccess
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.ErrorManagement.BackendAccess
 <MudDialog Class="relative flex rounded-lg bg-gradient-to-br from-adlerbggradientfrom to-adlerbggradientto w-[420px] h-[400px]">
     <TitleContent>
         <div class="flex flex-row gap-3 justify-center items-center">
+            @* ReSharper disable Html.PathError *@
             <img class="w-14 h-14" src="CustomIcons/moodle-icon-darkblue-nobg.png" alt="moodle-icon"/>
+            @* ReSharper restore Html.PathError *@
             <p class="text-xl flex justify-center font-bold text-adlerdarkblue">@Localizer["Header.Moodle.Text"]</p>
         </div>
     </TitleContent>
@@ -14,7 +17,7 @@
         {
             <div class="flex flex-col justify-center py-7">
                 <p class="flex justify-center font-bold text-2xl text-adlerdarkblue-200 opacity-50">@Localizer["DialogContent.LoggedIn.Header"]</p>
-                <div class="flex flex-row gap-1.5 flex justify-center">
+                <div class="flex flex-row gap-1.5 justify-center">
                     <p class="text-lg text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
                     <p class="text-lg text-adlerblue-700">@PresentationLogic.LoginName</p>
                 </div>
@@ -59,18 +62,18 @@
 @code {
 
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; }
+    MudDialogInstance? MudDialog { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IApplicationConfiguration Configuration { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LmsLoginDialog> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<LmsLoginDialog> Logger { get; set; }
 
     private string _backendUrl = "";
@@ -84,7 +87,7 @@
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
-    private static DialogOptions Options => new DialogOptions() {CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
+    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
 
     protected override void OnParametersSet()
     {
@@ -96,7 +99,7 @@
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
         CheckIfLmsIsConnected();
-        MudDialog.SetOptions(Options);
+        MudDialog?.SetOptions(Options);
     }
 
     private async void CheckIfLmsIsConnected()
@@ -118,7 +121,7 @@
             _errorInvalidUrlMessage = "";
             CheckIfLmsIsConnected();
         }
-        catch (BackendInvalidLoginException e)
+        catch (BackendInvalidLoginException)
         {
             _showErrorInvalidCredentials = true;
             _errorInvalidUrlMessage = "";
@@ -141,12 +144,6 @@
     {
         PresentationLogic.Logout();
         CheckIfLmsIsConnected();
-    }
-
-    void Cancel()
-    {
-        _isLmsConnected = false;
-        MudDialog.Cancel();
     }
 
     private void OnKeyPress(KeyboardEventArgs eventArgs)

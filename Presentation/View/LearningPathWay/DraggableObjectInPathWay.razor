@@ -1,10 +1,10 @@
 @using Presentation.PresentationLogic
-@using Presentation.Components
-@using Presentation.Components.RightClickMenu
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
-
-<Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
+@using Presentation.Components
+@using Presentation.Components.RightClickMenu
+@using System.Diagnostics.CodeAnalysis
+<Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
     @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
@@ -24,70 +24,82 @@
     <title>@Title</title>
 </Draggable>
 
-<PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX 
+<PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX
               Y1="@ObjectInPathWay.OutputConnectionY"
-              PositioningSrv="@PositioningService"></PullablePath>
+              PositioningSrv="@PositioningService">
+</PullablePath>
 @if (ShowingRightClickMenu)
 {
     <RightClickMenu LearningObject="@ObjectInPathWay"
-                                    MenuEntries="@GetRightClickMenuEntries()"
-                                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
+                    MenuEntries="@GetRightClickMenuEntries()"
+                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
 }
 
 @ChildContent
 
 
 @code {
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
-    
+
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
+
     [Parameter]
     public EventCallback<IObjectInPathWayViewModel> OnDoubleClickedDraggable { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public EventCallback<IObjectInPathWayViewModel> OnRightClickedDraggable { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public EventCallback OnCloseRightClickMenu { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public bool ShowingRightClickMenu { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public EventCallback<IObjectInPathWayViewModel> OnClickedDeleteObject { get; set; }
+
     // Overwrite nullability warning below because service may never be null -n.stich
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
     protected abstract string Text { get; }
-    
+
     protected abstract string Title { get; }
-    
+
     protected abstract string ObjectName { get; }
-    
+
     protected abstract string OnHoveredObjectShape { get; }
 
     protected abstract string ObjectShape { get; }
-    
+
     protected abstract string ObjectStyleWhenSelected { get; }
-    
+
     protected abstract string ObjectStyleWhenNotSelected { get; }
-    
+
     private string ObjectStyle => SelectedObjectsService?.LearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
-    protected abstract string DeletePathButtonShape { get;}
-    
+    protected abstract string DeletePathButtonShape { get; }
+
     protected abstract string DeleteObjectButtonShape { get; }
-    
+
     protected abstract List<RightClickMenuEntry> GetRightClickMenuEntries();
-    
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -96,4 +108,5 @@
             throw new ArgumentNullException(nameof(ObjectInPathWay));
         }
     }
+
 }

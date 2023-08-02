@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BusinessLogic.Commands;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
@@ -317,7 +318,7 @@ public class LearningSpacePresenterUt
     {
         var element = ViewModelProvider.GetLearningElement();
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -327,7 +328,7 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningElement_ThrowsWhenSelectedSpaceNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningElement());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -380,7 +381,7 @@ public class LearningSpacePresenterUt
     public void SaveSelectedLearningElementAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.SaveSelectedLearningElementAsync());
@@ -473,7 +474,7 @@ public class LearningSpacePresenterUt
     public void ShowSelectedElementContent_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.ShowSelectedElementContentAsync());
@@ -589,7 +590,7 @@ public class LearningSpacePresenterUt
     public void LoadLearningElementAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.LoadLearningElementAsync(1));
@@ -616,7 +617,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(x => throw new SerializationException("test"));
+            .Do(_ => throw new SerializationException("test"));
         var space = ViewModelProvider.GetLearningSpace();
 
         var errorService = Substitute.For<IErrorService>();
@@ -632,7 +633,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(x => throw new InvalidOperationException("test"));
+            .Do(_ => throw new InvalidOperationException("test"));
         var space = ViewModelProvider.GetLearningSpace();
 
         var errorService = Substitute.For<IErrorService>();
@@ -649,7 +650,7 @@ public class LearningSpacePresenterUt
         ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        logger ??= Substitute.For<ILogger<LearningSpacePresenter>>();
+        logger ??= new NullLogger<LearningSpacePresenter>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         errorService ??= Substitute.For<IErrorService>();

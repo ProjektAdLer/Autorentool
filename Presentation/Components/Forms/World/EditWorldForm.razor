@@ -2,8 +2,9 @@
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
-@using System.ComponentModel
 @using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -66,27 +67,26 @@
 </BaseForm>
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IMapper Mapper { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<EditWorldForm> Localizer { get; set; }
-#pragma warning restore CS8618
 
-#pragma warning disable CS8618
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
-#pragma warning restore CS8618
+
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich

@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.MyLearningWorlds
 @using Shared
 @using Presentation.PresentationLogic.API
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.World
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
@@ -47,19 +48,19 @@
 
 @code {
 
-#pragma warning disable CS8618
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<MyLearningWorldsOverview> Localizer { get; private init; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IMyLearningWorldsProvider MyLearningWorldsProvider { get; private init; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; private init; }
-#pragma warning restore CS8618
+
 
     private bool _createLearningWorldDialogOpen;
 

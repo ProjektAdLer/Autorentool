@@ -111,7 +111,7 @@ public class RightClickMenuUt
         var learningObject = Substitute.For<ILearningElementViewModel>();
         const string onOpenText = "Open";
         var onOpenClicked = Substitute.For<Action>();
-        var menuEntries = new List<RightClickMenuEntry>() { new RightClickMenuEntry(onOpenText, onOpenClicked) };
+        var menuEntries = new List<RightClickMenuEntry>() { new(onOpenText, onOpenClicked) };
 
         var systemUnderTest =
             CreateRenderedRightClickMenu(learningObject, menuEntries);
@@ -150,10 +150,9 @@ public class RightClickMenuUt
             .Add(p => p.OnClose, onClose)
         );
     }
-#pragma warning disable CS8618
+
     private TestContext _testContext;
     private IMouseService _mouseService;
     private IStringLocalizer<RightClickMenu<ILearningElementViewModel>> _eleLocalizer;
     private IStringLocalizer<RightClickMenu<ILearningSpaceViewModel>> _spaceLocalizer;
-#pragma warning restore CS8618
 }

@@ -222,11 +222,10 @@ public class LearningWorldViewUt
         return _ctx.RenderComponent<LearningWorldView>(parameters => parameters
             .Add(p => p.ChildContent, childContent));
     }
-#pragma warning disable CS8618 // set in setup - n.stich
+
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IStringLocalizer<LearningWorldView> _localizer;
-#pragma warning restore CS8618
 }

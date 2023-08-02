@@ -246,7 +246,7 @@ public class HeaderBarUt
     public void UndoButton_Clicked_UndoCommandThrowsUndoException_ErrorServiceCalled()
     {
         _presentationLogic.CanUndo.Returns(true);
-        _presentationLogic.When(x => x.UndoCommand()).Do(x => throw new UndoException());
+        _presentationLogic.When(x => x.UndoCommand()).Do(_ => throw new UndoException());
         var systemUnderTest = GetRenderedComponent();
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("undo")
@@ -272,7 +272,7 @@ public class HeaderBarUt
     public void RedoButton_Clicked_RedoCommandThrowsRedoException_ErrorServiceCalled()
     {
         _presentationLogic.CanRedo.Returns(true);
-        _presentationLogic.When(x => x.RedoCommand()).Do(x => throw new RedoException());
+        _presentationLogic.When(x => x.RedoCommand()).Do(_ => throw new RedoException());
         var systemUnderTest = GetRenderedComponent();
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("redo")

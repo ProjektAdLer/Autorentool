@@ -1,4 +1,5 @@
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @inherits LayoutComponentBase
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
@@ -9,8 +10,8 @@
 @Body
 
 @code {
-#pragma warning disable CS8618 - injected by Blazor - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<MainLayout> Localizer { get; set; }
-#pragma warning restore CS8618
+
 }

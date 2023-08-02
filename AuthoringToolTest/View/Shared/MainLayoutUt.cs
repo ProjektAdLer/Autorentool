@@ -66,8 +66,7 @@ public class MainLayoutUt
                 .Add(p => p.Body, body)
         );
     }
-#pragma warning disable CS8618 // set in setup - n.stich
+
     private TestContext _ctx;
     private IStringLocalizer<MainLayout> _stringLocalizer;
-#pragma warning restore CS8618
 }

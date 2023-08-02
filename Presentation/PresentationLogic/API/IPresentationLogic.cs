@@ -28,6 +28,16 @@ public interface IPresentationLogic
     bool RunningElectron { get; }
 
     /// <summary>
+    /// Whether or not undo can be run.
+    /// </summary>
+    bool CanUndo { get; }
+
+    /// <summary>
+    /// Whether or not undo can be run.
+    /// </summary>
+    bool CanRedo { get; }
+
+    /// <summary>
     /// Asynchronously constructs a backup for a Learning World.
     /// </summary>
     /// <param name="learningWorldViewModel">The Learning World view model to backup.</param>
@@ -37,16 +47,6 @@ public interface IPresentationLogic
     /// This method prompts the user to select a file for saving the backup, and then constructs the backup using the selected file path.
     /// </remarks>
     Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
-
-    /// <summary>
-    /// Whether or not undo can be run.
-    /// </summary>
-    bool CanUndo { get; }
-
-    /// <summary>
-    /// Whether or not undo can be run.
-    /// </summary>
-    bool CanRedo { get; }
 
     /// <summary>
     /// Calls the business logic method to undo the last executed command.
@@ -294,6 +294,7 @@ public interface IPresentationLogic
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
+    /// <param name="elementModel">The 2d/3d model description of the learning element</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX"></param>
@@ -504,11 +505,14 @@ public interface IPresentationLogic
     /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. 
     /// The task result contains the file path for the Learning World.</returns>
     Task<string> GetWorldSavePath();
+
     IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
     void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
     void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
     void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+
+    void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
     #region BackendAccess
 
@@ -519,6 +523,4 @@ public interface IPresentationLogic
     void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
 
     #endregion
-
-    void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 }

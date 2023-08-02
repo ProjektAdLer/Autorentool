@@ -1,9 +1,10 @@
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.LearningContent
-@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.Mediator
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
 <MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter">
@@ -89,25 +90,25 @@
 
 @code {
 
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IMediator Mediator { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<ContentFilesView> Localizer { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
-#pragma warning restore CS8618
+
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
 
     internal string? SearchString { get; set; }

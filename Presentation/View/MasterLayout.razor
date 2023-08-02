@@ -9,6 +9,7 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.World
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
@@ -118,21 +119,21 @@
 
 @code {
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IMediator Mediator { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IOnUndoRedo OnUndoRedoEventSource { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IStringLocalizer<MasterLayout> Localizer { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 
 

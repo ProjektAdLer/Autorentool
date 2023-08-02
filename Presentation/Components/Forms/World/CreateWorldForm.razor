@@ -1,7 +1,8 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
-@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -60,22 +61,22 @@
 
 @code {
 
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateWorldForm> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
-#pragma warning restore CS8618
+
     [Parameter]
     public EventCallback OnSubmitted { get; set; }
-    
+
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 

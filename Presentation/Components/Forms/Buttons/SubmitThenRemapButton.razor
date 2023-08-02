@@ -1,15 +1,21 @@
 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check" IconColor="Color.Success"
-           Class="btn-standard rounded" OnClick="@(async () => await SubmitThenRemapAsync())">Ok</MudButton>
+           Class="btn-standard rounded" OnClick="@(async () => await SubmitThenRemapAsync())">
+    Ok
+</MudButton>
 
 @code {
+
     [CascadingParameter]
-    public IBaseForm Form { get; set; }
+    public IBaseForm? Form { get; set; }
+
     [Parameter, EditorRequired]
     public EventCallback RemapAction { get; set; }
 
     private async Task SubmitThenRemapAsync()
     {
+        if (Form is null) throw new InvalidOperationException("Form CascadingParameter is null");
         await Form.SubmitAsync();
         await RemapAction.InvokeAsync();
     }
+
 }

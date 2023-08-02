@@ -1,13 +1,10 @@
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Shared
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
-@using System.ComponentModel
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View
-@using Shared
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
@@ -90,20 +87,19 @@
 </BaseForm>
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ILearningWorldPresenter LearningWorldPresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 
-#pragma warning restore CS8618
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich

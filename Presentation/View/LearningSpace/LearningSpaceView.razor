@@ -4,6 +4,7 @@
 @using Presentation.View.LearningElement
 @using Shared
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using System.Text
 @using Presentation.PresentationLogic.LearningElement
 <div class="mx-2 rounded-lg">
@@ -86,16 +87,16 @@
 }
 
 @code {
-#pragma warning disable CS8618 // injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningSpacePresenter LearningSpaceP { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
-#pragma warning restore CS8618
+
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -103,7 +104,7 @@
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
@@ -123,7 +124,7 @@
                 await InvokeAsync(TriggerMasterLayoutStateHasChanged);
             }
         };
-        LearningSpaceP.PropertyChanged += (sender, earg) =>
+        LearningSpaceP.PropertyChanged += (_, earg) =>
         {
             if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged);
         };

@@ -1,4 +1,5 @@
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
         @Localizer["Dialog.Content.Line1.Text"]
@@ -15,7 +16,7 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ReplaceLearningElementDialog> Localizer { get; set; }
 
     void ReplaceElement()

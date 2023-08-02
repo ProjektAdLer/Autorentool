@@ -1,10 +1,9 @@
-@using System.ComponentModel
 <button onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
     @SidebarContent
 </button>
 
 @code {
-#pragma warning disable CS8618 - injected by framework n.stich
+
     [CascadingParameter]
     public ISidebar Sidebar { get; set; }
 
@@ -40,7 +39,6 @@
         else if (Sidebar.CurrentItem == this) Sidebar.ClearSidebarItem();
     }
 
-#pragma warning restore CS8618
 
     private void SetAsCurrentItem()
     {
@@ -56,7 +54,7 @@
         Side.Left => "rounded-l-lg",
         Side.Right => "rounded-r-lg",
         _ => throw new ArgumentOutOfRangeException()
-    };
+        };
 
     private bool _isActive;
 }

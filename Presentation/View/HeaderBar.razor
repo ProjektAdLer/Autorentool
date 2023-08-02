@@ -1,16 +1,17 @@
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.Mediator
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Runtime.Serialization
-@using System.Text
-@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared.Exceptions
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using System.Text
+@using Presentation.Components.Dialogues
+@using System.Runtime.Serialization
 @using Presentation.Components.Culture
 @using Presentation.Components
-@using Shared.Exceptions
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -117,28 +118,28 @@
 
 @code {
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IMediator Mediator { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IErrorService ErrorService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<HeaderBar> Logger { get; set; }
 
     private string _filepath = "";
@@ -153,7 +154,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) => await InvokeAsync(StateHasChanged);
+        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
     }
 
@@ -321,7 +322,7 @@
             ErrorService.SetError("An error occurred while attempting to undo the last action", e.Message);
         }
     }
-    
+
     private void OnClickRedo()
     {
         try

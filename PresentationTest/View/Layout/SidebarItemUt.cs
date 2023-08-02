@@ -10,15 +10,15 @@ namespace PresentationTest.View.Layout;
 [TestFixture]
 public class SidebarItemUt
 {
-    public ISidebar SidebarSubstitute { get; set; }
-    private TestContext _testContext;
-
     [SetUp]
     public void Setup()
     {
         _testContext = new TestContext();
         SidebarSubstitute = Substitute.For<ISidebar>();
     }
+
+    public ISidebar SidebarSubstitute { get; set; }
+    private TestContext _testContext;
 
     [Test]
     public void Render_RendersSidebarContent()
@@ -30,7 +30,7 @@ public class SidebarItemUt
         };
 
         var systemUnderTest = GetRenderedComponent(sidebarContent, _ => { }, false);
-        
+
         var sidebar = systemUnderTest.Find("button");
         Assert.That(sidebar.Children, Has.Length.EqualTo(1));
         Assert.That(sidebar.Children[0].TagName.ToLowerInvariant(), Is.EqualTo("div"));
@@ -40,12 +40,12 @@ public class SidebarItemUt
     public void Click_CallsCallback()
     {
         var callbackCalled = false;
-        var callback = EventCallback.Factory.Create<bool>(this, value => callbackCalled = true);
-        
+        var callback = EventCallback.Factory.Create<bool>(this, _ => callbackCalled = true);
+
         var systemUnderTest = GetRenderedComponent(_ => { }, _ => { }, false, callback);
-        
+
         systemUnderTest.Find("button").Click();
-        
+
         Assert.That(callbackCalled, Is.True);
     }
 
@@ -55,13 +55,13 @@ public class SidebarItemUt
         var systemUnderTest = GetRenderedComponent(_ => { }, _ => { }, false);
 #pragma warning disable BL0005
         systemUnderTest.Instance.IsActive = true;
-        
+
         SidebarSubstitute.Received(1).SetSidebarItem(systemUnderTest.Instance);
         SidebarSubstitute.CurrentItem.Returns(systemUnderTest.Instance);
-        
+
         systemUnderTest.Instance.IsActive = false;
 #pragma warning restore BL0005
-        
+
         SidebarSubstitute.Received(1).ClearSidebarItem();
     }
 

@@ -41,7 +41,7 @@ public class UserBackendServicesUt
 
         var responseString = JsonConvert.SerializeObject(new Dictionary<string, string>
         {
-            {"lmsToken", "expectedToken"}
+            { "lmsToken", "expectedToken" }
         });
         mockedHttp
             .When("*")
@@ -50,7 +50,7 @@ public class UserBackendServicesUt
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
             .Returns(mockedHttp.ToHttpClient());
-        
+
         var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         // Act
@@ -68,7 +68,7 @@ public class UserBackendServicesUt
 
         var responseContent = JsonConvert.SerializeObject(new Dictionary<string, string>
         {
-            {"detail", "Error Message"}
+            { "detail", "Error Message" }
         });
         var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
         response.StatusCode = HttpStatusCode.Unauthorized;
@@ -76,7 +76,7 @@ public class UserBackendServicesUt
         response.Content = new StringContent(responseContent);
         mockedHttp
             .When("*")
-            .Respond(req => response);
+            .Respond(_ => response);
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
@@ -98,7 +98,7 @@ public class UserBackendServicesUt
 
         var responseContent = JsonConvert.SerializeObject(new Dictionary<string, string>
         {
-            {"detail", "Error Message"}
+            { "detail", "Error Message" }
         });
         var response = new HttpResponseMessage(HttpStatusCode.NotFound);
         response.StatusCode = HttpStatusCode.NotFound;
@@ -106,7 +106,7 @@ public class UserBackendServicesUt
         response.Content = new StringContent(responseContent);
         mockedHttp
             .When("*")
-            .Respond(req => response);
+            .Respond(_ => response);
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
@@ -166,13 +166,14 @@ public class UserBackendServicesUt
         mockedHttp
             .When("*")
             .Throw(httpRequestException);
-        
+
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
             .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
@@ -192,13 +193,14 @@ public class UserBackendServicesUt
         mockedHttp
             .When("*")
             .Throw(httpRequestException);
-        
+
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
             .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
@@ -214,10 +216,10 @@ public class UserBackendServicesUt
 
         var responseContent = JsonConvert.SerializeObject(new Dictionary<string, object>
         {
-            {"lmsUserName", "expectedUsername"},
-            {"userEmail", "expectedEmail"},
-            {"userId", 1},
-            {"isAdmin", true}
+            { "lmsUserName", "expectedUsername" },
+            { "userEmail", "expectedEmail" },
+            { "userId", 1 },
+            { "isAdmin", true }
         });
 
         var response = new HttpResponseMessage(HttpStatusCode.OK);

@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Shared;
@@ -18,9 +19,8 @@ public class ReadDsl : IReadDsl
     private DocumentRootJson _rootJson;
 
 
-#pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public ReadDsl(IFileSystem fileSystem, ILogger<ReadDsl> logger)
-#pragma warning restore CS8618
+
     {
         Initialize();
         _fileSystem = fileSystem;
@@ -101,6 +101,9 @@ public class ReadDsl : IReadDsl
         return _listAllElementsOrdered;
     }
 
+    [MemberNotNull(nameof(_learningWorldJson), nameof(_rootJson), nameof(_listH5PElements),
+        nameof(_listResourceElements), nameof(_listLabelElements), nameof(_listUrlElements),
+        nameof(_listAllElementsOrdered))]
     private void Initialize()
     {
         _learningWorldJson = new LearningWorldJson("Value",
