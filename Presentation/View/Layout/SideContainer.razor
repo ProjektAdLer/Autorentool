@@ -5,10 +5,10 @@
 
 @code {
 
-    [Parameter]
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich 
     public RenderFragment ChildContent { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public Side Side { get; set; }
 
     private string GetSide => Side switch 

@@ -230,32 +230,6 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void AddLearningSpace_LearningWorldIsNull_ThrowsException()
-    {
-        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var space = ViewModelProvider.GetLearningSpace();
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
-    }
-
-    [Test]
-    public void AddLearningSpace_CallsPresentationLogic()
-    {
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.AddLearningSpace(space);
-
-        presentationLogic.Received().AddLearningSpace(world, space);
-    }
-
-    [Test]
     public void AddNewLearningSpace_ThrowsWhenWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();

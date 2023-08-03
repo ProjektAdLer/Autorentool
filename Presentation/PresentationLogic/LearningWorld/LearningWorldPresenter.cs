@@ -17,9 +17,19 @@ using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface,
+public class LearningWorldPresenter : ILearningWorldPresenter,
     ILearningWorldPresenterOverviewInterface
 {
+    private readonly IErrorService _errorService;
+    private readonly ILearningSpacePresenter _learningSpacePresenter;
+    private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly IMediator _mediator;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+
+    private ILearningWorldViewModel? _learningWorldVm;
+
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
@@ -36,23 +46,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _errorService = errorService;
     }
 
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILogger<LearningWorldPresenter> _logger;
-    private readonly IMediator _mediator;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IErrorService _errorService;
-
-    private ILearningWorldViewModel? _learningWorldVm;
-    private IObjectInPathWayViewModel? _newConditionSourceObject;
-    private LearningSpaceViewModel? _newConditionTargetSpace;
-    private int _spaceCreationCounter = 0;
-    private int _conditionCreationCounter = 0;
-
     public bool SelectedLearningObjectIsSpace =>
         _selectedViewModelsProvider.LearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
 
-    public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
+    public bool ShowingLearningSpaceView => LearningWorldVm is { ShowingLearningSpaceView: true };
 
     /// <summary>
     /// The currently selected LearningWorldViewModel.
@@ -102,6 +99,34 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public event PropertyChangingEventHandler? PropertyChanging;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+    }
+
+    private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        OnPropertyChanging(propertyName);
+        return true;
+    }
+
     #region LearningWorld
 
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
@@ -123,7 +148,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
 
-        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel) LearningWorldVm);
+        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm);
     }
 
     #endregion
@@ -142,9 +167,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (SelectedLearningObjectIsSpace)
         {
             _learningSpacePresenter.SetLearningSpace(
-                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
+                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay!);
         }
-        
+
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
 
         HideRightClickMenu();
@@ -257,14 +282,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
             requiredPoints, theme, positionX, positionY, topic);
         //TODO: Return error in the command in case of failure
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
-    public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.AddLearningSpace(LearningWorldVm, learningSpace);
     }
 
     public void AddNewLearningSpace()
@@ -394,7 +411,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         else
         {
             LearningWorldVm.OnHoveredObjectInPathWay = objectAtPosition;
-            _logger.LogDebug("ObjectAtPosition: {0} ", sourceObject.Id);
+            _logger.LogDebug("ObjectAtPosition: {Id} ", sourceObject.Id);
         }
     }
 
@@ -410,7 +427,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y &&
                                    ls.PositionY + 84 >= y) ??
-                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
@@ -431,10 +448,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (targetObject == null || targetObject == sourceObject)
             return;
         LearningWorldVm.OnHoveredObjectInPathWay = null;
-        if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel space)
+        if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel)
         {
-            _newConditionSourceObject = sourceObject;
-            _newConditionTargetSpace = space;
             return;
         }
 
@@ -472,9 +487,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("SelectedLearningWorld is null");
         if (learningElement.Parent != null)
         {
-            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null); 
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         }
-        
+
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         _mediator.RequestOpenElementDialog();
     }
@@ -534,7 +549,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         SetSelectedLearningElement(learningElement);
         try
         {
-            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
         }
         catch (ArgumentOutOfRangeException e)
         {
@@ -575,32 +590,4 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     }
 
     #endregion
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    public event PropertyChangingEventHandler? PropertyChanging;
-
-    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-    }
-
-    private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        OnPropertyChanging(propertyName);
-        return true;
-    }
 }

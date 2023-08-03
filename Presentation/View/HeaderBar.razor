@@ -46,14 +46,14 @@
         </MudPopover>
 
     </div>
-    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
         <div class="flex justify-center items-center gap-2">
             <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
             <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
         </div>
     }
-    @if (SelectedViewModelsProvider?.LearningWorld?.Name != null)
+    @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
         <div class="flex justify-center items-center gap-2">
             <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world-icon-nobg.png" alt="learningworld">
@@ -69,7 +69,7 @@
             <ChildContent>
                 <div class="w-64">
 
-                    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
                     {
                         <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
                             <div class="flex flex-row items-center gap-4">
@@ -109,7 +109,7 @@
 
         <CultureSelector/>
         <LmsLoginButton/>
-        @if (PresentationLogic?.RunningElectron == true)
+        @if (PresentationLogic.RunningElectron)
         {
             <CloseAppButton/>
         }
@@ -240,7 +240,7 @@
 
         errorString.Append("</ul>");
 
-        Logger.LogError("LearningWorld is not valid" + errorString);
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
     }
@@ -350,7 +350,7 @@
         {
             ErrorService.SetError("An error occurred while attempting to save the LearningWorld", e.Message);
         }
-        catch (OperationCanceledException e)
+        catch (OperationCanceledException)
         {
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }

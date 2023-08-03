@@ -10,8 +10,7 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
-public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
-    IAuthoringToolWorkspacePresenterToolboxInterface, IDisposable, IAsyncDisposable
+public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter, IDisposable, IAsyncDisposable
 {
     private readonly IDialogService _dialogService;
     private readonly IErrorService _errorService;

@@ -17,7 +17,7 @@ using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public sealed class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
+public sealed class LearningSpacePresenter : ILearningSpacePresenter
 {
     private readonly IErrorService _errorService;
     private readonly IMediator _mediator;

@@ -2,8 +2,8 @@ namespace Presentation.View.Layout;
 
 public interface ISidebar
 {
-    void SetSidebarItem(SidebarItem sidebarItem);
-    SidebarItem CurrentItem { get; }
+    SidebarItem? CurrentItem { get; }
     Side Side { get; }
+    void SetSidebarItem(SidebarItem sidebarItem);
     void ClearSidebarItem();
 }

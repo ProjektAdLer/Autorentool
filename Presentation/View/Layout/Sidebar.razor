@@ -20,10 +20,10 @@
 @code {
     private SidebarItem? _currentItem;
 
-    [Parameter]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment ChildContent { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public Side Side { get; set; }
 
 

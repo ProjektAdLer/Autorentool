@@ -6,7 +6,7 @@ namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldPresenterOverviewInterface
 {
-    ILearningWorldViewModel LearningWorldVm { get; }
+    ILearningWorldViewModel? LearningWorldVm { get; }
 
     /// <summary>
     /// Sets the selected learning element of the learning world to the given learning element.

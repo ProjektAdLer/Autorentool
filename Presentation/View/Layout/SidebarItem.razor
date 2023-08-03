@@ -1,16 +1,17 @@
-<button onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
+@using System.Diagnostics.CodeAnalysis
+<button @onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
     @SidebarContent
 </button>
 
 @code {
 
     [CascadingParameter]
-    public ISidebar Sidebar { get; set; }
+    public ISidebar? Sidebar { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
     public RenderFragment SidebarContent { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
     public RenderFragment MainContent { get; set; }
 
     [Parameter]
@@ -38,7 +39,6 @@
         if (IsActive) Sidebar.SetSidebarItem(this);
         else if (Sidebar.CurrentItem == this) Sidebar.ClearSidebarItem();
     }
-
 
     private void SetAsCurrentItem()
     {

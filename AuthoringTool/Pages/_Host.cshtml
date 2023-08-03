@@ -1,13 +1,11 @@
 ﻿@page "/"
-@using AuthoringTool
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Globalization
+@using Microsoft.AspNetCore.Localization
 @namespace AuthoringTool.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
 }
-@using System.Globalization
-@using Microsoft.AspNetCore.Localization
 @{
     this.HttpContext.Response.Cookies.Append(
         CookieRequestCultureProvider.DefaultCookieName,
@@ -16,4 +14,4 @@
                 CultureInfo.CurrentCulture,
                 CultureInfo.CurrentUICulture)));
 }
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+<component type="typeof(App)" render-mode="ServerPrerendered"/>

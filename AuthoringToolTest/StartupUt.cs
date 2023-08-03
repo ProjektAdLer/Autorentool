@@ -62,21 +62,6 @@ public class StartupUt
         ConfigureServicesCoreTest(requiredType);
     }
 
-
-    private static readonly Type[] ConfigureToolboxRequiredTypes =
-    {
-        typeof(IAuthoringToolWorkspacePresenterToolboxInterface), typeof(ILearningWorldPresenterToolboxInterface),
-        typeof(ILearningSpacePresenterToolboxInterface)
-    };
-
-    [Test]
-    [TestCaseSource(nameof(ConfigureToolboxRequiredTypes))]
-    public void Startup_ConfigureServices_CanResolveAllToolboxServices(Type requiredType)
-    {
-        ConfigureServicesCoreTest(requiredType);
-    }
-
-
     private static readonly Type[] ConfigureUtilitiesRequiredTypes =
     {
         typeof(IMemoryCache), typeof(IMouseService), typeof(IFileSystem)
@@ -179,7 +164,7 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
     private static readonly Type[] ConfigureCommandFactoriesRequiredTypes =
     {
         typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
@@ -207,7 +192,7 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
     private static readonly Type[] ConfigureNetworkingRequiredTypes =
     {
         typeof(IHttpClientFactory), typeof(ProgressMessageHandler)

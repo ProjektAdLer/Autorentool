@@ -84,7 +84,6 @@ public class Startup
         ConfigureBusinessLogic(services);
         ConfigureGenerator(services);
         ConfigureDataAccess(services);
-        ConfigureToolbox(services);
         ConfigureMyLearningWorlds(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
@@ -147,7 +146,7 @@ public class Startup
         services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
-            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
@@ -161,7 +160,6 @@ public class Startup
     {
         services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
         services.AddSingleton<IErrorManager, ErrorManager>();
-
     }
 
     private void ConfigureDataAccess(IServiceCollection services)
@@ -197,16 +195,6 @@ public class Startup
         services.AddSingleton<ISelectedViewModelsProvider, SelectedViewModelsProvider>();
     }
 
-    private static void ConfigureToolbox(IServiceCollection services)
-    {
-        services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface) p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
-        services.AddSingleton(p =>
-            (ILearningWorldPresenterToolboxInterface) p.GetService(typeof(ILearningWorldPresenter))!);
-        services.AddSingleton(p =>
-            (ILearningSpacePresenterToolboxInterface) p.GetService(typeof(ILearningSpacePresenter))!);
-    }
-
     private static void ConfigureMyLearningWorlds(IServiceCollection services)
     {
         services.AddScoped<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
@@ -240,7 +228,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager)p.GetService<ICommandStateManager>()!);
     }
 
     private void ConfigureCommandFactories(IServiceCollection services)
@@ -273,7 +261,7 @@ public class Startup
         app.UseStaticFiles();
 
         // Add localization cultures
-        var supportedCultures = new[] {"de-DE", "en-DE"};
+        var supportedCultures = new[] { "de-DE", "en-DE" };
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
