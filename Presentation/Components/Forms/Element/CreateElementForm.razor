@@ -65,6 +65,7 @@
 
         <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <TableSelect
+                T="ILearningContentViewModel"
                 Class=""
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
                 For="@(() => FormModel.LearningContent)"

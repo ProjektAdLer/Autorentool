@@ -8,6 +8,7 @@
     <RootNamespace>Presentation</RootNamespace>
     <OutputType>Library</OutputType>
     <AssemblyName>Presentation</AssemblyName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />

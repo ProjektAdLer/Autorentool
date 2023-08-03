@@ -165,7 +165,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// Byte Filesize for the file
     public void H5PSetParametersFilesXml(string hashCheckSum, string filesize, string uuid)
     {
-        var file1 = new FilesXmlFile()
+        var file1 = new FilesXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
@@ -255,11 +255,11 @@ public class XmlH5PFactory : IXmlH5PFactory
         //file activities/h5p.../inforef.xml
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
 
-        var inforefFile1 = new ActivitiesInforefXmlFile()
+        var inforefFile1 = new ActivitiesInforefXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString()
         };
-        var inforefFile2 = new ActivitiesInforefXmlFile()
+        var inforefFile2 = new ActivitiesInforefXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock2().ToString()
         };

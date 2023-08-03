@@ -64,7 +64,7 @@ public class XmlUrlFactoryUt
             "YoutubeVideo", "youtube.de", "video", "Video-Link", 1,
             2, "",
             "desc", new[] { "goals" });
-        var urlList = new List<LearningElementJson>() { urlLearningElementJson };
+        var urlList = new List<LearningElementJson> { urlLearningElementJson };
 
         mockReadDsl.GetUrlElementList().Returns(urlList);
         // Act
@@ -105,7 +105,7 @@ public class XmlUrlFactoryUt
             "youtube.de", "video", "url", 1,
             2, "",
             "desc", new[] { "goals" });
-        var urlList = new List<LearningElementJson>() { urlLearningElementJson };
+        var urlList = new List<LearningElementJson> { urlLearningElementJson };
 
 
         // Act

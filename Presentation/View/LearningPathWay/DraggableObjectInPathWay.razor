@@ -47,35 +47,35 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
 
     [Parameter]
     public EventCallback<IObjectInPathWayViewModel> OnDoubleClickedDraggable { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<IObjectInPathWayViewModel> OnRightClickedDraggable { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback OnCloseRightClickMenu { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public bool ShowingRightClickMenu { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<IObjectInPathWayViewModel> OnClickedDeleteObject { get; set; }
 
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    [Inject] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
     protected abstract string Text { get; }

@@ -38,9 +38,7 @@
             </MudGrid>
         </section>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
-            <MudDrawerContent>
-                <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
-            </MudDrawerContent>
+            <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
         </MudDrawer>
     </article>
     <img class="pointer-events-none w-3/5 opacity-10 absolute -bottom-1/4 -right-64" src="/CustomIcons/world-icon-nobg.png"/>

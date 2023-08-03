@@ -69,6 +69,7 @@
 
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <TableSelect
+                T="ILearningContentViewModel"
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
                 For="@(() => FormModel.LearningContent)"
                 Elements="WorldPresenter.GetAllContent()"
@@ -81,7 +82,7 @@
                 <RowTemplate>
                     <MudTd Class="px-1.5">
                         <MudIconButton Icon="@Icons.Material.Filled.Preview"
-                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                                       OnClick="() => PreviewOnClick(context)"/>
                     </MudTd>
                     <MudTd DataLabel="Name">@context.Name</MudTd>
                     <MudTd DataLabel="Type">
@@ -208,6 +209,11 @@
     private async Task ShowSelectedElementContentAsync()
     {
         await WorldPresenter.ShowSelectedElementContentAsync(ElementToEdit);
+    }
+
+    private void PreviewOnClick(ILearningContentViewModel context)
+    {
+        PresentationLogic.ShowLearningContentAsync(context);
     }
 
 }

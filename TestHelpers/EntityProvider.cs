@@ -14,15 +14,15 @@ public static class EntityProvider
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
         return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append)
-            {UnsavedChanges = unsavedChanges};
+            { UnsavedChanges = unsavedChanges };
     }
 
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
         return new LearningSpace("a", "d", "e", 4, Theme.Campus,
-                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
-            {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
+                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
+            { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
@@ -33,7 +33,7 @@ public static class EntityProvider
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
-        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> {{1, GetLearningElement()}},
+        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -43,7 +43,7 @@ public static class EntityProvider
     {
         return new LearningElement("a" + append, content!, "d" + append, "e" + append,
             LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
-            positionY: positionY) {UnsavedChanges = unsavedChanges};
+            positionY: positionY) { UnsavedChanges = unsavedChanges };
     }
 
     public static PathWayCondition GetPathWayCondition()
@@ -73,8 +73,8 @@ public static class EntityProvider
 
     public static SavedLearningWorldPath GetSavedLearningWorldPath()
     {
-        return new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1"};
+        return new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1" };
     }
 
     public static LearningWorld GetLearningWorldWithSpace()

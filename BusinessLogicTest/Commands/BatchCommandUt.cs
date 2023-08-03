@@ -30,7 +30,7 @@ public class BatchCommandUt
         var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3,
             new NullLogger<CreatePathWayCondition>());
 
-        var batchCommand = new BatchCommand(new List<IUndoCommand>() { command1, command2, command3 });
+        var batchCommand = new BatchCommand(new List<IUndoCommand> { command1, command2, command3 });
 
         Assert.Multiple(() =>
         {

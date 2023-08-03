@@ -37,6 +37,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
     }
 
+    public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
+
     public ValueTask DisposeAsync()
     {
         Dispose();
@@ -45,9 +47,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
 
-    public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
-
-    public event Action? OnForceViewUpdate;
 
     public void Dispose()
     {

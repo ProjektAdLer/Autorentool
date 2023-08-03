@@ -41,16 +41,16 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel LearningElement { get; set; } = null!;
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
 
     [Parameter]

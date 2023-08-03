@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningPathway;
@@ -50,12 +49,11 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
     protected override string DeleteObjectButtonShape =>
         @"<text font-size=""12"" transform=""translate(65,12)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
+    [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
 
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
-        return new List<RightClickMenuEntry>()
+        return new List<RightClickMenuEntry>
         {
             new("Delete", () => OnDeletePathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay)),
         };

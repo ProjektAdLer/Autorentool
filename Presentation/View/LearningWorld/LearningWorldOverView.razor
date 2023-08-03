@@ -8,7 +8,7 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 
-@if (LearningWorldP?.LearningWorldVm != null)
+@if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col">
         <article class="flex flex-col justify-content w-[250px] mb-2">
@@ -28,7 +28,7 @@
         <section class="flex bg-white rounded-lg w-[250px] grow pt-2">
             <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @bind-SelectedValue="SelectedValue">
 
-                @if (LearningWorldP.LearningWorldVm.LearningSpaces.Count > 0)
+                @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
                 {
                     @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                     {
@@ -48,7 +48,7 @@
 }
 
 @code{
-    string SelectedValue { get; set; }
+    string? SelectedValue { get; set; }
     public Color Color { get; set; } = Color.Info;
 }
 
@@ -89,12 +89,12 @@
 
     private void OnElementClicked(ILearningElementViewModel element)
     {
-        LearningWorldP?.SetSelectedLearningElement(element);
+        LearningWorldP.SetSelectedLearningElement(element);
     }
 
     private void OnSpaceClicked(ILearningSpaceViewModel space)
     {
-        LearningWorldP?.SetSelectedLearningSpace(space);
+        LearningWorldP.SetSelectedLearningSpace(space);
     }
 
     private void TriggerStateHasChanged()

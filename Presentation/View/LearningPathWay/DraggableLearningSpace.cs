@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningSpace;
@@ -92,21 +91,17 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
         ? ""
         : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public EventCallback<ILearningSpaceViewModel> OnRemoveLearningSpaceFromTopic { get; set; }
+    [Parameter] public EventCallback<ILearningSpaceViewModel>? OnRemoveLearningSpaceFromTopic { get; set; }
 
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
-        var menuEntries = new List<RightClickMenuEntry>()
+        var menuEntries = new List<RightClickMenuEntry>
         {
             new("Open", () => OnOpenLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
             new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
@@ -115,8 +110,8 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 
         if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
         {
-            menuEntries.Add(new("Remove topic",
-                () => OnRemoveLearningSpaceFromTopic.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
+            menuEntries.Add(new RightClickMenuEntry("Remove topic",
+                () => OnRemoveLearningSpaceFromTopic?.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
         }
 
         return menuEntries;

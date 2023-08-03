@@ -36,9 +36,9 @@
     public Direction Direction2 { get; set; } = Direction.Left;
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public ILearningPathWayViewModel? LearningPathWay { get; set; }
+    public ILearningPathWayViewModel LearningPathWay { get; set; }
 
-    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    [Parameter, EditorRequired]
     public EventCallback<ILearningPathWayViewModel> OnClickedClickable { get; set; }
 
     // Overwrite nullability warning below because service may never be null -m.ho
@@ -46,9 +46,9 @@
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
+    public ISelectedViewModelsProvider SelectedObjectsService { get; set; }
 
-    private double StrokeWidth => SelectedObjectsService?.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
+    private double StrokeWidth => SelectedObjectsService.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;

@@ -90,7 +90,7 @@ public class CreateDslUt
         var mockElement4 = PersistEntityProvider.GetLearningElement(name: "Same Name Element");
         var mockElement5 = PersistEntityProvider.GetLearningElement(name: "Same Name Element");
 
-        var mockLearningElements1 = new Dictionary<int, ILearningElementPe>()
+        var mockLearningElements1 = new Dictionary<int, ILearningElementPe>
         {
             {
                 0,
@@ -104,7 +104,7 @@ public class CreateDslUt
         var mockLearningSpaceLayout1 =
             PersistEntityProvider.GetLearningSpaceLayout(learningElements: mockLearningElements1,
                 floorPlan: FloorPlanEnum.R_20X30_8L);
-        var mockLearningElements2 = new Dictionary<int, ILearningElementPe>()
+        var mockLearningElements2 = new Dictionary<int, ILearningElementPe>
         {
             {
                 0,
@@ -114,7 +114,7 @@ public class CreateDslUt
         var mockLearningSpaceLayout2 =
             PersistEntityProvider.GetLearningSpaceLayout(learningElements: mockLearningElements2,
                 floorPlan: FloorPlanEnum.R_20X30_8L);
-        var mockLearningElements3 = new Dictionary<int, ILearningElementPe>()
+        var mockLearningElements3 = new Dictionary<int, ILearningElementPe>
         {
             {
                 0,
@@ -203,7 +203,7 @@ public class CreateDslUt
         {
             LearningSpaceLayout =
             {
-                LearningElements = new Dictionary<int, ILearningElementPe>()
+                LearningElements = new Dictionary<int, ILearningElementPe>
                 {
                     {
                         0,
@@ -242,12 +242,12 @@ public class CreateDslUt
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
             new List<IObjectInPathWayPe> { space1, space2 });
-        space1.OutBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
-        space2.InBoundObjects = new List<IObjectInPathWayPe>() { condition1 };
-        space2.OutBoundObjects = new List<IObjectInPathWayPe>() { space3 };
-        space3.InBoundObjects = new List<IObjectInPathWayPe>() { space2 };
+        space1.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+        space2.InBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+        space2.OutBoundObjects = new List<IObjectInPathWayPe> { space3 };
+        space3.InBoundObjects = new List<IObjectInPathWayPe> { space2 };
         var learningSpaces = new List<LearningSpacePe> { space1, space2, space3, space4 };
-        var topics = new List<TopicPe>() { topic1, topic2 };
+        var topics = new List<TopicPe> { topic1, topic2 };
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,

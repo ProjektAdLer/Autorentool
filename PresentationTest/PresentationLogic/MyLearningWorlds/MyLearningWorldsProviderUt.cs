@@ -50,8 +50,7 @@ public class MyLearningWorldsProviderUt
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var learningWorld2 = new LearningWorldViewModel("w2", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
-            {learningWorld1, learningWorld2});
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel> { learningWorld1, learningWorld2 });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
         var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter);
@@ -85,13 +84,13 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void GetSavedLearningWorlds_ReturnsSavedLearningWorlds()
     {
-        var savedLearningWorld1 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
-        var savedLearningWorld2 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000002", "D"), Name = "w2", Path = "p2"};
+        var savedLearningWorld1 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1" };
+        var savedLearningWorld2 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000002", "D"), Name = "w2", Path = "p2" };
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>()
-            {savedLearningWorld1, savedLearningWorld2});
+        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>
+            { savedLearningWorld1, savedLearningWorld2 });
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic);
 
         var result = systemUnderTest.GetSavedLearningWorlds();
@@ -116,17 +115,15 @@ public class MyLearningWorldsProviderUt
     {
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
-            {learningWorld1});
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel> { learningWorld1 });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
-        var savedLearningWorld1 = new SavedLearningWorldPath()
-            {Id = learningWorld1.Id, Name = "w1", Path = "p1"};
-        var savedLearningWorld2 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000002", "D"), Name = "w2", Path = "p2"};
+        var savedLearningWorld1 = new SavedLearningWorldPath { Id = learningWorld1.Id, Name = "w1", Path = "p1" };
+        var savedLearningWorld2 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000002", "D"), Name = "w2", Path = "p2" };
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>()
-            {savedLearningWorld1, savedLearningWorld2});
+        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>
+            { savedLearningWorld1, savedLearningWorld2 });
         var systemUnderTest =
             CreateProviderForTesting(presentationLogic: presentationLogic, workspacePresenter: workspacePresenter);
 
@@ -151,8 +148,7 @@ public class MyLearningWorldsProviderUt
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
-            {learningWorld1});
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel> { learningWorld1 });
         var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter,
             selectedViewModelsProvider: selectedViewModelsProvider);
 
@@ -167,14 +163,14 @@ public class MyLearningWorldsProviderUt
     {
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var worldInWorkspace = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
-        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldInWorkspace});
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel> { worldInWorkspace });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
-        var savedLearningWorld1 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
+        var savedLearningWorld1 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1" };
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>()
-            {savedLearningWorld1});
+        presentationLogic.GetSavedLearningWorldPaths()
+            .Returns(new List<SavedLearningWorldPath> { savedLearningWorld1 });
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(Arg.Any<string>()).Returns(true);
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic,
@@ -190,11 +186,11 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void OpenLearningWorld_WorldIsSavedButFileDoesNotExist_PresentationLogicIsNotCalled()
     {
-        var savedLearningWorld1 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
+        var savedLearningWorld1 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1" };
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>()
-            {savedLearningWorld1});
+        presentationLogic.GetSavedLearningWorldPaths()
+            .Returns(new List<SavedLearningWorldPath> { savedLearningWorld1 });
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(Arg.Any<string>()).Returns(false);
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic, fileSystem: fileSystem);
@@ -209,15 +205,13 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void OpenLearningWorld_WorldIsNotSavedAndNotLoaded_ThrowsException()
     {
-        var savedLearningWorld1 = new SavedLearningWorldPath()
-            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
+        var savedLearningWorld1 = new SavedLearningWorldPath
+            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1" };
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic);
 
         Assert.Throws<ArgumentException>(() => systemUnderTest.OpenLearningWorld(savedLearningWorld1));
     }
-
-    #region LoadSavedLearningWorld
 
     [Test]
     public void LoadSavedLearningWorld_CallsPresentationLogicGetWorldSavePath()
@@ -261,7 +255,7 @@ public class MyLearningWorldsProviderUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         const string savePath = "path";
         presentationLogic.GetWorldSavePath().Returns(savePath);
-        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var savedLearningWorldPath = new SavedLearningWorldPath { Path = savePath };
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(savePath).Returns(false);
         presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
@@ -278,7 +272,7 @@ public class MyLearningWorldsProviderUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         const string savePath = "path";
         presentationLogic.GetWorldSavePath().Returns(savePath);
-        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var savedLearningWorldPath = new SavedLearningWorldPath { Path = savePath };
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(savePath).Returns(true);
         presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
@@ -300,7 +294,7 @@ public class MyLearningWorldsProviderUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         const string savePath = "path";
         presentationLogic.GetWorldSavePath().Returns(savePath);
-        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var savedLearningWorldPath = new SavedLearningWorldPath { Path = savePath };
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(savePath).Returns(true);
         presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
@@ -309,7 +303,7 @@ public class MyLearningWorldsProviderUt
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         var worldVmId = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D");
         worldVm.Id.Returns(worldVmId);
-        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldVm});
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel> { worldVm });
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic, fileSystem: fileSystem,
             workspacePresenter: workspacePresenter);
@@ -319,10 +313,6 @@ public class MyLearningWorldsProviderUt
         presentationLogic.Received(1).UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, worldVmId);
     }
 
-    #endregion
-
-    #region DeleteLearningWorld
-
     [Test]
     public void DeleteLearningWorld_CallsWorkspacePresenterDeleteLearningWorld()
     {
@@ -331,17 +321,15 @@ public class MyLearningWorldsProviderUt
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         worldVm.Id.Returns(worldVmId);
-        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldVm});
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel> { worldVm });
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
-        var savedLearningWorldPath = new SavedLearningWorldPath() {Id = worldVmId};
+        var savedLearningWorldPath = new SavedLearningWorldPath { Id = worldVmId };
         var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter);
 
         _ = systemUnderTest.DeleteLearningWorld(savedLearningWorldPath);
 
         workspacePresenter.Received(1).DeleteLearningWorld(worldVm);
     }
-
-    #endregion
 
     private MyLearningWorldsProvider CreateProviderForTesting(IPresentationLogic? presentationLogic = null,
         IAuthoringToolWorkspacePresenter? workspacePresenter = null, IFileSystem? fileSystem = null,

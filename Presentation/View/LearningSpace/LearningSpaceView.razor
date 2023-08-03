@@ -19,7 +19,7 @@
         <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
         <p class="text-lg text-adlerblue-600 truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
     </div>
-    @if (SelectedViewModelsProvider?.LearningObjectInPathWay != null)
+    @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="gap-8 flex justify-between items-start">
@@ -102,7 +102,7 @@
     public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action TriggerMasterLayoutStateHasChanged { get; set; }
+    private Action? TriggerMasterLayoutStateHasChanged { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
@@ -121,12 +121,12 @@
                 "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
                 "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
             {
-                await InvokeAsync(TriggerMasterLayoutStateHasChanged);
+                await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
             }
         };
         LearningSpaceP.PropertyChanged += (_, earg) =>
         {
-            if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged);
+            if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged!);
         };
     }
 

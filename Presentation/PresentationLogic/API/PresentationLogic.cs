@@ -192,7 +192,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         learningWorldViewModel.UnsavedChanges = false;
-        AddSavedLearningWorldPath(new SavedLearningWorldPath()
+        AddSavedLearningWorldPath(new SavedLearningWorldPath
             { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
     }
 
@@ -623,7 +623,8 @@ public class PresentationLogic : IPresentationLogic
         }
         catch (ArgumentOutOfRangeException)
         {
-            Logger.LogError("LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
+            Logger.LogError(
+                "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
             throw new ArgumentOutOfRangeException(nameof(learningElementVm),
                 "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
         }

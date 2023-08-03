@@ -232,7 +232,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.UnplacedLearningElements = new List<ILearningElementPe>()
+        destination.UnplacedLearningElements = new List<ILearningElementPe>
         {
             new LearningElementPe(NewName, GetTestableNewContentPersistEntity(), NewDescription, NewGoals,
                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
@@ -275,7 +275,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.LearningSpaces = new List<LearningSpacePe>()
+        destination.LearningSpaces = new List<LearningSpacePe>
         {
             new(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
                 positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
@@ -343,8 +343,8 @@ public class EntityPersistEntityMappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnum.And, 2, 1);
         var spacePe2 = GetTestableNewSpacePersistEntity();
-        destination.LearningSpaces = new List<LearningSpacePe>() { spacePe1, spacePe2 };
-        destination.PathWayConditions = new List<PathWayConditionPe>() { pathWayConditionPe };
+        destination.LearningSpaces = new List<LearningSpacePe> { spacePe1, spacePe2 };
+        destination.PathWayConditions = new List<PathWayConditionPe> { pathWayConditionPe };
         destination.LearningPathways = new List<LearningPathwayPe>
             { new(spacePe1, pathWayConditionPe), new(pathWayConditionPe, spacePe2) };
         spacePe1.OutBoundObjects.Add(pathWayConditionPe);
@@ -502,7 +502,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
             new LearningSpaceLayoutPe(
-                new Dictionary<int, ILearningElementPe>()
+                new Dictionary<int, ILearningElementPe>
                 {
                     {
                         0,

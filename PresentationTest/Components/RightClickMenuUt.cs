@@ -111,7 +111,7 @@ public class RightClickMenuUt
         var learningObject = Substitute.For<ILearningElementViewModel>();
         const string onOpenText = "Open";
         var onOpenClicked = Substitute.For<Action>();
-        var menuEntries = new List<RightClickMenuEntry>() { new(onOpenText, onOpenClicked) };
+        var menuEntries = new List<RightClickMenuEntry> { new(onOpenText, onOpenClicked) };
 
         var systemUnderTest =
             CreateRenderedRightClickMenu(learningObject, menuEntries);

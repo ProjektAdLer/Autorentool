@@ -262,7 +262,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>()
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>
         {
             new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, NewRequiredPoints,
                 positionX: NewPositionX, positionY: NewPositionY)
@@ -303,7 +303,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>() { GetTestableNewSpaceViewModel() };
+        destination.LearningSpaces = new List<ILearningSpaceViewModel> { GetTestableNewSpaceViewModel() };
 
         systemUnderTest.Map(destination, source);
 
@@ -353,8 +353,8 @@ public class ViewModelEntityMappingProfileUt
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
         var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>() { spaceVm1 };
-        destination.PathWayConditions = new List<PathWayConditionViewModel>() { pathWayConditionVm };
+        destination.LearningSpaces = new List<ILearningSpaceViewModel> { spaceVm1 };
+        destination.PathWayConditions = new List<PathWayConditionViewModel> { pathWayConditionVm };
         destination.LearningPathWays = new List<ILearningPathWayViewModel>();
         destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, pathWayConditionVm));
 

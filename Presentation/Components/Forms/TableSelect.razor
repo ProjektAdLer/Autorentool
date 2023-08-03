@@ -1,4 +1,4 @@
-@typeparam T
+@typeparam T where T : notnull
 @using MudBlazor.Utilities
 @using System.Diagnostics.CodeAnalysis
 @inherits MudBaseInput<T>
@@ -73,7 +73,6 @@
 
     private string SelectedRowClassFunc(T element, int rowNumber)
     {
-        if (element == null) return string.Empty;
         return element.Equals(Value) ? "bg-adlergrey-600" : string.Empty;
     }
 

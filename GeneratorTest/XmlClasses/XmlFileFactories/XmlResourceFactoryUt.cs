@@ -75,7 +75,7 @@ public class XmlResourceFactoryUt
         var txtDocument = new LearningElementJson(11, "", "Document", "", "", "txt", 1, learningEvl, "");
 
 
-        var resourceList = new List<LearningElementJson>()
+        var resourceList = new List<LearningElementJson>
         {
             jsonDocument,
             pngDocument,
@@ -91,7 +91,7 @@ public class XmlResourceFactoryUt
         };
 
         mockReadDsl.GetResourceElementList().Returns(resourceList);
-        var space_1 = new LearningSpaceJson(1, "", "space", new List<int?>() { 1, 2 }, 10, "", "");
+        var space_1 = new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "", "");
         var fileString = Path.Join(currWorkDir, "XMLFilesForExport", "Document");
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "Document"),
             new MockFileData("Hello World"));
