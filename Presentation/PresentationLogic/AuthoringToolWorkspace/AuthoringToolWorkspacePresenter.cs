@@ -53,6 +53,13 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
     }
 
+    private void LogAndSetError(string operation, string errorDetail, string? userMessage)
+    {
+        _logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
+        userMessage ??= errorDetail;
+        _errorService.SetError("Operation failed", userMessage);
+    }
+
 
     #region LearningWorld
 
@@ -67,21 +74,16 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
     /// </summary>
     /// <param name="worldName">The name of the world that should be selected.</param>
-    /// <exception cref="ArgumentException">Thrown when no world with that name is registered in the view model.</exception>
     public void SetSelectedLearningWorld(string worldName)
     {
         var world = AuthoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
-        if (world == null) throw new ArgumentException("no world with that name in viewmodel");
-        _selectedViewModelsProvider.SetLearningWorld(world, null);
-    }
+        if (world == null)
+        {
+            LogAndSetError("SetSelectedLearningWorld", $"No learning world with name {worldName} found", null);
+            return;
+        }
 
-    /// <summary>
-    /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
-    /// </summary>
-    /// <param name="learningWorld">The learning world that should be set as selected</param>
-    internal void SetSelectedLearningWorld(LearningWorldViewModel? learningWorld)
-    {
-        _selectedViewModelsProvider.SetLearningWorld(learningWorld, null);
+        _selectedViewModelsProvider.SetLearningWorld(world, null);
     }
 
     /// <summary>
@@ -101,17 +103,18 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         {
             var result = await AskForSaveWorld(learningWorld);
             if (result.Canceled) return;
-            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+            if (result.Data is not bool)
+            {
+                LogAndSetError("DeleteLearningWorld",
+                    $"Unexpected dialog result type while trying to save world; expected bool, got {result.Data?.GetType()}",
+                    "Unexpected dialog result type");
+                return;
+            }
 
             if (result.Data is true) await SaveLearningWorldAsync(learningWorld);
         }
 
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
-    }
-
-    public void AddLearningWorld(LearningWorldViewModel learningWorld)
-    {
-        _presentationLogic.AddLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
     public async Task LoadLearningWorldAsync()
@@ -149,7 +152,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public async Task SaveSelectedLearningWorldAsync()
     {
         if (_selectedViewModelsProvider.LearningWorld == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        {
+            LogAndSetError("SaveSelectedLearningWorldAsync", "No world selected", null);
+            return;
+        }
+
         await SaveLearningWorldAsync(_selectedViewModelsProvider.LearningWorld);
     }
 
@@ -167,7 +174,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+            if (result.Data is not bool)
+            {
+                LogAndSetError("OnBeforeShutdownAsync",
+                    $"Unexpected dialog result type while trying to save world; expected bool, got {result.Data?.GetType()}",
+                    "Unexpected dialog result type");
+                return;
+            }
+
             if (result.Data is true) await SaveLearningWorldAsync(world);
         }
     }

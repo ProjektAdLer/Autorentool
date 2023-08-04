@@ -10,9 +10,7 @@ using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
@@ -26,9 +24,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void StandardConstructor_AllPropertiesInitialized()
     {
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
         Assert.Multiple(() => { Assert.That(systemUnderTest.AuthoringToolWorkspaceVm, Is.EqualTo(workspaceVm)); });
     }
 
@@ -55,7 +52,6 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         selectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
-        var worldPresenter = CreateLearningWorldPresenter(selectedViewModelsProvider: selectedViewModelsProvider);
         var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
@@ -63,7 +59,7 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm._learningWorlds.Add(world1);
         workspaceVm._learningWorlds.Add(world2);
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter,
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
             selectedViewModelsProvider: selectedViewModelsProvider);
 
         Assert.That(selectedViewModelsProvider.LearningWorld, Is.Null);
@@ -80,16 +76,16 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void ChangeSelectedLearningWorld_ThrowsIfNoLearningWorldWithName()
+    public void ChangeSelectedLearningWorld_CallsErrorServiceIfNoLearningWorldWithName()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateLearningWorldPresenter();
+        var errorService = Substitute.For<IErrorService>();
         Assert.That(workspaceVm.LearningWorlds, Is.Empty);
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, errorService: errorService);
 
-        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SetSelectedLearningWorld("foo"));
-        Assert.That(ex!.Message, Is.EqualTo("no world with that name in viewmodel"));
+        systemUnderTest.SetSelectedLearningWorld("foo");
+        errorService.Received(1).SetError("Operation failed", "No learning world with name foo found");
     }
 
     [Test]
@@ -156,12 +152,108 @@ public class AuthoringToolWorkspacePresenterUt
     public void DeleteSelectedLearningWorld_DoesNotThrowWhenSelectedWorldNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateLearningWorldPresenter();
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
 
         Assert.DoesNotThrow(systemUnderTest.DeleteSelectedLearningWorld);
     }
+
+    [Test]
+    public async Task DeleteLearningWorld_CallsSaveLearningWorldAsync_WhenUnsavedChangesAndYesResponse()
+    {
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        var dialogService = Substitute.For<IDialogService>();
+        dialogService
+            .ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            dialogService: dialogService);
+
+        await systemUnderTest.DeleteLearningWorld(learningWorld);
+
+        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+    }
+
+    [Test]
+    public async Task DeleteLearningWorld_CallsDeleteLearningWorld_WhenNoUnsavedChangesOrNoResponse()
+    {
+        var learningWorld = new LearningWorldViewModel("saved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = false
+        };
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(false));
+        var dialogService = Substitute.For<IDialogService>();
+        dialogService
+            .ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            dialogService: dialogService);
+
+        await systemUnderTest.DeleteLearningWorld(learningWorld);
+
+        presentationLogic.Received().DeleteLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(), learningWorld);
+    }
+
+    [Test]
+    public async Task DeleteLearningWorld_CallsErrorService_WhenUnexpectedDialogResultType()
+    {
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok("unexpected type"));
+        var dialogService = Substitute.For<IDialogService>();
+        dialogService
+            .ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+        var errorService = Substitute.For<IErrorService>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            dialogService: dialogService, errorService: errorService);
+
+        await systemUnderTest.DeleteLearningWorld(learningWorld);
+
+        errorService.Received().SetError("Operation failed", "Unexpected dialog result type");
+    }
+
+    [Test]
+    public async Task DeleteLearningWorld_AbortsWhenDialogCanceled()
+    {
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Cancel());
+        var dialogService = Substitute.For<IDialogService>();
+        dialogService
+            .ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+        var errorService = Substitute.For<IErrorService>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            dialogService: dialogService, errorService: errorService);
+
+        await systemUnderTest.DeleteLearningWorld(learningWorld);
+
+        presentationLogic.DidNotReceive()
+            .DeleteLearningWorld(Arg.Any<AuthoringToolWorkspaceViewModel>(), learningWorld);
+        errorService.DidNotReceive().SetError(Arg.Any<string>(), Arg.Any<string>());
+    }
+
 
     [Test]
     public async Task SaveLearningWorldAsync_CallsPresentationLogic()
@@ -230,18 +322,20 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void SaveSelectedLearningWorldAsync_ThrowsIfSelectedWorldNull()
+    public async Task SaveSelectedLearningWorldAsync_CallsErrorServiceIfSelectedWorldNull()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
         var mockSelectedViewModelProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
         mockSelectedViewModelProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: mockPresentationLogic, authoringToolWorkspaceVm: viewModel,
-                selectedViewModelsProvider: mockSelectedViewModelProvider);
+                selectedViewModelsProvider: mockSelectedViewModelProvider, errorService: errorService);
 
-        Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningWorldAsync());
+        await systemUnderTest.SaveSelectedLearningWorldAsync();
+        errorService.Received().SetError("Operation failed", "No world selected");
     }
 
     [Test]
@@ -384,9 +478,37 @@ public class AuthoringToolWorkspacePresenterUt
         });
     }
 
+    [Test]
+    public async Task OnBeforeShutdown_CallsErrorService_WhenUnexpectedDialogResultTypeReturned()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        viewModel._learningWorlds.Add(unsavedWorld);
+        var args = new BeforeShutdownEventArgs();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var errorService = Substitute.For<IErrorService>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok("unexpected"));
+        var dialogService = Substitute.For<IDialogService>();
+        dialogService
+            .ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic,
+            dialogService: dialogService, errorService: errorService);
+
+        await systemUnderTest.OnBeforeShutdownAsync(null, args);
+
+        errorService.Received().SetError(Arg.Is<string>(s => s == "Operation failed"),
+            Arg.Is<string>(s => s == "Unexpected dialog result type"));
+    }
+
+
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
-        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILogger<AuthoringToolWorkspacePresenter>? logger = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IShutdownManager? shutdownManager = null,
@@ -394,8 +516,6 @@ public class AuthoringToolWorkspacePresenterUt
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
-        learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
@@ -403,20 +523,5 @@ public class AuthoringToolWorkspacePresenterUt
         errorService ??= Substitute.For<IErrorService>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, logger,
             selectedViewModelsProvider, shutdownManager, dialogService, errorService);
-    }
-
-    private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,
-        ILearningSpacePresenter? learningSpacePresenter = null, ILogger<LearningWorldPresenter>? logger = null,
-        IMediator? mediator = null,
-        ISelectedViewModelsProvider? selectedViewModelsProvider = null, IErrorService? errorService = null)
-    {
-        presentationLogic ??= Substitute.For<IPresentationLogic>();
-        learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
-        logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
-        errorService ??= Substitute.For<IErrorService>();
-        selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
-        mediator ??= Substitute.For<IMediator>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, mediator,
-            selectedViewModelsProvider, errorService);
     }
 }

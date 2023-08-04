@@ -27,10 +27,10 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         _onUndoRedo.OnUndo += OnUndo;
         _onUndoRedo.OnRedo += OnRedo;
 
-        _logger = logger;
+        Logger = logger;
     }
 
-    private ILogger<SelectedViewModelsProvider> _logger { get; }
+    private ILogger<SelectedViewModelsProvider> Logger { get; }
 
     public ILearningWorldViewModel? LearningWorld
     {
@@ -67,7 +67,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         if (command is not null)
             _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveSlotInSpace, s => ActiveSlotInSpace = s));
         ActiveSlotInSpace = slot;
-        _logger.LogTrace("ActiveSlotInSpace set to {Slot}", slot);
+        Logger.LogTrace("ActiveSlotInSpace set to {Slot}", slot);
         _redoStack.Clear();
     }
 
@@ -77,7 +77,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningWorldViewModelStackEntry(command, LearningWorld, lw => LearningWorld = lw));
         LearningWorld = learningWorld;
-        _logger.LogTrace("LearningWorld set to {LearningWorld} with id {Id}", learningWorld?.Name, learningWorld?.Id);
+        Logger.LogTrace("LearningWorld set to {LearningWorld} with id {Id}", learningWorld?.Name, learningWorld?.Id);
         SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
@@ -92,20 +92,20 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         switch (learningObjectInPathWay)
         {
             case null:
-                _logger.LogTrace("LearningObjectInPathWay set to null");
+                Logger.LogTrace("LearningObjectInPathWay set to null");
                 break;
             case LearningPathwayViewModel learningPathwayViewModel:
-                _logger.LogTrace("LearningObjectInPathWay set to {Id}", learningPathwayViewModel.Id);
+                Logger.LogTrace("LearningObjectInPathWay set to {Id}", learningPathwayViewModel.Id);
                 break;
             case PathWayConditionViewModel pathWayConditionViewModel:
-                _logger.LogTrace("LearningObjectInPathWay set to {Id}", pathWayConditionViewModel.Id);
+                Logger.LogTrace("LearningObjectInPathWay set to {Id}", pathWayConditionViewModel.Id);
                 break;
             case LearningSpaceViewModel learningSpaceViewModel:
-                _logger.LogTrace("LearningObjectInPathWay set to space {Name} with id {Id}",
+                Logger.LogTrace("LearningObjectInPathWay set to space {Name} with id {Id}",
                     learningSpaceViewModel.Name, learningSpaceViewModel.Id);
                 break;
             default:
-                _logger.LogTrace("LearningObjectInPathWay set to an unrecognized object type");
+                Logger.LogTrace("LearningObjectInPathWay set to an unrecognized object type");
                 break;
         }
 
@@ -119,7 +119,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningElementViewModelStackEntry(command, LearningElement, le => LearningElement = le));
         LearningElement = learningElement;
-        _logger.LogTrace("LearningElement set to {LearningElement} with id {Id}", learningElement?.Name,
+        Logger.LogTrace("LearningElement set to {LearningElement} with id {Id}", learningElement?.Name,
             learningElement?.Id);
         SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
@@ -131,7 +131,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningContentViewModelStackEntry(command, LearningContent, lc => LearningContent = lc));
         LearningContent = content;
-        _logger.LogTrace("LearningContent set to {LearningContent}", content?.Name);
+        Logger.LogTrace("LearningContent set to {LearningContent}", content?.Name);
         _redoStack.Clear();
     }
 
