@@ -132,6 +132,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         return true;
     }
 
+
     private bool CheckLearningWorldNotNull(string operation)
     {
         if (LearningWorldVm != null)
