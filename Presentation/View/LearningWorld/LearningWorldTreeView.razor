@@ -48,19 +48,21 @@
 }
 
 @code{
-    string? SelectedValue { get; set; }
-    public Color Color { get; set; } = Color.Info;
 }
 
 @code {
+    //Hierarchical view of the learning world
+    //Formerly known as LearningWorldOverView
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningWorldPresenterOverviewInterface LearningWorldP { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<LearningWorldOverView> Localizer { get; set; }
+    private IStringLocalizer<LearningWorldTreeView> Localizer { get; set; }
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+    private string? SelectedValue { get; set; }
+    private Color Color { get; set; } = Color.Info;
 
     protected override void OnParametersSet()
     {

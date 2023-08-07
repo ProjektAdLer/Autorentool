@@ -99,6 +99,8 @@
 </article>
 
 @code {
+    //Pathway view of the learning world
+    //formerly known as "LearningWorldView"
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -114,7 +116,7 @@
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<LearningWorldView> Localizer { get; set; }
+    private IStringLocalizer<LearningWorldPathwayView> Localizer { get; set; }
 
 
     private ExceptionWrapper? ErrorState { get; set; }

@@ -26,7 +26,7 @@ using TestContext = Bunit.TestContext;
 namespace PresentationTest.View.LearningWorld;
 
 [TestFixture]
-public class LearningWorldViewUt
+public class LearningWorldPathwayViewUt
 {
     [SetUp]
     public void Setup()
@@ -35,7 +35,7 @@ public class LearningWorldViewUt
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        _localizer = Substitute.For<IStringLocalizer<LearningWorldView>>();
+        _localizer = Substitute.For<IStringLocalizer<LearningWorldPathwayView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
@@ -217,9 +217,10 @@ public class LearningWorldViewUt
         await _worldPresenter.Received().LoadLearningSpaceAsync();
     }
 
-    private IRenderedComponent<LearningWorldView> GetLearningWorldViewForTesting(RenderFragment? childContent = null)
+    private IRenderedComponent<LearningWorldPathwayView> GetLearningWorldViewForTesting(
+        RenderFragment? childContent = null)
     {
-        return _ctx.RenderComponent<LearningWorldView>(parameters => parameters
+        return _ctx.RenderComponent<LearningWorldPathwayView>(parameters => parameters
             .Add(p => p.ChildContent, childContent));
     }
 
@@ -227,5 +228,5 @@ public class LearningWorldViewUt
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IStringLocalizer<LearningWorldView> _localizer;
+    private IStringLocalizer<LearningWorldPathwayView> _localizer;
 }
