@@ -63,6 +63,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     #region LearningWorld
 
+    /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
         string goals)
     {
@@ -70,33 +71,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             description, goals);
     }
 
-    /// <summary>
-    /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
-    /// </summary>
-    /// <param name="worldName">The name of the world that should be selected.</param>
-    public void SetSelectedLearningWorld(string worldName)
-    {
-        var world = AuthoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
-        if (world == null)
-        {
-            LogAndSetError("SetSelectedLearningWorld", $"No learning world with name {worldName} found", null);
-            return;
-        }
-
-        _selectedViewModelsProvider.SetLearningWorld(world, null);
-    }
-
-    /// <summary>
-    /// Deletes the currently selected learning world from the view model and selects the last learning world in the
-    /// collection, if any remain.
-    /// </summary>
-    public void DeleteSelectedLearningWorld()
-    {
-        var learningWorld = _selectedViewModelsProvider.LearningWorld;
-        if (learningWorld == null) return;
-        _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
-    }
-
+    /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>
     public async Task DeleteLearningWorld(ILearningWorldViewModel learningWorld)
     {
         if (WorldHasUnsavedChanges(learningWorld))
@@ -117,22 +92,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
-    public async Task LoadLearningWorldAsync()
-    {
-        try
-        {
-            await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while loading world", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while loading world", e.Message);
-        }
-    }
-
     internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
     {
         try
@@ -147,17 +106,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         {
             _errorService.SetError("Error while saving world", e.Message);
         }
-    }
-
-    public async Task SaveSelectedLearningWorldAsync()
-    {
-        if (_selectedViewModelsProvider.LearningWorld == null)
-        {
-            LogAndSetError("SaveSelectedLearningWorldAsync", "No world selected", null);
-            return;
-        }
-
-        await SaveLearningWorldAsync(_selectedViewModelsProvider.LearningWorld);
     }
 
 

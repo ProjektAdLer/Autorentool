@@ -287,7 +287,6 @@ public class LearningWorldPresenterUt
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
 
         Assert.That(selectedViewModelsProvider.LearningObjectInPathWay, Is.EqualTo(space));
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
         Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
 
@@ -598,26 +597,6 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.LoadLearningSpaceAsync();
         errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
-    }
-
-    [Test]
-    public void ShowAndCloseLearningSpaceView_OpensAndClosesLearningSpaceView_SetsShowingLearningSpaceViewBool()
-    {
-        var world = ViewModelProvider.GetLearningWorld();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
-        systemUnderTest.LearningWorldVm = world;
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
-
-        systemUnderTest.ShowSelectedLearningSpaceView();
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
-
-        systemUnderTest.CloseLearningSpaceView();
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
     }
 
     [Test]

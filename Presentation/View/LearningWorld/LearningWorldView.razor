@@ -43,8 +43,8 @@
     <div class="bg-white rounded-lg w-full grow overflow-scroll">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
              @onmousemove=@(e => MouseService.FireMove(this, e))
-                 @onmouseup=@(e => MouseService.FireUp(this, e))
-                 @onmouseleave=@(e => MouseService.FireOut(this, e))>
+                                  @onmouseup=@(e => MouseService.FireUp(this, e))
+                                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
 
             @if (LearningWorldP.LearningWorldVm != null)
             {
@@ -75,7 +75,7 @@
                                             OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
                                             OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                             ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
-                                            OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
+                                            OnOpenLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                             OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                             OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
                                             OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"

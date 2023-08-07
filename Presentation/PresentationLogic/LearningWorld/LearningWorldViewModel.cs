@@ -10,6 +10,21 @@ namespace Presentation.PresentationLogic.LearningWorld;
 
 public class LearningWorldViewModel : ILearningWorldViewModel
 {
+    public const string fileEnding = "awf";
+    private string _authors;
+    private string _description;
+    private string _goals;
+    private string _language;
+    private ICollection<ILearningPathWayViewModel> _learningPathWays;
+    private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private string _name;
+    private IObjectInPathWayViewModel? _onHoveredLearningObject;
+    private ICollection<PathWayConditionViewModel> _pathWayConditions;
+    private string _savePath;
+    private string _shortname;
+    private ICollection<TopicViewModel> _topics;
+    private ICollection<ILearningElementViewModel> _unplacedLearningElements;
+
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
@@ -50,8 +65,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, string savePath = "",  bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
-        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null,
+        string goals, string savePath = "", bool unsavedChanges = true,
+        List<ILearningSpaceViewModel>? learningSpaces = null,
+        List<PathWayConditionViewModel>? pathWayConditions = null,
+        List<ILearningPathWayViewModel>? learningPathWays = null,
         List<ILearningElementViewModel>? unplacedLearningElements = null,
         List<TopicViewModel>? topics = null)
     {
@@ -70,24 +87,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _unplacedLearningElements = unplacedLearningElements ?? new List<ILearningElementViewModel>();
         _topics = topics ?? new List<TopicViewModel>();
     }
-    
-    public const string fileEnding = "awf";
-    
+
+    public IEnumerable<ISelectableObjectInWorldViewModel> SelectableWorldObjects =>
+        ObjectsInPathWays.Concat<ISelectableObjectInWorldViewModel>(LearningPathWays);
+
     public Guid Id { get; private set; }
-    private ICollection<ILearningSpaceViewModel> _learningSpaces;
-    private ICollection<PathWayConditionViewModel> _pathWayConditions;
-    private ICollection<ILearningPathWayViewModel> _learningPathWays;
-    private ICollection<ILearningElementViewModel> _unplacedLearningElements;
-    private ICollection<TopicViewModel> _topics;
-    private string _name;
-    private string _shortname;
-    private string _authors;
-    private string _language;
-    private string _description;
-    private string _goals;
-    private string _savePath;
-    private IObjectInPathWayViewModel? _onHoveredLearningObject;
-    private bool _showingLearningSpaceView;
 
     public string FileEnding => fileEnding;
 
@@ -100,7 +104,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
             OnPropertyChanged(nameof(Workload));
         }
     }
-    
+
     public ICollection<PathWayConditionViewModel> PathWayConditions
     {
         get => _pathWayConditions;
@@ -112,7 +116,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         get => _learningPathWays;
         set => SetField(ref _learningPathWays, value);
     }
-    
+
     public ICollection<ILearningElementViewModel> UnplacedLearningElements
     {
         get => _unplacedLearningElements;
@@ -132,15 +136,13 @@ public class LearningWorldViewModel : ILearningWorldViewModel
 
     public IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays =>
         LearningSpaces.Concat<IObjectInPathWayViewModel>(PathWayConditions);
-    
-    public IEnumerable<ISelectableObjectInWorldViewModel> SelectableWorldObjects =>
-        ObjectsInPathWays.Concat<ISelectableObjectInWorldViewModel>(LearningPathWays);
 
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload);
 
     public int Points =>
         LearningSpaces.Sum(space => space.Points);
+
     public string Name
     {
         get => _name;
@@ -192,20 +194,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
                Topics.Any(topic => topic.UnsavedChanges);
         set => InternalUnsavedChanges = value;
     }
-    
-    
-    
+
+
     public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {
         get => _onHoveredLearningObject;
         set => SetField(ref _onHoveredLearningObject, value);
-    }
-
-    public bool ShowingLearningSpaceView
-    {
-        get => _showingLearningSpaceView;
-        //TODO: Throw exception if ShowingLearningSpaceView is set to true but LearningSpaceViewModel in LearningSpacePresenter is null
-        set => SetField(ref _showingLearningSpaceView, value);
     }
 
     // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
