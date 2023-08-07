@@ -1,5 +1,4 @@
-﻿@page "/LearningWorldViewRedesign"
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
+﻿@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningPathWay
@@ -38,13 +37,11 @@
             </MudButton>
         </div>
     </section>
-    @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
-    <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <div class="bg-white rounded-lg w-full grow overflow-scroll">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
              @onmousemove=@(e => MouseService.FireMove(this, e))
-                                  @onmouseup=@(e => MouseService.FireUp(this, e))
-                                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseup=@(e => MouseService.FireUp(this, e))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseleave=@(e => MouseService.FireOut(this, e))>
 
             @if (LearningWorldP.LearningWorldVm != null)
             {
@@ -107,27 +104,24 @@
 
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public IMouseService MouseService { get; set; }
+    internal IMouseService MouseService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ILearningWorldPresenter LearningWorldP { get; set; }
+    internal ILearningWorldPresenter LearningWorldP { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<LearningWorldPathwayView> Localizer { get; set; }
-
-
-    private ExceptionWrapper? ErrorState { get; set; }
+    internal IStringLocalizer<LearningWorldPathwayView> Localizer { get; set; }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
-        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
     }
 
     private void AddNewLearningSpace()
@@ -140,75 +134,14 @@
         LearningWorldP.CreatePathWayCondition();
     }
 
-    private void DeleteSelectedLearningObject()
-    {
-        LearningWorldP.DeleteSelectedLearningObject();
-    }
-
     private async Task LoadLearningSpaceAsync()
     {
-        try
-        {
-            await LearningWorldP.LoadLearningSpaceAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.LoadSpace.Exception.Message"], exception);
-        }
-        finally
-        {
+        await LearningWorldP.LoadLearningSpaceAsync();
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
+        await InvokeAsync(StateHasChanged);
     }
 
-    private async Task SaveLearningWorldAsync()
-    {
-        try
-        {
-            await LearningWorldP.SaveLearningWorldAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveWorld.Exception.Message"], exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    private async Task SaveSelectedLearningSpaceAsync()
-    {
-        try
-        {
-            await LearningWorldP.SaveSelectedLearningSpaceAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveSpace.Exception.Message"], exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    public void TriggerStateHasChanged()
+    private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
     }
@@ -239,11 +172,6 @@
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         TriggerStateHasChanged();
-    }
-
-    private void EditSelectedLearningSpace()
-    {
-        LearningWorldP.EditSelectedLearningSpace();
     }
 
 }

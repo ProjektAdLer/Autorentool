@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -21,6 +22,7 @@ using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
 using Shared;
+using Shared.Command;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningWorld;
@@ -48,6 +50,12 @@ public class LearningWorldPathwayViewUt
         _ctx.Services.AddSingleton(_localizer);
     }
 
+    private TestContext _ctx = null!;
+    private IMouseService _mouseService = null!;
+    private ILearningWorldPresenter _worldPresenter = null!;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
+    private IStringLocalizer<LearningWorldPathwayView> _localizer = null!;
+
     [Test]
     public void Constructor_InjectsDependencies()
     {
@@ -58,6 +66,36 @@ public class LearningWorldPathwayViewUt
             Assert.That(systemUnderTest.Instance.MouseService, Is.EqualTo(_mouseService));
             Assert.That(systemUnderTest.Instance.LearningWorldP, Is.EqualTo(_worldPresenter));
         });
+    }
+
+    [Test]
+    public void OnParametersSet_EventHandlersRegisteredOnPresenter()
+    {
+        _ = GetLearningWorldViewForTesting();
+
+        _worldPresenter.Received().PropertyChanging += Arg.Any<PropertyChangingEventHandler>();
+        _worldPresenter.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
+        _worldPresenter.Received().OnCommandUndoRedoOrExecute += Arg.Any<EventHandler<CommandUndoRedoOrExecuteArgs>>();
+        _selectedViewModelsProvider.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
+    }
+
+    [Test]
+    public void LearningWorldPresenter_PropertyChangingThenChanged_EventHandlersDeregisteredAndRegistered()
+    {
+        _ = GetLearningWorldViewForTesting();
+
+        var learningWorldVm = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorldVm);
+
+        _worldPresenter.PropertyChanging += Raise.Event<PropertyChangingEventHandler>(new object(),
+            new PropertyChangingEventArgs(nameof(ILearningWorldPresenter.LearningWorldVm)));
+
+        learningWorldVm.Received().PropertyChanged -= Arg.Any<PropertyChangedEventHandler>();
+
+        _worldPresenter.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(new object(),
+            new PropertyChangedEventArgs(nameof(ILearningWorldPresenter.LearningWorldVm)));
+
+        learningWorldVm.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
     }
 
     [Test]
@@ -123,7 +161,6 @@ public class LearningWorldPathwayViewUt
         {
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(draggablePathWayConditions, Has.Count.EqualTo(pathWayConditions.Count));
-            //TODO: This Test fails on the CI (macos), but not locally. I have no idea why.
             Assert.That(learningSpaces.All(le =>
                 draggableLearningSpaces.Any(dle =>
                     dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
@@ -223,10 +260,4 @@ public class LearningWorldPathwayViewUt
         return _ctx.RenderComponent<LearningWorldPathwayView>(parameters => parameters
             .Add(p => p.ChildContent, childContent));
     }
-
-    private TestContext _ctx;
-    private IMouseService _mouseService;
-    private ILearningWorldPresenter _worldPresenter;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IStringLocalizer<LearningWorldPathwayView> _localizer;
 }
