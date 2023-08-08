@@ -1,0 +1,5 @@
+namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
+
+public interface IAdvancedLearningElementSlotViewModel : IAdvancedComponentViewModel
+{
+}

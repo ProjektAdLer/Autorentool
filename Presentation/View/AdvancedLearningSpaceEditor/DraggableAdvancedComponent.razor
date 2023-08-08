@@ -1,16 +1,15 @@
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.Components.RightClickMenu
-@using Presentation.PresentationLogic.AdvancedComponent
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.AspNetCore.Components
-@using Presentation.PresentationLogic.AdvancedLearningSpaceGenerator
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor
 
 <Draggable LearningObject="AdvancedComponent" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@AdvancedComponent.PositionX" @bind-Y="@AdvancedComponent.PositionY">
-    @if (AdvancedComponent == AdvancedPositioningService.OnHoveredAdvancedObject)
+    @if (AdvancedComponent == AdvancedPositioningService.GetOnHoveredAdvancedComponent())
     {
         @((MarkupString)OnHoveredObjectShape)
     }
@@ -28,7 +27,7 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
-    // // Overwrite nullability warning below because we check in OnParametersSet -n.stich
+    // // Overwrite nullability warning below because we check in OnParametersSet
     [Parameter, EditorRequired]
     public IAdvancedComponentViewModel AdvancedComponent { get; set; } = null!;
     [Parameter, EditorRequired]
@@ -41,11 +40,11 @@
     public DraggedEventArgs<IAdvancedComponentViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
     [Parameter, EditorRequired]
     public EventCallback<IAdvancedComponentViewModel> OnClickedDeleteObject { get; set; }
-    // Overwrite nullability warning below because service may never be null -n.stich
+    // Overwrite nullability warning below because service may never be null
     [Parameter, EditorRequired]
     public IAdvancedLearningSpaceEditorPresenter AdvancedEditorPresenter { get; set; } = null!;
     [Parameter, EditorRequired]
-    public IAdvancedLearningSpaceEditorPresenter AdvancedPositioningService { get; set; } = null!;
+    public IAdvancedPositioningService AdvancedPositioningService { get; set; } = null!;
 
     protected abstract string Text { get; }
     
