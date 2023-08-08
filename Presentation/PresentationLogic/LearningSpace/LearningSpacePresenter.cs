@@ -25,6 +25,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData? _replaceLearningElementData;
+    private bool _replaceLearningElementDialogOpen;
 
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
@@ -67,7 +68,11 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ReplaceLearningElementDialogOpen"/>
-    public bool ReplaceLearningElementDialogOpen { get; private set; }
+    public bool ReplaceLearningElementDialogOpen
+    {
+        get => _replaceLearningElementDialogOpen;
+        private set => SetField(ref _replaceLearningElementDialogOpen, value);
+    }
 
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
@@ -94,18 +99,6 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
     private bool CheckLearningSpaceNotNull(string operation)
     {
         if (LearningSpaceVm != null)
@@ -119,6 +112,18 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     {
         Logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
         _errorService.SetError("Operation failed", userMessage);
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
     }
 
     #region LearningElement
@@ -230,21 +235,21 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
     private void SelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningObjectInPathWay))
+        if (e.PropertyName != nameof(_selectedViewModelsProvider.LearningObjectInPathWay)) return;
+        if (caller is not ISelectedViewModelsProvider)
         {
-            if (caller is not ISelectedViewModelsProvider)
-            {
-                LogAndSetError("OnSelectedViewModelsProviderOnPropertyChanged",
-                    $"Caller must be of type ISelectedViewModelsProvider, got {caller?.GetType()}",
-                    "Caller must be of type ISelectedViewModelsProvider");
-                return;
-            }
-
-            if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
-                LearningSpaceVm = space;
-            else if (_selectedViewModelsProvider.LearningObjectInPathWay is null)
-                LearningSpaceVm = null;
+            LogAndSetError("OnSelectedViewModelsProviderOnPropertyChanged",
+                $"Caller must be of type ISelectedViewModelsProvider, got {caller?.GetType()}",
+                "Caller must be of type ISelectedViewModelsProvider");
+            return;
         }
+
+        LearningSpaceVm = _selectedViewModelsProvider.LearningObjectInPathWay switch
+        {
+            LearningSpaceViewModel space => space,
+            null => null,
+            _ => LearningSpaceVm
+        };
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.LoadLearningElementAsync"/>
@@ -314,19 +319,4 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     #endregion
-}
-
-internal class ReplaceLearningElementData
-{
-    public ReplaceLearningElementData(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
-        int slotId)
-    {
-        LearningWorldVm = learningWorldVm;
-        DropItem = dropItem;
-        SlotId = slotId;
-    }
-
-    internal ILearningWorldViewModel LearningWorldVm { get; init; }
-    public ILearningElementViewModel DropItem { get; init; }
-    public int SlotId { get; init; }
 }

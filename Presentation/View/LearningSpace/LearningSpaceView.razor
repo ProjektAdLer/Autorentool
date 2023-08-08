@@ -3,10 +3,14 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
 @using Shared
+@using Shared.Command
 @using Microsoft.Extensions.Localization
+@using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningElement
+@implements IDisposable
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
@@ -81,10 +85,6 @@
         </div>
     }
 }
-@if (LearningSpaceP.ReplaceLearningElementDialogOpen && _showingReplaceLearningElementDialog == false)
-{
-    @ShowReplaceLearningElementDialog()
-}
 
 @code {
 
@@ -107,50 +107,46 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
-    //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
-    //then display it in the UI - n.stich
-    internal ExceptionWrapper? ErrorState { get; private set; }
-
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        base.OnParametersSet();
-        LearningSpaceP.OnCommandUndoRedoOrExecute += async (_, args) =>
-        {
-            await InvokeAsync(StateHasChanged);
-            if (args.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
-                "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
-                "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
-            {
-                await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
-            }
-        };
-        LearningSpaceP.PropertyChanged += (_, earg) =>
-        {
-            if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged!);
-        };
+        base.OnInitialized();
+        LearningSpaceP.OnCommandUndoRedoOrExecute += OnCommandUndoRedoOrExecute;
+        LearningSpaceP.PropertyChanged += PropertyChanged;
     }
 
-    private bool _showingReplaceLearningElementDialog = false;
+    /// <summary>
+    /// Updates this component when a command is executed, undone or redone which affects this component.
+    /// </summary>
+    private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
+    {
+        await InvokeAsync(StateHasChanged);
+        if (e.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
+            "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
+            "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
+        {
+            await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
+        }
+    }
+
+    private async void PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(LearningSpaceP.LearningSpaceVm):
+                await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
+                break;
+            case nameof(LearningSpaceP.ReplaceLearningElementDialogOpen)
+                when LearningSpaceP.ReplaceLearningElementDialogOpen:
+                await ShowReplaceLearningElementDialog();
+                break;
+        }
+    }
 
     private async Task LoadLearningElementAsync(int slotIndex)
     {
-        try
-        {
-            await LearningSpaceP.LoadLearningElementAsync(slotIndex);
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.LoadLearningElement.Message"], exception);
-        }
-        finally
-        {
+        await LearningSpaceP.LoadLearningElementAsync(slotIndex);
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
-            await InvokeAsync(StateHasChanged);
-        }
+        await InvokeAsync(StateHasChanged);
     }
 
     private void EditLearningElement(int slotIndex)
@@ -217,11 +213,7 @@
     {
         if (LearningSpaceP.LearningSpaceVm == null) return "";
 
-        if (LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(position))
-        {
-            return "";
-        }
-        return "@Icons.Material.Filled.Add";
+        return LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(position) ? "" : "@Icons.Material.Filled.Add";
     }
 
     private void ClickOnSlot(int i)
@@ -231,11 +223,15 @@
 
     private async Task ShowReplaceLearningElementDialog()
     {
-        _showingReplaceLearningElementDialog = true;
         var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
         var result = await dialog.Result;
         LearningSpaceP.OnReplaceLearningElementDialogClose(result);
-        _showingReplaceLearningElementDialog = false;
+    }
+
+    public void Dispose()
+    {
+        LearningSpaceP.OnCommandUndoRedoOrExecute -= OnCommandUndoRedoOrExecute;
+        LearningSpaceP.PropertyChanged -= PropertyChanged;
     }
 
 }
