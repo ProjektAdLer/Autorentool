@@ -1,12 +1,9 @@
-using System.IO.Abstractions.TestingHelpers;
-using Generator.WorldExport;
 using Generator.XmlClasses.Entities._sections.Section.xml;
 using NUnit.Framework;
 
 namespace GeneratorTest.XmlClasses.Entities._sections;
 
 [TestFixture]
-
 public class SectionsSectionXmlPluginLocalAdlerSectionUt
 {
     [Test]

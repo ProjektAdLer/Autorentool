@@ -1,6 +1,5 @@
 using System.Globalization;
 using Bunit;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using NSubstitute;
@@ -13,10 +12,6 @@ namespace PresentationTest.Components.Culture;
 [TestFixture]
 public class CultureSelectorUt
 {
-    private TestContext _testContext;
-    private INavigationManagerWrapper _navigation;
-    private IStringLocalizer<CultureSelector> _localizer;
-
     [SetUp]
     public void Setup()
     {
@@ -28,11 +23,15 @@ public class CultureSelectorUt
         _navigation.Uri.Returns("http://localhost:8001/Foo");
     }
 
+    private TestContext _testContext;
+    private INavigationManagerWrapper _navigation;
+    private IStringLocalizer<CultureSelector> _localizer;
+
     [Test]
     public void Render_CurrentCultureGerman_GermanHighlighted()
     {
         CultureInfo.CurrentCulture = new CultureInfo("de-DE");
-        
+
         var systemUnderTest = GetRenderedComponent();
 
         var buttonGerman = systemUnderTest.Find("button.german");
@@ -41,7 +40,7 @@ public class CultureSelectorUt
         var pEnglish = systemUnderTest.Find("p.english");
         var imageGerman = systemUnderTest.Find("img.german");
         var imageEnglish = systemUnderTest.Find("img.english");
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(buttonGerman.ClassList, Does.Not.Contain("bg-adlerbggradientto"));
@@ -57,7 +56,7 @@ public class CultureSelectorUt
     public void Render_CurrentCultureEnglish_EnglishHighlighted()
     {
         CultureInfo.CurrentCulture = new CultureInfo("en-DE");
-        
+
         var systemUnderTest = GetRenderedComponent();
 
         var buttonGerman = systemUnderTest.Find("button.german");
@@ -66,7 +65,7 @@ public class CultureSelectorUt
         var pEnglish = systemUnderTest.Find("p.english");
         var imageGerman = systemUnderTest.Find("img.german");
         var imageEnglish = systemUnderTest.Find("img.english");
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(buttonGerman.ClassList, Does.Contain("bg-adlerbggradientto"));
@@ -82,40 +81,39 @@ public class CultureSelectorUt
     public void ClickGerman_CurrentCultureEnglish_SwitchesToGerman()
     {
         CultureInfo.CurrentCulture = new CultureInfo("en-DE");
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         var buttonGerman = systemUnderTest.Find("button.german");
         buttonGerman.Click();
-        
+
         _navigation.Received().NavigateTo("Culture/Set?culture=de-DE&redirectUri=%2FFoo", true);
     }
 
     [Test]
     public void ClickGerman_CurrentCultureGerman_NothingHappens()
     {
-        
         CultureInfo.CurrentCulture = new CultureInfo("de-DE");
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         var buttonGerman = systemUnderTest.Find("button.german");
         buttonGerman.Click();
-        
+
         _navigation.DidNotReceive().NavigateTo("Culture/Set?culture=de-DE&redirectUri=%2FFoo", true);
     }
-    
-    
+
+
     [Test]
     public void ClickEnglish_CurrentCultureGerman_SwitchesToEnglish()
     {
         CultureInfo.CurrentCulture = new CultureInfo("de-DE");
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         var buttonEnglish = systemUnderTest.Find("button.english");
         buttonEnglish.Click();
-        
+
         _navigation.Received().NavigateTo("Culture/Set?culture=en-DE&redirectUri=%2FFoo", true);
     }
 
@@ -123,5 +121,4 @@ public class CultureSelectorUt
     {
         return _testContext.RenderComponent<CultureSelector>();
     }
-
 }

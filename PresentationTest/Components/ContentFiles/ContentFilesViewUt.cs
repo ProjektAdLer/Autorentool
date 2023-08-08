@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using AngleSharp.Dom;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,7 @@ public class ContentFilesViewUt
     private IMediator _mediator;
     private IAuthoringToolWorkspaceViewModel _workspaceViewModel;
     private IStringLocalizer<ContentFilesView> _localizer;
+    private IErrorService _errorService;
 
     [SetUp]
     public void Setup()
@@ -46,12 +49,14 @@ public class ContentFilesViewUt
         _localizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
             new LocalizedString(ci.Arg<string>() + string.Concat(ci.Arg<object[]>()),
                 ci.Arg<string>() + string.Concat(ci.Arg<object[]>())));
+        _errorService = Substitute.For<IErrorService>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_workspaceViewModel);
         _testContext.Services.AddSingleton(_localizer);
+        _testContext.Services.AddSingleton(_errorService);
 
         _testContext.AddMudBlazorTestServices();
     }
@@ -68,6 +73,7 @@ public class ContentFilesViewUt
             Assert.That(systemUnderTest.Instance.Mediator, Is.EqualTo(_mediator));
             Assert.That(systemUnderTest.Instance.WorkspaceViewModel, Is.EqualTo(_workspaceViewModel));
             Assert.That(systemUnderTest.Instance.Localizer, Is.EqualTo(_localizer));
+            Assert.That(systemUnderTest.Instance.ErrorService, Is.EqualTo(_errorService));
         });
     }
 
@@ -129,6 +135,72 @@ public class ContentFilesViewUt
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>();
         _presentationLogic.Received(1).RemoveContent(items.First());
+    }
+    
+    [Test]
+    public void ClickDelete_ArgumentOutOfRangeException_CallsErrorService()
+    {
+        var items = PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+        
+        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new ArgumentOutOfRangeException());
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var tableRows = systemUnderTest.FindAll("tbody tr");
+        var deleteButton = tableRows.First().Children.First().Children.First();
+
+        deleteButton.Click();
+
+       _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+    }
+    
+    [Test]
+    public void ClickDelete_FileNotFoundException_CallsErrorService()
+    {
+        var items = PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+        
+        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new FileNotFoundException("test"));
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var tableRows = systemUnderTest.FindAll("tbody tr");
+        var deleteButton = tableRows.First().Children.First().Children.First();
+
+        deleteButton.Click();
+
+        _errorService.Received(1).SetError("Error deleting content", "test");
+    }
+    
+    [Test]
+    public void ClickDelete_SerializationException_CallsErrorService()
+    {
+        var items = PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+        
+        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new SerializationException("test"));
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var tableRows = systemUnderTest.FindAll("tbody tr");
+        var deleteButton = tableRows.First().Children.First().Children.First();
+
+        deleteButton.Click();
+
+        _errorService.Received(1).SetError("Error deleting content", "test");
     }
 
     [Test]

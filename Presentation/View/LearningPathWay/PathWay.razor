@@ -1,12 +1,12 @@
-@using Presentation.Components
-@inject IMouseService MouseSrv
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Direction = Shared.Direction
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components
+@inject IMouseService MouseSrv
 @inject ILogger<PathWay> Logger;
-@using Shared
-@using Direction = Shared.Direction
 <Clickable OnClickedParam="LearningPathWay" OnClicked="@OnClickedClickable">
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
@@ -14,32 +14,41 @@
 
 @code {
     // Coordinates of the start of the pathway
-    [Parameter] public double X1 { get; set; }
-    [Parameter] public double Y1 { get; set; }
+    [Parameter]
+    public double X1 { get; set; }
+
+    [Parameter]
+    public double Y1 { get; set; }
 
     // Coordinates of the end of the pathway
-    [Parameter] public double X2 { get; set; }
-    [Parameter] public double Y2 { get; set; }
-    
+    [Parameter]
+    public double X2 { get; set; }
+
+    [Parameter]
+    public double Y2 { get; set; }
+
     // Direction of curvature of the first half of the pathway
-    [Parameter] public Direction Direction1 { get; set; } = Direction.Right;
+    [Parameter]
+    public Direction Direction1 { get; set; } = Direction.Right;
+
     // Direction of curvature of the first half of the pathway
-    [Parameter] public Direction Direction2 { get; set; } = Direction.Left;
-    
-    [Parameter, EditorRequired]
-    public ILearningPathWayViewModel? LearningPathWay { get; set; }
-    
+    [Parameter]
+    public Direction Direction2 { get; set; } = Direction.Left;
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public ILearningPathWayViewModel LearningPathWay { get; set; }
+
     [Parameter, EditorRequired]
     public EventCallback<ILearningPathWayViewModel> OnClickedClickable { get; set; }
-    
+
     // Overwrite nullability warning below because service may never be null -m.ho
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
-    [Inject]
-    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    public ISelectedViewModelsProvider SelectedObjectsService { get; set; }
 
-    private double StrokeWidth => SelectedObjectsService?.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
+    private double StrokeWidth => SelectedObjectsService.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;
@@ -48,7 +57,8 @@
     private double _c2Y;
     private double Length => Math.Sqrt(Math.Pow(X2 - X1, 2) + Math.Pow(Y2 - Y1, 2));
 
-    protected override void OnParametersSet() {
+    protected override void OnParametersSet()
+    {
         _c1Y = GetControlPoint(Direction1, Y1);
         _c2Y = GetControlPoint(Direction2, Y2);
 
@@ -72,4 +82,5 @@
 
     double GetControlPoint(Direction direction, double y)
         => direction == Direction.Right ? y + Coefficient : y - Coefficient;
+
 }

@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic;
@@ -22,19 +25,6 @@ public class LearningWorldPresenterUt
 {
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
 
-    #region LearningWorld
-
-    [Test]
-    public void EditLearningWorld_ThrowsExceptionIfLearningWorldIsNull()
-    {
-        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g"));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
-    }
-
     [Test]
     public void EditLearningWorld_CallsPresentationLogic()
     {
@@ -46,21 +36,80 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g");
     }
 
-    #endregion
-
-    #region LearningSpace
-
     [Test]
-    public void SetSelectedLearningObject_SelectedLearningWorldIsNull_ThrowsException()
+    public void EditLearningWorld_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        var mockErrorService = Substitute.For<IErrorService>();
+
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+
+        var systemUnderTest = CreatePresenterForTesting(
+            selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
+
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g");
+
+        mockErrorService.Received().SetError("Operation failed", "No learning world selected");
+    }
+
+    [Test]
+    public async Task SaveLearningWorldAsync_CallsSaveLearningWorldAsyncIfLearningWorldIsNotNull()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockPresentationLogic = Substitute.For<IPresentationLogic>();
+        var mockLogger = Substitute.For<ILogger<LearningWorldPresenter>>();
+        var mockErrorService = Substitute.For<IErrorService>();
+
+        var world = ViewModelProvider.GetLearningWorld();
+
+        mockSelectedViewModelsProvider.LearningWorld.Returns(world);
+
+        var systemUnderTest = CreatePresenterForTesting(
+            selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            presentationLogic: mockPresentationLogic,
+            errorService: mockErrorService,
+            logger: mockLogger);
+
+        await systemUnderTest.SaveLearningWorldAsync();
+
+        await mockPresentationLogic.Received().SaveLearningWorldAsync(Arg.Is<LearningWorldViewModel>(x => x == world));
+    }
+
+
+    [Test]
+    public async Task SaveLearningWorldAsync_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockErrorService = Substitute.For<IErrorService>();
+
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+
+        var systemUnderTest = CreatePresenterForTesting(
+            selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
+
+        await systemUnderTest.SaveLearningWorldAsync();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning world selected");
+    }
+
+    [Test]
+    public void SetSelectedLearningObject_SelectedLearningWorldIsNull_LogsErrorAndSetsErrorService()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockErrorService = Substitute.For<IErrorService>();
+
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
         var space = ViewModelProvider.GetLearningSpace();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(space));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.SetSelectedLearningObject(space);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }
+
 
     [Test]
     public void SetSelectedLearningObject_CallsSpacePresenter()
@@ -112,28 +161,34 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void EditSelectedLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void EditSelectedLearningSpace_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningSpace());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.EditSelectedLearningSpace();
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
-    public void EditSelectedLearningSpace_SelectedObjectInPathWayIsNotLearningSpace_ThrowsException()
+    public void EditSelectedLearningSpace_SelectedObjectInPathWayIsNotLearningSpace_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var world = ViewModelProvider.GetLearningWorld();
         var condition = ViewModelProvider.GetPathWayCondition();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
         systemUnderTest.LearningWorldVm = world;
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(condition);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningSpace());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningObjectInPathWay is not LearningSpaceViewModel"));
+        systemUnderTest.EditSelectedLearningSpace();
+
+        errorService.Received().SetError("Operation failed", "Selected object in pathway is not a learning space");
     }
 
     [Test]
@@ -167,15 +222,19 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void DeleteLearningSpace_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var space = ViewModelProvider.GetLearningSpace();
 
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningSpace(space));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
+
+        systemUnderTest.DeleteLearningSpace(space);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -228,49 +287,24 @@ public class LearningWorldPresenterUt
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
 
         Assert.That(selectedViewModelsProvider.LearningObjectInPathWay, Is.EqualTo(space));
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
         Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
 
-
-    #region Create/AddLearningSpace
-
     [Test]
-    public void AddLearningSpace_LearningWorldIsNull_ThrowsException()
+    public void AddNewLearningSpace_LogsErrorWhenWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var space = ViewModelProvider.GetLearningSpace();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
+
+        systemUnderTest.AddNewLearningSpace();
+
+        mockErrorService.Received().SetError(Arg.Any<string>(), Arg.Any<string>());
     }
 
-    [Test]
-    public void AddLearningSpace_CallsPresentationLogic()
-    {
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.AddLearningSpace(space);
-
-        presentationLogic.Received().AddLearningSpace(world, space);
-    }
-
-    [Test]
-    public void AddNewLearningSpace_ThrowsWhenWorldIsNull()
-    {
-        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddNewLearningSpace());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
-    }
 
     [Test]
     public void AddNewLearningSpace_CallsSelectedViewModelsProviderAndMediator()
@@ -312,27 +346,25 @@ public class LearningWorldPresenterUt
     {
         var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
         var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus, false);
 
-        errorService.Received().SetError("Error", "Error while creating learning space; No Learning World selected");
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
-    #endregion
-
-    #region DeleteSelectedLearningObject
-
     [Test]
-    public void DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
+    public void DeleteSelectedLearningObject_SelectedLearningWorldIsNull_CallsErrorService()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
         systemUnderTest.LearningWorldVm = null;
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.DeleteSelectedLearningObject();
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -344,7 +376,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
         systemUnderTest.LearningWorldVm = world;
         selectedViewModelsProvider.LearningWorld.Returns(world);
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns((LearningSpaceViewModel) null!);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns((LearningSpaceViewModel)null!);
 
         Assert.Multiple(() =>
         {
@@ -416,34 +448,34 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().DeleteLearningPathWay(world, pathWay);
     }
 
-    #endregion
-
-    #region SaveSelectedLearningSpace
-
     [Test]
-    public void SaveSelectedLearningSpaceAsync_ThrowsWhenSelectedWorldNull()
+    public async Task SaveSelectedLearningSpaceAsync_SelectedWorldNull_CallsErrorService()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
         systemUnderTest.LearningWorldVm = null;
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.SaveSelectedLearningSpaceAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
-    public void SaveSelectedLearningSpaceAsync_DoesNotThrowWhenSelectedSpaceNull()
+    public async Task SaveSelectedLearningSpaceAsync_SelectedSpaceNull_CallsErrorService()
     {
         var world = ViewModelProvider.GetLearningWorld();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
 
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreatePresenterForTesting(
+            selectedViewModelsProvider: selectedViewModelsProvider,
+            errorService: errorService);
         systemUnderTest.LearningWorldVm = world;
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns((LearningSpaceViewModel) null!);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns((LearningSpaceViewModel)null!);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.SaveSelectedLearningSpaceAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+
+        errorService.Received().SetError("Operation failed", "No object in pathway is selected");
     }
 
     [Test]
@@ -464,19 +496,60 @@ public class LearningWorldPresenterUt
         await presentationLogic.Received().SaveLearningSpaceAsync(space);
     }
 
-    #endregion
+    [Test]
+    public async Task SaveSelectedLearningSpace_SerializationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        world.LearningSpaces.Add(space);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
+        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
+            .Do(_ => throw new SerializationException());
 
-    #region LoadLearningSpace
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService,
+                selectedViewModelsProvider: selectedViewModelsProvider);
+
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
+    }
 
     [Test]
-    public void LoadLearningSpace_ThrowsWhenSelectedWorldNull()
+    public async Task SaveSelectedLearningSpace_InvalidOperationException_CallsErrorService()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        world.LearningSpaces.Add(space);
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
+        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
+            .Do(_ => throw new InvalidOperationException());
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService,
+                selectedViewModelsProvider: selectedViewModelsProvider);
+
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.SaveSelectedLearningSpaceAsync();
+        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
+    }
+
+    [Test]
+    public void LoadLearningSpaceAsync_SelectedLearningWorldIsNull_CallsErrorService()
+    {
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
         systemUnderTest.LearningWorldVm = null;
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningSpaceAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        Assert.DoesNotThrowAsync(async () => await systemUnderTest.LoadLearningSpaceAsync());
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -494,36 +567,37 @@ public class LearningWorldPresenterUt
         await presentationLogic.Received().LoadLearningSpaceAsync(world);
     }
 
-    #endregion
-
-    #region Open/CloseLearningSpaceView
-
     [Test]
-    public void ShowAndCloseLearningSpaceView_OpensAndClosesLearningSpaceView_SetsShowingLearningSpaceViewBool()
+    public async Task LoadLearningSpace_SerializationException_CallsErrorService()
     {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        world.LearningSpaces.Add(space);
+        presentationLogic.LoadLearningSpaceAsync(world).Throws(new SerializationException());
 
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
         systemUnderTest.LearningWorldVm = world;
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
-
-        systemUnderTest.ShowSelectedLearningSpaceView();
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
-
-        systemUnderTest.CloseLearningSpaceView();
-
-        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
+        await systemUnderTest.LoadLearningSpaceAsync();
+        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
     }
 
-    #endregion
+    [Test]
+    public async Task LoadLearningSpace_InvalidOperationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        world.LearningSpaces.Add(space);
+        presentationLogic.LoadLearningSpaceAsync(world).Throws(new InvalidOperationException());
 
-    #endregion
-
-    #region LearningPathWays
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.LearningWorldVm = world;
+        await systemUnderTest.LoadLearningSpaceAsync();
+        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
+    }
 
     [Test]
     public void SetSelectedLearningObject_SetsPathWayToSelectedObject()
@@ -542,17 +616,22 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteLearningObject_ThrowsWhenWorldIsNull()
+    public void DeleteLearningObject_SelectedLearningWorldIsNull_LogsErrorAndSetsErrorService()
     {
         var condition = ViewModelProvider.GetPathWayCondition();
 
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        var mockErrorService = Substitute.For<IErrorService>();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningObject(condition));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
+
+        systemUnderTest.DeleteLearningObject(condition);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }
+
 
     [Test]
     public void DeleteLearningObject_CallsPresentationLogic_WithPathWayCondition()
@@ -586,8 +665,6 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().DeleteLearningSpace(world, space);
     }
 
-    #region PathWayCondition
-
     [Test]
     public void SetSelectedLearningObject_SetsConditionToSelectedObject()
     {
@@ -603,14 +680,17 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreatePathWayCondition_ThrowsWhenWorldIsNull()
+    public void CreatePathWayCondition_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreatePathWayCondition());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.CreatePathWayCondition();
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -626,6 +706,26 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreatePathWayCondition();
 
         presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.Or, 0, 0);
+    }
+
+    [Test]
+    public void CreatePathWayCondition_ApplicationException_CallsErrorService()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, errorService: errorService,
+                selectedViewModelsProvider: selectedViewModelsProvider);
+
+        systemUnderTest.LearningWorldVm = world;
+        presentationLogic.When(x => x.CreatePathWayCondition(world, ConditionEnum.Or, 0, 0))
+            .Do(_ => throw new ApplicationException("Test"));
+
+        systemUnderTest.CreatePathWayCondition();
+        errorService.Received().SetError("Error while creating PathWayCondition", "Test");
     }
 
     [Test]
@@ -645,16 +745,19 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeletePathWayCondition_ThrowsWhenWorldIsNull()
+    public void DeletePathWayCondition_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var condition = ViewModelProvider.GetPathWayCondition();
 
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeletePathWayCondition(condition));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.DeletePathWayCondition(condition);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -706,10 +809,6 @@ public class LearningWorldPresenterUt
 
         presentationLogic.Received().EditPathWayCondition(condition, ConditionEnum.Or);
     }
-
-    #endregion
-
-    #region SetOnHoveredObjectInPathWay
 
     [Test]
     public void SetOnHoveredPathWayObject_ObjectAtPositionIsNull_SetsOnHoveredObjectInPathWayToNull()
@@ -784,20 +883,19 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_ThrowsException()
+    public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: errorService);
         var space = ViewModelProvider.GetLearningSpace();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredObjectInPathWay(space, 3, 3));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.SetOnHoveredObjectInPathWay(space, 3, 3);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
-
-    #endregion
-
-    #region CreateLearningPathWay
 
     [Test]
     public void CreateLearningPathWay_WithoutTargetSpace_DoesNotCallPresentationLogic()
@@ -854,20 +952,21 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreateLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
+    public void CreateLearningPathWay_LogsErrorWhenWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: mockErrorService);
+
         var space = ViewModelProvider.GetLearningSpace();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateLearningPathWay(space, 3, 3));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.CreateLearningPathWay(space, 3, 3);
+
+        mockErrorService.Received().SetError(Arg.Any<string>(), Arg.Any<string>());
     }
-
-    #endregion
-
-    #region DeleteLearningPathWay
 
     [Test]
     public void DeleteLearningPathWay_CallsPresentationLogic()
@@ -888,46 +987,48 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
+    public void DeleteLearningPathWay_SelectedLearningWorld_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var space = ViewModelProvider.GetLearningSpace();
+        mockSelectedViewModelsProvider.LearningWorld.Returns(null as ILearningWorldViewModel);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        var objectInPathway = ViewModelProvider.GetLearningSpace();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.DeleteLearningPathWay(objectInPathway);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
-    public void DeleteLearningPathWay_PathWayIsNull_ThrowsException()
+    public void DeleteLearningPathWay_PathWayIsNull_CallsErrorService()
     {
-        var world = ViewModelProvider.GetLearningWorld();
-        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var errorService = Substitute.For<IErrorService>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns(ViewModelProvider.GetLearningWorld());
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        var objectInPathway = ViewModelProvider.GetLearningSpace();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DeleteLearningPathWay(objectInPathway);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(null!));
-        Assert.That(ex!.Message, Is.EqualTo("LearningPathWay is null"));
+        errorService.Received().SetError("Operation failed", "No LearningPathWay found");
     }
 
-    #endregion
-
-    #endregion
-
-    #region LearningElement
-
     [Test]
-    public void SetSelectedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    public void SetSelectedLearningElement_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: errorService);
         var element = ViewModelProvider.GetLearningElement();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.SetSelectedLearningElement(element);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -947,54 +1048,58 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void EditLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    public void EditLearningElement_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = ViewModelProvider.GetLearningElement();
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 0, 0, null!);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
-    public void EditLearningElement_UnplacedHasASpaceParent_ThrowsException()
+    public void EditLearningElement_UnplacedHasASpaceParent_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var world = ViewModelProvider.GetLearningWorld();
         var space = ViewModelProvider.GetLearningSpace();
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
         var content = ViewModelProvider.GetLinkContent();
         var element = ViewModelProvider.GetLearningElement(content: content, parent: space);
 
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
+        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 0, 0, null!);
 
-        Assert.That(ex!.Message, Is.EqualTo("LearningElement is unplaced but has a space parent"));
+        errorService.Received().SetError("Operation failed", "LearningElement is unplaced but has a space parent");
     }
 
     [Test]
-    public void EditLearningElement_UnplacedDoesNotContainElement_ThrowsException()
+    public void EditLearningElement_UnplacedDoesNotContainElement_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var world = ViewModelProvider.GetLearningWorld();
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
         var content = ViewModelProvider.GetLinkContent();
         var element = ViewModelProvider.GetLearningElement(content: content);
 
         systemUnderTest.LearningWorldVm = world;
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
+        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 0, 0, null!);
 
-        Assert.That(ex!.Message, Is.EqualTo("LearningElement is placed but has a different or null parent"));
+        errorService.Received()
+            .SetError("Operation failed", "LearningElement is placed but has a different or null parent");
     }
+
 
     [Test]
     public void EditLearningElement_ElementParentIsNotNull_CallsSpacePresenter()
@@ -1037,16 +1142,18 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_ThrowsException()
+    public async Task ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider,
+            errorService: errorService);
         var element = ViewModelProvider.GetLearningElement();
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.ShowSelectedElementContentAsync(element));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -1068,15 +1175,84 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    public async Task ShowSelectedElementContentAsync_ArgumentOutOfRangeException_CallsErrorService()
     {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(_ => throw new ArgumentOutOfRangeException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContentAsync_IOException_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(_ => throw new IOException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContentAsync_InvalidOperationException_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+
+        presentationLogic.When(x => x.ShowLearningElementContentAsync(element))
+            .Do(_ => throw new InvalidOperationException());
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
+    [Test]
+    public void DeleteLearningElement_SelectedLearningWorldIsNull_CallsErrorService()
+    {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = ViewModelProvider.GetLearningElement();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.DeleteLearningElement(element);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -1105,17 +1281,18 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreateUnplacedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    public void CreateUnplacedLearningElement_SelectedLearningWorldIsNull_CallsErrorService()
     {
+        var errorService = Substitute.For<IErrorService>();
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
-        var element = ViewModelProvider.GetLearningElement();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateUnplacedLearningElement("a", null!, "c", "d", LearningElementDifficultyEnum.Easy,
-                ElementModel.l_h5p_slotmachine_1, 0, 0));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        systemUnderTest.CreateUnplacedLearningElement("a", null!, "c", "d", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 0, 0);
+
+        errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
     [Test]
@@ -1133,8 +1310,6 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().CreateUnplacedLearningElement(world, "abc", content, "a", "b",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0);
     }
-
-    #endregion
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,

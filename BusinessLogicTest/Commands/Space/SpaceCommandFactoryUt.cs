@@ -1,22 +1,24 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
+
 [TestFixture]
 public class SpaceCommandFactoryUt
 {
-    private SpaceCommandFactory _factory = null!;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new SpaceCommandFactory();
+        _factory = new SpaceCommandFactory(new NullLoggerFactory());
     }
+
+    private SpaceCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithLearningWorldAndParameters_ReturnsCreateLearningSpaceCommand()
@@ -32,7 +34,7 @@ public class SpaceCommandFactoryUt
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
         var advancedMode = false;
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme, advancedMode,
@@ -61,7 +63,7 @@ public class SpaceCommandFactoryUt
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
         var learningSpace = EntityProvider.GetLearningSpace();
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(learningWorld, learningSpace, mappingAction);
@@ -83,7 +85,7 @@ public class SpaceCommandFactoryUt
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
         var learningSpace = EntityProvider.GetLearningSpace();
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetDeleteCommand(learningWorld, learningSpace, mappingAction);
@@ -110,7 +112,7 @@ public class SpaceCommandFactoryUt
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
-        Action<ILearningSpace> mappingAction = space => { };
+        Action<ILearningSpace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, theme,
@@ -138,7 +140,7 @@ public class SpaceCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var filepath = "path/to/file";
         var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetLoadCommand(learningWorld, filepath, businessLogic, mappingAction);
@@ -164,7 +166,7 @@ public class SpaceCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningSpace = EntityProvider.GetLearningSpace();
         businessLogic.LoadLearningSpace(Arg.Any<Stream>()).Returns(learningSpace);
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetLoadCommand(learningWorld, stream, businessLogic, mappingAction);

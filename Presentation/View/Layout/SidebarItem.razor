@@ -1,17 +1,17 @@
-@using System.ComponentModel
-<button onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
+@using System.Diagnostics.CodeAnalysis
+<button @onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
     @SidebarContent
 </button>
 
 @code {
-#pragma warning disable CS8618 - injected by framework n.stich
-    [CascadingParameter]
-    public ISidebar Sidebar { get; set; }
 
-    [Parameter]
+    [CascadingParameter]
+    public ISidebar? Sidebar { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
     public RenderFragment SidebarContent { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
     public RenderFragment MainContent { get; set; }
 
     [Parameter]
@@ -40,8 +40,6 @@
         else if (Sidebar.CurrentItem == this) Sidebar.ClearSidebarItem();
     }
 
-#pragma warning restore CS8618
-
     private void SetAsCurrentItem()
     {
         RequestIsActiveToggle.InvokeAsync(!IsActive);
@@ -56,7 +54,7 @@
         Side.Left => "rounded-l-lg",
         Side.Right => "rounded-r-lg",
         _ => throw new ArgumentOutOfRangeException()
-    };
+        };
 
     private bool _isActive;
 }

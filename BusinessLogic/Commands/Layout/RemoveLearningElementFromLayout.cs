@@ -1,26 +1,31 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
 public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
 {
-    public string Name => nameof(RemoveLearningElementFromLayout);
-    internal LearningWorld LearningWorld { get; }
-    internal ILearningSpace LearningSpace { get; }
-    internal ILearningElement LearningElement { get; }
-    internal Action<LearningWorld> MappingAction { get; }
-    private IMemento? _mementoWorld;
     private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
+    private IMemento? _mementoWorld;
 
     public RemoveLearningElementFromLayout(LearningWorld learningWorld, LearningSpace learningSpace,
-        ILearningElement learningElement, Action<LearningWorld> mappingAction)
+        ILearningElement learningElement, Action<LearningWorld> mappingAction,
+        ILogger<RemoveLearningElementFromLayout> logger)
     {
         LearningWorld = learningWorld;
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
         LearningElement = LearningSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
         MappingAction = mappingAction;
+        Logger = logger;
     }
+
+    internal LearningWorld LearningWorld { get; }
+    internal ILearningSpace LearningSpace { get; }
+    internal ILearningElement LearningElement { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<RemoveLearningElementFromLayout> Logger { get; }
+    public string Name => nameof(RemoveLearningElementFromLayout);
 
     public void Execute()
     {
@@ -39,6 +44,11 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
         {
             LearningWorld.UnplacedLearningElements.Add(LearningElement);
         }
+
+        Logger.LogTrace(
+            "Removed LearningElement {LearningElementName} ({LearningElementId}) from slot {OldSlot} of LearningSpace {LearningSpaceName}({LearningSpaceId}) in LearningWorld {LearningWorldName} ({LearningWorldId}) and added it to UnplacedLearningElements",
+            LearningElement.Name, LearningElement.Id, oldSlot, LearningSpace.Name, LearningSpace.Id, LearningWorld.Name,
+            LearningWorld.Id);
 
         MappingAction.Invoke(LearningWorld);
     }
@@ -64,8 +74,17 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
+        Logger.LogTrace(
+            "Undone removal of LearningElement {LearningElementName} ({LearningElementId}). Restored LearningWorld {LearningWorldName} ({LearningWorldId}), LearningSpace {LearningSpaceName} ({LearningSpaceId}) and LearningSpaceLayout to previous state",
+            LearningElement.Name, LearningElement.Id, LearningWorld.Name, LearningWorld.Id, LearningSpace.Name,
+            LearningSpace.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing RemoveLearningElementFromLayout");
+        Execute();
+    }
 }

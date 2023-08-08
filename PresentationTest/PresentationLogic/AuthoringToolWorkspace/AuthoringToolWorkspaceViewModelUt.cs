@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -14,10 +12,10 @@ public class AuthoringToolWorkspaceViewModelUt
     public void AuthoringToolWorkspaceViewModel_Constructor_EnumerableStartsEmpty()
     {
         IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        
+
         Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
     }
-    
+
     [Test]
     public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RemovesLearningWorldFromEnumerable()
     {
@@ -31,10 +29,10 @@ public class AuthoringToolWorkspaceViewModelUt
             Assert.That(systemUnderTest.LearningWorlds, Contains.Item(viewModel));
         });
         systemUnderTest.RemoveLearningWorld(viewModel);
-        
+
         Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
     }
-    
+
     [Test]
     public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RaisesStateChangeEventWithCurrentState()
     {
@@ -48,8 +46,9 @@ public class AuthoringToolWorkspaceViewModelUt
             Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
             Assert.That(systemUnderTest.LearningWorlds, Contains.Item(viewModel));
         });
-        
-        systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
+
+        systemUnderTest.PropertyChanged += (caller, changedEventArgs) =>
+        {
             if (handlerCalled) Assert.Fail("handler called twice");
             handlerCalled = true;
             Assert.Multiple(() =>
@@ -58,9 +57,9 @@ public class AuthoringToolWorkspaceViewModelUt
                 Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.LearningWorlds)));
             });
         };
-        
+
         systemUnderTest.RemoveLearningWorld(viewModel);
-        
+
         Assert.That(handlerCalled, Is.True);
     }
 

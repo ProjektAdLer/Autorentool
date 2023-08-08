@@ -12,17 +12,19 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
+    ILearningSpaceViewModel? LearningSpaceVm { get; }
+
+    bool ReplaceLearningElementDialogOpen { get; set; }
+
     void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme, 
         ITopicViewModel? topic = null);
 
-    ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningElement(ILearningElementViewModel? learningElement);
     void DeleteSelectedLearningElement();
     Task LoadLearningElementAsync(int slotIndex);
     Task SaveSelectedLearningElementAsync();
     Task ShowSelectedElementContentAsync();
     void SetLearningSpace(ILearningSpaceViewModel space);
-    ILearningContentViewModel? DragAndDropLearningContent { get; }
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
@@ -39,7 +41,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
         int slotId);
 
-    bool ReplaceLearningElementDialogOpen { get; set; }
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
     void ClickOnSlot(int i);
 

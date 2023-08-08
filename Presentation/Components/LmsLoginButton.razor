@@ -1,7 +1,6 @@
-@using Presentation.Components.Dialogues
 @using Microsoft.Extensions.Localization
-@using Presentation.View
-
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Dialogues
 <MudIconButton OnClick="OpenLmsDialog" Icon="@Icons.Material.Filled.Person"
                Title=@Localizer["LMS.Login.Hover"] Size="Size.Large"
                Class="text-adlerdarkblue p-0 normal-case">
@@ -9,10 +8,10 @@
 
 @code {
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IDialogService DialogService { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<LmsLoginButton> Localizer { get; set; }
 
     private void OpenLmsDialog()

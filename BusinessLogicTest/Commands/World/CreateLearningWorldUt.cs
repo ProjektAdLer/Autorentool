@@ -1,5 +1,8 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -17,11 +20,11 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.IsEmpty(workspace.LearningWorlds);
         Assert.IsFalse(actionWasInvoked);
@@ -49,21 +52,22 @@ public class CreateLearningWorldUt
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { });
-        
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { },
+            new NullLogger<CreateLearningWorld>());
+
         systemUnderTest.Execute();
         Assert.That(workspace.LearningWorlds.Last().Name, Is.EqualTo("Foo(2)"));
     }
-    
+
     [Test]
     public void Execute_AddsLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("n", "sn", "a", "l", "d", "g");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, world, mappingAction);
+        var command = new CreateLearningWorld(workspace, world, mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.IsEmpty(workspace.LearningWorlds);
         Assert.IsFalse(actionWasInvoked);
@@ -85,15 +89,16 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        
+
         Assert.IsFalse(actionWasInvoked);
     }
 
@@ -109,11 +114,11 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
+            mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);
@@ -121,16 +126,18 @@ public class CreateLearningWorldUt
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.IsTrue(actionWasInvoked);
+        actionWasInvoked = false;
 
         command.Undo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.IsTrue(actionWasInvoked);
+        actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked); 
+        Assert.IsTrue(actionWasInvoked);
     }
 }

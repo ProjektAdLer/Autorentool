@@ -1,9 +1,8 @@
 ﻿using System.IO.Abstractions;
-using Generator.XmlClasses;
 using Generator.DSL;
+using Generator.XmlClasses;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
-
 
 namespace Generator.WorldExport;
 
@@ -129,10 +128,10 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <param name="recursive">Whether or not directories in the source should be saved recursively too.</param>
     public void SaveDirectoryToTar(TarArchive tar, string source, bool recursive)
     {
-        TarEntry tarEntry = TarEntry.CreateEntryFromFile(source);
+        var tarEntry = TarEntry.CreateEntryFromFile(source);
         tar.WriteEntry(tarEntry, false);
         var filenames = _fileSystem.Directory.GetFiles(source).Where(s => !s.EndsWith(".mbz"));
-        foreach (string filename in filenames)
+        foreach (var filename in filenames)
         {
             tarEntry = TarEntry.CreateEntryFromFile(filename);
             tar.WriteEntry(tarEntry, false);
@@ -141,7 +140,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         if (recursive)
         {
             string[] directories = _fileSystem.Directory.GetDirectories(source);
-            foreach (string directory in directories)
+            foreach (var directory in directories)
                 SaveDirectoryToTar(tar, directory, recursive);
         }
     }
@@ -162,7 +161,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         {
             if (entry.IsDirectory) continue;
             if (!entry.Name.EndsWith(".json")) continue;
-                
+
             var tempDir = GetTempDir();
             var tempPath = _fileSystem.Path.Combine(tempDir, entry.Name);
             using var outStream = _fileSystem.File.Create(tempPath);

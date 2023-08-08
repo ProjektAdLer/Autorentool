@@ -1,20 +1,22 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Layout;
+
 [TestFixture]
 public class LayoutCommandFactoryTests
 {
-    private LayoutCommandFactory _factory;
-
     [SetUp]
     public void Setup()
     {
-        _factory = new LayoutCommandFactory();
+        _factory = new LayoutCommandFactory(new NullLoggerFactory());
     }
+
+    private LayoutCommandFactory _factory = null!;
 
     [Test]
     public void GetChangeCommand_WithLearningSpaceAndLearningWorld_ReturnsChangeLearningSpaceLayoutCommand()
@@ -23,7 +25,7 @@ public class LayoutCommandFactoryTests
         var learningSpace = EntityProvider.GetLearningSpace();
         var learningWorld = EntityProvider.GetLearningWorld();
         var floorPlanName = FloorPlanEnum.R_20X20_6L;
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetChangeCommand(learningSpace, learningWorld, floorPlanName, mappingAction);
@@ -41,14 +43,15 @@ public class LayoutCommandFactoryTests
     }
 
     [Test]
-    public void GetPlaceFromLayoutCommand_WithLearningSpaceAndLearningElement_ReturnsPlaceLearningElementInLayoutFromLayoutCommand()
+    public void
+        GetPlaceFromLayoutCommand_WithLearningSpaceAndLearningElement_ReturnsPlaceLearningElementInLayoutFromLayoutCommand()
     {
         // Arrange
         var parentSpace = EntityProvider.GetLearningSpace();
         var learningElement = EntityProvider.GetLearningElement();
         parentSpace.LearningSpaceLayout.LearningElements.Add(0, learningElement);
         var newSlotIndex = 1;
-        Action<LearningSpace> mappingAction = space => { };
+        Action<LearningSpace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetPlaceFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
@@ -66,7 +69,8 @@ public class LayoutCommandFactoryTests
     }
 
     [Test]
-    public void GetPlaceFromUnplacedCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsPlaceLearningElementInLayoutFromUnplacedCommand()
+    public void
+        GetPlaceFromUnplacedCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsPlaceLearningElementInLayoutFromUnplacedCommand()
     {
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
@@ -75,10 +79,11 @@ public class LayoutCommandFactoryTests
         var learningElement = EntityProvider.GetLearningElement();
         learningWorld.UnplacedLearningElements.Add(learningElement);
         var newSlotIndex = 1;
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetPlaceFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex, mappingAction);
+        var result = _factory.GetPlaceFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex,
+            mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<PlaceLearningElementInLayoutFromUnplaced>());
@@ -94,7 +99,8 @@ public class LayoutCommandFactoryTests
     }
 
     [Test]
-    public void GetRemoveCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsRemoveLearningElementFromLayoutCommand()
+    public void
+        GetRemoveCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsRemoveLearningElementFromLayoutCommand()
     {
         // Arrange
         var learningWorld = EntityProvider.GetLearningWorld();
@@ -102,7 +108,7 @@ public class LayoutCommandFactoryTests
         learningWorld.LearningSpaces.Add(learningSpace);
         var learningElement = EntityProvider.GetLearningElement();
         learningSpace.LearningSpaceLayout.LearningElements.Add(0, learningElement);
-        Action<LearningWorld> mappingAction = world => { };
+        Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetRemoveCommand(learningWorld, learningSpace, learningElement, mappingAction);

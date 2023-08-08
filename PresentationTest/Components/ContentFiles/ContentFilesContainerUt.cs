@@ -13,21 +13,12 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.Mediator;
 using TestContext = Bunit.TestContext;
-#pragma warning disable CS8618
 
 namespace PresentationTest.Components.ContentFiles;
 
 [TestFixture]
 public class ContentFilesContainerUt
 {
-    private TestContext _testContext;
-    private IPresentationLogic _presentationLogic;
-    private IDialogService _dialogService;
-    private ContentFilesView _contentFilesViewSubstitute;
-    private IMediator _mediator;
-    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
-    private IStringLocalizer<ContentFilesView> _localizer;
-
     [SetUp]
     public void Setup()
     {
@@ -37,26 +28,37 @@ public class ContentFilesContainerUt
         _mediator = Substitute.For<IMediator>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         _localizer = Substitute.For<IStringLocalizer<ContentFilesView>>();
-        
+        _errorService = Substitute.For<IErrorService>();
+
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_authoringToolWorkspaceViewModel);
         _testContext.Services.AddSingleton(_localizer);
-        
+        _testContext.Services.AddSingleton(_errorService);
+
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();
         _testContext.ComponentFactories.Add(_contentFilesViewSubstitute);
     }
 
+    private TestContext _testContext;
+    private IPresentationLogic _presentationLogic;
+    private IDialogService _dialogService;
+    private ContentFilesView _contentFilesViewSubstitute;
+    private IMediator _mediator;
+    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
+    private IStringLocalizer<ContentFilesView> _localizer;
+    private IErrorService _errorService;
+
     [Test]
     public void Constructor_SetsAllPropertiesAndRendersCorrectly()
     {
         var component = GetRenderedComponent();
-        
+
         var contentFilesViewComponent = component.FindComponent<ContentFilesView>();
         var contentFilesContainerCascadingValue = component.FindComponent<CascadingValue<Func<Task>>>().Instance;
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(component.HasComponent<Stub<ContentFilesAdd>>());
@@ -71,7 +73,7 @@ public class ContentFilesContainerUt
         var component = GetRenderedComponent();
 
         await _contentFilesViewSubstitute.DidNotReceive().RerenderAsync();
-        
+
         await component.Instance.RerenderAsync();
 
         await _contentFilesViewSubstitute.Received().RerenderAsync();
@@ -81,5 +83,4 @@ public class ContentFilesContainerUt
     {
         return _testContext.RenderComponent<ContentFilesContainer>();
     }
-
 }

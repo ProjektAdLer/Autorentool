@@ -43,28 +43,48 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         }
     }
 
+    public bool IsItemInDropZone(ILearningElementViewModel item, string dropzoneIdentifier)
+    {
+        if (item.Parent != null)
+        {
+            return
+                item.Parent.Id.ToString() +
+                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key
+                == dropzoneIdentifier;
+        }
+
+        if (dropzoneIdentifier != "unplacedElements") return false;
+        return WorldP.LearningWorldVm != null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
+    }
+
     private void DragItemToUnplaced(MudItemDropInfo<ILearningElementViewModel> dropItem)
     {
         if (SpaceP.LearningSpaceVm == null) throw new ApplicationException("LearningSpaceVm is null");
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-        if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item) &&
-            dropItem.Item.Parent == SpaceP.LearningSpaceVm)
+        switch (dropItem.Item)
         {
-            PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm, dropItem.Item);
-        }
-        else if (dropItem.Item.Parent == null &&
-                 WorldP.LearningWorldVm.UnplacedLearningElements.Contains(dropItem.Item))
-        {
-            // do nothing, because the item is already in the unplaced elements
-        }
-        else
-        {
-            throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
+            case { Parent: not null } when
+                dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item) &&
+                dropItem.Item.Parent == SpaceP.LearningSpaceVm:
+            {
+                PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                    dropItem.Item);
+                break;
+            }
+            case { Parent: null } when
+                WorldP.LearningWorldVm.UnplacedLearningElements.Contains(dropItem.Item):
+            {
+                // do nothing, because the item is already in the unplaced elements
+                break;
+            }
+            default:
+                throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
         }
     }
 
     private void DragItemToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem)
     {
+        if (dropItem.Item == null) return;
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
         var oldSlot = -1;
         if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
@@ -99,19 +119,5 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
                     dropItem.Item, slotId);
             }
         }
-    }
-
-    public bool IsItemInDropZone(ILearningElementViewModel item, string dropzoneIdentifier)
-    {
-        if (item.Parent != null)
-        {
-            return
-                item.Parent.Id.ToString() +
-                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key
-                == dropzoneIdentifier;
-        }
-
-        if (dropzoneIdentifier != "unplacedElements") return false;
-        return WorldP.LearningWorldVm != null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
     }
 }

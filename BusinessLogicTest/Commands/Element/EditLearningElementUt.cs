@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -35,7 +36,7 @@ public class EditLearningElementUt
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction);
+            workload, points, newContent, mappingAction, new NullLogger<EditLearningElement>());
 
         Assert.Multiple(() =>
         {
@@ -89,7 +90,7 @@ public class EditLearningElementUt
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, content, mappingAction);
+            workload, points, content, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -123,7 +124,7 @@ public class EditLearningElementUt
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, elementModel,
-            workload, points, newContent, mappingAction);
+            workload, points, newContent, mappingAction, new NullLogger<EditLearningElement>());
 
         Assert.Multiple(() =>
         {

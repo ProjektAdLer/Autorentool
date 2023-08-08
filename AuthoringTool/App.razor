@@ -1,7 +1,8 @@
 ﻿@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.View
 @using AuthoringTool.View.Shared
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] {typeof(MasterLayout).Assembly}">
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(MasterLayout).Assembly }">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
@@ -16,6 +17,8 @@
 
 @code
 {
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<App> Localizer { get; set; }
+
 }

@@ -79,21 +79,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
-    public void ResetButton_Clicked_RemapsIntoContainer()
-    {
-        var vm = ViewModelProvider.GetLearningElement();
-        
-        var systemUnderTest = GetRenderedComponent(vm);
-        
-        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
-        Mapper.ClearReceivedCalls();
-        
-        systemUnderTest.FindComponentWithMarkup<MudIconButton>("reset-form").Find("button").Click();
-        
-        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
-    }
-
-    [Test]
     public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
@@ -203,6 +188,19 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         );
     }
     
+    [Test]
+    public void ShowElementContentButton_Clicked_CallsShowSelectedElementContentAsync()
+    {
+        
+        var vm = ViewModelProvider.GetLearningElement();
+        
+        var systemUnderTest = GetRenderedComponent(vm);
+
+        systemUnderTest.FindComponentWithMarkup<MudIconButton>("btn-standard rounded").Find("button").Click();
+
+        WorldPresenter.Received(1).ShowSelectedElementContentAsync(vm);
+    }
+
     private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,
         EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null)
     {

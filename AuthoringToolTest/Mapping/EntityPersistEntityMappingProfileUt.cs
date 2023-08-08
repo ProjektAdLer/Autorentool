@@ -85,7 +85,8 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, content, Description, Goals,
-            Difficulty, SelectedElementModel, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
+            Difficulty, SelectedElementModel, workload: Workload, points: Points, positionX: PositionX,
+            positionY: PositionY);
         var destination = new LearningElementPe("", new FileContentPe("", "", "bar/baz/buz.txt"), "", "",
             LearningElementDifficultyEnum.Easy, ElementModel.l_text_bookshelf_1);
 
@@ -114,7 +115,7 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false, null,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         var destination = new LearningSpacePe("", "", "", 0, Theme.Campus);
@@ -231,7 +232,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.UnplacedLearningElements = new List<ILearningElementPe>()
+        destination.UnplacedLearningElements = new List<ILearningElementPe>
         {
             new LearningElementPe(NewName, GetTestableNewContentPersistEntity(), NewDescription, NewGoals,
                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
@@ -254,7 +255,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
-            null, positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
+            positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
         var destination = new LearningWorldPe("", "", "", "", "", "", "");
 
@@ -274,10 +275,10 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
-        destination.LearningSpaces = new List<LearningSpacePe>()
+        destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
-                null, positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
+            new(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
+                positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };
 
@@ -342,8 +343,8 @@ public class EntityPersistEntityMappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnum.And, 2, 1);
         var spacePe2 = GetTestableNewSpacePersistEntity();
-        destination.LearningSpaces = new List<LearningSpacePe>() { spacePe1, spacePe2 };
-        destination.PathWayConditions = new List<PathWayConditionPe>() { pathWayConditionPe };
+        destination.LearningSpaces = new List<LearningSpacePe> { spacePe1, spacePe2 };
+        destination.PathWayConditions = new List<PathWayConditionPe> { pathWayConditionPe };
         destination.LearningPathways = new List<LearningPathwayPe>
             { new(spacePe1, pathWayConditionPe), new(pathWayConditionPe, spacePe2) };
         spacePe1.OutBoundObjects.Add(pathWayConditionPe);
@@ -462,8 +463,6 @@ public class EntityPersistEntityMappingProfileUt
         Assert.That(restoredWorld.UnsavedChanges, Is.False);
     }
 
-    #region testable Content/Element/Space/World
-
     private static FileContent GetTestableContent()
     {
         return new FileContent(Name, Type, Filepath);
@@ -476,7 +475,8 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
-        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel, parent, Workload,
+        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel,
+            parent, Workload,
             Points, PositionX,
             PositionY);
     }
@@ -502,7 +502,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
             new LearningSpaceLayoutPe(
-                new Dictionary<int, ILearningElementPe>()
+                new Dictionary<int, ILearningElementPe>
                 {
                     {
                         0,
@@ -511,10 +511,6 @@ public class EntityPersistEntityMappingProfileUt
                 },
                 FloorPlanEnum.R_20X30_8L), positionX: NewPositionX, positionY: NewPositionY);
     }
-
-    #endregion
-
-    #region static test methods
 
     private static void TestWorld(object destination, bool useNewFields)
     {
@@ -644,7 +640,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
-                    Assert.That(element.ElementModel, Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
+                    Assert.That(element.ElementModel,
+                        Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
                     Assert.That(element.Parent, Is.EqualTo(parent));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
                     Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
@@ -660,7 +657,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
-                    Assert.That(element.ElementModel, Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
+                    Assert.That(element.ElementModel,
+                        Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
                     Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
@@ -694,8 +692,6 @@ public class EntityPersistEntityMappingProfileUt
                 throw new NotImplementedException();
         }
     }
-
-    #endregion
 
     private static IMapper CreateTestableMapper()
     {

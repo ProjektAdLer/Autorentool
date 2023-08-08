@@ -19,10 +19,6 @@ public class LinkContentPe : ILinkContentPe, IEquatable<LinkContentPe>
         Name = "";
         Link = "";
     }
-    [DataMember]
-    public string Name { get; set; }
-    [DataMember]
-    public string Link { get; set; }
 
     public bool Equals(LinkContentPe? other)
     {
@@ -31,16 +27,6 @@ public class LinkContentPe : ILinkContentPe, IEquatable<LinkContentPe>
         return Name == other.Name && Link == other.Link;
     }
 
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((LinkContentPe)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Link);
-    }
+    [DataMember] public string Name { get; set; }
+    [DataMember] public string Link { get; set; }
 }

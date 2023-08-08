@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Bunit;
@@ -32,16 +31,6 @@ namespace PresentationTest.View;
 [TestFixture]
 public class HeaderBarUt
 {
-    private TestContext _testContext;
-    private IPresentationLogic _presentationLogic;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IMediator _mediator;
-    private IStringLocalizer<HeaderBar> _stringLocalizer;
-    private ISnackbar _snackbar;
-    private IDialogService _dialogService;
-    private IErrorService _errorService;
-    private ILogger _logger;
-
     [SetUp]
     public void Setup()
     {
@@ -73,6 +62,16 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_logger);
     }
+
+    private TestContext _testContext;
+    private IPresentationLogic _presentationLogic;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IMediator _mediator;
+    private IStringLocalizer<HeaderBar> _stringLocalizer;
+    private ISnackbar _snackbar;
+    private IDialogService _dialogService;
+    private IErrorService _errorService;
+    private ILogger _logger;
 
     private static string FormatStringLocalizerValue(CallInfo ci)
     {
@@ -213,7 +212,7 @@ public class HeaderBarUt
     }
 
     [Test]
-    public void ExportButton_Clicked_ConstructBackupThrowsArgumentOutOfRangeException_ErrorServiceCalled()
+    public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
         var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, false, 1);
@@ -222,7 +221,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.ConstructBackupAsync(world).Throws(new ArgumentOutOfRangeException());
+        _presentationLogic.ConstructBackupAsync(world).Throws(new GeneratorException());
         var systemUnderTest = GetRenderedComponent();
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
@@ -231,25 +230,6 @@ public class HeaderBarUt
         _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
     }
 
-    [Test]
-    public void ExportButton_Clicked_ConstructBackupThrowsFileNotFoundException_ErrorServiceCalled()
-    {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
-        var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, false, 1);
-        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
-        space.LearningSpaceLayout.LearningElements.Add(0, element);
-        world.LearningSpaces.Add(space);
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.ConstructBackupAsync(world).Throws(new FileNotFoundException());
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        button.Click();
-
-        _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
-    }
-    
     [Test]
     public void UndoButton_Clicked_CallsPresentationLogic()
     {
@@ -261,18 +241,19 @@ public class HeaderBarUt
 
         _presentationLogic.Received().UndoCommand();
     }
-    
+
     [Test]
     public void UndoButton_Clicked_UndoCommandThrowsUndoException_ErrorServiceCalled()
     {
         _presentationLogic.CanUndo.Returns(true);
-        _presentationLogic.When(x => x.UndoCommand()).Do(x => throw new UndoException());
+        _presentationLogic.When(x => x.UndoCommand()).Do(_ => throw new UndoException());
         var systemUnderTest = GetRenderedComponent();
-        
+
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("undo")
             .Find("button").Click();
 
-        _errorService.Received().SetError("An error occurred while attempting to undo the last action", Arg.Any<string>());
+        _errorService.Received()
+            .SetError("An error occurred while attempting to undo the last action", Arg.Any<string>());
     }
 
     [Test]
@@ -291,18 +272,18 @@ public class HeaderBarUt
     public void RedoButton_Clicked_RedoCommandThrowsRedoException_ErrorServiceCalled()
     {
         _presentationLogic.CanRedo.Returns(true);
-        _presentationLogic.When(x => x.RedoCommand()).Do(x => throw new RedoException());
+        _presentationLogic.When(x => x.RedoCommand()).Do(_ => throw new RedoException());
         var systemUnderTest = GetRenderedComponent();
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("redo")
             .Find("button").Click();
 
-        _errorService.Received().SetError("An error occurred while attempting to redo the last undone action", Arg.Any<string>());
+        _errorService.Received().SetError("An error occurred while attempting to redo the last undone action",
+            Arg.Any<string>());
     }
 
     private IRenderedComponent<HeaderBar> GetRenderedComponent()
     {
         return _testContext.RenderComponent<HeaderBar>();
     }
-
 }

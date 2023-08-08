@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
@@ -45,8 +47,8 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
     [Test]
     public void Render_DisplaysLoadedAndSavedWorlds()
     {
-        var loadedLearningWorldPaths = new[] { new SavedLearningWorldPath() };
-        var savedLearningWorldPaths = new[] { new SavedLearningWorldPath() };
+        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
+        var savedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
         MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
         MyLearningWorldsProvider.GetSavedLearningWorlds().Returns(savedLearningWorldPaths);
 
@@ -59,6 +61,37 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
             Is.EqualTo(loadedLearningWorldPaths[0]));
         Assert.That(learningWorldCards[1].Instance.Parameters["LearningWorldPath"],
             Is.EqualTo(savedLearningWorldPaths[0]));
+    }
+
+    [Test]
+    public async Task CloseWorldButtonOnCard_Clicked_CallsWorldsProvider()
+    {
+        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
+        MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var learningWorldCard = systemUnderTest.FindComponent<Stub<LearningWorldCard>>().Instance;
+        var callback = (EventCallback<SavedLearningWorldPath>) learningWorldCard.Parameters["OnCloseWorld"];
+        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(loadedLearningWorldPaths[0]));
+
+        await MyLearningWorldsProvider.Received(1).DeleteLearningWorld(loadedLearningWorldPaths[0]);
+        MyLearningWorldsProvider.Received(1).DeletePathFromSavedLearningWorlds(loadedLearningWorldPaths[0]);
+    }
+
+    [Test]
+    public async Task OpenWorldButtonOnCard_Clicked_CallsWorldsProvider()
+    {
+        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
+        MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var learningWorldCard = systemUnderTest.FindComponent<Stub<LearningWorldCard>>().Instance;
+        var callback = (EventCallback<SavedLearningWorldPath>) learningWorldCard.Parameters["OnOpenLearningWorld"];
+        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(loadedLearningWorldPaths[0]));
+
+        MyLearningWorldsProvider.Received().OpenLearningWorld(loadedLearningWorldPaths[0]);
     }
 
     [Test]

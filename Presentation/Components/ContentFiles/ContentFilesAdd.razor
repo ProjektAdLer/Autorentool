@@ -1,10 +1,10 @@
-@using Presentation.Components.Forms.Content
-@using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.ElectronNET
-@using Presentation.Components.Dialogues
-@using BusinessLogic.Entities.LearningContent
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities.LearningContent
+@using Presentation.Components.Forms
+@using Presentation.Components.Forms.Content
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -44,20 +44,25 @@
 
 @code {
 
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<ContentFilesAdd> Logger { get; set; }
-    
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IErrorService ErrorService { get; set; }
+
     [CascadingParameter]
-    public ContentFilesContainer ContentFilesContainer { get; set; }
+    public ContentFilesContainer? ContentFilesContainer { get; set; }
+
 
     private string DragClass { get; set; } = "";
     private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
@@ -74,7 +79,7 @@
             ToggleSpinner();
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
 
-            var files = obj.GetMultipleFiles(10);
+            var files = obj.GetMultipleFiles();
             Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
 
             foreach (var file in files)
@@ -89,6 +94,7 @@
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
+            if (ContentFilesContainer is null) throw new InvalidOperationException("ContentFilesContainer cascading parameter not set");
             await ContentFilesContainer.RerenderAsync();
             ToggleSpinner();
             ClearDragClass();
@@ -117,7 +123,14 @@
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
     //TODO: report when a file with same content already exists
-        PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+        try
+        {
+            PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+        }
+        catch (IOException e)
+        {
+            ErrorService.SetError("Error while loading content", e.Message);
+        }
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 

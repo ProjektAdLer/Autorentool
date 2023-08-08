@@ -2,7 +2,6 @@
 
 public class ErrorBE
 {
-    public string Title { get; init; }
-    public string Detail { get; init; }
-    public int Status { get; init; }
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
+    public string? Detail { get; }
 }

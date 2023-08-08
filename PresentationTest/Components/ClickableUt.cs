@@ -15,11 +15,6 @@ namespace PresentationTest.Components;
 [TestFixture]
 public class ClickableUt
 {
-#pragma warning disable CS8618
-    private Bunit.TestContext _testContext;
-    private IMouseService _mouseService;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -30,7 +25,10 @@ public class ClickableUt
 
     [TearDown]
     public void TearDown() => _testContext.Dispose();
-    
+
+    private Bunit.TestContext _testContext;
+    private IMouseService _mouseService;
+
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
@@ -50,7 +48,7 @@ public class ClickableUt
                     onClicked.Target ?? throw new InvalidOperationException("onClicked.Target is null"), onClicked)));
         });
     }
-    
+
     [Test]
     public void ClickAndRelease_OnClickedTriggered()
     {
@@ -86,8 +84,9 @@ public class ClickableUt
         Assert.That(onClickedEventTriggered, Is.EqualTo(null));
     }
 
-    private IRenderedComponent<Clickable<ILearningSpaceViewModel>> CreateRenderedClickableComponent(RenderFragment? childContent = null,
-        ILearningSpaceViewModel? learningObject = null,  Action<ILearningSpaceViewModel>? onClicked = null)
+    private IRenderedComponent<Clickable<ILearningSpaceViewModel>> CreateRenderedClickableComponent(
+        RenderFragment? childContent = null,
+        ILearningSpaceViewModel? learningObject = null, Action<ILearningSpaceViewModel>? onClicked = null)
     {
         onClicked ??= _ => { };
         return _testContext.RenderComponent<Clickable<ILearningSpaceViewModel>>(parameters => parameters

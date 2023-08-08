@@ -1,6 +1,7 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.LearningElement
-@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
         <MudText Class="main-text">
@@ -25,16 +26,21 @@
 </MudDialog>
 
 @code {
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
+
     [CascadingParameter]
-    public MudDialogInstance MudDialog { get; set; }
-    [Parameter, EditorRequired]
+    public MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string ContentName { get; set; }
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> WorldElementInUseTuples { get; set; }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    private void Cancel() => MudDialog.Cancel();
+
+    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    private void Cancel() => MudDialog?.Cancel();
 
 }

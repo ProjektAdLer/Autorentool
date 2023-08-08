@@ -1,5 +1,5 @@
-@using System.ComponentModel
 @using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
         @Localizer["Dialog.Content.Line1.Text"]
@@ -14,18 +14,19 @@
 @code {
 
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; }
-    
-    [Inject]
+    MudDialogInstance? MudDialog { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ReplaceLearningElementDialog> Localizer { get; set; }
 
     void ReplaceElement()
     {
-        MudDialog.Close(DialogResult.Ok(true));
+        MudDialog?.Close(DialogResult.Ok(true));
     }
-    
-    void Cancel() 
+
+    void Cancel()
     {
-        MudDialog.Close(DialogResult.Cancel());
+        MudDialog?.Close(DialogResult.Cancel());
     }
+
 }

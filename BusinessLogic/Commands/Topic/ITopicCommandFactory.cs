@@ -11,12 +11,12 @@ public interface ITopicCommandFactory
     /// Creates a command to create a topic.
     /// </summary>
     ICreateTopic GetCreateCommand(LearningWorld learningWorld, string name, Action<LearningWorld> mappingAction);
-    
+
     /// <summary>
     /// Creates a command to delete a topic.
     /// </summary>
     IDeleteTopic GetDeleteCommand(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction);
-    
+
     /// <summary>
     /// Creates a command to edit a topic.
     /// </summary>

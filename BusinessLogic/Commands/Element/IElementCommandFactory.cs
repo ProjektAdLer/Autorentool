@@ -22,8 +22,7 @@ public interface IElementCommandFactory
     /// Creates a command to create a learning element in a slot.
     /// </summary>
     ICreateLearningElementInSlot GetCreateInSlotCommand(LearningSpace parentSpace, int slotIndex,
-        LearningElement learningElement,
-        Action<LearningSpace> mappingAction);
+        LearningElement learningElement, Action<LearningSpace> mappingAction);
 
     /// <summary>
     /// Creates a command to create a learning element unplaced in a world.
@@ -62,15 +61,13 @@ public interface IElementCommandFactory
     /// Creates a command to load a learning element from a file.
     /// </summary>
     ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, string filepath,
-        IBusinessLogic businessLogic,
-        Action<LearningSpace> mappingAction);
+        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction);
 
     /// <summary>
     /// Creates a command to load a learning element from a stream.
     /// </summary>
     ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, Stream stream,
-        IBusinessLogic businessLogic,
-        Action<LearningSpace> mappingAction);
+        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction);
 
     /// <summary>
     /// Creates a command to save a learning element to a file.

@@ -28,6 +28,15 @@ public interface IBusinessLogic
     /// Calls the method to redo the last undone command.
     /// </summary>
     void RedoCommand();
+    
+    /// <summary>
+    /// Constructs a backup for the provided LearningWorld at a given filepath.
+    /// </summary>
+    /// <param name="learningWorld">The LearningWorld instance for which to create a backup.</param>
+    /// <param name="filepath">The file path where the backup will be stored.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when parameter values are outside the acceptable range.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the method is called in an invalid state.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the specified file cannot be found.</exception>
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);

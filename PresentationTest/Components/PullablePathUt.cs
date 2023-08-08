@@ -14,15 +14,8 @@ using TestContext = Bunit.TestContext;
 namespace PresentationTest.Components;
 
 [TestFixture]
-
 public class PullablePathUt
 {
-    #pragma warning disable CS8618
-    private TestContext _testContext;
-    private IMouseService _mouseService;
-    private IPositioningService _positioningService;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -34,6 +27,10 @@ public class PullablePathUt
 
     [TearDown]
     public void TearDown() => _testContext.Dispose();
+
+    private TestContext _testContext;
+    private IMouseService _mouseService;
+    private IPositioningService _positioningService;
 
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
@@ -53,7 +50,7 @@ public class PullablePathUt
             Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1));
         });
     }
-    
+
     [Test]
     public void ClickAndMove_CallsWorldPresenter()
     {
@@ -62,20 +59,20 @@ public class PullablePathUt
         double x1 = 5;
         double y1 = 6;
 
-       var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
-        
+        var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
+
         systemUnderTest.WaitForElement("g", TimeSpan.FromSeconds(3)).MouseDown(new MouseEventArgs());
         _mouseService.OnMove +=
-            Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
+            Raise.EventWith(new MouseEventArgs { ClientX = 13, ClientY = 24 });
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-        
+
         Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
         Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1 + 13));
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1 + 24));
-        
-        _positioningService.Received().SetOnHoveredObjectInPathWay(learningSpace, x1+13, y1+24);
-        _positioningService.Received().CreateLearningPathWay(learningSpace, x1+13, y1+24);
+
+        _positioningService.Received().SetOnHoveredObjectInPathWay(learningSpace, x1 + 13, y1 + 24);
+        _positioningService.Received().CreateLearningPathWay(learningSpace, x1 + 13, y1 + 24);
     }
 
     [Test]
@@ -87,16 +84,16 @@ public class PullablePathUt
         double y1 = 6;
 
         var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
-        
+
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-        
+
         Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
         Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1));
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1));
     }
-    
+
     private IRenderedComponent<PullablePath> CreateRenderedPullablePathComponent(
         ILearningSpaceViewModel? learningObject = null, double x1 = 0, double y1 = 0,
         Direction dir1 = Direction.Right, Direction dir2 = Direction.Left)

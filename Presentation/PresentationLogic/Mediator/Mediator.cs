@@ -5,29 +5,55 @@ namespace Presentation.PresentationLogic.Mediator;
 
 public class Mediator : IMediator
 {
-    private bool _worldDialogOpen;
-    private bool _spaceDialogOpen;
-    private bool _elementDialogOpen;
     private bool _contentDialogOpen;
-    private bool _worldViewOpen;
-    private bool _worldOverViewOpen;
+    private bool _elementDialogOpen;
     private bool _overwriteElementEdit;
+    private bool _spaceDialogOpen;
+    private bool _worldDialogOpen;
+    private bool _worldOverViewOpen;
+    private bool _worldViewOpen;
     private bool _advancedLearningSpaceChecked;
 
+    public void CloseBothSides()
+    {
+        CloseAllLeftSide();
+        CloseAllRightSide();
+    }
+
+    /// <summary>
+    /// Closes all dialogs on the left side.
+    /// </summary>
+    private void CloseAllLeftSide()
+    {
+        WorldDialogOpen = false;
+        SpaceDialogOpen = false;
+        ElementDialogOpen = false;
+        ContentDialogOpen = false;
+    }
+
+    /// <summary>
+    /// Closes all dialogs on the right side.
+    /// </summary>
+    private void CloseAllRightSide()
+    {
+        WorldViewOpen = false;
+        WorldOverviewOpen = false;
+    }
+
     #region left side
-    
+
     public bool WorldDialogOpen
     {
         get => _worldDialogOpen;
         private set => SetField(ref _worldDialogOpen, value);
     }
-    
+
     public bool SpaceDialogOpen
     {
         get => _spaceDialogOpen;
         private set => SetField(ref _spaceDialogOpen, value);
     }
-    
+
     public bool ElementDialogOpen
     {
         get => _elementDialogOpen;
@@ -39,7 +65,7 @@ public class Mediator : IMediator
         get => _overwriteElementEdit;
         set => SetField(ref _overwriteElementEdit, value);
     }
-    
+
     public bool ContentDialogOpen
     {
         get => _contentDialogOpen;
@@ -61,7 +87,7 @@ public class Mediator : IMediator
         get => _worldViewOpen;
         private set => SetField(ref _worldViewOpen, value);
     }
-    
+
     public bool WorldOverviewOpen
     {
         get => _worldOverViewOpen;
@@ -77,19 +103,19 @@ public class Mediator : IMediator
         CloseAllLeftSide();
         WorldDialogOpen = true;
     }
-    
+
     public void RequestOpenSpaceDialog()
     {
         CloseAllLeftSide();
         SpaceDialogOpen = true;
     }
-    
+
     public void RequestOpenElementDialog()
     {
         CloseAllLeftSide();
         ElementDialogOpen = true;
     }
-    
+
     public void RequestOpenNewElementDialog()
     {
         CloseAllLeftSide();
@@ -102,13 +128,13 @@ public class Mediator : IMediator
         CloseAllLeftSide();
         ContentDialogOpen = true;
     }
-    
+
     public void RequestOpenWorldView()
     {
         CloseAllRightSide();
         WorldViewOpen = true;
     }
-    
+
     public void RequestOpenWorldOverview()
     {
         CloseAllRightSide();
@@ -192,49 +218,22 @@ public class Mediator : IMediator
     }
 
     #endregion
-    
-    /// <summary>
-    /// Closes all dialogs on the left side.
-    /// </summary>
-    private void CloseAllLeftSide()
-    {
-        WorldDialogOpen = false;
-        SpaceDialogOpen = false;
-        ElementDialogOpen = false;
-        ContentDialogOpen = false;
-    }
-
-    /// <summary>
-    /// Closes all dialogs on the right side.
-    /// </summary>
-    private void CloseAllRightSide()
-    {
-        WorldViewOpen = false;
-        WorldOverviewOpen = false;
-    }
-    
-    public void CloseBothSides()
-    {
-        CloseAllLeftSide();
-        CloseAllRightSide();
-    }
 
 
     #region INotifyPropertyChanged
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
-    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
-        return true;
     }
 
     #endregion

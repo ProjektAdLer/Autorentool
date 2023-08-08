@@ -1,4 +1,4 @@
-<div class="m-0 gap-2 p-1 bg-adlerbgbright">
+<div class="m-0 gap-2 p-1 bg-adlerbgbright @Style">
     <div class="flex flex-row toggler" @onclick="@Toggle">
         @if (Collapsed)
         {
@@ -20,6 +20,9 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public string? Style { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

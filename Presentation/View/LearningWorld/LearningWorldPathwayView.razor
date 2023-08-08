@@ -1,26 +1,25 @@
-﻿@page "/LearningWorldViewRedesign"
+﻿@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.View.LearningSpace
-@using Presentation.View.LearningPathWay
-@using Size = MudBlazor.Size
-@using Color = MudBlazor.Color
-@using System.ComponentModel
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningPathway
-@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningPathWay
 @using Direction = Shared.Direction
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 @ChildContent
 
 <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] h-full grow">
     <section class="bg-white rounded-lg p-2">
         <div class="flex justify-start items-center space-x-2 py-1">
-        <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7"> 
-        <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
+            <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7">
+            <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span></h3>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+        <h3 class="text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
+        </h3>
+        <h3 class="text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points
+        </h3>
     </section>
     <section class="flex flex-row gap-2 justify-center">
         <div class="flex grow justify-between">
@@ -28,7 +27,7 @@
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
             </MudButton>
-            <MudButton Class="relative btn-standard w-14 load-learning-space" title="Import learning space" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">
+            <MudButton Class="relative btn-standard w-14 load-learning-space" title=@Localizer["LearningWorldView.ImportLearningSpace.Title"] @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Download" Class="absolute"></MudIcon>
             </MudButton>
@@ -36,15 +35,13 @@
                 <img src="CustomIcons/new-condition-icon-nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
             </MudButton>
-            </div>
+        </div>
     </section>
-    @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
-    <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <div class="bg-white rounded-lg w-full grow overflow-scroll">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
              @onmousemove=@(e => MouseService.FireMove(this, e))
-                 @onmouseup=@(e => MouseService.FireUp(this, e))
-                 @onmouseleave=@(e => MouseService.FireOut(this, e))>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseup=@(e => MouseService.FireUp(this, e))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseleave=@(e => MouseService.FireOut(this, e))>
 
             @if (LearningWorldP.LearningWorldVm != null)
             {
@@ -75,7 +72,7 @@
                                             OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
                                             OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                             ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
-                                            OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
+                                            OnOpenLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                             OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                             OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
                                             OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
@@ -99,113 +96,52 @@
 </article>
 
 @code {
+    //Pathway view of the learning world
+    //formerly known as "LearningWorldView"
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-#pragma warning disable CS8618 // injected by framework - n.stich
-    [Inject]
-    public IMouseService MouseService { get; set; }
-    
-    [Inject]
-    public ILearningWorldPresenter LearningWorldP { get; set; }
 
-    [Inject]
-    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    [Inject]
-    private IStringLocalizer<LearningWorldView> Localizer { get; set; }
-#pragma warning restore CS8618
-    
-    private ExceptionWrapper? ErrorState { get; set; }
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IMouseService MouseService { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal ILearningWorldPresenter LearningWorldP { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IStringLocalizer<LearningWorldPathwayView> Localizer { get; set; }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
-        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
     }
-    
+
     private void AddNewLearningSpace()
     {
         LearningWorldP.AddNewLearningSpace();
     }
-    
+
     private void AddNewPathWayCondition()
     {
         LearningWorldP.CreatePathWayCondition();
     }
 
-    private void DeleteSelectedLearningObject()
-    {
-        LearningWorldP.DeleteSelectedLearningObject();
-    }
-
     private async Task LoadLearningSpaceAsync()
     {
-        try
-        {
-            await LearningWorldP.LoadLearningSpaceAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.LoadSpace.Exception.Message"], exception);
-        }
-        finally
-        {
+        await LearningWorldP.LoadLearningSpaceAsync();
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-    
-    private async Task SaveLearningWorldAsync()
-    {
-        try
-        {
-            await LearningWorldP.SaveLearningWorldAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveWorld.Exception.Message"], exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
+        await InvokeAsync(StateHasChanged);
     }
 
-    private async Task SaveSelectedLearningSpaceAsync()
-    {
-        try
-        {
-            await LearningWorldP.SaveSelectedLearningSpaceAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveSpace.Exception.Message"], exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    public void TriggerStateHasChanged()
+    private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
     }
@@ -232,15 +168,10 @@
         }
         TriggerStateHasChanged();
     }
-    
+
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         TriggerStateHasChanged();
-    }
-
-    private void EditSelectedLearningSpace()
-    {
-        LearningWorldP.EditSelectedLearningSpace();
     }
 
 }

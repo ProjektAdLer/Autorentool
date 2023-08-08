@@ -1,15 +1,17 @@
 @using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.Mediator
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Text
-@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared.Exceptions
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using System.Text
+@using Presentation.Components.Dialogues
+@using System.Runtime.Serialization
 @using Presentation.Components.Culture
 @using Presentation.Components
-@using Shared.Exceptions
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -26,7 +28,7 @@
             </MudIconButton>
         </div>
         <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-            <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
+            <MudIcon Icon="@Icons.Material.Filled.Upload"></MudIcon>
             <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
         </Button>
 
@@ -44,14 +46,14 @@
         </MudPopover>
 
     </div>
-    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
         <div class="flex justify-center items-center gap-2">
             <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
             <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
         </div>
     }
-    @if (SelectedViewModelsProvider?.LearningWorld?.Name != null)
+    @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
         <div class="flex justify-center items-center gap-2">
             <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world-icon-nobg.png" alt="learningworld">
@@ -67,7 +69,7 @@
             <ChildContent>
                 <div class="w-64">
 
-                    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
                     {
                         <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
                             <div class="flex flex-row items-center gap-4">
@@ -107,7 +109,7 @@
 
         <CultureSelector/>
         <LmsLoginButton/>
-        @if (PresentationLogic?.RunningElectron == true)
+        @if (PresentationLogic.RunningElectron)
         {
             <CloseAppButton/>
         }
@@ -116,28 +118,28 @@
 
 @code {
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IMediator Mediator { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IDialogService DialogService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IErrorService ErrorService { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<HeaderBar> Logger { get; set; }
 
     private string _filepath = "";
@@ -152,7 +154,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) => await InvokeAsync(StateHasChanged);
+        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
     }
 
@@ -189,13 +191,9 @@
         catch (OperationCanceledException)
         {
             Snackbar.Add(Localizer["ExportCanceled.Snackbar.Message"], Severity.Warning);
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
             return;
         }
-        catch (FileNotFoundException e)
+        catch (GeneratorException e)
         {
             ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
             return;
@@ -242,7 +240,7 @@
 
         errorString.Append("</ul>");
 
-        Logger.LogError("LearningWorld is not valid" + errorString);
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
     }
@@ -324,7 +322,7 @@
             ErrorService.SetError("An error occurred while attempting to undo the last action", e.Message);
         }
     }
-    
+
     private void OnClickRedo()
     {
         try
@@ -340,7 +338,22 @@
     private async Task TrySaveAsync()
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
-        await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+        try
+        {
+            await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to save the LearningWorld", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            ErrorService.SetError("An error occurred while attempting to save the LearningWorld", e.Message);
+        }
+        catch (OperationCanceledException)
+        {
+            Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
+        }
     }
 
 }

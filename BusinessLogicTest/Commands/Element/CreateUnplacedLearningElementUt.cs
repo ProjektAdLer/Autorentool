@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.Element;
@@ -11,12 +12,12 @@ public class CreateUnplacedLearningElementUt
     public void Execute_CreatesLearningElement()
     {
         var testParameter = new TestParameter();
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
-            testParameter.PositionY, mappingAction);
+            testParameter.PositionY, mappingAction, new NullLogger<CreateUnplacedLearningElement>());
 
         Assert.Multiple(() =>
         {
@@ -48,12 +49,12 @@ public class CreateUnplacedLearningElementUt
     {
         var testParameter = new TestParameter();
         var worldParent = testParameter.WorldParent;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
-            testParameter.PositionY, mappingAction);
+            testParameter.PositionY, mappingAction, new NullLogger<CreateUnplacedLearningElement>());
 
         Assert.Multiple(() =>
         {
@@ -98,12 +99,12 @@ public class CreateUnplacedLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var testParameter = new TestParameter();
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
-            testParameter.PositionY, mappingAction);
+            testParameter.PositionY, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));

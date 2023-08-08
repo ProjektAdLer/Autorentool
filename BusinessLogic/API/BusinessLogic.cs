@@ -1,9 +1,11 @@
-﻿using BusinessLogic.Commands;
+﻿using System.Runtime.Serialization;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using Microsoft.Extensions.Logging;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -18,7 +20,8 @@ public class BusinessLogic : IBusinessLogic
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
         IBackendAccess backendAccess,
-        IErrorManager errorManager)
+        IErrorManager errorManager,
+        ILogger<BusinessLogic> logger)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
@@ -26,16 +29,18 @@ public class BusinessLogic : IBusinessLogic
         CommandStateManager = commandStateManager;
         BackendAccess = backendAccess;
         ErrorManager = errorManager;
+        Logger = logger;
     }
 
 
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
     internal IErrorManager ErrorManager { get; }
+    internal ILogger<BusinessLogic> Logger { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
     public IApplicationConfiguration Configuration { get; }
-    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
+    public event EventHandler<CommandUndoRedoOrExecuteArgs>? OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
 
@@ -48,13 +53,37 @@ public class BusinessLogic : IBusinessLogic
     /// <inheritdoc cref="IBusinessLogic.RemoveContent" />
     public void RemoveContent(ILearningContent content)
     {
-        DataAccess.RemoveContent(content);
+        try
+        {
+            DataAccess.RemoveContent(content);
+            Logger.LogTrace("Removed {Type} : {Name}", content.GetType(), content.Name);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     /// <inheritdoc cref="IBusinessLogic.SaveLink" />
     public void SaveLink(LinkContent linkContent)
     {
-        DataAccess.SaveLink(linkContent);
+        try
+        {
+            DataAccess.SaveLink(linkContent);
+            Logger.LogTrace("Saved link: {Link} with name: {LinkName}", linkContent.Link, linkContent.Name);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     /// <inheritdoc cref="IBusinessLogic.ExecuteCommand" />
@@ -64,7 +93,7 @@ public class BusinessLogic : IBusinessLogic
         OnCommandUndoRedoOrExecute?.Invoke(this,
             new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
     }
-    
+
     /// <inheritdoc cref="IBusinessLogic.UndoCommand" />
     public void UndoCommand()
     {
@@ -103,64 +132,125 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
+    /// <inheritdoc cref="IBusinessLogic.ConstructBackup" />
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
         try
         {
             WorldGenerator.ConstructBackup(learningWorld, filepath);
+            Logger.LogTrace(
+                "Constructed backup for learning world: {LearningWorldName} with id {LearningWorldId} at path: {Filepath}",
+                learningWorld.Name, learningWorld.Id, filepath);
         }
         catch (ArgumentOutOfRangeException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
         catch (InvalidOperationException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
         catch (FileNotFoundException e)
         {
-            ErrorManager.LogAndRethrowError(e);
+            ErrorManager.LogAndRethrowGeneratorError(e);
         }
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
+        try
+        {
+            DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
-        return DataAccess.LoadLearningWorld(filepath);
+        try
+        {
+            var world = DataAccess.LoadLearningWorld(filepath);
+            return world;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
-        DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+        try
+        {
+            DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
-        return DataAccess.LoadLearningSpace(filepath);
+        try
+        {
+            var space = DataAccess.LoadLearningSpace(filepath);
+            return space;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
-        DataAccess.SaveLearningElementToFile(learningElement, filepath);
+        try
+        {
+            DataAccess.SaveLearningElementToFile(learningElement, filepath);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
     }
 
     public LearningElement LoadLearningElement(string filepath)
     {
-        return DataAccess.LoadLearningElement(filepath);
+        try
+        {
+            var learningElement = DataAccess.LoadLearningElement(filepath);
+            return learningElement;
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public ILearningContent LoadLearningContent(string filepath)
     {
-        return DataAccess.LoadLearningContent(filepath);
+        var content = DataAccess.LoadLearningContent(filepath);
+        return content;
     }
 
     public ILearningContent LoadLearningContent(string name, Stream stream)
     {
-        return DataAccess.LoadLearningContent(name, stream);
+        try
+        {
+            return DataAccess.LoadLearningContent(name, stream);
+        }
+        catch (IOException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
@@ -175,7 +265,8 @@ public class BusinessLogic : IBusinessLogic
 
     public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
     {
-        return DataAccess.AddSavedLearningWorldPathByPathOnly(path);
+        var savedLearningWorldPath = DataAccess.AddSavedLearningWorldPathByPathOnly(path);
+        return savedLearningWorldPath;
     }
 
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
@@ -190,22 +281,47 @@ public class BusinessLogic : IBusinessLogic
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {
-        return DataAccess.LoadLearningWorld(stream);
+        try
+        {
+            return DataAccess.LoadLearningWorld(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public LearningSpace LoadLearningSpace(Stream stream)
     {
-        return DataAccess.LoadLearningSpace(stream);
+        try
+        {
+            return DataAccess.LoadLearningSpace(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public LearningElement LoadLearningElement(Stream stream)
     {
-        return DataAccess.LoadLearningElement(stream);
+        try
+        {
+            return DataAccess.LoadLearningElement(stream);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+            return null!;
+        }
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
     {
-        return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        return targetPath;
     }
 
     public string GetContentFilesFolderPath()
@@ -246,13 +362,14 @@ public class BusinessLogic : IBusinessLogic
         {
             var token = await BackendAccess.GetUserTokenAsync(username, password);
             Configuration[IApplicationConfiguration.BackendToken] = token.Token;
+            Logger.LogTrace("Logged in user: {Username}", username);
         }
-        catch (BackendInvalidLoginException e)
+        catch (BackendInvalidLoginException)
         {
             Logout();
             throw;
         }
-        catch (BackendInvalidUrlException e)
+        catch (BackendInvalidUrlException)
         {
             Logout();
             throw;
@@ -268,6 +385,7 @@ public class BusinessLogic : IBusinessLogic
         _userInformation.IsLmsAdmin = false;
         _userInformation.LmsId = 0;
         _userInformation.LmsEmail = "";
+        Logger.LogTrace("Logged out user");
     }
 
     public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
@@ -275,6 +393,7 @@ public class BusinessLogic : IBusinessLogic
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
         BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
             filepath, atfPath, progress);
+        Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
     }
 
     #endregion

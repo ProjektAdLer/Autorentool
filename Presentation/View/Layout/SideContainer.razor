@@ -1,10 +1,13 @@
+@using System.Diagnostics.CodeAnalysis
 <div class="@GetSide p-1 h-[95%]">
     @ChildContent
 </div>
 
 @code {
-    [Parameter]
+
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich 
     public RenderFragment ChildContent { get; set; }
+
     [Parameter, EditorRequired]
     public Side Side { get; set; }
 
@@ -13,6 +16,6 @@
         Side.Left => "left",
         Side.Right => "right",
         _ => throw new ArgumentOutOfRangeException(nameof(Side))
-    };
+        };
 
 }

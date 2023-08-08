@@ -1,11 +1,13 @@
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.Forms.Buttons
-@using BusinessLogic.Entities.LearningContent
-@using Presentation.Components.ContentFiles
 @using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningContent
+@using BusinessLogic.Entities.LearningContent
 @using AutoMapper
 @using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.LearningContent
+@using System.Diagnostics.CodeAnalysis
+@using System.Runtime.Serialization
+@using Presentation.Components.Forms.Buttons
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
@@ -26,23 +28,26 @@
 
 @code {
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LinkContentFormModel, LinkContent> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IMapper Mapper { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<AddLinkForm> Localizer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IErrorService ErrorService { get; set; }
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 
     [CascadingParameter(Name = "RerenderContentContainer")]
-    public Func<Task> RerenderContentContainer { get; set; }
+    public Func<Task>? RerenderContentContainer { get; set; }
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
@@ -50,8 +55,16 @@
 
     private async Task OnValidSubmit(LinkContentFormModel model)
     {
-        PresentationLogic.SaveLink(Mapper.Map<LinkContentViewModel>(model));
-        await RerenderContentContainer();
+        try
+        {
+            PresentationLogic.SaveLink(Mapper.Map<LinkContentViewModel>(model));
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("Error while adding link", e.Message);
+        }
+        if (RerenderContentContainer is not null)
+            await RerenderContentContainer();
     }
 
 }

@@ -50,4 +50,18 @@ public class ErrorManagerUt
         Assert.That(ex?.InnerException, Is.EqualTo(dummyException));
     }
 
+    [Test]
+    public void LogAndRethrowGeneratorError_LogsErrorAndRethrows()
+    {
+        var mockLogger = Substitute.For<ILogger<ErrorManager>>();
+        var systemUnderTest = new ErrorManager(mockLogger);
+        
+        var dummyException = new Exception("Dummy Exception");
+        
+        var ex = Assert.Throws<GeneratorException>(() => systemUnderTest.LogAndRethrowGeneratorError(dummyException));
+        
+        Assert.That(ex?.Message, Is.EqualTo(dummyException.Message));
+        Assert.That(ex?.InnerException, Is.EqualTo(dummyException));
+    }
+
 }

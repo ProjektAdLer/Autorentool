@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -20,11 +21,12 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
         {
@@ -63,15 +65,16 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                new NullLogger<EditLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        
+
         Assert.IsFalse(actionWasInvoked);
     }
 
@@ -88,11 +91,12 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+                new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
         {

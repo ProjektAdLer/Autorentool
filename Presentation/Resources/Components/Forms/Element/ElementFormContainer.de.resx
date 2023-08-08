@@ -26,4 +26,7 @@
     <data name="Text" xml:space="preserve">
         <value>Liste von allen Lernelementen</value>
     </data>
+    <data name="ElementFormContainer.UnplacedElements.Title" xml:space="preserve">
+        <value>Liste aller Elemente</value>
+    </data>
 </root>

@@ -26,31 +26,22 @@
         <value>Lernraum Editor</value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Punkte:</value>
+        <value>Punkte: </value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Arbeitslast:</value>
+        <value>Arbeitslast: </value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Ausgewähltes Lernelement:</value>
-    </data>
-    <data name="LearningSpace.Button.DeleteLearningElement.Title" xml:space="preserve">
-        <value>Lösche Lernelement</value>
-    </data>
-    <data name="LearningSpace.Button.SaveLearningElement.Title" xml:space="preserve">
-        <value>Speichere Lernelement</value>
-    </data>
-    <data name="LearningSpace.Button.ShowLearningElement.Title" xml:space="preserve">
-        <value>Zeige Lernelement</value>
     </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
         <value>Ersetze Lernelement</value>
     </data>
     <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
-        <value>Thema:</value>
+        <value>Thema: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
-        <value>Ziele:</value>
+        <value>Ziele: </value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
         <value>Ersetze Lernelement</value>

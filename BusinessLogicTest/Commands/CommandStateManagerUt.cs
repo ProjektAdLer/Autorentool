@@ -4,6 +4,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
@@ -161,7 +162,7 @@ public class CommandStateManagerUt
         var systemUnderTest = GetCommandStateManagerForTest();
         var wasCalled = false;
         var eventObjects = new List<object>();
-        systemUnderTest.RemovedCommandsFromStacks += (sender, args) =>
+        systemUnderTest.RemovedCommandsFromStacks += (_, args) =>
         {
             wasCalled = true;
             eventObjects = args.ObjectsInStacks.ToList();
@@ -186,32 +187,44 @@ public class CommandStateManagerUt
         ExecuteCommandAfterRedoingAnCommand_TriggersRemovedCommandsFromStacksWithRemainingCommandsInStacks_AllCommandTypes()
     {
         var learningElement = EntityProvider.GetLearningElement();
+        learningElement.LearningContent = EntityProvider.GetFileContent();
         var learningSpace = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X30_8L);
         var learningWorld = EntityProvider.GetLearningWorld();
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var createLearningElementCommand = new CreateLearningElementInSlot(learningSpace, 0, learningElement, _ => { });
-        var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { });
-        var createLearningWorldCommand = new CreateLearningWorld(workspace, learningWorld, _ => { });
-        var deleteLearningElementCommand = new DeleteLearningElementInSpace(learningElement, learningSpace, _ => { });
-        var deleteLearningSpaceCommand = new DeleteLearningSpace(learningWorld, learningSpace, _ => { });
-        var deleteLearningWorldCommand = new DeleteLearningWorld(workspace, learningWorld, _ => { });
+        var createLearningElementCommand = new CreateLearningElementInSlot(learningSpace, 0, learningElement, _ => { },
+            new NullLogger<CreateLearningElementInSlot>());
+        var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { },
+            new NullLogger<CreateLearningSpace>());
+        var createLearningWorldCommand =
+            new CreateLearningWorld(workspace, learningWorld, _ => { }, new NullLogger<CreateLearningWorld>());
+        var deleteLearningElementCommand = new DeleteLearningElementInSpace(learningElement, learningSpace, _ => { },
+            new NullLogger<DeleteLearningElementInSpace>());
+        var deleteLearningSpaceCommand = new DeleteLearningSpace(learningWorld, learningSpace, _ => { },
+            new NullLogger<DeleteLearningSpace>());
+        var deleteLearningWorldCommand =
+            new DeleteLearningWorld(workspace, learningWorld, _ => { }, new NullLogger<DeleteLearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(learningElement);
         mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(learningSpace);
         mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(learningWorld);
-        var loadLearningElementCommand = new LoadLearningElement(learningSpace, 0, "e", mockBusinessLogic, _ => { });
-        var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { });
-        var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { });
+        var loadLearningElementCommand = new LoadLearningElement(learningSpace, 0, "e", mockBusinessLogic, _ => { },
+            new NullLogger<LoadLearningElement>());
+        var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { },
+            new NullLogger<LoadLearningSpace>());
+        var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { },
+            new NullLogger<LoadLearningWorld>());
 
         var secondLearningWorld = EntityProvider.GetLearningWorld(append: "2");
         var thirdLearningWorld = EntityProvider.GetLearningWorld(append: "3");
-        var createSecondLearningWorldCommand = new CreateLearningWorld(workspace, secondLearningWorld, _ => { });
-        var createThirdLearningWorldCommand = new CreateLearningWorld(workspace, thirdLearningWorld, _ => { });
+        var createSecondLearningWorldCommand = new CreateLearningWorld(workspace, secondLearningWorld, _ => { },
+            new NullLogger<CreateLearningWorld>());
+        var createThirdLearningWorldCommand = new CreateLearningWorld(workspace, thirdLearningWorld, _ => { },
+            new NullLogger<CreateLearningWorld>());
 
         var systemUnderTest = GetCommandStateManagerForTest();
         var wasCalled = false;
         var eventObjects = new List<object>();
-        systemUnderTest.RemovedCommandsFromStacks += (sender, args) =>
+        systemUnderTest.RemovedCommandsFromStacks += (_, args) =>
         {
             wasCalled = true;
             eventObjects = args.ObjectsInStacks.ToList();

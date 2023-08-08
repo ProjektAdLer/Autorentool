@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using ElectronWrapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
@@ -20,6 +21,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace IntegrationTest;
 
@@ -30,13 +32,15 @@ public class CachingMapperIt
     public void CreateWorldThenUndoAndRedo_ViewModelShouldStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic =
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
@@ -64,13 +68,16 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceThenUndoAndRedo_CheckIfWorldViewModelStaysTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic =
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -119,14 +126,17 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceAndElementThenUndoAndRedo_CheckIfAllViewModelsStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!);
+        var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        var businessLogic =
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var logger = Substitute.For<ILogger<CachingMapper>>();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
+        var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(), spaceCommandFactory: new SpaceCommandFactory(),
-            elementCommandFactory: new ElementCommandFactory());
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()),
+            elementCommandFactory: new ElementCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -144,7 +154,8 @@ public class CachingMapperIt
         var spaceVm = worldVm.LearningSpaces.First();
 
         systemUnderTest.CreateLearningElementInSlot(spaceVm, 0, "l",
-            null!, "o", "p", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 2, 3);
+            ViewModelProvider.GetLinkContent(), "o", "p", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_slotmachine_1, 2, 3);
 
         Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 
@@ -216,7 +227,8 @@ public class CachingMapperIt
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
 
         return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
+            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
+            shellWrapper,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
             spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
     }

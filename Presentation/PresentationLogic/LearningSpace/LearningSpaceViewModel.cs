@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
@@ -11,12 +12,24 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceViewModel
 {
+    public const string fileEnding = "asf";
+    private string _description;
+    private string _goals;
+
+    private string _name;
+    private bool _advancedMode;
+    private double _positionX;
+    private double _positionY;
+    private int _requiredPoints;
+    private Theme _theme;
+
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
     [UsedImplicitly]
     private LearningSpaceViewModel()
     {
+        InitializeFields();
         Id = Guid.Empty;
         Name = "";
         Description = "";
@@ -52,6 +65,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         ICollection<IObjectInPathWayViewModel>? outBoundObjects = null,
         TopicViewModel? assignedTopic = null)
     {
+        InitializeFields();
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
@@ -67,16 +81,15 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         PositionY = positionY;
     }
 
-    public const string fileEnding = "asf";
-    public string FileEnding => fileEnding;
     public ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public TopicViewModel? AssignedTopic { get; set; }
     public int Workload => ContainedLearningElements.Sum(element => element.Workload);
+
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => ContainedLearningElements.Sum(element => element.Points);
-    
+
     public Guid Id { get; private set; }
 
     public string Name
@@ -102,7 +115,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         get => _requiredPoints;
         set => SetField(ref _requiredPoints, value);
     }
-    
+
     public Theme Theme
     {
         get => _theme;
@@ -135,6 +148,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
             };
         }
     }
+
     public double PositionY
     {
         get => _positionY;
@@ -148,19 +162,11 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
             };
         }
     }
+
     public double InputConnectionX => PositionX + 33;
     public double InputConnectionY => PositionY - 7;
     public double OutputConnectionX => PositionX + 32;
     public double OutputConnectionY => PositionY + 62;
-
-    private string _name;
-    private string _description;
-    private string _goals;
-    private int _requiredPoints;
-    private Theme _theme;
-    private bool _advancedMode;
-    private double _positionX;
-    private double _positionY;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;
@@ -170,6 +176,15 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
+    public string FileEnding => fileEnding;
+
+    [MemberNotNull(nameof(_name), nameof(_description), nameof(_goals))]
+    private void InitializeFields()
+    {
+        _name = "";
+        _description = "";
+        _goals = "";
+    }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

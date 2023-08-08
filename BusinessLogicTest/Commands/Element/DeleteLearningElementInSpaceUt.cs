@@ -1,13 +1,12 @@
 ﻿using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
 [TestFixture]
-
 public class DeleteLearningElementInSpaceUt
 {
     [Test]
@@ -15,22 +14,23 @@ public class DeleteLearningElementInSpaceUt
     {
         var space = EntityProvider.GetLearningSpace(unsavedChanges: false);
         var element = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false);
-        
-        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
+
+        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement> { { 0, element } };
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
-        
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction,
+            new NullLogger<DeleteLearningElementInSpace>());
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements, Does.Contain(element));
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements, Is.Empty);
@@ -57,8 +57,9 @@ public class DeleteLearningElementInSpaceUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInSpace(element1, space, mappingAction);
-        
+        var command = new DeleteLearningElementInSpace(element1, space, mappingAction,
+            new NullLogger<DeleteLearningElementInSpace>());
+
         Assert.That(space.ContainedLearningElements, Does.Contain(element1));
         Assert.Multiple(() =>
         {
@@ -66,9 +67,9 @@ public class DeleteLearningElementInSpaceUt
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
@@ -86,11 +87,11 @@ public class DeleteLearningElementInSpaceUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
-        
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction, null!);
+
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        
+
         Assert.IsFalse(actionWasInvoked);
     }
 
@@ -112,8 +113,9 @@ public class DeleteLearningElementInSpaceUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElementInSpace(element1, space, mappingAction);
-        
+        var command = new DeleteLearningElementInSpace(element1, space, mappingAction,
+            new NullLogger<DeleteLearningElementInSpace>());
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
@@ -121,21 +123,21 @@ public class DeleteLearningElementInSpaceUt
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-            
+
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.UnsavedChanges, Is.True);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Undo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
@@ -143,15 +145,15 @@ public class DeleteLearningElementInSpaceUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.UnsavedChanges, Is.False);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Redo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-            
+
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.UnsavedChanges, Is.True);
         });

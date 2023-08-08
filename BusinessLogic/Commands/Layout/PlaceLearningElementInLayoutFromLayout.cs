@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
@@ -7,22 +8,26 @@ namespace BusinessLogic.Commands.Layout;
 /// </summary>
 public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLayoutFromLayout
 {
-    public string Name => nameof(PlaceLearningElementInLayoutFromLayout);
-    internal LearningSpace ParentSpace { get; }
-    internal int NewSlotIndex { get; }
-    internal ILearningElement LearningElement { get; }
-    internal Action<LearningSpace> MappingAction { get; }
     private IMemento? _mementoLayout;
     private IMemento? _mementoSpace;
 
-    public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newSlotIndex,
-        Action<LearningSpace> mappingAction)
+    public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement,
+        int newSlotIndex,
+        Action<LearningSpace> mappingAction, ILogger<PlaceLearningElementInLayoutFromLayout> logger)
     {
         ParentSpace = parentSpace;
         LearningElement = ParentSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
         NewSlotIndex = newSlotIndex;
         MappingAction = mappingAction;
+        Logger = logger;
     }
+
+    internal LearningSpace ParentSpace { get; }
+    internal int NewSlotIndex { get; }
+    internal ILearningElement LearningElement { get; }
+    internal Action<LearningSpace> MappingAction { get; }
+    private ILogger<PlaceLearningElementInLayoutFromLayout> Logger { get; }
+    public string Name => nameof(PlaceLearningElementInLayoutFromLayout);
 
     public void Execute()
     {
@@ -34,14 +39,16 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
         var kvP = ParentSpace.LearningSpaceLayout.LearningElements
             .First(kvP => kvP.Value.Equals(LearningElement));
         var oldSlotIndex = kvP.Key;
-        var replacedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.ContainsKey(NewSlotIndex)
-            ? ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex]
-            : null;
+        ParentSpace.LearningSpaceLayout.LearningElements.TryGetValue(NewSlotIndex, out var replacedLearningElement);
         ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
         if (replacedLearningElement != null)
             ParentSpace.LearningSpaceLayout.LearningElements[oldSlotIndex] = replacedLearningElement;
-        else 
+        else
             ParentSpace.LearningSpaceLayout.LearningElements.Remove(oldSlotIndex);
+
+        Logger.LogTrace(
+            "Placed LearningElement {LearningElementName} ({LearningElementId}) from slot {OldSlotIndex} to {NewSlotIndex} of ParentSpace {ParentSpaceName}({ParentSpaceId})",
+            LearningElement.Name, LearningElement.Id, oldSlotIndex, NewSlotIndex, ParentSpace.Name, ParentSpace.Id);
 
         MappingAction.Invoke(ParentSpace);
     }
@@ -61,8 +68,16 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoLayout);
         ParentSpace.RestoreMemento(_mementoSpace);
 
+        Logger.LogTrace(
+            "Undone placement of LearningElement {LearningElementName} ({LearningElementId}). Restored ParentSpace {ParentSpaceName} ({ParentSpaceId}) and LearningSpaceLayout to previous state",
+            LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
+
         MappingAction.Invoke(ParentSpace);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing PlaceLearningElementInLayoutFromLayout");
+        Execute();
+    }
 }

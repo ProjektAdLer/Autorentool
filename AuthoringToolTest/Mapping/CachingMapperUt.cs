@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -92,7 +91,7 @@ public class CachingMapperUt
 
         systemUnderTest.Map(entity, viewModel);
 
-        mapper.Received(1).Map(entity, (ILearningWorldViewModel) viewModel);
+        mapper.Received(1).Map(entity, (ILearningWorldViewModel)viewModel);
     }
 
     [Test]
@@ -296,7 +295,7 @@ public class CachingMapperUt
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5].Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
@@ -314,7 +313,7 @@ public class CachingMapperUt
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7], Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7].Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
@@ -332,7 +331,7 @@ public class CachingMapperUt
 
         systemUnderTest.Map(entity, viewModel);
 
-        mapper.Received(1).Map(entity, (ILearningSpaceViewModel) viewModel);
+        mapper.Received(1).Map(entity, (ILearningSpaceViewModel)viewModel);
     }
 
     [Test]
@@ -419,7 +418,7 @@ public class CachingMapperUt
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
         var worldEntity = EntityProvider.GetLearningWorld();
-        var workspace = EntityProvider.GetAuthoringToolWorkspace(worlds: new List<ILearningWorld> {worldEntity});
+        var workspace = EntityProvider.GetAuthoringToolWorkspace(worlds: new List<ILearningWorld> { worldEntity });
         var workspaceViewModel = ViewModelProvider.GetAuthoringToolWorkspace();
         var spaceEntity = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X30_8L);
         var elementEntity = EntityProvider.GetLearningElement();
@@ -449,7 +448,7 @@ public class CachingMapperUt
 
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(4));
 
-        var objectList = new List<object> {worldEntity, spaceEntity, elementEntity};
+        var objectList = new List<object> { worldEntity, spaceEntity, elementEntity };
         mockCommandStateManager.RemovedCommandsFromStacks +=
             Raise.Event<CommandStateManager.RemovedCommandsFromStacksHandler>(mockCommandStateManager,
                 new RemoveCommandsFromStacksEventArgs(objectList));

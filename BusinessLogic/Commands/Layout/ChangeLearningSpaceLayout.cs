@@ -1,28 +1,32 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.FloorPlans;
+using Microsoft.Extensions.Logging;
 using Shared;
 
 namespace BusinessLogic.Commands.Layout;
 
 public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 {
-    public string Name => nameof(ChangeLearningSpaceLayout);
-    internal ILearningSpace LearningSpace { get; }
-    public LearningWorld LearningWorld { get; }
-    internal FloorPlanEnum FloorPlanName { get; }
-    internal Action<LearningWorld> MappingAction { get; }
-    private IMemento? _mementoSpaceLayout;
     private IMemento? _mementoSpace;
+    private IMemento? _mementoSpaceLayout;
     private IMemento? _mementoWorld;
 
     public ChangeLearningSpaceLayout(ILearningSpace learningSpace, LearningWorld learningWorld,
-        FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction)
+        FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction, ILogger<ChangeLearningSpaceLayout> logger)
     {
         LearningSpace = learningSpace;
         LearningWorld = learningWorld;
         FloorPlanName = floorPlanName;
         MappingAction = mappingAction;
+        Logger = logger;
     }
+
+    internal ILearningSpace LearningSpace { get; }
+    public LearningWorld LearningWorld { get; }
+    internal FloorPlanEnum FloorPlanName { get; }
+    internal Action<LearningWorld> MappingAction { get; }
+    private ILogger<ChangeLearningSpaceLayout> Logger { get; }
+    public string Name => nameof(ChangeLearningSpaceLayout);
 
     public void Execute()
     {
@@ -48,6 +52,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
             LearningWorld.UnplacedLearningElements.Add(unplacedElement.Value);
             unplacedElement.Value.Parent = null;
         }
+
         //compress the element indices if necessary
         if (newLearningElementDictionary.Any() && newLearningElementDictionary.Max(kvP => kvP.Key) >= capacity)
         {
@@ -59,7 +64,11 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
         LearningSpace.LearningSpaceLayout.LearningElements =
             newLearningElementDictionary.ToDictionary(kvP => kvP.Key, kvP => kvP.Value);
         LearningSpace.LearningSpaceLayout.FloorPlanName = FloorPlanName;
-        
+
+        Logger.LogTrace(
+            "Changed LearningSpaceLayout for {LearningSpaceName} ({LearningSpaceId}) to {FloorPlan} in {LearningWorldName} ({LearningWorldId})",
+            LearningSpace.Name, LearningSpace.Id, FloorPlanName.ToString(), LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
@@ -79,13 +88,21 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
         {
             throw new InvalidOperationException("_mementoWorld is null");
         }
-        
+
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningWorld.RestoreMemento(_mementoWorld);
-        
+
+        Logger.LogTrace(
+            "Undone ChangeLearningSpaceLayout for {LearningSpaceName} ({LearningSpaceId}) in {LearningWorldName} ({LearningWorldId})",
+            LearningSpace.Name, LearningSpace.Id, LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(LearningWorld);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing ChangeLearningSpaceLayout");
+        Execute();
+    }
 }

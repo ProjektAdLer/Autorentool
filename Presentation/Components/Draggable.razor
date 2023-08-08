@@ -1,8 +1,7 @@
 @inject IMouseService MouseService
 @inject ILogger<Draggable<T>> Logger;
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic
 @implements IDisposable
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @typeparam T
 
 <g transform="translate(@X, @Y)" @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
@@ -13,7 +12,7 @@
 
     ///Code from https://github.com/AlexeyBoiko/BlazorDraggableDemo
     //get (optional) child html content as a RenderFragment
-    [Parameter]
+        [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     //fields bound to translate vector of <g> element
@@ -46,7 +45,7 @@
     public EventCallback<T> OnRightClicked { get; set; }
 
     [Parameter]
-    public DraggedEventArgs<T>.DraggedEventHandler OnDragged { get; set; }
+    public DraggedEventArgs<T>.DraggedEventHandler? OnDragged { get; set; }
 
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
@@ -139,7 +138,7 @@
     private Task OnClick(object? sender, MouseEventArgs e)
     {
         Logger.LogDebug("OnClick");
-        //override nullability because we check in OnParametersSet - n.stich
+    //override nullability because we check in OnParametersSet - n.stich
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
         return OnClicked.InvokeAsync(LearningObject);
     }

@@ -54,7 +54,7 @@
         <value>Erfolgreich angemeldet!</value>
     </data>
     <data name="Header.Moodle.Text" xml:space="preserve">
-        <value>Moodle Login</value>
+        <value>Einloggen auf AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
         <value>Passwort vergessen?</value>
@@ -66,6 +66,12 @@
         <value>Passwort anzeigen</value>
     </data>
     <data name="DialogContent.Button.Login.Title" xml:space="preserve">
-        <value>Bei moodle einloggen</value>
+        <value>Einloggen auf AdLer-Server</value>
+    </data>
+    <data name="DialogContent.Button.Logout.Title" xml:space="preserve">
+        <value>Ausloggen vom AdLer-Server</value>
+    </data>
+    <data name="DialogContent.Button.ForgotPassword.Title" xml:space="preserve">
+        <value>Passwort vergessen?</value>
     </data>
 </root>

@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -9,13 +10,13 @@ namespace BusinessLogicTest.Commands.Condition;
 [TestFixture]
 public class ConditionCommandFactoryUt
 {
-    private ConditionCommandFactory _factory = null!;
-
     [SetUp]
     public void SetUp()
     {
-        _factory = new ConditionCommandFactory();
+        _factory = new ConditionCommandFactory(new NullLoggerFactory());
     }
+
+    private ConditionCommandFactory _factory = null!;
 
     [Test]
     public void GetCreateCommand_WithCoordinates_ReturnsCreatePathWayCondition()

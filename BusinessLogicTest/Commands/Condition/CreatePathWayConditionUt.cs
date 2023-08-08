@@ -1,33 +1,40 @@
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
 
 namespace BusinessLogicTest.Commands.Condition;
 
 [TestFixture]
-
 public class CreatePathWayConditionUt
 {
     [Test]
     public void Execute_CreatesPathWayCondition()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        ConditionEnum condition = ConditionEnum.And;
+        var condition = ConditionEnum.And;
         var positionX = 1;
         var positionY = 2;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
-        
-        Assert.IsEmpty(world.PathWayConditions);
-        Assert.IsFalse(actionWasInvoked);
+
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction,
+            new NullLogger<CreatePathWayCondition>());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
-        
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         var pathWayCondition = world.PathWayConditions.First();
         Assert.Multiple(() =>
         {
@@ -36,36 +43,43 @@ public class CreatePathWayConditionUt
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(2));
         });
     }
-    
+
     [Test]
     public void Execute_CreatesPathWayConditionBetweenGivenObjects()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, null!,positionX: 200,positionY: 200);
+        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, positionX: 200, positionY: 200);
         var previousPathWay = new LearningPathway(previousCondition, previousSpace);
         previousCondition.OutBoundObjects.Add(previousSpace);
         previousSpace.InBoundObjects.Add(previousCondition);
         world.PathWayConditions.Add(previousCondition);
         world.LearningSpaces.Add(previousSpace);
         world.LearningPathways.Add(previousPathWay);
-        ConditionEnum condition = ConditionEnum.And;
-        bool actionWasInvoked = false;
+        var condition = ConditionEnum.And;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
-        
-        Assert.That(world.PathWayConditions.Count, Is.EqualTo(1));
-        Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
-        Assert.That(world.LearningPathways.Count, Is.EqualTo(1));
-        Assert.IsFalse(actionWasInvoked);
 
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction,
+            new NullLogger<CreatePathWayCondition>());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.False);
+        });
         command.Execute();
-        
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
-        Assert.That(world.LearningPathways.Count, Is.EqualTo(3));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(3));
+            Assert.That(actionWasInvoked, Is.True);
+        });
+        actionWasInvoked = false;
         var pathWayCondition = world.PathWayConditions.Last();
         Assert.Multiple(() =>
         {
@@ -73,20 +87,28 @@ public class CreatePathWayConditionUt
             Assert.That(pathWayCondition.PositionX, Is.EqualTo(242));
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(140));
         });
-        
+
         command.Undo();
-        
-        Assert.That(world.PathWayConditions.Count, Is.EqualTo(1));
-        Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
-        Assert.That(world.LearningPathways.Count, Is.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
-        
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions.Count, Is.EqualTo(1));
+            Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
+            Assert.That(world.LearningPathways.Count, Is.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
+        actionWasInvoked = false;
+
         command.Redo();
-        
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
-        Assert.That(world.LearningPathways.Count, Is.EqualTo(3));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(world.LearningSpaces.Count, Is.EqualTo(1));
+            Assert.That(world.LearningPathways.Count, Is.EqualTo(3));
+            Assert.That(actionWasInvoked, Is.True);
+        });
+        actionWasInvoked = false;
         var pathWayConditionRedo = world.PathWayConditions.Last();
         Assert.Multiple(() =>
         {
@@ -101,21 +123,24 @@ public class CreatePathWayConditionUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, null!, positionX: 200, positionY: 200);
+        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, positionX: 200, positionY: 200);
         previousCondition.OutBoundObjects.Add(previousSpace);
         previousSpace.InBoundObjects.Add(previousCondition);
         world.PathWayConditions.Add(previousCondition);
         world.LearningSpaces.Add(previousSpace);
-        ConditionEnum condition = ConditionEnum.And;
-        bool actionWasInvoked = false;
+        var condition = ConditionEnum.And;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction,
+            new NullLogger<CreatePathWayCondition>());
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
-        Assert.That(ex!.Message, Is.EqualTo("Previous pathway is null"));
-        
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("Previous pathway is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -123,41 +148,45 @@ public class CreatePathWayConditionUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, null!, positionX: 200, positionY: 200);
+        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, false, positionX: 200, positionY: 200);
         var previousPathWay = new LearningPathway(previousCondition, previousSpace);
         world.PathWayConditions.Add(previousCondition);
         world.LearningSpaces.Add(previousSpace);
         world.LearningPathways.Add(previousPathWay);
-        ConditionEnum condition = ConditionEnum.And;
-        bool actionWasInvoked = false;
+        var condition = ConditionEnum.And;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction);
+        var command = new CreatePathWayCondition(world, condition, previousCondition, previousSpace, mappingAction,
+            new NullLogger<CreatePathWayCondition>());
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
-        Assert.That(ex!.Message, Is.EqualTo("Previous in bound object is null"));
-        
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("Previous in bound object is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        ConditionEnum condition = ConditionEnum.And;
+        var condition = ConditionEnum.And;
         var positionX = 1;
         var positionY = 2;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
-        
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction, null!);
+
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
-    
 
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
@@ -165,29 +194,32 @@ public class CreatePathWayConditionUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 1, 2);
         world.PathWayConditions.Add(pathWayCondition);
-        ConditionEnum condition = ConditionEnum.Or;
+        var condition = ConditionEnum.Or;
         var positionX = 4;
         var positionY = 5;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        
-        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
-        
+
+        var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction,
+            new NullLogger<CreatePathWayCondition>());
+
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);
-        
+
         command.Execute();
-        
+
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
-        
+        Assert.IsTrue(actionWasInvoked);
+        actionWasInvoked = false;
+
         command.Undo();
-        
+
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
-        
+        Assert.IsTrue(actionWasInvoked);
+        actionWasInvoked = false;
+
         command.Redo();
-        
+
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
         Assert.IsTrue(actionWasInvoked);
     }

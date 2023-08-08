@@ -1,13 +1,13 @@
 @using Presentation.PresentationLogic.LearningSpace
+@using Shared
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
+@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using ElectronNET.API.Entities
-@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-@using Shared
-
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
@@ -104,22 +104,21 @@
 </BaseForm>
 
 @code {
-#pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILearningSpacePresenter LearningSpacePresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IMapper Mapper { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<EditSpaceForm> Localizer { get; set; }
-#pragma warning restore CS8618
 
-#pragma warning disable CS8618
-    [Parameter, EditorRequired]
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningSpaceViewModel SpaceToEdit { get; set; }
 
     [Parameter, EditorRequired]
@@ -127,7 +126,7 @@
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
-#pragma warning restore CS8618
+
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich

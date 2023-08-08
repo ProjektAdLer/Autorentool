@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">@Localizer["NavBar.Brand.Text"]</a>
@@ -35,6 +36,8 @@
 
 @code
 {
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<NavMenu> Localizer { get; set; }
+
 }

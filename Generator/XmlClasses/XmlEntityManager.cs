@@ -10,47 +10,48 @@ public class XmlEntityManager : IXmlEntityManager
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     private IFileSystem _fileSystem;
-    private IXmlResourceFactory? _xmlResourceFactory;
-    private IXmlH5PFactory? _xmlH5PFactory;
-    private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
-    private IXmlSectionFactory? _xmlSectionFactory;
+    private IXmlCourseFactory? _xmlCourseFactory;
+    private IXmlH5PFactory? _xmlH5PFactory;
     private IXmlLabelFactory? _xmlLabelFactory;
+    private IXmlResourceFactory? _xmlResourceFactory;
+    private IXmlSectionFactory? _xmlSectionFactory;
     private IXmlUrlFactory? _xmlUrlFactory;
 
-    public XmlEntityManager(IFileSystem? fileSystem=null)
+    public XmlEntityManager(IFileSystem? fileSystem = null)
     {
         _fileSystem = fileSystem ?? new FileSystem();
     }
 
     //run all factories that are available, to set the parameters and create the xml files
-    public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory=null, 
-        IXmlH5PFactory? xmlH5PFactory=null, IXmlCourseFactory? xmlCourseFactory=null, IXmlBackupFactory? xmlBackupFactory=null,
-        IXmlSectionFactory? xmlSectionFactory=null, IXmlLabelFactory? xmlLabelFactory=null, IXmlUrlFactory? xmlUrlFactory=null)
+    public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory = null,
+        IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
+        IXmlBackupFactory? xmlBackupFactory = null,
+        IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,
+        IXmlUrlFactory? xmlUrlFactory = null)
     {
-        XmlFileManager filemanager = new XmlFileManager();
+        var filemanager = new XmlFileManager();
 
         _xmlSectionFactory = xmlSectionFactory ?? new XmlSectionFactory(readDsl);
         _xmlSectionFactory.CreateSectionFactory();
-        
+
         _xmlLabelFactory = xmlLabelFactory ?? new XmlLabelFactory(readDsl);
         _xmlLabelFactory.CreateLabelFactory();
 
         _xmlUrlFactory = xmlUrlFactory ?? new XmlUrlFactory(readDsl);
         _xmlUrlFactory.CreateUrlFactory();
-        
+
         _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
         _xmlResourceFactory.CreateResourceFactory();
 
         _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();
-        
-        _xmlCourseFactory = xmlCourseFactory ??  new XmlCourseFactory(readDsl);
+
+        _xmlCourseFactory = xmlCourseFactory ?? new XmlCourseFactory(readDsl);
         _xmlCourseFactory.CreateXmlCourseFactory();
-        
+
         _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readDsl);
         _xmlBackupFactory.CreateXmlBackupFactory();
-        
     }
 
     public static int GetFileIdBlock1()
@@ -62,7 +63,7 @@ public class XmlEntityManager : IXmlEntityManager
     {
         return FileIdBlock2;
     }
-    
+
     //The id´s need to be incremental. Block1 and Block2 should not have the same values. 
     //The reason for this is that the id´s are used in the files.xml file, every Resource gets 2 Blocks and therefore 2 id´s are needed.
     public static void IncreaseFileId()
@@ -70,5 +71,4 @@ public class XmlEntityManager : IXmlEntityManager
         FileIdBlock1 = FileIdBlock1 + 2;
         FileIdBlock2 = FileIdBlock2 + 2;
     }
-    
 }

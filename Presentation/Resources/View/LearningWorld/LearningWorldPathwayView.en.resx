@@ -18,7 +18,7 @@
         <value>Points:</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
-        <value>min.</value>
+        <value> min.</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Load learning space</value>

@@ -1,4 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -15,13 +23,13 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="OverView.Workload.TimeScale" xml:space="preserve">
-        <value>min.</value>
-    </data>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Workload:</value>
+        <value>Arbeitslast: </value>
     </data>
     <data name="OverView.Points" xml:space="preserve">
-        <value>Points:</value>
+        <value>Punkte:</value>
+    </data>
+    <data name="OverView.Workload.TimeScale" xml:space="preserve">
+        <value> min.</value>
     </data>
 </root>

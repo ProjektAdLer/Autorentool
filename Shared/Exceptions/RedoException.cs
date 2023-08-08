@@ -6,10 +6,6 @@ public class RedoException : Exception
     {
     }
     
-    public RedoException(string message) : base(message)
-    {
-    }
-    
     public RedoException(string message, Exception inner) : base(message, inner)
     {
     }

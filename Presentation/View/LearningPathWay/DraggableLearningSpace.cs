@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.View.LearningWorld;
 
 namespace Presentation.View.LearningPathWay;
 
@@ -9,13 +8,19 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 {
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
-    protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,0.6);stroke-width:100";
-    protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
-    protected override string OnHoveredObjectShape =>  
-    @"<rect transform=""translate(0,0)"" height=""4rem"" width=""4rem"" rx=5 style=""fill:rgb(229,189,115);stroke:rgba(229,189,115,0.5);stroke-width:5""></rect>
-        "; 
+    protected override string Title => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
 
-    protected override string ObjectShape =>  
+    protected override string ObjectStyleWhenSelected =>
+        @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,0.6);stroke-width:100";
+
+    protected override string ObjectStyleWhenNotSelected =>
+        @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
+
+    protected override string OnHoveredObjectShape =>
+        @"<rect transform=""translate(0,0)"" height=""4rem"" width=""4rem"" rx=5 style=""fill:rgb(229,189,115);stroke:rgba(229,189,115,0.5);stroke-width:5""></rect>
+        ";
+
+    protected override string ObjectShape =>
         @"<svg width=""4rem"" height=""4rem"" viewBox=""-100 -100 2200 2000"" preserveAspectRatio=""xMinYMin"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xml:space=""preserve"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"">
             <g transform=""matrix(1.12299,-0.648358,1.29672,0.74866,-322.238,-121.233)"">
                 <rect x=""-1024"" y=""1191.65"" width=""825.427"" height=""714.841"" style=""fill:rgb(185,190,198);""/>
@@ -74,25 +79,29 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
             </foreignObject>
         </svg>";
 
-    protected override string DeletePathButtonShape => @"<circle r=""7"" transform=""translate(33,0)"" fill=""red"" stroke=""red""/>
+    protected override string DeletePathButtonShape =>
+        @"<circle r=""7"" transform=""translate(33,0)"" fill=""red"" stroke=""red""/>
                                     <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(33,0)"" 
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
-    
-    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
-    
-    private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null ? "" : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnRemoveLearningSpaceFromTopic { get; set; }
+    protected override string DeleteObjectButtonShape =>
+        @"<text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
+
+    private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null
+        ? ""
+        : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
+
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
+
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
+
+    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
+
+    [Parameter] public EventCallback<ILearningSpaceViewModel>? OnRemoveLearningSpaceFromTopic { get; set; }
+
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
-        var menuEntries = new List<RightClickMenuEntry>()
+        var menuEntries = new List<RightClickMenuEntry>
         {
             new("Open", () => OnOpenLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
             new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
@@ -101,7 +110,8 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 
         if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
         {
-            menuEntries.Add(new("Remove topic", () => OnRemoveLearningSpaceFromTopic.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
+            menuEntries.Add(new RightClickMenuEntry("Remove topic",
+                () => OnRemoveLearningSpaceFromTopic?.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
         }
 
         return menuEntries;

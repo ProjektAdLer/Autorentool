@@ -1,8 +1,11 @@
-<div class="h-[41rem] 2xl:h-[44rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] box-border grow m-1 p-1 bg-white rounded-lg overflow-auto">
+@using System.Diagnostics.CodeAnalysis
+<div class="h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] max-w-[95vw] min-w-[30vw] box-border grow m-1 p-1 bg-white rounded-lg overflow-auto">
     @ChildContent
 </div>
 
 @code {
-    [Parameter]
+
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
     public RenderFragment ChildContent { get; set; }
+
 }

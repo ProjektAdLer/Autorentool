@@ -8,16 +8,10 @@ namespace DataAccess.Persistence;
 
 public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
 {
-    private readonly ILogger<LearningWorldSavePathsHandler> _logger;
     private readonly IFileSystem _fileSystem;
+    private readonly ILogger<LearningWorldSavePathsHandler> _logger;
     private readonly List<SavedLearningWorldPath> _savedLearningWorldPaths;
     private readonly XmlSerializer _serializer;
-
-    private string LearningWorldSavePathsFolderPath => Path.Join(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "AdLerAuthoring", "SavedWorlds");
-
-    private string SavedWorldPathsFilePath => Path.Join(LearningWorldSavePathsFolderPath, "SavedWorlds.xml");
 
     public LearningWorldSavePathsHandler(ILogger<LearningWorldSavePathsHandler> logger, IFileSystem fileSystem)
     {
@@ -33,6 +27,63 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         _logger.LogInformation("SavedWorldPathsFilePath is {}", SavedWorldPathsFilePath);
 
         LoadSavedLearningWorldPaths();
+    }
+
+    private string LearningWorldSavePathsFolderPath => Path.Join(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "AdLerAuthoring", "SavedWorlds");
+
+    private string SavedWorldPathsFilePath => Path.Join(LearningWorldSavePathsFolderPath, "SavedWorlds.xml");
+
+    /// <inheritdoc cref="ILearningWorldSavePathsHandler.AddSavedLearningWorldPath"/>
+    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        _savedLearningWorldPaths.RemoveAll(x => x.Path == savedLearningWorldPath.Path);
+        _savedLearningWorldPaths.FindAll(x => x.Id == savedLearningWorldPath.Id).ForEach(x => x.Id = Guid.Empty);
+        _savedLearningWorldPaths.Add(savedLearningWorldPath);
+        _logger.LogTrace("Added saved learning world path {Name} ({Id}) at path {Path}", savedLearningWorldPath.Name,
+            savedLearningWorldPath.Id, savedLearningWorldPath.Path);
+        SaveSavedLearningWorldPaths();
+    }
+
+    /// <inheritdoc cref="ILearningWorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly"/>
+    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
+    {
+        var worldName = Path.GetFileNameWithoutExtension(path);
+        var savedLearningWorldPath = new SavedLearningWorldPath
+        {
+            Name = worldName,
+            Path = path
+        };
+        AddSavedLearningWorldPath(savedLearningWorldPath);
+        return savedLearningWorldPath;
+    }
+
+    /// <inheritdoc cref="ILearningWorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath"/>
+    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
+    {
+        if (_savedLearningWorldPaths.Contains(savedLearningWorldPath))
+        {
+            _savedLearningWorldPaths.Find(x => x == savedLearningWorldPath)!.Id = id;
+        }
+
+        SaveSavedLearningWorldPaths();
+        _logger.LogTrace("Updated id of saved learning world path {Name} to {Id}", savedLearningWorldPath.Name, id);
+    }
+
+    /// <inheritdoc cref="ILearningWorldSavePathsHandler.GetSavedLearningWorldPaths"/>
+    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    {
+        return _savedLearningWorldPaths;
+    }
+
+    /// <inheritdoc cref="ILearningWorldSavePathsHandler.RemoveSavedLearningWorldPath"/>
+    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        _savedLearningWorldPaths.Remove(_savedLearningWorldPaths.Find(x => x.Id == savedLearningWorldPath.Id)!);
+        _logger.LogTrace("Removed saved learning world path {Name} ({Id}) at path {Path}", savedLearningWorldPath.Name,
+            savedLearningWorldPath.Id, savedLearningWorldPath.Path);
+        SaveSavedLearningWorldPaths();
     }
 
     private void AssertLearningWorldSavePathsFolderExists()
@@ -62,7 +113,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         using var stream = _fileSystem.File.OpenRead(SavedWorldPathsFilePath);
         if (CanDeserializeStream(stream))
         {
-            var savedPaths = (List<SavedLearningWorldPath>) _serializer.Deserialize(stream)!;
+            var savedPaths = (List<SavedLearningWorldPath>)_serializer.Deserialize(stream)!;
             foreach (var loadedPath in _savedLearningWorldPaths.Where(loadedPath =>
                          savedPaths.All(x => x.Path != loadedPath.Path && x.Name != loadedPath.Name)))
             {
@@ -97,51 +148,5 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         {
             stream.Position = 0;
         }
-    }
-
-    /// <inheritdoc cref="ILearningWorldSavePathsHandler.AddSavedLearningWorldPath"/>
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        _savedLearningWorldPaths.RemoveAll(x => x.Path == savedLearningWorldPath.Path);
-        _savedLearningWorldPaths.FindAll(x => x.Id == savedLearningWorldPath.Id).ForEach(x => x.Id = Guid.Empty);
-        _savedLearningWorldPaths.Add(savedLearningWorldPath);
-        SaveSavedLearningWorldPaths();
-    }
-
-    /// <inheritdoc cref="ILearningWorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly"/>
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        var worldName = Path.GetFileNameWithoutExtension(path);
-        var savedLearningWorldPath = new SavedLearningWorldPath
-        {
-            Name = worldName,
-            Path = path
-        };
-        AddSavedLearningWorldPath(savedLearningWorldPath);
-        return savedLearningWorldPath;
-    }
-
-    /// <inheritdoc cref="ILearningWorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath"/>
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        if (_savedLearningWorldPaths.Contains(savedLearningWorldPath))
-        {
-            _savedLearningWorldPaths.Find(x => x == savedLearningWorldPath)!.Id = id;
-        }
-
-        SaveSavedLearningWorldPaths();
-    }
-
-    /// <inheritdoc cref="ILearningWorldSavePathsHandler.GetSavedLearningWorldPaths"/>
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
-    {
-        return _savedLearningWorldPaths;
-    }
-
-    /// <inheritdoc cref="ILearningWorldSavePathsHandler.RemoveSavedLearningWorldPath"/>
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        _savedLearningWorldPaths.Remove(_savedLearningWorldPaths.Find(x => x.Id == savedLearningWorldPath.Id)!);
-        SaveSavedLearningWorldPaths();
     }
 }

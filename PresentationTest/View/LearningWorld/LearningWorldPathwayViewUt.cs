@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -21,22 +22,14 @@ using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
 using Shared;
-using DraggableObjectInPathWay = Presentation.View.AdvancedLearningRoomGenerator.DraggableObjectInPathWay;
+using Shared.Command;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningWorld;
 
 [TestFixture]
-public class LearningWorldViewUt
+public class LearningWorldPathwayViewUt
 {
-#pragma warning disable CS8618 // set in setup - n.stich
-    private TestContext _ctx;
-    private IMouseService _mouseService;
-    private ILearningWorldPresenter _worldPresenter;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private IStringLocalizer<LearningWorldView> _localizer;
-#pragma warning restore CS8618
-    
     [SetUp]
     public void Setup()
     {
@@ -44,7 +37,7 @@ public class LearningWorldViewUt
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        _localizer = Substitute.For<IStringLocalizer<LearningWorldView>>();
+        _localizer = Substitute.For<IStringLocalizer<LearningWorldPathwayView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
@@ -57,16 +50,52 @@ public class LearningWorldViewUt
         _ctx.Services.AddSingleton(_localizer);
     }
 
+    private TestContext _ctx = null!;
+    private IMouseService _mouseService = null!;
+    private ILearningWorldPresenter _worldPresenter = null!;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
+    private IStringLocalizer<LearningWorldPathwayView> _localizer = null!;
+
     [Test]
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.MouseService, Is.EqualTo(_mouseService));
             Assert.That(systemUnderTest.Instance.LearningWorldP, Is.EqualTo(_worldPresenter));
         });
+    }
+
+    [Test]
+    public void OnParametersSet_EventHandlersRegisteredOnPresenter()
+    {
+        _ = GetLearningWorldViewForTesting();
+
+        _worldPresenter.Received().PropertyChanging += Arg.Any<PropertyChangingEventHandler>();
+        _worldPresenter.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
+        _worldPresenter.Received().OnCommandUndoRedoOrExecute += Arg.Any<EventHandler<CommandUndoRedoOrExecuteArgs>>();
+        _selectedViewModelsProvider.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
+    }
+
+    [Test]
+    public void LearningWorldPresenter_PropertyChangingThenChanged_EventHandlersDeregisteredAndRegistered()
+    {
+        _ = GetLearningWorldViewForTesting();
+
+        var learningWorldVm = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorldVm);
+
+        _worldPresenter.PropertyChanging += Raise.Event<PropertyChangingEventHandler>(new object(),
+            new PropertyChangingEventArgs(nameof(ILearningWorldPresenter.LearningWorldVm)));
+
+        learningWorldVm.Received().PropertyChanged -= Arg.Any<PropertyChangedEventHandler>();
+
+        _worldPresenter.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(new object(),
+            new PropertyChangedEventArgs(nameof(ILearningWorldPresenter.LearningWorldVm)));
+
+        learningWorldVm.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
     }
 
     [Test]
@@ -79,7 +108,7 @@ public class LearningWorldViewUt
             builder.AddContent(2, "foobar");
             builder.CloseElement();
         };
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting(childContent);
 
         Assert.That(systemUnderTest.FindOrFail("div.barbaz").TextContent, Is.EqualTo("foobar"));
@@ -93,15 +122,16 @@ public class LearningWorldViewUt
         learningWorld.Workload.Returns(42);
         learningWorld.Points.Returns(9);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var h3 = systemUnderTest.FindAllOrFail("h3").ToList();
         h3[0].MarkupMatches(
             @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></h3>");
-        h3[1].MarkupMatches(@"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
+        h3[1].MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
     }
-    
+
     [Test]
     public void Render_LearningSpaceInWorld_CorrectDraggableForEachSpace()
     {
@@ -119,18 +149,18 @@ public class LearningWorldViewUt
         learningWorld.LearningPathWays.Returns(learningPathWays);
         learningWorld.PathWayConditions.Returns(pathWayConditions);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningSpace>>().ToList();
-        var draggablePathWayConditions = systemUnderTest.FindComponentsOrFail<Stub<DraggablePathWayCondition>>().ToList();
+        var draggablePathWayConditions =
+            systemUnderTest.FindComponentsOrFail<Stub<DraggablePathWayCondition>>().ToList();
         var pathWays = systemUnderTest.FindComponentsOrFail<Stub<PathWay>>().ToList();
 
         Assert.Multiple(() =>
         {
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(draggablePathWayConditions, Has.Count.EqualTo(pathWayConditions.Count));
-            //TODO: This Test fails on the CI (macos), but not locally. I have no idea why.
             Assert.That(learningSpaces.All(le =>
                 draggableLearningSpaces.Any(dle =>
                     dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
@@ -146,7 +176,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseMove(mouseEventArgs);
-        
+
         _mouseService.Received().FireMove(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -158,7 +188,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseUp(mouseEventArgs);
-        
+
         _mouseService.Received().FireUp(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -170,7 +200,7 @@ public class LearningWorldViewUt
 
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseLeave(mouseEventArgs);
-        
+
         _mouseService.Received().FireOut(systemUnderTest.Instance, mouseEventArgs);
     }
 
@@ -185,7 +215,7 @@ public class LearningWorldViewUt
             await ((EventCallback<MouseEventArgs>)addSpaceButton.Instance.Parameters["onclick"]).InvokeAsync(null));
         _worldPresenter.Received().AddNewLearningSpace();
     }
-    
+
     [Test]
     public async Task AddConditionButton_Clicked_CallsAddNewPathWayCondition()
     {
@@ -195,14 +225,14 @@ public class LearningWorldViewUt
             ((string)btn.Instance.Parameters["Class"]).Contains("add-condition"));
         await addConditionButton.InvokeAsync(async () =>
             await ((EventCallback<MouseEventArgs>)addConditionButton.Instance.Parameters["onclick"]).InvokeAsync(null));
-        _worldPresenter.Received().CreatePathWayCondition(ConditionEnum.Or);
+        _worldPresenter.Received().CreatePathWayCondition();
     }
-    
+
     [Test]
     public async Task LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
     {
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
             ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
         await loadSpaceButton.InvokeAsync(async () =>
@@ -214,9 +244,9 @@ public class LearningWorldViewUt
     public async Task LoadSpaceButton_Clicked_OperationCancelledExceptionCaught()
     {
         _worldPresenter.LoadLearningSpaceAsync().Throws<OperationCanceledException>();
-        
+
         var systemUnderTest = GetLearningWorldViewForTesting();
-        
+
         var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
             ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
         await loadSpaceButton.InvokeAsync(async () =>
@@ -224,9 +254,10 @@ public class LearningWorldViewUt
         await _worldPresenter.Received().LoadLearningSpaceAsync();
     }
 
-    private IRenderedComponent<LearningWorldView> GetLearningWorldViewForTesting(RenderFragment? childContent = null)
+    private IRenderedComponent<LearningWorldPathwayView> GetLearningWorldViewForTesting(
+        RenderFragment? childContent = null)
     {
-        return _ctx.RenderComponent<LearningWorldView>(parameters => parameters
+        return _ctx.RenderComponent<LearningWorldPathwayView>(parameters => parameters
             .Add(p => p.ChildContent, childContent));
     }
 }

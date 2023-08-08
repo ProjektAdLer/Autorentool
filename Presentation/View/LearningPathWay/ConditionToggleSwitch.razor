@@ -1,26 +1,27 @@
+@using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningPathway
 @using Shared
-@using Presentation.PresentationLogic
-
+@using System.Diagnostics.CodeAnalysis
 <foreignObject transform="translate(9,7)" x=@ObjectInPathWay.PositionX y=@ObjectInPathWay.PositionY width="56" height="28">
     <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" checked="@ConditionValue" onclick="@HandleCheckboxChanged" class="sr-only peer">
+        <input type="checkbox" checked="@ConditionValue" @onclick="@HandleCheckboxChanged" class="sr-only peer">
         <div class="w-14 h-7 bg-[#172D4C] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-[#172D4C]"></div>
     </label>
-</foreignobject>  
+</foreignobject>
 
 @((MarkupString)String.Format(Text, ObjectName, ObjectInPathWay.PositionX, ObjectInPathWay.PositionY))
 
 @code {
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
 
     [Parameter]
     public EventCallback<PathWayConditionViewModel> OnSwitchPathWayCondition { get; set; }
 
-    private void HandleCheckboxChanged() {
+    private void HandleCheckboxChanged()
+    {
         OnSwitchPathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay);
     }
 
@@ -36,9 +37,9 @@
                 };
         }
     }
-    
+
     private string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
-    
+
     private string Text
     {
         get
@@ -54,4 +55,5 @@
             }
         }
     }
+
 }

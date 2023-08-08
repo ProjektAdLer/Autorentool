@@ -180,7 +180,7 @@ public static class TestExtensions
             options.SnackbarConfiguration.ShowTransitionDuration = 0;
             options.SnackbarConfiguration.HideTransitionDuration = 0;
         });
-        ctx.Services.AddScoped(sp => new HttpClient());
+        ctx.Services.AddScoped(_ => new HttpClient());
         ctx.Services.AddOptions();
     }
 
@@ -195,9 +195,9 @@ public static class TestExtensions
         public MockNavigationManager() : base() =>
             this.Initialize("http://localhost:2112/", "http://localhost:2112/test");
 
+        public bool WasNavigateInvoked { get; private set; }
+
         protected override void NavigateToCore(string uri, bool forceLoad) =>
             this.WasNavigateInvoked = true;
-
-        public bool WasNavigateInvoked { get; private set; }
     }
 }

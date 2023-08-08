@@ -1,11 +1,10 @@
-@inject IMouseService MouseService
-@inject ILogger<PullablePath> Logger;
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.LearningSpace
-@using Shared
 @using Direction = Shared.Direction
 @using Presentation.PresentationLogic
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using System.Diagnostics.CodeAnalysis
+@inject IMouseService MouseService
+@inject ILogger<PullablePath> Logger;
 
 <marker
     id="arrow"
@@ -17,49 +16,61 @@
     stroke="rgb(108, 117, 125)"
     fill="rgb(108, 117, 125)"
     orient="auto-start-reverse">
-    <path d="M 0 0 L 10 5 L 0 10 z" />
+    <path d="M 0 0 L 10 5 L 0 10 z"/>
 </marker>
 <g @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
     <circle r="7" transform="translate(@(X1), @(Y1))" fill="green" stroke="green"/>
     <polyline points="0,0 0,4 0,-4 0,0 4,0 -4,0" transform="translate(@(X1), @(Y1))" style="fill:none;stroke:white;stroke-width:1"/>
     @if (_isDown)
     {
-        <path d="M @X1 @(Y1+6) C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="2" fill="transparent" marker-end="url(#arrow)" pointer-events="none"/>
+        <path d="M @X1 @(Y1 + 6) C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="2" fill="transparent" marker-end="url(#arrow)" pointer-events="none"/>
     }
 </g>
 
 @code {
     // Overwrite nullability warning below because service may never be null -n.stich
-    [Parameter, EditorRequired] 
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich 
     public IPositioningService PositioningSrv { get; set; } = null!;
-    
+
     // Coordinates of the start of the pathway
-    [Parameter] public double X1 { get; set; }
-    [Parameter] public double Y1 { get; set; }
+    [Parameter]
+    public double X1 { get; set; }
+
+    [Parameter]
+    public double Y1 { get; set; }
 
     // Coordinates of the end of the pathway
-    [Parameter] public double X2 { get; set; }
-    [Parameter] public double Y2 { get; set; }
-    
+    [Parameter]
+    public double X2 { get; set; }
+
+    [Parameter]
+    public double Y2 { get; set; }
+
     // Direction of curvature of the first half of the pathway
-    [Parameter] public Direction Direction1 { get; set; } = Direction.Right;
+    [Parameter]
+    public Direction Direction1 { get; set; } = Direction.Right;
+
     // Direction of curvature of the first half of the pathway
-    [Parameter] public Direction Direction2 { get; set; } = Direction.Left;
+    [Parameter]
+    public Direction Direction2 { get; set; } = Direction.Left;
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel LearningObject { get; set; } = null!;
-    
+
     // Size of the given LearningObject
-    [Parameter] public double SizeX { get; set; }
-    [Parameter] public double SizeY { get; set; }
+    [Parameter]
+    public double SizeX { get; set; }
+
+    [Parameter]
+    public double SizeY { get; set; }
 
     // The following coordinates are used as control points for the Bezier curve
     private double _c1X;
     private double _c2X;
     private double C1Y => Y1;
     private double C2Y => Y2;
-    
+
     private double _cursorX;
     private double _cursorY;
 
@@ -77,7 +88,7 @@
         }
     }
 
-    const int Coefficient = 0;
+        const int Coefficient = 0;
 
     double GetControlPoint(Direction dir, double x)
         => dir == Direction.Right ? x + Coefficient : x - Coefficient;
@@ -92,19 +103,19 @@
         MouseService.OnOut += OnUpOrOut;
         base.OnInitialized();
     }
-    
+
     private void OnMove(object? sender, MouseEventArgs e)
     {
         if (!_isDown) return;
 
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
-        
-        PositioningSrv.SetOnHoveredObjectInPathWay(LearningObject,X2, Y2);
+
+        PositioningSrv.SetOnHoveredObjectInPathWay(LearningObject, X2, Y2);
 
         _hasMoved = true;
     }
-    
+
     private void OnDown(MouseEventArgs e)
     {
         _cursorX = e.ClientX;
@@ -115,7 +126,7 @@
         _cursor = "grabbing";
         _hasMoved = false;
     }
-    
+
     private void OnUpOrOut(object? sender, MouseEventArgs e)
     {
         if (!_hasMoved)
@@ -129,4 +140,5 @@
         }
         _isDown = false;
     }
+
 }

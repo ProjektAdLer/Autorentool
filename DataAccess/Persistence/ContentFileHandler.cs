@@ -8,15 +8,10 @@ namespace DataAccess.Persistence;
 
 public class ContentFileHandler : IContentFileHandler
 {
-    private readonly ILogger<ContentFileHandler> _logger;
-    private readonly IFileSystem _fileSystem;
-    private readonly IXmlFileHandler<List<LinkContentPe>> _xmlFileHandlerLink;
-
     private const string LinkFile = ".linkstore";
-
-    public string ContentFilesFolderPath => Path.Join(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "AdLerAuthoring", "ContentFiles");
+    private readonly IFileSystem _fileSystem;
+    private readonly ILogger<ContentFileHandler> _logger;
+    private readonly IXmlFileHandler<List<LinkContentPe>> _xmlFileHandlerLink;
 
     public ContentFileHandler(ILogger<ContentFileHandler> logger, IFileSystem fileSystem,
         IXmlFileHandler<List<LinkContentPe>> xmlFileHandlerLink)
@@ -30,12 +25,9 @@ public class ContentFileHandler : IContentFileHandler
         AssertAllFilesInContentFilesFolderHaveHash();
     }
 
-    private void AssertContentFilesFolderExists()
-    {
-        if (_fileSystem.Directory.Exists(ContentFilesFolderPath)) return;
-        _logger.LogDebug("Folder {} did not exist, creating", ContentFilesFolderPath);
-        _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
-    }
+    public string ContentFilesFolderPath => Path.Join(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "AdLerAuthoring", "ContentFiles");
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
     public async Task<ILearningContentPe> LoadContentAsync(string filepath)
@@ -85,28 +77,6 @@ public class ContentFileHandler : IContentFileHandler
         OverwriteLinksFile(links);
     }
 
-    private void DeleteLink(LinkContentPe linkContent)
-    {
-        var links = GetAllLinks();
-        links.Remove(linkContent);
-        OverwriteLinksFile(links);
-    }
-
-    private List<LinkContentPe> GetAllLinks()
-    {
-        AssertContentFilesFolderExists();
-        var filepath = _fileSystem.Path.Combine(ContentFilesFolderPath, LinkFile);
-        //assert file exists
-        return _fileSystem.File.Exists(filepath) ? _xmlFileHandlerLink.LoadFromDisk(filepath) : new List<LinkContentPe>();
-    }
-
-    private void OverwriteLinksFile(List<LinkContentPe> links)
-    {
-        AssertContentFilesFolderExists();
-        var filepath = _fileSystem.Path.Combine(ContentFilesFolderPath, LinkFile);
-        _xmlFileHandlerLink.SaveToDisk(links, filepath);
-    }
-
     /// <inheritdoc cref="IContentFileHandler.GetAllContent"/>
     public IEnumerable<ILearningContentPe> GetAllContent()
     {
@@ -115,29 +85,6 @@ public class ContentFileHandler : IContentFileHandler
             .Select(ParseFileName)
             .Where(FilterContent);
         return fileContent.Union(GetAllLinks());
-    }
-
-    /// <summary>
-    /// Filters out content entries that shouldn't be shown to the user.
-    /// </summary>
-    /// <param name="arg">The content that should be filtered.</param>
-    /// <returns>True if it should be shown, false if not.</returns>
-    private static bool FilterContent(ILearningContentPe arg)
-    {
-        if (arg is FileContentPe { Type: "hash" or "ds_store" }) return false;
-        return !arg.Name.StartsWith(".");
-    }
-
-    /// <summary>
-    /// Parses a file at a given path into a <see cref="LearningContentPe"/> object.
-    /// </summary>
-    /// <param name="filePath">The path of the file that should be parsed.</param>
-    /// <returns>The parsed <see cref="LearningContentPe"/> object.</returns>
-    private ILearningContentPe ParseFileName(string filePath)
-    {
-        var fileType = _fileSystem.Path.GetExtension(filePath).Trim('.').ToLower();
-        var fileName = _fileSystem.Path.GetFileName(filePath);
-        return new FileContentPe(fileName, fileType, filePath);
     }
 
     /// <inheritdoc cref="IContentFileHandler.RemoveContent"/>
@@ -154,6 +101,60 @@ public class ContentFileHandler : IContentFileHandler
             default:
                 throw new ArgumentOutOfRangeException(nameof(content), content, null);
         }
+    }
+
+    private void AssertContentFilesFolderExists()
+    {
+        if (_fileSystem.Directory.Exists(ContentFilesFolderPath)) return;
+        _logger.LogDebug("Folder {} did not exist, creating", ContentFilesFolderPath);
+        _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
+    }
+
+    private void DeleteLink(LinkContentPe linkContent)
+    {
+        var links = GetAllLinks();
+        links.Remove(linkContent);
+        OverwriteLinksFile(links);
+    }
+
+    private List<LinkContentPe> GetAllLinks()
+    {
+        AssertContentFilesFolderExists();
+        var filepath = _fileSystem.Path.Combine(ContentFilesFolderPath, LinkFile);
+        //assert file exists
+        return _fileSystem.File.Exists(filepath)
+            ? _xmlFileHandlerLink.LoadFromDisk(filepath)
+            : new List<LinkContentPe>();
+    }
+
+    private void OverwriteLinksFile(List<LinkContentPe> links)
+    {
+        AssertContentFilesFolderExists();
+        var filepath = _fileSystem.Path.Combine(ContentFilesFolderPath, LinkFile);
+        _xmlFileHandlerLink.SaveToDisk(links, filepath);
+    }
+
+    /// <summary>
+    /// Filters out content entries that shouldn't be shown to the user.
+    /// </summary>
+    /// <param name="arg">The content that should be filtered.</param>
+    /// <returns>True if it should be shown, false if not.</returns>
+    private static bool FilterContent(ILearningContentPe arg)
+    {
+        if (arg is FileContentPe { Type: "hash" or "ds_store" }) return false;
+        return !arg.Name.StartsWith(".");
+    }
+
+    /// <summary>
+    /// Parses a file at a given path into a <see cref="ILearningContentPe"/> object.
+    /// </summary>
+    /// <param name="filePath">The path of the file that should be parsed.</param>
+    /// <returns>The parsed <see cref="ILearningContentPe"/> object.</returns>
+    private ILearningContentPe ParseFileName(string filePath)
+    {
+        var fileType = _fileSystem.Path.GetExtension(filePath).Trim('.').ToLower();
+        var fileName = _fileSystem.Path.GetFileName(filePath);
+        return new FileContentPe(fileName, fileType, filePath);
     }
 
     private void RemoveFileContent(FileContentPe fileContent)
@@ -226,7 +227,7 @@ public class ContentFileHandler : IContentFileHandler
             //pre-filter all hash files where length of actual file is not equal to length of stream
             .Where(hashPath => RealFileHasSameLength(stream, hashPath))
             .FirstOrDefault(path => streamHash.SequenceEqual(_fileSystem.File.ReadAllBytes(path)));
-        if(match != null)
+        if (match != null)
             _logger.LogInformation("Found matching hash at {Match}", match);
         return match == null
             ? (null, streamHash)
@@ -288,7 +289,7 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogTrace("Begin computing hash");
         return await sha256.ComputeHashAsync(stream);
     }
-    
+
     private string CopyFileToContentFilesFolder(string filePath)
     {
         var uniqueDestination = FindUniqueDestination(filePath);

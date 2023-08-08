@@ -351,7 +351,7 @@ public class PersistenceCt
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
                     0,
@@ -359,14 +359,15 @@ public class PersistenceCt
                 }
             }, FloorPlanEnum.R_20X30_8L));
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
                     0,
                     element
                 }
             }, FloorPlanEnum.R_20X30_8L));
-        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe> {space1, space2});
+        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
+            { space1, space2 });
 
         var mockFileSystem = new MockFileSystem();
 
@@ -387,7 +388,7 @@ public class PersistenceCt
         var element1 = PersistEntityProvider.GetLearningElement(content: content);
         var element2 = PersistEntityProvider.GetLearningElement(content: content);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
                     0,
@@ -395,14 +396,15 @@ public class PersistenceCt
                 }
             }, FloorPlanEnum.R_20X30_8L));
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
                     0,
                     element2
                 }
             }, FloorPlanEnum.R_20X30_8L));
-        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe> {space1, space2});
+        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
+            { space1, space2 });
 
         var mockFileSystem = new MockFileSystem();
 

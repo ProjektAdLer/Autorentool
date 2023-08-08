@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
@@ -16,9 +17,19 @@ using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface,
+public class LearningWorldPresenter : ILearningWorldPresenter,
     ILearningWorldPresenterOverviewInterface
 {
+    private readonly IErrorService _errorService;
+    private readonly ILearningSpacePresenter _learningSpacePresenter;
+    private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly IMediator _mediator;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+
+    private ILearningWorldViewModel? _learningWorldVm;
+
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
@@ -35,41 +46,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _errorService = errorService;
     }
 
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILogger<LearningWorldPresenter> _logger;
-    private readonly IMediator _mediator;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IErrorService _errorService;
-
-    private ILearningWorldViewModel? _learningWorldVm;
-    private IObjectInPathWayViewModel? _newConditionSourceObject;
-    private LearningSpaceViewModel? _newConditionTargetSpace;
-    private int _spaceCreationCounter = 0;
-    private int _conditionCreationCounter = 0;
-
-    public bool SelectedLearningObjectIsSpace =>
-        _selectedViewModelsProvider.LearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
-
-    public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
-
-    /// <summary>
-    /// The currently selected LearningWorldViewModel.
-    /// </summary>
+    /// <inheritdoc cref="ILearningWorldPresenter.LearningWorldVm"/>
     public ILearningWorldViewModel? LearningWorldVm
     {
         get => _learningWorldVm;
         internal set
         {
-            var selectedLearningObjectIsSpaceBefore = SelectedLearningObjectIsSpace;
-            var showingLearningSpaceViewBefore = ShowingLearningSpaceView;
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
-            if (SelectedLearningObjectIsSpace != selectedLearningObjectIsSpaceBefore)
-                OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
-            if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
-                OnPropertyChanged(nameof(ShowingLearningSpaceView));
             HideRightClickMenu();
         }
     }
@@ -84,45 +69,90 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
 
-    /// <summary>
-    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
-    /// Otherwise, it is null.
-    /// </summary>
+    /// <inheritdoc cref="ILearningWorldPresenter.RightClickedLearningObject"/>
     public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
 
-    public void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningWorld))
-        {
-            if (caller is not ISelectedViewModelsProvider)
-                throw new ArgumentException("Caller must be of type ISelectedViewModelsProvider");
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-            LearningWorldVm = _selectedViewModelsProvider.LearningWorld;
+    public event PropertyChangingEventHandler? PropertyChanging;
+
+    private void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(_selectedViewModelsProvider.LearningWorld)) return;
+        if (caller is not ISelectedViewModelsProvider)
+        {
+            LogAndSetError("OnSelectedViewModelsProviderOnPropertyChanged",
+                $"Caller must be of type ISelectedViewModelsProvider, got {caller?.GetType()}",
+                "Caller must be of type ISelectedViewModelsProvider");
+            return;
         }
+
+        LearningWorldVm = _selectedViewModelsProvider.LearningWorld;
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+    }
+
+    private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        OnPropertyChanging(propertyName);
+        return true;
+    }
+
+
+    private bool CheckLearningWorldNotNull(string operation)
+    {
+        if (LearningWorldVm != null)
+        {
+            return true;
+        }
+
+        LogAndSetError(operation, "SelectedLearningWorld is null", "No learning world selected");
+        return false;
+    }
+
+    private void LogAndSetError(string operation, string errorDetail, string userMessage)
+    {
+        _logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
+        _errorService.SetError("Operation failed", userMessage);
     }
 
     #region LearningWorld
 
+    /// <inheritdoc cref="ILearningWorldPresenter.EditLearningWorld"/>
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
         string goals)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("EditLearningWorld"))
+            return;
 
-        _presentationLogic.EditLearningWorld(LearningWorldVm, name, shortname, authors, language, description, goals);
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals);
     }
 
-    /// <summary>
-    /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorldAsync"/>
     public async Task SaveLearningWorldAsync()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("SaveLearningWorldAsync"))
+            return;
 
-        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel) LearningWorldVm);
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm!);
     }
 
     #endregion
@@ -133,111 +163,99 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// Changes the selected <see cref="IObjectInPathWayViewModel"/> in the currently selected learning world.
     /// </summary>
     /// <param name="pathWayObject">The pathway object that should be set as selected</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     internal void SetSelectedLearningObject(ISelectableObjectInWorldViewModel pathWayObject)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        if (SelectedLearningObjectIsSpace)
+        if (!CheckLearningWorldNotNull("SetSelectedLearningObject"))
+            return;
+        if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
         {
             _learningSpacePresenter.SetLearningSpace(
-                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
+                space);
         }
-        
+
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
 
         HideRightClickMenu();
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.DragObjectInPathWay"/>
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
     {
         _presentationLogic.DragObjectInPathWay(args.LearningObject, args.OldPositionX, args.OldPositionY);
         HideRightClickMenu();
     }
 
-    public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel obj)
+    /// <inheritdoc cref="ILearningWorldPresenter.RightClickOnObjectInPathWay"/>
+    public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWayView)
     {
-        RightClickedLearningObject = obj;
+        RightClickedLearningObject = objectInPathWayView;
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.HideRightClickMenu"/>
     public void HideRightClickMenu()
     {
         RightClickedLearningObject = null;
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.ClickOnObjectInWorld"/>
     public void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj)
     {
         SetSelectedLearningObject(obj);
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.DoubleClickOnObjectInPathway"/>
     public void DoubleClickOnObjectInPathway(IObjectInPathWayViewModel obj)
     {
         SetSelectedLearningObject(obj);
         if (obj is PathWayConditionViewModel pathwayCondition)
             SwitchPathWayCondition(pathwayCondition);
-        ShowSelectedLearningSpaceView();
     }
 
-    public void DeleteLearningObject(IObjectInPathWayViewModel obj)
+    /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningObject"/>
+    public void DeleteLearningObject(IObjectInPathWayViewModel objectInPathWayViewModel)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        switch (obj)
+        if (!CheckLearningWorldNotNull("DeleteLearningObject"))
+            return;
+        switch (objectInPathWayViewModel)
         {
             case PathWayConditionViewModel pathWayConditionViewModel:
-                _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayConditionViewModel);
+                _presentationLogic.DeletePathWayCondition(LearningWorldVm!, pathWayConditionViewModel);
                 break;
             case LearningSpaceViewModel learningSpaceViewModel:
-                _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpaceViewModel);
+                _presentationLogic.DeleteLearningSpace(LearningWorldVm!, learningSpaceViewModel);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(obj));
         }
     }
 
-    /// <summary>
-    /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.DeleteSelectedLearningObject"/>
     public void DeleteSelectedLearningObject()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("SaveLearningWorldAsync"))
+            return;
         switch (_selectedViewModelsProvider.LearningObjectInPathWay)
         {
             case null:
                 return;
             case LearningSpaceViewModel space:
-                _presentationLogic.DeleteLearningSpace(LearningWorldVm, space);
+                _presentationLogic.DeleteLearningSpace(LearningWorldVm!, space);
                 break;
             case LearningPathwayViewModel pathWay:
-                _presentationLogic.DeleteLearningPathWay(LearningWorldVm, pathWay);
+                _presentationLogic.DeleteLearningPathWay(LearningWorldVm!, pathWay);
                 break;
             case PathWayConditionViewModel condition:
-                _presentationLogic.DeletePathWayCondition(LearningWorldVm, condition);
+                _presentationLogic.DeletePathWayCondition(LearningWorldVm!, condition);
                 break;
         }
     }
 
     #region LearningSpace
 
-    public void SetSelectedLearningSpace(IObjectInPathWayViewModel obj)
+    /// <inheritdoc cref="ISelectedSetter.SetSelectedLearningSpace"/>
+    public void SetSelectedLearningSpace(IObjectInPathWayViewModel objectInPathWayViewModel)
     {
-        SetSelectedLearningObject(obj);
+        SetSelectedLearningObject(objectInPathWayViewModel);
         _selectedViewModelsProvider.SetLearningElement(null, null);
         _mediator.RequestOpenSpaceDialog();
-    }
-
-    public void ShowSelectedLearningSpaceView()
-    {
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
-        HideRightClickMenu();
-    }
-
-    public void CloseLearningSpaceView()
-    {
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
@@ -248,124 +266,147 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         double positionY = 0D,
         TopicViewModel? topic = null)
     {
-        if (LearningWorldVm == null)
-        {
-            _errorService.SetError("Error", "Error while creating learning space; No Learning World selected");
+        if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
-        }
 
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
             requiredPoints, theme, advancedMode, positionX, positionY, topic);
-        //TODO: Return error in the command in case of failure
     }
 
-    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
-    public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.AddLearningSpace(LearningWorldVm, learningSpace);
-    }
-
+    /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>
     public void AddNewLearningSpace()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("AddNewLearningSpace"))
+            return;
         _selectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
         _mediator.RequestOpenSpaceDialog();
     }
 
-    /// <summary>
-    /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.LoadLearningSpaceAsync"/>
     public async Task LoadLearningSpaceAsync()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
+        if (!CheckLearningWorldNotNull("LoadLearningSpaceAsync"))
+            return;
+        try
+        {
+            //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+            await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm!);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while loading learning space", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while loading learning space", e.Message);
+        }
     }
 
-    /// <summary>
-    /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.SaveSelectedLearningSpaceAsync"/>
     public async Task SaveSelectedLearningSpaceAsync()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("SaveLearningSpaceAsync"))
+            return;
         if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
+        {
+            LogAndSetError("SaveLearningSpaceAsync", "SelectedLearningObjectInPathWay is null",
+                "No object in pathway is selected");
+            return;
+        }
 
-        await _presentationLogic.SaveLearningSpaceAsync(
-            (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
+        try
+        {
+            await _presentationLogic.SaveLearningSpaceAsync(
+                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while saving learning space", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while saving learning space", e.Message);
+        }
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.EditSelectedLearningSpace"/>
     public void EditSelectedLearningSpace()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("EditSelectedLearningSpace"))
+            return;
         if (_selectedViewModelsProvider.LearningObjectInPathWay is not LearningSpaceViewModel)
-            throw new ApplicationException("SelectedLearningObjectInPathWay is not LearningSpaceViewModel");
+        {
+            LogAndSetError("EditSelectedLearningSpace", "SelectedLearningObjectInPathWay is not LearningSpaceViewModel",
+                "Selected object in pathway is not a learning space");
+            return;
+        }
+
         _mediator.RequestOpenSpaceDialog();
     }
 
-    public void DeleteLearningSpace(ILearningSpaceViewModel obj)
+    /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningSpace"/>
+    public void DeleteLearningSpace(ILearningSpaceViewModel learningSpaceViewModel)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
+        if (!CheckLearningWorldNotNull("DeleteLearningSpace"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.DeleteLearningSpace(LearningWorldVm!, learningSpaceViewModel);
     }
 
     #endregion
 
     #region PathWayCondition
 
+    /// <inheritdoc cref="ILearningWorldPresenter.CreatePathWayCondition"/>
     public void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
+        if (!CheckLearningWorldNotNull("CreatePathWayCondition"))
+            return;
+        try
+        {
+            _presentationLogic.CreatePathWayCondition(LearningWorldVm!, condition, 0, 0);
+        }
+        catch (ApplicationException e)
+        {
+            _errorService.SetError("Error while creating PathWayCondition", e.Message);
+        }
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.SwitchPathWayCondition"/>
     public void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition)
     {
         _presentationLogic.EditPathWayCondition(pathWayCondition,
             pathWayCondition.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
     }
 
+    /// <inheritdoc cref="ILearningWorldPresenter.DeletePathWayCondition"/>
     public void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayCondition);
+        if (!CheckLearningWorldNotNull("DeletePathWayCondition"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.DeletePathWayCondition(LearningWorldVm!, pathWayCondition);
     }
 
     #endregion
 
     #region LearningPathWay
 
-    /// <summary>
-    /// Sets the on hovered learning object of the learning world to the target object on the given position.
-    /// When there is no learning object on the given position, the on hovered learning object is set to null.
-    /// </summary>
-    /// <param name="sourceObject">The learning object from which the path starts.</param>
-    /// <param name="x">The x-coordinate of the target object.</param>
-    /// <param name="y">The y-coordinate of the target object.</param>
+    /// <inheritdoc cref="IPositioningService.SetOnHoveredObjectInPathWay"/>
     public void SetOnHoveredObjectInPathWay(IObjectInPathWayViewModel sourceObject, double x, double y)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("SetOnHoveredObjectInPathWay"))
+            return;
         var objectAtPosition = GetObjectAtPosition(x, y);
         if (objectAtPosition == null || objectAtPosition == sourceObject)
         {
-            LearningWorldVm.OnHoveredObjectInPathWay = null;
+            LearningWorldVm!.OnHoveredObjectInPathWay = null;
         }
         else
         {
-            LearningWorldVm.OnHoveredObjectInPathWay = objectAtPosition;
-            _logger.LogDebug("ObjectAtPosition: {0} ", sourceObject.Id);
+            LearningWorldVm!.OnHoveredObjectInPathWay = objectAtPosition;
+            _logger.LogDebug("ObjectAtPosition: {Id} ", sourceObject.Id);
         }
     }
 
@@ -381,48 +422,42 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y &&
                                    ls.PositionY + 84 >= y) ??
-                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
     }
 
-    /// <summary>
-    /// Creates a learning pathway from the given source space to the target space on the given position.
-    /// Does nothing when there is no learning space on the given position.
-    /// </summary>
-    /// <param name="sourceObject">The learning space from which the path starts.</param>
-    /// <param name="x">The x-coordinate of the target space</param>
-    /// <param name="y">The y-coordinate of the target space</param>
+    /// <inheritdoc cref="IPositioningService.CreateLearningPathWay"/>
     public void CreateLearningPathWay(IObjectInPathWayViewModel sourceObject, double x, double y)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("CreateLearningPathWay"))
+            return;
         var targetObject = GetObjectAtPosition(x, y);
         if (targetObject == null || targetObject == sourceObject)
             return;
-        LearningWorldVm.OnHoveredObjectInPathWay = null;
-        if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel space)
+        LearningWorldVm!.OnHoveredObjectInPathWay = null;
+        if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel)
         {
-            _newConditionSourceObject = sourceObject;
-            _newConditionTargetSpace = space;
             return;
         }
 
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceObject, targetObject);
     }
 
-    /// <summary>
-    /// Deletes the last created learning pathway leading to the target space.
-    /// </summary>
-    /// <param name="targetObject">The learning space where the path ends.</param>
+    /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningPathWay"/>
     public void DeleteLearningPathWay(IObjectInPathWayViewModel targetObject)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        var learningPathWay = LearningWorldVm.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
+        if (!CheckLearningWorldNotNull("DeleteLearningPathWay"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        var learningPathWay = LearningWorldVm!.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
         if (learningPathWay == null)
-            throw new ApplicationException("LearningPathWay is null");
+        {
+            LogAndSetError("DeleteLearningPathWay", "LearningPathWay is null", "No LearningPathWay found");
+            return;
+        }
+
         _presentationLogic.DeleteLearningPathWay(LearningWorldVm, learningPathWay);
     }
 
@@ -432,53 +467,37 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #region LearningElement
 
-    /// <summary>
-    /// Sets the selected learning element of the learning world to the given learning element.
-    /// </summary>
-    /// <param name="learningElement">The learning element to set.</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <inheritdoc cref="ISelectedSetter.SetSelectedLearningElement"/>
     public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("SetSelectedLearningElement"))
+            return;
         if (learningElement.Parent != null)
         {
-            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null); 
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         }
-        
+
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         _mediator.RequestOpenElementDialog();
     }
 
-    /// <summary>
-    /// Edits a given learning element.
-    /// </summary>
-    /// <param name="elementParent">The parent of the learning element which is either a learning space or null.</param>
-    /// <param name="learningElement">The learning element to edit.</param>
-    /// <param name="name">The new name of the element.</param>
-    /// <param name="description">The new description of the element.</param>
-    /// <param name="goals">The new goals of the element.</param>
-    /// <param name="difficulty">The new difficulty of the element.</param>
-    /// <param name="elementModel">The Theme of the element.</param>
-    /// <param name="workload">The new workload of the element.</param>
-    /// <param name="points">The new points of the element.</param>
-    /// <param name="learningContent">The new learning content of the element.</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or the learning
-    /// element to edit is not a unplaced element in the learning world.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.EditLearningElement"/>
     public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
         string name, string description, string goals, LearningElementDifficultyEnum difficulty,
         ElementModel elementModel,
         int workload, int points, ILearningContentViewModel learningContent)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement))
+        if (!CheckLearningWorldNotNull("EditLearningElement"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        if (LearningWorldVm!.UnplacedLearningElements.Contains(learningElement))
             if (learningElement.Parent == null)
                 _presentationLogic.EditLearningElement(elementParent, learningElement, name,
                     description, goals, difficulty, elementModel, workload, points, learningContent);
             else
             {
-                throw new ApplicationException("LearningElement is unplaced but has a space parent");
+                LogAndSetError("EditLearningElement", "LearningElement is unplaced but has a space parent",
+                    "LearningElement is unplaced but has a space parent");
             }
         else
         {
@@ -487,76 +506,58 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                     elementModel, workload, points, learningContent);
             else
             {
-                throw new ApplicationException("LearningElement is placed but has a different or null parent");
+                LogAndSetError("EditLearningElement", "LearningElement is placed but has a different or null parent",
+                    "LearningElement is placed but has a different or null parent");
             }
         }
     }
 
-    /// <summary>
-    /// Calls the the show learning element content method for the selected learning element.
-    /// </summary>
-    /// <param name="learningElement"></param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or no learning element
-    /// is selected in the learning world.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.ShowSelectedElementContentAsync"/>
     public async Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        if (!CheckLearningWorldNotNull("ShowSelectedElementContentAsync"))
+            return;
         SetSelectedLearningElement(learningElement);
-        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+        try
+        {
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
+        catch (IOException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while showing learning element content", e.Message);
+        }
     }
 
-    /// <summary>
-    /// Deletes the given learning element.
-    /// </summary>
-    /// <param name="learningElement">Learning element to delete.</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningElement"/>
     public void DeleteLearningElement(ILearningElementViewModel learningElement)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm, learningElement);
+        if (!CheckLearningWorldNotNull("DeleteLearningElement"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm!, learningElement);
     }
 
     public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();
 
+    /// <inheritdoc cref="ILearningWorldPresenter.CreateUnplacedLearningElement"/>
     public void CreateUnplacedLearningElement(string name,
         ILearningContentViewModel learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, learningContent,
+        if (!CheckLearningWorldNotNull("CreateUnplacedLearningElement"))
+            return;
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm!, name, learningContent,
             description, goals, difficulty, elementModel, workload, points);
     }
 
     #endregion
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
-        field = value;
-        OnPropertyChanged(propertyName);
-    }
-
-    public event PropertyChangingEventHandler? PropertyChanging;
-
-    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-    }
-
-    private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        OnPropertyChanging(propertyName);
-        return true;
-    }
 }

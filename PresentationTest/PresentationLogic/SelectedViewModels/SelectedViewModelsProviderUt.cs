@@ -1,6 +1,7 @@
 using System;
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Space;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningSpace;
@@ -19,7 +20,8 @@ public class SelectedViewModelsProviderUt
     public void SetLearningWorld_SetsLearningWorld()
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
-        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
+        var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
+        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "g");
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
@@ -44,7 +46,8 @@ public class SelectedViewModelsProviderUt
     public void SetLearningObjectInPathWay_SetsLearningObjectInPathWay()
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
-        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
+        var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
+        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus, false);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
         
@@ -67,7 +70,8 @@ public class SelectedViewModelsProviderUt
     public void SetLearningElement_SetsLearningElement()
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
-        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
+        var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
+        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var learningElement = ViewModelProvider.GetLearningElement();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
         
@@ -90,7 +94,8 @@ public class SelectedViewModelsProviderUt
     public void SetLearningContent_SetsLearningContent()
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
-        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
+        var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
+        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var content = ViewModelProvider.GetFileContent();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
         
@@ -113,7 +118,8 @@ public class SelectedViewModelsProviderUt
     public void SetActiveSlotInSpace_SetsActiveSlotInSpace()
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
-        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
+        var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
+        var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveSlotInSpace(1, mockCommand);

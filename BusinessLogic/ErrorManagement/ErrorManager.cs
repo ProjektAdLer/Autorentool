@@ -15,24 +15,32 @@ public class ErrorManager : IErrorManager
     /// <inheritdoc cref="IErrorManager.LogAndRethrowError" />
     public void LogAndRethrowError(Exception exception)
     {
-        _logger.LogError(exception, "an error has occurred: {message}", exception.Message);
+        _logger.LogError(exception, "an error has occurred: {Message}", exception.Message);
 
         throw exception;
     }
-    
+
     /// <inheritdoc cref="IErrorManager.LogAndRethrowUndoError" />
     public void LogAndRethrowUndoError(Exception exception)
     {
-        _logger.LogError(exception, "an error has occurred during undo operation: {message}", exception.Message);
+        _logger.LogError(exception, "an error has occurred during undo operation: {Message}", exception.Message);
 
-        throw new UndoException(exception.Message ,exception);
+        throw new UndoException(exception.Message, exception);
     }
 
     /// <inheritdoc cref="IErrorManager.LogAndRethrowRedoError" />
     public void LogAndRethrowRedoError(Exception exception)
     {
-        _logger.LogError(exception, "an error has occurred during redo operation: {message}", exception.Message);
+        _logger.LogError(exception, "an error has occurred during redo operation: {Message}", exception.Message);
 
         throw new RedoException(exception.Message, exception);
+    }
+
+    /// <inheritdoc cref="IErrorManager.LogAndRethrowGeneratorError" />
+    public void LogAndRethrowGeneratorError(Exception exception)
+    {
+        _logger.LogError(exception, "an error has occurred during generator operation: {Message}", exception.Message);
+
+        throw new GeneratorException(exception.Message, exception);
     }
 }

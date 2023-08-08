@@ -1,32 +1,37 @@
 using BusinessLogic.Entities;
+using Microsoft.Extensions.Logging;
 using Shared.Extensions;
 
 namespace BusinessLogic.Commands.World;
 
 public class CreateLearningWorld : ICreateLearningWorld
 {
-    public string Name => nameof(CreateLearningWorld);
-    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
-    internal Action<AuthoringToolWorkspace> MappingAction { get; }
-
     private IMemento? _memento;
-    internal LearningWorld LearningWorld { get; }
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors, string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction)
+        string authors, string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction,
+        ILogger<CreateLearningWorld> logger)
     {
         LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
         AuthoringToolWorkspace = authoringToolWorkspace;
         MappingAction = mappingAction;
+        Logger = logger;
     }
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
-        Action<AuthoringToolWorkspace> mappingAction)
+        Action<AuthoringToolWorkspace> mappingAction, ILogger<CreateLearningWorld> logger)
     {
         LearningWorld = learningWorld;
         AuthoringToolWorkspace = authoringToolWorkspace;
         MappingAction = mappingAction;
+        Logger = logger;
     }
+
+    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
+    internal Action<AuthoringToolWorkspace> MappingAction { get; }
+    internal LearningWorld LearningWorld { get; }
+    private ILogger<CreateLearningWorld> Logger { get; }
+    public string Name => nameof(CreateLearningWorld);
 
     public void Execute()
     {
@@ -40,6 +45,11 @@ public class CreateLearningWorld : ICreateLearningWorld
 
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
+        Logger.LogTrace(
+            "Created LearningWorld ({Id}). Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}",
+            LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
+            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals);
+
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
@@ -52,8 +62,14 @@ public class CreateLearningWorld : ICreateLearningWorld
 
         AuthoringToolWorkspace.RestoreMemento(_memento);
 
+        Logger.LogTrace("Undone creation of LearningWorld {Name} ({Id})", LearningWorld.Name, LearningWorld.Id);
+
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
-    public void Redo() => Execute();
+    public void Redo()
+    {
+        Logger.LogTrace("Redoing CreateLearningWorld");
+        Execute();
+    }
 }

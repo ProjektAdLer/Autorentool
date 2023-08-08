@@ -13,12 +13,15 @@
 </MudPaper>
 
 @code {
-    private ContentFilesView ContentFilesView { get; set; }
+
+    private ContentFilesView? ContentFilesView { get; set; }
+
 
     /// <summary>Rerenders this component as well as the <see cref="ContentFilesView"/> inside of it.</summary>
     internal async Task RerenderAsync()
     {
         await InvokeAsync(StateHasChanged);
+        if (ContentFilesView is null) throw new InvalidOperationException("ContentFilesView @ref is null");
         await ContentFilesView.RerenderAsync();
     }
 

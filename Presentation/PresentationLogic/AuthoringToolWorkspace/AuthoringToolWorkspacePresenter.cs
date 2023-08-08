@@ -1,7 +1,7 @@
-﻿using MudBlazor;
+﻿using System.Runtime.Serialization;
+using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 
@@ -10,42 +10,60 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
-public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
-    IAuthoringToolWorkspacePresenterToolboxInterface, IDisposable, IAsyncDisposable
+public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter, IDisposable, IAsyncDisposable
 {
+    private readonly IDialogService _dialogService;
+    private readonly IErrorService _errorService;
+    private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private readonly IShutdownManager _shutdownManager;
+
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<AuthoringToolWorkspacePresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider,
-        IShutdownManager shutdownManager, IDialogService dialogService)
+        IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
+        ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
+        IDialogService dialogService, IErrorService errorService)
     {
-        _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
         _logger = logger;
         _shutdownManager = shutdownManager;
         _dialogService = dialogService;
+        _errorService = errorService;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
     }
 
-    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
-
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IShutdownManager _shutdownManager;
-    private readonly IDialogService _dialogService;
-
     public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
 
-    public event Action? OnForceViewUpdate;
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
+
+
+    public void Dispose()
+    {
+        _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
+    }
+
+    private void LogAndSetError(string operation, string errorDetail, string? userMessage)
+    {
+        _logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
+        userMessage ??= errorDetail;
+        _errorService.SetError("Operation failed", userMessage);
+    }
 
 
     #region LearningWorld
 
+    /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
         string goals)
     {
@@ -53,45 +71,20 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             description, goals);
     }
 
-    /// <summary>
-    /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
-    /// </summary>
-    /// <param name="worldName">The name of the world that should be selected.</param>
-    /// <exception cref="ArgumentException">Thrown when no world with that name is registered in the view model.</exception>
-    public void SetSelectedLearningWorld(string worldName)
-    {
-        var world = AuthoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
-        if (world == null) throw new ArgumentException("no world with that name in viewmodel");
-        _selectedViewModelsProvider.SetLearningWorld(world, null);
-    }
-
-    /// <summary>
-    /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
-    /// </summary>
-    /// <param name="learningWorld">The learning world that should be set as selected</param>
-    internal void SetSelectedLearningWorld(LearningWorldViewModel? learningWorld)
-    {
-        _selectedViewModelsProvider.SetLearningWorld(learningWorld, null);
-    }
-
-    /// <summary>
-    /// Deletes the currently selected learning world from the view model and selects the last learning world in the
-    /// collection, if any remain.
-    /// </summary>
-    public void DeleteSelectedLearningWorld()
-    {
-        var learningWorld = _selectedViewModelsProvider.LearningWorld;
-        if (learningWorld == null) return;
-        _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
-    }
-
+    /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>
     public async Task DeleteLearningWorld(ILearningWorldViewModel learningWorld)
     {
         if (WorldHasUnsavedChanges(learningWorld))
         {
             var result = await AskForSaveWorld(learningWorld);
             if (result.Canceled) return;
-            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+            if (result.Data is not bool)
+            {
+                LogAndSetError("DeleteLearningWorld",
+                    $"Unexpected dialog result type while trying to save world; expected bool, got {result.Data?.GetType()}",
+                    "Unexpected dialog result type");
+                return;
+            }
 
             if (result.Data is true) await SaveLearningWorldAsync(learningWorld);
         }
@@ -99,26 +92,20 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
-    public void AddLearningWorld(LearningWorldViewModel learningWorld)
-    {
-        _presentationLogic.AddLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
-    }
-
-    public async Task LoadLearningWorldAsync()
-    {
-        await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
-    }
-
     internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
     {
-        await _presentationLogic.SaveLearningWorldAsync(world);
-    }
-
-    public async Task SaveSelectedLearningWorldAsync()
-    {
-        if (_selectedViewModelsProvider.LearningWorld == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        await SaveLearningWorldAsync(_selectedViewModelsProvider.LearningWorld);
+        try
+        {
+            await _presentationLogic.SaveLearningWorldAsync(world);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while saving world", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while saving world", e.Message);
+        }
     }
 
 
@@ -135,7 +122,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+            if (result.Data is not bool)
+            {
+                LogAndSetError("OnBeforeShutdownAsync",
+                    $"Unexpected dialog result type while trying to save world; expected bool, got {result.Data?.GetType()}",
+                    "Unexpected dialog result type");
+                return;
+            }
+
             if (result.Data is true) await SaveLearningWorldAsync(world);
         }
     }
@@ -146,7 +140,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         //show mudblazor dialog asking if user wants to save unsaved worlds
         var parameters = new DialogParameters
         {
-            {nameof(UnsavedWorldDialog.WorldName), world.Name}
+            { nameof(UnsavedWorldDialog.WorldName), world.Name }
         };
         var options = new DialogOptions
         {
@@ -165,15 +159,4 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     }
 
     #endregion
-
-    public void Dispose()
-    {
-        _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        Dispose();
-        return ValueTask.CompletedTask;
-    }
 }

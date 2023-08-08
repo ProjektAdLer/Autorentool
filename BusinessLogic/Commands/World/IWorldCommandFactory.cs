@@ -44,7 +44,7 @@ public interface IWorldCommandFactory
     /// </summary>
     ILoadLearningWorld GetLoadCommand(AuthoringToolWorkspace workspace, Stream stream, IBusinessLogic businessLogic,
         Action<AuthoringToolWorkspace> mappingAction);
-    
+
     /// <summary>
     /// Creates a command to save a learning world.
     /// </summary>

@@ -1,8 +1,11 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using MudBlazor;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -14,26 +17,30 @@ using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
+public sealed class LearningSpacePresenter : ILearningSpacePresenter
 {
+    private readonly IErrorService _errorService;
+    private readonly IMediator _mediator;
+
+    private readonly IPresentationLogic _presentationLogic;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private ILearningSpaceViewModel? _learningSpaceVm;
+    private ReplaceLearningElementData? _replaceLearningElementData;
+
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
-        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
+        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger,
+        IErrorService errorService)
     {
+        Logger = logger;
         _presentationLogic = presentationLogic;
         _mediator = mediator;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
-        _logger = logger;
+        _errorService = errorService;
     }
 
-    private readonly IPresentationLogic _presentationLogic;
-    private readonly IMediator _mediator;
-    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly ILogger<LearningSpacePresenter> _logger;
-    private int _creationCounter = 0;
-    private ILearningSpaceViewModel? _learningSpaceVm;
-    private ReplaceLearningElementData _replaceLearningElementData = new();
+    private ILogger<LearningSpacePresenter> Logger { get; }
 
     public ILearningSpaceViewModel? LearningSpaceVm
     {
@@ -41,23 +48,24 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         private set => SetField(ref _learningSpaceVm, value);
     }
 
-    public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
+        Logger.LogDebug("LearningSpace set to {Name}", space.Name);
     }
 
     public void EditLearningSpace(string name, string description, string goals,
         int requiredPoints, Theme theme, ITopicViewModel? topic)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, description, goals,
+        if (!CheckLearningSpaceNotNull("EditLearningSpace"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description, goals,
             requiredPoints, theme, topic);
     }
 
-    public bool ReplaceLearningElementDialogOpen { get; set; } = false;
+    public bool ReplaceLearningElementDialogOpen { get; set; }
 
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
@@ -67,37 +75,70 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public void SetLearningSpaceLayout(FloorPlanEnum floorPlanName)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
+        if (!CheckLearningSpaceNotNull("SetLearningSpaceLayout"))
+            return;
         if (_selectedViewModelsProvider.LearningWorld == null)
-            throw new ApplicationException("LearningWorld is null");
-        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld,
+        {
+            LogAndSetError("SetLearningSpaceLayout", "SelectedLearningWorld is null", "No LearningWorld selected");
+            return;
+        }
+
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm!, _selectedViewModelsProvider.LearningWorld,
             floorPlanName);
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    private bool CheckLearningSpaceNotNull(string operation)
+    {
+        if (LearningSpaceVm != null)
+            return true;
+
+        LogAndSetError(operation, "SelectedLearningSpace is null", "No learning space selected");
+        return false;
+    }
+
+    private void LogAndSetError(string operation, string errorDetail, string userMessage)
+    {
+        Logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
+        _errorService.SetError("Operation failed", userMessage);
+    }
+
     #region LearningElement
 
+    [MemberNotNull(nameof(_replaceLearningElementData))]
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel dropItem, int slotId)
     {
-        _replaceLearningElementData = new ReplaceLearningElementData
-        {
-            LearningWorldVm = learningWorldVm,
-            DropItem = dropItem,
-            SlotId = slotId
-        };
+        _replaceLearningElementData = new ReplaceLearningElementData(learningWorldVm, dropItem, slotId);
         ReplaceLearningElementDialogOpen = true;
     }
 
     public void OnReplaceLearningElementDialogClose(DialogResult closeResult)
     {
         ReplaceLearningElementDialogOpen = false;
-        if (LearningSpaceVm == null) throw new ApplicationException("LearningSpaceVm is null");
+        if (!CheckLearningSpaceNotNull("OnReplaceLearningElementDialogClose"))
+            return;
 
         if (closeResult.Canceled) return;
 
-        _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData.LearningWorldVm, LearningSpaceVm,
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData!.LearningWorldVm,
+            LearningSpaceVm!,
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
@@ -120,9 +161,10 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlotInSpace,
+        if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveSlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
@@ -151,19 +193,26 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public void EditLearningElement(int slotIndex)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        var element = LearningSpaceVm.LearningSpaceLayout.GetElement(slotIndex);
+        if (!CheckLearningSpaceNotNull("EditLearningElement"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        var element = LearningSpaceVm!.LearningSpaceLayout.GetElement(slotIndex);
         if (element == null)
-            throw new ApplicationException($"LearningElement at slotIndex {slotIndex} is null");
+        {
+            LogAndSetError("EditLearningElement", $"LearningElement at slotIndex {slotIndex} is null",
+                "LearningElement to edit not found");
+            return;
+        }
+
         SetSelectedLearningElement(element);
     }
 
     public void DeleteLearningElement(ILearningElementViewModel obj)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
-        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm, obj);
+        if (!CheckLearningSpaceNotNull("DeleteLearningElement"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!, obj);
     }
 
     public async void ShowElementContent(ILearningElementViewModel obj)
@@ -177,7 +226,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningObjectInPathWay))
         {
             if (caller is not ISelectedViewModelsProvider)
-                throw new ArgumentException("Caller must be of type ISelectedViewModelsProvider");
+            {
+                LogAndSetError("OnSelectedViewModelsProviderOnPropertyChanged",
+                    $"Caller must be of type ISelectedViewModelsProvider, got {caller?.GetType()}",
+                    "Caller must be of type ISelectedViewModelsProvider");
+                return;
+            }
 
             if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
@@ -190,61 +244,90 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
     /// learning element to its parent.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
     public async Task LoadLearningElementAsync(int slotIndex)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
-        await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm, slotIndex);
+        if (!CheckLearningSpaceNotNull("LoadLearningElementAsync"))
+            return;
+        try
+        {
+            //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+            await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm!, slotIndex);
+        }
+        catch (SerializationException e)
+        {
+            _errorService.SetError("Error while loading learning element", e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            _errorService.SetError("Error while loading learning element", e.Message);
+        }
     }
 
     public void AddLearningElement(ILearningElementViewModel element, int slotIndex)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
-        _presentationLogic.AddLearningElement(LearningSpaceVm, slotIndex, element);
+        if (!CheckLearningSpaceNotNull("AddLearningElement"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.AddLearningElement(LearningSpaceVm!, slotIndex, element);
     }
 
     /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void SetSelectedLearningElement(ILearningElementViewModel? learningElement)
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
+        if (!CheckLearningSpaceNotNull("SetSelectedLearningElement"))
+            return;
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
     }
 
     /// <summary>
     /// Deletes the selected learning element in the currently selected learning space and sets an other element as selected learning element.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void DeleteSelectedLearningElement()
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
-        if (_selectedViewModelsProvider.LearningElement == null)
+        if (!CheckLearningSpaceNotNull("DeleteSelectedLearningElement"))
             return;
-        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm,
+        if (_selectedViewModelsProvider.LearningElement == null)
+        {
+            LogAndSetError("DeleteSelectedLearningElement", "SelectedLearningElement is null",
+                "No learning element selected");
+            return;
+        }
+
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!,
             _selectedViewModelsProvider.LearningElement);
     }
 
     /// <summary>
     /// Calls the the Save methode for the selected learning element.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public async Task SaveSelectedLearningElementAsync()
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
+        if (!CheckLearningSpaceNotNull("SaveSelectedLearningElementAsync"))
+            return;
         switch (_selectedViewModelsProvider.LearningElement)
         {
             case null:
-                throw new ApplicationException("SelectedLearningElement is null");
+                LogAndSetError("SaveSelectedLearningElementAsync", "SelectedLearningElement is null",
+                    "No learning element selected");
+                return;
             case LearningElementViewModel learningElement:
-                await _presentationLogic.SaveLearningElementAsync(learningElement);
+                try
+                {
+                    await _presentationLogic.SaveLearningElementAsync(learningElement);
+                }
+                catch (SerializationException e)
+                {
+                    _errorService.SetError("Error while loading learning element", e.Message);
+                }
+                catch (InvalidOperationException e)
+                {
+                    _errorService.SetError("Error while loading learning element", e.Message);
+                }
+
                 break;
         }
     }
@@ -252,42 +335,51 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// <summary>
     /// Calls the the show learning element content method for the selected learning element.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected or no learning element
-    /// is selected in the learning space.</exception>
     public async Task ShowSelectedElementContentAsync()
     {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
+        if (!CheckLearningSpaceNotNull("ShowSelectedElementContentAsync"))
+            return;
         switch (_selectedViewModelsProvider.LearningElement)
         {
             case null:
-                throw new ApplicationException("SelectedLearningElement is null");
+                LogAndSetError("ShowSelectedElementContentAsync", "SelectedLearningElement is null",
+                    "No learning element selected");
+                return;
             case LearningElementViewModel learningElement:
-                await _presentationLogic.ShowLearningElementContentAsync(learningElement);
+                try
+                {
+                    await _presentationLogic.ShowLearningElementContentAsync(learningElement);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
+                catch (IOException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
+                catch (InvalidOperationException e)
+                {
+                    _errorService.SetError("Error while showing learning element content", e.Message);
+                }
+
                 break;
         }
     }
 
     #endregion
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
 }
 
 internal class ReplaceLearningElementData
 {
+    public ReplaceLearningElementData(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId)
+    {
+        LearningWorldVm = learningWorldVm;
+        DropItem = dropItem;
+        SlotId = slotId;
+    }
+
     internal ILearningWorldViewModel LearningWorldVm { get; init; }
     public ILearningElementViewModel DropItem { get; init; }
     public int SlotId { get; init; }

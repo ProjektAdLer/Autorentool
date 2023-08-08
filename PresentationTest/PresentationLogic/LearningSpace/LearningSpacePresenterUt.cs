@@ -1,11 +1,15 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BusinessLogic.Commands;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -19,18 +23,15 @@ namespace PresentationTest.PresentationLogic.LearningSpace;
 [TestFixture]
 public class LearningSpacePresenterUt
 {
-    #region LearningSpace
-
-    #region EditLearningSpace
-
     [Test]
-    public void EditLearningSpace_LearningSpaceVmIsNull_ThrowsException()
+    public void EditLearningSpace_LearningSpaceVmIsNull_SetsError()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningSpace("a", "d", "e", 5, Theme.Campus, null));
-        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+        systemUnderTest.EditLearningSpace("a", "d", "e", 5, Theme.Campus, null);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
@@ -47,21 +48,16 @@ public class LearningSpacePresenterUt
         presentationLogic.Received().EditLearningSpace(space, "space", "d", "e", 5, Theme.Campus, topic);
     }
 
-    #endregion
-
-    #endregion
-
-    #region LearningElement
-
     [Test]
-    public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
+    public void AddLearningElement_SelectedLearningSpaceIsNull_SetsError()
     {
         var element = ViewModelProvider.GetLearningElement();
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.AddLearningElement(element, 0);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element, 0));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
@@ -115,13 +111,15 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
+    public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_SetsError()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
         var element = ViewModelProvider.GetLearningElement();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        systemUnderTest.SetSelectedLearningElement(element);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
@@ -198,11 +196,12 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void CreateLearningElementInSlot_SpaceVmIsNull_Throws()
+    public void CreateLearningElementInSlot_SpaceVmIsNull_SetsError()
     {
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
         var presentationLogic = Substitute.For<IPresentationLogic>();
+        var mockErrorService = Substitute.For<IErrorService>();
         var name = "name";
         var content = new FileContentViewModel("abc", "def", "ghi");
         var difficulty = LearningElementDifficultyEnum.Easy;
@@ -214,12 +213,12 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
-                presentationLogic: presentationLogic);
+                presentationLogic: presentationLogic, errorService: mockErrorService);
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel,
-                workload, points));
-        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+        systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel,
+            workload, points);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
@@ -251,8 +250,6 @@ public class LearningSpacePresenterUt
         selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
     }
 
-    #region EditLearningElement
-
     [Test]
     public void EditLearningElement_CallsPresentationLogic()
     {
@@ -271,26 +268,30 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void EditLearningElementWithSlotIndex_SpaceVmIsNull_Throws()
+    public void EditLearningElementWithSlotIndex_SpaceVmIsNull_SetsError()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(2));
-        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
+
+        systemUnderTest.EditLearningElement(2);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
-    public void EditLearningElementWithSlotIndex_ElementAtSlotIndexIsNull_Throws()
+    public void EditLearningElementWithSlotIndex_ElementAtSlotIndexIsNull_SetsError()
     {
+        var mockErrorService = Substitute.For<IErrorService>();
         var space = ViewModelProvider.GetLearningSpace();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         space.LearningSpaceLayout.PutElement(2, null!);
-
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
+            errorService: mockErrorService);
         systemUnderTest.SetLearningSpace(space);
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(2));
-        Assert.That(ex!.Message, Is.EqualTo("LearningElement at slotIndex 2 is null"));
+
+        systemUnderTest.EditLearningElement(2);
+
+        mockErrorService.Received().SetError("Operation failed", "LearningElement to edit not found");
     }
 
     [Test]
@@ -308,11 +309,6 @@ public class LearningSpacePresenterUt
         selectedViewModelsProvider.Received().SetLearningElement(element, null);
     }
 
-    #endregion
-
-
-    #region DeleteLearningElement
-
     [Test]
     public void DeleteLearningElement_CallsPresentationLogic()
     {
@@ -327,31 +323,39 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void DeleteLearningElement_ThrowsWhenSelectedSpaceNull()
+    public void DeleteLearningElement_SetsErrorWhenSelectedSpaceNull()
     {
         var element = ViewModelProvider.GetLearningElement();
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
+
+        systemUnderTest.DeleteLearningElement(element);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
-    public void DeleteSelectedLearningElement_ThrowsWhenSelectedSpaceNull()
+    public void DeleteSelectedLearningElement_SetsErrorWhenSelectedSpaceNull()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningElement());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
+
+        systemUnderTest.DeleteSelectedLearningElement();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
+
 
     [Test]
     public void DeleteSelectedLearningElement_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = new SelectedViewModelsProvider(Substitute.For<IOnUndoRedo>());
+        var selectedViewModelsProvider = new SelectedViewModelsProvider(Substitute.For<IOnUndoRedo>(),
+            Substitute.For<ILogger<SelectedViewModelsProvider>>());
         selectedViewModelsProvider.SetLearningElement(null, null);
 
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
@@ -389,34 +393,33 @@ public class LearningSpacePresenterUt
         mockPresentationLogic.Received().DeleteLearningElementInSpace(space, element);
     }
 
-    #endregion
-
-    #region SaveSelectedLearningElement
-
     [Test]
-    public void SaveSelectedLearningElementAsync_ThrowsWhenSelectedWorldNull()
+    public async Task SaveSelectedLearningElementAsync_SetsErrorWhenSelectedSpaceNull()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.SaveSelectedLearningElementAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
+
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
-    public void SaveSelectedLearningElementAsync_DoesNotThrowWhenSelectedObjectNull()
+    public async Task SaveSelectedLearningElementAsync_LogsErrorWhenSelectedObjectNull()
     {
+        var mockErrorService = Substitute.For<IErrorService>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var space = ViewModelProvider.GetLearningSpace();
-
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
+            errorService: mockErrorService);
         systemUnderTest.SetLearningSpace(space);
-        selectedViewModelsProvider.LearningElement.Returns((ILearningElementViewModel?) null);
+        selectedViewModelsProvider.LearningElement.Returns((ILearningElementViewModel?)null);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.SaveSelectedLearningElementAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning element selected");
     }
 
     [Test]
@@ -439,36 +442,82 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().SaveLearningElementAsync(element);
     }
 
-    #endregion
-
-    #region ShowSelectedElementContent
-
     [Test]
-    public void ShowSelectedElementContent_ThrowsWhenSelectedWorldNull()
+    public async Task SaveSelectedLearningElementAsync_SerializationException_CallsErrorManager()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.ShowSelectedElementContentAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.SaveLearningElementAsync(element).Returns(Task.FromException(new SerializationException()));
+
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        errorService.Received().SetError("Error while loading learning element", Arg.Any<string>());
     }
 
     [Test]
-    public void ShowSelectedElementContent_DoesNotThrowWhenSelectedObjectNull()
+    public async Task SaveSelectedLearningElementAsync_InvalidOperationException_CallsErrorManager()
     {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.SaveLearningElementAsync(element)
+            .Returns(Task.FromException(new InvalidOperationException()));
+
+        await systemUnderTest.SaveSelectedLearningElementAsync();
+
+        errorService.Received().SetError("Error while loading learning element", Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContent_SetsErrorWhenSelectedSpaceNull()
+    {
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
+
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
+
+        await systemUnderTest.ShowSelectedElementContentAsync();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContent_LogsErrorWhenSelectedObjectNull()
+    {
+        var mockErrorService = Substitute.For<IErrorService>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var space = ViewModelProvider.GetLearningSpace();
-
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
+            errorService: mockErrorService);
         systemUnderTest.SetLearningSpace(space);
         selectedViewModelsProvider.SetLearningElement(null, null);
         selectedViewModelsProvider.Received(1).SetLearningElement(null, null);
-        selectedViewModelsProvider.LearningElement.Returns((ILearningElementViewModel?) null);
+        selectedViewModelsProvider.LearningElement.Returns((ILearningElementViewModel?)null);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.ShowSelectedElementContentAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
+        await systemUnderTest.ShowSelectedElementContentAsync();
+
+        mockErrorService.Received().SetError("Operation failed", "No learning element selected");
     }
 
     [Test]
@@ -491,19 +540,85 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().ShowLearningElementContentAsync(element);
     }
 
-    #endregion
+    [Test]
+    public async Task ShowSelectedElementContentAsync_InvalidOperationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
 
-    #region LoadLearningElement
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element)
+            .Returns(Task.FromException(new InvalidOperationException()));
+
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
 
     [Test]
-    public void LoadLearningElementAsync_ThrowsWhenSelectedWorldNull()
+    public async Task ShowSelectedElementContentAsync_ArgumentOutOfRangeException_CallsErrorManager()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningElementAsync(1));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element)
+            .Returns(Task.FromException(new ArgumentOutOfRangeException()));
+
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContentAsync_IOException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = ViewModelProvider.GetLearningSpace();
+        var element = ViewModelProvider.GetLearningElement(parent: space);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        space.LearningSpaceLayout.PutElement(0, element);
+        selectedViewModelsProvider.SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.LearningElement.Returns(element);
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService,
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.SetLearningSpace(space);
+        presentationLogic.ShowLearningElementContentAsync(element).Returns(Task.FromException(new IOException()));
+
+        await systemUnderTest.ShowSelectedElementContentAsync();
+        errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task LoadLearningElementAsync_SetsErrorWhenSelectedSpaceNull()
+    {
+        var mockErrorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
+
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
+
+        await systemUnderTest.LoadLearningElementAsync(1);
+
+        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
 
     [Test]
@@ -521,19 +636,49 @@ public class LearningSpacePresenterUt
         await presentationLogic.Received().LoadLearningElementAsync(space, 1);
     }
 
-    #endregion
+    [Test]
+    public async Task LoadLearningElementAsync_SerializationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
+            .Do(_ => throw new SerializationException("test"));
+        var space = ViewModelProvider.GetLearningSpace();
 
-    #endregion
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.SetLearningSpace(space);
+
+        await systemUnderTest.LoadLearningElementAsync(1);
+        errorService.Received(1).SetError("Error while loading learning element", "test");
+    }
+
+    [Test]
+    public async Task LoadLearningElementAsync_InvalidOperationException_CallsErrorManager()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
+            .Do(_ => throw new InvalidOperationException("test"));
+        var space = ViewModelProvider.GetLearningSpace();
+
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
+        systemUnderTest.SetLearningSpace(space);
+
+        await systemUnderTest.LoadLearningElementAsync(1);
+        errorService.Received(1).SetError("Error while loading learning element", "test");
+    }
 
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         IMediator? mediator = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        ILogger<LearningSpacePresenter>? logger = null)
+        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        logger ??= Substitute.For<ILogger<LearningSpacePresenter>>();
+        logger ??= new NullLogger<LearningSpacePresenter>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
-        return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger);
+        errorService ??= Substitute.For<IErrorService>();
+        return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger,
+            errorService);
     }
 }

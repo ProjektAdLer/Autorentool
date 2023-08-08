@@ -15,7 +15,7 @@ public class LearningSpaceLayoutUt
         var content2 = EntityProvider.GetFileContent(append: "2");
         var ele1 = EntityProvider.GetLearningElement(content: content1);
         var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
-        var learningElements = new Dictionary<int, ILearningElement>()
+        var learningElements = new Dictionary<int, ILearningElement>
         {
             {
                 0, ele1
@@ -47,7 +47,7 @@ public class LearningSpaceLayoutUt
         var content2 = EntityProvider.GetFileContent(append: "2");
         var ele1 = EntityProvider.GetLearningElement(content: content1);
         var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
-        var learningElements = new Dictionary<int, ILearningElement>()
+        var learningElements = new Dictionary<int, ILearningElement>
         {
             {
                 0, ele1
@@ -66,7 +66,7 @@ public class LearningSpaceLayoutUt
         var content2Changed = EntityProvider.GetFileContent(append: "c2");
         var ele1Changed = EntityProvider.GetLearningElement(append: "c1", content: content1Changed);
         var ele2Changed = EntityProvider.GetLearningElement(append: "c2", content: content2Changed);
-        var learningElementsChanged = new Dictionary<int, ILearningElement>()
+        var learningElementsChanged = new Dictionary<int, ILearningElement>
         {
             {
                 1, ele1Changed
@@ -112,7 +112,7 @@ public class LearningSpaceLayoutUt
         var content2 = EntityProvider.GetFileContent(append: "2");
         var ele1 = EntityProvider.GetLearningElement(content: content1);
         var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
-        var learningElements = new Dictionary<int, ILearningElement>()
+        var learningElements = new Dictionary<int, ILearningElement>
         {
             {
                 0, ele1

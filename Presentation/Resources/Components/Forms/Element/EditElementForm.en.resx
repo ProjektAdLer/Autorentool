@@ -68,4 +68,7 @@
     <data name="EditElementForm.NewButton.Text" xml:space="preserve">
         <value>New</value>
     </data>
+    <data name="EditElementForm.Button.ShowLearningElement.Title" xml:space="preserve">
+        <value>Show Learning Element</value>
+    </data>
 </root>

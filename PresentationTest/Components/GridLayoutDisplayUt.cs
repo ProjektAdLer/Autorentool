@@ -12,10 +12,6 @@ namespace PresentationTest.Components;
 [TestFixture]
 public class GridLayoutDisplayUt
 {
-#pragma warning disable CS8618
-    private TestContext _testContext;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -24,6 +20,8 @@ public class GridLayoutDisplayUt
 
     [TearDown]
     public void TearDown() => _testContext.Dispose();
+
+    private TestContext _testContext;
 
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
@@ -37,7 +35,7 @@ public class GridLayoutDisplayUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.Items, Is.EqualTo(items));
-            Assert.That(systemUnderTest.Instance.ItemRenderTemplate, Is.EqualTo((RenderFragment<int>) Template));
+            Assert.That(systemUnderTest.Instance.ItemRenderTemplate, Is.EqualTo((RenderFragment<int>)Template));
             Assert.That(systemUnderTest.Instance.HeaderTitle, Is.EqualTo(headerTitle));
             Assert.That(systemUnderTest.Instance.ItemsPerRow, Is.EqualTo(itemsPerRow));
         });
@@ -84,7 +82,7 @@ internal class GridLayoutDisplayTestCases : IEnumerable
         {
             new[] { 1, 2, 3, 4, 5, 6 },
             3u,
-            new[] {3, 3}
+            new[] { 3, 3 }
         };
         yield return new object[] //doesn't fit in row
         {

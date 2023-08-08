@@ -21,11 +21,6 @@ namespace PresentationTest.View.LearningElement;
 [TestFixture]
 public class DragDropLearningElementUt
 {
-#pragma warning disable CS8618 //set in setup - n.stich
-    private TestContext _ctx;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
-#pragma warning restore CS8618
-
     [SetUp]
     public void Setup()
     {
@@ -41,6 +36,9 @@ public class DragDropLearningElementUt
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
+
+    private TestContext _ctx;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 
     [Test]
     public void Constructor_SetsParametersCorrectly()
@@ -83,7 +81,7 @@ public class DragDropLearningElementUt
         learningElement.Name.Returns("foo bar super cool name");
         var content = Substitute.For<ILinkContentViewModel>();
         learningElement.LearningContent = content;
-        
+
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var onDoubleClicked = new Action<ILearningElementViewModel>(_ => { });
         var onEditLearningElement = new Action<ILearningElementViewModel>(_ => { });
@@ -100,19 +98,20 @@ public class DragDropLearningElementUt
         var cardContent = _ctx.Render((RenderFragment)mudCardContent.FindComponentOrFail<Stub<MudCardContent>>()
             .Instance.Parameters["ChildContent"]);
         var icons = cardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
-        
+
         Assert.That(menu.Instance.Parameters["ActivationEvent"], Is.EqualTo(MouseEvent.RightClick));
         Assert.That(menu.Instance.Parameters["PositionAtCursor"], Is.EqualTo(true));
 
         var elementIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("element-icon"));
-        var difficultyIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
+        var difficultyIcon =
+            icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
         Assert.Multiple(() =>
         {
             Assert.That(elementIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.VideoElementIcon));
             Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.DifficultyPolygonMedium));
         });
     }
-    
+
     [Test]
     public void RenderMudCardContent_DifficultyOutOfRange_ThrowsException()
     {
@@ -123,7 +122,9 @@ public class DragDropLearningElementUt
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
         var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
             .Parameters["ActivatorContent"]);
-        var mudCardContent = _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance.Parameters["ChildContent"]);
+        var mudCardContent =
+            _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+                .Parameters["ChildContent"]);
         Assert.That(() => _ctx.Render((RenderFragment)mudCardContent.FindComponent<Stub<MudCardContent>>().Instance
                 .Parameters["ChildContent"]),
             Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -146,7 +147,9 @@ public class DragDropLearningElementUt
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
         var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
             .Parameters["ActivatorContent"]);
-        var mudCardContent = _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance.Parameters["ChildContent"]);
+        var mudCardContent =
+            _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+                .Parameters["ChildContent"]);
         Assert.That(() => _ctx.Render((RenderFragment)mudCardContent.FindComponent<Stub<MudCardContent>>().Instance
             .Parameters["ChildContent"]), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
@@ -156,7 +159,8 @@ public class DragDropLearningElementUt
     [TestCase(LearningElementDifficultyEnum.Medium, CustomIcons.DifficultyPolygonMedium)]
     [TestCase(LearningElementDifficultyEnum.Hard, CustomIcons.DifficultyPolygonHard)]
     [TestCase(LearningElementDifficultyEnum.None, CustomIcons.DifficultyPolygonNone)]
-    public void GetDifficultyPolygon_ValidInput_ReturnsCorrectPolygon(LearningElementDifficultyEnum difficulty, string expectedIconString)
+    public void GetDifficultyPolygon_ValidInput_ReturnsCorrectPolygon(LearningElementDifficultyEnum difficulty,
+        string expectedIconString)
     {
         var element = Substitute.For<ILearningElementViewModel>();
         var content = Substitute.For<ILinkContentViewModel>();
@@ -166,7 +170,9 @@ public class DragDropLearningElementUt
         var menu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
         var activatorContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ActivatorContent"]);
         var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
-        var mudCardContent = _ctx.Render((RenderFragment)_ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]).FindComponentOrFail<Stub<MudCardContent>>().Instance.Parameters["ChildContent"]);
+        var mudCardContent = _ctx.Render((RenderFragment)_ctx
+            .Render((RenderFragment)card.Instance.Parameters["ChildContent"])
+            .FindComponentOrFail<Stub<MudCardContent>>().Instance.Parameters["ChildContent"]);
         var difficultyIcon = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>()
             .First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
         Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(expectedIconString));
@@ -185,7 +191,7 @@ public class DragDropLearningElementUt
         onEditLearningElement ??= _ => { };
         onDeleteLearningElement ??= _ => { };
         onShowLearningElementContent ??= _ => { };
-        
+
         return _ctx.RenderComponent<DragDropLearningElement>(parameters => parameters
             .Add(p => p.LearningElement, objectViewmodel)
             .Add(p => p.OnClicked, onClicked)

@@ -1,17 +1,14 @@
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.Components.Forms.Models
-@using BusinessLogic.Entities
-@using System.ComponentModel
-@using Microsoft.Extensions.Localization
-@using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View
-
+@using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateElementForm.Header.Text"]</h2>
@@ -66,8 +63,10 @@
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+        <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <TableSelect
+                T="ILearningContentViewModel"
+                Class=""
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
                 For="@(() => FormModel.LearningContent)"
                 Elements="WorldPresenter.GetAllContent()"
@@ -136,31 +135,30 @@
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
-        <DefaultResetButton/>
     </FooterButtons>
 </BaseForm>
 
 @code {
-#pragma warning disable CS8618 - injected by framework
-    [Inject]
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ILearningWorldPresenter WorldPresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ILearningSpacePresenter SpacePresenter { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IElementModelHandler ElementModelHandler { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateElementForm> Localizer { get; set; }
 
-    [Inject]
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
     [Parameter]
@@ -168,7 +166,7 @@
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
-#pragma warning restore CS8618
+
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
@@ -179,8 +177,8 @@
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        //check content for not null again even though validation ensures that LearningContent is not null
-        //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
+    //check content for not null again even though validation ensures that LearningContent is not null
+    //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
