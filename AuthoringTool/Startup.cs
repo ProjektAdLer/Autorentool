@@ -29,6 +29,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;

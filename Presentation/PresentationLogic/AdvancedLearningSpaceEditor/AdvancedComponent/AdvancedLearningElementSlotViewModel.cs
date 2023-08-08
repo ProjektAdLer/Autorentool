@@ -1,4 +1,4 @@
-namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
+namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 
 public class AdvancedLearningElementSlotViewModel : IAdvancedLearningElementSlotViewModel
 {

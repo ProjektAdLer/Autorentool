@@ -1,6 +1,7 @@
 using Presentation.Components;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 
-namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
+namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
 public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditorPresenter, IAdvancedPositioningService
 {
