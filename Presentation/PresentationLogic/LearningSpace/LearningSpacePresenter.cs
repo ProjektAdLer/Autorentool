@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using MudBlazor;
-using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -42,19 +41,21 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
     private ILogger<LearningSpacePresenter> Logger { get; }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.LearningSpaceVm"/>
     public ILearningSpaceViewModel? LearningSpaceVm
     {
         get => _learningSpaceVm;
         private set => SetField(ref _learningSpaceVm, value);
     }
 
-
+    /// <inheritdoc cref="ILearningSpacePresenter.SetLearningSpace"/>
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
         Logger.LogDebug("LearningSpace set to {Name}", space.Name);
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.EditLearningSpace"/>
     public void EditLearningSpace(string name, string description, string goals,
         int requiredPoints, Theme theme, ITopicViewModel? topic)
     {
@@ -65,7 +66,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             requiredPoints, theme, topic);
     }
 
-    public bool ReplaceLearningElementDialogOpen { get; set; }
+    /// <inheritdoc cref="ILearningSpacePresenter.ReplaceLearningElementDialogOpen"/>
+    public bool ReplaceLearningElementDialogOpen { get; private set; }
 
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
@@ -73,6 +75,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.SetLearningSpaceLayout"/>
     public void SetLearningSpaceLayout(FloorPlanEnum floorPlanName)
     {
         if (!CheckLearningSpaceNotNull("SetLearningSpaceLayout"))
@@ -120,6 +123,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
     #region LearningElement
 
+    /// <inheritdoc cref="ILearningSpacePresenter.OpenReplaceLearningElementDialog"/>
     [MemberNotNull(nameof(_replaceLearningElementData))]
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel dropItem, int slotId)
@@ -128,6 +132,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         ReplaceLearningElementDialogOpen = true;
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.OnReplaceLearningElementDialogClose"/>
     public void OnReplaceLearningElementDialogClose(DialogResult closeResult)
     {
         ReplaceLearningElementDialogOpen = false;
@@ -142,6 +147,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.ClickOnSlot"/>
     public void ClickOnSlot(int i)
     {
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
@@ -157,6 +163,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _mediator.RequestOpenElementDialog();
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.CreateLearningElementInSlot"/>
     public void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points)
@@ -170,18 +177,15 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 
-    public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
-    {
-        _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
-    }
-
-    public void ClickedLearningElement(ILearningElementViewModel obj)
+    /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>
+    public void ClickedLearningElement(ILearningElementViewModel learningElementViewModel)
     {
         _mediator.RequestOpenElementDialog();
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
-        SetSelectedLearningElement(obj);
+        SetSelectedLearningElement(learningElementViewModel);
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.EditLearningElement(ILearningElementViewModel, string, string, string, LearningElementDifficultyEnum, ElementModel, int, int, ILearningContentViewModel)"/>
     public void EditLearningElement(ILearningElementViewModel learningElement, string name, string description,
         string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
         ILearningContentViewModel learningContent)
@@ -191,6 +195,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             elementModel, workload, points, learningContent);
     }
 
+    /// <inheritdoc cref="ILearningSpacePresenter.EditLearningElement(int)"/>
     public void EditLearningElement(int slotIndex)
     {
         if (!CheckLearningSpaceNotNull("EditLearningElement"))
@@ -207,17 +212,19 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         SetSelectedLearningElement(element);
     }
 
-    public void DeleteLearningElement(ILearningElementViewModel obj)
+    /// <inheritdoc cref="ILearningSpacePresenter.DeleteLearningElement"/>
+    public void DeleteLearningElement(ILearningElementViewModel learningElementViewModel)
     {
         if (!CheckLearningSpaceNotNull("DeleteLearningElement"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!, obj);
+        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!, learningElementViewModel);
     }
 
-    public async void ShowElementContent(ILearningElementViewModel obj)
+    /// <inheritdoc cref="ILearningSpacePresenter.ShowElementContent"/>
+    public async void ShowElementContent(ILearningElementViewModel learningElementViewModel)
     {
-        SetSelectedLearningElement(obj);
+        SetSelectedLearningElement(learningElementViewModel);
         await ShowSelectedElementContentAsync();
     }
 
@@ -240,10 +247,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         }
     }
 
-    /// <summary>
-    /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
-    /// learning element to its parent.
-    /// </summary>
+    /// <inheritdoc cref="ILearningSpacePresenter.LoadLearningElementAsync"/>
     public async Task LoadLearningElementAsync(int slotIndex)
     {
         if (!CheckLearningSpaceNotNull("LoadLearningElementAsync"))
@@ -263,19 +267,11 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         }
     }
 
-    public void AddLearningElement(ILearningElementViewModel element, int slotIndex)
-    {
-        if (!CheckLearningSpaceNotNull("AddLearningElement"))
-            return;
-        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.AddLearningElement(LearningSpaceVm!, slotIndex, element);
-    }
-
     /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
-    public void SetSelectedLearningElement(ILearningElementViewModel? learningElement)
+    private void SetSelectedLearningElement(ILearningElementViewModel? learningElement)
     {
         if (!CheckLearningSpaceNotNull("SetSelectedLearningElement"))
             return;
@@ -283,59 +279,9 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <summary>
-    /// Deletes the selected learning element in the currently selected learning space and sets an other element as selected learning element.
-    /// </summary>
-    public void DeleteSelectedLearningElement()
-    {
-        if (!CheckLearningSpaceNotNull("DeleteSelectedLearningElement"))
-            return;
-        if (_selectedViewModelsProvider.LearningElement == null)
-        {
-            LogAndSetError("DeleteSelectedLearningElement", "SelectedLearningElement is null",
-                "No learning element selected");
-            return;
-        }
-
-        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!,
-            _selectedViewModelsProvider.LearningElement);
-    }
-
-    /// <summary>
-    /// Calls the the Save methode for the selected learning element.
-    /// </summary>
-    public async Task SaveSelectedLearningElementAsync()
-    {
-        if (!CheckLearningSpaceNotNull("SaveSelectedLearningElementAsync"))
-            return;
-        switch (_selectedViewModelsProvider.LearningElement)
-        {
-            case null:
-                LogAndSetError("SaveSelectedLearningElementAsync", "SelectedLearningElement is null",
-                    "No learning element selected");
-                return;
-            case LearningElementViewModel learningElement:
-                try
-                {
-                    await _presentationLogic.SaveLearningElementAsync(learningElement);
-                }
-                catch (SerializationException e)
-                {
-                    _errorService.SetError("Error while loading learning element", e.Message);
-                }
-                catch (InvalidOperationException e)
-                {
-                    _errorService.SetError("Error while loading learning element", e.Message);
-                }
-
-                break;
-        }
-    }
-
-    /// <summary>
     /// Calls the the show learning element content method for the selected learning element.
     /// </summary>
-    public async Task ShowSelectedElementContentAsync()
+    private async Task ShowSelectedElementContentAsync()
     {
         if (!CheckLearningSpaceNotNull("ShowSelectedElementContentAsync"))
             return;
