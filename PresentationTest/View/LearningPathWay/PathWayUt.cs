@@ -11,7 +11,7 @@ using Presentation.View.LearningPathWay;
 using Shared;
 using TestContext = Bunit.TestContext;
 
-namespace PresentationTest.View.LearningWorld;
+namespace PresentationTest.View.LearningPathWay;
 
 [TestFixture]
 public class PathWayUt
@@ -27,10 +27,10 @@ public class PathWayUt
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
-    private TestContext _ctx;
-    private IMouseService _mouseService;
-    private ILearningWorldPresenter _positioningService;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private TestContext _ctx = null!;
+    private IMouseService _mouseService = null!;
+    private ILearningWorldPresenter _positioningService = null!;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
 
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
