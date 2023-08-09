@@ -184,16 +184,21 @@ public class BusinessLogic : IBusinessLogic
 
     private async Task UpdateUserInformation()
     {
-        if (Configuration[IApplicationConfiguration.BackendToken] != "")
-        {
-            _userInformation =
-                await BackendAccess.GetUserInformationAsync(
-                    new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
-        }
-        else
+        if (Configuration[IApplicationConfiguration.BackendToken] == "")
         {
             Logout();
+            return;
         }
+
+        if (Configuration[IApplicationConfiguration.BackendBaseUrl] == "")
+        {
+            Logout();
+            return;
+        }
+
+        _userInformation =
+            await BackendAccess.GetUserInformationAsync(
+                new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
     }
 
     public async Task Login(string username, string password)
