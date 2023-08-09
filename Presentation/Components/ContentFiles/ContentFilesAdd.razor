@@ -46,19 +46,19 @@
 
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IDialogService DialogService { get; set; }
+    internal IDialogService DialogService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private ILogger<ContentFilesAdd> Logger { get; set; }
+    internal ILogger<ContentFilesAdd> Logger { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
+    internal IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IErrorService ErrorService { get; set; }
+    internal IErrorService ErrorService { get; set; }
 
     [CascadingParameter]
     public ContentFilesContainer? ContentFilesContainer { get; set; }
