@@ -268,7 +268,7 @@ public class UserBackendServicesUt
         // Assert
         var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
-        Assert.That(ex!.Message, Is.EqualTo("Das Ergebnis der Backend Api konnte nicht gelesen werden"));
+        Assert.That(ex!.Message, Is.EqualTo("Http response could not be deserialized."));
     }
 
     [Test]

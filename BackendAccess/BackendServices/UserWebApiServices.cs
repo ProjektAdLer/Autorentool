@@ -147,6 +147,10 @@ public class UserWebApiServices : IUserWebApiServices
         return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
 
+    /// <summary>
+    /// Internal helper method for making requests and parsing responses generically
+    /// </summary>
+    /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters)
     {
         // Build the query string from url and parameters.
@@ -167,12 +171,12 @@ public class UserWebApiServices : IUserWebApiServices
         return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
 
-    /**
-     * This method is used to handle errors that are returned by the API.
-     * It will be more refined, once we have a concept for error handling.
-     * 
-     * @throws HttpRequestException with meaningfully message if the response is not successful.
-     */
+    /// <summary>
+    /// This method is used to handle errors that are returned by the API.
+    /// It will be more refined, once we have a concept for error handling. - philgei
+    /// </summary>
+    /// <param name="apiResp">The response message which should be parsed for errors.</param>
+    /// <exception cref="HttpRequestException">Response was not successful, see message for details.</exception>
     private async Task HandleErrorMessage(HttpResponseMessage apiResp)
     {
         if (apiResp.IsSuccessStatusCode) return;
@@ -187,13 +191,16 @@ public class UserWebApiServices : IUserWebApiServices
         throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
     }
 
-    /**
-     * This method is used to deserialize the response from the API.
-     * It will deserialize the response in case-insensitive mode.
-     * It will throw an exception if the response could not be deserialized.
-     * 
-     * @throws HttpRequestException if the response could not be deserialized.
-     */
+
+    /// <summary>
+    /// This method is used to deserialize the response from the API.
+    /// It will deserialize the response in case-insensitive mode.
+    /// It will throw an exception if the response could not be deserialized.
+    /// </summary>
+    /// <param name="responseString">The response string of the HTTP request to be deserialized.</param>
+    /// <typeparam name="TResponse">The type into which the response should be deserialized.</typeparam>
+    /// <returns>Returns request deserialized into a <typeparamref name="TResponse"/> object.</returns>
+    /// <exception cref="HttpRequestException">The response could not be deserialized.</exception>
     private static TResponse TryRead<TResponse>(string responseString)
     {
         try
@@ -207,7 +214,7 @@ public class UserWebApiServices : IUserWebApiServices
         }
         catch (Exception e)
         {
-            throw new HttpRequestException("Das Ergebnis der Backend Api konnte nicht gelesen werden", e);
+            throw new HttpRequestException("Http response could not be deserialized.", e);
         }
     }
 
