@@ -39,4 +39,10 @@
     <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
         <value>Allowed file formats: {0}</value>
     </data>
+    <data name="FileTooBig.Error.Title" xml:space="preserve">
+        <value>File too big</value>
+    </data>
+    <data name="FileTooBig.Error.Message" xml:space="preserve">
+        <value>The maximum supported file size for learning content files is 1 gigabyte.</value>
+    </data>
 </root>

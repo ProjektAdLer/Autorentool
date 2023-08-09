@@ -68,7 +68,9 @@
     private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
     private bool Working { get; set; } = false;
 
-    //iterates all files, copies them into a new stream and passes said stream to presentation logic
+    /// <summary>
+    /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
+    /// </summary>
     private void OnFilesChanged(InputFileChangeEventArgs obj)
     {
     //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
@@ -114,12 +116,21 @@
         }
 
         Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
-        await using var stream = file.OpenReadStream(1_000_000_000);
-        Logger.LogTrace("BrowserFileStream opened");
-
+        Stream stream;
+        try
+        {
+            stream = file.OpenReadStream(1_000_000_000);
+            Logger.LogTrace("BrowserFileStream opened");
+        }
+        catch (IOException)
+        {
+            ErrorService.SetError(Localizer["FileTooBig.Error.Title"], Localizer["FileTooBig.Error.Text"]);
+            return;
+        }
         Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
+        await stream.DisposeAsync();
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
     //TODO: report when a file with same content already exists

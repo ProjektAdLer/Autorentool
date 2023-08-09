@@ -30,10 +30,10 @@
         <value>Ziehen Sie Dateien hierher, oder klicken Sie, um sie hinzuzufügen.</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
-        <value/>
+        <value>Inkompatible Dateiendung</value>
     </data>
     <data name="Invocation.MessageBox.Message" xml:space="preserve">
-        <value/>
+        <value>Die bereitgestellte Datei {0} ist nicht unterstützt.</value>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
         <value>Datei leer</value>
@@ -46,5 +46,11 @@
     </data>
     <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
         <value>Erlaubte Dateiendungen: {0}</value>
+    </data>
+    <data name="FileTooBig.Error.Title" xml:space="preserve">
+        <value>Datei zu groß</value>
+    </data>
+    <data name="FileTooBig.Error.Message" xml:space="preserve">
+        <value>Die maximal unterstützte Dateigröße für Lerninhalte beträgt 1 Gigabyte.</value>
     </data>
 </root>
