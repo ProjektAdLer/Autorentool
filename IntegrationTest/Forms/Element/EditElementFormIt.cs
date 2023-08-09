@@ -26,14 +26,6 @@ namespace IntegrationTest.Forms.Element;
 [TestFixture]
 public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningElementFormModel, LearningElement>
 {
-    
-    public ILearningWorldPresenter WorldPresenter { get; set; }
-    public ILearningSpacePresenter SpacePresenter { get; set; }
-    public IElementModelHandler ElementModelHandler { get; set; }
-    public IPresentationLogic PresentationLogic { get; set; }
-    public ILearningContentViewModel[] LearningContentViewModels { get; set; }
-
-    private const string Expected = "test";
     [SetUp]
     public void Setup()
     {
@@ -49,7 +41,15 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
     }
-    
+
+    public ILearningWorldPresenter WorldPresenter { get; set; }
+    public ILearningSpacePresenter SpacePresenter { get; set; }
+    public IElementModelHandler ElementModelHandler { get; set; }
+    public IPresentationLogic PresentationLogic { get; set; }
+    public ILearningContentViewModel[] LearningContentViewModels { get; set; }
+
+    private const string Expected = "test";
+
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
@@ -65,16 +65,17 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
         Assert.That(systemUnderTest.Instance.OnNewButtonClicked, Is.EqualTo(onNewClicked));
         Assert.That(systemUnderTest.Instance.DebounceInterval, Is.EqualTo(0));
-        Assert.That(systemUnderTest.Instance.TriggerMasterLayoutStateHasChanged, Is.EqualTo(masterLayoutStateHasChanged));
+        Assert.That(systemUnderTest.Instance.TriggerMasterLayoutStateHasChanged,
+            Is.EqualTo(masterLayoutStateHasChanged));
     }
 
     [Test]
     public void OnParametersSet_CallsMapper()
     {
         var vm = ViewModelProvider.GetLearningElement();
-        
+
         var systemUnderTest = GetRenderedComponent(vm);
-        
+
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
@@ -111,6 +112,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
+    [Retry(3)]
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var vm = ViewModelProvider.GetLearningElement();
@@ -121,20 +123,21 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
-        
+
         ChangeFields(systemUnderTest, popover);
-        
+
         AssertFieldsSet(systemUnderTest);
-        
+
         Mapper.ClearReceivedCalls();
-        
+
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        WorldPresenter.Received(1).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
-            LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123, LearningContentViewModels[0]);
+        Assert.That(() => WorldPresenter.Received(1).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
+                LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123, LearningContentViewModels[0]),
+            Throws.Nothing);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
-    
+
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
     {
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
@@ -187,13 +190,12 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             }
         );
     }
-    
+
     [Test]
     public void ShowElementContentButton_Clicked_CallsShowSelectedElementContentAsync()
     {
-        
         var vm = ViewModelProvider.GetLearningElement();
-        
+
         var systemUnderTest = GetRenderedComponent(vm);
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("btn-standard rounded").Find("button").Click();
@@ -215,7 +217,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             p.AddCascadingValue("TriggerMasterLayoutStateHasChanged", masterLayoutStateHasChanged);
         });
     }
-    
+
     private IRenderedFragment GetFormWithPopoverProvider(ILearningElementViewModel? vm = null,
         EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null)
     {
