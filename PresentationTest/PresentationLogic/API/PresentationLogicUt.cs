@@ -134,7 +134,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -234,7 +234,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -291,7 +291,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -1091,7 +1091,7 @@ public class PresentationLogicUt
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ))
             .Returns(mockBatchCommand);
 
@@ -1121,7 +1121,7 @@ public class PresentationLogicUt
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ));
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -1178,7 +1178,8 @@ public class PresentationLogicUt
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
         Substitute.For<ILogger<WorldCommandFactory>>();
-        mockWorldCommandFactory.GetSaveCommand(mockBusinessLogic, entity, filepath + ".awf").Returns(mockCommand);
+        mockWorldCommandFactory.GetSaveCommand(mockBusinessLogic, entity, filepath + ".awf",
+            Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>()).Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider,
@@ -1661,7 +1662,7 @@ public class PresentationLogicUt
         var learningWorldViewModel = Substitute.For<ILearningWorldViewModel>();
         learningWorldViewModel.Id.Returns(guid);
         authoringToolWorkspaceVm.LearningWorlds
-            .Returns(new List<ILearningWorldViewModel> { learningWorldViewModel });
+            .Returns(new List<ILearningWorldViewModel> {learningWorldViewModel});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport,
@@ -1695,7 +1696,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
         mockBusinessLogic.GetSavedLearningWorldPaths()
-            .Returns(new List<SavedLearningWorldPath> { savedLearningWorldPath });
+            .Returns(new List<SavedLearningWorldPath> {savedLearningWorldPath});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 

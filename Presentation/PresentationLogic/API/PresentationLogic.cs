@@ -188,12 +188,12 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath);
+        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath,
+            world => CMapper.Map(world, learningWorldViewModel));
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
-        learningWorldViewModel.UnsavedChanges = false;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
+            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -390,7 +390,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
+                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -724,7 +724,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -756,7 +756,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;

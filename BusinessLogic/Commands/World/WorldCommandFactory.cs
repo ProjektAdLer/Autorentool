@@ -45,6 +45,7 @@ public class WorldCommandFactory : IWorldCommandFactory
             LoggerFactory.CreateLogger<LoadLearningWorld>());
 
     public ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld,
-        string filepath) =>
-        new SaveLearningWorld(businessLogic, learningWorld, filepath, LoggerFactory.CreateLogger<SaveLearningWorld>());
+        string filepath, Action<LearningWorld> mappingAction) =>
+        new SaveLearningWorld(businessLogic, learningWorld, filepath, mappingAction,
+            LoggerFactory.CreateLogger<SaveLearningWorld>());
 }

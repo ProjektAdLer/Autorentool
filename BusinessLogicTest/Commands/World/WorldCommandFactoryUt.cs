@@ -185,8 +185,9 @@ public class WorldCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningWorld = EntityProvider.GetLearningWorld();
         var filepath = "FilePath";
+        Action<LearningWorld> mappingAction = _ => { };
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath);
+        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningWorld>());

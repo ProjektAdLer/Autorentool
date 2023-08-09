@@ -7,17 +7,19 @@ namespace BusinessLogic.Commands.World;
 public class SaveLearningWorld : ISaveLearningWorld
 {
     public SaveLearningWorld(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath,
-        ILogger<SaveLearningWorld> logger)
+        Action<LearningWorld> mappingAction, ILogger<SaveLearningWorld> logger)
     {
         BusinessLogic = businessLogic;
         LearningWorld = learningWorld;
         Filepath = filepath;
+        MappingAction = mappingAction;
         Logger = logger;
     }
 
     internal IBusinessLogic BusinessLogic { get; }
     internal LearningWorld LearningWorld { get; }
     internal string Filepath { get; }
+    internal Action<LearningWorld> MappingAction { get; }
     private ILogger<SaveLearningWorld> Logger { get; }
     public string Name => nameof(SaveLearningWorld);
 
@@ -26,6 +28,7 @@ public class SaveLearningWorld : ISaveLearningWorld
         BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);
         Logger.LogTrace("Saved LearningWorld {Name} ({Id}) to {Path}", LearningWorld.Name, LearningWorld.Id, Filepath);
         ResetWorldUnsavedChangesState();
+        MappingAction.Invoke(LearningWorld);
     }
 
     private void ResetWorldUnsavedChangesState()

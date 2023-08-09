@@ -48,5 +48,6 @@ public interface IWorldCommandFactory
     /// <summary>
     /// Creates a command to save a learning world.
     /// </summary>
-    ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath);
+    ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath,
+        Action<LearningWorld> mappingAction);
 }
