@@ -916,9 +916,10 @@ public class BusinessLogicUt
         backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
             .Returns(Task.FromResult(userInformation));
         var mockConfiguration = Substitute.For<IApplicationConfiguration>();
-        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        mockConfiguration[IApplicationConfiguration.BackendBaseUrl] = "some url";
 
-        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(fakeConfiguration: mockConfiguration, apiAccess: backendAccess);
 
         await systemUnderTest.Login(username, password);
 
