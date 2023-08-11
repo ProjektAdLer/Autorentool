@@ -2,7 +2,6 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
-@using Shared
 @using Shared.Command
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
@@ -140,31 +139,6 @@
                 await ShowReplaceLearningElementDialog();
                 break;
         }
-    }
-
-    private async Task LoadLearningElementAsync(int slotIndex)
-    {
-        await LearningSpaceP.LoadLearningElementAsync(slotIndex);
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private void EditLearningElement(int slotIndex)
-    {
-        LearningSpaceP.EditLearningElement(slotIndex);
-    }
-
-    private void OnReplaceElementDialogClose(DialogResult closeResult)
-    {
-        LearningSpaceP.OnReplaceLearningElementDialogClose(closeResult);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void SetLearningSpaceLayout(string floorPlanName)
-    {
-        Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
-        LearningSpaceP.SetLearningSpaceLayout(floorPlan);
-        InvokeAsync(StateHasChanged);
     }
 
     private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
