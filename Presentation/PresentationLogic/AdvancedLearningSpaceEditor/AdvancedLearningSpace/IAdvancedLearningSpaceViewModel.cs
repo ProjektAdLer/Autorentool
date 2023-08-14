@@ -5,16 +5,16 @@ using Shared;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 
-public interface IAdvancedLearningSpaceViewModel : ILearningSpaceViewModel
+public interface IAdvancedLearningSpaceViewModel : IObjectInPathWayViewModel
 {
-    IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
+    IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
     TopicViewModel? AssignedTopic { get; set; }
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }
     Theme Theme { get; set; }
     bool AdvancedMode { get; }
-    new string Name { get; set; }
+    string Name { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
     bool InternalUnsavedChanges { get; }
