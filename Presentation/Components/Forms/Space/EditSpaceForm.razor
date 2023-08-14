@@ -25,9 +25,9 @@
         </MudButton>
     </HeaderButtons>
     <Fields>
-        @if (LearningSpacePresenter.LearningSpaceVm.AdvancedMode)
+        @if (LearningSpacePresenter.LearningSpaceVm!.AdvancedMode)
         {
-            // ToDd: Fix If clause
+            // ToDo: Fix If clause
             <div>AdvancedSpaceGen: Yes</div>
         }
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
