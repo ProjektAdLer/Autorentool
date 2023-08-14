@@ -9,7 +9,7 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            "LWPg" + append, "LWPev" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,
@@ -19,7 +19,7 @@ public static class PersistEntityProvider
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, "LSPg" + append, 4,
             Theme.Campus,
-            learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan)),
+            learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX, positionY, inBoundObjects, outBoundObjects, assignedTopic);
     }
 

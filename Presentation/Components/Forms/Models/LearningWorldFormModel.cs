@@ -10,6 +10,7 @@ public class LearningWorldFormModel
         Language = "";
         Description = "";
         Goals = "";
+        EvaluationLink = "";
     }
 
     public Guid Id { get; set; }
@@ -19,4 +20,5 @@ public class LearningWorldFormModel
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public string EvaluationLink { get; set; }
 }

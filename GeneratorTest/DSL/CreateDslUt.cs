@@ -177,6 +177,7 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "http://www.projekt-alder.eu";
         const string savePath = "C:\\foo\\bar";
 
         var content1 = PersistEntityProvider.GetFileContent(name: "FileName", type: "h5p",
@@ -250,14 +251,14 @@ public class CreateDslUt
         var topics = new List<TopicPe> { topic1, topic2 };
 
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath,
             learningSpaces, topics: topics);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
         //Every Element except Content with "url" is added to the comparison list.
         var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
-        var learningElementsSpace2 = new List<LearningElementPe>();
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -279,6 +280,7 @@ public class CreateDslUt
                 Is.EqualTo(""));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].RequiredSpacesToEnter,
                 Is.EqualTo("(1)^(2)"));
+            Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
     }
@@ -297,6 +299,7 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "https://www.projekt-alder.eu";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var content1 = PersistEntityProvider.GetFileContent("FileName", "mp3", "/foo/bar.txt");
@@ -320,7 +323,8 @@ public class CreateDslUt
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath,
             learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
@@ -354,6 +358,7 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "https://www.projekt-alder.eu";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
@@ -367,7 +372,8 @@ public class CreateDslUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath,
             learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
@@ -400,6 +406,7 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "https://www.projekt-alder.eu";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
@@ -421,7 +428,8 @@ public class CreateDslUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath,
             learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);

@@ -20,15 +20,15 @@ public static class ViewModelProvider
 
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", "LWVMev");
     }
 
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
         return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.Campus, 4,
-            floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan), positionX: positionX,
-            positionY: positionY) {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
+            floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
+            positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
     public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(

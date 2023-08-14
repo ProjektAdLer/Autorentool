@@ -2,7 +2,6 @@
 
 public interface ILearningWorld
 {
-    
     List<ILearningSpace> LearningSpaces { get; set; }
     List<PathWayCondition> PathWayConditions { get; set; }
     List<IObjectInPathWay> ObjectsInPathWays { get; }
@@ -19,4 +18,5 @@ public interface ILearningWorld
     Guid Id { get; }
     string Name { get; set; }
     bool InternalUnsavedChanges { get; }
+    string EvaluationLink { get; set; }
 }

@@ -13,7 +13,6 @@ using TestHelpers;
 namespace PresentationTest.PresentationLogic.SelectedViewModels;
 
 [TestFixture]
-
 public class SelectedViewModelsProviderUt
 {
     [Test]
@@ -22,15 +21,15 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "g");
+        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "h", "g");
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveSlotInSpace(1, null);
-        
+
         systemUnderTest.SetLearningWorld(learningWorld, mockCommand);
-        
+
         Assert.That(systemUnderTest.LearningWorld, Is.EqualTo(learningWorld));
-        
+
         Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
@@ -41,7 +40,7 @@ public class SelectedViewModelsProviderUt
         Assert.That(systemUnderTest.LearningWorld, Is.EqualTo(learningWorld));
         Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
     }
-    
+
     [Test]
     public void SetLearningObjectInPathWay_SetsLearningObjectInPathWay()
     {
@@ -50,7 +49,7 @@ public class SelectedViewModelsProviderUt
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
-        
+
         systemUnderTest.SetActiveSlotInSpace(1, null);
         systemUnderTest.SetLearningObjectInPathWay(learningObjectInPathWay, mockCommand);
 
@@ -74,7 +73,7 @@ public class SelectedViewModelsProviderUt
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var learningElement = ViewModelProvider.GetLearningElement();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
-        
+
         systemUnderTest.SetActiveSlotInSpace(1, null);
         systemUnderTest.SetLearningElement(learningElement, mockCommand);
 
@@ -89,7 +88,7 @@ public class SelectedViewModelsProviderUt
         Assert.That(systemUnderTest.LearningElement, Is.EqualTo(learningElement));
         Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
     }
-    
+
     [Test]
     public void SetLearningContent_SetsLearningContent()
     {
@@ -98,7 +97,7 @@ public class SelectedViewModelsProviderUt
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var content = ViewModelProvider.GetFileContent();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
-        
+
         systemUnderTest.SetActiveSlotInSpace(1, null);
         systemUnderTest.SetLearningContent(content, mockCommand);
 

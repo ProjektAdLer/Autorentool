@@ -18,6 +18,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = "";
         Goals = "";
         SavePath = "";
+        EvaluationLink = "";
         LearningSpaces = new List<ILearningSpace>();
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
@@ -27,7 +28,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     }
 
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string savePath = "", List<ILearningSpace>? learningSpaces = null,
+        string goals, string evaluationLink = "", string savePath = "", List<ILearningSpace>? learningSpaces = null,
         List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
     {
@@ -39,6 +40,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = description;
         Goals = goals;
         SavePath = savePath;
+        EvaluationLink = evaluationLink;
         LearningSpaces = learningSpaces ?? new List<ILearningSpace>();
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
@@ -65,6 +67,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public string EvaluationLink { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
     public string SavePath { get; set; }
 
@@ -83,9 +86,10 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges, UnplacedLearningElements);
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
+            SavePath,
+            LearningSpaces, PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges,
+            UnplacedLearningElements);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -101,6 +105,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
+        EvaluationLink = learningWorldMemento.EvaluationLink;
         SavePath = learningWorldMemento.SavePath;
         LearningSpaces = learningWorldMemento.LearningSpaces;
         PathWayConditions = learningWorldMemento.PathWayConditions;
@@ -113,7 +118,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, string savePath, List<ILearningSpace> learningSpaces,
+            string description, string goals, string evaluationLink, string savePath,
+            List<ILearningSpace> learningSpaces,
             List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
             IEnumerable<ILearningElement> unplacedLearningElements)
@@ -125,6 +131,7 @@ public class LearningWorld : ILearningWorld, IOriginator
             Description = description;
             Goals = goals;
             SavePath = savePath;
+            EvaluationLink = evaluationLink;
             UnsavedChanges = unsavedChanges;
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
@@ -143,6 +150,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal string EvaluationLink { get; }
         internal string SavePath { get; }
         public bool UnsavedChanges { get; }
         internal List<ILearningElement> UnplacedLearningElements { get; }

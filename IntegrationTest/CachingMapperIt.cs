@@ -42,11 +42,11 @@ public class CachingMapperIt
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1");
+        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1", "g1");
         systemUnderTest.UndoCommand();
 
         systemUnderTest.UndoCommand();
@@ -81,7 +81,7 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
@@ -140,7 +140,7 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 

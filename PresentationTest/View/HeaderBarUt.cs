@@ -131,7 +131,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_CallsPresentationLogic()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
@@ -149,7 +149,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_WorldHasNoSpaces_ErrorServiceCalled()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         var systemUnderTest = GetRenderedComponent();
 
@@ -168,7 +168,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_WorldSpaceHasNoElementsAndInsufficientPoints_ErrorServiceCalled()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         var space1 = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 2);
         var space2 = new LearningSpaceViewModel("ah", "fi", "dh", Theme.Campus, 3);
         var element1 = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
@@ -195,7 +195,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
@@ -214,7 +214,7 @@ public class HeaderBarUt
     [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d");
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         var space = new LearningSpaceViewModel("a", "f", "d", Theme.Campus, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);

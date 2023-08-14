@@ -45,4 +45,7 @@
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Text" xml:space="preserve">
         <value>Language</value>
     </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text" xml:space="preserve">
+        <value>Link to evaluation</value>
+    </data>
 </root>

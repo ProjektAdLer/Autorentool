@@ -141,14 +141,14 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals,
+            description, goals, evaluationLink,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -157,12 +157,12 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals,
+            goals, evaluationLink,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -193,7 +193,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
+            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -390,7 +390,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
+                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -724,7 +724,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -756,7 +756,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;

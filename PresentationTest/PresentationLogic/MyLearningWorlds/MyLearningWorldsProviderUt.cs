@@ -47,8 +47,8 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void GetLoadedLearningWorlds_ReturnsLoadedLearningWorlds()
     {
-        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
-        var learningWorld2 = new LearningWorldViewModel("w2", "s", "a", "l", "d", "g");
+        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g", "h");
+        var learningWorld2 = new LearningWorldViewModel("w2", "s", "a", "l", "d", "g", "h");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel> { learningWorld1, learningWorld2 });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
@@ -113,7 +113,7 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void GetSavedLearningWorlds_ReturnsSavedLearningWorlds_ExceptLoadedLearningWorlds()
     {
-        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
+        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g", "h");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel> { learningWorld1 });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
@@ -143,7 +143,7 @@ public class MyLearningWorldsProviderUt
     [Test]
     public void OpenLearningWorld_WorldIsAlreadyLoaded_SelectedLearningWorldInWorkspaceViewModelIsSet()
     {
-        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
+        var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g", "h");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
@@ -162,7 +162,7 @@ public class MyLearningWorldsProviderUt
     public void OpenLearningWorld_WorldIsSavedAndSaveFileExists_PresentationLogicIsCalled()
     {
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        var worldInWorkspace = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
+        var worldInWorkspace = new LearningWorldViewModel("n", "s", "a", "l", "d", "g", "h");
         workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel> { worldInWorkspace });
         var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);

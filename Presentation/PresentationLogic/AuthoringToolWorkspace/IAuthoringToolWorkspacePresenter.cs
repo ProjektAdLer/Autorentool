@@ -15,8 +15,9 @@ public interface IAuthoringToolWorkspacePresenter
     /// <param name="language">Language of the new learning world</param>
     /// <param name="description">Description of the new learning world</param>
     /// <param name="goals">Goals of the new learning world</param>
+    /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals);
+        string goals, string evaluationLink);
 
     /// <summary>
     /// Asks the user for confirmation and asks for saving the learning world if it was changed. Then deletes the

@@ -70,6 +70,6 @@ public class AuthoringToolWorkspaceViewModelUt
 
     private LearningWorldViewModel GetLearningWorldViewModelForTesting()
     {
-        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar");
+        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar", "foo");
     }
 }

@@ -8,7 +8,8 @@ public class EditLearningWorld : IEditLearningWorld
     private IMemento? _memento;
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
-        string authors, string language, string description, string goals, Action<LearningWorld> mappingAction,
+        string authors, string language, string description, string goals, string evaluationLink,
+        Action<LearningWorld> mappingAction,
         ILogger<EditLearningWorld> logger)
     {
         LearningWorld = learningWorld;
@@ -18,6 +19,7 @@ public class EditLearningWorld : IEditLearningWorld
         Language = language;
         Description = description;
         Goals = goals;
+        EvaluationLink = evaluationLink;
         MappingAction = mappingAction;
         Logger = logger;
     }
@@ -29,6 +31,7 @@ public class EditLearningWorld : IEditLearningWorld
     internal string Language { get; }
     internal string Description { get; }
     internal string Goals { get; }
+    internal string EvaluationLink { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private ILogger<EditLearningWorld> Logger { get; }
     public string Name => nameof(EditLearningWorld);
@@ -38,8 +41,9 @@ public class EditLearningWorld : IEditLearningWorld
         _memento ??= LearningWorld.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}",
-            LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals);
+            "Editing LearningWorld {OldName} ({Id}). Previous Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, EvaluationLink: {EvaluationLink}",
+            LearningWorld.Name, LearningWorld.Id, WorldName, Shortname, Authors, Language, Description, Goals,
+            EvaluationLink);
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
         LearningWorld.Name = WorldName;
@@ -48,11 +52,12 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Language = Language;
         LearningWorld.Description = Description;
         LearningWorld.Goals = Goals;
+        LearningWorld.EvaluationLink = EvaluationLink;
 
         Logger.LogTrace(
-            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}",
+            "Edited LearningWorld ({Id}). Updated Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, EvaluationLink: {EvaluationLink}",
             LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
-            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals);
+            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals, LearningWorld.EvaluationLink);
 
         MappingAction.Invoke(LearningWorld);
     }
@@ -84,5 +89,6 @@ public class EditLearningWorld : IEditLearningWorld
         LearningWorld.Authors != Authors ||
         LearningWorld.Language != Language ||
         LearningWorld.Description != Description ||
-        LearningWorld.Goals != Goals;
+        LearningWorld.Goals != Goals ||
+        LearningWorld.EvaluationLink != EvaluationLink;
 }

@@ -45,4 +45,7 @@
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
         <value>Goals</value>
     </data>
+    <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
+        <value>Link to evaluation</value>
+    </data>
 </root>

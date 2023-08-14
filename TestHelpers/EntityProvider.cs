@@ -13,7 +13,8 @@ public static class EntityProvider
 
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
-        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append)
+        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
+                "g" + append)
             { UnsavedChanges = unsavedChanges };
     }
 

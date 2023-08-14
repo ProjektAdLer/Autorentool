@@ -67,7 +67,7 @@ public class CreateDsl : ICreateDsl
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(learningWorld.Name, learningWorld.Id.ToString(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(),
-            learningWorld.Description, learningWorld.Goals.Split("\n"));
+            learningWorld.Description, learningWorld.Goals.Split("\n"), learningWorld.EvaluationLink);
 
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 

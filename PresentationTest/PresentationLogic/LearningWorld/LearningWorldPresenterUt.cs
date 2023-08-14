@@ -32,8 +32,8 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g");
-        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g");
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", "h");
+        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g", "h");
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class LearningWorldPresenterUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider,
             errorService: mockErrorService);
 
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g");
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", "h");
 
         mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }

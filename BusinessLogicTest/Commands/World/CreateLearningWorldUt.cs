@@ -1,8 +1,6 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands.World;
@@ -20,10 +18,12 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+            evaluationLink,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.IsEmpty(workspace.LearningWorlds);
@@ -42,6 +42,7 @@ public class CreateLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("el"));
         });
     }
 
@@ -52,7 +53,7 @@ public class CreateLearningWorldUt
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { },
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -63,7 +64,7 @@ public class CreateLearningWorldUt
     public void Execute_AddsLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("n", "sn", "a", "l", "d", "g");
+        var world = new LearningWorld("n", "sn", "a", "l", "d", "g", "el");
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -89,11 +90,12 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
-        var logger = Substitute.For<ILogger<WorldCommandFactory>>();
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+            evaluationLink,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -106,7 +108,7 @@ public class CreateLearningWorldUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "g");
         workspace.LearningWorlds.Add(world);
         var name = "n";
         var shortname = "sn";
@@ -114,10 +116,12 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+            evaluationLink,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));

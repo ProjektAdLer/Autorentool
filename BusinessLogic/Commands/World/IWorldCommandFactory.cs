@@ -12,7 +12,7 @@ public interface IWorldCommandFactory
     /// Creates a command to create a learning world.
     /// </summary>
     ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors, string language, string description, string goals,
+        string authors, string language, string description, string goals, string evaluationLink,
         Action<AuthoringToolWorkspace> mappingAction);
 
     /// <summary>
@@ -31,7 +31,7 @@ public interface IWorldCommandFactory
     /// Creates a command to edit a learning world.
     /// </summary>
     IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
-        string language, string description, string goals, Action<LearningWorld> mappingAction);
+        string language, string description, string goals, string evaluationLink, Action<LearningWorld> mappingAction);
 
     /// <summary>
     /// Creates a command to load a learning world.
