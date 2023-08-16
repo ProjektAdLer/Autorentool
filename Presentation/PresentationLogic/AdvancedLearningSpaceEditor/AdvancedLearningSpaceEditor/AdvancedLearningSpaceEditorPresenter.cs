@@ -1,16 +1,26 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Presentation.Components;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
+using Presentation.PresentationLogic.SelectedViewModels;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
 public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditorPresenter, IAdvancedPositioningService
 {
-    public AdvancedLearningSpaceEditorPresenter()
+    private IAdvancedLearningSpaceViewModel? _advancedLearningSpaceVm;
+    public AdvancedLearningSpaceEditorPresenter(ILogger<AdvancedLearningSpaceEditorPresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
     {
-        
+        Logger = logger;
     }
+    private ILogger<AdvancedLearningSpaceEditorPresenter> Logger { get; }
 
-    public IAdvancedLearningSpaceEditorViewModel? AdvancedLearningSpaceEditorViewModel;
+    public IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceVm
+    {
+        get => _advancedLearningSpaceVm;
+        private set => SetField(ref _advancedLearningSpaceVm, value);
+    }
     public IAdvancedComponentViewModel? SelectedAdvancedComponentViewModel { get; set; }
 
     public void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs)
@@ -21,6 +31,12 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
     public void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj)
     {
         SelectedAdvancedComponentViewModel = obj;
+    }
+
+    public void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace)
+    {
+        AdvancedLearningSpaceVm = advSpace;
+        Logger.LogDebug("LearningSpace set to {Name}", advSpace.Name);
     }
 
     public void DeleteSelectedAdvancedComponent()
@@ -43,24 +59,18 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
         throw new NotImplementedException();
     }
 
-    public void SetOnHoveredAdvancedComponent(IAdvancedComponentViewModel sourceObject, double x, double y)
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        var objectAtPosition = GetObjectAtPosition(x, y);
-        if (objectAtPosition == null || objectAtPosition == sourceObject)
-        {
-            LearningWorldVm.OnHoveredObjectInPathWay = null;
-        }
-        else
-        {
-            LearningWorldVm.OnHoveredObjectInPathWay = objectAtPosition;
-            _logger.LogDebug("ObjectAtPosition: {0} ", sourceObject.Id);
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public IAdvancedComponentViewModel GetOnHoveredAdvancedComponent()
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        throw new NotImplementedException();
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

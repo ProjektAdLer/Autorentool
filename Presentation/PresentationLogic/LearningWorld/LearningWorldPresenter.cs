@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using BusinessLogic.Validation;
 using Presentation.Components;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -22,6 +24,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 {
     private readonly IErrorService _errorService;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
+    private readonly IAdvancedLearningSpaceEditorPresenter _advancedLearningSpaceEditorPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
     private readonly IMediator _mediator;
 
@@ -31,11 +34,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     private ILearningWorldViewModel? _learningWorldVm;
 
     public LearningWorldPresenter(
-        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
+        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter, IAdvancedLearningSpaceEditorPresenter advancedLearningSpaceEditorPresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
         ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
     {
         _learningSpacePresenter = learningSpacePresenter;
+        _advancedLearningSpaceEditorPresenter = advancedLearningSpaceEditorPresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
         _mediator = mediator;
@@ -171,6 +175,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         {
             _learningSpacePresenter.SetLearningSpace(
                 space);
+        }
+
+        if (_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
+        {
+            _advancedLearningSpaceEditorPresenter.SetAdvancedLearningSpace(advSpace);
         }
 
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);

@@ -2,6 +2,7 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedCom
 
 public interface IAdvancedComponentViewModel
 {
+    
     double PositionX { get; set; }
     double PositionY { get; set; }
 }
