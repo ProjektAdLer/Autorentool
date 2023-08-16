@@ -2,6 +2,7 @@
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Entities.BackendAccess;
+using BusinessLogic.ErrorManagement.BackendAccess;
 
 namespace BackendAccess.API;
 
@@ -20,6 +21,9 @@ public class BackendAccess : IBackendAccess
     /// <inheritdoc cref="IBackendAccess.GetUserTokenAsync"/>
     public async Task<UserToken> GetUserTokenAsync(string username, string password)
     {
+        if (!await UserWebApiServices.GetApiHealthcheck())
+            throw new BackendApiUnreachableException("API healthcheck failed, not reachable");
+
         var receivedToken = await UserWebApiServices.GetUserTokenAsync(username, password);
 
         var retVal = Mapper.Map<UserToken>(receivedToken);
@@ -29,6 +33,9 @@ public class BackendAccess : IBackendAccess
 
     public async Task<UserInformation> GetUserInformationAsync(UserToken token)
     {
+        if (!await UserWebApiServices.GetApiHealthcheck())
+            throw new BackendApiUnreachableException("API healthcheck failed, not reachable");
+
         var receivedUserInformation = await UserWebApiServices.GetUserInformationAsync(token.Token);
 
         return Mapper.Map<UserInformation>(receivedUserInformation);
