@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using BusinessLogic.Commands;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -13,10 +14,12 @@ public interface ISelectedViewModelsProvider : INotifyPropertyChanged
     ILearningElementViewModel? LearningElement { get; }
     ILearningContentViewModel? LearningContent { get; }
     int ActiveSlotInSpace { get; }
+    IAdvancedComponentViewModel? AdvancedComponent { get; }
 
     void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command);
     void SetLearningObjectInPathWay(ISelectableObjectInWorldViewModel? learningObjectInPathWay, ICommand? command);
     void SetLearningElement(ILearningElementViewModel? learningElement, ICommand? command);
     void SetLearningContent(ILearningContentViewModel? content, ICommand? command);
     void SetActiveSlotInSpace(int slot, ICommand? command);
+    void SetAdvancedComponent(IAdvancedComponentViewModel? advancedComponent, ICommand? command);
 }

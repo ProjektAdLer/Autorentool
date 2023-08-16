@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BusinessLogic.Commands;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -20,6 +21,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private ILearningElementViewModel? _learningElement;
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningWorldViewModel? _learningWorld;
+    private IAdvancedComponentViewModel? _advancedComponent;
+    
 
     public SelectedViewModelsProvider(IOnUndoRedo onUndoRedo, ILogger<SelectedViewModelsProvider> logger)
     {
@@ -62,6 +65,12 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         private set => SetField(ref _activeSlotInSpace, value);
     }
 
+    public IAdvancedComponentViewModel? AdvancedComponent
+    {
+        get => _advancedComponent;
+        private set => SetField(ref _advancedComponent, value);
+    }
+
     public void SetActiveSlotInSpace(int slot, ICommand? command)
     {
         if (command is not null)
@@ -69,6 +78,13 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         ActiveSlotInSpace = slot;
         Logger.LogTrace("ActiveSlotInSpace set to {Slot}", slot);
         _redoStack.Clear();
+    }
+
+    public void SetAdvancedComponent(IAdvancedComponentViewModel? advancedComponent, ICommand? command)
+    {
+        AdvancedComponent = advancedComponent;
+        Logger.LogTrace("SelectedAdvancedComponent set to {AdvancedComponent}", advancedComponent);
+
     }
 
     public void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command)

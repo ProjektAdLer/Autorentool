@@ -11,10 +11,7 @@
 <Draggable LearningObject="AdvancedComponent" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@AdvancedComponent.PositionX" @bind-Y="@AdvancedComponent.PositionY">
-    @if (AdvancedComponent == AdvancedPositioningService.GetOnHoveredAdvancedComponent())
-    {
-        @((MarkupString)OnHoveredObjectShape)
-    }
+
     @* Wird mit Code überschrieben *@
     @((MarkupString)String.Format(ObjectShape, ObjectStyle, ObjectName))
     <Clickable OnClickedParam="AdvancedComponent" OnClicked="@OnClickedDeleteObject">
@@ -47,6 +44,9 @@
     public IAdvancedLearningSpaceEditorPresenter AdvancedEditorPresenter { get; set; } = null!;
     [Parameter, EditorRequired]
     public IAdvancedPositioningService AdvancedPositioningService { get; set; } = null!;
+    
+    [Inject] //can never be null, DI will throw exception on unresolved types
+    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
     protected abstract string Text { get; }
     
@@ -60,7 +60,7 @@
     
     protected abstract string ObjectStyleWhenNotSelected { get; }
     
-    private string ObjectStyle => Advanced Space Gen Presenter (hinterlegter selecteter raum) == AdvancedComponent ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
+    private string ObjectStyle => SelectedObjectsService?.AdvancedComponent == AdvancedComponent ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeleteObjectButtonShape { get; }
     
