@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -172,6 +173,9 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         AdvancedLearningSpaceLayout.ContainedLearningElements;
+
+    public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
+        AdvancedLearningSpaceLayout.ContainedAdvancedLearningElementSlots;
 
     // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
     public bool InternalUnsavedChanges { get; private set; }

@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.View.AdvancedLearningSpaceEditor;
 
-namespace Presentation.View.AdvancedLearningSpaceGenerator;
+namespace Presentation.View.AdvancedLearningSpaceEditor;
 
 public class DraggableAdvancedLearningElementSlot : DraggableAdvancedComponent
 {
-    // protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
+    protected override string ObjectName =>   "Slot at: (" +((IAdvancedLearningElementSlotViewModel)AdvancedComponent).PositionX + " | " +((IAdvancedLearningElementSlotViewModel)AdvancedComponent).PositionY +").";
     protected override string Text => "";
-    protected override string ObjectName { get; }
     protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,0.6);stroke-width:100";
     protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
     protected override string OnHoveredObjectShape =>  
@@ -78,21 +77,12 @@ public class DraggableAdvancedLearningElementSlot : DraggableAdvancedComponent
     protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
     
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnRemoveLearningSpaceFromTopic { get; set; }
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
         var menuEntries = new List<RightClickMenuEntry>()
         {
-            new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
+            // new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
         };
-
-        if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
-        {
-            menuEntries.Add(new("Remove topic", () => OnRemoveLearningSpaceFromTopic.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
-        }
 
         return menuEntries;
     }

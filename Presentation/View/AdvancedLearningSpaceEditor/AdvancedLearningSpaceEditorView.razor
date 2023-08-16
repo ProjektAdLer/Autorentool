@@ -1,9 +1,8 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningSpace
-@using Presentation.View.LearningWorld
 @using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor
+@ChildContent
 
 <section class="p-2 gap-1 flex flex-col justify-start">
     <div class="gap-8 flex justify-between items-start">
@@ -37,18 +36,28 @@
                          @onmousemove=@(e => MouseService.FireMove(this, e))
                                  @onmouseup=@(e => MouseService.FireUp(this, e))
                                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
+                        @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                        {
+                            @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
+                            {
+                                <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
+                                                                      AdvancedComponent="advancedComponentSlot"
+                                                                      AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter"
+                                                                      OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
+                                                                      OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
+                                                                      OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
+                                                                      OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
+                                                                      @* ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
+                                                                      @* OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
+                                                                      AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter" 
+                                ></DraggableAdvancedLearningElementSlot>
 
-                        <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
-                                                              OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
-                                                              OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
-                                                              OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
-                                                              OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
-                                                              @* ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
-                                                              @* OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
-                                                              AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"/>
+                            }
+                        }
+             
 
 
-                        <!-- The RightClickMenu might lies behind other spaces. 
+                                                              <!-- The RightClickMenu might lies behind other spaces. 
                         This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
                         <!--<use xlink:href="#rightClickMenu" />-->
                     </svg>

@@ -1,3 +1,4 @@
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
@@ -8,6 +9,7 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLea
 public interface IAdvancedLearningSpaceViewModel : IObjectInPathWayViewModel
 {
     IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
+    IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots { get; }
     TopicViewModel? AssignedTopic { get; set; }
     int Workload { get; }
     int Points { get; }

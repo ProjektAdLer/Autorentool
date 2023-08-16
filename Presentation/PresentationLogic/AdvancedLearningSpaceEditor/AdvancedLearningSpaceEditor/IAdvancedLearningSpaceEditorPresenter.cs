@@ -5,9 +5,10 @@ using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearnin
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
-public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged
+public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged, IAdvancedPositioningService
 {
     IAdvancedComponentViewModel? SelectedAdvancedComponentViewModel { get; set; }
+    IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel { get; }
     void RightClickOnAdvancedComponent();
     void DeleteSelectedAdvancedComponent();
     void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs);

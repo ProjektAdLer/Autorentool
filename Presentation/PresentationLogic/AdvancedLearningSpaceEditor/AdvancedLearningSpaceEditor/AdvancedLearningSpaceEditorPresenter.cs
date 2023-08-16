@@ -7,7 +7,7 @@ using Presentation.PresentationLogic.SelectedViewModels;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
-public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditorPresenter, IAdvancedPositioningService
+public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditorPresenter
 {
     private IAdvancedLearningSpaceViewModel? _advancedLearningSpaceVm;
     public AdvancedLearningSpaceEditorPresenter(ILogger<AdvancedLearningSpaceEditorPresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
@@ -16,7 +16,7 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
     }
     private ILogger<AdvancedLearningSpaceEditorPresenter> Logger { get; }
 
-    public IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceVm
+    public IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel
     {
         get => _advancedLearningSpaceVm;
         private set => SetField(ref _advancedLearningSpaceVm, value);
@@ -35,7 +35,7 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
 
     public void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace)
     {
-        AdvancedLearningSpaceVm = advSpace;
+        AdvancedLearningSpaceViewModel = advSpace;
         Logger.LogDebug("LearningSpace set to {Name}", advSpace.Name);
     }
 

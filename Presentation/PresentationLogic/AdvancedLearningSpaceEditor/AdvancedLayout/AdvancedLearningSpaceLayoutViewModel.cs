@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
@@ -13,6 +14,7 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     internal AdvancedLearningSpaceLayoutViewModel()
     {
         _learningElements = new Dictionary<int, ILearningElementViewModel>();
+        _advancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlotViewModel>();
     }
 
     public IDictionary<int, ILearningElementViewModel> LearningElements
@@ -20,6 +22,13 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         get => _learningElements;
         set => _learningElements = value;
     }
+
+    public IDictionary<int, IAdvancedLearningElementSlotViewModel> AdvancedLearningElementSlots
+    {
+        get => _advancedLearningElementSlots;
+        set =>_advancedLearningElementSlots = value;
+    }
+
 
     public int Capacity => 0;
     //TODO: Fix capacity
@@ -32,7 +41,11 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         _learningElements.Values;
 
+    public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
+        _advancedLearningElementSlots.Values;
+
     private IDictionary<int, ILearningElementViewModel> _learningElements;
+    private IDictionary<int, IAdvancedLearningElementSlotViewModel> _advancedLearningElementSlots;
 
     public ILearningElementViewModel GetElement(int index)
     {
