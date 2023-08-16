@@ -484,8 +484,6 @@ public class BusinessLogicUt
         dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
     }
 
-    #region BackendAccess
-
     [Test]
     public async Task Login_WritesTokenToConfiguration()
     {
@@ -545,8 +543,10 @@ public class BusinessLogicUt
             .Returns(Task.FromResult(userInformation));
         var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        mockConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("http://foobar.com");
 
-        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
 
         await systemUnderTest.Login(username, password);
 
@@ -585,8 +585,6 @@ public class BusinessLogicUt
         backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
     }
-
-    #endregion
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IApplicationConfiguration? fakeConfiguration = null,
