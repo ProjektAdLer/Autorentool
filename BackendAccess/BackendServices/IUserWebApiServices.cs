@@ -25,4 +25,10 @@ public interface IUserWebApiServices
 
     public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
         IProgress<int>? progress = null);
+
+    /// <summary>
+    /// Check if the API is reachable and healthy.
+    /// </summary>
+    /// <returns>True if we got correct response from API, false in all other cases.</returns>
+    Task<bool> GetApiHealthcheck();
 }

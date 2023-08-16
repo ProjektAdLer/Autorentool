@@ -45,6 +45,12 @@
                                 @Localizer["DialogContent.Error.WrongUserOrPassword"]
                             </MudText>
                         }
+                        @if (_showErrorApiUnreachable)
+                        {
+                            <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                @Localizer["DialogContent.Error.APIUnreachable"]
+                            </MudText>
+                        }
                     </div>
                     <div class="flex flex-col">
                         <!--TODO: Password reset link and API link should be set in the config - we need a proper configuration dialog -->
@@ -83,6 +89,7 @@
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
     private bool _showErrorInvalidCredentials = false;
+    private bool _showErrorApiUnreachable = false;
     private bool _isLmsConnected = false;
 
     private bool _isPasswordVisible = false;
@@ -106,13 +113,29 @@
 
     private async void UpdateLmsIsConnected()
     {
-        _isLmsConnected = await PresentationLogic.IsLmsConnected();
-        StateHasChanged();
+        try
+        {
+            _isLmsConnected = await PresentationLogic.IsLmsConnected();
+        }
+        catch (BackendApiUnreachableException)
+        {
+            _showErrorApiUnreachable = true;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
     private async void SubmitForm()
     {
+    //TODO: redo form as MudForm with proper validation
         if (_backendUrl == "" || _username == "" || _password == "") return;
+        if (!_backendUrl.StartsWith("http://") && !_backendUrl.StartsWith("https://"))
+        {
+            _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
+            return;
+        }
         Configuration[IApplicationConfiguration.BackendBaseUrl] = _backendUrl;
         Configuration[IApplicationConfiguration.BackendUsername] = _username;
         try
@@ -127,17 +150,25 @@
         {
             HandleInvalidUrlException(e);
         }
+        catch (BackendApiUnreachableException)
+        {
+            _showErrorApiUnreachable = true;
+        }
         catch (Exception e)
         {
             Logger.LogError(e, "Error from Backend_GetUserTokenAsync");
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
         }
     }
 
     private async Task LoginAsync()
     {
         await PresentationLogic.Login(_username, _password);
-
         _showErrorInvalidCredentials = false;
+        _showErrorApiUnreachable = false;
         _errorInvalidUrlMessage = "";
         UpdateLmsIsConnected();
     }

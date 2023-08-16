@@ -60,7 +60,7 @@
         <value>Passwort vergessen?</value>
     </data>
     <data name="DialogContent.Field.BackendUrl" xml:space="preserve">
-        <value>BackendUrl</value>
+        <value>AdLer API URL</value>
     </data>
     <data name="DialogContent.Button.ShowPassword" xml:space="preserve">
         <value>Passwort anzeigen</value>
@@ -73,5 +73,11 @@
     </data>
     <data name="DialogContent.Button.ForgotPassword.Title" xml:space="preserve">
         <value>Passwort vergessen?</value>
+    </data>
+    <data name="DialogContent.Error.APIUnreachable" xml:space="preserve">
+        <value>AdLer API nicht erreichbar. Bitte prüfen Sie die angegebene URL auf Korrektheit und stellen Sie sicher, dass Ihre Internetverbindung korrekt funktioniert.</value>
+    </data>
+    <data name="DialogContent.Error.ProtocolMissing" xml:space="preserve">
+        <value>Die API URL muss mit "http://" oder "https://" beginnen.</value>
     </data>
 </root>

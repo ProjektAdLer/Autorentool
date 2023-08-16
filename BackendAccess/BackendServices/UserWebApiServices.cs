@@ -13,7 +13,7 @@ using Shared.Networking;
 
 namespace BackendAccess.BackendServices;
 
-public class UserWebApiServices : IUserWebApiServices
+public class UserWebApiServices : IUserWebApiServices, IDisposable
 {
     private readonly HttpClient _client;
     private readonly IFileSystem _fileSystem;
@@ -25,6 +25,7 @@ public class UserWebApiServices : IUserWebApiServices
     {
         Configuration = configuration;
         _client = httpClientFactory.CreateClient(progressMessageHandler);
+        _client.Timeout = TimeSpan.FromSeconds(10);
         _progressMessageHandler = progressMessageHandler;
         _logger = logger;
         _fileSystem = fileSystem;
@@ -33,6 +34,13 @@ public class UserWebApiServices : IUserWebApiServices
     private IProgress<int>? ProgressReporter { get; set; }
 
     public IApplicationConfiguration Configuration { get; }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _client.Dispose();
+        _progressMessageHandler.Dispose();
+    }
 
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
@@ -45,7 +53,7 @@ public class UserWebApiServices : IUserWebApiServices
 
         try
         {
-            return await SendHttpGetRequestAsync<UserTokenBE>("/Users/Login", parameters);
+            return await SendHttpGetRequestAsync<UserTokenBE>("Users/Login", parameters);
         }
         catch (HttpRequestException e)
         {
@@ -90,7 +98,7 @@ public class UserWebApiServices : IUserWebApiServices
             { "WebServiceToken", token }
         };
 
-        return await SendHttpGetRequestAsync<UserInformationBE>("/Users/UserData",
+        return await SendHttpGetRequestAsync<UserInformationBE>("Users/UserData",
             parameters);
     }
 
@@ -113,17 +121,74 @@ public class UserWebApiServices : IUserWebApiServices
         content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
             "atfFile", awtPath);
 
-        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content, progress);
+        return await SendHttpPostRequestAsync<bool>("Worlds", headers, content, progress);
     }
 
+    /// <inheritdoc cref="GetApiHealthcheck"/>
+    public async Task<bool> GetApiHealthcheck()
+    {
+        var uri = new Uri(GetApiBaseUrl(), "health");
+        try
+        {
+            var response = await _client.GetAsync(uri);
+            var responseMessage = await response.Content.ReadAsStringAsync();
+            return responseMessage == "Healthy";
+        }
+        catch (HttpRequestException httpEx)
+        {
+            _logger.LogError("Failed to get healthcheck, assuming API is unreachable, {ExceptionMessage}",
+                httpEx.Message);
+            return false;
+        }
+        catch (InvalidOperationException invOpEx)
+        {
+            _logger.LogError("Failed to get healthcheck due to invalid URI, {ExceptionMessage}", invOpEx.Message);
+            return false;
+        }
+        catch (TaskCanceledException tCEx)
+        {
+            _logger.LogError("Failed to get healthcheck due to timeout, {ExceptionMessage}", tCEx.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Calculates the base URL for the API from the configuration.
+    /// </summary>
+    /// <returns>Base URL for API.</returns>
+    /// <exception cref="BackendInvalidUrlException">No URL was set in configuration or the format was invalid.</exception>
+    private Uri GetApiBaseUrl()
+    {
+        if (string.IsNullOrWhiteSpace(Configuration[IApplicationConfiguration.BackendBaseUrl]))
+        {
+            _logger.LogWarning("No URL set in configuration yet");
+            throw new BackendInvalidUrlException("No URL set in configuration yet.");
+        }
+
+        var uriBuilder = new UriBuilder(Configuration[IApplicationConfiguration.BackendBaseUrl]);
+        if (!Configuration[IApplicationConfiguration.BackendBaseUrl].EndsWith("/api/"))
+            uriBuilder.Path = "/api/";
+        try
+        {
+            return uriBuilder.Uri;
+        }
+        catch (UriFormatException e)
+        {
+            _logger.LogError("Invalid backend URL format, {ExceptionMessage}", e.Message);
+            throw new BackendInvalidUrlException("Invalid backend URL format", e);
+        }
+    }
+
+    /// <summary>
+    /// Sends a POST request with the given headers and content to the given URL.
+    /// </summary>
+    /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
         MultipartFormDataContent content, IProgress<int>? progress = null)
     {
-        // Set the Base URL of the API.
-        // TODO: This should be set in the configuration.
-        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
+        var uri = new Uri(GetApiBaseUrl(), url);
 
-        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        var request = new HttpRequestMessage(HttpMethod.Post, uri);
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
         request.Content = content;
 
@@ -150,6 +215,7 @@ public class UserWebApiServices : IUserWebApiServices
     /// <summary>
     /// Internal helper method for making requests and parsing responses generically
     /// </summary>
+    /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters)
     {
@@ -157,13 +223,11 @@ public class UserWebApiServices : IUserWebApiServices
         var queryString = HttpUtility.ParseQueryString(string.Empty);
         foreach (var (key, value) in parameters) queryString[key] = value;
 
-        // Set the Base URL of the API.
-        // TODO: This should be set in the configuration.
-        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
-
         url += "?" + queryString;
 
-        var apiResp = await _client.GetAsync(url);
+        var uri = new Uri(GetApiBaseUrl(), url);
+
+        var apiResp = await _client.GetAsync(uri);
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);

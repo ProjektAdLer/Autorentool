@@ -46,16 +46,37 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
-        mudTextFields[0].Find("input").Change("URL");
+        mudTextFields[0].Find("input").Change("http://foobar.com");
         mudTextFields[1].Find("input").Change("Username");
         mudTextFields[2].Find("input").Change("Password");
 
         var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
         mudButtons[0].Find("button").Click();
 
-        _applicationConfiguration.Received()[IApplicationConfiguration.BackendBaseUrl] = "URL";
+        _applicationConfiguration.Received()[IApplicationConfiguration.BackendBaseUrl] = "http://foobar.com";
         _applicationConfiguration.Received()[IApplicationConfiguration.BackendUsername] = "Username";
         await _presentationLogic.Received(1).Login("Username", "Password");
+    }
+
+    [Test]
+    public async Task EnterDetailsAndClickLoginButton_UrlDoesNotIncludeProtocol_ShowsErrorMessage()
+    {
+        _presentationLogic.IsLmsConnected().Returns(false);
+        await OpenDialogAndGetDialogReferenceAsync();
+
+        _presentationLogic.When(x => x.Login(Arg.Any<string>(), Arg.Any<string>()))
+            .Throw(new BackendInvalidLoginException());
+
+        var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
+        mudTextFields[0].Find("input").Change("NoProto");
+        mudTextFields[1].Find("input").Change("Username");
+        mudTextFields[2].Find("input").Change("Password");
+
+        var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
+        mudButtons[0].Find("button").Click();
+
+        var mudText = DialogProvider.FindComponents<MudText>();
+        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
     }
 
     [Test]
@@ -69,7 +90,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
             .Throw(new BackendInvalidLoginException());
 
         var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
-        mudTextFields[0].Find("input").Change("URL");
+        mudTextFields[0].Find("input").Change("http://foobar.com");
         mudTextFields[1].Find("input").Change("Username");
         mudTextFields[2].Find("input").Change("Password");
 
@@ -90,7 +111,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
             .Throw(new BackendInvalidUrlException("nix gut"));
 
         var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
-        mudTextFields[0].Find("input").Change("URL");
+        mudTextFields[0].Find("input").Change("http://foobar");
         mudTextFields[1].Find("input").Change("Username");
         mudTextFields[2].Find("input").Change("Password");
 
@@ -99,6 +120,27 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         var mudText = DialogProvider.FindComponents<MudText>();
         Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
+    }
+
+    [Test]
+    public async Task ClickLoginButton_PresentationThrowsBackendApiUnreachableException_ExceptionIsHandled()
+    {
+        _presentationLogic.IsLmsConnected().Returns(false);
+        await OpenDialogAndGetDialogReferenceAsync();
+
+        _presentationLogic.When(x => x.Login(Arg.Any<string>(), Arg.Any<string>()))
+            .Throw(new BackendApiUnreachableException("nix gut"));
+
+        var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
+        mudTextFields[0].Find("input").Change("http://foobar");
+        mudTextFields[1].Find("input").Change("Username");
+        mudTextFields[2].Find("input").Change("Password");
+
+        var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
+        mudButtons[0].Find("button").Click();
+
+        var mudText = DialogProvider.FindComponents<MudText>();
+        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
     }
 
     [Test]

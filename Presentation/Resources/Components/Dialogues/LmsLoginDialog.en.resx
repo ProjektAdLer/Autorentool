@@ -48,7 +48,7 @@
         <value>Forgot password?</value>
     </data>
     <data name="DialogContent.Field.BackendUrl" xml:space="preserve">
-        <value>BackendUrl</value>
+        <value>AdLer API URL</value>
     </data>
     <data name="DialogContent.Button.ShowPassword" xml:space="preserve">
         <value>Show password</value>
@@ -61,5 +61,11 @@
     </data>
     <data name="DialogContent.Button.ForgotPassword.Title" xml:space="preserve">
         <value>Forgot password?</value>
+    </data>
+    <data name="DialogContent.Error.APIUnreachable" xml:space="preserve">
+        <value>Couldn't reach AdLer API. Please check the supplied URL for corretness and ensure that your internet connection is working.</value>
+    </data>
+    <data name="DialogContent.Error.ProtocolMissing" xml:space="preserve">
+        <value>The API URL must start with either "http://" or "https://".</value>
     </data>
 </root>
