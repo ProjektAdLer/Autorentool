@@ -26,6 +26,13 @@
         }
         else
         {
+            @if (_spinnerActive)
+            {
+                <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
+                </div>
+                <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
+                                     Color="Color.Primary" Size="Size.Large"/>
+            }
             <div class="flex flex-col">
                 <MudForm>
                     <div class="flex flex-col">
@@ -49,6 +56,12 @@
                         {
                             <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
                                 @Localizer["DialogContent.Error.APIUnreachable"]
+                            </MudText>
+                        }
+                        @if (_showErrorTokenInvalid)
+                        {
+                            <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                @Localizer["DialogContent.Error.TokenInvalid"]
                             </MudText>
                         }
                     </div>
@@ -93,6 +106,8 @@
     private bool _isLmsConnected = false;
 
     private bool _isPasswordVisible = false;
+    private bool _showErrorTokenInvalid = false;
+    private bool _spinnerActive = false;
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
@@ -115,17 +130,26 @@
     {
         try
         {
+            StartSpinner();
             _isLmsConnected = await PresentationLogic.IsLmsConnected();
         }
         catch (BackendApiUnreachableException)
         {
             _showErrorApiUnreachable = true;
         }
+        catch (BackendInvalidTokenException)
+        {
+            _showErrorTokenInvalid = true;
+        }
         finally
         {
+            StopSpinner();
             StateHasChanged();
         }
     }
+
+    private void StartSpinner() => _spinnerActive = true;
+    private void StopSpinner() => _spinnerActive = false;
 
     private async void SubmitForm()
     {
@@ -140,6 +164,7 @@
         Configuration[IApplicationConfiguration.BackendUsername] = _username;
         try
         {
+            StartSpinner();
             await LoginAsync();
         }
         catch (BackendInvalidLoginException)
@@ -160,6 +185,7 @@
         }
         finally
         {
+            StopSpinner();
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -169,6 +195,7 @@
         await PresentationLogic.Login(_username, _password);
         _showErrorInvalidCredentials = false;
         _showErrorApiUnreachable = false;
+        _showErrorTokenInvalid = false;
         _errorInvalidUrlMessage = "";
         UpdateLmsIsConnected();
     }
