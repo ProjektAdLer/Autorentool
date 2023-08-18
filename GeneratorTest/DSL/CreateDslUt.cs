@@ -198,7 +198,7 @@ public class CreateDslUt
         var topic1 = PersistEntityProvider.GetTopic(name: "topic1");
         var topic2 = PersistEntityProvider.GetTopic(name: "topic2");
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+        var space1 = new LearningSpacePe("a", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
         {
@@ -229,31 +229,40 @@ public class CreateDslUt
                 }
             }
         };
-        var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, Theme.Campus,
+        var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
-        var space3 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+        var space3 = new LearningSpacePe("c", "ff", "ff", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.R_20X30_8L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
-        var space4 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+        var space4 = new LearningSpacePe("d", "ff", "ff", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
-            new List<IObjectInPathWayPe> { space1, space2 });
-        space1.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
-        space2.InBoundObjects = new List<IObjectInPathWayPe> { condition1 };
-        space2.OutBoundObjects = new List<IObjectInPathWayPe> { space3 };
-        space3.InBoundObjects = new List<IObjectInPathWayPe> { space2 };
+            new List<IObjectInPathWayPe>());
+
+        space1.OutBoundObjects = new List<IObjectInPathWayPe> { space2 };
+        space2.InBoundObjects = new List<IObjectInPathWayPe> { space1 };
+
+        space2.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+        condition1.InBoundObjects = new List<IObjectInPathWayPe> { space2, space3 };
+
+        space3.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+
+        condition1.OutBoundObjects = new List<IObjectInPathWayPe> { space4 };
+        space4.InBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+
         var learningSpaces = new List<LearningSpacePe> { space1, space2, space3, space4 };
+        var conditions = new List<PathWayConditionPe> { condition1 };
         var topics = new List<TopicPe> { topic1, topic2 };
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
             savePath,
-            learningSpaces, topics: topics);
+            learningSpaces, conditions, topics: topics);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
@@ -274,12 +283,19 @@ public class CreateDslUt
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
-            Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceName, Is.EqualTo(space1.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].SpaceName, Is.EqualTo(space3.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[2].SpaceName, Is.EqualTo(space2.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceName, Is.EqualTo(space4.Name));
             Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].RequiredSpacesToEnter,
                 Is.EqualTo(""));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].RequiredSpacesToEnter,
-                Is.EqualTo("(1)^(2)"));
+                Is.EqualTo(""));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[2].RequiredSpacesToEnter,
+                Is.EqualTo("1"));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].RequiredSpacesToEnter,
+                Is.EqualTo("(3)^(2)"));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });

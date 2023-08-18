@@ -72,7 +72,7 @@ public class CreateDsl : ICreateDsl
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
-        ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+        ListLearningSpaces.AddRange(GetLearningSpacesInOrder(learningWorld.ObjectsInPathWaysPe));
 
         foreach (var space in ListLearningSpaces)
         {
@@ -362,5 +362,61 @@ public class CreateDsl : ICreateDsl
         _currentConditionSpace =
             _currentConditionSpace.Substring(0, _currentConditionSpace.LastIndexOf(")", StringComparison.Ordinal) + 1);
         return _currentConditionSpace;
+    }
+
+    /// <summary>
+    /// Determines the order of learning spaces based on the provided paths and returns them as a list.
+    ///
+    /// This algorithm uses a Breadth-First Search (BFS) approach to ensure that spaces residing on the same "level"
+    /// are consecutive in the resulting list. Spaces without outgoing or incoming paths are appended at the end of the list.
+    ///
+    /// Spaces from the same path are ordered alphabetically.
+    ///
+    /// Note: This algorithm is also utilized in the "LearningWorldTreeView.razor". Changes made here should be reflected there as well.
+    /// </summary>
+    /// <param name="objectInPathWayViewModels">The collection of path objects used to determine the order.</param>
+    /// <returns>A sorted list of learning spaces based on the provided paths.</returns>
+    private List<LearningSpacePe> GetLearningSpacesInOrder(IEnumerable<IObjectInPathWayPe> objectInPathWayViewModels)
+    {
+        var objectInPathWayList = objectInPathWayViewModels.ToList();
+        var startObjects = objectInPathWayList
+            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count > 0).ToList();
+
+        var visited = new HashSet<IObjectInPathWayPe>();
+        var pathOrder = new List<LearningSpacePe>();
+        var queue = new Queue<IObjectInPathWayPe>();
+
+        foreach (var startObject in startObjects)
+        {
+            queue.Enqueue(startObject);
+        }
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            if (visited.Contains(current))
+                continue;
+
+            visited.Add(current);
+
+            if (current is LearningSpacePe learningSpace)
+            {
+                pathOrder.Add(learningSpace);
+            }
+
+            foreach (var nextObject in current.OutBoundObjects.OrderBy(o =>
+                         o is LearningSpacePe lsvm ? lsvm.Name : string.Empty))
+            {
+                queue.Enqueue(nextObject);
+            }
+        }
+
+        var spacesWithOutPaths = objectInPathWayList
+            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count == 0)
+            .Cast<LearningSpacePe>().ToList();
+
+        pathOrder.AddRange(spacesWithOutPaths);
+        return pathOrder;
     }
 }

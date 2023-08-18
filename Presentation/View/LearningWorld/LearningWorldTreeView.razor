@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
@@ -28,7 +29,7 @@
 
                 @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
                 {
-                    @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+                    @foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.ObjectsInPathWays))
                     {
                         <div class="text-adlergrey-700 text-lg w-[250px]">
                             <MudTreeViewItem Class="break-words w-[250px]" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
@@ -86,6 +87,59 @@
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }
+
+    /// <summary>
+    /// Determines the order of learning spaces based on the provided paths and returns them as a list.
+    ///
+    /// This algorithm uses a Breadth-First Search (BFS) approach to ensure that spaces residing on the same "level"
+    /// are consecutive in the resulting list. Spaces without outgoing or incoming paths are appended at the end of the list.
+    ///
+    /// Spaces from the same path are ordered alphabetically.
+    ///
+    /// Note: This algorithm is also utilized in the "CreateDSL" class. Changes made here should be reflected there as well.
+    /// </summary>
+    /// <param name="objectInPathWayViewModels">The collection of path object view models used to determine the order.</param>
+    /// <returns>A sorted list of learning space view models based on the provided paths.</returns>
+    private List<ILearningSpaceViewModel> GetLearningSpacesInOrder(IEnumerable<IObjectInPathWayViewModel> objectInPathWayViewModels)
+    {
+        var objectInPathWayList = objectInPathWayViewModels.ToList();
+        var startObjects = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is LearningSpaceViewModel && x.OutBoundObjects.Count > 0).ToList();
+
+        var visited = new HashSet<IObjectInPathWayViewModel>();
+        var pathOrder = new List<ILearningSpaceViewModel>();
+        var queue = new Queue<IObjectInPathWayViewModel>();
+
+        foreach (var startObject in startObjects)
+        {
+            queue.Enqueue(startObject);
+        }
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            if (visited.Contains(current))
+                continue;
+
+            visited.Add(current);
+
+            if (current is ILearningSpaceViewModel learningSpace)
+            {
+                pathOrder.Add(learningSpace);
+            }
+
+            foreach (var nextObject in current.OutBoundObjects.OrderBy(o => o is LearningSpaceViewModel lsvm ? lsvm.Name : string.Empty))
+            {
+                queue.Enqueue(nextObject);
+            }
+        }
+
+        var spacesWithOutPaths = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpaceViewModel && x.OutBoundObjects.Count == 0).Cast<ILearningSpaceViewModel>().ToList();
+
+        pathOrder.AddRange(spacesWithOutPaths);
+        return pathOrder;
+    }
+
 
     private void OnElementClicked(ILearningElementViewModel element)
     {
