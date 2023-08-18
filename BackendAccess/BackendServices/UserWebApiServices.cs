@@ -98,8 +98,17 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             { "WebServiceToken", token }
         };
 
-        return await SendHttpGetRequestAsync<UserInformationBE>("Users/UserData",
-            parameters);
+        try
+        {
+            return await SendHttpGetRequestAsync<UserInformationBE>("Users/UserData",
+                parameters);
+        }
+        catch (HttpRequestException httpReqEx)
+        {
+            if (httpReqEx.Message == "The provided token is invalid")
+                throw new BackendInvalidTokenException(httpReqEx.Message, httpReqEx);
+            throw;
+        }
     }
 
 

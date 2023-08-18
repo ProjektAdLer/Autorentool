@@ -62,4 +62,7 @@
     <data name="DialogContent.Error.ProtocolMissing" xml:space="preserve">
         <value>The API URL must start with either "http://" or "https://".</value>
     </data>
+    <data name="DialogContent.Error.TokenInvalid" xml:space="preserve">
+        <value>Please log in again.</value>
+    </data>
 </root>
