@@ -140,6 +140,7 @@
         catch (BackendInvalidTokenException)
         {
             _showErrorTokenInvalid = true;
+            Logout();
         }
         finally
         {
