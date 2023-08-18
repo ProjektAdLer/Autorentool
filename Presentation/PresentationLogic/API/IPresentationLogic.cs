@@ -151,6 +151,21 @@ public interface IPresentationLogic
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, string goals, int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
+    /// <summary>
+    /// Creates a new advanced learning space in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Space.</param>
+    /// <param name="name">The name of the Learning Space.</param>
+    /// <param name="description">The description of the Learning Space.</param>
+    /// <param name="goals">The goals of the Learning Space.</param>
+    /// <param name="requiredPoints">The points required to access the Learning Space.</param>
+    /// <param name="theme">The theme of the Learning Space.</param>
+    /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
+    /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
+    /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
+    void CreateAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
+        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        ITopicViewModel? topicVm = null);
 
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.

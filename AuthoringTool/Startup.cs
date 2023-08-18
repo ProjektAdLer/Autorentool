@@ -11,6 +11,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.ErrorManagement;
@@ -241,6 +242,7 @@ public class Startup
         services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
         services.AddSingleton<IPathwayCommandFactory, PathwayCommandFactory>();
         services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
+        services.AddSingleton<IAdvancedLearningSpaceCommandFactory, AdvancedLearningSpaceCommandFactory>();
         services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
         services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
         services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();

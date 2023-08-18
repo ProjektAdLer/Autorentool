@@ -4,7 +4,7 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
 
 public interface IAdvancedPositioningService 
 {
-    void CreateAdvancedComponent(IAdvancedComponentViewModel sourceObject, double x, double y);
+    void CreateAdvancedComponent();
     void DeleteAdvancedComponent(IAdvancedComponentViewModel targetObject);
     
 }

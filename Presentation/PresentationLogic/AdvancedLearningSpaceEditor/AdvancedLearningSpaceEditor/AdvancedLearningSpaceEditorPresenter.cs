@@ -49,7 +49,13 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
 
     }
 
-    public void CreateAdvancedComponent(IAdvancedComponentViewModel sourceObject, double x, double y)
+    public void CreateAdvancedLearningElementSlot(double positionX = 0, double positionY = 0)
+    {
+        if (AdvancedLearningSpaceViewModel == null)
+            throw new ApplicationException("AdvancedLearningSpaceViewModel is null!");
+        AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AddAdvancedLearningElementSlot();
+    }
+    public void CreateAdvancedComponent()
     {
         throw new NotImplementedException();
     }

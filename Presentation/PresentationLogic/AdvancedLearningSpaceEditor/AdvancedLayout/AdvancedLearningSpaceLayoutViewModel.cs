@@ -71,4 +71,10 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public void ClearAllElements() => _learningElements.Clear();
 
+    public void AddAdvancedLearningElementSlot()
+    {
+        var slotCount = AdvancedLearningElementSlots.Keys.Max() + 1;
+        AdvancedLearningElementSlots.Add(slotCount, new AdvancedLearningElementSlotViewModel());
+    }
+
 }

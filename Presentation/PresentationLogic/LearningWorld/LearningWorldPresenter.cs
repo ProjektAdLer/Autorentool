@@ -34,7 +34,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     private ILearningWorldViewModel? _learningWorldVm;
 
     public LearningWorldPresenter(
-        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter, IAdvancedLearningSpaceEditorPresenter advancedLearningSpaceEditorPresenter,
+        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
+        IAdvancedLearningSpaceEditorPresenter advancedLearningSpaceEditorPresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
         ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
     {
@@ -171,16 +172,16 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         if (!CheckLearningWorldNotNull("SetSelectedLearningObject"))
             return;
-        if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
+        if (_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
+        {
+            _advancedLearningSpaceEditorPresenter.SetAdvancedLearningSpace(advSpace);
+        }
+        else if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
         {
             _learningSpacePresenter.SetLearningSpace(
                 space);
         }
 
-        if (_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
-        {
-            _advancedLearningSpaceEditorPresenter.SetAdvancedLearningSpace(advSpace);
-        }
 
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
 
@@ -277,10 +278,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
-
-        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
-            requiredPoints, theme, advancedMode, positionX, positionY, topic);
+        if (!advancedMode)
+        {
+            //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
+            _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
+                requiredPoints, theme, advancedMode, positionX, positionY, topic);
+        }
+        else
+            _presentationLogic.CreateAdvancedLearningSpace(LearningWorldVm!, name, description, goals,
+                requiredPoints, theme, positionX, positionY, topic);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>

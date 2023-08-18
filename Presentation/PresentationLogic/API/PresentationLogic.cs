@@ -6,6 +6,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
@@ -51,6 +52,7 @@ public class PresentationLogic : IPresentationLogic
         ILayoutCommandFactory layoutCommandFactory,
         IPathwayCommandFactory pathwayCommandFactory,
         ISpaceCommandFactory spaceCommandFactory,
+        IAdvancedLearningSpaceCommandFactory advancedLearningSpaceCommandFactory,
         ITopicCommandFactory topicCommandFactory,
         IWorldCommandFactory worldCommandFactory,
         IBatchCommandFactory batchCommandFactory)
@@ -68,6 +70,7 @@ public class PresentationLogic : IPresentationLogic
         LayoutCommandFactory = layoutCommandFactory;
         PathwayCommandFactory = pathwayCommandFactory;
         SpaceCommandFactory = spaceCommandFactory;
+        AdvancedLearningSpaceCommandFactory = advancedLearningSpaceCommandFactory;
         TopicCommandFactory = topicCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
@@ -85,6 +88,7 @@ public class PresentationLogic : IPresentationLogic
     public ILayoutCommandFactory LayoutCommandFactory { get; }
     public IPathwayCommandFactory PathwayCommandFactory { get; }
     public ISpaceCommandFactory SpaceCommandFactory { get; }
+    public IAdvancedLearningSpaceCommandFactory AdvancedLearningSpaceCommandFactory { get; }
     public ITopicCommandFactory TopicCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
@@ -232,6 +236,21 @@ public class PresentationLogic : IPresentationLogic
 
         var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, goals, requiredPoints, theme,
             advancedMode, positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.Last(), command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.CreateAdvancedLearningSpace"/>
+    public void CreateAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
+        string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        ITopicViewModel? topicVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
+
+        var command = AdvancedLearningSpaceCommandFactory.GetCreateCommand(worldEntity, name, description, goals, requiredPoints, theme,
+             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.Last(), command);

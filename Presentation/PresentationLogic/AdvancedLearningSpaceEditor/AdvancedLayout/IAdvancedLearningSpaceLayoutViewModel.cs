@@ -16,4 +16,5 @@ public interface IAdvancedLearningSpaceLayoutViewModel
     void PutElement(int index, ILearningElementViewModel element);
     void RemoveElement(int index);
     void ClearAllElements();
+    void AddAdvancedLearningElementSlot();
 }

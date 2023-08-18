@@ -99,7 +99,11 @@
             </div>
         </nav>
         <div>
-            Menu Inhalt
+            <button
+                class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
+                @onclick="CreateAdvancedLearningElementSlot">
+                
+            </button>
         </div>
     </div>
 </section>
@@ -142,4 +146,10 @@
     {
         return buttonType == _menuFocus ? "bg-gray-900 text-white " : "text-gray-400 hover:bg-gray-700 hover:text-white ";
     }
+
+    private void CreateAdvancedLearningElementSlot()
+    {
+        AdvancedLearningSpaceEditorPresenter.CreateAdvancedLearningElementSlot();
+    }
+    
 }

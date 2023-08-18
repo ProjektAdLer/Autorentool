@@ -7,6 +7,7 @@ using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedCompone
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 
@@ -31,6 +32,7 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
     [UsedImplicitly]
     private AdvancedLearningSpaceViewModel()
     {
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.L_32X31_10L);
         InitializeFields();
         Id = Guid.Empty;
         Name = "";
@@ -43,6 +45,7 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
         AdvancedMode = false;
         PositionX = 0;
         PositionY = 0;
+        
     }
 
     /// <summary>
@@ -60,8 +63,7 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
     /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
-    public AdvancedLearningSpaceViewModel(string name, string description, string goals, Theme theme, bool advancedMode,
-        int requiredPoints = 0,
+    public AdvancedLearningSpaceViewModel(string name, string description, string goals, Theme theme, bool advancedMode, int requiredPoints = 0,
         IAdvancedLearningSpaceLayoutViewModel? advancedLayoutViewModel = null, double positionX = 0,
         double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
@@ -75,6 +77,7 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
         Goals = goals;
         Theme = theme;
         AdvancedMode = advancedMode;
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.L_32X31_10L);
         RequiredPoints = requiredPoints;
         AdvancedLearningSpaceLayout = advancedLayoutViewModel ?? new AdvancedLearningSpaceLayoutViewModel();
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
@@ -173,6 +176,8 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         AdvancedLearningSpaceLayout.ContainedLearningElements;
+
+    public ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
 
     public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
         AdvancedLearningSpaceLayout.ContainedAdvancedLearningElementSlots;

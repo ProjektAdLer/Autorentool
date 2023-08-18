@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BusinessLogic.Commands;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
