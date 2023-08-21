@@ -60,8 +60,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
 
-    [CascadingParameter]
-    public ContentFilesContainer? ContentFilesContainer { get; set; }
+    [CascadingParameter(Name = "RerenderContentContainer")]
+    public Func<Task>? RerenderContentFilesContainer { get; set; }
 
 
     private string DragClass { get; set; } = "";
@@ -96,8 +96,9 @@
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
-            if (ContentFilesContainer is null) throw new InvalidOperationException("ContentFilesContainer cascading parameter not set");
-            await ContentFilesContainer.RerenderAsync();
+            var rerenderTask = RerenderContentFilesContainer?.Invoke();
+            if (rerenderTask is not null)
+                await rerenderTask;
             ToggleSpinner();
             ClearDragClass();
         });
