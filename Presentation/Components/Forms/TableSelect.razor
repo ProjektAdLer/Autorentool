@@ -83,7 +83,7 @@
 
     private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
     {
-        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString));
+        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
     }
 
 }
