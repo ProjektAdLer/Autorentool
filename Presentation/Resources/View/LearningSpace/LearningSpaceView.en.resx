@@ -23,7 +23,7 @@
         </value>
     </resheader>
     <data name="LearningSpace.Title.Text" xml:space="preserve">
-        <value>Learning Space Editor</value>
+        <value>Learning space editor</value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Selected learning element:</value>
@@ -32,10 +32,10 @@
         <value>Workload: </value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Points: </value>
+        <value>Total points:</value>
     </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
-        <value>Replace Learning Element</value>
+        <value>Replace learning element</value>
     </data>
     <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
         <value>Theme: </value>
@@ -44,7 +44,7 @@
         <value>Goals: </value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
-        <value>Replace Learning Element</value>
+        <value>Replace learning element</value>
     </data>
     <data name="Error.ExceptionWrapper.ShowLearningElementContent.Message" xml:space="preserve">
         <value>Show learning element content</value>

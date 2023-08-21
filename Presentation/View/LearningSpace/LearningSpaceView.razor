@@ -10,14 +10,14 @@
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningElement
 @implements IDisposable
-<div class="mx-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
-    </div>
-</div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
+    <div class="mx-2 rounded-lg">
+        <div class="flex justify-center p-2">
+            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
+        </div>
+    </div>
     <div class="p-2 flex justify-start space-x-2">
         <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
         <p class="text-lg text-adlerblue-600 truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>

@@ -15,7 +15,7 @@
         <value>Edit learning space</value>
     </data>
     <data name="EditSpaceForm.SnackbarMessage" xml:space="preserve">
-        <value>Space updated</value>
+        <value>Learning space updated</value>
     </data>
     <data name="EditSpaceForm.Button.New.Text" xml:space="preserve">
         <value>New</value>
@@ -27,7 +27,7 @@
         <value>Goals</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Theme</value>
+        <value>Theme of learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
         <value>Completion conditions</value>

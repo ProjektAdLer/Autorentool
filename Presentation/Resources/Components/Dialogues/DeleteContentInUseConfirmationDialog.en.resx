@@ -25,7 +25,7 @@
         <value>Delete</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
-        <value>That content is currently in use in the following elements in the following worlds:</value>
+        <value>That content is currently in use in the following learning elements:</value>
     </data>
     <data name="Dialog.Text1" xml:space="preserve">
         <value>Are you really sure you want to delete {0}?</value>

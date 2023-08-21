@@ -24,10 +24,10 @@
         </value>
     </resheader>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
-        <value>Lernelement editieren</value>
+        <value>Lernelement bearbeiten</value>
     </data>
     <data name="EditElementForm.SnackbarMessage" xml:space="preserve">
-        <value>Element editiert</value>
+        <value>Lernelement aktualisiert</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>Allgemein</value>
@@ -72,10 +72,10 @@
         <value>Schwierigkeitsgrad</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D Darstellung</value>
+        <value>3D-Darstellung des Lernelements</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
-        <value>3D-Darstellung dieses Lernelements</value>
+        <value>3D-Darstellung</value>
     </data>
     <data name="EditElementForm.NewButton.Text" xml:space="preserve">
         <value>Neu</value>

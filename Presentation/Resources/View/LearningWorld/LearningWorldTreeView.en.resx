@@ -22,6 +22,6 @@
         <value>Workload: </value>
     </data>
     <data name="OverView.Points" xml:space="preserve">
-        <value>Points:</value>
+        <value>Total points:</value>
     </data>
 </root>

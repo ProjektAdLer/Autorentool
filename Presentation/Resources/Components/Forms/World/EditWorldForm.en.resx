@@ -19,7 +19,7 @@
         <value>Edit learning world</value>
     </data>
     <data name="EditWorldForm.SnackbarMessage" xml:space="preserve">
-        <value>World updated</value>
+        <value>Learning world updated</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>

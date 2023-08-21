@@ -28,7 +28,7 @@
         <value>Kurzname</value>
     </data>
     <data name="CreateWorldForm.General.Field.Authors.Text" xml:space="preserve">
-        <value>Autoren</value>
+        <value>Autor(en)</value>
     </data>
     <data name="CreateWorldForm.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>
@@ -47,5 +47,8 @@
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
         <value>Ziele</value>
+    </data>
+    <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
+        <value>Lernwelt erstellt</value>
     </data>
 </root>

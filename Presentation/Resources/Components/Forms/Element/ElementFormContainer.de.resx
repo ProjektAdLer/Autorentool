@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Text" xml:space="preserve">
-        <value>Liste von allen Lernelementen</value>
+        <value>Liste von allen Elementen</value>
     </data>
     <data name="ElementFormContainer.UnplacedElements.Title" xml:space="preserve">
         <value>Liste aller Elemente</value>

@@ -21,7 +21,7 @@
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]/>
+                              Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
             </div>
         </Collapsable>
 
@@ -44,7 +44,7 @@
                      @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
-                           Label="@nameof(FormDataContainer.FormModel.Theme)"
+                           Label=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
                            For="@(() => FormModel.Theme)">
                     @foreach (var theme in _themes)

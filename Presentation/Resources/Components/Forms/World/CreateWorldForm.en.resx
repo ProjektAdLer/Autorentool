@@ -28,7 +28,7 @@
         <value>Shortname</value>
     </data>
     <data name="CreateWorldForm.General.Field.Authors.Text" xml:space="preserve">
-        <value>Authors</value>
+        <value>Author(s)</value>
     </data>
     <data name="CreateWorldForm.General.Field.Language.Text" xml:space="preserve">
         <value>Language</value>
@@ -47,5 +47,8 @@
     </data>
     <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
         <value>Link to evaluation</value>
+    </data>
+    <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
+        <value>Learning world created</value>
     </data>
 </root>
