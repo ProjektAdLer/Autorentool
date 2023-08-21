@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
 using PersistEntities.LearningContent;
+using Shared.Configuration;
 using Shared.Extensions;
 
 namespace DataAccess.Persistence;
@@ -21,22 +22,21 @@ public class ContentFileHandler : IContentFileHandler
         _logger = logger;
         //make sure that the folder exists
         AssertContentFilesFolderExists();
-        _logger.LogInformation("ContentFilesFolderPath is {}", ContentFilesFolderPath);
+        _logger.LogInformation("ContentFilesFolderPath is {Path}", ContentFilesFolderPath);
         AssertAllFilesInContentFilesFolderHaveHash();
     }
 
-    public string ContentFilesFolderPath => Path.Join(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "AdLerAuthoring", "ContentFiles");
+    public string ContentFilesFolderPath => ApplicationPaths.ContentFolder;
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
     public async Task<ILearningContentPe> LoadContentAsync(string filepath)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
         if (duplicatePath == null)
-            _logger.LogDebug("{} not found in {}, copying file", filepath, ContentFilesFolderPath);
+            _logger.LogDebug("{File} not found in {ContentFilesFolderPath}, copying file", filepath,
+                ContentFilesFolderPath);
         else
-            _logger.LogDebug("{} found at {}, not copying", filepath, duplicatePath);
+            _logger.LogDebug("{File} found at {DuplicateFilePath}, not copying", filepath, duplicatePath);
 
         var finalPath = duplicatePath ?? CopyFileToContentFilesFolder(filepath);
 
@@ -53,9 +53,10 @@ public class ContentFileHandler : IContentFileHandler
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(stream);
         if (duplicatePath == null)
-            _logger.LogDebug("stream {} not found in {}, copying file", name, ContentFilesFolderPath);
+            _logger.LogDebug("stream {Name} not found in {ContentFilesFolderPath}, copying file", name,
+                ContentFilesFolderPath);
         else
-            _logger.LogDebug("stream {} found at {}, not copying", name, duplicatePath);
+            _logger.LogDebug("stream {Name} found at {DuplicateFilePath}, not copying", name, duplicatePath);
 
         var finalPath = duplicatePath ?? await CopyFileToContentFilesFolderAsync(name, stream);
 
@@ -106,7 +107,7 @@ public class ContentFileHandler : IContentFileHandler
     private void AssertContentFilesFolderExists()
     {
         if (_fileSystem.Directory.Exists(ContentFilesFolderPath)) return;
-        _logger.LogDebug("Folder {} did not exist, creating", ContentFilesFolderPath);
+        _logger.LogDebug("Folder {ContentFilesFolderPath} did not exist, creating", ContentFilesFolderPath);
         _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
     }
 
@@ -174,7 +175,7 @@ public class ContentFileHandler : IContentFileHandler
         var finalHashPath = finalPath + ".hash";
         await using var writeStream = _fileSystem.File.OpenWrite(finalHashPath);
         await writeStream.WriteAsync(new ReadOnlyMemory<byte>(hash));
-        _logger.LogDebug("Wrote hash for {} to {}", finalPath, finalHashPath);
+        _logger.LogDebug("Wrote hash for {FilePath} to {HashFilePath}", finalPath, finalHashPath);
     }
 
     /// <summary>
@@ -197,7 +198,7 @@ public class ContentFileHandler : IContentFileHandler
         }
         catch (IOException ioex)
         {
-            _logger.LogError("File at path {} is empty", filepath);
+            _logger.LogError("File at path {File} is empty", filepath);
             throw new IOException($"File at path {filepath} is empty.", ioex);
         }
     }
@@ -249,7 +250,7 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogDebug("Found {Count} applicable files without a hash", filesWithoutHash.Count);
         foreach (var path in filesWithoutHash)
         {
-            _logger.LogWarning("Found no hash file for real file at {}, creating one", path.realPath);
+            _logger.LogWarning("Found no hash file for real file at {Filepath}, creating one", path.realPath);
             await using var readStream = _fileSystem.File.OpenRead(path.realPath);
             await using var writeStream = _fileSystem.File.OpenWrite(path.hashPath);
             var hash = await ComputeHashAsync(readStream);
@@ -268,7 +269,8 @@ public class ContentFileHandler : IContentFileHandler
         catch (FileNotFoundException)
         {
             //log error and remove hash file
-            _logger.LogWarning("Found hash file {} but no real file at {} when checking for duplicates, removing it",
+            _logger.LogWarning(
+                "Found hash file {HashFile} but no real file at {FilePath} when checking for duplicates, removing it",
                 hashPath, filePath);
             _fileSystem.File.Delete(hashPath);
             return false;

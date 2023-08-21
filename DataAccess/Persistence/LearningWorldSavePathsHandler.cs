@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.Configuration;
 
 namespace DataAccess.Persistence;
 
@@ -21,17 +22,16 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         _serializer = new XmlSerializer(typeof(List<SavedLearningWorldPath>));
 
         AssertLearningWorldSavePathsFolderExists();
-        _logger.LogInformation("LearningWorldSavePathsFolderPath is {}", LearningWorldSavePathsFolderPath);
+        _logger.LogInformation("LearningWorldSavePathsFolderPath is {LearningWorldSavePathsFolderPath}",
+            LearningWorldSavePathsFolderPath);
 
         AssertSavedWorldPathsFileExists();
-        _logger.LogInformation("SavedWorldPathsFilePath is {}", SavedWorldPathsFilePath);
+        _logger.LogInformation("SavedWorldPathsFilePath is {SavedWorldPathsFilePath}", SavedWorldPathsFilePath);
 
         LoadSavedLearningWorldPaths();
     }
 
-    private string LearningWorldSavePathsFolderPath => Path.Join(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "AdLerAuthoring", "SavedWorlds");
+    private string LearningWorldSavePathsFolderPath => ApplicationPaths.SavedWorldsFolder;
 
     private string SavedWorldPathsFilePath => Path.Join(LearningWorldSavePathsFolderPath, "SavedWorlds.xml");
 
@@ -89,7 +89,8 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     private void AssertLearningWorldSavePathsFolderExists()
     {
         if (_fileSystem.Directory.Exists(LearningWorldSavePathsFolderPath)) return;
-        _logger.LogDebug("Folder {} did not exist, creating", LearningWorldSavePathsFolderPath);
+        _logger.LogDebug("Folder {LearningWorldSavePathsFolderPath} did not exist, creating",
+            LearningWorldSavePathsFolderPath);
         _fileSystem.Directory.CreateDirectory(LearningWorldSavePathsFolderPath);
     }
 
