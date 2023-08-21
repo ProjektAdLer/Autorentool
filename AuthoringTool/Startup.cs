@@ -38,6 +38,8 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.MyLearningWorlds;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -69,10 +71,18 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(Configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+            .WriteTo.File(path: Path.Combine(ApplicationPaths.LogsFolder, "log.txt"), buffered: false,
+                rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000000, retainedFileCountLimit: 5)
+            .CreateLogger();
+
         services.AddLogging(builder =>
         {
             builder.ClearProviders();
-            builder.AddConsole();
+            builder.AddSerilog(dispose: true);
             builder.SetMinimumLevel(LogLevel.Trace);
         });
 
