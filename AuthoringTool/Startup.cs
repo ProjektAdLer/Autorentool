@@ -50,12 +50,14 @@ namespace AuthoringTool;
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
 
     public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -71,12 +73,14 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+        var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
+        var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(Configuration)
             .Enrich.FromLogContext()
             .WriteTo.Console(theme: AnsiConsoleTheme.Code)
-            .WriteTo.File(path: Path.Combine(ApplicationPaths.LogsFolder, "log.txt"), buffered: false,
-                rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000000, retainedFileCountLimit: 5)
+            .WriteTo.File(path: logFilePath, buffered: false, rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000000,
+                retainedFileCountLimit: 5)
             .CreateLogger();
 
         services.AddLogging(builder =>
