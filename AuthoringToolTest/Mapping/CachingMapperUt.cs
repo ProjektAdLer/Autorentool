@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -478,6 +479,35 @@ public class CachingMapperUt
 
         systemUnderTest.Map(elementEntity, elementViewModel);
         mapper.Received(1).Map(elementEntity, elementViewModel);
+    }
+
+    /// <summary>
+    /// This is a regression test for bugfix for #315 https://github.com/ProjektAdLer/Autorentool/issues/315
+    /// </summary>
+    [Test]
+    public void ElementWithFileContent_EntityChangedToLinkContent_MapsBackToVmCorrectly()
+    {
+        var fileContentViewModel = ViewModelProvider.GetFileContent();
+        var elementViewModel = ViewModelProvider.GetLearningElement(content: fileContentViewModel);
+        var linkContentEntity = EntityProvider.GetLinkContent();
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+        var mapper = config.CreateMapper();
+
+        var systemUnderTest = CreateTestableCachingMapper(mapper: mapper);
+
+        var elementEntity = mapper.Map<ILearningElement>(elementViewModel);
+
+        elementEntity.LearningContent = linkContentEntity;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => systemUnderTest.Map(elementEntity, elementViewModel), Throws.Nothing);
+            Assert.That(elementViewModel.LearningContent, Is.TypeOf<LinkContentViewModel>());
+        });
     }
 
     private static CachingMapper CreateTestableCachingMapper(
