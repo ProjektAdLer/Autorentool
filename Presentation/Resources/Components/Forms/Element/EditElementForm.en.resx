@@ -15,7 +15,7 @@
         <value>Edit learning element</value>
     </data>
     <data name="EditElementForm.SnackbarMessage" xml:space="preserve">
-        <value>Element edited</value>
+        <value>Learning element updated</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>
@@ -42,10 +42,10 @@
         <value>Learning content</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D representation</value>
+        <value>3D representation of learning element</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
-        <value>3D representation of this learning element</value>
+        <value>3D representation</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Goals</value>
@@ -60,7 +60,7 @@
         <value>Learning content</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
-        <value>Punkte</value>
+        <value>Points</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
         <value>Name</value>
@@ -69,6 +69,6 @@
         <value>New</value>
     </data>
     <data name="EditElementForm.Button.ShowLearningElement.Title" xml:space="preserve">
-        <value>Show Learning Element</value>
+        <value>Show learning element</value>
     </data>
 </root>

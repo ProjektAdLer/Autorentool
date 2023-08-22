@@ -27,7 +27,7 @@
         <value>Lernraum erstellen</value>
     </data>
     <data name="CreateSpaceForm.SnackbarMessage" xml:space="preserve">
-        <value>Raum aktualisiert</value>
+        <value>Lernraum erstellt</value>
     </data>
     <data name="CreateSpaceForm.Button.New.Text" xml:space="preserve">
         <value>Neu</value>
@@ -42,7 +42,7 @@
         <value>Grundriss</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Design</value>
+        <value>Lernraum-Thema</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
@@ -61,5 +61,8 @@
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
         <value>Benötigte Punkte</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Thema</value>
     </data>
 </root>

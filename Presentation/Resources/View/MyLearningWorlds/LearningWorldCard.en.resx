@@ -31,6 +31,6 @@
         <value>OnCloseWorld must be set.</value>
     </data>
     <data name="LearningWorldCard.Button.Close.Text" xml:space="preserve">
-        <value>Close Learning World</value>
+        <value>Close learning world</value>
     </data>
 </root>

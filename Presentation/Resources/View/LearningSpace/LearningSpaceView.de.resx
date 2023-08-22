@@ -23,13 +23,13 @@
         </value>
     </resheader>
     <data name="LearningSpace.Title.Text" xml:space="preserve">
-        <value>Lernraum Editor</value>
+        <value>Lernraum-Editor</value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Punkte: </value>
+        <value>Gesamtpunkte:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Arbeitslast: </value>
+        <value>Arbeitsaufwand: </value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Ausgewähltes Lernelement:</value>

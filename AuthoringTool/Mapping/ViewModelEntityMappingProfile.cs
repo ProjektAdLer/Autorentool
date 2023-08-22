@@ -170,6 +170,9 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ForMember(x => x.LearningContent, opt => opt.Ignore())
+            .AfterMap((entity, vm, context) =>
+                vm.LearningContent = context.Mapper.Map<ILearningContentViewModel>(entity.LearningContent))
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
@@ -177,6 +180,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<ILearningElementViewModel, LearningElement>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ForMember(x => x.LearningContent, opt => opt.DoNotUseDestinationValue())
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore());

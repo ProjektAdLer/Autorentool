@@ -19,13 +19,13 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Page.LearningWorld.Heading" xml:space="preserve">
-        <value>My Learning Worlds</value>
+        <value>My learning worlds</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>New Learning World</value>
+        <value>New learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Import Learning World</value>
+        <value>Import learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEW</value>

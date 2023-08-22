@@ -15,7 +15,7 @@
         <value>Workload:</value>
     </data>
     <data name="LearningWorldView.Points.Text" xml:space="preserve">
-        <value>Points:</value>
+        <value>Total points:</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
         <value> min.</value>
