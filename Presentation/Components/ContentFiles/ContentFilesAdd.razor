@@ -16,25 +16,27 @@
 
         @if (Working)
         {
-            <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
-            </div>
             <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
                                  Color="Color.Primary" Size="Size.Large"/>
         }
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
-                       Accept="@AllowedFileEndings.EndingsCommaSeparated"
-                       InputClass="absolute w-full h-full opacity-0 z-10"
-                       @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
-                       @ondragend="ClearDragClass">
-            <ButtonTemplate>
-                <MudPaper Class="@PaperClasses" Outlined="true">
-                    <MudText Typo="Typo.body1" Class="break-word w-80" Align="Align.Center">
-                        @Localizer["FileUpload.ButtonTemplate.Text1"]<br/>
-                        @Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]
-                    </MudText>
-                </MudPaper>
-            </ButtonTemplate>
-        </MudFileUpload>
+        
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
+                           Accept="@AllowedFileEndings.EndingsCommaSeparated"
+                           InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
+                           @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
+                           @ondragend="ClearDragClass">
+                <ButtonTemplate>
+                    <MudPaper Class="@PaperClasses" Outlined="true">
+                        <div class="h-32 flex flex-col justify-center items-center">
+                        <img class="w-9" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
+                        <h1 class="flex text-base justify-center break-word w-[40rem] font-bold text-adlerdarkblue mx-4">@Localizer["FileUpload.ButtonTemplate.Text1"]</h1>
+                        <p class="flex justify-center text-sm text-center break-word w-[40rem] mx-4">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</p>
+                        </div>
+                    </MudPaper>
+                    
+                </ButtonTemplate>
+            </MudFileUpload>
+            
     </div>
     <Collapsable Title=@Localizer["Collapsable.Title"] Collapsed="true">
         <AddLinkForm/>
@@ -65,7 +67,7 @@
 
 
     private string DragClass { get; set; } = "";
-    private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
+    private string PaperClasses => $"h-32 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
     private bool Working { get; set; } = false;
 
     /// <summary>
