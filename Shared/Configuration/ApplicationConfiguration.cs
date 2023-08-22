@@ -7,8 +7,21 @@ namespace Shared.Configuration;
 
 public class ApplicationConfiguration : IApplicationConfiguration
 {
-    private readonly string _folderPath;
     private readonly string _filePath;
+    private readonly string _folderPath;
+
+    public ApplicationConfiguration(ILogger<ApplicationConfiguration> logger, IFileSystem fileSystem)
+    {
+        Logger = logger;
+        FileSystem = fileSystem;
+        _folderPath = ApplicationPaths.RootFolder;
+        _filePath = FileSystem.Path.Combine(_folderPath, "ApplicationConfig.json");
+        Configuration = TryLoadConfiguration();
+        CheckIfAllKeysExist();
+        SaveConfiguration();
+        Configuration.CollectionChanged += OnCollectionChanged;
+    }
+
     internal ILogger<ApplicationConfiguration> Logger { get; }
     internal IFileSystem FileSystem { get; }
     public IObservableDictionary<string, string> Configuration { get; }
@@ -17,19 +30,6 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         get => Configuration[key];
         set => Configuration[key] = value;
-    }
-
-    public ApplicationConfiguration(ILogger<ApplicationConfiguration> logger, IFileSystem fileSystem)
-    {
-        Logger = logger;
-        FileSystem = fileSystem;
-        _folderPath = FileSystem.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "AdLerAuthoring");
-        _filePath = FileSystem.Path.Combine(_folderPath, "ApplicationConfig.json");
-        Configuration = TryLoadConfiguration();
-        CheckIfAllKeysExist();
-        SaveConfiguration();
-        Configuration.CollectionChanged += OnCollectionChanged;
     }
 
     private ObservableDictionary<string, string> TryLoadConfiguration()
@@ -49,9 +49,9 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         return new ObservableDictionary<string, string>
         {
-            {IApplicationConfiguration.BackendBaseUrl, ""},
-            {IApplicationConfiguration.BackendUsername, ""},
-            {IApplicationConfiguration.BackendToken, ""}
+            { IApplicationConfiguration.BackendBaseUrl, "" },
+            { IApplicationConfiguration.BackendUsername, "" },
+            { IApplicationConfiguration.BackendToken, "" }
         };
     }
 

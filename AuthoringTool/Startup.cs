@@ -38,6 +38,8 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.MyLearningWorlds;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -48,12 +50,14 @@ namespace AuthoringTool;
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
 
     public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -69,10 +73,20 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+        var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
+        var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(Configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+            .WriteTo.File(path: logFilePath, buffered: false, rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000000,
+                retainedFileCountLimit: 5)
+            .CreateLogger();
+
         services.AddLogging(builder =>
         {
             builder.ClearProviders();
-            builder.AddConsole();
+            builder.AddSerilog(dispose: true);
             builder.SetMinimumLevel(LogLevel.Trace);
         });
 
