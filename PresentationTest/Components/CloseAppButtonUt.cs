@@ -4,6 +4,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic;
+using TestHelpers;
 
 namespace PresentationTest.Components;
 
@@ -16,6 +17,7 @@ public class CloseAppButtonUt
         _context = new Bunit.TestContext();
         _shutdownManager = Substitute.For<IShutdownManager>();
         _context.Services.AddSingleton(_shutdownManager);
+        _context.AddLocalizerForTest<CloseAppButton>();
     }
 
     private Bunit.TestContext _context;
