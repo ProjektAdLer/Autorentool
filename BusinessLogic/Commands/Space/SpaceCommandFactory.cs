@@ -16,9 +16,9 @@ public class SpaceCommandFactory : ISpaceCommandFactory
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
         string goals,
-        int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction) =>
-        new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, advancedMode, positionX, positionY,
+        new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, positionX, positionY,
             topic, mappingAction, LoggerFactory.CreateLogger<CreateLearningSpace>());
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, LearningSpace learningSpace,

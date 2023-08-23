@@ -149,7 +149,7 @@ public interface IPresentationLogic
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY,
+        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
     /// <summary>
     /// Creates a new advanced learning space in the given learning world with the corresponding command.

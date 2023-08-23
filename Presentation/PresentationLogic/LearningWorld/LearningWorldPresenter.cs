@@ -278,11 +278,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
+        
+        //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
         if (!advancedMode)
         {
-            //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
             _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
-                requiredPoints, theme, advancedMode, positionX, positionY, topic);
+                requiredPoints, theme, positionX, positionY, topic);
         }
         else
             _presentationLogic.CreateAdvancedLearningSpace(LearningWorldVm!, name, description, goals,

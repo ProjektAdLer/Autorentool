@@ -13,7 +13,7 @@ public interface ISpaceCommandFactory
     /// Creates a command to create a learning space.
     /// </summary>
     ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name,
-        string description, string goals, int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY,
+        string description, string goals, int requiredPoints, Theme theme,  double positionX, double positionY,
         Entities.Topic? topic, Action<LearningWorld> mappingAction);
 
     /// <summary>

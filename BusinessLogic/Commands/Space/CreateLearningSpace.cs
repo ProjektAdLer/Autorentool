@@ -9,7 +9,7 @@ public class CreateLearningSpace : ICreateLearningSpace
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string description, string goals,
-        int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction, ILogger<CreateLearningSpace> logger)
     {
         LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, positionX: positionX,
