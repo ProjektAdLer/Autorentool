@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.View.AdvancedLearningSpaceEditor
 
@@ -13,7 +14,7 @@
 {
     <div class="mx-2 rounded-lg">
         <div class="flex justify-center p-2">
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!LearningSpaceP.LearningSpaceVm.AdvancedMode) ? @Localizer["LearningSpace.Title.Text"] : @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
+            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(LearningSpaceP.LearningSpaceVm is not IAdvancedLearningSpaceViewModel) ? @Localizer["LearningSpace.Title.Text"] : @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
         </div>
     </div> 
 
@@ -22,7 +23,7 @@
         <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
         <p class="text-lg text-adlerblue-600 truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
     </div>
-    @if (!LearningSpaceP.LearningSpaceVm.AdvancedMode)
+    @if (LearningSpaceP.LearningSpaceVm is not IAdvancedLearningSpaceViewModel)
     {
         @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
         {

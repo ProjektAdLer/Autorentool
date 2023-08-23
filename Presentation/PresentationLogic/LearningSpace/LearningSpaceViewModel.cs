@@ -17,7 +17,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private string _goals;
 
     private string _name;
-    private bool _advancedMode;
     private double _positionX;
     private double _positionY;
     private int _requiredPoints;
@@ -38,7 +37,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
-        AdvancedMode = false;
         PositionX = 0;
         PositionY = 0;
     }
@@ -71,7 +69,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = description;
         Goals = goals;
         Theme = theme;
-        AdvancedMode = advancedMode;
         RequiredPoints = requiredPoints;
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
@@ -122,11 +119,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         set => SetField(ref _theme, value);
     }
 
-    public bool AdvancedMode
-    {
-        get => _advancedMode;
-        set => SetField(ref _advancedMode, value);
-    }
     
     public bool UnsavedChanges
     {

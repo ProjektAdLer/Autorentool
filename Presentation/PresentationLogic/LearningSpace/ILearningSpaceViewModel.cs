@@ -15,7 +15,6 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     int Points { get; }
     int RequiredPoints { get; }
     Theme Theme { get; set; }
-    bool AdvancedMode { get; }
     new string Name { get; set; }
     string Description { get; set; }
     string Goals { get; set; }

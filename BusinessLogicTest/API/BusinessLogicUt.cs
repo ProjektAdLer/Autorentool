@@ -421,7 +421,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningSpace_CallsDataAccess()
     {
-        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus, false);
+        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -434,7 +434,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningSpace_SerializationException_CallsErrorManager()
     {
-        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus, false);
+        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.When(x => x.SaveLearningSpaceToFile(Arg.Any<LearningSpace>(), Arg.Any<string>()))
             .Do(_ => throw new SerializationException());
@@ -464,7 +464,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpace_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus, false);
+        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
 
@@ -747,7 +747,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus, false);
+        var learningSpace = new LearningSpace("fa", "f", "f", 0, Theme.Campus);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);

@@ -1,8 +1,11 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -25,11 +28,13 @@ public class ViewModelEntityMappingProfile : Profile
         CreateWorkspaceMap();
         CreateLearningWorldMap();
         CreateLearningSpaceMap();
+        CreateAdvancedSpaceMap();
         CreateLearningElementMap();
         CreateLearningContentMap();
         CreatePathwayMaps();
         CreateInterfaceMaps();
         CreateLearningSpaceLayoutMap();
+        CreateAdvancedLearningSpaceLayoutMap();
         CreateTopicMap();
     }
 
@@ -61,6 +66,25 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ReverseMap()
             .IncludeBase<ILearningSpaceLayoutViewModel, LearningSpaceLayout>();
+    }
+
+    private void CreateAdvancedLearningSpaceLayoutMap()
+    {
+        CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.LearningElements, opt => opt.Ignore());
+            //.AfterMap(MapSpaceLayoutElements);
+        CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+
+        CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+            .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>();
+        CreateMap<AdvancedLearningSpaceLayoutViewModel, IAdvancedLearningSpaceLayout>()
+            .As<AdvancedLearningSpaceLayout>();
     }
 
     private static void MapSpaceLayoutElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
@@ -232,6 +256,74 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+    }
+
+    private void CreateAdvancedSpaceMap()
+    {
+        CreateMap<AdvancedLearningSpace, AdvancedLearningSpaceViewModel>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+            })
+            .ReverseMap()
+            .IncludeBase<IObjectInPathWayViewModel, IObjectInPathWay>()
+            .IncludeBase<ILearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+        CreateMap<IAdvancedLearningSpaceViewModel, IAdvancedLearningSpace>()
+            .As<AdvancedLearningSpace>();
+        CreateMap<IAdvancedLearningSpace, IAdvancedLearningSpaceViewModel>()
+            .As<AdvancedLearningSpaceViewModel>();
+        CreateMap<IAdvancedLearningSpaceViewModel, AdvancedLearningSpace>()
+            .IncludeBase<IObjectInPathWayViewModel, IObjectInPathWay>()
+            .IncludeBase<IAdvancedLearningSpaceViewModel, IAdvancedLearningSpace>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+        CreateMap<IAdvancedLearningSpace, AdvancedLearningSpaceViewModel>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .IncludeBase<IAdvancedLearningSpace, IAdvancedLearningSpaceViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((_, d) =>
             {

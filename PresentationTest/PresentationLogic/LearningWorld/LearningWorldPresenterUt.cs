@@ -8,6 +8,7 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
@@ -1313,17 +1314,19 @@ public class LearningWorldPresenterUt
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,
+        IAdvancedLearningSpaceEditorPresenter? advancedLearningSpaceEditorPresenter = null,
         ILogger<LearningWorldPresenter>? logger = null, IMediator? mediator = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
+        advancedLearningSpaceEditorPresenter ??= Substitute.For<IAdvancedLearningSpaceEditorPresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         errorService ??= Substitute.For<IErrorService>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger,
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, advancedLearningSpaceEditorPresenter, logger,
             mediator, selectedViewModelsProvider, errorService);
     }
 }

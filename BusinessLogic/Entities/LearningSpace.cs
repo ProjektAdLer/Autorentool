@@ -17,7 +17,6 @@ public class LearningSpace : ILearningSpace
         Goals = "";
         RequiredPoints = 0;
         UnsavedChanges = false;
-        AdvancedMode = false;
         //null warning override okay here as automapper must set this value after construction - n.stich
         LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWay>();
@@ -28,7 +27,7 @@ public class LearningSpace : ILearningSpace
     }
 
     public LearningSpace(string name, string description,
-        string goals, int requiredPoints, Theme theme, bool advancedMode, LearningSpaceLayout? learningSpaceLayout = null,  double positionX = 0,
+        string goals, int requiredPoints, Theme theme, LearningSpaceLayout? learningSpaceLayout = null,  double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null,
         Topic? assignedTopic = null)
     {
@@ -38,7 +37,6 @@ public class LearningSpace : ILearningSpace
         Goals = goals;
         RequiredPoints = requiredPoints;
         Theme = theme;
-        AdvancedMode = advancedMode;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
                               ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(),
@@ -58,8 +56,6 @@ public class LearningSpace : ILearningSpace
     public int RequiredPoints { get; set; }
 
     public Theme Theme { get; set; }
-    public bool AdvancedMode { get; set; }
-
     public bool UnsavedChanges
     {
         get => InternalUnsavedChanges ||
@@ -80,7 +76,7 @@ public class LearningSpace : ILearningSpace
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, AdvancedMode, LearningSpaceLayout,
+        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, LearningSpaceLayout,
             InBoundObjects,
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
@@ -96,7 +92,6 @@ public class LearningSpace : ILearningSpace
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
         RequiredPoints = learningSpaceMemento.RequiredPoints;
-        AdvancedMode = learningSpaceMemento.AdvancedMode;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
         InBoundObjects = learningSpaceMemento.InBoundObjects;
         OutBoundObjects = learningSpaceMemento.OutBoundObjects;
@@ -109,7 +104,7 @@ public class LearningSpace : ILearningSpace
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            string goals, int requiredPoints, Theme theme, bool advancedMode,  ILearningSpaceLayout learningSpaceLayout,
+            string goals, int requiredPoints, Theme theme,  ILearningSpaceLayout learningSpaceLayout,
             List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX, double positionY,
             bool unsavedChanges)
@@ -119,7 +114,6 @@ public class LearningSpace : ILearningSpace
             Goals = goals;
             RequiredPoints = requiredPoints;
             Theme = theme;
-            AdvancedMode = advancedMode;
             LearningSpaceLayout = learningSpaceLayout;
             InBoundObjects = inBoundSpaces.ToList();
             OutBoundObjects = outBoundSpaces.ToList();
@@ -137,7 +131,6 @@ public class LearningSpace : ILearningSpace
         // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future
         internal Theme Theme { get; }
         
-        internal bool AdvancedMode { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }

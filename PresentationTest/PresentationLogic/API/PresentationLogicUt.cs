@@ -11,6 +11,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
@@ -75,7 +76,7 @@ public class PresentationLogicUt
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
             mockHybridSupportWrapper,
             mockShellWrapper, mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory,
-            mockPathwayCommandFactory, mockSpaceCommandFactory, mockTopicCommandFactory, mockWorldCommandFactory,
+            mockPathwayCommandFactory, mockSpaceCommandFactory, null, mockTopicCommandFactory, mockWorldCommandFactory,
             mockBatchCommandFactory);
         Assert.Multiple(() =>
         {
@@ -2231,6 +2232,7 @@ public class PresentationLogicUt
         ILayoutCommandFactory? layoutCommandFactory = null,
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
+        IAdvancedLearningSpaceCommandFactory? advancedLearningSpaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null)
@@ -2249,6 +2251,7 @@ public class PresentationLogicUt
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
+        advancedLearningSpaceCommandFactory ??= Substitute.For<IAdvancedLearningSpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
@@ -2257,6 +2260,7 @@ public class PresentationLogicUt
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger,
             hybridSupportWrapper, shellWrapper,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+            spaceCommandFactory, advancedLearningSpaceCommandFactory,
+            topicCommandFactory, worldCommandFactory, batchCommandFactory);
     }
 }

@@ -1,9 +1,12 @@
 ﻿using AgileObjects.ReadableExpressions;
+using AngleSharp.Dom;
 using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -146,7 +149,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX,
             positionY: PositionY);
         var destination = new LearningSpaceViewModel("", "", "", Theme.Campus, false);
@@ -174,7 +177,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
@@ -241,7 +244,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX,
             positionY: PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
@@ -468,6 +471,55 @@ public class ViewModelEntityMappingProfileUt
         });
     }
 
+    [Test]
+    public void AdvancedLearningSpace_ViewModelToEntityAndBack()
+    {
+        var spaceVm = new AdvancedLearningSpaceViewModel(
+            "test", "testDescription", "testGoals", Theme.Campus, 0 );
+        var systemUnderTest = CreateTestableMapper();
+        
+        var spaceEntity = systemUnderTest.Map<AdvancedLearningSpace>(spaceVm);
+        spaceEntity.Name = "newName";
+        systemUnderTest.Map(spaceEntity, spaceVm);
+        
+        Assert.That(spaceVm.Name, Is.EqualTo("newName"));
+        Assert.That(spaceVm, Is.TypeOf<AdvancedLearningSpaceViewModel>());
+        
+    }
+
+    [Test]
+    public void LearningWorldWithAdvancedSpace_ViewModelToEntityAndBack()
+    {
+        var worldVm = ViewModelProvider.GetLearningWorld();
+        var aSpaceVm = new AdvancedLearningSpaceViewModel(
+            "test", "testDescription", "testGoals", Theme.Campus, 0 );
+        worldVm.LearningSpaces.Add(aSpaceVm);
+        
+        var systemUnderTest = CreateTestableMapper();
+        
+        var worldEntity = systemUnderTest.Map<LearningWorld>(worldVm);
+        worldEntity.LearningSpaces.First().Name = "newName";
+
+        systemUnderTest.Map(worldEntity, worldVm);
+        
+        Assert.That(worldVm.LearningSpaces.First().Name, Is.EqualTo("newName"));
+    }
+
+    [Test]
+    public void LearningWorldWithAdvancedSpace_EntityToViewModelDirectly()
+    {
+        var worldVm = ViewModelProvider.GetLearningWorld();
+        var worldEntity = EntityProvider.GetLearningWorld();
+        var aSpaceEntity = new AdvancedLearningSpace(
+            "test", "testDescription", "testGoals", 0, Theme.Campus);
+        worldEntity.LearningSpaces.Add(aSpaceEntity);
+        
+        var systemUnderTest = CreateTestableMapper();
+
+        systemUnderTest.Map(worldEntity, worldVm);
+        var worldVm2 = systemUnderTest.Map<LearningWorldViewModel>(worldEntity);
+    }
+
     private static FileContent GetTestableContent()
     {
         return new FileContent(Name, Type, Filepath);
@@ -495,7 +547,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
+        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
@@ -690,6 +742,7 @@ public class ViewModelEntityMappingProfileUt
                 throw new NotImplementedException();
         }
     }
+    
 
     private static IMapper CreateTestableMapper()
     {

@@ -7,7 +7,9 @@
 @using System.ComponentModel
 @using ElectronNET.API.Entities
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities.AdvancedLearningSpaces
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
@@ -25,7 +27,7 @@
         </MudButton>
     </HeaderButtons>
     <Fields>
-        @if (LearningSpacePresenter.LearningSpaceVm!.AdvancedMode)
+        @if (LearningSpacePresenter.LearningSpaceVm is IAdvancedLearningSpaceViewModel )
         {
             // ToDo: Fix If clause
             <div>AdvancedSpaceGen: Yes</div>

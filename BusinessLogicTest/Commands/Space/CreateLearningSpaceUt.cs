@@ -53,7 +53,7 @@ public class CreateLearningSpaceUt
     public void Execute_AddsLearningSpaceAndSetAsSelectedLearningObject()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z", "w", "v", 5, Theme.Campus, false);
+        var space = new LearningSpace("z", "w", "v", 5, Theme.Campus);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -96,7 +96,7 @@ public class CreateLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus, false);
+        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus);
         world.LearningSpaces.Add(space);
         var name = "space1";
         var description = "space for learning";
