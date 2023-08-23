@@ -24,22 +24,22 @@
         </value>
     </resheader>
     <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
-        <value/>
+        <value>Lernwelt Metadaten Dialog</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
-        <value/>
+        <value>Lernraum Metadaten Dialog</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
-        <value/>
+        <value>Lernelement Metadaten Dialog</value>
     </data>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value/>
+        <value>Datei-Import Dialog</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
-        <value/>
+        <value>Lernwelt Pfadansicht</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
-        <value/>
+        <value>Lernwelt Baumansicht</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
         <value/>
@@ -48,13 +48,13 @@
         <value/>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
-        <value/>
+        <value>Lernelement Metadaten-Icon</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value/>
+        <value>Datei-Import-Icon</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
-        <value/>
+        <value>Lernwelt Pfadansicht-Icon</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Alt" xml:space="preserve">
         <value/>

@@ -16,28 +16,28 @@
         </value>
     </resheader>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value>Import Files</value>
+        <value>Import Files Dialog</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
-        <value>LearningElementMetadata</value>
+        <value>Learning Element Metadata Dialog</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
-        <value>LearningPathWays</value>
+        <value>Learning Path Ways Icon</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
-        <value>LearningSpaceMetadata</value>
+        <value>Learning Space Metadata Dialog</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
-        <value>LearningWorldMetadata</value>
+        <value>Learning World Metadata Dialog</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
-        <value>LearningWorldOverView</value>
+        <value>Learning World Tree View</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value>import-files</value>
+        <value>Import Files Icon</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
-        <value>learningelement-metadata</value>
+        <value>Learning Element Metadata Icon</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
         <value>learningspace-metadata</value>
@@ -46,7 +46,7 @@
         <value>learningworld-metadata</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
-        <value>learning pathways</value>
+        <value>Learning Path Ways Icon</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Alt" xml:space="preserve">
         <value>learning world overview</value>

@@ -1,4 +1,4 @@
 @using Presentation.PresentationLogic
 @inherits ComponentBase
 @inject IShutdownManager ShutdownManager
-<button class="btn-standard w-8 bg-red-400 text-2xl font-bold" @onclick="async () => await ShutdownManager.RequestShutdownAsync()">X</button>
+<button title="" class="btn-standard w-8 bg-red-400 text-2xl font-bold" @onclick="async () => await ShutdownManager.RequestShutdownAsync()">X</button>
