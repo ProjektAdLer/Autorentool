@@ -128,5 +128,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>RightClickMenu.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\CloseAppButton.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CloseAppButton.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\CloseAppButton.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CloseAppButton.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
