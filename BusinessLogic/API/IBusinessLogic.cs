@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement.DataAccess;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -18,17 +19,17 @@ public interface IBusinessLogic
     /// </summary>
     /// <param name="command">Command to be executed.</param>
     void ExecuteCommand(ICommand command);
-    
+
     /// <summary>
     /// Calls the method to undo the last executed command.
     /// </summary>
     void UndoCommand();
-    
+
     /// <summary>
     /// Calls the method to redo the last undone command.
     /// </summary>
     void RedoCommand();
-    
+
     /// <summary>
     /// Constructs a backup for the provided LearningWorld at a given filepath.
     /// </summary>
@@ -38,6 +39,7 @@ public interface IBusinessLogic
     /// <exception cref="InvalidOperationException">Thrown when the method is called in an invalid state.</exception>
     /// <exception cref="FileNotFoundException">Thrown when the specified file cannot be found.</exception>
     void ConstructBackup(LearningWorld learningWorld, string filepath);
+
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
     LearningWorld LoadLearningWorld(Stream stream);
@@ -47,8 +49,16 @@ public interface IBusinessLogic
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
-    ILearningContent LoadLearningContent(string filepath);
-    ILearningContent LoadLearningContent(string name, Stream stream);
+    Task<ILearningContent> LoadLearningContentAsync(string filepath);
+
+    /// <summary>
+    /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
+    /// </summary>
+    /// <param name="name">The name of the file which is contained in the stream.</param>
+    /// <param name="stream">The stream to be written.</param>
+    /// <returns>A content object referencing the file.</returns>
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
+    Task<ILearningContent> LoadLearningContentAsync(string name, Stream stream);
 
     /// <summary>
     ///     Gets all content files in the appdata folder.

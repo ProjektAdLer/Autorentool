@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.Entities.LearningContent
+@using BusinessLogic.ErrorManagement.DataAccess
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
 <header class="m-2 rounded-lg">
@@ -80,30 +81,36 @@
     //indefinitely for no apparent reason
         Task.Run(async () =>
         {
-            Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
-            ToggleSpinner();
-            Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
-
-            var files = obj.GetMultipleFiles();
-            Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
-
-            foreach (var file in files)
+            try
             {
-                var fileEnding = file.Name.Split(".").Select(s => "." + s).LastOrDefault();
-                if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.ToLowerInvariant()))
-                {
-                    await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
-                    continue;
-                }
-                await HandleFileAsync(file);
-            }
+                Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
+                ToggleSpinner();
+                Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
 
-            Logger.LogTrace("Rerendering ContentFilesContainer");
-            var rerenderTask = RerenderContentFilesContainer?.Invoke();
-            if (rerenderTask is not null)
-                await rerenderTask;
-            ToggleSpinner();
-            ClearDragClass();
+                var files = obj.GetMultipleFiles();
+                Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
+
+                foreach (var file in files)
+                {
+                    var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
+                    if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+                    {
+                        await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
+                        continue;
+                    }
+                    await HandleFileAsync(file);
+                }
+
+                Logger.LogTrace("Rerendering ContentFilesContainer");
+                var rerenderTask = RerenderContentFilesContainer?.Invoke();
+                if (rerenderTask is not null)
+                    await rerenderTask;
+            }
+            finally
+            {
+                ToggleSpinner();
+                ClearDragClass();
+            }
         });
     }
 
@@ -139,14 +146,17 @@
         var fileName = PathHelper.TrimFileName(file.Name);
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
-    //TODO: report when a file with same content already exists
         try
         {
-            PresentationLogic.LoadLearningContentViewModel(fileName, memoryStream);
+            await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
         }
         catch (IOException e)
         {
             ErrorService.SetError("Error while loading content", e.Message);
+        }
+        catch (HashExistsException hEEx)
+        {
+            await InvokeAsync(() => { DialogService.ShowMessageBox("Duplicate file", $"File with same content as '{file.Name}' already exists in content folder in file '{hEEx.DuplicateFileName}'"); });
         }
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }

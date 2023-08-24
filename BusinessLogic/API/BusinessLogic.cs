@@ -234,17 +234,17 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public ILearningContent LoadLearningContent(string filepath)
+    public async Task<ILearningContent> LoadLearningContentAsync(string filepath)
     {
-        var content = DataAccess.LoadLearningContent(filepath);
-        return content;
+        return await DataAccess.LoadLearningContentAsync(filepath);
     }
 
-    public ILearningContent LoadLearningContent(string name, Stream stream)
+    /// <inheritdoc cref="IBusinessLogic.LoadLearningContentAsync(string,System.IO.Stream)"/>
+    public async Task<ILearningContent> LoadLearningContentAsync(string name, Stream stream)
     {
         try
         {
-            return DataAccess.LoadLearningContent(name, stream);
+            return await DataAccess.LoadLearningContentAsync(name, stream);
         }
         catch (IOException e)
         {

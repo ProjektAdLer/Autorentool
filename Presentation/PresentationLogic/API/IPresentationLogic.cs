@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.API;
+using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -407,7 +408,8 @@ public interface IPresentationLogic
     /// <param name="name">The name of the Learning Content.</param>
     /// <param name="stream">The stream containing the data for the Learning Content.</param>
     /// <returns>The loaded Learning Content view model.</returns>
-    ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
+    Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
 
     /// <summary>
     /// Gets all content files in the appdata folder.

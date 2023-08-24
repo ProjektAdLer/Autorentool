@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using System.Security.Cryptography;
+using BusinessLogic.ErrorManagement.DataAccess;
 using Microsoft.Extensions.Logging;
 using PersistEntities.LearningContent;
 using Shared.Configuration;
@@ -36,7 +37,10 @@ public class ContentFileHandler : IContentFileHandler
             _logger.LogDebug("{File} not found in {ContentFilesFolderPath}, copying file", filepath,
                 ContentFilesFolderPath);
         else
+        {
             _logger.LogDebug("{File} found at {DuplicateFilePath}, not copying", filepath, duplicatePath);
+            throw new HashExistsException(Path.GetFileName(duplicatePath));
+        }
 
         var finalPath = duplicatePath ?? CopyFileToContentFilesFolder(filepath);
 
@@ -56,7 +60,10 @@ public class ContentFileHandler : IContentFileHandler
             _logger.LogDebug("stream {Name} not found in {ContentFilesFolderPath}, copying file", name,
                 ContentFilesFolderPath);
         else
+        {
             _logger.LogDebug("stream {Name} found at {DuplicateFilePath}, not copying", name, duplicatePath);
+            throw new HashExistsException(Path.GetFileName(duplicatePath));
+        }
 
         var finalPath = duplicatePath ?? await CopyFileToContentFilesFolderAsync(name, stream);
 

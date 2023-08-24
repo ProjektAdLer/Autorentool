@@ -699,10 +699,10 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModel"/>
-    public ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
+    /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModelAsync"/>
+    public async Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream)
     {
-        var entity = BusinessLogic.LoadLearningContent(name, stream);
+        var entity = await BusinessLogic.LoadLearningContentAsync(name, stream);
 
         return Mapper.Map<ILearningContentViewModel>(entity);
     }

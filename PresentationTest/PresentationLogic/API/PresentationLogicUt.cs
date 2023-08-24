@@ -2067,11 +2067,12 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
+    public async Task PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningContent = EntityProvider.GetFileContent();
-        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>()).Returns(mockLearningContent);
+        mockBusinessLogic.LoadLearningContentAsync(Arg.Any<string>(), Arg.Any<MemoryStream>())
+            .Returns(mockLearningContent);
         var mockLearningContentViewModel = ViewModelProvider.GetFileContent();
         var mockMapper = Substitute.For<IMapper>();
         mockMapper
@@ -2083,9 +2084,9 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        var result = systemUnderTest.LoadLearningContentViewModel(filename, stream);
+        var result = await systemUnderTest.LoadLearningContentViewModelAsync(filename, stream);
 
-        mockBusinessLogic.Received().LoadLearningContent(filename, stream);
+        await mockBusinessLogic.Received().LoadLearningContentAsync(filename, stream);
         mockMapper.Received().Map<ILearningContentViewModel>(mockLearningContent);
         Assert.That(result, Is.EqualTo(mockLearningContentViewModel));
     }
@@ -2094,14 +2095,15 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningContentViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>())
+        mockBusinessLogic.LoadLearningContentAsync(Arg.Any<string>(), Arg.Any<MemoryStream>())
             .Throws(new Exception("Exception"));
         const string filename = "test.png";
         var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningContentViewModel(filename, stream));
+        var ex = Assert.ThrowsAsync<Exception>(async () =>
+            await systemUnderTest.LoadLearningContentViewModelAsync(filename, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
