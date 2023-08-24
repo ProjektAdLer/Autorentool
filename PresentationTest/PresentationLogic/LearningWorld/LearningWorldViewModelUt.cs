@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
@@ -96,5 +98,30 @@ public class LearningWorldViewModelUt
         systemUnderTest.LearningSpaces.Remove(space);
 
         Assert.That(systemUnderTest.Points, Is.EqualTo(5));
+    }
+
+    /// <summary>
+    /// Regression test for #342 https://github.com/ProjektAdLer/Autorentool/issues/342
+    /// </summary>
+    [Test]
+    public void AllLearningElements_ReturnsUnplacedElementsAndAllElementsInAllSpaces()
+    {
+        var systemUnderTest = ViewModelProvider.GetLearningWorld();
+        var spaceElement1 = ViewModelProvider.GetLearningElement("1");
+        var spaceElement2 = ViewModelProvider.GetLearningElement("2");
+        var unplacedElement = ViewModelProvider.GetLearningElement("3");
+        var space1 = ViewModelProvider.GetLearningSpace();
+        space1.LearningSpaceLayout.PutElement(0, spaceElement1);
+        var space2 = ViewModelProvider.GetLearningSpace();
+        space2.LearningSpaceLayout.PutElement(0, spaceElement2);
+        systemUnderTest.UnplacedLearningElements.Add(unplacedElement);
+        systemUnderTest.LearningSpaces.Add(space1);
+        systemUnderTest.LearningSpaces.Add(space2);
+
+        var result = systemUnderTest.AllLearningElements.ToArray();
+
+        Assert.That(result, Has.Length.EqualTo(3));
+        Assert.That(result,
+            Is.EquivalentTo(new List<ILearningElementViewModel> { unplacedElement, spaceElement1, spaceElement2 }));
     }
 }
