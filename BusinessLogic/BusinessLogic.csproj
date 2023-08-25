@@ -19,7 +19,6 @@
       <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Entities\LearningContent\AdaptivityContent\"/>
       <Folder Include="Resources" />
     </ItemGroup>
 </Project>
