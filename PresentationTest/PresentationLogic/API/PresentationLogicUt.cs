@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.API;
@@ -2210,7 +2211,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void UploadLearningWorldToBackend_CallsBusinessLogic()
+    public async Task UploadLearningWorldToBackend_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockProgress = Substitute.For<IProgress<int>>();
@@ -2218,9 +2219,10 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
+        var cancellationToken = new CancellationToken();
+        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress, cancellationToken);
 
-        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath, mockProgress);
+        await mockBusinessLogic.Received().UploadLearningWorldToBackendAsync(filepath, mockProgress, cancellationToken);
     }
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(

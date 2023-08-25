@@ -524,7 +524,9 @@ public interface IPresentationLogic
     string LoginName { get; }
     Task Login(string username, string password);
     void Logout();
-    void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
+
+    Task UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
+        CancellationToken? cancellationToken = null);
 
     #endregion
 }

@@ -1,13 +1,15 @@
 @implements IDisposable
+@using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @implements IAsyncDisposable
 <MudDialog>
     <DialogContent>
+        @Localizer["Dialog.Text"]
         Your learning world is currently being uploaded. This might take a few moments to minutes, depending on the size of your world. <br/>
         <MudProgressLinear Value="_progress" Min="0" Max="100" Color="Color.Primary" Class="my-4 w-full"/>
     </DialogContent>
     <DialogActions>
-        <!-- intentionally empty, dialog closes automatically -->
+        <MudButton Color="Color.Error" OnClick="CancelUpload">@Localizer["Cancel.Button.Text"]</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -16,8 +18,14 @@
     [CascadingParameter]
     public MudDialogInstance? MudDialog { get; set; }
 
+    [Inject, AllowNull] //allow null since injected - n.stich
+    public IStringLocalizer<UploadProgressDialog> Localizer { get; set; }
+
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public Progress<int> Progress { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public CancellationTokenSource CancellationTokenSource { get; set; }
 
     private int _progress;
 
@@ -49,6 +57,11 @@
     {
         Dispose();
         return ValueTask.CompletedTask;
+    }
+
+    private void CancelUpload()
+    {
+        CancellationTokenSource.Cancel();
     }
 
 }

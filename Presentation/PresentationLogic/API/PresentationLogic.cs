@@ -858,9 +858,10 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
+    public async Task UploadLearningWorldToBackendAsync(string filepath,
+        IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
-        BusinessLogic.UploadLearningWorldToBackend(filepath, progress);
+        await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
     }
 
     #endregion

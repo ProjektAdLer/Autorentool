@@ -293,6 +293,7 @@
     //if not cancelled, upload LearningWorld
         if (!result.Canceled)
         {
+            var cancellationTokenSource = new CancellationTokenSource();
             var progress = new Progress<int>();
             options = new DialogOptions
             {
@@ -302,12 +303,28 @@
             };
             parameters = new DialogParameters
             {
-                { "Progress", progress }
+                { nameof(UploadProgressDialog.Progress), progress },
+                { nameof(UploadProgressDialog.CancellationTokenSource), cancellationTokenSource }
             };
 
-            await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+            var dialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
 
-            PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
+            try
+            {
+                await PresentationLogic.UploadLearningWorldToBackendAsync(_filepath, progress, cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+    //nothing to explicitly do here
+            }
+            catch (Exception ex)
+            {
+                ErrorService.SetError(ex);
+            }
+            finally
+            {
+                dialogReference.Close();
+            }
         }
     }
 

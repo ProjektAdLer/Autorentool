@@ -68,7 +68,8 @@ public class ApiAccessUt
         var mockProgress = Substitute.For<IProgress<int>>();
 
         // Act
-        await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription", mockProgress);
+        await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription",
+            progress: mockProgress);
 
         // Assert
         await _userWebApiServices.Received()

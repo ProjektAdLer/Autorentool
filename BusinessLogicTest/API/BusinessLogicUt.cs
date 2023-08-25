@@ -934,7 +934,7 @@ public class BusinessLogicUt
         const string filepath = "filepath";
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath);
+        systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
 
         worldGenerator.Received().ExtractAtfFromBackup(filepath);
     }
@@ -954,7 +954,7 @@ public class BusinessLogicUt
         var mockProgress = Substitute.For<IProgress<int>>();
         mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
+        systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
 
         backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);

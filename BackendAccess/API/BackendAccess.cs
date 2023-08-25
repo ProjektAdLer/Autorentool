@@ -42,8 +42,9 @@ public class BackendAccess : IBackendAccess
     }
 
     public async Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
-        IProgress<int>? mockProgress = null)
+        IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
-        await UserWebApiServices.UploadLearningWorldAsync(token.Token, backupPath, awtPath, mockProgress);
+        await UserWebApiServices.UploadLearningWorldAsync(token.Token, backupPath, awtPath, progress,
+            cancellationToken);
     }
 }

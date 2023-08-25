@@ -136,5 +136,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CloseAppButton.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadProgressDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadProgressDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadProgressDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadProgressDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

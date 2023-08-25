@@ -16,4 +16,9 @@ public class ErrorService : IErrorService
     {
         DialogService.ShowMessageBox(errorTitle, (MarkupString)errorMessage);
     }
+
+    public void SetError(Exception exception)
+    {
+        DialogService.ShowMessageBox("An error has occurred", (MarkupString)exception.Message);
+    }
 }

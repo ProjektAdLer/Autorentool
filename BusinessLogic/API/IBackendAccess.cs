@@ -29,6 +29,16 @@ public interface IBackendAccess
     /// </exception>
     public Task<UserInformation> GetUserInformationAsync(UserToken token);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="token"></param>
+    /// <param name="backupPath"></param>
+    /// <param name="awtPath"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="progress"></param>
+    /// <returns></returns>
     public Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
-        IProgress<int>? mockProgress = null);
+        IProgress<int>? progress = null,
+        CancellationToken? cancellationToken = null);
 }

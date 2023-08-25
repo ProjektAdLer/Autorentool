@@ -24,7 +24,7 @@ public interface IUserWebApiServices
     public Task<UserInformationBE> GetUserInformationAsync(string token);
 
     public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
-        IProgress<int>? progress = null);
+        IProgress<int>? progress = null, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Check if the API is reachable and healthy.

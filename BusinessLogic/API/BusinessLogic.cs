@@ -394,12 +394,21 @@ public class BusinessLogic : IBusinessLogic
         Logger.LogTrace("Logged out user");
     }
 
-    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
+    public async Task UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
+        CancellationToken? cancellationToken = null)
     {
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
-        BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
-            filepath, atfPath, progress);
-        Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
+        try
+        {
+            await BackendAccess.UploadLearningWorldAsync(
+                new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+                filepath, atfPath, progress, cancellationToken);
+            Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
+        }
+        catch (HttpRequestException httpReqEx)
+        {
+            ErrorManager.LogAndRethrowError(httpReqEx);
+        }
     }
 
     #endregion

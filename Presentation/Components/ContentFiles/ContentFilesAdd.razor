@@ -22,7 +22,7 @@
                                  Color="Color.Primary" Size="Size.Large"/>
         }
 
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
                        Accept="@AllowedFileEndings.EndingsCommaSeparated"
                        InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
@@ -75,43 +75,40 @@
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
     /// </summary>
-    private void OnFilesChanged(InputFileChangeEventArgs obj)
+    private async Task OnFilesChangedAsync(InputFileChangeEventArgs obj)
     {
     //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
     //indefinitely for no apparent reason
-        Task.Run(async () =>
+        try
         {
-            try
+            Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
+            ToggleSpinner();
+            Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
+
+            var files = obj.GetMultipleFiles();
+            Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
+
+            foreach (var file in files)
             {
-                Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
-                ToggleSpinner();
-                Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
-
-                var files = obj.GetMultipleFiles();
-                Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
-
-                foreach (var file in files)
+                var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
+                if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
                 {
-                    var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
-                    if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
-                    {
-                        await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
-                        continue;
-                    }
-                    await HandleFileAsync(file);
+                    await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
+                    continue;
                 }
+                await HandleFileAsync(file);
+            }
 
-                Logger.LogTrace("Rerendering ContentFilesContainer");
-                var rerenderTask = RerenderContentFilesContainer?.Invoke();
-                if (rerenderTask is not null)
-                    await rerenderTask;
-            }
-            finally
-            {
-                ToggleSpinner();
-                ClearDragClass();
-            }
-        });
+            Logger.LogTrace("Rerendering ContentFilesContainer");
+            var rerenderTask = RerenderContentFilesContainer?.Invoke();
+            if (rerenderTask is not null)
+                await rerenderTask;
+        }
+        finally
+        {
+            ToggleSpinner();
+            ClearDragClass();
+        }
     }
 
     private async Task HandleFileAsync(IBrowserFile file)

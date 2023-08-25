@@ -113,7 +113,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
 
 
     public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
-        IProgress<int>? progress = null)
+        IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
         // Validate that the paths are valid.
         if (!_fileSystem.File.Exists(backupPath)) throw new ArgumentException("The backup path is not valid.");
@@ -193,8 +193,9 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
-        MultipartFormDataContent content, IProgress<int>? progress = null)
+        MultipartFormDataContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
+        cancellationToken ??= CancellationToken.None;
         var uri = new Uri(GetApiBaseUrl(), url);
 
         var request = new HttpRequestMessage(HttpMethod.Post, uri);
@@ -206,7 +207,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         HttpResponseMessage apiResp;
         try
         {
-            apiResp = await _client.SendAsync(request);
+            apiResp = await _client.SendAsync(request, cancellationToken.Value);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("MBZ upload operation was cancelled");
+            throw;
         }
         finally
         {
