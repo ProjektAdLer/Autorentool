@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace BusinessLogic.Entities.LearningContent;
+namespace BusinessLogic.Entities.LearningContent.FileContent;
 
 public class FileContent : IFileContent
 {

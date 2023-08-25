@@ -1,7 +1,7 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;

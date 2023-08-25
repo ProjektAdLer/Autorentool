@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using Shared;
 
 namespace TestHelpers;

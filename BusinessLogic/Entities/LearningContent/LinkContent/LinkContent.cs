@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace BusinessLogic.Entities.LearningContent;
+namespace BusinessLogic.Entities.LearningContent.LinkContent;
 
 public class LinkContent : ILinkContent
 {
@@ -9,7 +9,7 @@ public class LinkContent : ILinkContent
         Name = name;
         Link = link;
     }
-    
+
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.
     /// </summary>

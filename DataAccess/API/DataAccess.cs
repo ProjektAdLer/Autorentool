@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Persistence;
 using PersistEntities;
 using PersistEntities.LearningContent;

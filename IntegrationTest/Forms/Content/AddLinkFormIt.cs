@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bunit;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;

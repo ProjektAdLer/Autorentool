@@ -2,7 +2,7 @@
 using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
