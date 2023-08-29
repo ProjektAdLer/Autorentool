@@ -32,5 +32,6 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
         Context.Services.AddSingleton(Mapper);
         Context.Services.AddSingleton(FormDataContainer);
         Context.AddLocalizerForTest<TComponent>();
+        Context.AddLocalizerFactoryForTest();
     }
 }
