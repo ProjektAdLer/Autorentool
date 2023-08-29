@@ -1,5 +1,4 @@
-﻿using AgileObjects.ReadableExpressions;
-using AuthoringTool.Mapping;
+﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
@@ -54,33 +53,6 @@ public class ViewModelEntityMappingProfileUt
     private const int NewRequiredPoints = 4;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
-
-    [Test]
-    public void Debug()
-    {
-        var mapper = new MapperConfiguration(cfg =>
-        {
-            ViewModelEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappersOnce();
-        });
-        var plan = mapper
-            .BuildExecutionPlan(typeof(LearningSpaceLayout), typeof(LearningSpaceLayoutViewModel))
-            .ToReadableString();
-
-        var source = EntityProvider.GetLearningSpaceLayoutWithElement();
-        var systemUnderTest = mapper.CreateMapper();
-        var destination =
-            systemUnderTest.Map<LearningSpaceLayout, LearningSpaceLayoutViewModel>(source);
-        var oldViewModel = destination.LearningElements[1];
-
-        oldViewModel.Name = "newName";
-        systemUnderTest.Map(source, destination);
-        var newViewModel = destination.LearningElements[1];
-        Assert.That(newViewModel, Is.EqualTo(oldViewModel));
-        var destination2 = ViewModelProvider.GetLearningSpaceLayout(floorPlan: FloorPlanEnum.R_20X20_6L);
-        systemUnderTest.Map(source, destination2);
-        Assert.That(destination2.LearningElements[1], Is.Not.Null);
-    }
 
 
     [Test]
