@@ -1,4 +1,4 @@
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+namespace Shared.Adaptivity;
 
 /// <summary>
 /// Indicates the difficulty of a <see cref="IAdaptivityQuestion"/>.

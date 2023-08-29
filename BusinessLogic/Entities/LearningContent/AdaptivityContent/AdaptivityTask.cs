@@ -1,4 +1,5 @@
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+using Shared.Adaptivity;
 
 namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 

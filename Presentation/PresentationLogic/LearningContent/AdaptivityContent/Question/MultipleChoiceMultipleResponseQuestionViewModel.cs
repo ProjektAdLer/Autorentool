@@ -1,13 +1,13 @@
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 
 /// <summary>
 /// Represents a question with multiple different choices and multiple responses.
 /// </summary>
-public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
+public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQuestionViewModel
 {
-    public MultipleChoiceMultipleResponseQuestion(int expectedCompletionTime, IEnumerable<Choice> choices,
+    public MultipleChoiceMultipleResponseQuestionViewModel(int expectedCompletionTime, IEnumerable<Choice> choices,
         IEnumerable<Choice> correctChoices, string text, QuestionDifficulty difficulty)
     {
         ExpectedCompletionTime = expectedCompletionTime;

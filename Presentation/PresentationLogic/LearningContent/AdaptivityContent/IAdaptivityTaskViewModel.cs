@@ -1,14 +1,14 @@
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
-public interface IAdaptivityTask
+public interface IAdaptivityTaskViewModel
 {
     /// <summary>
     /// The main questions this task contains.
     /// </summary>
-    public IEnumerable<IAdaptivityQuestion> Questions { get; set; }
+    public IEnumerable<IAdaptivityQuestionViewModel> Questions { get; set; }
     /// <summary>
     /// The minimum required difficulty of question required to answer to complete this task.
     /// </summary>

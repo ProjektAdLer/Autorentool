@@ -1,13 +1,13 @@
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 
 /// <summary>
 /// Represents a question with multiple different choices but only one response (and therefore only one correct choice).
 /// </summary>
-public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
+public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQuestionViewModel
 {
-    public MultipleChoiceSingleResponseQuestion(int expectedCompletionTime, IEnumerable<Choice> choices, string text, Choice correctChoice, QuestionDifficulty difficulty)
+    public MultipleChoiceSingleResponseQuestionViewModel(int expectedCompletionTime, IEnumerable<Choice> choices, string text, Choice correctChoice, QuestionDifficulty difficulty)
     {
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;

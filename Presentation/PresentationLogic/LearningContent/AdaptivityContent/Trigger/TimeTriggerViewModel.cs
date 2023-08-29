@@ -1,14 +1,15 @@
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using Shared;
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 
 /// <summary>
 /// Adaptivity trigger that is activated when the user spends a certain amount of time on a question.
 /// </summary>
-public class TimeTrigger : IAdaptivityTrigger
+public class TimeTriggerViewModel : IAdaptivityTriggerViewModel
 {
-    public TimeTrigger(int expected, TimeFrameType timeFrameType)
+    public TimeTriggerViewModel(int expected, TimeFrameType timeFrameType)
     {
         Expected = expected;
         TimeFrameType = timeFrameType;

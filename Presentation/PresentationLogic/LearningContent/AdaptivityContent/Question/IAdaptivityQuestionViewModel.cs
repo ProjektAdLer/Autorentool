@@ -1,8 +1,8 @@
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 
-public interface IAdaptivityQuestion
+public interface IAdaptivityQuestionViewModel
 {
     /// <summary>
     /// Expected completion time of question in seconds.

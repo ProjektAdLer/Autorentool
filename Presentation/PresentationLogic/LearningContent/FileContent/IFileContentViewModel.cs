@@ -1,4 +1,4 @@
-namespace Presentation.PresentationLogic.LearningContent;
+namespace Presentation.PresentationLogic.LearningContent.FileContent;
 
 public interface IFileContentViewModel : ILearningContentViewModel
 {

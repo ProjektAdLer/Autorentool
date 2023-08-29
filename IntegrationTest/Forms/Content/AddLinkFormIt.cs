@@ -13,6 +13,7 @@ using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.Content;

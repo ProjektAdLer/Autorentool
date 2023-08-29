@@ -1,14 +1,14 @@
 using Shared;
 using Shared.Adaptivity;
 
-namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 
 /// <summary>
 /// Adaptivity trigger that is activated when the user answers a question correctly or incorrectly.
 /// </summary>
-public class CorrectnessTrigger : IAdaptivityTrigger
+public class CorrectnessTriggerViewModel : IAdaptivityTriggerViewModel
 {
-    public CorrectnessTrigger(AnswerResult expectedAnswer)
+    public CorrectnessTriggerViewModel(AnswerResult expectedAnswer)
     {
         ExpectedAnswer = expectedAnswer;
     }
