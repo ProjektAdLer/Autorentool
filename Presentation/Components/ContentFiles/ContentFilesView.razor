@@ -6,12 +6,12 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
-<MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
+<MudTable Items="Items" Class="my-4 w-full grow h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
-        <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+        <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>

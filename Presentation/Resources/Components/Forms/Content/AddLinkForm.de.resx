@@ -27,7 +27,7 @@
         <value>Verbindung hinzugefügt</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name für den Link</value>
     </data>
     <data name="AddLinkForm.Field.Link.Text" xml:space="preserve">
         <value>Link</value>

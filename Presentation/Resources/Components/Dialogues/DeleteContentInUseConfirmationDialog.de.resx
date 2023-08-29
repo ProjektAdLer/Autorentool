@@ -28,6 +28,6 @@
         <value>Wollen Sie wirklich {0} löschen?</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
-        <value>Dieser Lerninhalt wird momentan in den folgenden Lernelementen verwendet:</value>
+        <value>Diese Datei wird momentan in den folgenden Lernelementen verwendet:</value>
     </data>
 </root>

@@ -26,7 +26,7 @@
         <value>Lernraum-Editor</value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Gesamtpunkte:</value>
+        <value>Abschlussbedingung:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
         <value>Arbeitsaufwand: </value>
@@ -54,5 +54,11 @@
     </data>
     <data name="Error.ExceptionWrapper.LoadLearningElement.Message" xml:space="preserve">
         <value>Lade Lernelement</value>
+    </data>
+    <data name="LearningSpace.SpaceWorkload.Text.Additional" xml:space="preserve">
+        <value> min</value>
+    </data>
+    <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
+        <value>Punkte</value>
     </data>
 </root>

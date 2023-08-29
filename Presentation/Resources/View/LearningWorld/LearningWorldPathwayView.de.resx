@@ -30,7 +30,7 @@
         <value>Gesamtpunkte:</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
-        <value> min.</value>
+        <value> min</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
         <value>Neuer Lernraum</value>
@@ -39,7 +39,7 @@
         <value>Importiere Lernraum</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Neue Bedingung</value>
+        <value>Neue Und-/Oder-Verbindung</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Lade Lernraum</value>

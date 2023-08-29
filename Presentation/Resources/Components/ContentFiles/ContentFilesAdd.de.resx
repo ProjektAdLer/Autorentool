@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Header.Text" xml:space="preserve">
-        <value>Dateiimport</value>
+        <value>Dateien und Links hinzufügen</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>
@@ -51,6 +51,6 @@
         <value>Datei zu groß</value>
     </data>
     <data name="FileTooBig.Error.Message" xml:space="preserve">
-        <value>Die maximal unterstützte Dateigröße für Lerninhalte beträgt 1 Gigabyte.</value>
+        <value>Die maximal unterstützte Dateigröße für Dateien beträgt 1 Gigabyte.</value>
     </data>
 </root>

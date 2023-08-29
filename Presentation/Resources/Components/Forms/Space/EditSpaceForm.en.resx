@@ -30,7 +30,7 @@
         <value>Theme of learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Completion conditions</value>
+        <value>Completion condition</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
         <value>Floor plan</value>
@@ -48,7 +48,7 @@
         <value>Name</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
-        <value>Required points</value>
+        <value>Required points to complete the learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Theme</value>
