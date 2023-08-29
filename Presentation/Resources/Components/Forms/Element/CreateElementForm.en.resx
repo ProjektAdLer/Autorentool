@@ -68,4 +68,7 @@
     <data name="CreateElementForm.Fields.Collapse.LearningContent.Type" xml:space="preserve">
         <value>Type</value>
     </data>
+    <data name="CreateElementForm.Fields.Collapse.LearningContent.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
 </root>
