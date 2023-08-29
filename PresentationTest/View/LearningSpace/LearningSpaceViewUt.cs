@@ -75,10 +75,10 @@ public class LearningSpaceViewUt
         //TODO Use this for LmsLoginDialogUt
         var spaceWorkload = systemUnderTest.Find("h3.space-workload");
         spaceWorkload.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600""> min.</span></h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></h3>");
         var spacePoints = systemUnderTest.Find("h3.space-points");
         spacePoints.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 8</h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></h3>");
     }
 
     [Test]
