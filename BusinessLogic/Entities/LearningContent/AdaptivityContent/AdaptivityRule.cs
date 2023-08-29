@@ -4,18 +4,16 @@ using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 
 namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
-public interface IAdaptivityRule
+class AdaptivityRule : IAdaptivityRule
 {
-    /// <summary>
-    /// The question this rule is associated with.
-    /// </summary>
+    public AdaptivityRule(IAdaptivityQuestion question, IAdaptivityTrigger trigger, IAdaptivityAction action)
+    {
+        Question = question;
+        Trigger = trigger;
+        Action = action;
+    }
+
     public IAdaptivityQuestion Question { get; set; }
-    /// <summary>
-    /// The trigger that activates the rule.
-    /// </summary>
     public IAdaptivityTrigger Trigger { get; set; }
-    /// <summary>
-    /// The action that is performed when the rule is activated.
-    /// </summary>
     public IAdaptivityAction Action { get; set; }
 }

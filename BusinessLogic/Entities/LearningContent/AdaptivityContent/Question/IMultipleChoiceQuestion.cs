@@ -3,7 +3,7 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
 /// <summary>
 /// Represents a multiple choice question with either single or multiple responses.
 /// </summary>
-public interface IMultipleChoiceQuestion : IQuestion
+public interface IMultipleChoiceQuestion : IAdaptivityQuestion
 {
     /// <summary>
     /// Choices for the question to pick response from.
@@ -15,7 +15,7 @@ public interface IMultipleChoiceQuestion : IQuestion
     /// May be single item for <see cref="MultipleChoiceSingleResponseQuestion"/>
     /// or multiple items for <see cref="MultipleChoiceMultipleResponseQuestion"/>.
     /// </summary>
-    public IEnumerable<Choice> CorrectChoices { get; set; }
+    public IEnumerable<Choice> CorrectChoices { get; }
 
     /// <summary>
     /// The main question text of the question.

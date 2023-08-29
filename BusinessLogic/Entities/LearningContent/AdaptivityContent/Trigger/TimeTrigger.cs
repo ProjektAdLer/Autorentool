@@ -11,6 +11,12 @@ public class TimeTrigger : IAdaptivityTrigger
         TimeFrameType = timeFrameType;
     }
 
+    /// <summary>
+    /// The time in seconds that the user must spend on the question for the trigger to be activated.
+    /// </summary>
     public int Expected { get; set; }
+    /// <summary>
+    /// Whether the user must spend less or more than <see cref="Expected"/> seconds for the trigger to be activated.
+    /// </summary>
     public TimeFrameType TimeFrameType { get; set; }
 }
