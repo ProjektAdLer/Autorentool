@@ -532,6 +532,10 @@ public class PresentationLogicUt
                 LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 5, 7, 0, 0,
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
+        var learningElementVm = ViewModelProvider.GetLearningElement();
+        mockBusinessLogic
+            .When(bl => bl.ExecuteCommand(mockCommand))
+            .Do(_ => learningWorldVm.UnplacedLearningElements.Add(learningElementVm));
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             elementCommandFactory: mockElementCommandFactory,
@@ -541,17 +545,23 @@ public class PresentationLogicUt
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 5, 7);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+        mockSelectedViewModelsProvider.Received().SetLearningElement(learningElementVm, mockCommand);
     }
 
     [Test]
-    public void CreateLearningElementInSlot_CallsBusinessLogic()
+    public void CreateLearningElementInSlot_CallsBusinessLogic_AndSetsElementInSelectedViewModelsProvider()
     {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
         var mockCommand = Substitute.For<ICreateLearningElementInSlot>();
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement(parent: learningSpaceVm);
+        mockBusinessLogic
+            .When(bl => bl.ExecuteCommand(mockCommand))
+            .Do(_ => learningSpaceVm.LearningSpaceLayout.PutElement(0, learningElementVm));
         Substitute.For<ILogger<ElementCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
@@ -562,12 +572,13 @@ public class PresentationLogicUt
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            elementCommandFactory: mockElementCommandFactory);
+            elementCommandFactory: mockElementCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, positionX: 3, positionY: 4);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+        mockSelectedViewModelsProvider.Received().SetLearningElement(learningElementVm, mockCommand);
     }
 
     [Test]
