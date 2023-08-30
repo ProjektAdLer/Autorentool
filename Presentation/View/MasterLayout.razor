@@ -14,6 +14,7 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
+@using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
@@ -129,6 +130,12 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IStringLocalizer<MasterLayout> Localizer { get; set; }
+    
+    [Inject, AllowNull] //see above
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject, AllowNull]
+    internal NavigationManager NavManager { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application
@@ -148,6 +155,7 @@
     {
         base.OnAfterRender(firstRender);
         //open left and right tabs
+        if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
         if (!firstRender) return;
         Mediator.RequestOpenWorldDialog();
         Mediator.RequestOpenWorldOverview();
