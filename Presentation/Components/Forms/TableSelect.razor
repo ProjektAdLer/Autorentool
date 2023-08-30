@@ -13,7 +13,7 @@
     <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
               Class="@TableClasses" Outlined="true" Style="border-color: rgb(204,204,204)"
               RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
-              Filter="Filter">
+              Filter="Filter" Dense="true">
         <ToolBarContent>
             <MudTextField @bind-Value="_searchString"
                           Immediate="true"
