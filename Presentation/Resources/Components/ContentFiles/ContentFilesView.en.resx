@@ -16,7 +16,7 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value>Your files and links</value>
+        <value>List of all added files and links</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Delete</value>
@@ -37,7 +37,7 @@
         <value>Open folder</value>
     </data>
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
-        <value>Do you really want to delete content entry {0}? If you delete content which an element inside a world is using, you won't be able to generate that world anymore until you add it back!</value>
+        <value>Do you really want to delete content entry &lt;&lt; {0} &gt;&gt;? If you delete content which an learning element inside a learning world is using, you won't be able to generate that learning world anymore until you add it back!</value>
     </data>
     <data name="MudTextField.Search.Placeholder" xml:space="preserve">
         <value>Search</value>
