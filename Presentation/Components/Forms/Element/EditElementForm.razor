@@ -14,8 +14,8 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditElementForm.Header.Text"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
-
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["EditElementForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <HeaderButtons>
@@ -68,6 +68,7 @@
         </Collapsable>
 
         <Collapsable Style="" Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+            <MudText Class="ml-4" Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</MudText>
             <TableSelect
                 T="ILearningContentViewModel"
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
@@ -81,7 +82,7 @@
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd Class="px-1.5">
-                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                        <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                        OnClick="() => PreviewOnClick(context)"/>
                     </MudTd>
                     <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>

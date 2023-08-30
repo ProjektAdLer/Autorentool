@@ -11,7 +11,8 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
@@ -21,23 +22,23 @@
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]/>
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                               For="@(() => FormModel.Shortname)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]/>
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                               For="@(() => FormModel.Authors)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]/>
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                               For="@(() => FormModel.Language)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]/>
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                               For="@(() => FormModel.EvaluationLink)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]/>
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
             </div>
         </Collapsable>
 

@@ -39,7 +39,7 @@
         <value>None</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Files and links</value>
+        <value>Files and links*</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
         <value>3D representation of learning element</value>
@@ -63,7 +63,7 @@
         <value>Points</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="EditElementForm.NewButton.Text" xml:space="preserve">
         <value>New</value>
@@ -76,5 +76,11 @@
     </data>
     <data name="EditElementForm.Fields.Collapse.LearningContent.Type" xml:space="preserve">
         <value>Type</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
+        <value>List of all added files and links</value>
+    </data>
+    <data name="EditElementForm.Text" xml:space="preserve">
+        <value>* Required information</value>
     </data>
 </root>

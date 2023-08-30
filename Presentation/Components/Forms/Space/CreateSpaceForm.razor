@@ -10,7 +10,8 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">

@@ -57,12 +57,15 @@
         <value>LearningWorldVm ist null</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.General.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
         <value>Benötigte Punkte für das Abschließen des Lernraums</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Thema</value>
+    </data>
+    <data name="EditSpaceForm.Text" xml:space="preserve">
+        <value>* Erforderliche Angabe</value>
     </data>
 </root>
