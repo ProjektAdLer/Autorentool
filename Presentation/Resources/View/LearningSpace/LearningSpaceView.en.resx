@@ -32,7 +32,7 @@
         <value>Workload: </value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Total points:</value>
+        <value>Completion condition:</value>
     </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
         <value>Replace learning element</value>
@@ -54,5 +54,11 @@
     </data>
     <data name="Error.ExceptionWrapper.LoadLearningElement.Message" xml:space="preserve">
         <value>Load learning element</value>
+    </data>
+    <data name="LearningSpace.SpaceWorkload.Text.Additional" xml:space="preserve">
+        <value> min</value>
+    </data>
+    <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
+        <value>points</value>
     </data>
 </root>

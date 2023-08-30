@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value>Ihre Lerninhalte</value>
+        <value>Ihre Dateien und Links</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Löschen</value>

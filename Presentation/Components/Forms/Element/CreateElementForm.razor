@@ -67,23 +67,22 @@
         <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <TableSelect
                 T="ILearningContentViewModel"
-                Class=""
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
                 For="@(() => FormModel.LearningContent)"
                 Elements="WorldPresenter.GetAllContent()"
                 FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
                 <HeaderContent>
                     <MudTh></MudTh>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Type</MudTh>
+                    <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
+                    <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd Class="px-1.5">
                         <MudIconButton Icon="@Icons.Material.Filled.Preview"
                                        OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
                     </MudTd>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Type">
+                    <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
+                    <MudTd Class="cursor-pointer" DataLabel="Type">
                         @if (context is FileContentViewModel fileContentContext)
                         {
                             @fileContentContext.Type

@@ -37,10 +37,12 @@
                 </label>
                 <div class="min-w-max">
                     <h3 class="text-base text-adlerblue-600 space-workload">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span>
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
                     </h3>
                     <h3 class="text-base text-adlerblue-600 space-points">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.RequiredPoints
+                        <span class="text-adlergrey-600"> / </span> @LearningSpaceP.LearningSpaceVm?.Points
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text.Points.Suffix"]</span>
                     </h3>
                     @ChildContent
                 </div>
@@ -178,9 +180,9 @@
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
         {
-            return "rounded-lg border-2 bg-adlergreen border-adlergreen bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-28 h-3 flex justify-center items-center";
+            return "cursor-pointer rounded-lg border-2 bg-adlergreen border-adlergreen bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-28 h-3 flex justify-center items-center";
         }
-        return "rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center hover:bg-adlerblue-300";
+        return "cursor-pointer rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center hover:bg-adlerblue-300";
     }
 
     private string GetSlotIconString(int position)

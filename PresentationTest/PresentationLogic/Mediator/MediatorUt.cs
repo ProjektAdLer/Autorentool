@@ -71,11 +71,11 @@ public class MediatorUt
     {
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
         
-        mediator.RequestOpenWorldView();
+        mediator.RequestOpenPathwayView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.True);
-            Assert.That(mediator.WorldOverviewOpen, Is.False);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.True);
+            Assert.That(mediator.WorldTreeViewOpen, Is.False);
         });
     }
     
@@ -84,11 +84,11 @@ public class MediatorUt
     {
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
         
-        mediator.RequestOpenWorldOverview();
+        mediator.RequestOpenWorldTreeView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.False);
-            Assert.That(mediator.WorldOverviewOpen, Is.True);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.False);
+            Assert.That(mediator.WorldTreeViewOpen, Is.True);
         });
     }
     
@@ -193,18 +193,18 @@ public class MediatorUt
     {
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
         
-        mediator.RequestToggleWorldView();
+        mediator.RequestToggleWorldPathwayView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.True);
-            Assert.That(mediator.WorldOverviewOpen, Is.False);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.True);
+            Assert.That(mediator.WorldTreeViewOpen, Is.False);
         });
         
-        mediator.RequestToggleWorldView();
+        mediator.RequestToggleWorldPathwayView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.False);
-            Assert.That(mediator.WorldOverviewOpen, Is.False);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.False);
+            Assert.That(mediator.WorldTreeViewOpen, Is.False);
         });
     }
     
@@ -213,18 +213,18 @@ public class MediatorUt
     {
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
         
-        mediator.RequestToggleWorldOverview();
+        mediator.RequestToggleWorldTreeView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.False);
-            Assert.That(mediator.WorldOverviewOpen, Is.True);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.False);
+            Assert.That(mediator.WorldTreeViewOpen, Is.True);
         });
         
-        mediator.RequestToggleWorldOverview();
+        mediator.RequestToggleWorldTreeView();
         Assert.Multiple(() =>
         {
-            Assert.That(mediator.WorldViewOpen, Is.False);
-            Assert.That(mediator.WorldOverviewOpen, Is.False);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.False);
+            Assert.That(mediator.WorldTreeViewOpen, Is.False);
         });
     }
 
@@ -234,7 +234,7 @@ public class MediatorUt
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
         
         mediator.RequestOpenWorldDialog();
-        mediator.RequestOpenWorldOverview();
+        mediator.RequestOpenWorldTreeView();
         
         mediator.CloseBothSides();
         
@@ -244,8 +244,8 @@ public class MediatorUt
             Assert.That(mediator.SpaceDialogOpen, Is.False);
             Assert.That(mediator.ElementDialogOpen, Is.False);
             Assert.That(mediator.ContentDialogOpen, Is.False);
-            Assert.That(mediator.WorldViewOpen, Is.False);
-            Assert.That(mediator.WorldOverviewOpen, Is.False);
+            Assert.That(mediator.WorldPathwayViewOpen, Is.False);
+            Assert.That(mediator.WorldTreeViewOpen, Is.False);
         });
     }
 }

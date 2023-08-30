@@ -14,6 +14,7 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
+@using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
@@ -83,8 +84,8 @@
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem
-                            IsActive="Mediator.WorldViewOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleWorldView">
+                            IsActive="Mediator.WorldPathwayViewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldPathwayView">
                             <SidebarContent>
                                 <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
                                     <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
@@ -95,8 +96,8 @@
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
-                            IsActive="Mediator.WorldOverviewOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
+                            IsActive="Mediator.WorldTreeViewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldTreeView">
                             <SidebarContent>
                                 <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
                                     <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
@@ -129,6 +130,12 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IStringLocalizer<MasterLayout> Localizer { get; set; }
+    
+    [Inject, AllowNull] //see above
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject, AllowNull]
+    internal NavigationManager NavManager { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application
@@ -138,9 +145,20 @@
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
         OnUndoRedoEventSource.OnRedo += OnUndoRedo;
         OnUndoRedoEventSource.OnUndo += OnUndoRedo;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        //open left and right tabs
+        if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
+        if (!firstRender) return;
+        Mediator.RequestOpenWorldDialog();
+        Mediator.RequestOpenPathwayView();
     }
 
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

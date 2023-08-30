@@ -19,7 +19,7 @@
         <value>Drag and drop files here or click to add them.</value>
     </data>
     <data name="Header.Text" xml:space="preserve">
-        <value>File import</value>
+        <value>Import files and links</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
         <value>Unsupported file ending</value>

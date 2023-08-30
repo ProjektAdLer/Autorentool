@@ -42,7 +42,7 @@
         <value>Arbeitsaufwand (min)</value>
     </data>
     <data name="EditElementForm.Difficulty.Easy" xml:space="preserve">
-        <value>Einfach</value>
+        <value>Leicht</value>
     </data>
     <data name="EditElementForm.Difficulty.Medium" xml:space="preserve">
         <value>Normal</value>
@@ -51,10 +51,10 @@
         <value>Schwer</value>
     </data>
     <data name="EditElementForm.Difficulty.None" xml:space="preserve">
-        <value>Keine</value>
+        <value>Keine Angabe</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Lerninhalte</value>
+        <value>Dateien und Links</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
@@ -66,7 +66,7 @@
         <value>Ziele</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
-        <value>Lerninhalte</value>
+        <value>Dateien und Links</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
         <value>Schwierigkeitsgrad</value>
@@ -82,5 +82,11 @@
     </data>
     <data name="EditElementForm.Button.ShowLearningElement.Title" xml:space="preserve">
         <value>Zeige Lernelement</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapse.LearningContent.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapse.LearningContent.Type" xml:space="preserve">
+        <value>Typ</value>
     </data>
 </root>

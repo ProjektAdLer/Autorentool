@@ -10,8 +10,8 @@ public class Mediator : IMediator
     private bool _overwriteElementEdit;
     private bool _spaceDialogOpen;
     private bool _worldDialogOpen;
-    private bool _worldOverViewOpen;
-    private bool _worldViewOpen;
+    private bool _worldTreeViewOpen;
+    private bool _worldPathwayViewOpen;
 
     public void CloseBothSides()
     {
@@ -35,8 +35,8 @@ public class Mediator : IMediator
     /// </summary>
     private void CloseAllRightSide()
     {
-        WorldViewOpen = false;
-        WorldOverviewOpen = false;
+        WorldPathwayViewOpen = false;
+        WorldTreeViewOpen = false;
     }
 
     #region left side
@@ -75,16 +75,16 @@ public class Mediator : IMediator
 
     #region right side
 
-    public bool WorldViewOpen
+    public bool WorldPathwayViewOpen
     {
-        get => _worldViewOpen;
-        private set => SetField(ref _worldViewOpen, value);
+        get => _worldPathwayViewOpen;
+        private set => SetField(ref _worldPathwayViewOpen, value);
     }
 
-    public bool WorldOverviewOpen
+    public bool WorldTreeViewOpen
     {
-        get => _worldOverViewOpen;
-        private set => SetField(ref _worldOverViewOpen, value);
+        get => _worldTreeViewOpen;
+        private set => SetField(ref _worldTreeViewOpen, value);
     }
 
     #endregion
@@ -122,16 +122,16 @@ public class Mediator : IMediator
         ContentDialogOpen = true;
     }
 
-    public void RequestOpenWorldView()
+    public void RequestOpenPathwayView()
     {
         CloseAllRightSide();
-        WorldViewOpen = true;
+        WorldPathwayViewOpen = true;
     }
 
-    public void RequestOpenWorldOverview()
+    public void RequestOpenWorldTreeView()
     {
         CloseAllRightSide();
-        WorldOverviewOpen = true;
+        WorldTreeViewOpen = true;
     }
 
     #endregion
@@ -186,27 +186,27 @@ public class Mediator : IMediator
         }
     }
 
-    public void RequestToggleWorldView()
+    public void RequestToggleWorldPathwayView()
     {
-        if (WorldViewOpen)
+        if (WorldPathwayViewOpen)
         {
-            WorldViewOpen = false;
+            WorldPathwayViewOpen = false;
         }
         else
         {
-            RequestOpenWorldView();
+            RequestOpenPathwayView();
         }
     }
 
-    public void RequestToggleWorldOverview()
+    public void RequestToggleWorldTreeView()
     {
-        if (WorldOverviewOpen)
+        if (WorldTreeViewOpen)
         {
-            WorldOverviewOpen = false;
+            WorldTreeViewOpen = false;
         }
         else
         {
-            RequestOpenWorldOverview();
+            RequestOpenWorldTreeView();
         }
     }
 

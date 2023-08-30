@@ -36,7 +36,7 @@
         <value>Allgemein</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Abschlussbedingungen</value>
+        <value>Abschlussbedingung</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
         <value>Grundriss</value>
@@ -60,7 +60,7 @@
         <value>Name</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
-        <value>Benötigte Punkte</value>
+        <value>Benötigte Punkte für das Abschließen des Lernraums</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Thema</value>
