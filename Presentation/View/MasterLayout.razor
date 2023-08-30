@@ -84,8 +84,8 @@
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem
-                            IsActive="Mediator.WorldViewOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleWorldView">
+                            IsActive="Mediator.WorldPathwayViewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldPathwayView">
                             <SidebarContent>
                                 <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
                                     <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
@@ -96,8 +96,8 @@
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
-                            IsActive="Mediator.WorldOverviewOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
+                            IsActive="Mediator.WorldTreeViewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldTreeView">
                             <SidebarContent>
                                 <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
                                     <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
@@ -158,7 +158,7 @@
         if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
         if (!firstRender) return;
         Mediator.RequestOpenWorldDialog();
-        Mediator.RequestOpenWorldOverview();
+        Mediator.RequestOpenPathwayView();
     }
 
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
