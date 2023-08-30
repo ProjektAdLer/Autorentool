@@ -41,4 +41,7 @@
     <data name="LearningWorldCard.Button.Close.Text" xml:space="preserve">
         <value>Lernwelt schließen</value>
     </data>
+    <data name="LearningWorldCard.Button.Open.Title" xml:space="preserve">
+        <value>Lernwelt öffnen</value>
+    </data>
 </root>

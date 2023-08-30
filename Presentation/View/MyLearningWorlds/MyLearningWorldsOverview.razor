@@ -30,7 +30,7 @@
             </div>
         </section>
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded-lg">
-            <MudGrid Class="flex justify-center overflow-auto h-[95%] shrink" Spacing="2">
+            <MudGrid Class="flex justify-center overflow-auto mt-4 h-[95%] shrink" Spacing="2">
                 @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds().Concat(MyLearningWorldsProvider.GetSavedLearningWorlds()))
                 {
                     <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnCloseWorld="OnCloseWorldAsync"/>
@@ -41,7 +41,7 @@
             <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
         </MudDrawer>
     </article>
-    <img class="pointer-events-none w-3/5 opacity-10 absolute -bottom-1/4 -right-64" src="/CustomIcons/world-icon-nobg.png"/>
+    <img class="pointer-events-none w-20 opacity-50 absolute bottom-1 right-1" src="/CustomIcons/autorentool-logo.png"/>
 </main>
 
 @code {
