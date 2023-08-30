@@ -28,7 +28,7 @@
         <value>Wollen Sie das Lernelement ersetzen?</value>
     </data>
     <data name="Dialog.Content.Line2.Text" xml:space="preserve">
-        <value>Dadurch wird das aktuelle Lernelement zu den nicht platzierten Lernelementen in der Welt verschoben.</value>
+        <value>Dadurch wird das aktuelle Lernelement zu den nicht platzierten Lernelementen in der Lernwelt verschoben.</value>
     </data>
     <data name="Dialog.Button.Replace.Text" xml:space="preserve">
         <value>Ersetzen</value>

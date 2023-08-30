@@ -88,7 +88,7 @@
         <value>Lernwelt ist ungültig</value>
     </data>
     <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
-        <value>Lernwelt hat keine Lernräume</value>
+        <value>Diese Lernwelt enthält keine Lernräume.</value>
     </data>
     <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
         <value>Lernraum &lt;&lt; {0} &gt;&gt; enthält keine Lernelemente.</value>

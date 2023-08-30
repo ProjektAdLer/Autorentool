@@ -76,7 +76,7 @@
         <value>Exporting learning world was canceled</value>
     </data>
     <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
-        <value>Learning world has no learning spaces</value>
+        <value>Learning world contains no learning spaces.</value>
     </data>
     <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
         <value>Learning space &lt;&lt; {0} &gt;&gt; contains no learning elements.</value>
