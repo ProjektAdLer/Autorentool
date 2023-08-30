@@ -14,6 +14,15 @@ public class TimeTriggerViewModel : IAdaptivityTriggerViewModel
         Expected = expected;
         TimeFrameType = timeFrameType;
     }
+    
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private TimeTriggerViewModel()
+    {
+        Expected = 0;
+        TimeFrameType = TimeFrameType.From;
+    }
 
     /// <summary>
     /// The time in seconds that the user must spend on the question for the trigger to be activated.

@@ -15,6 +15,15 @@ public class TimeTrigger : IAdaptivityTrigger
     }
 
     /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private TimeTrigger()
+    {
+        Expected = 0;
+        TimeFrameType = TimeFrameType.From;
+    }
+
+    /// <summary>
     /// The time in seconds that the user must spend on the question for the trigger to be activated.
     /// </summary>
     public int Expected { get; set; }

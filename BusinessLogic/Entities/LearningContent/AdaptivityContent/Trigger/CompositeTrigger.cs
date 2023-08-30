@@ -15,6 +15,17 @@ public class CompositeTrigger : IAdaptivityTrigger
     }
 
     /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private CompositeTrigger()
+    {
+        Condition = ConditionEnum.And;
+        //suppress null ref exception as automapper will set these properties immediately
+        Left = null!;
+        Right = null!;
+    }
+
+    /// <summary>
     /// The logical condition between <see cref="Left"/> and <see cref="Right"/>. Either logical OR or logical AND.
     /// </summary>
     public ConditionEnum Condition { get; set; }

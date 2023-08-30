@@ -1,6 +1,7 @@
 ﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -10,6 +11,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 
 namespace TestHelpers;
 
@@ -104,5 +106,22 @@ public static class ViewModelProvider
         var space = GetLearningSpaceWithElement();
         world.LearningSpaces.Add(space);
         return world;
+    }
+
+    public static CorrectnessTriggerViewModel GetCorrectnessTrigger(AnswerResult result = AnswerResult.Correct)
+    {
+        return new CorrectnessTriggerViewModel(result);
+    }
+    
+    public static TimeTriggerViewModel GetTimeTrigger(int time = 0, TimeFrameType timeFrameType = TimeFrameType.Until)
+    {
+        return new TimeTriggerViewModel(time, timeFrameType);
+    }
+    
+    public static CompositeTriggerViewModel GetCompositeTrigger(ConditionEnum type = ConditionEnum.And, IAdaptivityTriggerViewModel? leftSide = null, IAdaptivityTriggerViewModel? rightSide = null)
+    {
+        leftSide ??= GetCorrectnessTrigger();
+        rightSide ??= GetTimeTrigger();
+        return new CompositeTriggerViewModel(type, leftSide, rightSide);
     }
 }

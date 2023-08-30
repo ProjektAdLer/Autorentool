@@ -2,10 +2,10 @@
 using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Adaptivity;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
@@ -474,6 +475,31 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(source2.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
         });
+    }
+
+    [Test]
+    public void AdaptivityTrigger_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var correctnessTriggerVm = ViewModelProvider.GetCorrectnessTrigger();
+        var timeTriggerVm = ViewModelProvider.GetTimeTrigger();
+        var compositeTriggerVm = ViewModelProvider.GetCompositeTrigger();
+        
+        var correctnessTrigger = systemUnderTest.Map<CorrectnessTrigger>(correctnessTriggerVm);
+        var timeTrigger = systemUnderTest.Map<TimeTrigger>(timeTriggerVm);
+        var compositeTrigger = systemUnderTest.Map<CompositeTrigger>(compositeTriggerVm);
+
+        correctnessTrigger.ExpectedAnswer = AnswerResult.Incorrect;
+        timeTrigger.Expected = 123;
+        compositeTrigger.Condition = ConditionEnum.Or;
+        
+        systemUnderTest.Map(correctnessTrigger, correctnessTriggerVm);
+        systemUnderTest.Map(timeTrigger, timeTriggerVm);
+        systemUnderTest.Map(compositeTrigger, compositeTriggerVm);
+        
+        Assert.That(correctnessTriggerVm.ExpectedAnswer, Is.EqualTo(AnswerResult.Incorrect));
+        Assert.That(timeTriggerVm.Expected, Is.EqualTo(123));
+        Assert.That(compositeTriggerVm.Condition, Is.EqualTo(ConditionEnum.Or));
     }
 
     private static FileContent GetTestableContent()

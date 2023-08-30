@@ -2,11 +2,13 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -35,6 +37,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateInterfaceMaps();
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
+        CreateAdaptivityMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -419,5 +422,67 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.WorldNames, opt => opt.Ignore())
             .ForMember(x => x.WorldShortnames, opt => opt.Ignore())
             .ReverseMap();
+    }
+
+    private void CreateAdaptivityMap()
+    {
+        CreateAdaptivityTriggerMap();
+        // CreateAdaptivityActionMap();
+        // CreateAdaptivityQuestionMap();
+        // CreateAdaptivityRuleMap();
+        // CreateAdaptivityTaskMap();
+        // CreateAdaptivityContentMap();
+    }
+
+    private void CreateAdaptivityTriggerMap()
+    {
+        CreateMap<IAdaptivityTrigger, IAdaptivityTriggerViewModel>();
+        
+        CreateMap<CorrectnessTrigger, IAdaptivityTriggerViewModel>()
+            .As<CorrectnessTriggerViewModel>();
+        CreateMap<CorrectnessTriggerViewModel, IAdaptivityTrigger>()
+            .As<CorrectnessTrigger>();
+        
+        CreateMap<TimeTrigger, IAdaptivityTriggerViewModel>()
+            .As<TimeTriggerViewModel>();
+        CreateMap<TimeTriggerViewModel, IAdaptivityTrigger>()
+            .As<TimeTrigger>();
+        
+        CreateMap<CompositeTrigger, IAdaptivityTriggerViewModel>()
+            .As<CompositeTriggerViewModel>();
+        CreateMap<CompositeTriggerViewModel, IAdaptivityTrigger>()
+            .As<CompositeTrigger>();
+
+        CreateMap<CorrectnessTrigger, CorrectnessTriggerViewModel>()
+            .ReverseMap();
+        CreateMap<TimeTrigger, TimeTriggerViewModel>()
+            .ReverseMap();
+        CreateMap<CompositeTrigger, CompositeTriggerViewModel>()
+            .ReverseMap();
+    }
+
+    private void CreateAdaptivityActionMap()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CreateAdaptivityQuestionMap()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CreateAdaptivityRuleMap()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CreateAdaptivityTaskMap()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CreateAdaptivityContentMap()
+    {
+        throw new NotImplementedException();
     }
 }

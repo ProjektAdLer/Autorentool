@@ -13,6 +13,17 @@ public class CompositeTriggerViewModel : IAdaptivityTriggerViewModel
         Left = left;
         Right = right;
     }
+    
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private CompositeTriggerViewModel()
+    {
+        Condition = ConditionEnum.And;
+        //suppress null ref exception as automapper will set these properties immediately
+        Left = null!;
+        Right = null!;
+    }
 
     /// <summary>
     /// The logical condition between <see cref="Left"/> and <see cref="Right"/>. Either logical OR or logical AND.
