@@ -459,11 +459,19 @@ public class PresentationLogic : IPresentationLogic
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
+        //copy list of elements before
+        var elementsInWorldBefore = learningWorldVm.UnplacedLearningElements.ToList();
+
         var command = ElementCommandFactory.GetCreateUnplacedCommand(learningWorldEntity, name, contentEntity,
             description, goals,
             difficulty, elementModel, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+        
+        //as there should only be one new element, we can take new list - old list = new element
+        var elementsInWorldAfter = learningWorldVm.UnplacedLearningElements;
+        var newElement = elementsInWorldAfter.Except(elementsInWorldBefore).First();
+        SelectedViewModelsProvider.SetLearningElement(newElement, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
@@ -475,11 +483,19 @@ public class PresentationLogic : IPresentationLogic
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
+        //copy list of elements before
+        var elementsInSpaceBefore = parentSpaceVm.ContainedLearningElements.ToList();
+
         var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, name, contentEntity,
             description,
             goals, difficulty, elementModel, workload, points, positionX, positionY,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
+
+        //as there should only be one new element, we can take new list - old list = new element
+        var elementsInSpaceAfter = parentSpaceVm.ContainedLearningElements;
+        var newElement = elementsInSpaceAfter.Except(elementsInSpaceBefore).First();
+        SelectedViewModelsProvider.SetLearningElement(newElement, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
