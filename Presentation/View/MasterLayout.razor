@@ -138,9 +138,19 @@
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
         OnUndoRedoEventSource.OnRedo += OnUndoRedo;
         OnUndoRedoEventSource.OnUndo += OnUndoRedo;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        //open left and right tabs
+        if (!firstRender) return;
+        Mediator.RequestOpenWorldDialog();
+        Mediator.RequestOpenWorldOverview();
     }
 
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
