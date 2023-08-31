@@ -157,6 +157,7 @@
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
         OnUndoRedoEventSource.OnRedo += OnUndoRedo;
         OnUndoRedoEventSource.OnUndo += OnUndoRedo;
+        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
     }
 
     protected override void OnAfterRender(bool firstRender)
