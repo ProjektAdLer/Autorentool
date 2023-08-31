@@ -7,8 +7,9 @@
 @using Presentation.Components.Forms.World
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
-    <article class="p-2 flex flex-col items-center gap-6 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
+    <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
+        <p class="text-md -mt-4">@Localizer["Page.LearningWorld.Subheading"]</p>
         <section class="flex flex-row gap-2 justify-center bg-blacktrans-200 p-1 rounded-lg">
             <div class="btn-standard w-28 flex justify-center items-center create-world-button"
                  @onclick="CreateLearningWorld"

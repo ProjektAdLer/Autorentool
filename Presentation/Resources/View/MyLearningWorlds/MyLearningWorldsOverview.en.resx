@@ -39,4 +39,7 @@
     <data name="Page.LearningWorld.Button.GOTO.CreateDebugWorld.Text" xml:space="preserve">
         <value>Create debug world</value>
     </data>
+    <data name="Page.LearningWorld.Subheading" xml:space="preserve">
+        <value>Hover over your Learning Worlds and open those subsequently.</value>
+    </data>
 </root>

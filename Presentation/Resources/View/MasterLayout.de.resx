@@ -42,7 +42,7 @@
         <value>Lernwelt Baumansicht</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
-        <value/>
+        <value>Lernwelt Metadaten</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
         <value/>

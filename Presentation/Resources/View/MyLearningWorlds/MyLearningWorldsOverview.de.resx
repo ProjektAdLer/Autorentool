@@ -39,4 +39,7 @@
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEU</value>
     </data>
+    <data name="Page.LearningWorld.Subheading" xml:space="preserve">
+        <value>Fahren Sie mit der Maus über Ihre Lernwelten, und öffnen sie diese anschließend.</value>
+    </data>
 </root>
