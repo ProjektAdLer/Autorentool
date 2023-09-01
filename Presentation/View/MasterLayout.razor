@@ -163,9 +163,11 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        //open left and right tabs
+        //if no world is selected (after hot reload for example), navigate to overview
         if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
+        //only open tabs if it's our first render after being created
         if (!firstRender) return;
+        //open left and right tabs
         Mediator.RequestOpenWorldDialog();
         Mediator.RequestOpenPathwayView();
     }
