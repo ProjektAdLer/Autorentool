@@ -1,5 +1,3 @@
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
-using Shared;
 using Shared.Adaptivity;
 
 namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;

@@ -1,5 +1,3 @@
-using BusinessLogic.Entities.LearningContent;
-
 namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 /// <summary>

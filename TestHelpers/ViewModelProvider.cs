@@ -1,6 +1,7 @@
 ﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -123,5 +124,20 @@ public static class ViewModelProvider
         leftSide ??= GetCorrectnessTrigger();
         rightSide ??= GetTimeTrigger();
         return new CompositeTriggerViewModel(type, leftSide, rightSide);
+    }
+
+    public static CommentActionViewModel GetCommentAction()
+    {
+        return new CommentActionViewModel("a comment");
+    }
+
+    public static ElementReferenceActionViewModel GetElementReferenceAction()
+    {
+        return new ElementReferenceActionViewModel(Guid.NewGuid());
+    }
+    
+    public static ContentReferenceActionViewModel GetContentReferenceAction()
+    {
+        return new ContentReferenceActionViewModel(GetFileContent());
     }
 }

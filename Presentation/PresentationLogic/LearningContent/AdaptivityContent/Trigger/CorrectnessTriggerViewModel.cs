@@ -1,4 +1,3 @@
-using Shared;
 using Shared.Adaptivity;
 
 namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;

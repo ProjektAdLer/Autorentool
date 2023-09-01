@@ -7,5 +7,13 @@ public class CommentActionViewModel : IAdaptivityActionViewModel
         Comment = comment;
     }
 
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private CommentActionViewModel()
+    {
+        Comment = "";
+    }
+
     public string Comment { get; set; }
 }

@@ -2,12 +2,14 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -427,7 +429,7 @@ public class ViewModelEntityMappingProfile : Profile
     private void CreateAdaptivityMap()
     {
         CreateAdaptivityTriggerMap();
-        // CreateAdaptivityActionMap();
+        CreateAdaptivityActionMap();
         // CreateAdaptivityQuestionMap();
         // CreateAdaptivityRuleMap();
         // CreateAdaptivityTaskMap();
@@ -436,7 +438,8 @@ public class ViewModelEntityMappingProfile : Profile
 
     private void CreateAdaptivityTriggerMap()
     {
-        CreateMap<IAdaptivityTrigger, IAdaptivityTriggerViewModel>();
+        CreateMap<IAdaptivityTrigger, IAdaptivityTriggerViewModel>()
+            .ReverseMap();
         
         CreateMap<CorrectnessTrigger, IAdaptivityTriggerViewModel>()
             .As<CorrectnessTriggerViewModel>();
@@ -458,12 +461,48 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<TimeTrigger, TimeTriggerViewModel>()
             .ReverseMap();
         CreateMap<CompositeTrigger, CompositeTriggerViewModel>()
-            .ReverseMap();
+            .ForMember(ctvm => ctvm.Left, opt => opt.Ignore())
+            .AfterMap((ct, ctvm, ctx) => ctvm.Left = ctx.Mapper.Map<IAdaptivityTriggerViewModel>(ct.Left))
+            .ForMember(ctvm => ctvm.Right, opt => opt.Ignore())
+            .AfterMap((ct, ctvm, ctx) => ctvm.Right = ctx.Mapper.Map<IAdaptivityTriggerViewModel>(ct.Right))
+            .ReverseMap()
+            .ForMember(ct => ct.Left, opt => opt.Ignore())
+            .AfterMap((ctvm, ct, ctx) => ct.Left = ctx.Mapper.Map<IAdaptivityTrigger>(ctvm.Left))
+            .ForMember(ct => ct.Right, opt => opt.Ignore())
+            .AfterMap((ctvm, ct, ctx) => ct.Right = ctx.Mapper.Map<IAdaptivityTrigger>(ctvm.Right));
     }
 
     private void CreateAdaptivityActionMap()
     {
-        throw new NotImplementedException();
+        CreateMap<IAdaptivityAction, IAdaptivityActionViewModel>()
+            .ReverseMap();
+
+        CreateMap<CommentAction, IAdaptivityActionViewModel>()
+            .As<CommentActionViewModel>();
+        CreateMap<CommentActionViewModel, IAdaptivityAction>()
+            .As<CommentAction>();
+        
+        CreateMap<ElementReferenceAction, IAdaptivityActionViewModel>()
+            .As<ElementReferenceActionViewModel>();
+        CreateMap<ElementReferenceActionViewModel, IAdaptivityAction>()
+            .As<ElementReferenceAction>();
+        
+        CreateMap<ContentReferenceAction, IAdaptivityActionViewModel>()
+            .As<ContentReferenceActionViewModel>();
+        CreateMap<ContentReferenceActionViewModel, IAdaptivityAction>()
+            .As<ContentReferenceAction>();
+
+        CreateMap<CommentAction, CommentActionViewModel>()
+            .ReverseMap();
+        CreateMap<ElementReferenceAction, ElementReferenceActionViewModel>()
+            .ReverseMap();
+        CreateMap<ContentReferenceAction, ContentReferenceActionViewModel>()
+            .ForMember(crvm => crvm.Content, opt => opt.Ignore())
+            .AfterMap((cr, crvm, ctx) => crvm.Content = ctx.Mapper.Map<ILearningContentViewModel>(cr.Content))
+            .ReverseMap()
+            .ForMember(cr => cr.Content, opt => opt.Ignore())
+            .AfterMap((crvm, cr, ctx) => cr.Content = ctx.Mapper.Map<ILearningContent>(crvm.Content));
+
     }
 
     private void CreateAdaptivityQuestionMap()

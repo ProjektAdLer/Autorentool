@@ -1,11 +1,14 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -469,9 +472,46 @@ public class ViewModelEntityMappingProfileUt
         systemUnderTest.Map(timeTrigger, timeTriggerVm);
         systemUnderTest.Map(compositeTrigger, compositeTriggerVm);
         
-        Assert.That(correctnessTriggerVm.ExpectedAnswer, Is.EqualTo(AnswerResult.Incorrect));
-        Assert.That(timeTriggerVm.Expected, Is.EqualTo(123));
-        Assert.That(compositeTriggerVm.Condition, Is.EqualTo(ConditionEnum.Or));
+        Assert.Multiple(() =>
+        {
+            Assert.That(correctnessTriggerVm.ExpectedAnswer, Is.EqualTo(AnswerResult.Incorrect));
+            Assert.That(timeTriggerVm.Expected, Is.EqualTo(123));
+            Assert.That(compositeTriggerVm.Condition, Is.EqualTo(ConditionEnum.Or));
+        });
+    }
+
+    [Test]
+    public void AdaptivityAction_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var commentActionVm = ViewModelProvider.GetCommentAction();
+        var elementReferenceActionVm = ViewModelProvider.GetElementReferenceAction();
+        var contentReferenceActionVm = ViewModelProvider.GetContentReferenceAction();
+        
+        var commentAction = systemUnderTest.Map<CommentAction>(commentActionVm);
+        var elementReferenceAction = systemUnderTest.Map<ElementReferenceAction>(elementReferenceActionVm);
+        var contentReferenceAction = systemUnderTest.Map<ContentReferenceAction>(contentReferenceActionVm);
+        
+        commentAction.Comment = "another comment";
+        elementReferenceAction.ElementId = Guid.NewGuid();
+        contentReferenceAction.Content = new LinkContent("a name", "a link");
+        
+        systemUnderTest.Map(commentAction, commentActionVm);
+        systemUnderTest.Map(elementReferenceAction, elementReferenceActionVm);
+        systemUnderTest.Map(contentReferenceAction, contentReferenceActionVm);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(commentActionVm.Comment, Is.EqualTo("another comment"));
+            Assert.That(elementReferenceActionVm.ElementId, Is.EqualTo(elementReferenceAction.ElementId));
+            Assert.That(contentReferenceActionVm.Content, Is.TypeOf<LinkContentViewModel>());
+        });
+        var linkContentVm = (LinkContentViewModel) contentReferenceActionVm.Content;
+        Assert.Multiple(() =>
+        {
+            Assert.That(linkContentVm.Name, Is.EqualTo("a name"));
+            Assert.That(linkContentVm.Link, Is.EqualTo("a link"));
+        });
     }
 
     private static FileContent GetTestableContent()

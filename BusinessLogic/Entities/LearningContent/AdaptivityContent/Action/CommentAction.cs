@@ -6,6 +6,14 @@ public class CommentAction : IAdaptivityAction
     {
         Comment = comment;
     }
+    
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private CommentAction()
+    {
+        Comment = "";
+    }
 
     public string Comment { get; set; }
 }
