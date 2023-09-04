@@ -4,7 +4,8 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components
 @using Presentation.PresentationLogic.LearningContent
-<MudMenu Class="p-1" ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
+
+<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start">
@@ -22,7 +23,7 @@
 
                 </MudCardContent>
             </section>
-            <MudButton Style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: transparent;"
+            <MudButton Class="cursor-grab" Style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: transparent;"
                        OnClick="() => OnClicked.InvokeAsync(LearningElement)"/>
         </MudCard>
     </ActivatorContent>
@@ -34,7 +35,7 @@
 </MudMenu>
 
 @code {
-
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
 
