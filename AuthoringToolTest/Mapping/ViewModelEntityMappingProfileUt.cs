@@ -1,6 +1,7 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
@@ -512,6 +513,17 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(linkContentVm.Name, Is.EqualTo("a name"));
             Assert.That(linkContentVm.Link, Is.EqualTo("a link"));
         });
+    }
+
+    [Test]
+    public void AdaptivityRule_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var ruleVm = ViewModelProvider.GetRule();
+        
+        var rule = systemUnderTest.Map<AdaptivityRule>(ruleVm);
+        
+        
     }
 
     private static FileContent GetTestableContent()

@@ -1,7 +1,9 @@
 ﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -113,13 +115,14 @@ public static class ViewModelProvider
     {
         return new CorrectnessTriggerViewModel(result);
     }
-    
+
     public static TimeTriggerViewModel GetTimeTrigger(int time = 0, TimeFrameType timeFrameType = TimeFrameType.Until)
     {
         return new TimeTriggerViewModel(time, timeFrameType);
     }
-    
-    public static CompositeTriggerViewModel GetCompositeTrigger(ConditionEnum type = ConditionEnum.And, IAdaptivityTriggerViewModel? leftSide = null, IAdaptivityTriggerViewModel? rightSide = null)
+
+    public static CompositeTriggerViewModel GetCompositeTrigger(ConditionEnum type = ConditionEnum.And,
+        IAdaptivityTriggerViewModel? leftSide = null, IAdaptivityTriggerViewModel? rightSide = null)
     {
         leftSide ??= GetCorrectnessTrigger();
         rightSide ??= GetTimeTrigger();
@@ -135,9 +138,27 @@ public static class ViewModelProvider
     {
         return new ElementReferenceActionViewModel(Guid.NewGuid());
     }
-    
+
     public static ContentReferenceActionViewModel GetContentReferenceAction()
     {
         return new ContentReferenceActionViewModel(GetFileContent());
+    }
+
+    public static AdaptivityRuleViewModel GetRule()
+    {
+        return new AdaptivityRuleViewModel(GetMultipleChoiceSingleResponseQuestion(), GetCorrectnessTrigger(),
+            GetCommentAction());
+    }
+
+    public static ChoiceViewModel GetChoice()
+    {
+        return new ChoiceViewModel("a choice");
+    }
+
+    private static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
+    {
+        var choiceViewModels = new[] { GetChoice() };
+        return new MultipleChoiceSingleResponseQuestionViewModel(1, choiceViewModels, "question text",
+            choiceViewModels.First(), QuestionDifficulty.Medium);
     }
 }

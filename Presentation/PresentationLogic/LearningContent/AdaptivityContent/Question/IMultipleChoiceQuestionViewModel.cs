@@ -8,14 +8,14 @@ public interface IMultipleChoiceQuestionViewModel : IAdaptivityQuestionViewModel
     /// <summary>
     /// Choices for the question to pick response from.
     /// </summary>
-    public IEnumerable<Choice> Choices { get; set; }
+    public IEnumerable<ChoiceViewModel> Choices { get; set; }
 
     /// <summary>
     /// Correct choices from <see cref="Choices"/>.
     /// May be single item for <see cref="MultipleChoiceSingleResponseQuestionViewModel"/>
     /// or multiple items for <see cref="MultipleChoiceMultipleResponseQuestionViewModel"/>.
     /// </summary>
-    public IEnumerable<Choice> CorrectChoices { get; }
+    public IEnumerable<ChoiceViewModel> CorrectChoices { get; }
 
     /// <summary>
     /// The main question text of the question.

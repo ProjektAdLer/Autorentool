@@ -7,8 +7,8 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Quest
 /// </summary>
 public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQuestionViewModel
 {
-    public MultipleChoiceMultipleResponseQuestionViewModel(int expectedCompletionTime, IEnumerable<Choice> choices,
-        IEnumerable<Choice> correctChoices, string text, QuestionDifficulty difficulty)
+    public MultipleChoiceMultipleResponseQuestionViewModel(int expectedCompletionTime, IEnumerable<ChoiceViewModel> choices,
+        IEnumerable<ChoiceViewModel> correctChoices, string text, QuestionDifficulty difficulty)
     {
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
@@ -17,9 +17,21 @@ public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQu
         Difficulty = difficulty;
     }
 
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private MultipleChoiceMultipleResponseQuestionViewModel()
+    {
+        ExpectedCompletionTime = 0;
+        Choices = null!;
+        CorrectChoices = null!;
+        Text = null!;
+        Difficulty = QuestionDifficulty.Easy;
+    }
+
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
-    public IEnumerable<Choice> Choices { get; set; }
-    public IEnumerable<Choice> CorrectChoices { get; set; }
+    public IEnumerable<ChoiceViewModel> Choices { get; set; }
+    public IEnumerable<ChoiceViewModel> CorrectChoices { get; set; }
     public string Text { get; set; }
 }

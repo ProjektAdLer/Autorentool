@@ -16,6 +16,18 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         Text = text;
         Difficulty = difficulty;
     }
+    
+    /// <summary>
+    /// Automapper constructor. DO NOT USE.
+    /// </summary>
+    private MultipleChoiceMultipleResponseQuestion()
+    {
+        ExpectedCompletionTime = 0;
+        Choices = null!;
+        CorrectChoices = null!;
+        Text = null!;
+        Difficulty = QuestionDifficulty.Easy;
+    }
 
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }

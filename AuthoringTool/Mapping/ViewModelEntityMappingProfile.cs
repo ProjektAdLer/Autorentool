@@ -2,14 +2,18 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -430,46 +434,53 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateAdaptivityTriggerMap();
         CreateAdaptivityActionMap();
-        // CreateAdaptivityQuestionMap();
-        // CreateAdaptivityRuleMap();
-        // CreateAdaptivityTaskMap();
-        // CreateAdaptivityContentMap();
+        CreateAdaptivityQuestionMap();
+        CreateChoiceMap();
+        CreateAdaptivityRuleMap();
+        CreateAdaptivityTaskMap();
+        CreateAdaptivityContentMap();
     }
 
     private void CreateAdaptivityTriggerMap()
     {
         CreateMap<IAdaptivityTrigger, IAdaptivityTriggerViewModel>()
             .ReverseMap();
-        
+
         CreateMap<CorrectnessTrigger, IAdaptivityTriggerViewModel>()
             .As<CorrectnessTriggerViewModel>();
         CreateMap<CorrectnessTriggerViewModel, IAdaptivityTrigger>()
             .As<CorrectnessTrigger>();
-        
+
         CreateMap<TimeTrigger, IAdaptivityTriggerViewModel>()
             .As<TimeTriggerViewModel>();
         CreateMap<TimeTriggerViewModel, IAdaptivityTrigger>()
             .As<TimeTrigger>();
-        
+
         CreateMap<CompositeTrigger, IAdaptivityTriggerViewModel>()
             .As<CompositeTriggerViewModel>();
         CreateMap<CompositeTriggerViewModel, IAdaptivityTrigger>()
             .As<CompositeTrigger>();
 
         CreateMap<CorrectnessTrigger, CorrectnessTriggerViewModel>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTriggerViewModel, IAdaptivityTrigger>();
         CreateMap<TimeTrigger, TimeTriggerViewModel>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTriggerViewModel, IAdaptivityTrigger>();
         CreateMap<CompositeTrigger, CompositeTriggerViewModel>()
             .ForMember(ctvm => ctvm.Left, opt => opt.Ignore())
             .AfterMap((ct, ctvm, ctx) => ctvm.Left = ctx.Mapper.Map<IAdaptivityTriggerViewModel>(ct.Left))
             .ForMember(ctvm => ctvm.Right, opt => opt.Ignore())
             .AfterMap((ct, ctvm, ctx) => ctvm.Right = ctx.Mapper.Map<IAdaptivityTriggerViewModel>(ct.Right))
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerViewModel>()
             .ReverseMap()
             .ForMember(ct => ct.Left, opt => opt.Ignore())
             .AfterMap((ctvm, ct, ctx) => ct.Left = ctx.Mapper.Map<IAdaptivityTrigger>(ctvm.Left))
             .ForMember(ct => ct.Right, opt => opt.Ignore())
-            .AfterMap((ctvm, ct, ctx) => ct.Right = ctx.Mapper.Map<IAdaptivityTrigger>(ctvm.Right));
+            .AfterMap((ctvm, ct, ctx) => ct.Right = ctx.Mapper.Map<IAdaptivityTrigger>(ctvm.Right))
+            .IncludeBase<IAdaptivityTriggerViewModel, IAdaptivityTrigger>();
     }
 
     private void CreateAdaptivityActionMap()
@@ -481,47 +492,111 @@ public class ViewModelEntityMappingProfile : Profile
             .As<CommentActionViewModel>();
         CreateMap<CommentActionViewModel, IAdaptivityAction>()
             .As<CommentAction>();
-        
+
         CreateMap<ElementReferenceAction, IAdaptivityActionViewModel>()
             .As<ElementReferenceActionViewModel>();
         CreateMap<ElementReferenceActionViewModel, IAdaptivityAction>()
             .As<ElementReferenceAction>();
-        
+
         CreateMap<ContentReferenceAction, IAdaptivityActionViewModel>()
             .As<ContentReferenceActionViewModel>();
         CreateMap<ContentReferenceActionViewModel, IAdaptivityAction>()
             .As<ContentReferenceAction>();
 
         CreateMap<CommentAction, CommentActionViewModel>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityActionViewModel, IAdaptivityAction>();
         CreateMap<ElementReferenceAction, ElementReferenceActionViewModel>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityActionViewModel, IAdaptivityAction>();
         CreateMap<ContentReferenceAction, ContentReferenceActionViewModel>()
             .ForMember(crvm => crvm.Content, opt => opt.Ignore())
             .AfterMap((cr, crvm, ctx) => crvm.Content = ctx.Mapper.Map<ILearningContentViewModel>(cr.Content))
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionViewModel>()
             .ReverseMap()
             .ForMember(cr => cr.Content, opt => opt.Ignore())
-            .AfterMap((crvm, cr, ctx) => cr.Content = ctx.Mapper.Map<ILearningContent>(crvm.Content));
-
+            .AfterMap((crvm, cr, ctx) => cr.Content = ctx.Mapper.Map<ILearningContent>(crvm.Content))
+            .IncludeBase<IAdaptivityActionViewModel, IAdaptivityAction>();
     }
 
     private void CreateAdaptivityQuestionMap()
     {
-        throw new NotImplementedException();
+        CreateMap<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
+            .ReverseMap();
+        CreateMap<IMultipleChoiceQuestion, IMultipleChoiceQuestion>()
+            .ReverseMap();
+
+        CreateMap<MultipleChoiceSingleResponseQuestion, IAdaptivityQuestionViewModel>()
+            .As<MultipleChoiceSingleResponseQuestionViewModel>();
+        CreateMap<MultipleChoiceSingleResponseQuestionViewModel, IAdaptivityQuestion>()
+            .As<MultipleChoiceSingleResponseQuestion>();
+
+        CreateMap<MultipleChoiceMultipleResponseQuestion, IAdaptivityQuestionViewModel>()
+            .As<MultipleChoiceMultipleResponseQuestionViewModel>();
+        CreateMap<MultipleChoiceMultipleResponseQuestionViewModel, IAdaptivityQuestion>()
+            .As<MultipleChoiceMultipleResponseQuestion>();
+
+        CreateMap<MultipleChoiceSingleResponseQuestion, MultipleChoiceSingleResponseQuestionViewModel>()
+            .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>();
+        CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
+            .ReverseMap();
+    }
+
+    private void CreateChoiceMap()
+    {
+        CreateMap<Choice, ChoiceViewModel>()
+            .ReverseMap();
     }
 
     private void CreateAdaptivityRuleMap()
     {
-        throw new NotImplementedException();
+        CreateMap<IAdaptivityRule, IAdaptivityRuleViewModel>()
+            .ReverseMap();
+
+        CreateMap<AdaptivityRule, IAdaptivityRuleViewModel>()
+            .As<AdaptivityRuleViewModel>();
+        CreateMap<AdaptivityRuleViewModel, IAdaptivityRule>()
+            .As<AdaptivityRule>();
+
+        CreateMap<AdaptivityRule, AdaptivityRuleViewModel>()
+            .IncludeBase<IAdaptivityRule, IAdaptivityRuleViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityRuleViewModel, IAdaptivityRule>();
     }
 
     private void CreateAdaptivityTaskMap()
     {
-        throw new NotImplementedException();
+        CreateMap<IAdaptivityTask, IAdaptivityTaskViewModel>()
+            .ReverseMap();
+
+        CreateMap<AdaptivityTask, IAdaptivityTaskViewModel>()
+            .As<AdaptivityTaskViewModel>();
+        CreateMap<AdaptivityTaskViewModel, IAdaptivityTask>()
+            .As<AdaptivityTask>();
+
+        CreateMap<AdaptivityTask, AdaptivityTaskViewModel>()
+            .IncludeBase<IAdaptivityTask, IAdaptivityTaskViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTaskViewModel, IAdaptivityTask>();
     }
 
     private void CreateAdaptivityContentMap()
     {
-        throw new NotImplementedException();
+        CreateMap<IAdaptivityContent, IAdaptivityContentViewModel>()
+            .ReverseMap();
+        
+        CreateMap<AdaptivityContent, IAdaptivityContentViewModel>()
+            .As<AdaptivityContentViewModel>();
+        CreateMap<AdaptivityContentViewModel, IAdaptivityContent>()
+            .As<AdaptivityContent>();
+
+        CreateMap<AdaptivityContent, AdaptivityContentViewModel>()
+            .IncludeBase<IAdaptivityContent, IAdaptivityContentViewModel>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityContentViewModel, IAdaptivityContent>();
     }
 }
