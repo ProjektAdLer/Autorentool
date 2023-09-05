@@ -9,6 +9,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using ElectronWrapper;
@@ -76,8 +77,7 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
-            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()));
+            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()), worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -87,7 +87,7 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, false, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
         var spaceVm = worldVm.LearningSpaces.First();
@@ -134,9 +134,7 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
-            spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()),
-            elementCommandFactory: new ElementCommandFactory(new NullLoggerFactory()));
+            elementCommandFactory: new ElementCommandFactory(new NullLoggerFactory()), spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()), worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
@@ -146,7 +144,7 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, false, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
@@ -206,7 +204,9 @@ public class CachingMapperIt
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
-        IBatchCommandFactory? batchCommandFactory = null)
+        IBatchCommandFactory? batchCommandFactory = null,
+        IAdvancedLearningSpaceCommandFactory? advancedSpaceCommandFactory = null
+        )
     {
         configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -222,6 +222,7 @@ public class CachingMapperIt
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
+        advancedSpaceCommandFactory ??= Substitute.For<IAdvancedLearningSpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
@@ -230,6 +231,6 @@ public class CachingMapperIt
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
             shellWrapper,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+            spaceCommandFactory, advancedSpaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
     }
 }

@@ -12,16 +12,16 @@ public class AdvancedLearningSpaceLayout : IAdvancedLearningSpaceLayout
     private AdvancedLearningSpaceLayout()
     {
         LearningElements = new Dictionary<int, ILearningElement>();
-        AdvancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlot>();
+        AdvancedLearningElementSlots = new Dictionary<int, Coordinate>();
     }
 
-    public AdvancedLearningSpaceLayout(IDictionary<int, ILearningElement> learningElements, IDictionary<int, IAdvancedLearningElementSlot> advancedLearningElementSlots)
+    public AdvancedLearningSpaceLayout(IDictionary<int, ILearningElement>? learningElements = null, IDictionary<int, Coordinate>? advancedLearningElementSlots = null)
     {
-        LearningElements = learningElements;
-        AdvancedLearningElementSlots = advancedLearningElementSlots;
+        LearningElements = learningElements ?? new Dictionary<int, ILearningElement>();
+        AdvancedLearningElementSlots = advancedLearningElementSlots ?? new Dictionary<int, Coordinate>();
     }
 
-    public IDictionary<int, IAdvancedLearningElementSlot> AdvancedLearningElementSlots { get; set; }
+    public IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; set; }
 
     public IDictionary<int, ILearningElement> LearningElements { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningElements.Values;
@@ -46,14 +46,14 @@ public class AdvancedLearningSpaceLayout : IAdvancedLearningSpaceLayout
     private record AdvancedLearningSpaceLayoutMemento : IMemento
     {
         internal AdvancedLearningSpaceLayoutMemento(IDictionary<int, ILearningElement> learningElements,
-            IDictionary<int, IAdvancedLearningElementSlot> advancedLearningElementSlots)
+            IDictionary<int, Coordinate> advancedLearningElementSlots)
         {
             //shallow copy dictionary
             LearningElements = new Dictionary<int, ILearningElement>(learningElements);
-            AdvancedLearningElementSlots =  new Dictionary<int, IAdvancedLearningElementSlot>(advancedLearningElementSlots);
+            AdvancedLearningElementSlots = new Dictionary<int, Coordinate>(advancedLearningElementSlots);
         }
 
         internal IDictionary<int, ILearningElement> LearningElements { get; }
-        internal IDictionary<int, IAdvancedLearningElementSlot> AdvancedLearningElementSlots { get; } 
+        internal IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; } 
     }
 }

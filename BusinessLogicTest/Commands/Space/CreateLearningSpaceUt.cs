@@ -21,12 +21,11 @@ public class CreateLearningSpaceUt
         var positionX = 1;
         var positionY = 2;
         var topic = new BusinessLogic.Entities.Topic("topic1");
-        var advancedMode = false;
         world.Topics.Add(topic);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, theme, advancedMode, positionX,
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, theme, positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -83,7 +82,7 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, false, positionX,
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -108,7 +107,7 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, false, positionX,
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, Theme.Campus, positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);

@@ -37,7 +37,7 @@ public class SpaceCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme, advancedMode,
+        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme,
             positionX, positionY, topic, mappingAction);
 
         // Assert

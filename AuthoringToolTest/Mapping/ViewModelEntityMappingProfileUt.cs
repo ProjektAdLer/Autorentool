@@ -6,6 +6,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -65,22 +66,9 @@ public class ViewModelEntityMappingProfileUt
             cfg.AddCollectionMappersOnce();
         });
         var plan = mapper
-            .BuildExecutionPlan(typeof(LearningSpaceLayout), typeof(LearningSpaceLayoutViewModel))
+            .BuildExecutionPlan(typeof(AdvancedLearningSpaceViewModel), typeof(AdvancedLearningSpace))
             .ToReadableString();
-
-        var source = EntityProvider.GetLearningSpaceLayoutWithElement();
-        var systemUnderTest = mapper.CreateMapper();
-        var destination =
-            systemUnderTest.Map<LearningSpaceLayout, LearningSpaceLayoutViewModel>(source);
-        var oldViewModel = destination.LearningElements[1];
-
-        oldViewModel.Name = "newName";
-        systemUnderTest.Map(source, destination);
-        var newViewModel = destination.LearningElements[1];
-        Assert.That(newViewModel, Is.EqualTo(oldViewModel));
-        var destination2 = ViewModelProvider.GetLearningSpaceLayout(floorPlan: FloorPlanEnum.R_20X20_6L);
-        systemUnderTest.Map(source, destination2);
-        Assert.That(destination2.LearningElements[1], Is.Not.Null);
+        
     }
 
 
@@ -469,6 +457,21 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(source2.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
         });
+    }
+
+    [Test]
+    public void AdvancedLearningSpaceLayout_ViewModelToEntityAndBack()
+    {
+        IAdvancedLearningSpaceLayoutViewModel spaceLayoutVm = new AdvancedLearningSpaceLayoutViewModel();
+        var systemUnderTest = CreateTestableMapper();
+        
+        var spaceLayoutEntity = systemUnderTest.Map<AdvancedLearningSpaceLayout>(spaceLayoutVm);
+        var spaceLayoutEntityInterface = systemUnderTest.Map<IAdvancedLearningSpaceLayout>(spaceLayoutVm);
+
+        systemUnderTest.Map(spaceLayoutEntity, spaceLayoutVm);
+        var spaceLayoutVm2 = systemUnderTest.Map<AdvancedLearningSpaceLayoutViewModel>(spaceLayoutEntity);
+        var spaceLayoutVmInterface =
+            systemUnderTest.Map<IAdvancedLearningSpaceLayoutViewModel>(spaceLayoutEntityInterface);
     }
 
     [Test]

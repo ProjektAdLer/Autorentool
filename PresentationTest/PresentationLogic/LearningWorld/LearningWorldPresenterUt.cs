@@ -338,7 +338,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus, false);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<int>(), Arg.Any<Theme>(), false, Arg.Any<double>(),
+            Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(),
             Arg.Any<double>(), Arg.Any<TopicViewModel>());
     }
 

@@ -70,21 +70,36 @@ public class ViewModelEntityMappingProfile : Profile
 
     private void CreateAdvancedLearningSpaceLayoutMap()
     {
-        CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+        CreateMap<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
-            .ForMember(x => x.LearningElements, opt => opt.Ignore());
-            //.AfterMap(MapSpaceLayoutElements);
-        CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
+            .ReverseMap()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
-        CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
-            .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
-            .ReverseMap()
-            .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>();
+        CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore());
+
+        CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
+            .As<AdvancedLearningSpaceLayoutViewModel>();
         CreateMap<AdvancedLearningSpaceLayoutViewModel, IAdvancedLearningSpaceLayout>()
             .As<AdvancedLearningSpaceLayout>();
+        
+        CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+            /// your config here!
+            .ForMember(x => x.UsedIndices, opt => opt.Ignore()) 
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .IncludeBase<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
+            .ReverseMap()
+            /// your config here! aber andersrum
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, IAdvancedLearningSpaceLayout>()
+            ;
     }
 
     private static void MapSpaceLayoutElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
@@ -146,22 +161,8 @@ public class ViewModelEntityMappingProfile : Profile
         //We must tell the automapper what class to use when it has to map from a class to an interface
         CreateMap<LearningElement, ILearningElementViewModel>()
             .As<LearningElementViewModel>();
-        CreateMap<LearningSpace, ILearningSpaceViewModel>()
-            .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
-
-        CreateMap<LearningSpaceViewModel, ILearningSpace>()
-            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
-            .As<LearningSpace>();
-        CreateMap<ILearningElementViewModel, ILearningElement>()
-            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
-            .As<LearningElement>();
-        CreateMap<ILearningSpaceViewModel, ILearningSpace>()
-            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
-            .As<LearningSpace>();
-        CreateMap<ILearningSpace, ILearningSpaceViewModel>()
-            .As<LearningSpaceViewModel>();
 
         CreateMap<LearningWorld, ILearningWorldViewModel>()
             .EqualityComparison((e, intf) => e.Id.Equals(intf.Id))
@@ -235,35 +236,28 @@ public class ViewModelEntityMappingProfile : Profile
                     element.Parent = d;
                 }
             });
-        CreateMap<ILearningSpaceViewModel, LearningSpace>()
-            .IncludeBase<IObjectInPathWayViewModel, IObjectInPathWay>()
-            .IncludeBase<ILearningSpaceViewModel, ILearningSpace>()
-            .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+        
+        CreateMap<ILearningSpace, ILearningSpaceViewModel>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .AfterMap((_, d) =>
-            {
-                foreach (var element in d.ContainedLearningElements)
-                {
-                    element.Parent = d;
-                }
-            });
-        CreateMap<ILearningSpace, LearningSpaceViewModel>()
-            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
-            .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
-            .EqualityComparison((x, y) => x.Id == y.Id)
-            .AfterMap((_, d) =>
-            {
-                foreach (var element in d.ContainedLearningElements)
-                {
-                    element.Parent = d;
-                }
-            });
+            .ReverseMap()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        
+        CreateMap<LearningSpace, ILearningSpaceViewModel>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningSpaceViewModel>();
+        CreateMap<LearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningSpace>();
+        
+        CreateMap<AdvancedLearningSpace, ILearningSpaceViewModel>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<AdvancedLearningSpaceViewModel>();
+        CreateMap<AdvancedLearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<AdvancedLearningSpace>();
+        
     }
 
     private void CreateAdvancedLearningSpaceMap()

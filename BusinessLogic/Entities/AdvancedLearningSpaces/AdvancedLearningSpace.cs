@@ -20,8 +20,7 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
         RequiredPoints = 0;
         UnsavedChanges = false;
         //null warning override okay here as automapper must set this value after construction - n.stich
-        AdvancedLearningSpaceLayout =  new AdvancedLearningSpaceLayout(new Dictionary<int, ILearningElement>(),
-                                          new Dictionary<int, IAdvancedLearningElementSlot>());
+        AdvancedLearningSpaceLayout =  new AdvancedLearningSpaceLayout();
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
         AssignedTopic = null;
@@ -44,8 +43,7 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
         Theme = theme;
         UnsavedChanges = true;
         AdvancedLearningSpaceLayout = advancedLearningSpaceLayout
-                                      ?? new AdvancedLearningSpaceLayout(new Dictionary<int, ILearningElement>(),
-                                          new Dictionary<int, IAdvancedLearningElementSlot>());
+                                      ?? new AdvancedLearningSpaceLayout();
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         AssignedTopic = assignedTopic;

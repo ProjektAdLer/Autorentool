@@ -147,9 +147,11 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
-                var value = FormModel.GetType().GetProperty(ci.Arg<string>())?.GetValue(FormModel);
+                var propName = ci.Arg<string>();
+                var value = FormModel.GetType().GetProperty(propName)?.GetValue(FormModel);
                 var valid = value switch
                 {
+                    bool b when propName == nameof(LearningSpaceFormModel.AdvancedMode) => !b,
                     string str => str == Expected,
                     int i => i == 123,
                     //TODO: once we have more themes, change to a different theme and test that
