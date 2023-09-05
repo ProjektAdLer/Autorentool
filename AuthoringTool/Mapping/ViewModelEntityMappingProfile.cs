@@ -28,7 +28,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateWorkspaceMap();
         CreateLearningWorldMap();
         CreateLearningSpaceMap();
-        CreateAdvancedSpaceMap();
+        CreateAdvancedLearningSpaceMap();
         CreateLearningElementMap();
         CreateLearningContentMap();
         CreatePathwayMaps();
@@ -266,7 +266,7 @@ public class ViewModelEntityMappingProfile : Profile
             });
     }
 
-    private void CreateAdvancedSpaceMap()
+    private void CreateAdvancedLearningSpaceMap()
     {
         CreateMap<AdvancedLearningSpace, AdvancedLearningSpaceViewModel>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
@@ -274,6 +274,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.LearningSpaceLayout, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
@@ -291,6 +292,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.LearningSpaceLayout, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var element in d.ContainedLearningElements)

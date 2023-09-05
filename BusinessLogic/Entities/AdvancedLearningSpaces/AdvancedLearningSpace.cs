@@ -11,7 +11,8 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
     [UsedImplicitly]
     private AdvancedLearningSpace()
     {
-        LearningSpaceLayout = new LearningSpaceLayout( new Dictionary<int, ILearningElement>(), FloorPlanEnum.L_32X31_10L);
+        // LearningSpaceLayout = new LearningSpaceLayout( new Dictionary<int, ILearningElement>(), FloorPlanEnum.L_32X31_10L);
+        LearningSpaceLayout = null!;
         Id = Guid.NewGuid();
         Name = "";
         Description = "";
@@ -19,7 +20,8 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
         RequiredPoints = 0;
         UnsavedChanges = false;
         //null warning override okay here as automapper must set this value after construction - n.stich
-        AdvancedLearningSpaceLayout = null!;
+        AdvancedLearningSpaceLayout =  new AdvancedLearningSpaceLayout(new Dictionary<int, ILearningElement>(),
+                                          new Dictionary<int, IAdvancedLearningElementSlot>());
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
         AssignedTopic = null;
@@ -32,7 +34,8 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null,
         Topic? assignedTopic = null)
     {
-        LearningSpaceLayout = new LearningSpaceLayout( new Dictionary<int, ILearningElement>(), FloorPlanEnum.L_32X31_10L);
+        // LearningSpaceLayout = new LearningSpaceLayout( new Dictionary<int, ILearningElement>(), FloorPlanEnum.L_32X31_10L);
+        LearningSpaceLayout = null!;
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
