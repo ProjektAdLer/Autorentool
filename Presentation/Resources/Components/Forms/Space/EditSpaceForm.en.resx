@@ -27,7 +27,7 @@
         <value>Goals</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Theme of learning space</value>
+        <value>Theme</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
         <value>Completion condition</value>
@@ -51,7 +51,7 @@
         <value>Required points to complete the learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme</value>
+        <value>Theme of learning space</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Required information</value>

@@ -33,9 +33,9 @@
         <value>Import learning space</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>New and-/or-connection</value>
+        <value>Create and-/or-connection</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
-        <value>New learning space</value>
+        <value>Create learning space</value>
     </data>
 </root>

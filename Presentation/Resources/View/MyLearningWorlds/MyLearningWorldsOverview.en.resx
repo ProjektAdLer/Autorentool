@@ -22,7 +22,7 @@
         <value>My learning worlds</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>New learning world</value>
+        <value>Create new learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
         <value>Import learning world</value>

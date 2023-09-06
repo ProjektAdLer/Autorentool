@@ -42,7 +42,7 @@
         <value>Grundriss</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Lernraum-Thema</value>
+        <value>Thema</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
@@ -63,7 +63,7 @@
         <value>Benötigte Punkte für das Abschließen des Lernraums</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Thema</value>
+        <value>Thema des Lernraums</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>

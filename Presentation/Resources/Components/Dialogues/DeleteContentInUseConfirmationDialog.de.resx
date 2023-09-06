@@ -25,7 +25,7 @@
         <value>Abbrechen</value>
     </data>
     <data name="Dialog.Text1" xml:space="preserve">
-        <value>Wollen Sie wirklich &lt;&lt; {0} &gt;&gt; löschen?</value>
+        <value>Wollen Sie wirklich &gt; {0} &lt; löschen?</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
         <value>Diese Datei wird momentan in den folgenden Lernelementen verwendet:</value>

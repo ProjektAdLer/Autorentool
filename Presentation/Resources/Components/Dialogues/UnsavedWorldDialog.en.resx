@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="UnsavedWorldDialog.Content.Text" xml:space="preserve">
-        <value>The learning world &lt;&lt; {0} &gt;&gt; has unsaved changes. All unsaved changes will be lost upon closing the program. Do you want to save the learning world before closing?</value>
+        <value>The learning world &gt; {0} &lt; has unsaved changes. All unsaved changes will be lost upon closing the program. Do you want to save the learning world before closing?</value>
     </data>
     <data name="UnsavedWorldDialog.Button.Cancel" xml:space="preserve">
         <value>Cancel</value>

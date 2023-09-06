@@ -22,7 +22,7 @@
         <value>Meine Lernwelten</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>Neue Lernwelt</value>
+        <value>Neue Lernwelt erstellen</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug von Philipp</value>
@@ -31,7 +31,7 @@
         <value>Erstelle Debug-Welt</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Importiere Lernwelt</value>
+        <value>Lernwelt importieren</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
         <value>IMPORT</value>
