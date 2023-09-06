@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Shared;
@@ -121,4 +122,9 @@ public static class EntityProvider
             nameof(LinkContent) => GetLinkContent() as TEntity,
             _ => throw new ArgumentOutOfRangeException()
         })!;
+
+    public static IAdaptivityAction GetContentReferenceAction()
+    {
+        return new ContentReferenceAction(GetLinkContent());
+    }
 }

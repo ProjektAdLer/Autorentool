@@ -9,17 +9,21 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
     /// <exception cref="ArgumentException">Content was <see cref="IAdaptivityContentViewModel"/>.</exception>
     public ContentReferenceActionViewModel(ILearningContentViewModel content)
     {
-        if(content is IAdaptivityContentViewModel) throw new ArgumentException("Content cannot be an adaptivity content", nameof(content));
+        if (content is IAdaptivityContentViewModel)
+            throw new ArgumentException("Content cannot be an adaptivity content", nameof(content));
         Content = content;
+        Id = Guid.NewGuid();
     }
-    
+
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
     private ContentReferenceActionViewModel()
     {
         Content = null!;
+        Id = Guid.Empty;
     }
 
     public ILearningContentViewModel Content { get; set; }
+    public Guid Id { get; private set; }
 }

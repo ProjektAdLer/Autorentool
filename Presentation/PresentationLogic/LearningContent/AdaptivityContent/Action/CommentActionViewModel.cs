@@ -5,6 +5,7 @@ public class CommentActionViewModel : IAdaptivityActionViewModel
     public CommentActionViewModel(string comment)
     {
         Comment = comment;
+        Id = Guid.NewGuid();
     }
 
     /// <summary>
@@ -13,7 +14,9 @@ public class CommentActionViewModel : IAdaptivityActionViewModel
     private CommentActionViewModel()
     {
         Comment = "";
+        Id = Guid.Empty;
     }
 
     public string Comment { get; set; }
+    public Guid Id { get; private set; }
 }

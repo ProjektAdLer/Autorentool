@@ -12,6 +12,7 @@ public class ContentReferenceAction : IAdaptivityAction
         if (content is IAdaptivityContent)
             throw new ArgumentException("Content cannot be an adaptivity content", nameof(content));
         Content = content;
+        Id = Guid.NewGuid();
     }
 
     /// <summary>
@@ -20,7 +21,9 @@ public class ContentReferenceAction : IAdaptivityAction
     private ContentReferenceAction()
     {
         Content = null!;
+        Id = Guid.Empty;
     }
-    
+
     public ILearningContent Content { get; set; }
+    public Guid Id { get; private set; }
 }

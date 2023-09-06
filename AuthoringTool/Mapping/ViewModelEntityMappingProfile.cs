@@ -486,7 +486,9 @@ public class ViewModelEntityMappingProfile : Profile
     private void CreateAdaptivityActionMap()
     {
         CreateMap<IAdaptivityAction, IAdaptivityActionViewModel>()
-            .ReverseMap();
+            .EqualityComparison((entity, vm) => entity.Id == vm.Id)
+            .ReverseMap()
+            .EqualityComparison((vm, entity) => vm.Id == entity.Id);
 
         CreateMap<CommentAction, IAdaptivityActionViewModel>()
             .As<CommentActionViewModel>();
@@ -540,7 +542,15 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<MultipleChoiceSingleResponseQuestion, MultipleChoiceSingleResponseQuestionViewModel>()
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
+            .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((entity, vm, context) =>
+                vm.CorrectChoice = vm.Choices.Single(choicevm => choicevm.Id == entity.CorrectChoice.Id))
             .ReverseMap()
+            .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((vm, entity, context) =>
+                entity.CorrectChoice = entity.Choices.Single(choicevm => choicevm.Id == vm.CorrectChoice.Id))
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>();
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
             .ReverseMap();
@@ -564,6 +574,15 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityRule, AdaptivityRuleViewModel>()
             .IncludeBase<IAdaptivityRule, IAdaptivityRuleViewModel>()
+            .ForMember(x => x.Action, cfg => cfg.Ignore())
+            .AfterMap(
+                (entity, vm, context) => vm.Action = context.Mapper.Map<IAdaptivityActionViewModel>(entity.Action))
+            .ForMember(x => x.Question, cfg => cfg.Ignore())
+            .AfterMap((entity, vm, context) =>
+                vm.Question = context.Mapper.Map<IAdaptivityQuestionViewModel>(entity.Question))
+            .ForMember(x => x.Trigger, cfg => cfg.Ignore())
+            .AfterMap((entity, vm, context) =>
+                vm.Trigger = context.Mapper.Map<IAdaptivityTriggerViewModel>(entity.Trigger))
             .ReverseMap()
             .IncludeBase<IAdaptivityRuleViewModel, IAdaptivityRule>();
     }
@@ -588,7 +607,7 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateMap<IAdaptivityContent, IAdaptivityContentViewModel>()
             .ReverseMap();
-        
+
         CreateMap<AdaptivityContent, IAdaptivityContentViewModel>()
             .As<AdaptivityContentViewModel>();
         CreateMap<AdaptivityContentViewModel, IAdaptivityContent>()

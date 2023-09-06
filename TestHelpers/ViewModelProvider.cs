@@ -144,9 +144,10 @@ public static class ViewModelProvider
         return new ContentReferenceActionViewModel(GetFileContent());
     }
 
-    public static AdaptivityRuleViewModel GetRule()
+    public static AdaptivityRuleViewModel GetRule(IAdaptivityQuestionViewModel? question = null)
     {
-        return new AdaptivityRuleViewModel(GetMultipleChoiceSingleResponseQuestion(), GetCorrectnessTrigger(),
+        return new AdaptivityRuleViewModel(question ?? GetMultipleChoiceSingleResponseQuestion(),
+            GetCorrectnessTrigger(),
             GetCommentAction());
     }
 
@@ -155,10 +156,34 @@ public static class ViewModelProvider
         return new ChoiceViewModel("a choice");
     }
 
-    private static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
+    public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
     {
         var choiceViewModels = new[] { GetChoice() };
         return new MultipleChoiceSingleResponseQuestionViewModel(1, choiceViewModels, "question text",
             choiceViewModels.First(), QuestionDifficulty.Medium);
+    }
+
+    private static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
+    {
+        var choiceViewModels = new[] { GetChoice(), GetChoice() };
+        return new MultipleChoiceMultipleResponseQuestionViewModel(1, choiceViewModels, choiceViewModels,
+            "question text", QuestionDifficulty.Hard);
+    }
+
+    private static AdaptivityTaskViewModel GetAdaptivityTask()
+    {
+        return new AdaptivityTaskViewModel(
+            new List<IAdaptivityQuestionViewModel>
+                { GetMultipleChoiceSingleResponseQuestion(), GetMultipleChoiceMultipleResponseQuestion() },
+            QuestionDifficulty.Hard);
+    }
+
+    public static IAdaptivityContentViewModel GetAdaptivityContent()
+    {
+        var task = GetAdaptivityTask();
+        var rule = GetRule(task.Questions.First());
+        return new AdaptivityContentViewModel("adaptivity name",
+            new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() },
+            new List<IAdaptivityRuleViewModel> { rule });
     }
 }
