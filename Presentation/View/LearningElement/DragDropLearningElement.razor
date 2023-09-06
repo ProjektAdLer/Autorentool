@@ -12,7 +12,7 @@
                 <MudCardContent Class="relative flex w-24 h-12 p-0">
                     <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
-                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon absolute h-3.5 w-3.5"/>
+                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
                     </div>
 
                     @{
@@ -98,7 +98,7 @@
 
     private string GetElementStyleString()
     {
-        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-solid bg-adlergreen bg-opacity-30 relative flex rounded-lg m-[-1px] hover:bg-adlerblue-300" : "relative flex rounded-lg bg-adlerbggradientto m-[-1px] hover:bg-adlerblue-300";
+        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerbggradientfrom bg-adlerblue-100 bg-opacity-30 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerbggradientto hover:bg-adlerblue-300";
     }
 
 }
