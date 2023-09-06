@@ -30,7 +30,7 @@ public class ElementModelHandler : IElementModelHandler
 
     private static IEnumerable<ElementModel> GetElementModelsForImage()
     {
-        return new List<ElementModel> {ElementModel.l_picture_painting_1, ElementModel.l_picture_painting_2};
+        return new List<ElementModel> {ElementModel.l_picture_painting_1, ElementModel.l_picture_painting_2, ElementModel.l_picture_paintingeasel_1};
     }
 
     private static IEnumerable<ElementModel> GetElementModelsForH5P()
@@ -63,15 +63,16 @@ public class ElementModelHandler : IElementModelHandler
         {
             // ElementModel.l_random => "",
             ElementModel.l_random => "CustomIcons/ElementModels/random-icon-nobg.png",
-            ElementModel.l_picture_painting_1 => "CustomIcons/ElementModels/l-bild-Wandbild-1.png",
-            ElementModel.l_picture_painting_2 => "CustomIcons/ElementModels/l-bild-Wandbild-2.png",
-            ElementModel.l_h5p_deskpc_1 => "CustomIcons/ElementModels/l-h5p-Schreibtisch-1.png",
-            ElementModel.l_h5p_slotmachine_1 => "CustomIcons/ElementModels/l-h5p-Spielautomat-1.png",
-            ElementModel.l_h5p_blackboard_1 => "CustomIcons/ElementModels/l-h5p-Tafel-1.png",
-            ElementModel.l_h5p_drawingtable_1 => "CustomIcons/ElementModels/l-h5p-Zeichenpult-1.png",
-            ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/l-text-Bücherregal-1.png",
-            ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/l-text-Bücherregal-2.png",
-            ElementModel.l_video_television_1 => "CustomIcons/ElementModels/l-video-Fernseher-1.png",
+            ElementModel.l_picture_painting_1 => "CustomIcons/ElementModels/l_image_painting_1.png",
+            ElementModel.l_picture_painting_2 => "CustomIcons/ElementModels/l_image_painting_2.png",
+            ElementModel.l_picture_paintingeasel_1 => "CustomIcons/ElementModels/l_image_paintingeasel_1.png",
+            ElementModel.l_h5p_deskpc_1 => "CustomIcons/ElementModels/l_h5p_deskpc_1.png",
+            ElementModel.l_h5p_slotmachine_1 => "CustomIcons/ElementModels/l_h5p_slotmachine_1.png",
+            ElementModel.l_h5p_blackboard_1 => "CustomIcons/ElementModels/l_h5p_blackboard_1.png",
+            ElementModel.l_h5p_drawingtable_1 => "CustomIcons/ElementModels/l_h5p_drawingtable_1.png",
+            ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/l_text_bookshelf_1.png",
+            ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/l_text_bookshelf_2.png",
+            ElementModel.l_video_television_1 => "CustomIcons/ElementModels/l_video_television_1.png",
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, null)
         };
     }
