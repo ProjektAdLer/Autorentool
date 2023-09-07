@@ -83,4 +83,7 @@
     <data name="EditElementForm.Text" xml:space="preserve">
         <value>* Required information</value>
     </data>
+    <data name="EditElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
+        <value>3D representation icon</value>
+    </data>
 </root>

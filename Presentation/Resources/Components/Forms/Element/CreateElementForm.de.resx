@@ -89,4 +89,7 @@
     <data name="CreateElementForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
     </data>
+    <data name="CreateElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
+        <value>3D-Darstellung-Icon</value>
+    </data>
 </root>
