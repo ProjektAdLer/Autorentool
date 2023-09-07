@@ -8,7 +8,6 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
 {
     public AdaptivityRuleViewModel(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger, IAdaptivityActionViewModel action)
     {
-        Question = question;
         Trigger = trigger;
         Action = action;
     }
@@ -18,12 +17,10 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
     /// </summary>
     private AdaptivityRuleViewModel()
     {
-        Question = null!;
         Trigger = null!;
         Action = null!;
     }
 
-    public IAdaptivityQuestionViewModel Question { get; set; }
     public IAdaptivityTriggerViewModel Trigger { get; set; }
     public IAdaptivityActionViewModel Action { get; set; }
 }

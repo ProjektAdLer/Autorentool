@@ -8,7 +8,7 @@ public interface IAdaptivityTaskViewModel
     /// <summary>
     /// The main questions this task contains.
     /// </summary>
-    public IEnumerable<IAdaptivityQuestionViewModel> Questions { get; set; }
+    public ICollection<IAdaptivityQuestionViewModel> Questions { get; set; }
     /// <summary>
     /// The minimum required difficulty of question required to answer to complete this task.
     /// </summary>

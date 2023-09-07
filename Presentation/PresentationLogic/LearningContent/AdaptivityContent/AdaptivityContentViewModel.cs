@@ -2,10 +2,9 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 public class AdaptivityContentViewModel : IAdaptivityContentViewModel
 {
-    public AdaptivityContentViewModel(string name, IEnumerable<IAdaptivityTaskViewModel> tasks, IEnumerable<IAdaptivityRuleViewModel> rules)
+    public AdaptivityContentViewModel(string name, ICollection<IAdaptivityTaskViewModel> tasks)
     {
         Tasks = tasks;
-        Rules = rules;
         Name = name;
     }
 
@@ -15,11 +14,9 @@ public class AdaptivityContentViewModel : IAdaptivityContentViewModel
     private AdaptivityContentViewModel()
     {
         Tasks = null!;
-        Rules = null!;
         Name = "";
     }
 
-    public IEnumerable<IAdaptivityTaskViewModel> Tasks { get; set; }
-    public IEnumerable<IAdaptivityRuleViewModel> Rules { get; set; }
+    public ICollection<IAdaptivityTaskViewModel> Tasks { get; set; }
     public string Name { get; init; }
 }

@@ -7,10 +7,6 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 public interface IAdaptivityRule
 {
     /// <summary>
-    /// The question this rule is associated with.
-    /// </summary>
-    public IAdaptivityQuestion Question { get; set; }
-    /// <summary>
     /// The trigger that activates the rule.
     /// </summary>
     public IAdaptivityTrigger Trigger { get; set; }

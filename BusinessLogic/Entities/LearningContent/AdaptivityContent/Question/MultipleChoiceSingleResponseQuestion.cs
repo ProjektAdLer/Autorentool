@@ -7,13 +7,14 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
 /// </summary>
 public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
 {
-    public MultipleChoiceSingleResponseQuestion(int expectedCompletionTime, IEnumerable<Choice> choices, string text, Choice correctChoice, QuestionDifficulty difficulty)
+    public MultipleChoiceSingleResponseQuestion(int expectedCompletionTime, ICollection<Choice> choices, string text, Choice correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRule> rules)
     {
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         Text = text;
         CorrectChoice = correctChoice;
         Difficulty = difficulty;
+        Rules = rules;
     }
 
     /// <summary>
@@ -26,12 +27,14 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
         Text = null!;
         CorrectChoice = null!;
         Difficulty = QuestionDifficulty.Easy;
+        Rules = null!;
     }
     
     public Choice CorrectChoice { get; set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
-    public IEnumerable<Choice> Choices { get; set; }
-    public IEnumerable<Choice> CorrectChoices => new List<Choice> { CorrectChoice };
+    public ICollection<IAdaptivityRule> Rules { get; set; }
+    public ICollection<Choice> Choices { get; set; }
+    public ICollection<Choice> CorrectChoices => new List<Choice> { CorrectChoice };
     public string Text { get; set; }
 }

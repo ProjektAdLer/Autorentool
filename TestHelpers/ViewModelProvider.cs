@@ -158,16 +158,16 @@ public static class ViewModelProvider
 
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
     {
-        var choiceViewModels = new[] { GetChoice() };
-        return new MultipleChoiceSingleResponseQuestionViewModel(1, choiceViewModels, "question text",
-            choiceViewModels.First(), QuestionDifficulty.Medium);
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice() };
+        return new MultipleChoiceSingleResponseQuestionViewModel(1, "question text",
+            choiceViewModels.First(), QuestionDifficulty.Medium, choiceViewModels);
     }
 
     private static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
     {
-        var choiceViewModels = new[] { GetChoice(), GetChoice() };
-        return new MultipleChoiceMultipleResponseQuestionViewModel(1, choiceViewModels, choiceViewModels,
-            "question text", QuestionDifficulty.Hard);
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice(), GetChoice() };
+        return new MultipleChoiceMultipleResponseQuestionViewModel(1, "question text", QuestionDifficulty.Hard,
+            choiceViewModels, choiceViewModels);
     }
 
     private static AdaptivityTaskViewModel GetAdaptivityTask()
@@ -183,7 +183,6 @@ public static class ViewModelProvider
         var task = GetAdaptivityTask();
         var rule = GetRule(task.Questions.First());
         return new AdaptivityContentViewModel("adaptivity name",
-            new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() },
-            new List<IAdaptivityRuleViewModel> { rule });
+            new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
     }
 }

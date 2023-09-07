@@ -184,8 +184,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.LearningContent, opt => opt.Ignore())
-            .AfterMap((entity, vm, context) =>
-                vm.LearningContent = context.Mapper.Map<ILearningContentViewModel>(entity.LearningContent))
+            .AfterMap(ElementContentAfterMap)
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
@@ -197,6 +196,18 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore());
+    }
+
+    private void ElementContentAfterMap(LearningElement entity, LearningElementViewModel vm, ResolutionContext context)
+    {
+        try
+        {
+            context.Mapper.Map(entity.LearningContent, vm.LearningContent);
+        }
+        catch
+        {
+            vm.LearningContent = context.Mapper.Map<ILearningContentViewModel>(entity.LearningContent);
+        }
     }
 
     private void CreateLearningSpaceMap()
@@ -577,9 +588,6 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.Action, cfg => cfg.Ignore())
             .AfterMap(
                 (entity, vm, context) => vm.Action = context.Mapper.Map<IAdaptivityActionViewModel>(entity.Action))
-            .ForMember(x => x.Question, cfg => cfg.Ignore())
-            .AfterMap((entity, vm, context) =>
-                vm.Question = context.Mapper.Map<IAdaptivityQuestionViewModel>(entity.Question))
             .ForMember(x => x.Trigger, cfg => cfg.Ignore())
             .AfterMap((entity, vm, context) =>
                 vm.Trigger = context.Mapper.Map<IAdaptivityTriggerViewModel>(entity.Trigger))
@@ -599,7 +607,9 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityTask, AdaptivityTaskViewModel>()
             .IncludeBase<IAdaptivityTask, IAdaptivityTaskViewModel>()
+            .EqualityComparison((entity, vm) => entity.Id == vm.Id)
             .ReverseMap()
+            .EqualityComparison((vm, entity) => entity.Id == vm.Id)
             .IncludeBase<IAdaptivityTaskViewModel, IAdaptivityTask>();
     }
 
@@ -615,6 +625,7 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityContent, AdaptivityContentViewModel>()
             .IncludeBase<IAdaptivityContent, IAdaptivityContentViewModel>()
+            .ForMember(x => x.Tasks, opt => opt.UseDestinationValue())
             .ReverseMap()
             .IncludeBase<IAdaptivityContentViewModel, IAdaptivityContent>();
     }

@@ -9,6 +9,7 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -562,6 +563,7 @@ public class ViewModelEntityMappingProfileUt
 
         var elementVm = ViewModelProvider.GetLearningElement();
         var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        var tasks = adaptivityContent.Tasks.ToList();
 
         elementVm.LearningContent = adaptivityContent;
 
@@ -570,6 +572,8 @@ public class ViewModelEntityMappingProfileUt
         Assert.That(element.LearningContent, Is.TypeOf<AdaptivityContent>());
 
         systemUnderTest.Map(element, elementVm);
+        
+        Assert.That(tasks.First(), Is.EqualTo(((AdaptivityContentViewModel)elementVm.LearningContent).Tasks.First()));
     }
 
     private static FileContent GetTestableContent()

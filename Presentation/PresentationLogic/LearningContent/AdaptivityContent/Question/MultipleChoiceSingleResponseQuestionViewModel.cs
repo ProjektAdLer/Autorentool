@@ -7,13 +7,16 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Quest
 /// </summary>
 public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQuestionViewModel
 {
-    public MultipleChoiceSingleResponseQuestionViewModel(int expectedCompletionTime, IEnumerable<ChoiceViewModel> choices, string text, ChoiceViewModel correctChoice, QuestionDifficulty difficulty)
+    public MultipleChoiceSingleResponseQuestionViewModel(int expectedCompletionTime, string text,
+        ChoiceViewModel correctChoice, QuestionDifficulty difficulty, ICollection<ChoiceViewModel> choices,
+        ICollection<IAdaptivityRuleViewModel>? rules = null)
     {
         ExpectedCompletionTime = expectedCompletionTime;
-        Choices = choices;
         Text = text;
         CorrectChoice = correctChoice;
         Difficulty = difficulty;
+        Choices = choices;
+        Rules = rules ?? new List<IAdaptivityRuleViewModel>();
     }
 
     /// <summary>
@@ -26,12 +29,14 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
         Text = null!;
         CorrectChoice = null!;
         Difficulty = QuestionDifficulty.Easy;
+        Rules = null!;
     }
     
     public ChoiceViewModel CorrectChoice { get; set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
-    public IEnumerable<ChoiceViewModel> Choices { get; set; }
-    public IEnumerable<ChoiceViewModel> CorrectChoices => new List<ChoiceViewModel> { CorrectChoice };
+    public ICollection<IAdaptivityRuleViewModel> Rules { get; set; }
+    public ICollection<ChoiceViewModel> Choices { get; set; }
+    public ICollection<ChoiceViewModel> CorrectChoices => new List<ChoiceViewModel> { CorrectChoice };
     public string Text { get; set; }
 }

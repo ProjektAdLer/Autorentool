@@ -2,10 +2,9 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
 public class AdaptivityContent : IAdaptivityContent
 {
-    public AdaptivityContent(string name, IEnumerable<IAdaptivityTask> tasks, IEnumerable<IAdaptivityRule> rules)
+    public AdaptivityContent(string name, ICollection<IAdaptivityTask> tasks, IEnumerable<IAdaptivityRule> rules)
     {
         Tasks = tasks;
-        Rules = rules;
         Name = name;
     }
 
@@ -15,11 +14,9 @@ public class AdaptivityContent : IAdaptivityContent
     private AdaptivityContent()
     {
         Tasks = null!;
-        Rules = null!;
         Name = "";
     }
 
-    public IEnumerable<IAdaptivityTask> Tasks { get; set; }
-    public IEnumerable<IAdaptivityRule> Rules { get; set; }
+    public ICollection<IAdaptivityTask> Tasks { get; set; }
     public string Name { get; set; }
 }
