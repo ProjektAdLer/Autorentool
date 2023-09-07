@@ -30,7 +30,6 @@
                     <h3 class="text-base text-adlerblue-600 space-theme">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
                     </h3>
-                    @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
                     <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
                     </h3>
@@ -51,7 +50,7 @@
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div class="w-full min-h-[400px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
+        <div class="w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated">
             @*style="width: 90%; height: 400px; border: 2px solid;"*@
             <div class="drop-shadow-xl w-full h-full">
                 <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
