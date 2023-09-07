@@ -22,7 +22,7 @@
         <value>Meine Lernwelten</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>Neue Lernwelt erstellen</value>
+        <value>Lernwelt erstellen</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug von Philipp</value>

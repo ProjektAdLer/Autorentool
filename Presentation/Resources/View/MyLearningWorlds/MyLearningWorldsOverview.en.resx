@@ -22,7 +22,7 @@
         <value>My learning worlds</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>Create new learning world</value>
+        <value>Create learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
         <value>Import learning world</value>
@@ -40,6 +40,6 @@
         <value>Create debug world</value>
     </data>
     <data name="Page.LearningWorld.Subheading" xml:space="preserve">
-        <value>Hover over your Learning Worlds and open those subsequently.</value>
+        <value>Hover over your learning worlds and open those subsequently.</value>
     </data>
 </root>
