@@ -598,7 +598,9 @@ public class ViewModelEntityMappingProfile : Profile
     private void CreateAdaptivityTaskMap()
     {
         CreateMap<IAdaptivityTask, IAdaptivityTaskViewModel>()
-            .ReverseMap();
+            .EqualityComparison((entity, vm) => entity.Id == vm.Id)
+            .ReverseMap()
+            .EqualityComparison((vm, entity) => entity.Id == vm.Id);
 
         CreateMap<AdaptivityTask, IAdaptivityTaskViewModel>()
             .As<AdaptivityTaskViewModel>();
@@ -607,9 +609,7 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityTask, AdaptivityTaskViewModel>()
             .IncludeBase<IAdaptivityTask, IAdaptivityTaskViewModel>()
-            .EqualityComparison((entity, vm) => entity.Id == vm.Id)
             .ReverseMap()
-            .EqualityComparison((vm, entity) => entity.Id == vm.Id)
             .IncludeBase<IAdaptivityTaskViewModel, IAdaptivityTask>();
     }
 

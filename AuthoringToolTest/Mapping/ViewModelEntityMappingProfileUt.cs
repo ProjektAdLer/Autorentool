@@ -573,7 +573,11 @@ public class ViewModelEntityMappingProfileUt
 
         systemUnderTest.Map(element, elementVm);
         
-        Assert.That(tasks.First(), Is.EqualTo(((AdaptivityContentViewModel)elementVm.LearningContent).Tasks.First()));
+        Assert.Multiple(() =>
+        {
+            Assert.That(elementVm.LearningContent, Is.EqualTo(adaptivityContent));
+            Assert.That(tasks.First(), Is.EqualTo(((AdaptivityContentViewModel)elementVm.LearningContent).Tasks.First()));
+        });
     }
 
     private static FileContent GetTestableContent()
