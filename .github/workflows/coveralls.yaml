@@ -75,7 +75,7 @@ jobs:
 
       # submit result from parallel to coveralls
       - name: Coveralls Parallel
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@95b1a2355bd0e526ad2fd62da9fd386ad4c98474
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
@@ -88,7 +88,7 @@ jobs:
     steps:
       # tell coveralls we are done with this run
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@95b1a2355bd0e526ad2fd62da9fd386ad4c98474
         with:
           parallel-finished: true
           carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest"
