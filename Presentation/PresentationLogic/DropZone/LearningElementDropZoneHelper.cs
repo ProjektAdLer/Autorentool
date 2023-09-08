@@ -59,27 +59,27 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
     private void DragItemToUnplaced(MudItemDropInfo<ILearningElementViewModel> dropItem)
     {
-        if (SpaceP.LearningSpaceVm == null) throw new ApplicationException("LearningSpaceVm is null");
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-        switch (dropItem.Item)
+        var element = dropItem.Item;
+        
+        if (element is null)
+            throw new ApplicationException("Received null element from MudItemDropInfo");
+        if (element.Parent is null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(element))
+            return; //we can simply return because the item is already in unplaced elements, where it's trying to be placed
+        
+        //at this point selected space can't be null, because the element is in a space
+        if (SpaceP.LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        if (element.Parent is null ||
+            !element.Parent.ContainedLearningElements.Contains(element) ||
+            element.Parent != SpaceP.LearningSpaceVm)
         {
-            case { Parent: not null } when
-                dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item) &&
-                dropItem.Item.Parent == SpaceP.LearningSpaceVm:
-            {
-                PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
-                    dropItem.Item);
-                break;
-            }
-            case { Parent: null } when
-                WorldP.LearningWorldVm.UnplacedLearningElements.Contains(dropItem.Item):
-            {
-                // do nothing, because the item is already in the unplaced elements
-                break;
-            }
-            default:
-                throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
+            //if we got here, the element is neither in unplaced elements nor in the selected space
+            throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
         }
+
+        PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+            element);
     }
 
     private void DragItemToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem)
