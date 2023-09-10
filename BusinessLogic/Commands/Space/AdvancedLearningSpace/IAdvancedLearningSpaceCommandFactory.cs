@@ -14,7 +14,12 @@ public interface IAdvancedLearningSpaceCommandFactory
         string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         Entities.Topic? topic, Action<LearningWorld> mappingAction);
 
-
+    /// <summary>
+    /// Creates a command to create a learning space.
+    /// </summary>
+    ICreateAdvancedLearningSpace GetCreateCommand(LearningWorld learningWorld, Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        Action<LearningWorld> mappingAction);
+    
     /// <summary>
     /// Creates a command to delete a learning space.
     /// </summary>

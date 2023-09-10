@@ -12,6 +12,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -225,7 +226,17 @@ public class PresentationLogic : IPresentationLogic
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpaceVm, command);
     }
-
+    
+    /// <inheritdoc cref="IPresentationLogic.AddAdvancedLearningSpace"/>
+    public void AddAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm,
+        IAdvancedLearningSpaceViewModel advancedLearningSpaceVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        
+        var command = AdvancedLearningSpaceCommandFactory.GetCreateCommand(worldEntity, advancedSpaceEntity,
+            world => CMapper.Map(world, learningWorldVm));
+    }
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
         string goals, int requiredPoints, Theme theme, double positionX, double positionY,

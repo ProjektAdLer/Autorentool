@@ -22,7 +22,10 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
         new CreateAdvancedLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, positionX,
             positionY,
             topic, mappingAction, LoggerFactory.CreateLogger<CreateAdvancedLearningSpace>());
-
+    public ICreateAdvancedLearningSpace GetCreateCommand(LearningWorld learningWorld, Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        Action<LearningWorld> mappingAction) =>
+        new CreateAdvancedLearningSpace(learningWorld, advancedLearningSpace, mappingAction,
+            LoggerFactory.CreateLogger<CreateAdvancedLearningSpace>());
 
     public IDeleteAdvancedLearningSpace GetDeleteCommand(LearningWorld learningWorld,
         Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
