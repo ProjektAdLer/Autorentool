@@ -2,8 +2,9 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor
 <MudCard Class="overflow-auto">
-    @if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
+    @if (SpacePresenter.LearningSpaceVm == null && AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel == null || _editOverwritten)
     {
         <CreateSpaceForm/>
     }
@@ -17,6 +18,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningSpacePresenter SpacePresenter { get; set; }
+    
+    [Inject, AllowNull]
+    public IAdvancedLearningSpaceEditorPresenter AdvancedLearningSpaceEditorPresenter { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }

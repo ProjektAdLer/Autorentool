@@ -108,7 +108,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
             new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
         };
 
-        if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
+        if (((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
         {
             menuEntries.Add(new RightClickMenuEntry("Remove topic",
                 () => OnRemoveLearningSpaceFromTopic?.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));

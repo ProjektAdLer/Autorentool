@@ -121,6 +121,10 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                 Logger.LogTrace("LearningObjectInPathWay set to space {Name} with id {Id}",
                     learningSpaceViewModel.Name, learningSpaceViewModel.Id);
                 break;
+            case AdvancedLearningSpaceViewModel advancedLearningSpaceViewModel:
+                Logger.LogTrace("LearningObjectInPathWay set to advanced space {Name} with id {Id}",
+                    advancedLearningSpaceViewModel.Name, advancedLearningSpaceViewModel.Id);
+                break;
             default:
                 Logger.LogTrace("LearningObjectInPathWay set to an unrecognized object type");
                 break;

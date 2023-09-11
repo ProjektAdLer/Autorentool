@@ -172,6 +172,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         if (!CheckLearningWorldNotNull("SetSelectedLearningObject"))
             return;
+
+        _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
+        
         if (_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
         {
             _advancedLearningSpaceEditorPresenter.SetAdvancedLearningSpace(advSpace);
@@ -182,8 +185,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
                 space);
         }
 
-
-        _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
 
         HideRightClickMenu();
     }
@@ -286,8 +287,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
                 requiredPoints, theme, positionX, positionY, topic);
         }
         else
+        {
             _presentationLogic.CreateAdvancedLearningSpace(LearningWorldVm!, name, description, goals,
                 requiredPoints, theme, positionX, positionY, topic);
+        }
+
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>
