@@ -198,13 +198,30 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.Parent, opt => opt.Ignore());
     }
 
+    /// <summary>
+    /// We require this method because AutoMapper is stupid when mapping children when using the update syntax.
+    /// It tries to forcibly cast whatever the content type is into the type currently in vm.LearningContent.
+    /// If the type changed however, this will result in a InvalidCastException. We catch that exception here and
+    /// instead just map the content into a new view model without the update syntax.
+    /// </summary>
     private void ElementContentAfterMap(LearningElement entity, LearningElementViewModel vm, ResolutionContext context)
     {
         try
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (vm.LearningContent == null)
+            {
+                RemapWithoutUpdate();
+                return;
+            }
             context.Mapper.Map(entity.LearningContent, vm.LearningContent);
         }
         catch
+        {
+            RemapWithoutUpdate();
+        }
+
+        void RemapWithoutUpdate()
         {
             vm.LearningContent = context.Mapper.Map<ILearningContentViewModel>(entity.LearningContent);
         }
