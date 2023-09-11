@@ -2,7 +2,7 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
 public class AdaptivityContent : IAdaptivityContent
 {
-    public AdaptivityContent(string name, ICollection<IAdaptivityTask> tasks, IEnumerable<IAdaptivityRule> rules)
+    public AdaptivityContent(string name, ICollection<IAdaptivityTask> tasks)
     {
         Tasks = tasks;
         Name = name;

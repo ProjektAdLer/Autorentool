@@ -7,8 +7,8 @@ namespace PersistEntities.LearningContent.Question;
 /// </summary>
 public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionPe
 {
-    public MultipleChoiceMultipleResponseQuestionPe(int expectedCompletionTime, ICollection<Choice> choices,
-        ICollection<Choice> correctChoices, ICollection<IAdaptivityRulePe> rules, string text, QuestionDifficulty difficulty)
+    public MultipleChoiceMultipleResponseQuestionPe(int expectedCompletionTime, ICollection<ChoicePe> choices,
+        ICollection<ChoicePe> correctChoices, ICollection<IAdaptivityRulePe> rules, string text, QuestionDifficulty difficulty)
     {
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
@@ -34,7 +34,7 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRulePe> Rules { get; set; }
-    public ICollection<Choice> Choices { get; set; }
-    public ICollection<Choice> CorrectChoices { get; set; }
+    public ICollection<ChoicePe> Choices { get; set; }
+    public ICollection<ChoicePe> CorrectChoices { get; set; }
     public string Text { get; set; }
 }

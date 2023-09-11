@@ -1,9 +1,13 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent;
 using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Shared;
+using Shared.Adaptivity;
 
 namespace TestHelpers;
 
@@ -126,5 +130,51 @@ public static class EntityProvider
     public static IAdaptivityAction GetContentReferenceAction()
     {
         return new ContentReferenceAction(GetLinkContent());
+    }
+
+    public static IAdaptivityContent GetAdaptivityContent()
+    {
+        var tasks = new List<IAdaptivityTask> { GetAdaptivityTask() };
+        return new AdaptivityContent("foo", tasks);
+    }
+
+    private static IAdaptivityRule GetAdaptivityRule()
+    {
+        return new AdaptivityRule(GetAdaptivityTrigger(), GetAdaptivityAction());
+    }
+
+    private static IAdaptivityAction GetAdaptivityAction()
+    {
+        return new CommentAction("comment");
+    }
+
+    private static IAdaptivityTrigger GetAdaptivityTrigger()
+    {
+        return new CorrectnessTrigger(AnswerResult.Correct);
+    }
+
+    private static IAdaptivityTask GetAdaptivityTask()
+    {
+        var questions = new List<IAdaptivityQuestion> { GetAdaptivityQuestion() };
+        return new AdaptivityTask(questions, QuestionDifficulty.Hard);
+    }
+
+    private static IAdaptivityQuestion GetAdaptivityQuestion()
+    {
+        var choices = new List<Choice> { GetAdaptivityChoice() };
+        var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0], QuestionDifficulty.Easy,
+            rules);
+    }
+
+    private static Choice GetAdaptivityChoice()
+    {
+        return new Choice("a choice");
+    }
+
+    public static ILearningElement GetLearningElement(IAdaptivityContent content)
+    {
+        return new LearningElement("name", content, "description", "goals", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_deskpc_1);
     }
 }

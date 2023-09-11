@@ -7,6 +7,7 @@ using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using Shared;
+using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
 
@@ -467,6 +468,20 @@ public class EntityPersistEntityMappingProfileUt
             .Excluding(obj => obj.InternalUnsavedChanges)
         );
         Assert.That(restoredWorld.UnsavedChanges, Is.False);
+    }
+
+    [Test]
+    public void MapAdaptivityContentEntity_FullStructure_ToPeAndBack()
+    {
+        var content = EntityProvider.GetAdaptivityContent();
+        var element = EntityProvider.GetLearningElement(content);
+        
+        var systemUnderTest = CreateTestableMapper();
+        
+        var elementPe = systemUnderTest.Map<LearningElementPe>(element);
+
+        systemUnderTest.Map(elementPe, element);
+        var restoredElement = systemUnderTest.Map<LearningElement>(elementPe);
     }
 
     private static FileContent GetTestableContent()

@@ -1,14 +1,14 @@
 namespace PersistEntities.LearningContent.Question;
 
-public class Choice
+public class ChoicePe
 {
-    public Choice(string text)
+    public ChoicePe(string text)
     {
         Text = text;
         Id = Guid.NewGuid();
     }
 
-    private Choice()
+    private ChoicePe()
     {
         Text = "";
         Id = Guid.Empty;

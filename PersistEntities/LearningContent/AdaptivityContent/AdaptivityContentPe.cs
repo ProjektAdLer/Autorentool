@@ -2,7 +2,7 @@ namespace PersistEntities.LearningContent;
 
 public class AdaptivityContentPe : IAdaptivityContentPe
 {
-    public AdaptivityContentPe(string name, ICollection<IAdaptivityTaskPe> tasks, IEnumerable<IAdaptivityRulePe> rules)
+    public AdaptivityContentPe(string name, ICollection<IAdaptivityTaskPe> tasks)
     {
         Tasks = tasks;
         Name = name;
