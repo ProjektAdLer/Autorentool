@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
+using Shared;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;
@@ -28,6 +29,9 @@ public class LearningSpaceViewUt
         _mediator = Substitute.For<ISelectedViewModelsProvider>();
         _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper.Initialize(themeLocalizer);
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddSingleton(_localizer);
@@ -93,7 +97,7 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("h3.space-theme");
         elementName.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceTheme.Text</span>Campus</h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceTheme.Text</span>Enum.Theme.Campus</h3>");
         var elementDescription = systemUnderTest.Find("h3.space-goals");
         elementDescription.MarkupMatches(
             @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceGoals.Text</span></h3>");
@@ -102,7 +106,7 @@ public class LearningSpaceViewUt
     [Test]
     public void Render_NoLearningObjectSelected_DoesNotRenderLearningObjectSection()
     {
-        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?)null);
+        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
         Assert.That(_learningSpacePresenter.LearningSpaceVm, Is.Null);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();

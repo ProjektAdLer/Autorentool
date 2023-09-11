@@ -62,7 +62,7 @@
                            For="@(() => FormModel.Theme)">
                     @foreach (var theme in _themes)
                     {
-                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                        <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
                     }
                 </MudSelect>
             </div>
@@ -131,13 +131,13 @@
     private bool _collapsedFloorplan = false;
     private bool _collapsedTheme = true;
     private bool _collapsedGoals = true;
-    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints!, model.Theme);
+            model.Goals, (int) model.RequiredPoints!, model.Theme);
     }
 
     private async Task MapIntoContainer()

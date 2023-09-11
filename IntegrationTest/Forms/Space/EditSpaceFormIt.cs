@@ -6,6 +6,7 @@ using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -23,21 +24,24 @@ namespace IntegrationTest.Forms.Space;
 [TestFixture]
 public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFormModel, LearningSpace>
 {
-    private ILearningSpacePresenter SpacePresenter { get; set; }
-    private IMapper Mapper { get; set; }
-    private const string Expected = "test";
-
     [SetUp]
     public void Setup()
     {
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
         Mapper = Substitute.For<IMapper>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper.Initialize(themeLocalizer);
         Context.Services.AddSingleton(SpacePresenter);
         Context.Services.AddSingleton(Mapper);
         Context.AddLocalizerForTest<SpaceLayoutSelection>();
         Context.AddLocalizerForTest<FloorPlanEnum>();
         Context.ComponentFactories.AddStub<SpaceLayoutSelection>();
     }
+
+    private ILearningSpacePresenter SpacePresenter { get; set; }
+    private IMapper Mapper { get; set; }
+    private const string Expected = "test";
 
     [Test]
     public void Render_SetsParameters()
@@ -52,7 +56,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(systemUnderTest.Instance.OnNewButtonClicked, Is.EqualTo(onNewClicked));
         Assert.That(systemUnderTest.Instance.DebounceInterval, Is.EqualTo(0));
     }
-    
+
     [Test]
     public void OnParametersSet_CallsMapper()
     {
@@ -69,7 +73,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     {
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
-        
+
         var systemUnderTest = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
@@ -79,7 +83,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         Mapper.Received(2).Map(vm, FormDataContainer.FormModel);
     }
-    
+
     [Test]
     public void ResetButton_Clicked_RemapsIntoContainer()
     {
@@ -101,7 +105,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     {
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
-        
+
         var systemUnderTest = GetRenderedComponent(vm);
         var mudForm = systemUnderTest.FindComponent<MudForm>();
 
@@ -109,9 +113,9 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
-        
+
         ConfigureValidatorAllMembersTestOr123OrCampus();
-        
+
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
         Assert.That(FormModel.Goals, Is.EqualTo(""));
@@ -119,7 +123,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
-        
+
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int?>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<Theme>>();
@@ -131,7 +135,8 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
 
-        systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)), TimeSpan.FromSeconds(2));
+        systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)),
+            TimeSpan.FromSeconds(2));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
@@ -145,16 +150,16 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     {
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
-        
+
         var systemUnderTest = GetRenderedComponent(vm);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
-        
+
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
-        
+
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int?>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<Theme>>();
@@ -171,15 +176,15 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
-        
+
         Mapper.ClearReceivedCalls();
-        
+
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         SpacePresenter.Received(1).EditLearningSpace(Expected, Expected, Expected, 123, Theme.Campus);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
-    
+
     private void ConfigureValidatorAllMembersTestOr123OrCampus()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
@@ -193,7 +198,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
                     Theme t => t == Theme.Campus,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
+                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
             }
         );
     }

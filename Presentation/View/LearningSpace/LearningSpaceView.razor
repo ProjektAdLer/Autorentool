@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
+@using Shared
 @using Shared.Command
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
@@ -28,7 +29,7 @@
             <div class="gap-8 flex justify-between items-start">
                 <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
                     <h3 class="text-base text-adlerblue-600 space-theme">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
                     </h3>
                     <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
