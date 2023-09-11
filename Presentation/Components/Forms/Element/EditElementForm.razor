@@ -55,26 +55,26 @@
                                  Class="pb-6"/>
 
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                                           Immediate="false"
-                                           Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
-                                           For="@(() => FormModel.Difficulty)"
-                                           Variant="Variant.Outlined">
-                      <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                            <div class="flex flex-row items-center gap-2">
-                                <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["EditElementForm.Difficulty.Easy"]
-                            </div>
-                      </MudSelectItem>
-                      <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                            <div class="flex flex-row items-center gap-2">
-                                <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["EditElementForm.Difficulty.Medium"]
-                            </div>
-                      </MudSelectItem>
-                      <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                             <div class="flex flex-row items-center gap-2">
-                                 <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["EditElementForm.Difficulty.Hard"]
-                             </div>
-                      </MudSelectItem>
-                      <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
+                           Immediate="false"
+                           Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
+                           For="@(() => FormModel.Difficulty)"
+                           Variant="Variant.Outlined">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["EditElementForm.Difficulty.Easy"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["EditElementForm.Difficulty.Medium"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["EditElementForm.Difficulty.Hard"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
                 </MudSelect>
             </div>
         </Collapsable>
@@ -122,7 +122,7 @@
                            Text="@FormDataContainer.FormModel.ElementModel.ToString()"
                            Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]">
 
-                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent))
+                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme))
                     {
                         <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
                             <div class="flex flex-row items-center gap-2">

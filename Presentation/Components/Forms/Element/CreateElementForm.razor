@@ -40,7 +40,7 @@
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
-                
+
                 <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
                                  Min="0"
@@ -56,7 +56,7 @@
                            Label="@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
                            For="@(() => FormModel.Difficulty)"
                            Variant="Variant.Outlined">
-                <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
                         <div class="flex flex-row items-center gap-2">
                             <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["CreateElementForm.Difficulty.Easy"]
                         </div>
@@ -117,11 +117,11 @@
                            Variant="Variant.Outlined"
                            Immediate="false"
                            Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]">
-                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent))
+                    @foreach (var elementModel in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null))
                     {
-                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
+                        <MudSelectItem Value="@(elementModel)" Style="white-space: nowrap">
                             <div class="flex flex-row items-center gap-2">
-                                <img class="flex w-10 h-8 drop-shadow px-1" src="@ElementModelHandler.GetIconForElementModel(theme)" alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>@*@theme*@
+                                <img class="flex w-10 h-8 drop-shadow px-1" src="@ElementModelHandler.GetIconForElementModel(elementModel)" alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>@*@theme*@
                             </div>
                         </MudSelectItem>
                     }
@@ -218,4 +218,5 @@
         FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
         SelectedViewModelsProvider.SetLearningContent(null, null);
     }
+
 }
