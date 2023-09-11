@@ -31,6 +31,24 @@ public class ElementModelHandler : IElementModelHandler
         return elementModel switch
         {
             ElementModel.l_random => "CustomIcons/ElementModels/random-icon-nobg.png",
+            //ArcadeTheme
+            ElementModel.l_h5p_blackslotmachine_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_h5p_blackslotmachine_1.png",
+            ElementModel.l_h5p_deskpc_2 => "CustomIcons/ElementModels/arcadeTheme/l_h5p_deskpc_2.png",
+            ElementModel.l_h5p_greyslotmachine_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_h5p_greyslotmachine_1.png",
+            ElementModel.l_h5p_purpleslotmachine_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_h5p_purpleslotmachine_1.png",
+            ElementModel.l_h5p_redslotmachine_1 => "CustomIcons/ElementModels/arcadeTheme/l_h5p_redslotmachine_1.png",
+            ElementModel.l_image_cardboardcutout_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_image_cardboardcutout_1.png",
+            ElementModel.l_image_gameposter_1 => "CustomIcons/ElementModels/arcadeTheme/l_image_gameposter_1.png",
+            ElementModel.l_image_gameposter_2 => "CustomIcons/ElementModels/arcadeTheme/l_image_gameposter_2.png",
+            ElementModel.l_text_comicshelfbig_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_text_comicshelfbig_1.png",
+            ElementModel.l_text_comicshelfsmall_1 =>
+                "CustomIcons/ElementModels/arcadeTheme/l_text_comicshelfsmall_1.png",
+            ElementModel.l_video_vrdesk_1 => "CustomIcons/ElementModels/arcadeTheme/l_video_vrdesk_1.png",
             //CampusTheme
             ElementModel.l_h5p_blackboard_2 => "CustomIcons/ElementModels/campusTheme/l_h5p_blackboard_2.png",
             ElementModel.l_h5p_daylightprojector_1 =>
@@ -56,7 +74,6 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
-            //ArcadeTheme
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, null)
         };
     }
@@ -70,18 +87,13 @@ public class ElementModelHandler : IElementModelHandler
     {
         switch (modelType)
         {
-            case ContentTypeEnum.Image:
-                //CampusTheme
-                yield return ElementModel.l_image_sciencebio_1;
-                yield return ElementModel.l_image_sciencegeo_1;
-                yield return ElementModel.l_image_sciencewhiteboard_1;
-                //SuburbTheme
-                yield return ElementModel.l_picture_painting_1;
-                yield return ElementModel.l_picture_painting_2;
-                yield return ElementModel.l_picture_paintingeasel_1;
-                //ArcadeTheme
-                break;
             case ContentTypeEnum.H5P:
+                //ArcadeTheme
+                yield return ElementModel.l_h5p_blackslotmachine_1;
+                yield return ElementModel.l_h5p_deskpc_2;
+                yield return ElementModel.l_h5p_greyslotmachine_1;
+                yield return ElementModel.l_h5p_purpleslotmachine_1;
+                yield return ElementModel.l_h5p_redslotmachine_1;
                 //CampusTheme
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
@@ -92,22 +104,38 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_h5p_deskpc_1;
                 yield return ElementModel.l_h5p_blackboard_1;
                 yield return ElementModel.l_h5p_drawingtable_1;
+                break;
+            case ContentTypeEnum.Image:
                 //ArcadeTheme
+                yield return ElementModel.l_image_cardboardcutout_1;
+                yield return ElementModel.l_image_gameposter_1;
+                yield return ElementModel.l_image_gameposter_2;
+                //CampusTheme
+                yield return ElementModel.l_image_sciencebio_1;
+                yield return ElementModel.l_image_sciencegeo_1;
+                yield return ElementModel.l_image_sciencewhiteboard_1;
+                //SuburbTheme
+                yield return ElementModel.l_picture_painting_1;
+                yield return ElementModel.l_picture_painting_2;
+                yield return ElementModel.l_picture_paintingeasel_1;
                 break;
             case ContentTypeEnum.Text:
+                //ArcadeTheme
+                yield return ElementModel.l_text_comicshelfbig_1;
+                yield return ElementModel.l_text_comicshelfsmall_1;
                 //CampusTheme
                 yield return ElementModel.l_text_libraryshelf_1;
                 //SuburbTheme
                 yield return ElementModel.l_text_bookshelf_1;
                 yield return ElementModel.l_text_bookshelf_2;
-                //ArcadeTheme
                 break;
             case ContentTypeEnum.Video:
+                //ArcadeTheme
+                yield return ElementModel.l_video_vrdesk_1;
                 //CampusTheme
                 yield return ElementModel.l_video_movieprojektor_1;
                 //SuburbTheme
                 yield return ElementModel.l_video_television_1;
-                //ArcadeTheme
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
@@ -119,6 +147,17 @@ public class ElementModelHandler : IElementModelHandler
         switch (theme)
         {
             case Theme.Arcade:
+                yield return ElementModel.l_h5p_blackslotmachine_1;
+                yield return ElementModel.l_h5p_deskpc_2;
+                yield return ElementModel.l_h5p_greyslotmachine_1;
+                yield return ElementModel.l_h5p_purpleslotmachine_1;
+                yield return ElementModel.l_h5p_redslotmachine_1;
+                yield return ElementModel.l_image_cardboardcutout_1;
+                yield return ElementModel.l_image_gameposter_1;
+                yield return ElementModel.l_image_gameposter_2;
+                yield return ElementModel.l_text_comicshelfbig_1;
+                yield return ElementModel.l_text_comicshelfsmall_1;
+                yield return ElementModel.l_video_vrdesk_1;
                 break;
             case Theme.Campus:
                 yield return ElementModel.l_h5p_blackboard_2;
