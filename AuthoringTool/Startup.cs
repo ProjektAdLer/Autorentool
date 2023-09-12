@@ -40,6 +40,7 @@ using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.MyLearningWorlds;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Serilog;
+using Serilog.Settings.Configuration;
 using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
@@ -76,13 +77,23 @@ public class Startup
 
         var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
         var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(Configuration)
-            .Enrich.FromLogContext()
-            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
-            .WriteTo.File(path: logFilePath, buffered: false, rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000000,
-                retainedFileCountLimit: 5)
-            .CreateLogger();
+        try
+        {
+            var options = new ConfigurationReaderOptions(typeof(ConsoleLoggerExtensions).Assembly);
+            var loggerConfig = new LoggerConfiguration();
+            loggerConfig.ReadFrom.Configuration(Configuration, options)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .WriteTo.File(path: logFilePath, buffered: false, rollOnFileSizeLimit: true,
+                    fileSizeLimitBytes: 100000000,
+                    retainedFileCountLimit: 5);
+            Log.Logger = loggerConfig.CreateLogger();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
 
         services.AddLogging(builder =>
         {
