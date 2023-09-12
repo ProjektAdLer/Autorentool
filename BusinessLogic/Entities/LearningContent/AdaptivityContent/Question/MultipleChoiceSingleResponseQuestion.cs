@@ -9,6 +9,7 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
 {
     public MultipleChoiceSingleResponseQuestion(int expectedCompletionTime, ICollection<Choice> choices, string text, Choice correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRule> rules)
     {
+        Id = Guid.NewGuid();
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         Text = text;
@@ -22,6 +23,7 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
     /// </summary>
     private MultipleChoiceSingleResponseQuestion()
     {
+        Id = Guid.Empty;
         ExpectedCompletionTime = 0;
         Choices = null!;
         Text = null!;
@@ -30,6 +32,7 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
         Rules = null!;
     }
     
+    public Guid Id { get; private set; }
     public Choice CorrectChoice { get; set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }

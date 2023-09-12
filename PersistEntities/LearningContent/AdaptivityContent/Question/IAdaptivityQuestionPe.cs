@@ -4,6 +4,7 @@ namespace PersistEntities.LearningContent.Question;
 
 public interface IAdaptivityQuestionPe
 {
+    public Guid Id { get; }
     /// <summary>
     /// Expected completion time of question in seconds.
     /// </summary>

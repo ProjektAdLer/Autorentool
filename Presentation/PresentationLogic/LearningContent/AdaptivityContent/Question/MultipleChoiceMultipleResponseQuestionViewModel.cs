@@ -13,6 +13,7 @@ public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQu
         ICollection<ChoiceViewModel> choices,
         ICollection<IAdaptivityRuleViewModel>? rules = null)
     {
+        Id = Guid.NewGuid();
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         CorrectChoices = correctChoices;
@@ -26,6 +27,7 @@ public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQu
     /// </summary>
     private MultipleChoiceMultipleResponseQuestionViewModel()
     {
+        Id = Guid.Empty;
         ExpectedCompletionTime = 0;
         Choices = null!;
         CorrectChoices = null!;
@@ -34,6 +36,7 @@ public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQu
         Rules = null!;
     }
 
+    public Guid Id { get; private set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRuleViewModel> Rules { get; set; }

@@ -4,6 +4,7 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Quest
 
 public interface IAdaptivityQuestionViewModel
 {
+    public Guid Id { get; }
     /// <summary>
     /// Expected completion time of question in seconds.
     /// </summary>

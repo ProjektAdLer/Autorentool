@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 using Shared.Adaptivity;
 
 namespace PersistEntities.LearningContent.Question;
@@ -12,6 +13,7 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
     public MultipleChoiceSingleResponseQuestionPe(int expectedCompletionTime, ICollection<ChoicePe> choices,
         string text, ChoicePe correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRulePe> rules)
     {
+        Id = Guid.NewGuid();
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         Text = text;
@@ -25,6 +27,7 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
     /// </summary>
     private MultipleChoiceSingleResponseQuestionPe()
     {
+        Id = Guid.Empty;
         ExpectedCompletionTime = 0;
         Choices = null!;
         Text = null!;
@@ -33,6 +36,7 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
         Rules = null!;
     }
 
+    [IgnoreDataMember] public Guid Id { get; private set; }
     [DataMember] public ChoicePe CorrectChoice { get; set; }
     [DataMember] public int ExpectedCompletionTime { get; set; }
     [DataMember] public QuestionDifficulty Difficulty { get; set; }
@@ -40,4 +44,11 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
     [DataMember] public ICollection<ChoicePe> Choices { get; set; }
     [IgnoreDataMember] public ICollection<ChoicePe> CorrectChoices => new List<ChoicePe> { CorrectChoice };
     [DataMember] public string Text { get; set; }
+    
+    [OnDeserializing]
+    [UsedImplicitly]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

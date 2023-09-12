@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 using Shared.Adaptivity;
 
 namespace PersistEntities.LearningContent.Question;
@@ -13,6 +14,7 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
         ICollection<ChoicePe> correctChoices, ICollection<IAdaptivityRulePe> rules, string text,
         QuestionDifficulty difficulty)
     {
+        Id = Guid.NewGuid();
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         CorrectChoices = correctChoices;
@@ -26,6 +28,7 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
     /// </summary>
     private MultipleChoiceMultipleResponseQuestionPe()
     {
+        Id = Guid.Empty;
         ExpectedCompletionTime = 0;
         Choices = null!;
         CorrectChoices = null!;
@@ -34,10 +37,18 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
         Difficulty = QuestionDifficulty.Easy;
     }
 
+    [IgnoreDataMember] public Guid Id { get; private set; }
     [DataMember] public int ExpectedCompletionTime { get; set; }
     [DataMember] public QuestionDifficulty Difficulty { get; set; }
     [DataMember] public ICollection<IAdaptivityRulePe> Rules { get; set; }
     [DataMember] public ICollection<ChoicePe> Choices { get; set; }
     [DataMember] public ICollection<ChoicePe> CorrectChoices { get; set; }
     [DataMember] public string Text { get; set; }
+    
+    [OnDeserializing]
+    [UsedImplicitly]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

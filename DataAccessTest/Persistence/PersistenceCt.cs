@@ -482,6 +482,7 @@ public class PersistenceCt
         actualContent.Should().BeEquivalentTo(content, options =>
         {
             options.For(content => content.Tasks).Exclude(task => task.Id);
+            options.For(content => content.Tasks).For(task => task.Questions).Exclude(question => question.Id);
             options.For(content => content.Tasks).For(task => task.Questions).For(question => question.Rules)
                 .Exclude(rule => rule.Action.Id);
             return options;

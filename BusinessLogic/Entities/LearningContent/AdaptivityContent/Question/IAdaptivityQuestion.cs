@@ -4,6 +4,7 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
 
 public interface IAdaptivityQuestion
 {
+    public Guid Id { get; }
     /// <summary>
     /// Expected completion time of question in seconds.
     /// </summary>
