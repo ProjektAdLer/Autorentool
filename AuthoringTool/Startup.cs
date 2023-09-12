@@ -23,6 +23,7 @@ using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using Presentation.Components.Culture;
 using Presentation.Components.Forms;
@@ -160,7 +161,7 @@ public class Startup
         services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
-            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
@@ -242,7 +243,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager)p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
     }
 
     private void ConfigureCommandFactories(IServiceCollection services)
@@ -275,7 +276,7 @@ public class Startup
         app.UseStaticFiles();
 
         // Add localization cultures
-        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var supportedCultures = new[] {"de-DE", "en-DE"};
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
@@ -285,6 +286,7 @@ public class Startup
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
+        ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
 
         app.UseRouting();
 

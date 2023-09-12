@@ -33,13 +33,13 @@
         <value> min</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
-        <value>Neuer Lernraum</value>
+        <value>Lernraum erstellen</value>
     </data>
     <data name="LearningWorldView.ImportLearningSpace.Title" xml:space="preserve">
-        <value>Importiere Lernraum</value>
+        <value>Lernraum importieren</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Neue Und-/Oder-Verbindung</value>
+        <value>Und-/Oder-Verbindung erstellen</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Lade Lernraum</value>

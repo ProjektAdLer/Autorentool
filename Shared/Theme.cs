@@ -2,5 +2,5 @@ namespace Shared;
 
 public enum Theme
 {
-    Campus
+    Campus, Suburb, Arcade
 }

@@ -19,7 +19,7 @@
         <value>Do you want to replace the learning element?</value>
     </data>
     <data name="Dialog.Content.Line2.Text" xml:space="preserve">
-        <value>This will move the current learning element to the unplaced learning elements in the world.</value>
+        <value>This will move the current learning element to the unplaced learning elements in the learning world.</value>
     </data>
     <data name="Dialog.Button.Cancel.Text" xml:space="preserve">
         <value>Cancel</value>

@@ -16,34 +16,34 @@
         </value>
     </resheader>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value>Import Files Dialog</value>
+        <value>Files and links</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
-        <value>Learning Element Metadata Dialog</value>
+        <value>Learning element details</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
-        <value>Learning Path Ways Icon</value>
+        <value>Connections between learning spaces</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
-        <value>Learning Space Metadata Dialog</value>
+        <value>Learning space details</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
-        <value>Learning World Metadata Dialog</value>
+        <value>Learning world details</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
-        <value>Learning World Tree View</value>
+        <value>Hierarchical structure of the learning world</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value>Import Files Icon</value>
+        <value>Import files icon</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
-        <value>Learning Element Metadata Icon</value>
+        <value>Learning element metadata icon</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
-        <value>learningspace-metadata</value>
+        <value>Learning space metadata icon</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
-        <value>learningworld-metadata</value>
+        <value>Learning world metadata icon</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
         <value>Learning Path Ways Icon</value>

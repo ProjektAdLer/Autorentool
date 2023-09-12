@@ -5,19 +5,19 @@
 @using Microsoft.Extensions.Localization
 @using Shared.Localization
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center mx-4">
     @if (Error)
     {
         <MudText Class="text-formerror">@ErrorText</MudText>
     }
     <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
-              Class="@TableClasses"
+              Class="@TableClasses" Outlined="true" Style="border-color: rgb(204,204,204)"
               RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
-              Filter="Filter">
+              Filter="Filter" Dense="true">
         <ToolBarContent>
             <MudTextField @bind-Value="_searchString"
                           Immediate="true"
-                          Placeholder="@Localizer["TableSelect.Placeholder"].Value"
+                          Placeholder="@Localizer["TableSelect.Placeholder"]"
                           Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Outlined.Search"/>
         </ToolBarContent>
@@ -84,7 +84,7 @@
 
     private string SelectedRowClassFunc(T element, int rowNumber)
     {
-        return element.Equals(Value) ? "bg-adlergrey-600" : string.Empty;
+        return element.Equals(Value) ? "bg-adlergrey-100" : string.Empty;
     }
 
     private bool Filter(T element) =>

@@ -14,6 +14,7 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
+@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
@@ -79,7 +80,14 @@
                     </Sidebar>
                 </SideContainer>
                 <CenterContainer>
-                    <LearningSpaceView/>
+                    @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
+                    {
+                        <LearningSpaceView/>
+                    }
+                    else
+                    {
+                        <img class="w-1/3 opacity-10 pt-28 mx-auto absolute bottom-1/6 left-1/3" src="CustomIcons/autorentool-logo.png">
+                    }
                 </CenterContainer>
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
@@ -149,14 +157,17 @@
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
         OnUndoRedoEventSource.OnRedo += OnUndoRedo;
         OnUndoRedoEventSource.OnUndo += OnUndoRedo;
+        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        //open left and right tabs
+        //if no world is selected (after hot reload for example), navigate to overview
         if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
+        //only open tabs if it's our first render after being created
         if (!firstRender) return;
+        //open left and right tabs
         Mediator.RequestOpenWorldDialog();
         Mediator.RequestOpenPathwayView();
     }

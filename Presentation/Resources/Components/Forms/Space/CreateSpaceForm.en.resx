@@ -27,7 +27,7 @@
         <value>Goals</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Theme of learning space</value>
+        <value>Theme</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
         <value>Completion condition</value>
@@ -45,12 +45,15 @@
         <value>LearningWorldVm is null</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
         <value>Required points to complete the learning space</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme</value>
+        <value>Theme of learning space</value>
+    </data>
+    <data name="CreateSpaceForm.Text" xml:space="preserve">
+        <value>* Required information</value>
     </data>
 </root>

@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
+@using Shared
 @using Shared.Command
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
@@ -28,9 +29,8 @@
             <div class="gap-8 flex justify-between items-start">
                 <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
                     <h3 class="text-base text-adlerblue-600 space-theme">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
                     </h3>
-                    @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
                     <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
                     </h3>
@@ -51,9 +51,9 @@
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div class="w-full min-h-[400px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
+        <div class="w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated">
             @*style="width: 90%; height: 400px; border: 2px solid;"*@
-            <div class="layout-shadow w-full h-full">
+            <div class="drop-shadow-xl w-full h-full">
                 <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
 
                     @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
@@ -180,9 +180,9 @@
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
         {
-            return "cursor-pointer rounded-lg border-2 bg-adlergreen border-adlergreen bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-28 h-3 flex justify-center items-center";
+            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-24 h-3 flex justify-center items-center";
         }
-        return "cursor-pointer rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center hover:bg-adlerblue-300";
+        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-24 h-3 flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
     private string GetSlotIconString(int position)

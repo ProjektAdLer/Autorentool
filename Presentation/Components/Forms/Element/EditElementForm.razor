@@ -15,8 +15,8 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditElementForm.Header.Text"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
-
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["EditElementForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <HeaderButtons>
@@ -53,22 +53,35 @@
                                  DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
-                                 Class="pb-4"/>
+                                 Class="pb-6"/>
 
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                           Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
-                           For="@(() => FormModel.Difficulty)">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">@Localizer["EditElementForm.Difficulty.Easy"]</MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">@Localizer["EditElementForm.Difficulty.Medium"]</MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">@Localizer["EditElementForm.Difficulty.Hard"]</MudSelectItem>
+                           Immediate="false"
+                           Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
+                           For="@(() => FormModel.Difficulty)"
+                           Variant="Variant.Outlined">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["EditElementForm.Difficulty.Easy"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["EditElementForm.Difficulty.Medium"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["EditElementForm.Difficulty.Hard"]
+                        </div>
+                    </MudSelectItem>
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
                 </MudSelect>
-
-
             </div>
         </Collapsable>
 
         <Collapsable Style="" Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+            <MudText Class="ml-4" Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</MudText>
             <TableSelect
                 T="ILearningContentViewModel"
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
@@ -82,7 +95,7 @@
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd Class="px-1.5">
-                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                        <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                        OnClick="() => PreviewOnClick(context)"/>
                     </MudTd>
                     <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
@@ -102,15 +115,20 @@
 
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudText Class="break-words" Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
-                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                           AnchorOrigin="Origin.BottomCenter"
                            For="@(() => FormModel.ElementModel)"
-                           Variant="Variant.Outlined">
-                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent))
+                           Variant="Variant.Outlined"
+                           Immediate="false"
+                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                           Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]">
+
+                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme))
                     {
                         <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
-                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@
+                            <div class="flex flex-row items-center gap-2">
+                                <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="@Localizer["EditElement.Fields.Collapsable.3DRepresentation.Alt"]" class="flex w-10 h-8 drop-shadow px-1"/>@*@theme*@
+                            </div>
                         </MudSelectItem>
                     }
                 </MudSelect>

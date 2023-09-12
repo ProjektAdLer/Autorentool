@@ -54,7 +54,7 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
 
         var systemUnderTest = GetRenderedComponent(onOpenLearningWorld: onOpenLearningWorld);
 
-        systemUnderTest.FindComponentWithMarkup<MudButton>("open-button").Find("button").Click();
+        systemUnderTest.Find("button.open-button").Click();
 
         Assert.That(callbackCallCount, Is.EqualTo(1));
     }

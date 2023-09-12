@@ -28,7 +28,7 @@
         <value>Export der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Exportiere die Moodle Lernwelt-Datei (.mbz)</value>
+        <value>Moodle Lernwelt-Datei (.mbz) exportieren</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
@@ -70,7 +70,7 @@
         <value>Technisches Feedback</value>
     </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
-        <value>Möchtest du wirklich die Lernwelt {0} in {1} in das Backend hochladen?</value>
+        <value>Möchtest du wirklich die Lernwelt &gt; {0} &lt; in &gt; {1} &lt; in das Backend hochladen?</value>
     </data>
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
@@ -79,7 +79,7 @@
         <value>Hochladen</value>
     </data>
     <data name="Export.SnackBar.Message" xml:space="preserve">
-        <value>Lernwelt exportiert nach {0}</value>
+        <value>Lernwelt exportiert nach &gt; {0} &lt;.</value>
     </data>
     <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
         <value>Exportieren von Lernwelt abgebrochen</value>
@@ -88,13 +88,13 @@
         <value>Lernwelt ist ungültig</value>
     </data>
     <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
-        <value>Lernwelt hat keine Lernräume</value>
+        <value>Diese Lernwelt enthält keine Lernräume.</value>
     </data>
     <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
-        <value>Lernraum {0} hat keine Lernelemente.</value>
+        <value>Lernraum &gt; {0} &lt; enthält keine Lernelemente.</value>
     </data>
     <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
-        <value>Lernraum {0} kann nicht vervollständigt werden da die Punkte nicht ausreichen</value>
+        <value>Lernraum &gt; {0} &lt; kann nicht abgeschlossen werden, da die Punkte nicht ausreichen. Aktuell sind die benötigten Punkte höher als die Gesamtpunkte.</value>
     </data>
     <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
         <value>Du bist nicht angemeldet</value>

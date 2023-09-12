@@ -24,34 +24,34 @@
         </value>
     </resheader>
     <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
-        <value>Lernwelt Metadaten Dialog</value>
+        <value>Angaben zur Lernwelt</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
-        <value>Lernraum Metadaten Dialog</value>
+        <value>Angaben zu Lernräumen</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
-        <value>Lernelement Metadaten Dialog</value>
+        <value>Angaben zu Lernelementen</value>
     </data>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value>Datei-Import Dialog</value>
+        <value>Dateien und Links</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
-        <value>Lernwelt Pfadansicht</value>
+        <value>Verbindungen zwischen Lernräumen</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
-        <value>Lernwelt Baumansicht</value>
+        <value>Hierarchischer Aufbau der Lernwelt</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
-        <value/>
+        <value>Lernwelt-Metadaten-Icon</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
-        <value/>
+        <value>Lernraum-Metadaten-Icon</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
-        <value>Lernelement Metadaten-Icon</value>
+        <value>Lernelement-Metadaten-Icon</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value>Datei-Import-Icon</value>
+        <value>Dateiimport-Icon</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
         <value>Lernwelt Pfadansicht-Icon</value>

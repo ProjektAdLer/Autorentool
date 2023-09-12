@@ -9,8 +9,8 @@
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 
-<MudTable Items="Items" Class="my-4 w-full grow h-full flex flex-col flex-nowrap"
-          Dense="true" Virtualize="true" Filter="Filter">
+<MudTable Items="Items" Class="my-4 w-full grow h-full flex flex-col flex-nowrap border-adlergrey-200"
+          Dense="true" Virtualize="true" Filter="Filter" Outlined="true" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
@@ -62,8 +62,8 @@
                            OnClick="() => NewElementWithContent(context)"/>
         </MudTd>
         <MudTd Class="px-1.5">
-            <MudIconButton Icon="@Icons.Material.Filled.Preview"
-                           Class="show-content-preview"
+            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                           Class="flex justify-center show-content-preview"
                            OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
         </MudTd>
         @if (_showFilepath)

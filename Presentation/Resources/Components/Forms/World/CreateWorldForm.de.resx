@@ -22,7 +22,7 @@
         <value>Allgemein</value>
     </data>
     <data name="CreateWorldForm.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="CreateWorldForm.General.Field.Shortname.Text" xml:space="preserve">
         <value>Kurzname</value>
@@ -50,5 +50,8 @@
     </data>
     <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
         <value>Lernwelt erstellt</value>
+    </data>
+    <data name="CreateWorldForm.Text" xml:space="preserve">
+        <value>* Erforderliche Angabe</value>
     </data>
 </root>

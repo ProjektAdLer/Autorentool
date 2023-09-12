@@ -39,13 +39,13 @@
         <value>None</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Files and links</value>
+        <value>Files and links*</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D representation of learning element</value>
+        <value>3D representation</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
-        <value>3D representation</value>
+        <value>3D representation of learning element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Goals</value>
@@ -60,7 +60,7 @@
         <value>Points</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
         <value>Files and links</value>
@@ -70,5 +70,14 @@
     </data>
     <data name="CreateElementForm.Fields.Collapse.LearningContent.Name" xml:space="preserve">
         <value>Name</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
+        <value>List of all added files and links</value>
+    </data>
+    <data name="CreateElementForm.Text" xml:space="preserve">
+        <value>* Required information</value>
+    </data>
+    <data name="CreateElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
+        <value>3D representation icon</value>
     </data>
 </root>
