@@ -1,5 +1,8 @@
+using System.Runtime.Serialization;
+
 namespace PersistEntities.LearningContent;
 
+[KnownType(typeof(AdaptivityTaskPe))]
 public class AdaptivityContentPe : IAdaptivityContentPe
 {
     public AdaptivityContentPe(string name, ICollection<IAdaptivityTaskPe> tasks)
@@ -17,6 +20,6 @@ public class AdaptivityContentPe : IAdaptivityContentPe
         Name = "";
     }
 
-    public ICollection<IAdaptivityTaskPe> Tasks { get; set; }
-    public string Name { get; set; }
+    [DataMember] public ICollection<IAdaptivityTaskPe> Tasks { get; set; }
+    [DataMember] public string Name { get; set; }
 }

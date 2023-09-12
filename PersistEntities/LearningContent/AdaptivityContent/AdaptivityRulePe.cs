@@ -1,8 +1,15 @@
+using System.Runtime.Serialization;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Trigger;
 
 namespace PersistEntities.LearningContent;
 
+[KnownType(typeof(CompositeTriggerPe))]
+[KnownType(typeof(CorrectnessTriggerPe))]
+[KnownType(typeof(TimeTriggerPe))]
+[KnownType(typeof(CommentActionPe))]
+[KnownType(typeof(ContentReferenceActionPe))]
+[KnownType(typeof(ElementReferenceActionPe))]
 public class AdaptivityRulePe : IAdaptivityRulePe
 {
     public AdaptivityRulePe(IAdaptivityTriggerPe trigger, IAdaptivityActionPe action)
@@ -20,6 +27,6 @@ public class AdaptivityRulePe : IAdaptivityRulePe
         Action = null!;
     }
 
-    public IAdaptivityTriggerPe Trigger { get; set; }
-    public IAdaptivityActionPe Action { get; set; }
+    [DataMember] public IAdaptivityTriggerPe Trigger { get; set; }
+    [DataMember] public IAdaptivityActionPe Action { get; set; }
 }

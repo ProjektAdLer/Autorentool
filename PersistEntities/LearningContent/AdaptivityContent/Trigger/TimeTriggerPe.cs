@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Shared.Adaptivity;
 
 namespace PersistEntities.LearningContent.Trigger;
@@ -25,9 +26,12 @@ public class TimeTriggerPe : IAdaptivityTriggerPe
     /// <summary>
     /// The time in seconds that the user must spend on the question for the trigger to be activated.
     /// </summary>
+    [DataMember]
     public int Expected { get; set; }
+
     /// <summary>
     /// Whether the user must spend less or more than <see cref="Expected"/> seconds for the trigger to be activated.
     /// </summary>
+    [DataMember]
     public TimeFrameType TimeFrameType { get; set; }
 }

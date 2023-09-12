@@ -1,8 +1,12 @@
+using System.Runtime.Serialization;
+using JetBrains.Annotations;
 using PersistEntities.LearningContent.Question;
 using Shared.Adaptivity;
 
 namespace PersistEntities.LearningContent;
 
+[KnownType(typeof(MultipleChoiceMultipleResponseQuestionPe))]
+[KnownType(typeof(MultipleChoiceSingleResponseQuestionPe))]
 public class AdaptivityTaskPe : IAdaptivityTaskPe
 {
     public AdaptivityTaskPe(ICollection<IAdaptivityQuestionPe> questions, QuestionDifficulty minimumRequiredDifficulty)
@@ -22,7 +26,15 @@ public class AdaptivityTaskPe : IAdaptivityTaskPe
         Id = Guid.Empty;
     }
 
-    public ICollection<IAdaptivityQuestionPe> Questions { get; set; }
-    public QuestionDifficulty MinimumRequiredDifficulty { get; set; }
-    public Guid Id { get; set; }
+    [DataMember] public ICollection<IAdaptivityQuestionPe> Questions { get; set; }
+    [DataMember] public QuestionDifficulty MinimumRequiredDifficulty { get; set; }
+    [IgnoreDataMember] public Guid Id { get; set; }
+    
+    
+    [OnDeserializing]
+    [UsedImplicitly]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

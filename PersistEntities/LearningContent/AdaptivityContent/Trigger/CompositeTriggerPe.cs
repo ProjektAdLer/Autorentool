@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Shared;
 
 namespace PersistEntities.LearningContent.Trigger;
@@ -28,15 +29,18 @@ public class CompositeTriggerPe : IAdaptivityTriggerPe
     /// <summary>
     /// The logical condition between <see cref="Left"/> and <see cref="Right"/>. Either logical OR or logical AND.
     /// </summary>
+    [DataMember]
     public ConditionEnum Condition { get; set; }
 
     /// <summary>
     /// The left side of the boolean composite trigger expression.
     /// </summary>
+    [DataMember]
     public IAdaptivityTriggerPe Left { get; set; }
 
     /// <summary>
     /// The right side of the boolean composite trigger expression.
     /// </summary>
+    [DataMember]
     public IAdaptivityTriggerPe Right { get; set; }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Shared.Adaptivity;
 
 namespace PersistEntities.LearningContent.Trigger;
@@ -23,5 +24,6 @@ public class CorrectnessTriggerPe : IAdaptivityTriggerPe
     /// <summary>
     /// Whether the answer must be correct or incorrect for the trigger to be activated.
     /// </summary>
+    [DataMember]
     public AnswerResult ExpectedAnswer { get; set; }
 }

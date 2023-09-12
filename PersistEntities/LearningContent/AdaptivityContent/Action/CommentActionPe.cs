@@ -1,3 +1,6 @@
+using System.Runtime.Serialization;
+using JetBrains.Annotations;
+
 namespace PersistEntities.LearningContent.Action;
 
 public class CommentActionPe : IAdaptivityActionPe
@@ -17,6 +20,13 @@ public class CommentActionPe : IAdaptivityActionPe
         Id = Guid.Empty;
     }
 
-    public string Comment { get; set; }
-    public Guid Id { get; private set; }
+    [DataMember] public string Comment { get; set; }
+    [IgnoreDataMember] public Guid Id { get; private set; }
+
+    [OnDeserializing]
+    [UsedImplicitly]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

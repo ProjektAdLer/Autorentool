@@ -1,3 +1,6 @@
+using System.Runtime.Serialization;
+using JetBrains.Annotations;
+
 namespace PersistEntities.LearningContent.Action;
 
 public class ElementReferenceActionPe : IAdaptivityActionPe
@@ -17,6 +20,13 @@ public class ElementReferenceActionPe : IAdaptivityActionPe
         Id = Guid.Empty;
     }
 
-    public Guid ElementId { get; set; }
-    public Guid Id { get; private set; }
+    [DataMember] public Guid ElementId { get; set; }
+    [IgnoreDataMember] public Guid Id { get; private set; }
+
+    [OnDeserializing]
+    [UsedImplicitly]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }
