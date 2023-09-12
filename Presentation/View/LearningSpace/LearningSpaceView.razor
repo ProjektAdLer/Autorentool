@@ -128,7 +128,8 @@
             await InvokeAsync(StateHasChanged);
             if (args.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
                 "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
-                "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
+                "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "CreateAdvancedLearningSpace" or 
+                "RemoveLearningElementFromLayout")
             {
                 await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
             }

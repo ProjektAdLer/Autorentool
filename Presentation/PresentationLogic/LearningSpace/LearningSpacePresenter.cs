@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using MudBlazor;
 using Presentation.Components;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -235,6 +236,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
             if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
+            else if(_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
+                LearningSpaceVm = advSpace;
             else if (_selectedViewModelsProvider.LearningObjectInPathWay is null)
                 LearningSpaceVm = null;
         }

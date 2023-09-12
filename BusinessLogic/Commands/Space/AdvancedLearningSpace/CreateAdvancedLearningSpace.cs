@@ -32,7 +32,7 @@ public class CreateAdvancedLearningSpace: ICreateAdvancedLearningSpace
     internal Entities.AdvancedLearningSpaces.AdvancedLearningSpace AdvancedLearningSpace { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private ILogger<CreateAdvancedLearningSpace> Logger { get; }
-    public string Name => nameof(CreateLearningSpace);
+    public string Name => nameof(CreateAdvancedLearningSpace);
 
     public void Execute()
     {
