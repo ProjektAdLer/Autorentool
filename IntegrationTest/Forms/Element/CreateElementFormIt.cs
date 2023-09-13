@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
+using Bunit.TestDoubles;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using PresentationTest;
 using Shared;
 using TestHelpers;
 
@@ -42,6 +44,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
+        Context.ComponentFactories.AddStub<NoContentWarning>();
     }
 
     public ILearningWorldPresenter WorldPresenter { get; set; }
@@ -190,6 +193,17 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
                     Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
             TimeSpan.FromSeconds(2));
         Assert.That(callbackCalledCount, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void NoContentAvailable_ShowsNoContentWarningInsteadOfTableSelect()
+    {
+        WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+
+        Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
+        Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
