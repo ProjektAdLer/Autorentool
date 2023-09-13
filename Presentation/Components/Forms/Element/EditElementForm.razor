@@ -17,7 +17,8 @@
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
-          OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["EditElementForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
+          OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
+          SnackbarMessage=@Localizer["EditElementForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <HeaderButtons>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard"
                    OnClick="async () => await OnNewButtonClicked.InvokeAsync()">
@@ -211,6 +212,8 @@
             model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, model.LearningContent!);
         TriggerMasterLayoutStateHasChanged?.Invoke();
     }
+
+    private void OnValidFieldChange(LearningElementFormModel model) => OnValidSubmit(model);
 
     private async Task MapIntoContainer()
     {
