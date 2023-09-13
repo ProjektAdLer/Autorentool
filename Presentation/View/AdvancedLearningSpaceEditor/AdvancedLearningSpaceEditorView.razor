@@ -73,25 +73,26 @@
                         <button
                             class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
                             @onclick="() => _menuFocus = MenuFocus.LearningElements">
-                            <MudIcon Icon="@Icons.Material.Filled.AddChart"></MudIcon>
+                            @* <MudIcon Icon="@Icons.Material.Filled.AddChart"></MudIcon> *@
+                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/learning-element-slot-icon-nobg.png" class="pointer-events-none w-8 h-8">
                             @Localizer["AdvancedLearningSpaceEditor.LearningElementSlots.Title"]
                         </button>
                         <button
                             class="@GetMenuStyleString(MenuFocus.DecoObjects) rounded-md px-2 py-1 text-sm font-medium"
                             @onclick="() => _menuFocus = MenuFocus.DecoObjects">
-                            <MudIcon Icon="@Icons.Material.Filled.Castle"></MudIcon>
+                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
                             @Localizer["AdvancedLearningSpaceEditor.Decorations.Title"]
                         </button>
                         <button
                             class="@GetMenuStyleString(MenuFocus.Doors) rounded-md px-2 py-1 text-sm font-medium"
                             @onclick="() => _menuFocus = MenuFocus.Doors">
-                            <MudIcon Icon="@Icons.Material.Filled.SensorDoor"></MudIcon>
+                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/door-icon-nobg.png" class="pointer-events-none w-8 h-8">
                             @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
                         </button>
                         <button
                             class="@GetMenuStyleString(MenuFocus.Windows) rounded-md px-2 py-1 text-sm font-medium"
                             @onclick="() => _menuFocus = MenuFocus.Windows">
-                            <MudIcon Icon="@Icons.Material.Filled.Window"></MudIcon>
+                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/window-icon-nobg.png" class="pointer-events-none w-8 h-8">
                             @Localizer["AdvancedLearningSpaceEditor.Windows.Title"]
                         </button>
                     </div>
