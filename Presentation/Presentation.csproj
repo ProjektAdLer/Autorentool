@@ -152,5 +152,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TableSelect.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NoContentWarning.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NoContentWarning.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
