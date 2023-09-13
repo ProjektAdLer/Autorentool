@@ -23,7 +23,7 @@
     <Fields>
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
-                     @bind-Collapsed="_collapsedGeneral">
+                                           @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -80,9 +80,7 @@
             <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</MudText>
             @if (!WorldPresenter.GetAllContent().Any())
             {
-                <NoContentWarning
-                    For="@(() => FormModel.LearningContent!)"
-                    />
+                <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
             }
             else
             {
