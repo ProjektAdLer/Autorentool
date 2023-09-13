@@ -1,6 +1,7 @@
 @typeparam TForm where TForm : new()
 @typeparam TEntity
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @implements IBaseForm
 
 <MudCardActions Class="flex flex-col justify-center items-center">
@@ -11,7 +12,7 @@
     </MudButtonGroup>
 </MudCardActions>
 
-<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
+<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
     <MudCardContent>
         @Fields
         @if (SubmitErrorMessage != null)
@@ -42,6 +43,9 @@
 
     [Parameter, EditorRequired]
     public EventCallback<TForm> OnValidSubmit { get; set; }
+    
+    [Parameter]
+    public EventCallback<TForm> OnValidFieldChange { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string SnackbarMessage { get; set; }
@@ -98,6 +102,16 @@
                 SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
             }
         }
+    }
+
+
+    private async Task FieldChanged(FormFieldChangedEventArgs e)
+    {
+        //quit early if nobody is listening anyway
+        if(!OnValidFieldChange.HasDelegate) return;
+        if (_form == null) throw new ApplicationException("_form is null");
+        await _form.Validate();
+        if(_form.IsValid) await OnValidFieldChange.InvokeAsync(FormDataContainer.FormModel);
     }
 
 }
