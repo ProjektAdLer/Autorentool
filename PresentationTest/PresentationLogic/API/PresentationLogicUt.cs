@@ -260,6 +260,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockCommand = Substitute.For<IEditLearningWorld>();
+        mockCommand.AnyChanges().Returns(true);
         var mockWorldCommandFactory = Substitute.For<IWorldCommandFactory>();
         var worldVm = ViewModelProvider.GetLearningWorld();
         var mockMapper = Substitute.For<IMapper>();
@@ -375,6 +376,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockSpaceCommandFactory = Substitute.For<ISpaceCommandFactory>();
         var mockCommand = Substitute.For<IEditLearningSpace>();
+        mockCommand.AnyChanges().Returns(true);
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
@@ -587,6 +589,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
         var mockCommand = Substitute.For<IEditLearningElement>();
+        mockCommand.AnyChanges().Returns(true);
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
         var learningElementVm = ViewModelProvider.GetLearningElement(parent: learningSpaceVm);
         var learningContentVm = ViewModelProvider.GetFileContent();
