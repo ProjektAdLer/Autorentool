@@ -5,6 +5,7 @@ using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -30,18 +31,20 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         LearningContentViewModels = new ILearningContentViewModel[]
-            { ViewModelProvider.GetFileContent(), ViewModelProvider.GetLinkContent() };
+            {ViewModelProvider.GetFileContent(), ViewModelProvider.GetLinkContent()};
         WorldPresenter.GetAllContent().Returns(LearningContentViewModels);
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
+        SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?) null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
         PresentationLogic = Substitute.For<IPresentationLogic>();
+        var localizer = Substitute.For<IStringLocalizer<ElementModelGridSelect>>();
         Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(SpacePresenter);
         Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
+        Context.Services.AddSingleton(localizer);
     }
 
     public ILearningWorldPresenter WorldPresenter { get; set; }
@@ -241,7 +244,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
                     ILearningContentViewModel => true,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
+                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
             }
         );
     }

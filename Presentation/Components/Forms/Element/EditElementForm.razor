@@ -114,23 +114,11 @@
 
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
-                           AnchorOrigin="Origin.BottomCenter"
-                           For="@(() => FormModel.ElementModel)"
-                           Variant="Variant.Outlined"
-                           Immediate="false"
-                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
-                           Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]">
-
-                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme))
-                    {
-                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
-                            <div class="flex flex-row items-center gap-2">
-                                <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="@Localizer["EditElement.Fields.Collapsable.3DRepresentation.Alt"]" class="flex w-10 h-8 drop-shadow px-1"/>@*@theme*@
-                            </div>
-                        </MudSelectItem>
-                    }
-                </MudSelect>
+                <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                                        For="@(() => FormModel.ElementModel)"
+                                        Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme)">
+                </ElementModelGridSelect>
             </div>
         </Collapsable>
 
