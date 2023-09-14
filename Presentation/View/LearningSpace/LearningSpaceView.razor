@@ -14,7 +14,14 @@
 {
     <div class="mx-2 rounded-lg">
         <div class="flex justify-center p-2">
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(LearningSpaceP.LearningSpaceVm is not IAdvancedLearningSpaceViewModel) ? @Localizer["LearningSpace.Title.Text"] : @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
+            @if(LearningSpaceP.LearningSpaceVm is not IAdvancedLearningSpaceViewModel)
+            {
+            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2"> @Localizer["LearningSpace.Title.Text"] </h2>
+            }
+            else
+            {
+                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2"> @Localizer["LearningSpace.AdvancedSpaceTitle.Text"]</h2>
+            }
         </div>
     </div> 
 

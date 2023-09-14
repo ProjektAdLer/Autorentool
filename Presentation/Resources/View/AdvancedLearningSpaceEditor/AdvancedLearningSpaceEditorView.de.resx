@@ -23,4 +23,16 @@
     <data name="AdvancedLearningSpaceEditor.Windows.Title" xml:space="preserve">
         <value>Fenster</value>
     </data>
+    <data name="AdvancedLearningSpaceEditor.Points.Text" xml:space="preserve">
+        <value>Punkte: </value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.Workload.Text" xml:space="preserve">
+        <value>Arbeitslast: </value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.Theme.Text" xml:space="preserve">
+        <value>Thema:</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.Goals.Text" xml:space="preserve">
+        <value>Ziele:</value>
+    </data>
 </root>
