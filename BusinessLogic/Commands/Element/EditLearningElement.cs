@@ -102,5 +102,5 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.ElementModel != ElementModel ||
         LearningElement.Workload != Workload ||
         LearningElement.Points != Points ||
-        LearningElement.LearningContent != LearningContent;
+        !LearningElement.LearningContent.Equals(LearningContent);
 }
