@@ -83,7 +83,7 @@ public class EditLearningWorld : IEditLearningWorld
         Execute();
     }
 
-    private bool AnyChanges() =>
+    public bool AnyChanges() =>
         LearningWorld.Name != WorldName ||
         LearningWorld.Shortname != Shortname ||
         LearningWorld.Authors != Authors ||

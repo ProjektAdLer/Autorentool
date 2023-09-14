@@ -52,7 +52,7 @@ public class EditLearningElement : IEditLearningElement
             LearningElement.Goals, LearningElement.Difficulty, LearningElement.ElementModel, LearningElement.Workload,
             LearningElement.Points, LearningElement.LearningContent.Name);
 
-        if (AnyChange()) LearningElement.UnsavedChanges = true;
+        if (AnyChanges()) LearningElement.UnsavedChanges = true;
         LearningElement.Name = ElementName;
         LearningElement.Parent = ParentSpace;
         LearningElement.Description = Description;
@@ -93,7 +93,7 @@ public class EditLearningElement : IEditLearningElement
         Execute();
     }
 
-    private bool AnyChange() =>
+    public bool AnyChanges() =>
         LearningElement.Name != ElementName ||
         LearningElement.Parent != ParentSpace ||
         LearningElement.Description != Description ||
@@ -102,5 +102,5 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.ElementModel != ElementModel ||
         LearningElement.Workload != Workload ||
         LearningElement.Points != Points ||
-        LearningElement.LearningContent != LearningContent;
+        !LearningElement.LearningContent.Equals(LearningContent);
 }

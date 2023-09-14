@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
+using NSubstitute.ClearExtensions;
 using NUnit.Framework;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
@@ -135,7 +138,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        Assert.That(() => WorldPresenter.Received(1).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
+        Assert.That(() => WorldPresenter.Received(2).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
                 LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123, LearningContentViewModels[0]),
             Throws.Nothing);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
@@ -222,7 +225,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     private IRenderedFragment GetFormWithPopoverProvider(ILearningElementViewModel? vm = null,
-        EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null)
+        EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null, int debounceInterval = 0)
     {
         vm ??= ViewModelProvider.GetLearningElement();
         onNewClicked ??= EventCallback.Empty;
@@ -233,7 +236,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             builder.CloseComponent();
             builder.OpenComponent<EditElementForm>(1);
             builder.AddAttribute(2, nameof(EditElementForm.ElementToEdit), vm);
-            builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
+            builder.AddAttribute(3, nameof(EditElementForm.DebounceInterval), debounceInterval);
             builder.AddAttribute(4, nameof(EditElementForm.OnNewButtonClicked), onNewClicked.Value);
             builder.CloseComponent();
         };
