@@ -13,7 +13,7 @@
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
-<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
           SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"]
@@ -85,7 +85,6 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<EditWorldForm> Localizer { get; set; }
 
-
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldViewModel WorldToEdit { get; set; }
 
@@ -104,6 +103,8 @@
     {
         LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
     }
+
+    private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);
 
     private async Task MapIntoContainer()
     {

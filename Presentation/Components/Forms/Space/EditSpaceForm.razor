@@ -15,7 +15,8 @@
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
-          OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["EditSpaceForm.SnackbarMessage"]
+          OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
+          SnackbarMessage=@Localizer["EditSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <HeaderButtons>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard"
@@ -139,6 +140,8 @@
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
             model.Goals, (int) model.RequiredPoints!, model.Theme);
     }
+
+    private void OnValidFieldChange(LearningSpaceFormModel model) => OnValidSubmit(model);
 
     private async Task MapIntoContainer()
     {
