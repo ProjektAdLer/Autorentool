@@ -19,7 +19,7 @@
                    @bind-Checked="FormDataContainer.FormModel.AdvancedMode" 
                    For="@(() => FormModel.AdvancedMode)"
                    Color="Color.Secondary" 
-                   Label="Advanced Mode" 
+                   Label=@Localizer["CreateSpaceForm.Switch.AdvancedSwitch.Title"] 
                    LabelPosition="LabelPosition.Start">
         </MudSwitch>
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]

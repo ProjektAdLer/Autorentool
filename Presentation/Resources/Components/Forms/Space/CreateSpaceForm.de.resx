@@ -62,4 +62,7 @@
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
         <value>Benötigte Punkte</value>
     </data>
+    <data name="CreateSpaceForm.Switch.AdvancedSwitch.Title" xml:space="preserve">
+        <value>Erweiterter Modus</value>
+    </data>
 </root>
