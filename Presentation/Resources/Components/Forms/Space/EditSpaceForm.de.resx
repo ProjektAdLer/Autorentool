@@ -65,4 +65,7 @@
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Design</value>
     </data>
+    <data name="EditSpaceForm.Header.AdvancedTitle" xml:space="preserve">
+        <value>Erweiterten Lernraum editieren</value>
+    </data>
 </root>

@@ -12,7 +12,16 @@
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
+        @if (LearningSpacePresenter.LearningSpaceVm is not IAdvancedLearningSpaceViewModel)
+        {
+            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
+        }
+
+        else
+        {
+            <h2 class="text-l text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.AdvancedTitle"]</h2>
+        }
+            
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
@@ -27,11 +36,6 @@
         </MudButton>
     </HeaderButtons>
     <Fields>
-        @if (LearningSpacePresenter.LearningSpaceVm is IAdvancedLearningSpaceViewModel )
-        {
-            // ToDo: Fix If clause
-            <div>AdvancedSpaceGen: Yes</div>
-        }
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -56,11 +60,14 @@
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
-            <div class="flex rounded-lg w-4/4 px-1 pb-2">
-                <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
-            </div>
-        </Collapsable>
+        @if (LearningSpacePresenter.LearningSpaceVm is not IAdvancedLearningSpaceViewModel)
+        {
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
+                <div class="flex rounded-lg w-4/4 px-1 pb-2">
+                    <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
+                </div>
+            </Collapsable>
+        }
 
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
@@ -133,7 +140,7 @@
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
-    
+
     private bool _collapsedGeneral = false;
     private bool _collapsedConditions = true;
     private bool _collapsedFloorplan = false;
