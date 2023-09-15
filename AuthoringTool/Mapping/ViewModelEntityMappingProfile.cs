@@ -581,7 +581,15 @@ public class ViewModelEntityMappingProfile : Profile
                 entity.CorrectChoice = entity.Choices.Single(choicevm => choicevm.Id == vm.CorrectChoice.Id))
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>();
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((entity, vm, context) => vm.CorrectChoices = vm.Choices.Where(choicevm =>
+                entity.CorrectChoices.Any(choiceentity => choiceentity.Id.Equals(choicevm.Id))).ToList())
+            .ReverseMap()
+            .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((vm, entity, context) => entity.CorrectChoices = entity.Choices.Where(choiceentity =>
+                vm.CorrectChoices.Any(choicevm => choicevm.Id.Equals(choicevm.Id))).ToList());
     }
 
     private void CreateChoiceMap()
@@ -642,7 +650,6 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityContent, AdaptivityContentViewModel>()
             .IncludeBase<IAdaptivityContent, IAdaptivityContentViewModel>()
-            .ForMember(x => x.Tasks, opt => opt.UseDestinationValue())
             .ReverseMap()
             .IncludeBase<IAdaptivityContentViewModel, IAdaptivityContent>();
     }
