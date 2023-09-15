@@ -1,15 +1,11 @@
 @using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View.LearningElement
 @using Shared
 @using Shared.Command
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using System.Text
 @using Presentation.Components.Dialogues
-@using Presentation.PresentationLogic.LearningElement
 @implements IDisposable
 
 @if (LearningSpaceP.LearningSpaceVm != null)
@@ -51,39 +47,7 @@
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div class="w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated">
-            @*style="width: 90%; height: 400px; border: 2px solid;"*@
-            <div class="drop-shadow-xl w-full h-full">
-                <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
-
-                    @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
-                    {
-                        var x = i;
-                        var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
-
-                        <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                                     Class="@GetSlotStyleString(x)"
-                                     style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
-                                     @onclick="() => ClickOnSlot(x)">
-                            <ItemRenderer>
-                                <DragDropLearningElement
-                                    LearningElement="@context"
-                                    OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                                    OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
-                                    OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
-                                    OnClicked="@LearningSpaceP.ClickedLearningElement"/>
-                            </ItemRenderer>
-                            <ChildContent>
-                                @if (!LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(x))
-                                {
-                                    <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
-                                }
-                            </ChildContent>
-                        </MudDropZone>
-                    }
-                </div>
-            </div>
-        </div>
+        <LearningSpaceLayoutView LearningSpace="LearningSpaceP.LearningSpaceVm"/>
     }
 }
 
@@ -141,60 +105,6 @@
                 await ShowReplaceLearningElementDialog();
                 break;
         }
-    }
-
-    private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
-    {
-        var cornerPointsString = new StringBuilder();
-        cornerPointsString.Append("clip-path: polygon(");
-        foreach (var cornerPoint in floorPlan.CornerPoints)
-        {
-            cornerPointsString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
-        }
-        if (floorPlan.CornerPoints.Any())
-        {
-            cornerPointsString.Length -= 2;
-        }
-        else
-        {
-            cornerPointsString.Append("0% 0%");
-        }
-        cornerPointsString.Append(");");
-        return cornerPointsString.ToString();
-    }
-
-    private string GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
-    {
-        var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
-        var slotPositionString = new StringBuilder();
-        slotPositionString.Append("position: absolute; ");
-        slotPositionString.Append($"top: {slotPosition.Y}%; ");
-        slotPositionString.Append($"left: {slotPosition.X}%; ");
-        slotPositionString.Append("transform: translate(-80%, -110%);");
-        return slotPositionString.ToString();
-    }
-
-    private string GetSlotStyleString(int position)
-    {
-        if (LearningSpaceP.LearningSpaceVm == null) return "";
-
-        if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
-        {
-            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-24 h-3 flex justify-center items-center";
-        }
-        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-24 h-3 flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
-    }
-
-    private string GetSlotIconString(int position)
-    {
-        if (LearningSpaceP.LearningSpaceVm == null) return "";
-
-        return LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(position) ? "" : "@Icons.Material.Filled.Add";
-    }
-
-    private void ClickOnSlot(int i)
-    {
-        LearningSpaceP.ClickOnSlot(i);
     }
 
     private async Task ShowReplaceLearningElementDialog()

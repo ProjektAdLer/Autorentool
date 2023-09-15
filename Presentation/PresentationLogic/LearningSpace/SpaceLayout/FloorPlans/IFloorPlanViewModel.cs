@@ -22,5 +22,10 @@ public interface IFloorPlanViewModel
     /// </summary>
     IList<Point> ElementSlotPositions { get; }
 
+    /// <summary>
+    /// List of two X/Y coordinates of the door positions.
+    /// </summary>
+    IList<(Point, Point)> DoorPositions { get; }
+
     string GetIcon { get; }
 }
