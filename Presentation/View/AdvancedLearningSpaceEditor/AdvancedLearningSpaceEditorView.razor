@@ -27,86 +27,79 @@
         </div>
     </div>
 
-    <div class="w-full min-h-[300px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
-        @*style="width: 90%; height: 400px; border: 2px solid;"*@
-        <div class="layout-shadow w-full h-full">
-            <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="clip-path: polygon(0% 0%,  0% 60%, 60% 60%, 60% 0%);">
-                Raum content
-                <div class="bg-white rounded-lg w-full grow overflow-scroll">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
-                         @onmousemove=@(e => MouseService.FireMove(this, e))
+    <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
+        <div style="clip-path: polygon(0% 0%,  0% 60%, 60% 60%, 60% 0%);">
+            Raum content
+            <div class="rounded-lg w-full grow overflow-scroll">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-[350px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
+                     @onmousemove=@(e => MouseService.FireMove(this, e))
                                  @onmouseup=@(e => MouseService.FireUp(this, e))
                                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
-                        @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                    @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                    {
+                        @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
                         {
-                            @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
-                            {
-                                <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
-                                                                      AdvancedComponent="advancedComponentSlot"
-                                                                      AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter"
-                                                                      OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
-                                                                      OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
-                                                                      OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
-                                                                      OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
-                                                                      @* ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
-                                                                      @* OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
-                                                                      AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter" 
-                                ></DraggableAdvancedLearningElementSlot>
-
-                            }
+                            <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
+                                                                  AdvancedComponent="advancedComponentSlot"
+                                                                  AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter"
+                                                                  OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
+                                                                  OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
+                                                                  OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
+                                                                  OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
+                                                                  @* ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
+                                                                  @* OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
+                                                                  AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter">
+                            </DraggableAdvancedLearningElementSlot>
                         }
-             
-
-
-                                                              <!-- The RightClickMenu might lies behind other spaces. 
-                        This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
-                        <!--<use xlink:href="#rightClickMenu" />-->
-                    </svg>
-                </div>
+                    }
+                    <!-- The RightClickMenu might lies behind other spaces. 
+                    This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
+                    <!--<use xlink:href="#rightClickMenu" />-->
+                </svg>
             </div>
         </div>
     </div>
-    <div class="w-full min-h-[90px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
-        <nav class="bg-gray-300">
-            <div class="relative flex mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 h-8 items-center justify-between">
-                <div class="items-stretch justify-start hidden sm:ml-6 sm:block">
-                    <div class="flex space-x-4">
-                        <button
-                            class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
-                            @onclick="() => _menuFocus = MenuFocus.LearningElements">
-                            @* <MudIcon Icon="@Icons.Material.Filled.AddChart"></MudIcon> *@
-                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/learning-element-slot-icon-nobg.png" class="pointer-events-none w-8 h-8">
-                            @Localizer["AdvancedLearningSpaceEditor.LearningElementSlots.Title"]
-                        </button>
-                        <button
-                            class="@GetMenuStyleString(MenuFocus.DecoObjects) rounded-md px-2 py-1 text-sm font-medium"
-                            @onclick="() => _menuFocus = MenuFocus.DecoObjects">
-                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
-                            @Localizer["AdvancedLearningSpaceEditor.Decorations.Title"]
-                        </button>
-                        <button
-                            class="@GetMenuStyleString(MenuFocus.Doors) rounded-md px-2 py-1 text-sm font-medium"
-                            @onclick="() => _menuFocus = MenuFocus.Doors">
-                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/door-icon-nobg.png" class="pointer-events-none w-8 h-8">
-                            @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
-                        </button>
-                        <button
-                            class="@GetMenuStyleString(MenuFocus.Windows) rounded-md px-2 py-1 text-sm font-medium"
-                            @onclick="() => _menuFocus = MenuFocus.Windows">
-                            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/window-icon-nobg.png" class="pointer-events-none w-8 h-8">
-                            @Localizer["AdvancedLearningSpaceEditor.Windows.Title"]
-                        </button>
-                    </div>
-                </div>
+    <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated">
+        <button
+            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+            @onclick=CreateAdvancedLearningElementSlot>
+            <div class="h-[45px]">
+                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/learning-element-slot-icon-nobg.png" class="pointer-events-none w-8 h-8">
             </div>
-        </nav>
-        <div>
-            <button
-                class="@GetMenuStyleString(MenuFocus.LearningElements) rounded-md px-2 py-1 text-sm font-medium"
-                @onclick="CreateAdvancedLearningElementSlot">
-                
-            </button>
-        </div>
+            <div class="h-[45px]">
+                @Localizer["AdvancedLearningSpaceEditor.LearningElementSlots.Title"]
+            </div>
+        </button>
+        <button
+            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+            @onclick=CreateAdvancedLearningElementSlot>
+            <div class="h-[45px]">
+                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
+            </div>
+            <div class="h-[45px]">
+                @Localizer["AdvancedLearningSpaceEditor.Decorations.Title"]
+            </div>
+        </button>
+        <button
+            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+            @onclick=CreateAdvancedLearningElementSlot>
+            <div class="h-[45px]">
+                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/door-icon-nobg.png" class="pointer-events-none w-8 h-8">
+            </div>
+            <div class="h-[45px]">
+                @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
+            </div>
+        </button>
+        <button
+            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+            @onclick=CreateAdvancedLearningElementSlot>
+            <div class="h-[45px]">
+                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/window-icon-nobg.png" class="pointer-events-none w-8 h-8">
+            </div>
+            <div class="h-[45px]">
+                @Localizer["AdvancedLearningSpaceEditor.Windows.Title"]
+            </div>
+        </button>
     </div>
 </section>
 
@@ -132,26 +125,9 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    // Menu Button Stuff
-
-    private enum MenuFocus
-    {
-        LearningElements,
-        DecoObjects,
-        Doors,
-        Windows
-    }
-
-    private MenuFocus _menuFocus;
-
-    private string GetMenuStyleString(MenuFocus buttonType)
-    {
-        return buttonType == _menuFocus ? "bg-gray-900 text-white " : "text-gray-400 hover:bg-gray-700 hover:text-white ";
-    }
-
     private void CreateAdvancedLearningElementSlot()
     {
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedLearningElementSlot();
     }
-    
+
 }
