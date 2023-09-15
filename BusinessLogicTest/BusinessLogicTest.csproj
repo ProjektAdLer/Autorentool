@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AuthoringTool\AuthoringTool.csproj" />
       <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
       <ProjectReference Include="..\PersistEntities\PersistEntities.csproj" />
       <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />

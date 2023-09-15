@@ -1,6 +1,10 @@
 using PersistEntities;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Action;
+using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Trigger;
 using Shared;
+using Shared.Adaptivity;
 
 namespace TestHelpers;
 
@@ -93,5 +97,49 @@ public static class PersistEntityProvider
         var space = GetLearningSpaceWithElement();
         world.LearningSpaces.Add(space);
         return world;
+    }
+    public static IAdaptivityActionPe GetContentReferenceAction()
+    {
+        return new ContentReferenceActionPe(GetLinkContent());
+    }
+
+    public static IAdaptivityContentPe GetAdaptivityContent()
+    {
+        var tasks = new List<IAdaptivityTaskPe> { GetAdaptivityTask() };
+        return new AdaptivityContentPe("foo", tasks);
+    }
+
+    private static IAdaptivityRulePe GetAdaptivityRule()
+    {
+        return new AdaptivityRulePe(GetAdaptivityTrigger(), GetAdaptivityAction());
+    }
+
+    private static IAdaptivityActionPe GetAdaptivityAction()
+    {
+        return new CommentActionPe("comment");
+    }
+
+    private static IAdaptivityTriggerPe GetAdaptivityTrigger()
+    {
+        return new CorrectnessTriggerPe(AnswerResult.Correct);
+    }
+
+    private static IAdaptivityTaskPe GetAdaptivityTask()
+    {
+        var questions = new List<IAdaptivityQuestionPe> { GetAdaptivityQuestion() };
+        return new AdaptivityTaskPe(questions, QuestionDifficulty.Hard);
+    }
+
+    private static IAdaptivityQuestionPe GetAdaptivityQuestion()
+    {
+        var choices = new List<ChoicePe> { GetAdaptivityChoice() };
+        var rules = new List<IAdaptivityRulePe> { GetAdaptivityRule() };
+        return new MultipleChoiceSingleResponseQuestionPe(123, choices, "questiontext", choices[0], QuestionDifficulty.Easy,
+            rules);
+    }
+
+    private static ChoicePe GetAdaptivityChoice()
+    {
+        return new ChoicePe("a choice");
     }
 }

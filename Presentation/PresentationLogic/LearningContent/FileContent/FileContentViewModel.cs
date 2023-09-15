@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Presentation.PresentationLogic.LearningContent;
+namespace Presentation.PresentationLogic.LearningContent.FileContent;
 
 public class FileContentViewModel : IFileContentViewModel
 {

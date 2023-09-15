@@ -1,4 +1,4 @@
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Entities;
@@ -11,7 +11,7 @@ public class LinkContentUt
     {
         var name = "foobar";
         var link = "https://www.google.com";
-        
+
         var systemUnderTest = new LinkContent(name, link);
 
         Assert.Multiple(() =>

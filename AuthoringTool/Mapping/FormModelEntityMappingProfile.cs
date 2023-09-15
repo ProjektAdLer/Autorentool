@@ -1,18 +1,12 @@
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.Components.Forms.Models;
 
 namespace AuthoringTool.Mapping;
 
 public class FormModelEntityMappingProfile : Profile
 {
-    public static Action<IMapperConfigurationExpression> Configure => cfg =>
-    {
-        cfg.AddProfile(new FormModelEntityMappingProfile());
-        cfg.AddCollectionMappersOnce();
-    };
-
     private FormModelEntityMappingProfile()
     {
         DisableConstructorMapping();
@@ -21,6 +15,12 @@ public class FormModelEntityMappingProfile : Profile
         CreateElementMap();
         CreateContentMap();
     }
+
+    public static Action<IMapperConfigurationExpression> Configure => cfg =>
+    {
+        cfg.AddProfile(new FormModelEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
+    };
 
     private void CreateContentMap()
     {

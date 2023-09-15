@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Question;
 using Shared;
 using TestHelpers;
 
@@ -426,6 +428,65 @@ public class PersistenceCt
 
         Assert.That(actual.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements.First(),
             Is.Not.EqualTo(actual.LearningSpaces[1].LearningSpaceLayout.ContainedLearningElements.First()));
+    }
+
+    [Test]
+    public void SaveAndLoadWorld_WithAdaptivityContentElement_RestoresCorrectly()
+    {
+        var content = PersistEntityProvider.GetAdaptivityContent();
+        var element = PersistEntityProvider.GetLearningElement(content: content);
+        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
+            {
+                {
+                    0,
+                    element
+                }
+            }, FloorPlanEnum.R_20X30_8L));
+        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
+            { space1 });
+
+        var mockFileSystem = new MockFileSystem();
+
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem: mockFileSystem);
+
+        systemUnderTest.SaveToDisk(world, "foobar.txt");
+
+        var actual = systemUnderTest.LoadFromDisk("foobar.txt");
+
+        var actualContent = actual.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().LearningContent as IAdaptivityContentPe;
+        var actualQuestion = actualContent.Tasks.First().Questions.First() as MultipleChoiceSingleResponseQuestionPe;
+        Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoice));
+        Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoices.First()));
+
+        actual.Should().BeEquivalentTo(
+            world, options => options.IgnoringCyclicReferences()
+                .Excluding(obj => obj.Id)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.AssignedTopic)
+                .For(obj => obj.Topics).Exclude(obj => obj.Id)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
+                .Exclude(obj => obj.Id)
+                .Excluding(obj => obj.LearningPathways)
+                .Excluding(obj => obj.LearningSpaces[0].LearningSpaceLayout.LearningElements[0].Id)
+        );
+
+        actualContent.Should().BeEquivalentTo(content, options =>
+        {
+            options.For(content => content.Tasks).Exclude(task => task.Id);
+            options.For(content => content.Tasks).For(task => task.Questions).Exclude(question => question.Id);
+            options.For(content => content.Tasks).For(task => task.Questions).For(question => question.Rules)
+                .Exclude(rule => rule.Action.Id);
+            return options;
+        });
     }
 
     private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null,

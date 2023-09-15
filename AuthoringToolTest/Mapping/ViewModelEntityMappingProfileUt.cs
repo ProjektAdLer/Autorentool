@@ -1,16 +1,25 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Adaptivity;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
@@ -444,6 +453,130 @@ public class ViewModelEntityMappingProfileUt
         {
             Assert.That(source2.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
+        });
+    }
+
+    [Test]
+    public void AdaptivityTrigger_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var correctnessTriggerVm = ViewModelProvider.GetCorrectnessTrigger();
+        var timeTriggerVm = ViewModelProvider.GetTimeTrigger();
+        var compositeTriggerVm = ViewModelProvider.GetCompositeTrigger();
+
+        var correctnessTrigger = systemUnderTest.Map<CorrectnessTrigger>(correctnessTriggerVm);
+        var timeTrigger = systemUnderTest.Map<TimeTrigger>(timeTriggerVm);
+        var compositeTrigger = systemUnderTest.Map<CompositeTrigger>(compositeTriggerVm);
+
+        correctnessTrigger.ExpectedAnswer = AnswerResult.Incorrect;
+        timeTrigger.Expected = 123;
+        compositeTrigger.Condition = ConditionEnum.Or;
+
+        systemUnderTest.Map(correctnessTrigger, correctnessTriggerVm);
+        systemUnderTest.Map(timeTrigger, timeTriggerVm);
+        systemUnderTest.Map(compositeTrigger, compositeTriggerVm);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(correctnessTriggerVm.ExpectedAnswer, Is.EqualTo(AnswerResult.Incorrect));
+            Assert.That(timeTriggerVm.Expected, Is.EqualTo(123));
+            Assert.That(compositeTriggerVm.Condition, Is.EqualTo(ConditionEnum.Or));
+        });
+    }
+
+    [Test]
+    public void AdaptivityAction_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var commentActionVm = ViewModelProvider.GetCommentAction();
+        var elementReferenceActionVm = ViewModelProvider.GetElementReferenceAction();
+        var contentReferenceActionVm = ViewModelProvider.GetContentReferenceAction();
+
+        var commentAction = systemUnderTest.Map<CommentAction>(commentActionVm);
+        var elementReferenceAction = systemUnderTest.Map<ElementReferenceAction>(elementReferenceActionVm);
+        var contentReferenceAction = systemUnderTest.Map<ContentReferenceAction>(contentReferenceActionVm);
+
+        commentAction.Comment = "another comment";
+        elementReferenceAction.ElementId = Guid.NewGuid();
+        contentReferenceAction.Content = new LinkContent("a name", "a link");
+
+        systemUnderTest.Map(commentAction, commentActionVm);
+        systemUnderTest.Map(elementReferenceAction, elementReferenceActionVm);
+        systemUnderTest.Map(contentReferenceAction, contentReferenceActionVm);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(commentActionVm.Comment, Is.EqualTo("another comment"));
+            Assert.That(elementReferenceActionVm.ElementId, Is.EqualTo(elementReferenceAction.ElementId));
+            Assert.That(contentReferenceActionVm.Content, Is.TypeOf<LinkContentViewModel>());
+        });
+        var linkContentVm = (LinkContentViewModel)contentReferenceActionVm.Content;
+        Assert.Multiple(() =>
+        {
+            Assert.That(linkContentVm.Name, Is.EqualTo("a name"));
+            Assert.That(linkContentVm.Link, Is.EqualTo("a link"));
+        });
+    }
+
+    [Test]
+    public void AdaptivityRule_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var ruleVm = ViewModelProvider.GetRule();
+
+        var rule = systemUnderTest.Map<AdaptivityRule>(ruleVm);
+
+        rule.Action = EntityProvider.GetContentReferenceAction();
+
+        systemUnderTest.Map(rule, ruleVm);
+
+        Assert.That(ruleVm.Action, Is.TypeOf<ContentReferenceActionViewModel>());
+    }
+
+    [Test]
+    public void MultipleChoiceSingleResponseQuestion_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var questionVm = ViewModelProvider.GetMultipleChoiceSingleResponseQuestion();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(questionVm.CorrectChoice, Is.EqualTo(questionVm.Choices.First()));
+            Assert.That(questionVm.CorrectChoices, Is.EquivalentTo(questionVm.Choices));
+        });
+
+        var questionEntity = systemUnderTest.Map<MultipleChoiceSingleResponseQuestion>(questionVm);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(questionEntity.CorrectChoice, Is.EqualTo(questionEntity.Choices.First()));
+            Assert.That(questionEntity.CorrectChoices, Is.EquivalentTo(questionEntity.Choices));
+        });
+
+        Assert.That(() => systemUnderTest.Map(questionEntity, questionVm), Throws.Nothing);
+    }
+
+    [Test]
+    public void AdaptivityElement_FullStructure_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+
+        var elementVm = ViewModelProvider.GetLearningElement();
+        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        var tasks = adaptivityContent.Tasks.ToList();
+
+        elementVm.LearningContent = adaptivityContent;
+
+        var element = systemUnderTest.Map<LearningElement>(elementVm);
+
+        Assert.That(element.LearningContent, Is.TypeOf<AdaptivityContent>());
+
+        systemUnderTest.Map(element, elementVm);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(elementVm.LearningContent, Is.EqualTo(adaptivityContent));
+            Assert.That(tasks.First(), Is.EqualTo(((AdaptivityContentViewModel)elementVm.LearningContent).Tasks.First()));
         });
     }
 

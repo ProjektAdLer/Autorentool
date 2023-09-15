@@ -1,6 +1,12 @@
 ﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -8,6 +14,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 
 namespace TestHelpers;
 
@@ -102,5 +109,80 @@ public static class ViewModelProvider
         var space = GetLearningSpaceWithElement();
         world.LearningSpaces.Add(space);
         return world;
+    }
+
+    public static CorrectnessTriggerViewModel GetCorrectnessTrigger(AnswerResult result = AnswerResult.Correct)
+    {
+        return new CorrectnessTriggerViewModel(result);
+    }
+
+    public static TimeTriggerViewModel GetTimeTrigger(int time = 0, TimeFrameType timeFrameType = TimeFrameType.Until)
+    {
+        return new TimeTriggerViewModel(time, timeFrameType);
+    }
+
+    public static CompositeTriggerViewModel GetCompositeTrigger(ConditionEnum type = ConditionEnum.And,
+        IAdaptivityTriggerViewModel? leftSide = null, IAdaptivityTriggerViewModel? rightSide = null)
+    {
+        leftSide ??= GetCorrectnessTrigger();
+        rightSide ??= GetTimeTrigger();
+        return new CompositeTriggerViewModel(type, leftSide, rightSide);
+    }
+
+    public static CommentActionViewModel GetCommentAction()
+    {
+        return new CommentActionViewModel("a comment");
+    }
+
+    public static ElementReferenceActionViewModel GetElementReferenceAction()
+    {
+        return new ElementReferenceActionViewModel(Guid.NewGuid());
+    }
+
+    public static ContentReferenceActionViewModel GetContentReferenceAction()
+    {
+        return new ContentReferenceActionViewModel(GetFileContent());
+    }
+
+    public static AdaptivityRuleViewModel GetRule(IAdaptivityQuestionViewModel? question = null)
+    {
+        return new AdaptivityRuleViewModel(question ?? GetMultipleChoiceSingleResponseQuestion(),
+            GetCorrectnessTrigger(),
+            GetCommentAction());
+    }
+
+    public static ChoiceViewModel GetChoice()
+    {
+        return new ChoiceViewModel("a choice");
+    }
+
+    public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
+    {
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice() };
+        return new MultipleChoiceSingleResponseQuestionViewModel(1, "question text",
+            choiceViewModels.First(), QuestionDifficulty.Medium, choiceViewModels);
+    }
+
+    private static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
+    {
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice(), GetChoice() };
+        return new MultipleChoiceMultipleResponseQuestionViewModel(1, "question text", QuestionDifficulty.Hard,
+            choiceViewModels, choiceViewModels);
+    }
+
+    private static AdaptivityTaskViewModel GetAdaptivityTask()
+    {
+        return new AdaptivityTaskViewModel(
+            new List<IAdaptivityQuestionViewModel>
+                { GetMultipleChoiceSingleResponseQuestion(), GetMultipleChoiceMultipleResponseQuestion() },
+            QuestionDifficulty.Hard);
+    }
+
+    public static IAdaptivityContentViewModel GetAdaptivityContent()
+    {
+        var task = GetAdaptivityTask();
+        var rule = GetRule(task.Questions.First());
+        return new AdaptivityContentViewModel("adaptivity name",
+            new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
     }
 }
