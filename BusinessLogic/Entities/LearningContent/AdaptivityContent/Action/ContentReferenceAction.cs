@@ -26,4 +26,34 @@ public class ContentReferenceAction : IAdaptivityAction
 
     public ILearningContent Content { get; set; }
     public Guid Id { get; private set; }
+
+    public bool Equals(IAdaptivityAction? other)
+    {
+        if (other is not ContentReferenceAction contentReferenceAction)
+            return false;
+        return Content.Equals(contentReferenceAction.Content) && Id.Equals(contentReferenceAction.Id);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((ContentReferenceAction)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Content, Id);
+    }
+
+    public static bool operator ==(ContentReferenceAction? left, ContentReferenceAction? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(ContentReferenceAction? left, ContentReferenceAction? right)
+    {
+        return !Equals(left, right);
+    }
 }

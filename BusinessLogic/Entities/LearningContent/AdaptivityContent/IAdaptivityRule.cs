@@ -4,7 +4,7 @@ using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
 
 namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
-public interface IAdaptivityRule
+public interface IAdaptivityRule : IEquatable<IAdaptivityRule>
 {
     /// <summary>
     /// The trigger that activates the rule.

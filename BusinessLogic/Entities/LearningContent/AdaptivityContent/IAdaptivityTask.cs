@@ -3,7 +3,7 @@ using Shared.Adaptivity;
 
 namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
-public interface IAdaptivityTask
+public interface IAdaptivityTask : IEquatable<IAdaptivityTask>
 {
     /// <summary>
     /// The main questions this task contains.

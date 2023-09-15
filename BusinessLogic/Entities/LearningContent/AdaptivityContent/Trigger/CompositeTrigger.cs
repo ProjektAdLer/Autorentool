@@ -39,4 +39,35 @@ public class CompositeTrigger : IAdaptivityTrigger
     /// The right side of the boolean composite trigger expression.
     /// </summary>
     public IAdaptivityTrigger Right { get; set; }
+
+    public bool Equals(IAdaptivityTrigger? other)
+    {
+        if (other is not CompositeTrigger compositeTrigger)
+            return false;
+        return Condition == compositeTrigger.Condition && Left.Equals(compositeTrigger.Left) &&
+               Right.Equals(compositeTrigger.Right);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((CompositeTrigger)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine((int)Condition, Left, Right);
+    }
+
+    public static bool operator ==(CompositeTrigger? left, CompositeTrigger? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(CompositeTrigger? left, CompositeTrigger? right)
+    {
+        return !Equals(left, right);
+    }
 }
