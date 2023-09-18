@@ -5,10 +5,12 @@ namespace BusinessLogic.Entities.LearningContent.AdaptivityContent;
 
 public class AdaptivityTask : IAdaptivityTask
 {
-    public AdaptivityTask(ICollection<IAdaptivityQuestion> questions, QuestionDifficulty minimumRequiredDifficulty)
+    public AdaptivityTask(ICollection<IAdaptivityQuestion> questions, QuestionDifficulty minimumRequiredDifficulty,
+        string name)
     {
         Questions = questions;
         MinimumRequiredDifficulty = minimumRequiredDifficulty;
+        Name = name;
         Id = Guid.NewGuid();
     }
 
@@ -19,11 +21,13 @@ public class AdaptivityTask : IAdaptivityTask
     {
         Questions = null!;
         MinimumRequiredDifficulty = QuestionDifficulty.Easy;
+        Name = "";
         Id = Guid.Empty;
     }
 
     public ICollection<IAdaptivityQuestion> Questions { get; set; }
-    public QuestionDifficulty MinimumRequiredDifficulty { get; set; }
+    public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
+    public string Name { get; set; }
     public Guid Id { get; set; }
 
     public bool Equals(IAdaptivityTask? other)
@@ -44,7 +48,8 @@ public class AdaptivityTask : IAdaptivityTask
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Questions, (int)MinimumRequiredDifficulty, Id);
+        return HashCode.Combine(Questions,
+            MinimumRequiredDifficulty.HasValue ? (int)MinimumRequiredDifficulty.Value : -1, Id);
     }
 
     public static bool operator ==(AdaptivityTask? left, AdaptivityTask? right)

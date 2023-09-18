@@ -9,10 +9,11 @@ namespace PersistEntities.LearningContent;
 [KnownType(typeof(MultipleChoiceSingleResponseQuestionPe))]
 public class AdaptivityTaskPe : IAdaptivityTaskPe
 {
-    public AdaptivityTaskPe(ICollection<IAdaptivityQuestionPe> questions, QuestionDifficulty minimumRequiredDifficulty)
+    public AdaptivityTaskPe(ICollection<IAdaptivityQuestionPe> questions, QuestionDifficulty minimumRequiredDifficulty, string name)
     {
         Questions = questions;
         MinimumRequiredDifficulty = minimumRequiredDifficulty;
+        Name = name;
         Id = Guid.NewGuid();
     }
 
@@ -23,11 +24,13 @@ public class AdaptivityTaskPe : IAdaptivityTaskPe
     {
         Questions = null!;
         MinimumRequiredDifficulty = QuestionDifficulty.Easy;
+        Name = "";
         Id = Guid.Empty;
     }
 
     [DataMember] public ICollection<IAdaptivityQuestionPe> Questions { get; set; }
-    [DataMember] public QuestionDifficulty MinimumRequiredDifficulty { get; set; }
+    [DataMember] public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
+    [DataMember] public string Name { get; set; }
     [IgnoreDataMember] public Guid Id { get; set; }
     
     

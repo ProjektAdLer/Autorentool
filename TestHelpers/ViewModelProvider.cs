@@ -175,7 +175,8 @@ public static class ViewModelProvider
         return new AdaptivityTaskViewModel(
             new List<IAdaptivityQuestionViewModel>
                 { GetMultipleChoiceSingleResponseQuestion(), GetMultipleChoiceMultipleResponseQuestion() },
-            QuestionDifficulty.Hard);
+            QuestionDifficulty.Hard,
+            "taskname");
     }
 
     public static IAdaptivityContentViewModel GetAdaptivityContent()

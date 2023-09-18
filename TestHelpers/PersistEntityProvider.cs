@@ -127,7 +127,7 @@ public static class PersistEntityProvider
     private static IAdaptivityTaskPe GetAdaptivityTask()
     {
         var questions = new List<IAdaptivityQuestionPe> { GetAdaptivityQuestion() };
-        return new AdaptivityTaskPe(questions, QuestionDifficulty.Hard);
+        return new AdaptivityTaskPe(questions, QuestionDifficulty.Hard, "taskname");
     }
 
     private static IAdaptivityQuestionPe GetAdaptivityQuestion()

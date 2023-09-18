@@ -156,14 +156,15 @@ public static class EntityProvider
     private static IAdaptivityTask GetAdaptivityTask()
     {
         var questions = new List<IAdaptivityQuestion> { GetAdaptivityQuestion() };
-        return new AdaptivityTask(questions, QuestionDifficulty.Hard);
+        return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
     }
 
     private static IAdaptivityQuestion GetAdaptivityQuestion()
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
-        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0], QuestionDifficulty.Easy,
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
+            QuestionDifficulty.Easy,
             rules);
     }
 

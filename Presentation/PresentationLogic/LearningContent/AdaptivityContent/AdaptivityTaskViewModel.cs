@@ -5,10 +5,11 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 public class AdaptivityTaskViewModel : IAdaptivityTaskViewModel
 {
-    public AdaptivityTaskViewModel(ICollection<IAdaptivityQuestionViewModel> questions, QuestionDifficulty minimumRequiredDifficulty)
+    public AdaptivityTaskViewModel(ICollection<IAdaptivityQuestionViewModel> questions, QuestionDifficulty minimumRequiredDifficulty, string name)
     {
         Questions = questions;
         MinimumRequiredDifficulty = minimumRequiredDifficulty;
+        Name = name;
         Id = Guid.NewGuid();
     }
 
@@ -19,10 +20,12 @@ public class AdaptivityTaskViewModel : IAdaptivityTaskViewModel
     {
         Questions = null!;
         MinimumRequiredDifficulty = QuestionDifficulty.Easy;
+        Name = "";
         Id = Guid.Empty;
     }
 
     public ICollection<IAdaptivityQuestionViewModel> Questions { get; set; }
-    public QuestionDifficulty MinimumRequiredDifficulty { get; set; }
+    public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
+    public string Name { get; set; }
     public Guid Id { get; set; }
 }
