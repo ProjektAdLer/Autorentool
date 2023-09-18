@@ -5,17 +5,30 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningElement
 <MudCard Class="overflow-auto">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
-        <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
+        <MudTabs TabHeaderClass="sticky top-0 z-10 backdrop-blur-sm bg-adlerdeactivated/[.50]">
+            <MudTabPanel Text="Ele">
+                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
+            </MudTabPanel>
+            <MudTabPanel Text="Ada">
+                <CreateAdaptivityElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
+            </MudTabPanel>
+        </MudTabs>
     }
     else
     {
-        <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew">
-
-        </EditElementForm>
+        @if (SelectedViewModelsProvider.LearningElement.LearningContent is AdaptivityContentViewModel)
+        {
+            <EditAdaptivityElementForm/>
+        }
+        else
+        {
+            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew"/>
+        }
     }
 
 </MudCard>
