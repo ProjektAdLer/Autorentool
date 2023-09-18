@@ -135,7 +135,7 @@ public static class EntityProvider
     public static IAdaptivityContent GetAdaptivityContent()
     {
         var tasks = new List<IAdaptivityTask> { GetAdaptivityTask() };
-        return new AdaptivityContent("foo", tasks);
+        return new AdaptivityContent(tasks);
     }
 
     private static IAdaptivityRule GetAdaptivityRule()

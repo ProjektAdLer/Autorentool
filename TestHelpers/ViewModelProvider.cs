@@ -183,7 +183,6 @@ public static class ViewModelProvider
     {
         var task = GetAdaptivityTask();
         var rule = GetRule(task.Questions.First());
-        return new AdaptivityContentViewModel("adaptivity name",
-            new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
+        return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
     }
 }
