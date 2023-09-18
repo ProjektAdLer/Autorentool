@@ -73,7 +73,9 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public void AddAdvancedLearningElementSlot()
     {
-        var slotCount = AdvancedLearningElementSlots.Keys.Max() + 1;
+        Console.WriteLine(AdvancedLearningElementSlots);
+        // Schreibt in 1 beim ersten durchlauf?
+        var slotCount = AdvancedLearningElementSlots.Count();
         AdvancedLearningElementSlots.Add(slotCount, new AdvancedLearningElementSlotViewModel());
     }
 

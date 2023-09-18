@@ -3,16 +3,23 @@ using System.Runtime.CompilerServices;
 using Presentation.Components;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
 public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditorPresenter
 {
+    private readonly IErrorService _errorService;
     private IAdvancedLearningSpaceViewModel? _advancedLearningSpaceVm;
-    public AdvancedLearningSpaceEditorPresenter(ILogger<AdvancedLearningSpaceEditorPresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    public AdvancedLearningSpaceEditorPresenter(ILogger<AdvancedLearningSpaceEditorPresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
     {
         Logger = logger;
+        _selectedViewModelsProvider = selectedViewModelsProvider;
+        _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+        _errorService = errorService;
     }
     private ILogger<AdvancedLearningSpaceEditorPresenter> Logger { get; }
 
@@ -78,5 +85,31 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
         field = value;
         OnPropertyChanged(propertyName);
         return true;
+    }
+    
+    private void SelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningObjectInPathWay))
+        {
+            if (caller is not ISelectedViewModelsProvider)
+            {
+                LogAndSetError("OnSelectedViewModelsProviderOnPropertyChanged",
+                    $"Caller must be of type ISelectedViewModelsProvider, got {caller?.GetType()}",
+                    "Caller must be of type ISelectedViewModelsProvider");
+                return;
+            }
+
+            if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel)
+                AdvancedLearningSpaceViewModel = null;
+            else if(_selectedViewModelsProvider.LearningObjectInPathWay is AdvancedLearningSpaceViewModel advSpace)
+                AdvancedLearningSpaceViewModel = advSpace;
+            else if (_selectedViewModelsProvider.LearningObjectInPathWay is null)
+                AdvancedLearningSpaceViewModel = null;
+        }
+    }
+    private void LogAndSetError(string operation, string errorDetail, string userMessage)
+    {
+        Logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
+        _errorService.SetError("Operation failed", userMessage);
     }
 }
