@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace Presentation.PresentationLogic.LearningContent;
+namespace Presentation.PresentationLogic.LearningContent.LinkContent;
 
 public class LinkContentViewModel : ILinkContentViewModel
 {

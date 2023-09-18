@@ -1,3 +1,6 @@
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+
 namespace Presentation.PresentationLogic.LearningContent;
 
 public interface ILearningContentViewModel

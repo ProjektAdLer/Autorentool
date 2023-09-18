@@ -181,7 +181,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        SpacePresenter.Received(1).EditLearningSpace(Expected, Expected, Expected, 123, Theme.Campus);
+        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, Expected, 123, Theme.Campus);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 

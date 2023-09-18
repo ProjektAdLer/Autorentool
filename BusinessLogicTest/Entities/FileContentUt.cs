@@ -1,4 +1,4 @@
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Entities;
@@ -12,9 +12,9 @@ public class FileContentUt
         var name = "foobar";
         var type = "barbaz";
         var content = "";
-        
+
         var systemUnderTest = new FileContent(name, type, content);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));

@@ -1,4 +1,4 @@
-namespace BusinessLogic.Entities.LearningContent;
+namespace BusinessLogic.Entities.LearningContent.LinkContent;
 
 public interface ILinkContent : ILearningContent
 {

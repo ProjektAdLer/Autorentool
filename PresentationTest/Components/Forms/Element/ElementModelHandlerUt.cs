@@ -6,6 +6,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Shared;
 
 namespace PresentationTest.Components.Forms.Element;

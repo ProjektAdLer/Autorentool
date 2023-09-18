@@ -2,8 +2,18 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
+using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Action;
+using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Trigger;
+using Choice = BusinessLogic.Entities.LearningContent.AdaptivityContent.Question.Choice;
 
 namespace AuthoringTool.Mapping;
 
@@ -23,6 +33,7 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateInterfaceMaps();
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
+        CreateAdaptivityMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -238,5 +249,169 @@ public class EntityPersistEntityMappingProfile : Profile
                         .Select(x => x.TargetObject).ToList();
                 }
             });
+    }
+    
+    private void CreateAdaptivityMap()
+    {
+        CreateAdaptivityTriggerMap();
+        CreateAdaptivityActionMap();
+        CreateAdaptivityQuestionMap();
+        CreateChoiceMap();
+        CreateAdaptivityRuleMap();
+        CreateAdaptivityTaskMap();
+        CreateAdaptivityContentMap();
+    }
+
+    private void CreateAdaptivityTriggerMap()
+    {
+        CreateMap<IAdaptivityTrigger, IAdaptivityTriggerPe>()
+            .ReverseMap();
+
+        CreateMap<CorrectnessTrigger, IAdaptivityTriggerPe>()
+            .As<CorrectnessTriggerPe>();
+        CreateMap<CorrectnessTriggerPe, IAdaptivityTrigger>()
+            .As<CorrectnessTrigger>();
+
+        CreateMap<TimeTrigger, IAdaptivityTriggerPe>()
+            .As<TimeTriggerPe>();
+        CreateMap<TimeTriggerPe, IAdaptivityTrigger>()
+            .As<TimeTrigger>();
+
+        CreateMap<CompositeTrigger, IAdaptivityTriggerPe>()
+            .As<CompositeTriggerPe>();
+        CreateMap<CompositeTriggerPe, IAdaptivityTrigger>()
+            .As<CompositeTrigger>();
+
+        CreateMap<CorrectnessTrigger, CorrectnessTriggerPe>()
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTriggerPe, IAdaptivityTrigger>();
+        CreateMap<TimeTrigger, TimeTriggerPe>()
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTriggerPe, IAdaptivityTrigger>();
+        CreateMap<CompositeTrigger, CompositeTriggerPe>()
+            .IncludeBase<IAdaptivityTrigger, IAdaptivityTriggerPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTriggerPe, IAdaptivityTrigger>();
+    }
+
+    private void CreateAdaptivityActionMap()
+    {
+        CreateMap<IAdaptivityAction, IAdaptivityActionPe>()
+            .EqualityComparison((entity, pe) => entity.Id == pe.Id)
+            .ReverseMap()
+            .EqualityComparison((pe, entity) => pe.Id == entity.Id);
+
+        CreateMap<CommentAction, IAdaptivityActionPe>()
+            .As<CommentActionPe>();
+        CreateMap<CommentActionPe, IAdaptivityAction>()
+            .As<CommentAction>();
+
+        CreateMap<ElementReferenceAction, IAdaptivityActionPe>()
+            .As<ElementReferenceActionPe>();
+        CreateMap<ElementReferenceActionPe, IAdaptivityAction>()
+            .As<ElementReferenceAction>();
+
+        CreateMap<ContentReferenceAction, IAdaptivityActionPe>()
+            .As<ContentReferenceActionPe>();
+        CreateMap<ContentReferenceActionPe, IAdaptivityAction>()
+            .As<ContentReferenceAction>();
+
+        CreateMap<CommentAction, CommentActionPe>()
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityActionPe, IAdaptivityAction>();
+        CreateMap<ElementReferenceAction, ElementReferenceActionPe>()
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityActionPe, IAdaptivityAction>();
+        CreateMap<ContentReferenceAction, ContentReferenceActionPe>()
+            .IncludeBase<IAdaptivityAction, IAdaptivityActionPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityActionPe, IAdaptivityAction>();
+    }
+
+    private void CreateAdaptivityQuestionMap()
+    {
+        CreateMap<IAdaptivityQuestion, IAdaptivityQuestionPe>()
+            .ReverseMap();
+        CreateMap<IMultipleChoiceQuestion, IMultipleChoiceQuestion>()
+            .ReverseMap();
+
+        CreateMap<MultipleChoiceSingleResponseQuestion, IAdaptivityQuestionPe>()
+            .As<MultipleChoiceSingleResponseQuestionPe>();
+        CreateMap<MultipleChoiceSingleResponseQuestionPe, IAdaptivityQuestion>()
+            .As<MultipleChoiceSingleResponseQuestion>();
+
+        CreateMap<MultipleChoiceMultipleResponseQuestion, IAdaptivityQuestionPe>()
+            .As<MultipleChoiceMultipleResponseQuestionPe>();
+        CreateMap<MultipleChoiceMultipleResponseQuestionPe, IAdaptivityQuestion>()
+            .As<MultipleChoiceMultipleResponseQuestion>();
+
+        CreateMap<MultipleChoiceSingleResponseQuestion, MultipleChoiceSingleResponseQuestionPe>()
+            .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionPe>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .IncludeBase<IAdaptivityQuestionPe, IAdaptivityQuestion>();
+        CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionPe>()
+            .ReverseMap();
+    }
+
+    private void CreateChoiceMap()
+    {
+        CreateMap<Choice, ChoicePe>()
+            .ReverseMap();
+    }
+
+    private void CreateAdaptivityRuleMap()
+    {
+        CreateMap<IAdaptivityRule, IAdaptivityRulePe>()
+            .ReverseMap();
+
+        CreateMap<AdaptivityRule, IAdaptivityRulePe>()
+            .As<AdaptivityRulePe>();
+        CreateMap<AdaptivityRulePe, IAdaptivityRule>()
+            .As<AdaptivityRule>();
+
+        CreateMap<AdaptivityRule, AdaptivityRulePe>()
+            .IncludeBase<IAdaptivityRule, IAdaptivityRulePe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityRulePe, IAdaptivityRule>();
+    }
+
+    private void CreateAdaptivityTaskMap()
+    {
+        CreateMap<IAdaptivityTask, IAdaptivityTaskPe>()
+            .EqualityComparison((entity, pe) => entity.Id == pe.Id)
+            .ReverseMap()
+            .EqualityComparison((pe, entity) => entity.Id == pe.Id);
+
+        CreateMap<AdaptivityTask, IAdaptivityTaskPe>()
+            .As<AdaptivityTaskPe>();
+        CreateMap<AdaptivityTaskPe, IAdaptivityTask>()
+            .As<AdaptivityTask>();
+
+        CreateMap<AdaptivityTask, AdaptivityTaskPe>()
+            .IncludeBase<IAdaptivityTask, IAdaptivityTaskPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityTaskPe, IAdaptivityTask>();
+    }
+
+    private void CreateAdaptivityContentMap()
+    {
+        CreateMap<IAdaptivityContent, IAdaptivityContentPe>()
+            .ReverseMap();
+
+        CreateMap<AdaptivityContent, IAdaptivityContentPe>()
+            .As<AdaptivityContentPe>();
+        CreateMap<AdaptivityContentPe, IAdaptivityContent>()
+            .As<AdaptivityContent>();
+
+        CreateMap<AdaptivityContent, AdaptivityContentPe>()
+            .IncludeBase<IAdaptivityContent, IAdaptivityContentPe>()
+            .ReverseMap()
+            .IncludeBase<IAdaptivityContentPe, IAdaptivityContent>();
     }
 }

@@ -9,6 +9,7 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.LearningContent.FileContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateElementForm.Header.Text"]</h2>
@@ -118,21 +119,11 @@
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
-                           AnchorOrigin="Origin.BottomCenter"
+                <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                            For="@(() => FormModel.ElementModel)"
-                           Variant="Variant.Outlined"
-                           Immediate="false"
-                           Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]">
-                    @foreach (var elementModel in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null))
-                    {
-                        <MudSelectItem Value="@(elementModel)" Style="white-space: nowrap">
-                            <div class="flex flex-row items-center gap-2">
-                                <img class="flex w-10 h-8 drop-shadow px-1" src="@ElementModelHandler.GetIconForElementModel(elementModel)" alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>@*@theme*@
-                            </div>
-                        </MudSelectItem>
-                    }
-                </MudSelect>
+                           Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                           Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null)">
+                </ElementModelGridSelect>
             </div>
         </Collapsable>
 

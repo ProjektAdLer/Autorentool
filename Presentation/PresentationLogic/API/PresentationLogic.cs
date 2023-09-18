@@ -10,10 +10,13 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -164,6 +167,12 @@ public class PresentationLogic : IPresentationLogic
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
             goals, evaluationLink,
             world => CMapper.Map(world, learningWorldVm));
+        //quit early if there are no changes
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning world command, quitting before executing command");
+            return;
+        }
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -247,6 +256,11 @@ public class PresentationLogic : IPresentationLogic
         var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
             topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning space command, quitting before executing command");
+            return;
+        }
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -512,6 +526,11 @@ public class PresentationLogic : IPresentationLogic
         var command = ElementCommandFactory.GetEditCommand(elementEntity, parentSpaceEntity, name, description,
             goals, difficulty, elementModel, workload, points, contentEntity,
             element => CMapper.Map(element, learningElementVm));
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning element command, quitting before executing command");
+            return;
+        }
         BusinessLogic.ExecuteCommand(command);
     }
 

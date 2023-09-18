@@ -1,0 +1,39 @@
+@using Shared
+@using Presentation.Components.Forms.Element
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@inherits MudBaseInput<ElementModel>
+
+<div class="grid lg:grid-cols-4 xl:grid-cols-5">
+    @foreach (var elementModel in Elements)
+    {
+        var classString = elementModel == Value ? "bg-adlerblue-600" : "hover:bg-adlergrey-100";
+        <MudListItem Value="@(elementModel)"
+                     Class="@classString"
+                     OnClick="() => OnItemClick(elementModel)">
+            <div class="flex flex-row items-center gap-2">
+                <img class="flex w-10 h-8 drop-shadow px-1"
+                     src="@ElementModelHandler.GetIconForElementModel(elementModel)"
+                     alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>
+            </div>
+        </MudListItem>
+    }
+</div>
+
+@code {
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning
+    public IEnumerable<ElementModel> Elements { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IElementModelHandler ElementModelHandler { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<ElementModelGridSelect> Localizer { get; set; }
+
+    private void OnItemClick(ElementModel elementModel)
+    {
+        SetValueAsync(elementModel);
+    }
+
+}
