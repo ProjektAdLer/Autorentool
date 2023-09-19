@@ -50,6 +50,12 @@ public class LearningWorldPathwayViewUt
         _ctx.Services.AddSingleton(_localizer);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     private TestContext _ctx = null!;
     private IMouseService _mouseService = null!;
     private ILearningWorldPresenter _worldPresenter = null!;

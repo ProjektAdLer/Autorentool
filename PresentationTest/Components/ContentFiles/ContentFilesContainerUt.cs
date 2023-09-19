@@ -42,6 +42,12 @@ public class ContentFilesContainerUt
         _testContext.ComponentFactories.Add(_contentFilesViewSubstitute);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
     private TestContext _testContext;
     private IPresentationLogic _presentationLogic;
     private IDialogService _dialogService;

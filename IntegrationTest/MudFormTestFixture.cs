@@ -34,4 +34,10 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
         Context.AddLocalizerForTest<TComponent>();
         Context.AddLocalizerFactoryForTest();
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        Snackbar.Dispose();
+    }
 }

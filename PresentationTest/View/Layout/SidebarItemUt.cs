@@ -17,6 +17,12 @@ public class SidebarItemUt
         SidebarSubstitute = Substitute.For<ISidebar>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
     public ISidebar SidebarSubstitute { get; set; }
     private TestContext _testContext;
 

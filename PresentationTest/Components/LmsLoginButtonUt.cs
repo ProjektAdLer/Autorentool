@@ -27,6 +27,12 @@ public class LmsLoginButtonUt
         _context.Services.AddSingleton(_localizer);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _context.Dispose();
+    }
+
     private TestContext _context;
     private IDialogService _dialogService;
     private IStringLocalizer<LmsLoginButton> _localizer;

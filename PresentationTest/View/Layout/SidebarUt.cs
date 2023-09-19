@@ -17,6 +17,12 @@ public class SidebarUt
         _testContext = new TestContext();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
     [Test]
     public void Render_ParametersSet()
     {

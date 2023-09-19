@@ -23,6 +23,12 @@ public class UploadProgressDialogUt
         _ctx.AddLocalizerForTest<UploadProgressDialog>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     private TestContext _ctx;
 
     [Test]
