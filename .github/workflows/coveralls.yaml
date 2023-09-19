@@ -1,6 +1,13 @@
 name: Coveralls Code Coverage
 on:
   push:
+    branches:
+      - main
+    paths-ignore:
+      - LICENCE
+      - README.md
+      - .gitignore
+      - AuthoringTool/electron.manifest.json
   pull_request:
 
 jobs:
