@@ -23,11 +23,11 @@
     {
         @if (SelectedViewModelsProvider.LearningElement.LearningContent is AdaptivityContentViewModel)
         {
-            <EditAdaptivityElementForm/>
+            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew" AdaptivityElementMode="true"/>
         }
         else
         {
-            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew"/>
+            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew" AdaptivityElementMode="false"/>
         }
     }
 

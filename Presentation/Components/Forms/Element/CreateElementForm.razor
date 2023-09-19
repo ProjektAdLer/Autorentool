@@ -13,14 +13,7 @@
 @using Presentation.PresentationLogic.LearningContent.FileContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        @if (!AdaptivityElementMode)
-        {
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateElementForm.Header.Text"]</h2>
-        }
-        else
-        {
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateAdaptivityElementForm.Header.Text"]</h2>
-        }
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
