@@ -12,10 +12,10 @@
     {
         <MudTabs TabHeaderClass="sticky top-0 z-10 backdrop-blur-sm bg-adlerdeactivated/[.50]">
             <MudTabPanel Text="Ele">
-                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
+                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="false"/>
             </MudTabPanel>
             <MudTabPanel Text="Ada">
-                <CreateAdaptivityElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged"/>
+                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="true"/>
             </MudTabPanel>
         </MudTabs>
     }

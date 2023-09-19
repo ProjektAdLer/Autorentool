@@ -11,6 +11,21 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="CreateAdaptivityElementForm.Header.Text" xml:space="preserve">
+        <value>Create adaptivity element</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Adaptivity element created</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
+        <value>Tasks in this element</value>
+    </data>
+    <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
+        <value>Add tasks</value>
+    </data>
     <data name="CreateElementForm.Header.Text" xml:space="preserve">
         <value>Create learning element</value>
     </data>
