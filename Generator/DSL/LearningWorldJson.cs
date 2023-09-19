@@ -19,6 +19,8 @@ public class LearningWorldJson : ILearningWorldJson
 
     public string EvaluationLink { get; set; }
 
+    public string Type => "LearningWorld";
+
     public string WorldName { get; set; }
 
     public string WorldUUID { get; set; }
