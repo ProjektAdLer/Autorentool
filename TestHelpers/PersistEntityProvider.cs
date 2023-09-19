@@ -98,10 +98,6 @@ public static class PersistEntityProvider
         world.LearningSpaces.Add(space);
         return world;
     }
-    public static IAdaptivityActionPe GetContentReferenceAction()
-    {
-        return new ContentReferenceActionPe(GetLinkContent());
-    }
 
     public static IAdaptivityContentPe GetAdaptivityContent()
     {
@@ -109,33 +105,76 @@ public static class PersistEntityProvider
         return new AdaptivityContentPe("foo", tasks);
     }
 
-    private static IAdaptivityRulePe GetAdaptivityRule()
+    public static IAdaptivityContentPe GetAdaptivityContentFullStructure()
     {
-        return new AdaptivityRulePe(GetAdaptivityTrigger(), GetAdaptivityAction());
+        var tasks = new List<IAdaptivityTaskPe>
+            { GetAdaptivityTask(), GetAdaptivityTask(GetMultipleChoiceMultipleResponseAdaptivityQuestion()) };
+        tasks[1].Questions.First().Rules.Add(GetAdaptivityRule(GetTimeTrigger(), GetContentReferenceAction()));
+        tasks[1].Questions.First().Rules.Add(GetAdaptivityRule(GetCompositeTrigger(), GetElementReferenceAction()));
+        return new AdaptivityContentPe("foo", tasks);
     }
 
-    private static IAdaptivityActionPe GetAdaptivityAction()
+    private static IAdaptivityRulePe GetAdaptivityRule(IAdaptivityTriggerPe? trigger = null,
+        IAdaptivityActionPe? action = null)
+    {
+        trigger ??= GetCorrectnessTrigger();
+        action ??= GetCommentAction();
+        return new AdaptivityRulePe(trigger, action);
+    }
+
+    private static IAdaptivityActionPe GetCommentAction()
     {
         return new CommentActionPe("comment");
     }
 
-    private static IAdaptivityTriggerPe GetAdaptivityTrigger()
+    public static IAdaptivityActionPe GetContentReferenceAction()
+    {
+        return new ContentReferenceActionPe(GetLinkContent());
+    }
+
+    private static IAdaptivityActionPe GetElementReferenceAction(Guid? elementId = null)
+    {
+        elementId ??= Guid.NewGuid();
+        return new ElementReferenceActionPe(elementId.Value);
+    }
+
+    private static IAdaptivityTriggerPe GetCorrectnessTrigger()
     {
         return new CorrectnessTriggerPe(AnswerResult.Correct);
     }
 
-    private static IAdaptivityTaskPe GetAdaptivityTask()
+    private static IAdaptivityTriggerPe GetTimeTrigger()
     {
-        var questions = new List<IAdaptivityQuestionPe> { GetAdaptivityQuestion() };
+        return new TimeTriggerPe(123, TimeFrameType.Until);
+    }
+    
+    private static IAdaptivityTriggerPe GetCompositeTrigger()
+    {
+        return new CompositeTriggerPe(ConditionEnum.And, GetCorrectnessTrigger(), GetTimeTrigger());
+    }
+
+    private static IAdaptivityTaskPe GetAdaptivityTask(IAdaptivityQuestionPe? question = null)
+    {
+        question ??= GetMultipleChoiceSingleResponseAdaptivityQuestion();
+        var questions = new List<IAdaptivityQuestionPe> { question };
         return new AdaptivityTaskPe(questions, QuestionDifficulty.Hard, "taskname");
     }
 
-    private static IAdaptivityQuestionPe GetAdaptivityQuestion()
+    private static IAdaptivityQuestionPe GetMultipleChoiceSingleResponseAdaptivityQuestion()
     {
         var choices = new List<ChoicePe> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRulePe> { GetAdaptivityRule() };
-        return new MultipleChoiceSingleResponseQuestionPe(123, choices, "questiontext", choices[0], QuestionDifficulty.Easy,
+        return new MultipleChoiceSingleResponseQuestionPe(123, choices, "questiontext", choices[0],
+            QuestionDifficulty.Easy,
             rules);
+    }
+
+    private static IAdaptivityQuestionPe GetMultipleChoiceMultipleResponseAdaptivityQuestion()
+    {
+        var choices = new List<ChoicePe> { GetAdaptivityChoice() };
+        var rules = new List<IAdaptivityRulePe> { GetAdaptivityRule() };
+        return new MultipleChoiceMultipleResponseQuestionPe(123, choices, choices, rules, "questiontext",
+            QuestionDifficulty.Easy);
     }
 
     private static ChoicePe GetAdaptivityChoice()

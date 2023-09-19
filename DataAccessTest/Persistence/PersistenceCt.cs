@@ -433,7 +433,7 @@ public class PersistenceCt
     [Test]
     public void SaveAndLoadWorld_WithAdaptivityContentElement_RestoresCorrectly()
     {
-        var content = PersistEntityProvider.GetAdaptivityContent();
+        var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
         var element = PersistEntityProvider.GetLearningElement(content: content);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
