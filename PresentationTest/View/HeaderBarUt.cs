@@ -63,6 +63,13 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_logger);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+        _snackbar.Dispose();
+    }
+
     private TestContext _testContext;
     private IPresentationLogic _presentationLogic;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;

@@ -63,6 +63,12 @@ public class ContentFilesViewUt
         _testContext.AddMudBlazorTestServices();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
     [Test]
     public void Constructor_InjectsDependencies()
     {

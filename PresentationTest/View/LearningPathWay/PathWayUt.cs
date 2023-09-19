@@ -27,6 +27,12 @@ public class PathWayUt
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     private TestContext _ctx = null!;
     private IMouseService _mouseService = null!;
     private ILearningWorldPresenter _positioningService = null!;

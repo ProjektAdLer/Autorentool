@@ -30,6 +30,13 @@ public class BaseFormUt
         _testContext.ComponentFactories.AddStub<MudAlert>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+        _snackbar.Dispose();
+    }
+
     private TestContext _testContext;
     private IValidationWrapper<TestEntity> _validator;
     private ISnackbar _snackbar;

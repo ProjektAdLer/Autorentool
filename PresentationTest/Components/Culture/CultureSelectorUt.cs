@@ -23,6 +23,12 @@ public class CultureSelectorUt
         _navigation.Uri.Returns("http://localhost:8001/Foo");
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
     private TestContext _testContext;
     private INavigationManagerWrapper _navigation;
     private IStringLocalizer<CultureSelector> _localizer;

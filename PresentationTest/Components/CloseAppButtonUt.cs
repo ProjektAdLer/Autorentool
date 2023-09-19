@@ -20,6 +20,12 @@ public class CloseAppButtonUt
         _context.AddLocalizerForTest<CloseAppButton>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _context.Dispose();
+    }
+
     private Bunit.TestContext _context;
     private IShutdownManager _shutdownManager;
 

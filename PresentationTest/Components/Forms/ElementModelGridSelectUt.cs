@@ -31,6 +31,12 @@ public class ElementModelGridSelectUt
                 (nameof(ElementModelGridSelect.Elements), _elementModels));
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _component.Dispose();
+    }
+
     private IRenderedComponent<ElementModelGridSelect> _component = null!;
 
     private readonly IEnumerable<ElementModel> _elementModels = new List<ElementModel>

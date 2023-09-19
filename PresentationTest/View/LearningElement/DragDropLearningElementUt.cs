@@ -38,6 +38,12 @@ public class DragDropLearningElementUt
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     private TestContext _ctx;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
 
