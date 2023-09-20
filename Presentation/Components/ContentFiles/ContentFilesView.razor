@@ -1,14 +1,15 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
-
 <MudTable Items="Items" Class="my-4 w-full grow h-full flex flex-col flex-nowrap border-adlergrey-200"
           Dense="true" Virtualize="true" Filter="Filter" Outlined="true" Hover="true">
     <ToolBarContent>
@@ -155,39 +156,54 @@
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
         var result = await dialog.Result;
 
-        var matches = WorkspaceViewModel.LearningWorlds.SelectMany(world => world.AllLearningElements.Where(element => element.LearningContent.Equals(item)).Select(el => (world, el)));
+        if (result.Canceled) return;
+
+        var matches = WorkspaceViewModel.LearningWorlds
+            .SelectMany(world => world.AllLearningElements
+                .Where(element => element.LearningContent.Equals(item))
+                .Select(el => (world, el)))
+            .ToList();
         if (matches.Any())
         {
-            parameters = new DialogParameters
-            {
-                { nameof(DeleteContentInUseConfirmationDialog.ContentName), item.Name },
-                { nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples), matches }
-            };
-            var warningDialog = await DialogService.ShowAsync<DeleteContentInUseConfirmationDialog>(Localizer["WarningDialog.Title"], parameters, options);
-            var warningResult = await warningDialog.Result;
-            if (warningResult.Canceled) return;
+            if (await ShowContentInUseWarningAsync(item, matches, options)) return;
         }
 
-    //if not cancelled, delete content
-        if (!result.Canceled)
+    //not cancelled, delete content
+        try
         {
-            try
-            {
-                PresentationLogic.RemoveContent(item);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                ErrorService.SetError("Error deleting content", e.Message);
-            }
-            catch (FileNotFoundException e)
-            {
-                ErrorService.SetError("Error deleting content", e.Message);
-            }
-            catch (SerializationException e)
-            {
-                ErrorService.SetError("Error deleting content", e.Message);
-            }
+            PresentationLogic.RemoveContent(item);
         }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Shows the user a warning that the content that they are trying to delete is in use.
+    /// </summary>
+    /// <returns>True if the deletion should be cancelled, false otherwise.</returns>
+    private async Task<bool> ShowContentInUseWarningAsync(ILearningContentViewModel item, IEnumerable<(ILearningWorldViewModel world, ILearningElementViewModel el)> matches, DialogOptions options)
+    {
+        DialogParameters parameters;
+        parameters = new DialogParameters
+        {
+            { nameof(DeleteContentInUseConfirmationDialog.ContentName), item.Name },
+            { nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples), matches }
+        };
+        var warningDialog =
+            await DialogService.ShowAsync<DeleteContentInUseConfirmationDialog>(Localizer["WarningDialog.Title"],
+                parameters, options);
+        var warningResult = await warningDialog.Result;
+        return warningResult.Canceled;
     }
 
     public async Task RerenderAsync()
