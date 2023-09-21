@@ -5,11 +5,12 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningElement
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
-@using Presentation.PresentationLogic.LearningContent.FileContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["EditElementForm.Header.Text"] : Localizer["EditAdaptivityElementForm.Header.Text"])</h2>
@@ -122,7 +123,7 @@
             <Collapsable Style="" Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
                 <MudText Class="ml-4" Typo="Typo.caption">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</MudText><br/>
                 <div class="flex flex-col items-center justify-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Info">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OpenAdaptivityContentDialog">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]</MudButton>
                 </div>
             </Collapsable>
         }
@@ -190,6 +191,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IDialogService DialogService { get; set; }
+
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel ElementToEdit { get; set; }
 
@@ -244,6 +248,23 @@
     private void PreviewOnClick(ILearningContentViewModel context)
     {
         PresentationLogic.ShowLearningContentAsync(context);
+    }
+
+    private async void OpenAdaptivityContentDialog()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+        };
+        var parameters = new DialogParameters
+        {
+            {nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent}
+        };
+        var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>("AdaptivityContentDialogTitle", parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
     }
 
 }

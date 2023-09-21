@@ -2,10 +2,10 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using PersistEntities;
@@ -13,7 +13,6 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
-using Choice = BusinessLogic.Entities.LearningContent.AdaptivityContent.Question.Choice;
 
 namespace AuthoringTool.Mapping;
 
@@ -250,7 +249,7 @@ public class EntityPersistEntityMappingProfile : Profile
                 }
             });
     }
-    
+
     private void CreateAdaptivityMap()
     {
         CreateAdaptivityTriggerMap();

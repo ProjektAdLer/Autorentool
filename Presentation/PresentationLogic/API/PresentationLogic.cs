@@ -1,6 +1,7 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -10,11 +11,13 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -24,6 +27,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 
@@ -49,6 +53,7 @@ public class PresentationLogic : IPresentationLogic
         ILogger<PresentationLogic> logger,
         IHybridSupportWrapper hybridSupportWrapper,
         IShellWrapper shellWrapper,
+        ITaskCommandFactory taskCommandFactory,
         IConditionCommandFactory conditionCommandFactory,
         IElementCommandFactory elementCommandFactory,
         ILayoutCommandFactory layoutCommandFactory,
@@ -66,6 +71,7 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider = selectedViewModelsProvider;
         HybridSupportWrapper = hybridSupportWrapper;
         ShellWrapper = shellWrapper;
+        TaskCommandFactory = taskCommandFactory;
         ConditionCommandFactory = conditionCommandFactory;
         ElementCommandFactory = elementCommandFactory;
         LayoutCommandFactory = layoutCommandFactory;
@@ -83,6 +89,7 @@ public class PresentationLogic : IPresentationLogic
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
     internal IHybridSupportWrapper HybridSupportWrapper { get; }
     internal IShellWrapper ShellWrapper { get; }
+    public ITaskCommandFactory TaskCommandFactory { get; }
     public IConditionCommandFactory ConditionCommandFactory { get; }
     public IElementCommandFactory ElementCommandFactory { get; }
     public ILayoutCommandFactory LayoutCommandFactory { get; }
@@ -173,6 +180,7 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogInformation("No changes in edit learning world command, quitting before executing command");
             return;
         }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -202,7 +210,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
+            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -261,6 +269,7 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogInformation("No changes in edit learning space command, quitting before executing command");
             return;
         }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -404,7 +413,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
+                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -481,7 +490,7 @@ public class PresentationLogic : IPresentationLogic
             difficulty, elementModel, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         //as there should only be one new element, we can take new list - old list = new element
         var elementsInWorldAfter = learningWorldVm.UnplacedLearningElements;
         var newElement = elementsInWorldAfter.Except(elementsInWorldBefore).First();
@@ -531,6 +540,7 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogInformation("No changes in edit learning element command, quitting before executing command");
             return;
         }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -648,6 +658,7 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningElement(parentSpaceVm.ContainedLearningElements.Last(), command);
     }
 
+
     /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
     public async Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
     {
@@ -742,6 +753,33 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
 
+    public void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name)
+    {
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
+        var command = TaskCommandFactory.GetCreateCommand(contentEntity, name,
+            content => CMapper.Map(content, adaptivityContentVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void EditAdaptivityTask(IAdaptivityTaskViewModel adaptivityTaskVm, string name,
+        QuestionDifficulty? minimumRequiredDifficulty)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(adaptivityTaskVm);
+        var command = TaskCommandFactory.GetEditCommand(taskEntity, name, minimumRequiredDifficulty,
+            task => CMapper.Map(task, adaptivityTaskVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+        IAdaptivityTaskViewModel adaptivityTaskVm)
+    {
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
+        var taskEntity = Mapper.Map<AdaptivityTask>(adaptivityTaskVm);
+        var command = TaskCommandFactory.GetDeleteCommand(contentEntity, taskEntity,
+            content => CMapper.Map(content, adaptivityContentVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     public void SetSelectedLearningContentViewModel(ILearningContentViewModel content)
     {
         SelectedViewModelsProvider.SetLearningContent(content, null);
@@ -759,7 +797,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -791,7 +829,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
