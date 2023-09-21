@@ -23,6 +23,21 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="EditAdaptivityElementForm.Header.Text" xml:space="preserve">
+        <value>Adaptivitätselement bearbeiten</value>
+    </data>
+    <data name="EditAdaptivityElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Adaptivitätselement aktualisiert</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title" xml:space="preserve">
+        <value>Aufgaben</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
+        <value>Aufgaben in diesem Element</value>
+    </data>
+    <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
+        <value>Aufgaben hinzufügen</value>
+    </data>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
         <value>Lernelement bearbeiten</value>
     </data>

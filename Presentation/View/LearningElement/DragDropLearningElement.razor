@@ -4,6 +4,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 
@@ -94,6 +95,8 @@
                 } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
+            //TODO: change this icon
+            IAdaptivityContentViewModel => CustomIcons.H5PElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }
