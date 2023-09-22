@@ -27,7 +27,6 @@
         </article>
         <section class="flex bg-white rounded-lg w-[250px] grow pt-2">
             <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @bind-SelectedValue="SelectedValue">
-
                 @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
                 {
                     @foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.ObjectsInPathWays))
@@ -100,13 +99,14 @@
     /// <returns>A sorted list of learning space view models based on the provided paths.</returns>
     private List<ILearningSpaceViewModel> GetLearningSpacesInOrder(IEnumerable<IObjectInPathWayViewModel> objectInPathWayViewModels)
     {
-        var objectInPathWayList = objectInPathWayViewModels.ToList();
-        var startObjects = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is LearningSpaceViewModel && x.OutBoundObjects.Count > 0).ToList();
 
         var visited = new HashSet<IObjectInPathWayViewModel>();
         var pathOrder = new List<ILearningSpaceViewModel>();
         var queue = new Queue<IObjectInPathWayViewModel>();
 
+        //enqueue all spaces with no inbound paths and at least one outbound path
+        var objectInPathWayList = objectInPathWayViewModels.ToList();
+        var startObjects = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is LearningSpaceViewModel && x.OutBoundObjects.Count > 0).ToList();
         foreach (var startObject in startObjects)
         {
             queue.Enqueue(startObject);
@@ -114,10 +114,21 @@
 
         while (queue.Count > 0)
         {
+            ProcessQueue();
+        }
+
+        //Add spaces without paths to the end of the list
+        var spacesWithOutPaths = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpaceViewModel && x.OutBoundObjects.Count == 0).Cast<ILearningSpaceViewModel>();
+
+        pathOrder.AddRange(spacesWithOutPaths);
+        return pathOrder;
+
+        void ProcessQueue()
+        {
             var current = queue.Dequeue();
 
             if (visited.Contains(current))
-                continue;
+                return;
 
             visited.Add(current);
 
@@ -126,16 +137,13 @@
                 pathOrder.Add(learningSpace);
             }
 
-            foreach (var nextObject in current.OutBoundObjects.OrderBy(o => o is LearningSpaceViewModel lsvm ? lsvm.Name : string.Empty))
+            //enqueue all spaces that directly follow this space
+            foreach (var nextObject in current.OutBoundObjects.OrderBy(o =>
+                o is LearningSpaceViewModel lsvm ? lsvm.Name : string.Empty))
             {
                 queue.Enqueue(nextObject);
             }
         }
-
-        var spacesWithOutPaths = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpaceViewModel && x.OutBoundObjects.Count == 0).Cast<ILearningSpaceViewModel>().ToList();
-
-        pathOrder.AddRange(spacesWithOutPaths);
-        return pathOrder;
     }
 
 
