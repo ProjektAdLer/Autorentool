@@ -10,6 +10,10 @@ using TestContext = Bunit.TestContext;
 
 namespace IntegrationTest;
 
+/// <summary>
+/// Test fixture for integration tests that contain MudBlazor components.
+/// </summary>
+/// <typeparam name="T">Component under test.</typeparam>
 public class MudBlazorTestFixture<T> where T : ComponentBase
 {
     protected IStringLocalizer<T> Localizer { get; set; }
@@ -22,7 +26,7 @@ public class MudBlazorTestFixture<T> where T : ComponentBase
         Context = new TestContext();
         Context.AddMudBlazorTestServices();
         Localizer = Context.AddLocalizerForTest<T>();
-        Context.Services.AddSingleton(Localizer);
+        //Context.Services.AddSingleton(Localizer);
         Context.Services.AddLogging(builder => builder.AddProvider(NullLoggerProvider.Instance));
     }
 
