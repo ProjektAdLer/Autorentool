@@ -142,7 +142,7 @@ public class CreateDslUt
 
         //Act
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
-        var learningSpaceList = systemUnderTest.SearchDuplicateLearningElementNames(mockSpaces);
+        var learningSpaceList = CreateDsl.IncrementDuplicateLearningElementNames(mockSpaces);
 
         //Assert
         Assert.Multiple(() =>
@@ -270,7 +270,7 @@ public class CreateDslUt
         var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
 
         //Act
-        systemUnderTest.WriteLearningWorld(learningWorld);
+        systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
 
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
@@ -348,7 +348,7 @@ public class CreateDslUt
         //Act
         try
         {
-            systemUnderTest.WriteLearningWorld(learningWorld);
+            systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
             Assert.Fail("Learning Content Exception was not thrown");
         }
         catch (Exception e)
@@ -397,7 +397,7 @@ public class CreateDslUt
         //Act
         try
         {
-            systemUnderTest.WriteLearningWorld(learningWorld);
+            systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
             Assert.Fail("FloorPlanName Exception was not thrown");
         }
         catch (Exception e)
@@ -453,7 +453,7 @@ public class CreateDslUt
         //Act
         try
         {
-            systemUnderTest.WriteLearningWorld(learningWorld);
+            systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
             Assert.Fail("Learning Content Exception was not thrown");
         }
         catch (Exception e)
