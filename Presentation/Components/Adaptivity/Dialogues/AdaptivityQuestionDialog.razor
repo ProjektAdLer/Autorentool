@@ -1,0 +1,33 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Shared.Adaptivity
+@using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
+<MudDialog>
+    <DialogContent>
+        <AdaptivityQuestionFormContainer Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></AdaptivityQuestionFormContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CreateQuestion">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IAdaptivityTaskViewModel Task { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public QuestionDifficulty Difficulty { get; set; }
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = default!;
+
+    private void CreateQuestion()
+    {
+        var choices = new List<ChoiceViewModel> {new("a"), new("b"), new("c")};
+        Task.Questions.Add(new MultipleChoiceSingleResponseQuestionViewModel(5, "text", choices[0], Difficulty, choices));
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+}

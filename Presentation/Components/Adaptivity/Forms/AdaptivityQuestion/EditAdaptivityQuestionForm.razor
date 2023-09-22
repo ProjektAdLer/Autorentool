@@ -1,0 +1,81 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Adaptivity.Forms.Models
+@using Presentation.Components.Forms
+@using Presentation.PresentationLogic.API
+@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
+@using System.Diagnostics.CodeAnalysis
+<BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion"
+          OnValidSubmit="OnValidSubmit"
+          SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
+          FormDataContainer="FormDataContainer">
+    <Fields>
+
+        <div class="rounded-lg w-4/4 px-4 pb-2">
+            <MudText>Title</MudText>
+
+            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text#####"]</MudText>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
+                          For="@(() => FormModel.Text)"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="DebounceInterval"
+                          Class="pb-4 mt-0"/>
+
+            <MudText>Switch for only one answer</MudText>
+        </div>
+
+        <div class="rounded-lg w-4/4 px-4">
+
+            @foreach (var choice in FormModel.Choices)
+            {
+                <MudText>@choice.Text</MudText>
+            }
+        </div>
+
+    </Fields>
+    <FooterButtons>
+        <MudButton>Hinzufügen</MudButton>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IMultipleChoiceQuestionViewModel QuestionToEdit { get; set; } = null!;
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<CreateAdaptivityQuestionForm> Localizer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IFormDataContainer<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion> FormDataContainer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
+
+    private MultipleChoiceQuestionFormModel FormModel => FormDataContainer.FormModel;
+
+    private void OnValidSubmit(MultipleChoiceQuestionFormModel model)
+    {
+        if (model.CorrectChoices.Count == 1)
+        {
+    //PresentationLogic.EditMultipleChoiceSingleResponseQuestion(model.Text, model.Choices, model.CorrectChoices.First());
+        }
+        else
+        {
+    //PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(model.Text, model.Choices, model.CorrectChoices);
+        }
+
+        OnSubmitted.InvokeAsync();
+    }
+
+
+}

@@ -1,0 +1,124 @@
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Adaptivity.Forms.Models
+@using Presentation.Components.Forms
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Shared.Adaptivity
+@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
+@using System.Diagnostics.CodeAnalysis
+<BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_createQuestionForm"
+          OnValidSubmit="OnValidSubmit"
+          SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
+          FormDataContainer="FormDataContainer">
+    <Fields>
+
+        <div class="rounded-lg w-4/4 px-4 pb-2">
+            <MudText>Title</MudText>
+
+            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text#####"]</MudText>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
+                          For="@(() => FormModel.Text)"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="DebounceInterval"
+                          Class="pb-4 mt-0"/>
+
+            <MudText>Switch for only one answer</MudText>
+            <MudCheckBox @bind-Checked="FormDataContainer.FormModel.IsSingleResponse"
+                         For="@(() => FormModel.IsSingleResponse)" Label="IsSingleResponse">
+            </MudCheckBox>
+        </div>
+
+        <div class="rounded-lg w-4/4 px-4">
+            @foreach (var choice in FormDataContainer.FormModel.Choices)
+            {
+                <MudCheckBox Disabled="true" Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"></MudCheckBox>
+                <MudTextField Value="@choice.Text"></MudTextField>
+            }
+        </div>
+        <div class="rounded-lg w-4/4 px-4">
+            <MudCheckBox T="bool" @bind-Checked="@_newChoiceChecked"></MudCheckBox>
+            <MudTextField T="string" @bind-Value="@_newChoiceText"></MudTextField>
+            <MudIconButton OnClick="AddChoice" Icon="@Icons.Material.Filled.Add"/>
+        </div>
+
+    </Fields>
+    <FooterButtons>
+        <MudButton OnClick="() => { _createQuestionForm?.SubmitAsync(); }">Hinzufügen</MudButton>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<CreateAdaptivityQuestionForm> Localizer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IFormDataContainer<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion> FormDataContainer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public IAdaptivityTaskViewModel Task { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public QuestionDifficulty Difficulty { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
+
+
+    private MultipleChoiceQuestionFormModel FormModel => FormDataContainer.FormModel;
+
+    private BaseForm<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>? _createQuestionForm;
+
+    //private bool _isSingleResponse = false;
+
+    private bool _newChoiceChecked = false;
+    private string _newChoiceText = "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void OnValidSubmit(MultipleChoiceQuestionFormModel model)
+    {
+        if (model.IsSingleResponse)
+        {
+            if (model.CorrectChoices.Count == 1)
+            {
+                PresentationLogic.CreateMultipleChoiceSingleResponseQuestion(Task, Difficulty, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+            }
+        }
+        else
+        {
+            PresentationLogic.CreateMultipleChoiceMultipleResponseQuestion(Task, Difficulty, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+        }
+
+        OnSubmitted.InvokeAsync();
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void AddChoice()
+    {
+        FormDataContainer.FormModel.Choices.Add(new ChoiceViewModel(_newChoiceText));
+        if (_newChoiceChecked)
+        {
+            FormDataContainer.FormModel.CorrectChoices.Add(FormDataContainer.FormModel.Choices.Last());
+        }
+        _newChoiceChecked = false;
+        _newChoiceText = "";
+    }
+
+}

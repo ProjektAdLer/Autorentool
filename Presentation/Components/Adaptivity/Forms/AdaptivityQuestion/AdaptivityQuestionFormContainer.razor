@@ -1,0 +1,27 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Shared.Adaptivity
+@if (QuestionToEdit == null)
+{
+    <CreateAdaptivityQuestionForm Task="Task" Difficulty="Difficulty"></CreateAdaptivityQuestionForm>
+}
+else
+{
+    @if (QuestionToEdit is IMultipleChoiceQuestionViewModel multipleChoiceQuestionViewModel)
+    {
+        <EditAdaptivityQuestionForm QuestionToEdit="multipleChoiceQuestionViewModel"></EditAdaptivityQuestionForm>
+    }
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IAdaptivityTaskViewModel Task { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public QuestionDifficulty Difficulty { get; set; }
+
+    [Parameter, EditorRequired]
+    public IAdaptivityQuestionViewModel? QuestionToEdit { get; set; }
+
+}

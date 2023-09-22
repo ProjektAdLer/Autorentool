@@ -1,6 +1,7 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -12,12 +13,14 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -53,6 +56,7 @@ public class PresentationLogic : IPresentationLogic
         ILogger<PresentationLogic> logger,
         IHybridSupportWrapper hybridSupportWrapper,
         IShellWrapper shellWrapper,
+        IQuestionCommandFactory questionCommandFactory,
         ITaskCommandFactory taskCommandFactory,
         IConditionCommandFactory conditionCommandFactory,
         IElementCommandFactory elementCommandFactory,
@@ -71,6 +75,7 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider = selectedViewModelsProvider;
         HybridSupportWrapper = hybridSupportWrapper;
         ShellWrapper = shellWrapper;
+        QuestionCommandFactory = questionCommandFactory;
         TaskCommandFactory = taskCommandFactory;
         ConditionCommandFactory = conditionCommandFactory;
         ElementCommandFactory = elementCommandFactory;
@@ -89,6 +94,7 @@ public class PresentationLogic : IPresentationLogic
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
     internal IHybridSupportWrapper HybridSupportWrapper { get; }
     internal IShellWrapper ShellWrapper { get; }
+    public IQuestionCommandFactory QuestionCommandFactory { get; }
     public ITaskCommandFactory TaskCommandFactory { get; }
     public IConditionCommandFactory ConditionCommandFactory { get; }
     public IElementCommandFactory ElementCommandFactory { get; }
@@ -783,6 +789,36 @@ public class PresentationLogic : IPresentationLogic
     public void SetSelectedLearningContentViewModel(ILearningContentViewModel content)
     {
         SelectedViewModelsProvider.SetLearningContent(content, null);
+    }
+
+    public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
+        QuestionDifficulty difficulty,
+        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
+        var command = QuestionCommandFactory.GetCreateMultipleChoiceSingleResponseQuestionCommand(taskEntity,
+            difficulty,
+            questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            task => CMapper.Map(taskEntity, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
+        QuestionDifficulty difficulty,
+        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetCreateMultipleChoiceMultipleResponseQuestionCommand(taskEntity,
+            difficulty,
+            questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <summary>

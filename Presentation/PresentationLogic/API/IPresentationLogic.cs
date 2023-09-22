@@ -4,6 +4,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -545,6 +546,14 @@ public interface IPresentationLogic
     void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
 
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
+
+    void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
+        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime);
+
+    void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
+        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime);
 
     #region BackendAccess
 

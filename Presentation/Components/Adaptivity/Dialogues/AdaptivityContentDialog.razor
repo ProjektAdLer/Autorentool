@@ -126,27 +126,25 @@
         PresentationLogic.DeleteAdaptivityTask(MyContent, task);
     }
 
-    private void AddQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
+    private async void AddQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
     {
-        throw new NotImplementedException();
-    // var options = new DialogOptions
-    // {
-    //     DisableBackdropClick = false,
-    //     MaxWidth = MaxWidth.Large,
-    //     FullWidth = true,
-    // };
-    // var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("AdaptivityQuestionDialogTitle", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
-    // var result = await dialog.Result;
-    // await InvokeAsync(StateHasChanged);
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+        };
+        var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("AdaptivityQuestionDialogTitle", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
+        var result = await dialog.Result;
+        await InvokeAsync(StateHasChanged);
     }
 
     private void RemoveQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
     {
-        throw new NotImplementedException();
-    // if (task.Questions.FirstOrDefault(x => x.Difficulty == difficulty) != null)
-    // {
-    //     task.Questions.Remove(task.Questions.FirstOrDefault(x => x.Difficulty == difficulty)!);
-    // }
+        if (task.Questions.FirstOrDefault(x => x.Difficulty == difficulty) != null)
+        {
+            task.Questions.Remove(task.Questions.FirstOrDefault(x => x.Difficulty == difficulty)!);
+        }
     }
 
 }
