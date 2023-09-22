@@ -1,7 +1,7 @@
 using AutoMapper;
-using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -52,8 +52,10 @@ public class ViewModelFormModelMappingProfile : Profile
 
     private void CreateAdaptivityQuestionMap()
     {
-        CreateMap<IMultipleChoiceQuestion, MultipleChoiceQuestionFormModel>();
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>();
+        CreateMap<IMultipleChoiceQuestionViewModel, MultipleChoiceQuestionFormModel>();
+        CreateMap<MultipleChoiceMultipleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => false));
+        CreateMap<MultipleChoiceSingleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => true));
     }
 }

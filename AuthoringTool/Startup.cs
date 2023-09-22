@@ -15,8 +15,10 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.Validation;
+using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using FluentValidation;
@@ -156,6 +158,10 @@ public class Startup
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
+        services.AddSingleton<IValidator<MultipleChoiceSingleResponseQuestion>,
+            MultipleChoiceSingleResponseQuestionValidator>();
+        services.AddSingleton<IValidator<MultipleChoiceMultipleResponseQuestion>,
+            MultipleChoiceMultipleResponseQuestionValidator>();
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningSpaceNamesProvider>(p =>

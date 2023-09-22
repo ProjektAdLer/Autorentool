@@ -10,7 +10,8 @@
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_createQuestionForm"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
-          FormDataContainer="FormDataContainer">
+          FormDataContainer="FormDataContainer"
+          CustomValidatorFunc="ValidateModel">
     <Fields>
 
         <div class="rounded-lg w-4/4 px-4 pb-2">
@@ -61,6 +62,11 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
 
+    [Inject, AllowNull]
+    internal IValidationWrapper<MultipleChoiceMultipleResponseQuestion> MultipleResponseQuestionValidator { get; set; }
+
+    [Inject, AllowNull]
+    internal IValidationWrapper<MultipleChoiceSingleResponseQuestion> SingleResponseQuestionValidator { get; set; }
 
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; } = default!;
@@ -120,5 +126,16 @@
         _newChoiceChecked = false;
         _newChoiceText = "";
     }
+
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => (async (_, propertyName) =>
+    {
+        var modelEntity = FormDataContainer.GetMappedEntity();
+        return modelEntity switch
+        {
+            MultipleChoiceSingleResponseQuestion singleResponseQuestion => await SingleResponseQuestionValidator.ValidateAsync(singleResponseQuestion, propertyName),
+            MultipleChoiceMultipleResponseQuestion multipleResponseQuestion => await MultipleResponseQuestionValidator.ValidateAsync(multipleResponseQuestion, propertyName),
+            _ => throw new ArgumentOutOfRangeException(nameof(modelEntity), "Model entity is not a valid type")
+            };
+    });
 
 }

@@ -48,7 +48,9 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateAdaptivityQuestionMap()
     {
         CreateMap<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>()
-            .As<MultipleChoiceMultipleResponseQuestion>();
+            .ConstructUsing((formModel, context) => formModel.IsSingleResponse
+                ? context.Mapper.Map<MultipleChoiceSingleResponseQuestion>(formModel)
+                : context.Mapper.Map<MultipleChoiceMultipleResponseQuestion>(formModel));
         CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
         CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>();
     }
