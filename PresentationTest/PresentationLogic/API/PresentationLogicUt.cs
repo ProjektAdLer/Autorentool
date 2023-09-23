@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -54,6 +55,8 @@ public class PresentationLogicUt
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
+        Substitute.For<ILogger<QuestionCommandFactory>>();
+        Substitute.For<ILogger<TaskCommandFactory>>();
         Substitute.For<ILogger<ConditionCommandFactory>>();
         Substitute.For<ILogger<ElementCommandFactory>>();
         Substitute.For<ILogger<LayoutCommandFactory>>();
@@ -64,6 +67,7 @@ public class PresentationLogicUt
         Substitute.For<ILogger<BatchCommandFactory>>();
         var mockHybridSupportWrapper = Substitute.For<IHybridSupportWrapper>();
         var mockShellWrapper = Substitute.For<IShellWrapper>();
+        var mockQuestionCommandFactory = Substitute.For<IQuestionCommandFactory>();
         var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
         var mockConditionCommandFactory = Substitute.For<IConditionCommandFactory>();
         var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
@@ -77,9 +81,9 @@ public class PresentationLogicUt
         //Act
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper,
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
-            mockHybridSupportWrapper, mockShellWrapper, mockTaskCommandFactory, mockConditionCommandFactory,
-            mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory, mockSpaceCommandFactory,
-            mockTopicCommandFactory, mockWorldCommandFactory, mockBatchCommandFactory);
+            mockHybridSupportWrapper, mockShellWrapper, mockQuestionCommandFactory, mockTaskCommandFactory,
+            mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory,
+            mockSpaceCommandFactory, mockTopicCommandFactory, mockWorldCommandFactory, mockBatchCommandFactory);
         Assert.Multiple(() =>
         {
             //Assert
@@ -2248,6 +2252,7 @@ public class PresentationLogicUt
         IServiceProvider? serviceProvider = null,
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
+        IQuestionCommandFactory? questionCommandFactory = null,
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
@@ -2268,6 +2273,7 @@ public class PresentationLogicUt
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
+        questionCommandFactory ??= Substitute.For<IQuestionCommandFactory>();
         taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
         elementCommandFactory ??= Substitute.For<IElementCommandFactory>();
@@ -2279,8 +2285,8 @@ public class PresentationLogicUt
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
 
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger,
-            hybridSupportWrapper, shellWrapper, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
+            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
+            questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
             layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory,
             batchCommandFactory);
     }

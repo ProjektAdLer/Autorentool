@@ -2,7 +2,7 @@ using Shared.Adaptivity;
 
 namespace BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 
-public interface IAdaptivityQuestion : IEquatable<IAdaptivityQuestion>
+public interface IAdaptivityQuestion : IEquatable<IAdaptivityQuestion>, IOriginator
 {
     public Guid Id { get; }
 

@@ -12,7 +12,8 @@ public interface IQuestionCommandFactory
     /// <summary>
     /// Creates a command to create a multiple choice single response question.
     /// </summary>
-    ICommand GetCreateMultipleChoiceSingleResponseQuestionCommand(AdaptivityTask adaptivityTask,
+    ICreateMultipleChoiceSingleResponseQuestion GetCreateMultipleChoiceSingleResponseQuestionCommand(
+        AdaptivityTask adaptivityTask,
         QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices, Choice correctChoice,
         int expectedCompletionTime,
         Action<AdaptivityTask> mappingAction);
@@ -20,7 +21,30 @@ public interface IQuestionCommandFactory
     /// <summary>
     /// Creates a command to create a multiple choice multiple response question.
     /// </summary>
-    ICommand GetCreateMultipleChoiceMultipleResponseQuestionCommand(AdaptivityTask adaptivityTask,
+    ICreateMultipleChoiceMultipleResponseQuestion GetCreateMultipleChoiceMultipleResponseQuestionCommand(
+        AdaptivityTask adaptivityTask,
         QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices,
         ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction);
+
+    /// <summary>
+    /// Creates a command to edit a multiple choice single response question.
+    /// </summary>
+    IEditMultipleChoiceSingleResponseQuestion GetEditMultipleChoiceSingleResponseQuestionCommand(
+        MultipleChoiceSingleResponseQuestion question,
+        string questionText, ICollection<Choice> choices, Choice correctChoice, int expectedCompletionTime,
+        Action<MultipleChoiceSingleResponseQuestion> action);
+
+    /// <summary>
+    /// Creates a command to edit a multiple choice multiple response question.
+    /// </summary>
+    IEditMultipleChoiceMultipleResponseQuestion GetEditMultipleChoiceMultipleResponseQuestionCommand(
+        MultipleChoiceMultipleResponseQuestion question,
+        string questionText, ICollection<Choice> choices, ICollection<Choice> correctChoices,
+        int expectedCompletionTime, Action<MultipleChoiceMultipleResponseQuestion> mappingAction);
+
+    /// <summary>
+    /// Creates a command to delete a question.
+    /// </summary>
+    IDeleteAdaptivityQuestion GetDeleteCommand(AdaptivityTask task, IAdaptivityQuestion question,
+        Action<AdaptivityTask> mappingAction);
 }

@@ -4,7 +4,7 @@
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
 <MudDialog>
     <DialogContent>
-        <AdaptivityQuestionFormContainer Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></AdaptivityQuestionFormContainer>
+        <AdaptivityQuestionFormContainer Task="Task" Difficulty="Difficulty" QuestionToEdit="Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty)"></AdaptivityQuestionFormContainer>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="CreateQuestion">Add</MudButton>

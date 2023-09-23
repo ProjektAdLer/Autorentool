@@ -3,7 +3,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
-namespace BusinessLogicTest.Commands.Adaptivity;
+namespace BusinessLogicTest.Commands.Adaptivity.Task;
 
 [TestFixture]
 public class CreateAdaptivityTaskUt

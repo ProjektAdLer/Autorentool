@@ -4,11 +4,13 @@
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
 @using BusinessLogic.Entities.LearningContent.Adaptivity.Question
+@using AutoMapper
 @using System.Diagnostics.CodeAnalysis
-<BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion"
+<BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_editQuestionForm"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
-          FormDataContainer="FormDataContainer">
+          FormDataContainer="FormDataContainer"
+          CustomValidatorFunc="ValidateModel">
     <Fields>
 
         <div class="rounded-lg w-4/4 px-4 pb-2">
@@ -26,16 +28,29 @@
         </div>
 
         <div class="rounded-lg w-4/4 px-4">
-
-            @foreach (var choice in FormModel.Choices)
+            @foreach (var choice in FormDataContainer.FormModel.Choices)
             {
-                <MudText>@choice.Text</MudText>
+                <div class="inline-flex">
+                    <MudCheckBox T="bool"
+                                 Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                 CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
+                    <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
+                </div>
             }
+
+        </div>
+        <div class="rounded-lg w-4/4 px-4">
+
+            <span class="inline-flex">
+                <MudCheckBox T="bool" @bind-Checked="@_newChoiceChecked"></MudCheckBox>
+                <MudTextField T="string" @bind-Value="@_newChoiceText"></MudTextField>
+                <MudIconButton OnClick="AddChoice" Icon="@Icons.Material.Filled.Add"/>
+            </span>
         </div>
 
     </Fields>
     <FooterButtons>
-        <MudButton>Hinzufügen</MudButton>
+        <MudButton OnClick="() => { _editQuestionForm?.SubmitAsync(); }">Übernehmen</MudButton>
     </FooterButtons>
 </BaseForm>
 
@@ -53,6 +68,17 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
 
+    [Inject, AllowNull]
+    internal IValidationWrapper<MultipleChoiceMultipleResponseQuestion> MultipleResponseQuestionValidator { get; set; }
+
+    [Inject, AllowNull]
+    internal IValidationWrapper<MultipleChoiceSingleResponseQuestion> SingleResponseQuestionValidator { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IMapper Mapper { get; set; }
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter]
     public EventCallback OnSubmitted { get; set; }
@@ -62,20 +88,77 @@
 
 
     private MultipleChoiceQuestionFormModel FormModel => FormDataContainer.FormModel;
+    private BaseForm<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>? _editQuestionForm;
+
+
+    private bool _newChoiceChecked = false;
+    private string _newChoiceText = "";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+    }
+
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(QuestionToEdit, FormDataContainer.FormModel);
+        await InvokeAsync(StateHasChanged);
+    }
 
     private void OnValidSubmit(MultipleChoiceQuestionFormModel model)
     {
-        if (model.CorrectChoices.Count == 1)
+        switch (QuestionToEdit)
         {
-    //PresentationLogic.EditMultipleChoiceSingleResponseQuestion(model.Text, model.Choices, model.CorrectChoices.First());
-        }
-        else
-        {
-    //PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(model.Text, model.Choices, model.CorrectChoices);
+            case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:
+                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+                break;
+            case MultipleChoiceMultipleResponseQuestionViewModel multipleResponseQuestion:
+                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(QuestionToEdit), "Question to edit is not a valid type");
         }
 
         OnSubmitted.InvokeAsync();
+        MudDialog.Close(DialogResult.Ok(true));
     }
 
+    private void AddChoice()
+    {
+        FormDataContainer.FormModel.Choices.Add(new ChoiceViewModel(_newChoiceText));
+        if (_newChoiceChecked)
+        {
+            FormDataContainer.FormModel.CorrectChoices.Add(FormDataContainer.FormModel.Choices.Last());
+        }
+        _newChoiceChecked = false;
+        _newChoiceText = "";
+    }
+
+    private void ChangeCorrectness(ChoiceViewModel choice, bool b)
+    {
+        if (b)
+        {
+            FormDataContainer.FormModel.CorrectChoices.Add(choice);
+        }
+        else
+        {
+            var choiceToRemove = FormDataContainer.FormModel.CorrectChoices.FirstOrDefault(x => x.Id == choice.Id);
+            if (choiceToRemove != null)
+                FormDataContainer.FormModel.CorrectChoices.Remove(choiceToRemove);
+        }
+    }
+
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => (async (_, propertyName) =>
+    {
+        var modelEntity = FormDataContainer.GetMappedEntity();
+        return modelEntity switch
+        {
+            MultipleChoiceSingleResponseQuestion singleResponseQuestion => await SingleResponseQuestionValidator.ValidateAsync(singleResponseQuestion, propertyName),
+            MultipleChoiceMultipleResponseQuestion multipleResponseQuestion => await MultipleResponseQuestionValidator.ValidateAsync(multipleResponseQuestion, propertyName),
+            _ => throw new ArgumentOutOfRangeException(nameof(modelEntity), "Model entity is not a valid type")
+            };
+    });
 
 }

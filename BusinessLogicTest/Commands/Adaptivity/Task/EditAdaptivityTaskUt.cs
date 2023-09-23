@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Adaptivity;
 
-namespace BusinessLogicTest.Commands.Adaptivity;
+namespace BusinessLogicTest.Commands.Adaptivity.Task;
 
 [TestFixture]
 public class EditAdaptivityTaskUt

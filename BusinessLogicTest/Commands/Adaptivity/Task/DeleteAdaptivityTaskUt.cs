@@ -4,7 +4,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
-namespace BusinessLogicTest.Commands.Adaptivity;
+namespace BusinessLogicTest.Commands.Adaptivity.Task;
 
 [TestFixture]
 public class DeleteAdaptivityTaskUt

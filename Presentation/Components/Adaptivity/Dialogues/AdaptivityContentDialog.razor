@@ -25,51 +25,57 @@
             <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
         </MudTd>
         <MudTd DataLabel="leicht">
-            @if (context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Easy) != null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Easy))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Easy)"
-                                     ToggledChanged="b => ChangeDifficulty(context, QuestionDifficulty.Easy, b)"
+                                     ToggledChanged="b => ChangeRequiredDifficulty(context, QuestionDifficulty.Easy, b)"
                                      ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
             }
-            @if (@context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Easy) == null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Easy))
             {
-                <MudButton OnClick="() => AddQuestion(context, QuestionDifficulty.Easy)">Add Easy Question</MudButton>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Easy).ToString()</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Easy)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Easy)"/>
             }
             else
             {
-                <MudButton OnClick="() => RemoveQuestion(context, QuestionDifficulty.Easy)">Remove Easy Question</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Easy)"/>
             }
         </MudTd>
         <MudTd DataLabel="mittelschwer">
-            @if (context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Medium) != null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Medium))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Medium)"
-                                     ToggledChanged="b => ChangeDifficulty(context, QuestionDifficulty.Medium, b)"
+                                     ToggledChanged="b => ChangeRequiredDifficulty(context, QuestionDifficulty.Medium, b)"
                                      ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
             }
-            @if (@context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Medium) == null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Medium))
             {
-                <MudButton OnClick="() => AddQuestion(context, QuestionDifficulty.Medium)">Add Medium Question</MudButton>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Medium).ToString()</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Medium)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Medium)"/>
             }
             else
             {
-                <MudButton OnClick="() => RemoveQuestion(context, QuestionDifficulty.Medium)">Remove Medium Question</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Medium)"/>
             }
         </MudTd>
         <MudTd DataLabel="schwer">
-            @if (context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Hard) != null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Hard))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Hard)"
-                                     ToggledChanged="b => ChangeDifficulty(context, QuestionDifficulty.Hard, b)"
+                                     ToggledChanged="b => ChangeRequiredDifficulty(context, QuestionDifficulty.Hard, b)"
                                      ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
             }
-            @if (@context.Questions.FirstOrDefault(x => x.Difficulty == QuestionDifficulty.Hard) == null)
+            @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Hard))
             {
-                <MudButton OnClick="() => AddQuestion(context, QuestionDifficulty.Hard)">Add Hard Question</MudButton>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Hard).ToString()</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Hard)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Hard)"/>
             }
             else
             {
-                <MudButton OnClick="() => RemoveQuestion(context, QuestionDifficulty.Hard)">Remove Hard Question</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Hard)"/>
             }
         </MudTd>
     </RowTemplate>
@@ -116,7 +122,7 @@
         PresentationLogic.EditAdaptivityTask(task, text, task.MinimumRequiredDifficulty);
     }
 
-    private void ChangeDifficulty(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty, bool setChecked)
+    private void ChangeRequiredDifficulty(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty, bool setChecked)
     {
         PresentationLogic.EditAdaptivityTask(task, task.Name, setChecked ? difficulty : null);
     }
@@ -139,12 +145,28 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    private Task EditQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+        };
+        return DialogService.ShowAsync<AdaptivityQuestionDialog>("AdaptivityQuestionDialogTitle", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
+    }
+
     private void RemoveQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
     {
-        if (task.Questions.FirstOrDefault(x => x.Difficulty == difficulty) != null)
+        if (task.Questions.FirstOrDefault(x => x.Difficulty == difficulty) is {} question)
         {
-            task.Questions.Remove(task.Questions.FirstOrDefault(x => x.Difficulty == difficulty)!);
+            PresentationLogic.DeleteAdaptivityQuestion(task, question);
         }
+    }
+
+    private static bool HasTaskQuestionWithQuestionDifficulty(IAdaptivityTaskViewModel context, QuestionDifficulty questionDifficulty)
+    {
+        return context.Questions.FirstOrDefault(x => x.Difficulty == questionDifficulty) != null;
     }
 
 }

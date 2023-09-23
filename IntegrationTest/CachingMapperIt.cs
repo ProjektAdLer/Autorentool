@@ -4,6 +4,7 @@ using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -200,6 +201,7 @@ public class CachingMapperIt
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
+        IQuestionCommandFactory questionCommandFactory = null!,
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
@@ -219,6 +221,7 @@ public class CachingMapperIt
         logger ??= Substitute.For<ILogger<PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
+        questionCommandFactory ??= Substitute.For<IQuestionCommandFactory>();
         taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
         elementCommandFactory ??= Substitute.For<IElementCommandFactory>();
@@ -229,9 +232,9 @@ public class CachingMapperIt
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
 
-        return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
-            shellWrapper, taskCommandFactory, conditionCommandFactory, elementCommandFactory, layoutCommandFactory,
-            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
+            serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
+            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
+            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
     }
 }

@@ -821,6 +821,43 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    public void EditMultipleChoiceSingleResponseQuestion(
+        MultipleChoiceSingleResponseQuestionViewModel questionViewModel,
+        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime)
+    {
+        var questionEntity = Mapper.Map<MultipleChoiceSingleResponseQuestion>(questionViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity,
+            questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            question => CMapper.Map(question, questionViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void EditMultipleChoiceMultipleResponseQuestion(
+        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel,
+        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime)
+    {
+        var questionEntity = Mapper.Map<MultipleChoiceMultipleResponseQuestion>(questionViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity,
+            questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            question => CMapper.Map(question, questionViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel taskViewModel, IAdaptivityQuestionViewModel question)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var command = QuestionCommandFactory.GetDeleteCommand(taskEntity, questionEntity,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>

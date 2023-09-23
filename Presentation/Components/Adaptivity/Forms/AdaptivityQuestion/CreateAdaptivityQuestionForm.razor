@@ -34,14 +34,22 @@
         <div class="rounded-lg w-4/4 px-4">
             @foreach (var choice in FormDataContainer.FormModel.Choices)
             {
-                <MudCheckBox Disabled="true" Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"></MudCheckBox>
-                <MudTextField Value="@choice.Text"></MudTextField>
+                <div class="inline-flex">
+                    <MudCheckBox T="bool"
+                                 Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                 CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
+                    <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
+                </div>
             }
+
         </div>
         <div class="rounded-lg w-4/4 px-4">
-            <MudCheckBox T="bool" @bind-Checked="@_newChoiceChecked"></MudCheckBox>
-            <MudTextField T="string" @bind-Value="@_newChoiceText"></MudTextField>
-            <MudIconButton OnClick="AddChoice" Icon="@Icons.Material.Filled.Add"/>
+
+            <span class="inline-flex">
+                <MudCheckBox T="bool" @bind-Checked="@_newChoiceChecked"></MudCheckBox>
+                <MudTextField T="string" @bind-Value="@_newChoiceText"></MudTextField>
+                <MudIconButton OnClick="AddChoice" Icon="@Icons.Material.Filled.Add"/>
+            </span>
         </div>
 
     </Fields>
@@ -125,6 +133,20 @@
         }
         _newChoiceChecked = false;
         _newChoiceText = "";
+    }
+
+    private void ChangeCorrectness(ChoiceViewModel choice, bool b)
+    {
+        if (b)
+        {
+            FormDataContainer.FormModel.CorrectChoices.Add(choice);
+        }
+        else
+        {
+            var choiceToRemove = FormDataContainer.FormModel.CorrectChoices.FirstOrDefault(x => x.Id == choice.Id);
+            if (choiceToRemove != null)
+                FormDataContainer.FormModel.CorrectChoices.Remove(choiceToRemove);
+        }
     }
 
     private Func<object, string, Task<IEnumerable<string>>> ValidateModel => (async (_, propertyName) =>

@@ -555,6 +555,18 @@ public interface IPresentationLogic
         string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
         int expectedCompletionTime);
 
+
+    void EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestionViewModel question,
+        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime);
+
+    void EditMultipleChoiceMultipleResponseQuestion(
+        MultipleChoiceMultipleResponseQuestionViewModel question, string questionText,
+        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime);
+
+    void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();

@@ -52,6 +52,27 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
                CorrectChoices.SequenceEqual(mcmrq.CorrectChoices) && Text == mcmrq.Text;
     }
 
+    public IMemento GetMemento()
+    {
+        return new MultipleChoiceMultipleResponseQuestionMemento(ExpectedCompletionTime, Choices, Text, CorrectChoices,
+            Difficulty, Rules);
+    }
+
+    public void RestoreMemento(IMemento memento)
+    {
+        if (memento is not MultipleChoiceMultipleResponseQuestionMemento multipleChoiceMultipleResponseQuestionMemento)
+        {
+            throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
+        }
+
+        ExpectedCompletionTime = multipleChoiceMultipleResponseQuestionMemento.ExpectedCompletionTime;
+        Choices = multipleChoiceMultipleResponseQuestionMemento.Choices;
+        Text = multipleChoiceMultipleResponseQuestionMemento.Text;
+        CorrectChoices = multipleChoiceMultipleResponseQuestionMemento.CorrectChoices;
+        Difficulty = multipleChoiceMultipleResponseQuestionMemento.Difficulty;
+        Rules = multipleChoiceMultipleResponseQuestionMemento.Rules;
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
@@ -75,5 +96,27 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         MultipleChoiceMultipleResponseQuestion? right)
     {
         return !Equals(left, right);
+    }
+
+    private record MultipleChoiceMultipleResponseQuestionMemento : IMemento
+    {
+        internal MultipleChoiceMultipleResponseQuestionMemento(int expectedCompletionTime, ICollection<Choice> choices,
+            string text, ICollection<Choice> correctChoices, QuestionDifficulty difficulty,
+            ICollection<IAdaptivityRule> rules)
+        {
+            ExpectedCompletionTime = expectedCompletionTime;
+            Choices = choices.ToList();
+            Text = text;
+            CorrectChoices = correctChoices.ToList();
+            Difficulty = difficulty;
+            Rules = rules.ToList();
+        }
+
+        internal int ExpectedCompletionTime { get; }
+        internal ICollection<Choice> Choices { get; }
+        internal string Text { get; }
+        internal ICollection<Choice> CorrectChoices { get; }
+        internal QuestionDifficulty Difficulty { get; }
+        internal ICollection<IAdaptivityRule> Rules { get; }
     }
 }

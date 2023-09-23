@@ -14,7 +14,8 @@ public class QuestionCommandFactory : IQuestionCommandFactory
 
     private ILoggerFactory LoggerFactory { get; }
 
-    public ICommand GetCreateMultipleChoiceSingleResponseQuestionCommand(AdaptivityTask adaptivityTask,
+    public ICreateMultipleChoiceSingleResponseQuestion GetCreateMultipleChoiceSingleResponseQuestionCommand(
+        AdaptivityTask adaptivityTask,
         QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices, Choice correctChoice,
         int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
     {
@@ -23,7 +24,8 @@ public class QuestionCommandFactory : IQuestionCommandFactory
             LoggerFactory.CreateLogger<CreateMultipleChoiceSingleResponseQuestion>());
     }
 
-    public ICommand GetCreateMultipleChoiceMultipleResponseQuestionCommand(AdaptivityTask adaptivityTask,
+    public ICreateMultipleChoiceMultipleResponseQuestion GetCreateMultipleChoiceMultipleResponseQuestionCommand(
+        AdaptivityTask adaptivityTask,
         QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices,
         ICollection<Choice> correctChoices,
         int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
@@ -31,5 +33,32 @@ public class QuestionCommandFactory : IQuestionCommandFactory
         return new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText, choices,
             correctChoices, expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<CreateMultipleChoiceMultipleResponseQuestion>());
+    }
+
+    public IEditMultipleChoiceSingleResponseQuestion GetEditMultipleChoiceSingleResponseQuestionCommand(
+        MultipleChoiceSingleResponseQuestion question,
+        string questionText, ICollection<Choice> choices, Choice correctChoice, int expectedCompletionTime,
+        Action<MultipleChoiceSingleResponseQuestion> mappingAction)
+    {
+        return new EditMultipleChoiceSingleResponseQuestion(question, questionText, choices, correctChoice,
+            expectedCompletionTime, mappingAction,
+            LoggerFactory.CreateLogger<EditMultipleChoiceSingleResponseQuestion>());
+    }
+
+    public IEditMultipleChoiceMultipleResponseQuestion GetEditMultipleChoiceMultipleResponseQuestionCommand(
+        MultipleChoiceMultipleResponseQuestion question,
+        string questionText, ICollection<Choice> choices, ICollection<Choice> correctChoices,
+        int expectedCompletionTime, Action<MultipleChoiceMultipleResponseQuestion> mappingAction)
+    {
+        return new EditMultipleChoiceMultipleResponseQuestion(question, questionText, choices, correctChoices,
+            expectedCompletionTime, mappingAction,
+            LoggerFactory.CreateLogger<EditMultipleChoiceMultipleResponseQuestion>());
+    }
+
+    public IDeleteAdaptivityQuestion GetDeleteCommand(AdaptivityTask task, IAdaptivityQuestion question,
+        Action<AdaptivityTask> mappingAction)
+    {
+        return new DeleteAdaptivityQuestion(task, question, mappingAction,
+            LoggerFactory.CreateLogger<DeleteAdaptivityQuestion>());
     }
 }
