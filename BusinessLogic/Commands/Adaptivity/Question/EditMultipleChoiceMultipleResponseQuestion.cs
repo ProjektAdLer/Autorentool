@@ -50,6 +50,8 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
             "Edited MultipleChoiceMultipleResponseQuestion {QuestionName} ({QuestionId}). Updated Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
             Question.Text, Question.Id, Question.Text, Question.Choices, Question.CorrectChoices,
             Question.ExpectedCompletionTime);
+
+        MappingAction.Invoke(Question);
     }
 
     public void Undo()

@@ -168,6 +168,22 @@ public static class EntityProvider
             rules);
     }
 
+    public static MultipleChoiceMultipleResponseQuestion GetMultipleChoiceMultipleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceMultipleResponseQuestion(123, choices, choices, rules, "questiontext",
+            QuestionDifficulty.Easy);
+    }
+
+    public static MultipleChoiceSingleResponseQuestion GetMultipleChoiceSingleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
+            QuestionDifficulty.Easy, rules);
+    }
+
     private static Choice GetAdaptivityChoice()
     {
         return new Choice("a choice");

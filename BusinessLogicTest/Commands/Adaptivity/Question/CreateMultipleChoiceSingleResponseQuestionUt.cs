@@ -4,6 +4,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Adaptivity;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Adaptivity.Question;
 
@@ -14,7 +15,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
     public void Execute_CreatesMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
@@ -32,7 +34,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert before execution
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Is.Empty);
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount));
+            Assert.That(adaptivityTask.Questions, Does.Not.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.False);
         });
 
@@ -42,24 +45,29 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert after execution
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(1));
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount + 1));
+            Assert.That(adaptivityTask.Questions, Does.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.True);
         });
 
-        var createdQuestion = adaptivityTask.Questions.First() as MultipleChoiceSingleResponseQuestion;
+        var createdQuestion = adaptivityTask.Questions.Last() as MultipleChoiceSingleResponseQuestion;
         Assert.That(createdQuestion, Is.Not.Null);
-        Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
-        Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
-        Assert.That(createdQuestion.Choices.Count, Is.EqualTo(3));
-        Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
-        Assert.That(createdQuestion.CorrectChoice, Is.EqualTo(correctChoice));
+        Assert.Multiple(() =>
+        {
+            Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
+            Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(createdQuestion.Choices, Has.Count.EqualTo(3));
+            Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
+            Assert.That(createdQuestion.CorrectChoice, Is.EqualTo(correctChoice));
+        });
     }
 
     [Test]
     public void Undo_UndoesCreateMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
@@ -81,7 +89,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert before undo
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(1));
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount + 1));
+            Assert.That(adaptivityTask.Questions, Does.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.False);
         });
 
@@ -91,7 +100,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert after undo
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Is.Empty);
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount));
+            Assert.That(adaptivityTask.Questions, Does.Not.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.True);
         });
     }
@@ -100,7 +110,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
     public void Redo_RedoCreatesMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
@@ -123,7 +134,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert before redo
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Is.Empty);
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount));
+            Assert.That(adaptivityTask.Questions, Does.Not.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.False);
         });
 
@@ -133,24 +145,28 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         // Assert after redo
         Assert.Multiple(() =>
         {
-            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(1));
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount + 1));
+            Assert.That(adaptivityTask.Questions, Does.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.True);
         });
 
-        var createdQuestion = adaptivityTask.Questions.First() as MultipleChoiceSingleResponseQuestion;
+        var createdQuestion = adaptivityTask.Questions.Last() as MultipleChoiceSingleResponseQuestion;
         Assert.That(createdQuestion, Is.Not.Null);
-        Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
-        Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
-        Assert.That(createdQuestion.Choices.Count, Is.EqualTo(3));
-        Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
-        Assert.That(createdQuestion.CorrectChoice, Is.EqualTo(correctChoice));
+        Assert.Multiple(() =>
+        {
+            Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
+            Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(createdQuestion.Choices, Has.Count.EqualTo(3));
+            Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
+            Assert.That(createdQuestion.CorrectChoice, Is.EqualTo(correctChoice));
+        });
     }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choices = new List<Choice>();
