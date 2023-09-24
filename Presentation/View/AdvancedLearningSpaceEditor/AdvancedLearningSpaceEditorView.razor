@@ -3,6 +3,8 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor
 @using Shared
+@using ElectronNET.API.Entities
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent
 @ChildContent
 
 <section class="p-2 gap-1 flex flex-col justify-start">
@@ -23,41 +25,98 @@
             <h3 class="text-base text-adlerblue-600 space-points">
                 <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Points.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
             </h3>
-            @* @ChildContent *@
         </div>
     </div>
 
     <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
-        <div style="clip-path: polygon(0% 0%,  0% 60%, 60% 60%, 60% 0%);">
-            Raum content
-            <div class="rounded-lg w-full grow overflow-scroll">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-[350px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
-                     @onmousemove=@(e => MouseService.FireMove(this, e))
-                                 @onmouseup=@(e => MouseService.FireUp(this, e))
-                                 @onmouseleave=@(e => MouseService.FireOut(this, e))>
-                    @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-                    {
-                        @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
-                        {
-                            <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
-                                                                  AdvancedComponent="advancedComponentSlot"
-                                                                  AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter"
-                                                                  OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
-                                                                  OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
-                                                                  OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
-                                                                  OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
-                                                                  @* ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
-                                                                  @* OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
-                                                                  AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter">
-                            </DraggableAdvancedLearningElementSlot>
+        <div class="h-[375px]">
+            <svg width="750" height="375">
+                @* draw outline *@
+                <polygon points="20,20 20,350 730,350 730,20" style="fill:green;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9"/>
+                @* draw grid *@
+                @for (int i = 30; i < 730; i += 10)
+                {
+                    <line x1="@i" y1="20" x2="@i" y2="350" style="stroke:#d6d5d5;stroke-width:1"/>
+                }
+                @for (int i = 30; i < 350; i += 10)
+                {
+                    <line x1="20" y1="@i" x2="730" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
+                }
+                @* draw space *@
+                @* TODO: Doubleclick functionality *@
+                <polyline points="@getSpaceCornerPointsString()" style="stroke:yellow;stroke-width:3;stroke-opacity:0.9;fill-opacity:0">
+                    <title>
+                        Spaceoutline.
+                        Doubleclick to insert new corner point.
+                    </title>
+                </polyline>
+                <polyline points="@getSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
+                    <title>
+                        Space.
+                        Use Buttons below to add element slots or decorations.
+                    </title>
+                </polyline>
+                @foreach (var cornerPoint in getSpaceCornerPoints())
+                {
+                    // TODO: Drag and Drop functionality
+                    // TODO: Doubleclick functionality
+                    <circle cx="@cornerPoint.X" cy="@cornerPoint.Y" r="5" fill="red">
+                        <title>
+                            Drag and Drop to move corner point. Doubleclick to delete corner point.
+                        </title>
+                    </circle>
+                }
+                @* draw elementslots *@
+                @* WISO BRAUCHE ICH HIER NE NEUE LISTE WENNS NULL IST??? (glaube uch die abfrage ist noch etwas wrong...)*@
+                @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel?.ContainedAdvancedLearningElementSlots ?? new List<AdvancedLearningElementSlotViewModel>())
+                {
+                    <rect x="@advancedComponentSlot.PositionX" y="@advancedComponentSlot.PositionY" style="fill:purple;fill-opacity:0.1">
+                        @{
+                            Console.WriteLine("ADVANCEDCOMPSLOT: " + advancedComponentSlot);
                         }
-                    }
-                    <!-- The RightClickMenu might lies behind other spaces. 
-                    This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
-                    <!--<use xlink:href="#rightClickMenu" />-->
-                </svg>
-            </div>
+                        <title>
+                            Learning Element Slot.
+                            Drag and Drop to move.
+                        </title>
+                    </rect>
+                }
+                @* draw decorations *@
+                @* draw doors *@
+                @* draw spawnpoint *@
+
+            </svg>
         </div>
+
+        @* <div style="clip-path: polygon(0% 0%,  0% 60%, 60% 60%, 60% 0%);"> *@
+        @*     Raum content *@
+        @*     <div class="rounded-lg w-full grow overflow-scroll"> *@
+        @*         <svg xmlns="http://www.w3.org/2000/svg" class="h-[350px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]" *@
+        @*              @onmousemove=@(e => MouseService.FireMove(this, e)) *@
+        @*                          @onmouseup=@(e => MouseService.FireUp(this, e)) *@
+        @*                          @onmouseleave=@(e => MouseService.FireOut(this, e))> *@
+        @*             @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null) *@
+        @*             { *@
+        @*                 @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots) *@
+        @*                 { *@
+        @*                     <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot" *@
+        @*                                                           AdvancedComponent="advancedComponentSlot" *@
+        @*                                                           AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter" *@
+        @*                                                           OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel" *@
+        @*                                                           OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent" *@
+        @*                                                           OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent" *@
+        @*                                                           OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent" *@
+        @*                                                           $1$ ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" #1# *@
+        @*                                                           $1$ OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" #1# *@
+        @*                                                           AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"> *@
+        @*                     </DraggableAdvancedLearningElementSlot> *@
+        @*                 } *@
+        @*             } *@
+        @*             <!-- The RightClickMenu might lies behind other spaces.  *@
+        @*             This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. --> *@
+        @*             <!--<use xlink:href="#rightClickMenu" />--> *@
+        @*         </svg> *@
+        @*     </div> *@
+        @* </div> *@
     </div>
     <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated">
         <button
@@ -90,16 +149,6 @@
                 @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
             </div>
         </button>
-        <button
-            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
-            @onclick=CreateAdvancedLearningElementSlot>
-            <div class="h-[45px]">
-                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/window-icon-nobg.png" class="pointer-events-none w-8 h-8">
-            </div>
-            <div class="h-[45px]">
-                @Localizer["AdvancedLearningSpaceEditor.Windows.Title"]
-            </div>
-        </button>
     </div>
 </section>
 
@@ -128,6 +177,25 @@
     private void CreateAdvancedLearningElementSlot()
     {
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedLearningElementSlot();
+    }
+
+    private string getSpaceCornerPointsString()
+    {
+    // raw space coords need to be offset to be centered somewhat ok.
+    // AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel?.SpaceCornerPoints ?? "";
+        return "50,50 50,200 500,200 500,50 50,50";
+    }
+
+    private List<Point> getSpaceCornerPoints()
+    {
+    //ideally there is one base method to grab the corners and these two methods here just put them in the right format.
+        return (new List<Point>(new Point[]
+        {
+            new Point { X = 50, Y = 50 },
+            new Point { X = 50, Y = 200 },
+            new Point { X = 500, Y = 200 },
+            new Point { X = 500, Y = 50 }
+        }));
     }
 
 }
