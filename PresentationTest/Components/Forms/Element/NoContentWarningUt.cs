@@ -23,6 +23,12 @@ public class NoContentWarningUt
         _testContext.Services.AddSingleton(Mediator);
         _testContext.AddLocalizerForTest<NoContentWarning>();
     }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
 
     [Test]
     public void ButtonClick_CallsMediator()
