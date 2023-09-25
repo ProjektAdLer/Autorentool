@@ -20,7 +20,7 @@ public class AdaptivityElementJson : IAdaptivityElementJson
         AdaptivityContent = adaptivityContent;
     }
 
-    public string Type => "AdaptivityElement";
+    public string Type => JsonTypes.AdaptivityElementType;
     public int ElementId { get; set; }
     public string ElementUUID { get; set; }
     public string ElementName { get; set; }

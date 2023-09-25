@@ -25,7 +25,7 @@ public class LearningElementJson : ILearningElementJson
 
     public string Url { get; set; }
 
-    public string Type => "LearningElement";
+    public string Type => JsonTypes.LearningElementType;
     public int ElementId { get; set; }
 
     public string ElementUUID { get; set; }

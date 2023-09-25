@@ -30,7 +30,7 @@ public class LearningSpaceJson : ILearningSpaceJson
     // Maximum Points and Points that are needed to complete the Space
     public int RequiredPointsToComplete { get; set; }
 
-    public string Type => "LearningSpace";
+    public string Type => JsonTypes.LearningSpaceType;
 
     public int SpaceId { get; set; }
 

@@ -10,5 +10,5 @@ public class ChoiceJson : IChoiceJson
 
     public string AnswerText { get; set; }
     public bool IsCorrect { get; set; }
-    public string Type => "AdaptivityQuestionChoice";
+    public string Type => JsonTypes.AdaptivityQuestionAnswerType;
 }

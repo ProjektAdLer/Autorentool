@@ -2,10 +2,9 @@ namespace Generator.DSL.AdaptivityElement;
 
 public class AdaptivityTaskJson : IAdaptivityTaskJson
 {
-    public AdaptivityTaskJson(string type, int taskId, string taskUuid, string taskTitle, bool optional,
+    public AdaptivityTaskJson(int taskId, string taskUuid, string taskTitle, bool optional,
         int requiredDifficulty, List<IAdaptivityQuestionJson> adaptivityQuestions)
     {
-        Type = type;
         TaskId = taskId;
         TaskUUID = taskUuid;
         TaskTitle = taskTitle;
@@ -14,7 +13,7 @@ public class AdaptivityTaskJson : IAdaptivityTaskJson
         AdaptivityQuestions = adaptivityQuestions;
     }
 
-    public string Type { get; }
+    public string Type => JsonTypes.AdaptivityTaskType;
     public int TaskId { get; set; }
     public string TaskUUID { get; set; }
     public string TaskTitle { get; set; }

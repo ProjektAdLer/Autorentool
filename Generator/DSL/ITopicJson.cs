@@ -1,6 +1,5 @@
 ﻿namespace Generator.DSL;
 
-public interface ITopicJson
+public interface ITopicJson : IHasType
 {
-    
 }
