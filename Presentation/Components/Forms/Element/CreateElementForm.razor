@@ -25,7 +25,8 @@
           FormDataContainer="FormDataContainer">
     <Fields>
 
-        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
+                                                                                       @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -77,40 +78,46 @@
                 </MudSelect>
             </div>
         </Collapsable>
-
         @if (!AdaptivityElementMode)
         {
             <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
                 <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</MudText>
-                <TableSelect
-                    T="ILearningContentViewModel"
-                    @bind-Value="FormDataContainer.FormModel.LearningContent"
-                    For="@(() => FormModel.LearningContent)"
-                    Elements="WorldPresenter.GetAllContent()"
-                    FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
-                    <HeaderContent>
-                        <MudTh></MudTh>
-                        <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
-                        <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd Class="px-1.5">
-                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
-                        </MudTd>
-                        <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
-                        <MudTd Class="cursor-pointer" DataLabel="Type">
-                            @if (context is FileContentViewModel fileContentContext)
-                            {
-                                @fileContentContext.Type
-                            }
-                            else
-                            {
-                                <span>Link</span>
-                            }
-                        </MudTd>
-                    </RowTemplate>
-                </TableSelect>
+                @if (!WorldPresenter.GetAllContent().Any())
+                {
+                    <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
+                }
+                else
+                {
+                    <TableSelect
+                        T="ILearningContentViewModel"
+                        @bind-Value="FormDataContainer.FormModel.LearningContent"
+                        For="@(() => FormModel.LearningContent)"
+                        Elements="WorldPresenter.GetAllContent()"
+                        FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                        <HeaderContent>
+                            <MudTh></MudTh>
+                            <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
+                            <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd Class="px-1.5">
+                                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                               OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                            </MudTd>
+                            <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
+                            <MudTd Class="cursor-pointer" DataLabel="Type">
+                                @if (context is FileContentViewModel fileContentContext)
+                                {
+                                    @fileContentContext.Type
+                                }
+                                else
+                                {
+                                    <span>Link</span>
+                                }
+                            </MudTd>
+                        </RowTemplate>
+                    </TableSelect>
+                }
             </Collapsable>
         }
         else
@@ -118,7 +125,9 @@
             <Collapsable Style="" Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
                 <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</MudText><br/>
                 <div class="flex flex-col items-center justify-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OpenAdaptivityContentDialog">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" Class="add-tasks" OnClick="OpenAdaptivityContentDialog">
+                        @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
+                    </MudButton>
                 </div>
             </Collapsable>
         }
@@ -245,7 +254,7 @@
         };
         var parameters = new DialogParameters
         {
-            {nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent}
+            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent }
         };
         var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>("AdaptivityContentDialogTitle", parameters, options);
         _ = await dialog.Result;

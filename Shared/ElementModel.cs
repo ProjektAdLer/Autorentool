@@ -33,7 +33,7 @@ public enum ElementModel
 
     l_text_libraryshelf_1,
 
-    l_video_movieprojektor_1,
+    l_video_movieprojector_1,
 
     //SuburbTheme
     l_h5p_blackboard_1,

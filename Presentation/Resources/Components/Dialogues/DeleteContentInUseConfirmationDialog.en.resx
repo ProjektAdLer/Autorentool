@@ -28,6 +28,6 @@
         <value>That content is currently in use in the following learning elements:</value>
     </data>
     <data name="Dialog.Text1" xml:space="preserve">
-        <value>Are you really sure you want to delete &gt; {0} &lt;?</value>
+        <value>Are you really sure you want to delete &lt;b&gt;{0}&lt;/b&gt;?</value>
     </data>
 </root>
