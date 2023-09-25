@@ -95,6 +95,7 @@ public class LearningSpace : ILearningSpace
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
         RequiredPoints = learningSpaceMemento.RequiredPoints;
+        Theme = learningSpaceMemento.Theme;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
         InBoundObjects = learningSpaceMemento.InBoundObjects;
         OutBoundObjects = learningSpaceMemento.OutBoundObjects;
