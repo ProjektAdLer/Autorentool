@@ -1,11 +1,7 @@
-using System.Text.Json.Serialization;
-
 namespace Generator.DSL;
 
-public interface IElementJson
+public interface IElementJson : IHasType
 {
-    [JsonPropertyName("$type")] public string Type { get; }
-
     int ElementId { get; set; }
     string ElementUUID { get; set; }
     string ElementName { get; set; }

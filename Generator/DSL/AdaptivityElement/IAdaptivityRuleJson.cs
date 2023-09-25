@@ -1,11 +1,7 @@
-using System.Text.Json.Serialization;
-
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityRuleJson
+public interface IAdaptivityRuleJson : IHasType
 {
-    [JsonPropertyName("$type")] string Type { get; }
-
     int TriggerId { get; set; }
     string TriggerType { get; set; }
     string TriggerCondition { get; set; }

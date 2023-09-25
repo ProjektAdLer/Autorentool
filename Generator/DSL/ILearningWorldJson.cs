@@ -1,11 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Generator.DSL;
 
-namespace Generator.DSL;
-
-public interface ILearningWorldJson
+public interface ILearningWorldJson : IHasType
 {
-    [JsonPropertyName("$type")] string Type { get; }
-
     string WorldName { get; set; }
 
     string WorldUUID { get; set; }

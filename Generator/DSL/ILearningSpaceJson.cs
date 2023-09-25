@@ -1,11 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Generator.DSL;
 
-namespace Generator.DSL;
-
-public interface ILearningSpaceJson
+public interface ILearningSpaceJson : IHasType
 {
-    [JsonPropertyName("$type")] string Type { get; }
-
     int SpaceId { get; set; }
 
     string SpaceUUID { get; set; }

@@ -1,8 +1,5 @@
-using System.Text.Json.Serialization;
-
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityActionJson
+public interface IAdaptivityActionJson : IHasType
 {
-    [JsonPropertyName("$type")] string Type { get; }
 }
