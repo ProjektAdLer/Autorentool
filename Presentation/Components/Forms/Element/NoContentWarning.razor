@@ -1,0 +1,26 @@
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using System.ComponentModel
+@using MudBlazor.Utilities
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.LearningContent
+@inherits MudBaseInput<ILearningContentViewModel>
+<div class="flex flex-col justify-center items-center min-h-12 w-72">
+    <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesView">
+        <MudText Class="@TextCssClass.Build()">@Localizer["NoContentWarning.Text"]</MudText>
+    </MudButton>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //n.stich
+    IStringLocalizer<NoContentWarning> Localizer { get; set; }
+
+    [Inject, AllowNull] //n.stich
+    IMediator Mediator { get; set; }
+
+    private void OpenContentFilesView() => Mediator.RequestOpenContentDialog();
+
+    private CssBuilder ButtonCssClass => new CssBuilder("w-72 h-24").AddClass("bg-buttonbgblue");
+    private CssBuilder TextCssClass => new CssBuilder("text-center text-lg font-bold").AddClass("text-formerror", Error);
+}

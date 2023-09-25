@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
+using Bunit.TestDoubles;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +51,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(localizer);
+        Context.ComponentFactories.AddStub<NoContentWarning>();
     }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -222,6 +224,17 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(callbackCalledCount, Is.EqualTo(2));
     }
 
+    [Test]
+    public void NoContentAvailable_ShowsNoContentWarningInsteadOfTableSelect()
+    {
+        WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+
+        Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
+        Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
+    }
+    
     [Test]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
