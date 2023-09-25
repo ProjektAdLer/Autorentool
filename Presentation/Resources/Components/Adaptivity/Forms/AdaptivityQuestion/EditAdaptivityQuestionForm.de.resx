@@ -36,6 +36,12 @@
         <value>Übernehmen</value>
     </data>
     <data name="EditAdaptivityQuestionForm.Text.Choices" xml:space="preserve">
-        <value>Aufgaben</value>
+        <value>Antwortmöglichkeiten</value>
+    </data>
+    <data name="EditAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
+        <value>Antwortmöglichkeit</value>
+    </data>
+    <data name="EditAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
+        <value>Titel</value>
     </data>
 </root>

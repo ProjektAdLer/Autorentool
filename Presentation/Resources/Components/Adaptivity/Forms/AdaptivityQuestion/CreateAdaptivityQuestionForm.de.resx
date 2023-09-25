@@ -36,6 +36,12 @@
         <value>Erstellen</value>
     </data>
     <data name="CreateAdaptivityQuestionForm.Text.Choices" xml:space="preserve">
-        <value>Antworten</value>
+        <value>Antwortmöglichkeiten</value>
+    </data>
+    <data name="CreateAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
+        <value>Antwortmöglichkeit</value>
+    </data>
+    <data name="CreateAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
+        <value>Titel</value>
     </data>
 </root>

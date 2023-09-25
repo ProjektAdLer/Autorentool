@@ -33,7 +33,7 @@
             }
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Easy))
             {
-                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Easy).ToString()</MudText>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Easy).Title</MudText>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Easy)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Easy)"/>
             }
@@ -51,7 +51,7 @@
             }
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Medium))
             {
-                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Medium).ToString()</MudText>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Medium).Title</MudText>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Medium)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Medium)"/>
             }
@@ -69,7 +69,7 @@
             }
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Hard))
             {
-                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Hard).ToString()</MudText>
+                <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Hard).Title</MudText>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Hard)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Hard)"/>
             }

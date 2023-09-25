@@ -18,6 +18,7 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
+        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -29,8 +30,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText,
-            choices, correctChoices, expectedCompletionTime, mappingAction,
+        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionTitle,
+            questionText, choices, correctChoices, expectedCompletionTime, mappingAction,
             new NullLogger<CreateMultipleChoiceMultipleResponseQuestion>());
 
         // Assert before execution
@@ -54,13 +55,17 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
 
         var createdQuestion = adaptivityTask.Questions.Last() as MultipleChoiceMultipleResponseQuestion;
         Assert.That(createdQuestion, Is.Not.Null);
-        Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
-        Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
-        Assert.That(createdQuestion.Choices.Count, Is.EqualTo(4));
-        Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
-        Assert.That(createdQuestion.CorrectChoices, Is.EqualTo(correctChoices));
-        Assert.That(createdQuestion.CorrectChoices.Count, Is.EqualTo(2));
-        Assert.That(createdQuestion.CorrectChoices.First(), Is.EqualTo(correctChoice1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(createdQuestion!.Title, Is.EqualTo(questionTitle));
+            Assert.That(createdQuestion.Text, Is.EqualTo(questionText));
+            Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(createdQuestion.Choices, Has.Count.EqualTo(4));
+            Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
+            Assert.That(createdQuestion.CorrectChoices, Is.EqualTo(correctChoices));
+            Assert.That(createdQuestion.CorrectChoices, Has.Count.EqualTo(2));
+            Assert.That(createdQuestion.CorrectChoices.First(), Is.EqualTo(correctChoice1));
+        });
     }
 
     [Test]
@@ -70,6 +75,7 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
+        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -81,8 +87,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText,
-            choices, correctChoices, expectedCompletionTime, mappingAction,
+        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionTitle,
+            questionText, choices, correctChoices, expectedCompletionTime, mappingAction,
             new NullLogger<CreateMultipleChoiceMultipleResponseQuestion>());
 
         // Act
@@ -116,6 +122,7 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
+        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -127,8 +134,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText,
-            choices, correctChoices, expectedCompletionTime, mappingAction,
+        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionTitle,
+            questionText, choices, correctChoices, expectedCompletionTime, mappingAction,
             new NullLogger<CreateMultipleChoiceMultipleResponseQuestion>());
 
         // Execute and undo
@@ -157,13 +164,17 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
 
         var createdQuestion = adaptivityTask.Questions.Last() as MultipleChoiceMultipleResponseQuestion;
         Assert.That(createdQuestion, Is.Not.Null);
-        Assert.That(createdQuestion!.Text, Is.EqualTo(questionText));
-        Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
-        Assert.That(createdQuestion.Choices.Count, Is.EqualTo(4));
-        Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
-        Assert.That(createdQuestion.CorrectChoices, Is.EqualTo(correctChoices));
-        Assert.That(createdQuestion.CorrectChoices.Count, Is.EqualTo(2));
-        Assert.That(createdQuestion.CorrectChoices.First(), Is.EqualTo(correctChoice1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(createdQuestion!.Title, Is.EqualTo(questionTitle));
+            Assert.That(createdQuestion.Text, Is.EqualTo(questionText));
+            Assert.That(createdQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(createdQuestion.Choices, Has.Count.EqualTo(4));
+            Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
+            Assert.That(createdQuestion.CorrectChoices, Is.EqualTo(correctChoices));
+            Assert.That(createdQuestion.CorrectChoices, Has.Count.EqualTo(2));
+            Assert.That(createdQuestion.CorrectChoices.First(), Is.EqualTo(correctChoice1));
+        });
     }
 
     [Test]
@@ -172,14 +183,15 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         // Arrange
         var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var difficulty = QuestionDifficulty.Medium;
+        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var choices = new List<Choice>();
         var correctChoices = new List<Choice>();
         var expectedCompletionTime = 10;
         Action<AdaptivityTask> mappingAction = _ => { };
 
-        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText,
-            choices, correctChoices, expectedCompletionTime, mappingAction,
+        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionTitle,
+            questionText, choices, correctChoices, expectedCompletionTime, mappingAction,
             new NullLogger<CreateMultipleChoiceMultipleResponseQuestion>());
 
         // Act and assert

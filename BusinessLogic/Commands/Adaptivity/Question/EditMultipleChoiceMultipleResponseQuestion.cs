@@ -8,12 +8,13 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
 {
     private IMemento? _memento;
 
-    public EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestion question,
+    public EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestion question, string title,
         string questionText, ICollection<Choice> choices, ICollection<Choice> correctChoices,
         int expectedCompletionTime, Action<MultipleChoiceMultipleResponseQuestion> mappingAction,
         ILogger<EditMultipleChoiceMultipleResponseQuestion> createLogger)
     {
         Question = question;
+        Title = title;
         QuestionText = questionText;
         Choices = choices;
         CorrectChoices = correctChoices;
@@ -23,6 +24,7 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
     }
 
     internal MultipleChoiceMultipleResponseQuestion Question { get; }
+    internal string Title { get; }
     internal string QuestionText { get; }
     internal ICollection<Choice> Choices { get; }
     internal ICollection<Choice> CorrectChoices { get; }
@@ -37,18 +39,19 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
         _memento = Question.GetMemento();
 
         Logger.LogTrace(
-            "Editing MultipleChoiceMultipleResponseQuestion {QuestionName} ({QuestionId}). Previous Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Text, Question.Id, Question.Text, Question.Choices, Question.CorrectChoices,
+            "Editing MultipleChoiceMultipleResponseQuestion {QuestionTitle} ({QuestionId}). Previous Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoices,
             Question.ExpectedCompletionTime);
 
+        Question.Title = Title;
         Question.Text = QuestionText;
         Question.Choices = Choices;
         Question.CorrectChoices = CorrectChoices;
         Question.ExpectedCompletionTime = ExpectedCompletionTime;
 
         Logger.LogTrace(
-            "Edited MultipleChoiceMultipleResponseQuestion {QuestionName} ({QuestionId}). Updated Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Text, Question.Id, Question.Text, Question.Choices, Question.CorrectChoices,
+            "Edited MultipleChoiceMultipleResponseQuestion {QuestionTitle} ({QuestionId}). Updated Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoices,
             Question.ExpectedCompletionTime);
 
         MappingAction.Invoke(Question);
@@ -64,8 +67,8 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
         Question.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undone editing of MultipleChoiceMultipleResponseQuestion {QuestionName} ({QuestionId}). Restored to previous state",
-            Question.Text, Question.Id);
+            "Undone editing of MultipleChoiceMultipleResponseQuestion {QuestionTitle} ({QuestionId}). Restored to previous state",
+            Question.Title, Question.Id);
 
         MappingAction.Invoke(Question);
     }

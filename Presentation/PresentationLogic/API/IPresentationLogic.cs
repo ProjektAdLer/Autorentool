@@ -548,22 +548,21 @@ public interface IPresentationLogic
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
     void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string title, string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
         int expectedCompletionTime);
 
     void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
-        int expectedCompletionTime);
+        string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
 
 
     void EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestionViewModel question,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string title, string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
         int expectedCompletionTime);
 
-    void EditMultipleChoiceMultipleResponseQuestion(
-        MultipleChoiceMultipleResponseQuestionViewModel question, string questionText,
-        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
-        int expectedCompletionTime);
+    void EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestionViewModel question,
+        string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
 
     void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
 

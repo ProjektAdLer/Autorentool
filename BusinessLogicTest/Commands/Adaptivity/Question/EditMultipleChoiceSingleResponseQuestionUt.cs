@@ -14,6 +14,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
     {
         // Arrange
         var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
+        var questionTitle = "NewQuestionTitle";
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -23,7 +24,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionText,
+        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionTitle, questionText,
             choices, correctChoice, expectedCompletionTime, mappingAction,
             new NullLogger<EditMultipleChoiceSingleResponseQuestion>());
 
@@ -31,9 +32,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.False);
+            Assert.That(question.Title, Is.Not.EqualTo(questionTitle));
             Assert.That(question.Text, Is.Not.EqualTo(questionText));
             Assert.That(question.Choices, Is.Not.EqualTo(choices));
-            Assert.That(question.Choices.Count, Is.Not.EqualTo(3));
+            Assert.That(question.Choices, Has.Count.Not.EqualTo(3));
             Assert.That(question.Choices.First(), Is.Not.EqualTo(choice1));
             Assert.That(question.CorrectChoice, Is.Not.EqualTo(correctChoice));
         });
@@ -45,9 +47,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
+            Assert.That(question.Title, Is.EqualTo(questionTitle));
             Assert.That(question.Text, Is.EqualTo(questionText));
             Assert.That(question.Choices, Is.EqualTo(choices));
-            Assert.That(question.Choices.Count, Is.EqualTo(3));
+            Assert.That(question.Choices, Has.Count.EqualTo(3));
             Assert.That(question.Choices.First(), Is.EqualTo(choice1));
             Assert.That(question.CorrectChoice, Is.EqualTo(correctChoice));
         });
@@ -58,11 +61,13 @@ public class EditMultipleChoiceSingleResponseQuestionUt
     {
         // Arrange
         var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
+        var oldQuestionTitle = question.Title;
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoice = question.CorrectChoice;
         var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
+        var questionTitle = "NewQuestionTitle";
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -72,8 +77,8 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionText,
-            choices, correctChoice, expectedCompletionTime, mappingAction,
+        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionTitle, questionText, choices,
+            correctChoice, expectedCompletionTime, mappingAction,
             new NullLogger<EditMultipleChoiceSingleResponseQuestion>());
 
         command.Execute();
@@ -82,9 +87,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
+            Assert.That(question.Title, Is.EqualTo(questionTitle));
             Assert.That(question.Text, Is.EqualTo(questionText));
             Assert.That(question.Choices, Is.EqualTo(choices));
-            Assert.That(question.Choices.Count, Is.EqualTo(3));
+            Assert.That(question.Choices, Has.Count.EqualTo(3));
             Assert.That(question.Choices.First(), Is.EqualTo(choice1));
             Assert.That(question.CorrectChoice, Is.EqualTo(correctChoice));
         });
@@ -96,9 +102,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
+            Assert.That(question.Title, Is.EqualTo(oldQuestionTitle));
             Assert.That(question.Text, Is.EqualTo(oldQuestionText));
             Assert.That(question.Choices, Is.EqualTo(oldChoices));
-            Assert.That(question.Choices.Count, Is.EqualTo(oldChoices.Count));
+            Assert.That(question.Choices, Has.Count.EqualTo(oldChoices.Count));
             Assert.That(question.Choices.First(), Is.EqualTo(oldChoices.First()));
             Assert.That(question.CorrectChoice, Is.EqualTo(oldCorrectChoice));
         });
@@ -109,11 +116,13 @@ public class EditMultipleChoiceSingleResponseQuestionUt
     {
         // Arrange
         var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
+        var oldQuestionTitle = question.Title;
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoice = question.CorrectChoice;
         var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
+        var questionTitle = "NewQuestionTitle";
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -123,8 +132,8 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionText,
-            choices, correctChoice, expectedCompletionTime, mappingAction,
+        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionTitle, questionText, choices,
+            correctChoice, expectedCompletionTime, mappingAction,
             new NullLogger<EditMultipleChoiceSingleResponseQuestion>());
 
         command.Execute();
@@ -134,9 +143,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
+            Assert.That(question.Title, Is.EqualTo(oldQuestionTitle));
             Assert.That(question.Text, Is.EqualTo(oldQuestionText));
             Assert.That(question.Choices, Is.EqualTo(oldChoices));
-            Assert.That(question.Choices.Count, Is.EqualTo(oldChoices.Count));
+            Assert.That(question.Choices, Has.Count.EqualTo(oldChoices.Count));
             Assert.That(question.Choices.First(), Is.EqualTo(oldChoices.First()));
             Assert.That(question.CorrectChoice, Is.EqualTo(oldCorrectChoice));
         });
@@ -148,9 +158,10 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
+            Assert.That(question.Title, Is.EqualTo(questionTitle));
             Assert.That(question.Text, Is.EqualTo(questionText));
             Assert.That(question.Choices, Is.EqualTo(choices));
-            Assert.That(question.Choices.Count, Is.EqualTo(3));
+            Assert.That(question.Choices, Has.Count.EqualTo(3));
             Assert.That(question.Choices.First(), Is.EqualTo(choice1));
             Assert.That(question.CorrectChoice, Is.EqualTo(correctChoice));
         });
@@ -160,6 +171,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
+        var questionTitle = "NewQuestionTitle";
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -169,8 +181,8 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionText,
-            choices, correctChoice, expectedCompletionTime, mappingAction,
+        var command = new EditMultipleChoiceSingleResponseQuestion(question, questionTitle, questionText, choices,
+            correctChoice, expectedCompletionTime, mappingAction,
             new NullLogger<EditMultipleChoiceSingleResponseQuestion>());
 
         // Act and Assert

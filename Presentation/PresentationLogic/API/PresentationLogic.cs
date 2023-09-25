@@ -792,58 +792,53 @@ public class PresentationLogic : IPresentationLogic
     }
 
     public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
-        int expectedCompletionTime)
+        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ChoiceViewModel correctChoice, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
         var command = QuestionCommandFactory.GetCreateMultipleChoiceSingleResponseQuestionCommand(taskEntity,
-            difficulty,
-            questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            difficulty, title, questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
             task => CMapper.Map(taskEntity, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
 
     public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
-        int expectedCompletionTime)
+        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
         var command = QuestionCommandFactory.GetCreateMultipleChoiceMultipleResponseQuestionCommand(taskEntity,
-            difficulty,
-            questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            difficulty, title, questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
             task => CMapper.Map(task, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
 
     public void EditMultipleChoiceSingleResponseQuestion(
-        MultipleChoiceSingleResponseQuestionViewModel questionViewModel,
+        MultipleChoiceSingleResponseQuestionViewModel questionViewModel, string title,
         string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
         int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceSingleResponseQuestion>(questionViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
-        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity,
+        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity, title,
             questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
             question => CMapper.Map(question, questionViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
 
     public void EditMultipleChoiceMultipleResponseQuestion(
-        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel,
-        string questionText, ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices,
-        int expectedCompletionTime)
+        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string title, string questionText,
+        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceMultipleResponseQuestion>(questionViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
-        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity,
+        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity, title,
             questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
             question => CMapper.Map(question, questionViewModel));
         BusinessLogic.ExecuteCommand(command);

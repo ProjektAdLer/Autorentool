@@ -14,14 +14,18 @@
     <Fields>
 
         <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudText>Title</MudText>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Title"
+                          For="@(() => FormModel.Title)"
+                          DebounceInterval="DebounceInterval"
+                          Label=@Localizer["EditAdaptivityQuestionForm.Field.Title.Text"]
+                          Class="pb-4"/>
 
-            <MudText Typo="Typo.caption">@Localizer["EditAdaptivityQuestionForm.Field.QuestionText.Text"]</MudText>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                           For="@(() => FormModel.Text)"
                           Lines="3"
                           Variant="Variant.Outlined"
                           DebounceInterval="DebounceInterval"
+                          Label="@Localizer["EditAdaptivityQuestionForm.Field.QuestionText.Text"]"
                           Class="pb-4 mt-0"/>
 
             <MudText>###Switch for only one answer###</MudText>
@@ -36,6 +40,7 @@
                                  Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
                                  CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
                     <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
+                    <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
                 </div>
                 <br/>
             }
@@ -115,10 +120,10 @@
         switch (QuestionToEdit)
         {
             case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
                 break;
             case MultipleChoiceMultipleResponseQuestionViewModel multipleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(QuestionToEdit), "Question to edit is not a valid type");
@@ -130,6 +135,10 @@
 
     private void AddChoice()
     {
+        if (_newChoiceText == "")
+        {
+            _newChoiceText = Localizer["EditAdaptivityQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1);
+        }
         FormDataContainer.FormModel.Choices.Add(new ChoiceViewModel(_newChoiceText));
         if (_newChoiceChecked)
         {
@@ -137,6 +146,12 @@
         }
         _newChoiceChecked = false;
         _newChoiceText = "";
+    }
+
+    private void RemoveChoice(ChoiceViewModel choice)
+    {
+        FormDataContainer.FormModel.Choices.Remove(choice);
+        FormDataContainer.FormModel.CorrectChoices.Remove(choice);
     }
 
     private void ChangeCorrectness(ChoiceViewModel choice, bool b)

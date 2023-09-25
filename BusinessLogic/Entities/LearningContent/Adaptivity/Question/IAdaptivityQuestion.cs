@@ -7,6 +7,11 @@ public interface IAdaptivityQuestion : IEquatable<IAdaptivityQuestion>, IOrigina
     public Guid Id { get; }
 
     /// <summary>
+    /// Title of the question.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
     /// Expected completion time of question in seconds.
     /// </summary>
     public int ExpectedCompletionTime { get; set; }

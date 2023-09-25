@@ -163,7 +163,7 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy,
             rules);
     }
@@ -172,7 +172,7 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceMultipleResponseQuestion(123, choices, choices, rules, "questiontext",
+        return new MultipleChoiceMultipleResponseQuestion("questionTitle", 123, choices, choices, rules, "questionText",
             QuestionDifficulty.Easy);
     }
 
@@ -180,7 +180,7 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy, rules);
     }
 

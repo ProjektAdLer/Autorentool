@@ -30,4 +30,10 @@
     <data name="EditAdaptivityQuestionForm.SnackbarMessage" xml:space="preserve">
         <value>Question updated</value>
     </data>
+    <data name="EditAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
+        <value>Choice</value>
+    </data>
+    <data name="EditAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
+        <value>Title</value>
+    </data>
 </root>

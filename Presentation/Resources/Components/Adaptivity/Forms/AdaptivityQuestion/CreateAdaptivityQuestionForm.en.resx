@@ -30,4 +30,10 @@
     <data name="CreateAdaptivityQuestionForm.SnackbarMessage" xml:space="preserve">
         <value>Question created</value>
     </data>
+    <data name="CreateAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
+        <value>Choice</value>
+    </data>
+    <data name="CreateAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
+        <value>Title</value>
+    </data>
 </root>
