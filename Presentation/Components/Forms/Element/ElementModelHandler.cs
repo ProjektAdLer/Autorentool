@@ -62,8 +62,8 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_image_sciencewhiteboard_1 =>
                 "CustomIcons/ElementModels/campusTheme/l_image_sciencewhiteboard_1.png",
             ElementModel.l_text_libraryshelf_1 => "CustomIcons/ElementModels/campusTheme/l_text_libraryshelf_1.png",
-            ElementModel.l_video_movieprojektor_1 =>
-                "CustomIcons/ElementModels/campusTheme/l_video_movieprojektor_1.png",
+            ElementModel.l_video_movieprojector_1 =>
+                "CustomIcons/ElementModels/campusTheme/l_video_movieprojector_1.png",
             //SuburbTheme
             ElementModel.l_picture_painting_1 => "CustomIcons/ElementModels/suburbTheme/l_image_painting_1.png",
             ElementModel.l_picture_painting_2 => "CustomIcons/ElementModels/suburbTheme/l_image_painting_2.png",
@@ -135,7 +135,7 @@ public class ElementModelHandler : IElementModelHandler
                 //ArcadeTheme
                 yield return ElementModel.l_video_vrdesk_1;
                 //CampusTheme
-                yield return ElementModel.l_video_movieprojektor_1;
+                yield return ElementModel.l_video_movieprojector_1;
                 //SuburbTheme
                 yield return ElementModel.l_video_television_1;
                 break;
@@ -170,7 +170,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_image_sciencegeo_1;
                 yield return ElementModel.l_image_sciencewhiteboard_1;
                 yield return ElementModel.l_text_libraryshelf_1;
-                yield return ElementModel.l_video_movieprojektor_1;
+                yield return ElementModel.l_video_movieprojector_1;
                 break;
             case Theme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
