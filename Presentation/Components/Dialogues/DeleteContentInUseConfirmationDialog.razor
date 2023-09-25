@@ -5,7 +5,7 @@
 <MudDialog>
     <DialogContent>
         <MudText Class="main-text">
-            @Localizer["Dialog.Text1", ContentName]<br/>
+            @((MarkupString)Localizer["Dialog.Text1", ContentName].Value)<br/>
             @Localizer["Dialog.Text2"]
         </MudText>
         <MudTable Items="WorldElementInUseTuples">

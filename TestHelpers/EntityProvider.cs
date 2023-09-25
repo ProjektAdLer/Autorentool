@@ -1,9 +1,9 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Shared;
@@ -22,15 +22,15 @@ public static class EntityProvider
     {
         return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
                 "g" + append)
-            { UnsavedChanges = unsavedChanges };
+            {UnsavedChanges = unsavedChanges};
     }
 
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
         return new LearningSpace("a", "d", "e", 4, Theme.Campus,
-                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
-            { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
+            {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
@@ -41,7 +41,7 @@ public static class EntityProvider
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
-        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
+        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> {{1, GetLearningElement()}},
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -51,7 +51,7 @@ public static class EntityProvider
     {
         return new LearningElement("a" + append, content!, "d" + append, "e" + append,
             LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
-            positionY: positionY) { UnsavedChanges = unsavedChanges };
+            positionY: positionY) {UnsavedChanges = unsavedChanges};
     }
 
     public static PathWayCondition GetPathWayCondition()
@@ -82,7 +82,7 @@ public static class EntityProvider
     public static SavedLearningWorldPath GetSavedLearningWorldPath()
     {
         return new SavedLearningWorldPath
-            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1" };
+            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1"};
     }
 
     public static LearningWorld GetLearningWorldWithSpace()
@@ -132,10 +132,16 @@ public static class EntityProvider
         return new ContentReferenceAction(GetLinkContent());
     }
 
-    public static IAdaptivityContent GetAdaptivityContent()
+    public static AdaptivityContent GetAdaptivityContent()
     {
-        var tasks = new List<IAdaptivityTask> { GetAdaptivityTask() };
-        return new AdaptivityContent("foo", tasks);
+        var tasks = new List<IAdaptivityTask> {GetAdaptivityTask()};
+        return new AdaptivityContent(tasks);
+    }
+
+    public static AdaptivityTask GetAdaptivityTask()
+    {
+        var questions = new List<IAdaptivityQuestion> {GetAdaptivityQuestion()};
+        return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
     }
 
     private static IAdaptivityRule GetAdaptivityRule()
@@ -153,16 +159,10 @@ public static class EntityProvider
         return new CorrectnessTrigger(AnswerResult.Correct);
     }
 
-    private static IAdaptivityTask GetAdaptivityTask()
-    {
-        var questions = new List<IAdaptivityQuestion> { GetAdaptivityQuestion() };
-        return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
-    }
-
     private static IAdaptivityQuestion GetAdaptivityQuestion()
     {
-        var choices = new List<Choice> { GetAdaptivityChoice() };
-        var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
         return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
             QuestionDifficulty.Easy,
             rules);

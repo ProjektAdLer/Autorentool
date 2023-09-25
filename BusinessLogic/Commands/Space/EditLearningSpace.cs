@@ -86,5 +86,6 @@ public class EditLearningSpace : IEditLearningSpace
         LearningSpace.Description != Description ||
         LearningSpace.Goals != Goals ||
         LearningSpace.AssignedTopic != Topic ||
-        LearningSpace.RequiredPoints != RequiredPoints;
+        LearningSpace.RequiredPoints != RequiredPoints ||
+        LearningSpace.Theme != Theme;
 }

@@ -4,6 +4,7 @@ using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -199,6 +200,7 @@ public class CachingMapperIt
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
+        ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
         ILayoutCommandFactory? layoutCommandFactory = null,
@@ -217,6 +219,7 @@ public class CachingMapperIt
         logger ??= Substitute.For<ILogger<PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
+        taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
         elementCommandFactory ??= Substitute.For<IElementCommandFactory>();
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
@@ -228,8 +231,7 @@ public class CachingMapperIt
 
         return new PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
-            shellWrapper,
-            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+            shellWrapper, taskCommandFactory, conditionCommandFactory, elementCommandFactory, layoutCommandFactory,
+            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
     }
 }

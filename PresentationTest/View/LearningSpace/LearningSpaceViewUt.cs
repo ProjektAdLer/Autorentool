@@ -38,6 +38,17 @@ public class LearningSpaceViewUt
         _ctx.Services.AddLogging();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
+    private TestContext _ctx;
+    private ILearningSpacePresenter _learningSpacePresenter;
+    private ISelectedViewModelsProvider _mediator;
+    private IStringLocalizer<LearningSpaceView> _localizer;
+
     [Test]
     public void Constructor_InjectsDependencies()
     {
@@ -131,9 +142,4 @@ public class LearningSpaceViewUt
                 .Add(p => p.ChildContent, childContent)
         );
     }
-
-    private TestContext _ctx;
-    private ILearningSpacePresenter _learningSpacePresenter;
-    private ISelectedViewModelsProvider _mediator;
-    private IStringLocalizer<LearningSpaceView> _localizer;
 }

@@ -2,10 +2,11 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 public class AdaptivityContentViewModel : IAdaptivityContentViewModel
 {
-    public AdaptivityContentViewModel(string name, ICollection<IAdaptivityTaskViewModel> tasks)
+    public AdaptivityContentViewModel(ICollection<IAdaptivityTaskViewModel>? tasks = null)
     {
+        tasks ??= new List<IAdaptivityTaskViewModel>();
         Tasks = tasks;
-        Name = name;
+        Name = "";
     }
 
     /// <summary>

@@ -29,14 +29,6 @@ namespace PresentationTest.Components.ContentFiles;
 [TestFixture]
 public class ContentFilesViewUt
 {
-    private TestContext _testContext;
-    private IPresentationLogic _presentationLogic;
-    private IDialogService _dialogService;
-    private IMediator _mediator;
-    private IAuthoringToolWorkspaceViewModel _workspaceViewModel;
-    private IStringLocalizer<ContentFilesView> _localizer;
-    private IErrorService _errorService;
-
     [SetUp]
     public void Setup()
     {
@@ -62,6 +54,20 @@ public class ContentFilesViewUt
 
         _testContext.AddMudBlazorTestServices();
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _testContext.Dispose();
+    }
+
+    private TestContext _testContext;
+    private IPresentationLogic _presentationLogic;
+    private IDialogService _dialogService;
+    private IMediator _mediator;
+    private IAuthoringToolWorkspaceViewModel _workspaceViewModel;
+    private IStringLocalizer<ContentFilesView> _localizer;
+    private IErrorService _errorService;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -138,7 +144,7 @@ public class ContentFilesViewUt
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>();
         _presentationLogic.Received(1).RemoveContent(items.First());
     }
-    
+
     [Test]
     public void ClickDelete_ArgumentOutOfRangeException_CallsErrorService()
     {
@@ -148,7 +154,7 @@ public class ContentFilesViewUt
         _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
-        
+
         _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new ArgumentOutOfRangeException());
 
         var systemUnderTest = GetRenderedComponent();
@@ -158,9 +164,9 @@ public class ContentFilesViewUt
 
         deleteButton.Click();
 
-       _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
     }
-    
+
     [Test]
     public void ClickDelete_FileNotFoundException_CallsErrorService()
     {
@@ -170,7 +176,7 @@ public class ContentFilesViewUt
         _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
-        
+
         _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new FileNotFoundException("test"));
 
         var systemUnderTest = GetRenderedComponent();
@@ -182,7 +188,7 @@ public class ContentFilesViewUt
 
         _errorService.Received(1).SetError("Error deleting content", "test");
     }
-    
+
     [Test]
     public void ClickDelete_SerializationException_CallsErrorService()
     {
@@ -192,7 +198,7 @@ public class ContentFilesViewUt
         _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
-        
+
         _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new SerializationException("test"));
 
         var systemUnderTest = GetRenderedComponent();
@@ -233,7 +239,7 @@ public class ContentFilesViewUt
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
-        
+
         Expression<Predicate<DialogParameters>> secondDialogParametersPredicate = d =>
             (string)d[nameof(DeleteContentInUseConfirmationDialog.ContentName)] == "file1" &&
             ((IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)>)d[
@@ -241,7 +247,7 @@ public class ContentFilesViewUt
             .Any(tup =>
                 tup.Item1 == world &&
                 tup.Item2 == world.LearningSpaces.First().ContainedLearningElements.First());
-        
+
         _dialogService.Received(1).ShowAsync<DeleteContentInUseConfirmationDialog>("WarningDialog.Title",
             Arg.Is(secondDialogParametersPredicate),
             Arg.Any<DialogOptions>());
@@ -249,15 +255,42 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    public void ClickDelete_FirstDialogCancelled_DoesNotShowSecondDialog()
+    {
+        var items = PresentationLogicSetItems();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Cancel());
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference1);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var tableRows = systemUnderTest.FindAll("tbody tr");
+        var deleteButton = tableRows.First().Children.First().Children.First();
+
+        deleteButton.Click();
+
+        _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Any<DialogOptions>());
+        _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>(Arg.Any<string>(),
+            Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+    }
+
+    [Test]
     public void EnterSearchString_FiltersCorrectly()
     {
         PresentationLogicSetItems();
         var searchString = "file1";
-        
+
         var systemUnderTest = GetRenderedComponent();
 
         systemUnderTest.Instance.SearchString = searchString;
-        
+
         systemUnderTest.Render();
         var tableRows = systemUnderTest.FindAll("tbody tr");
         Assert.That(tableRows, Has.Count.EqualTo(1));
@@ -267,12 +300,12 @@ public class ContentFilesViewUt
     public void ShowFilepathSwitchPressed_ShowsFilepathOrLink()
     {
         var items = PresentationLogicSetItems();
-        
+
         var systemUnderTest = GetRenderedComponent();
         var mudSwitch = systemUnderTest.FindComponent<MudSwitch<bool>>();
         var showFilepathSwitch = mudSwitch.Find("input");
         showFilepathSwitch.Change(true);
-        
+
         var tableRows = systemUnderTest.FindAll("tbody tr");
         Assert.Multiple(() =>
         {
@@ -282,7 +315,8 @@ public class ContentFilesViewUt
                 var pathTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Filepath/Link");
                 var path = pathTd.GetInnerText();
-                Assert.That(path, Is.EqualTo(item is FileContentViewModel fc ? fc.Filepath : ((LinkContentViewModel)item).Link));
+                Assert.That(path,
+                    Is.EqualTo(item is FileContentViewModel fc ? fc.Filepath : ((LinkContentViewModel)item).Link));
             }
         });
     }
@@ -291,9 +325,9 @@ public class ContentFilesViewUt
     public void ClickNewElementButton_CallsPresentationLogicAndMediator()
     {
         var items = PresentationLogicSetItems();
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         var newElementButton = systemUnderTest.Find("button.create-element-with-content");
         newElementButton.Click();
         _presentationLogic.Received().SetSelectedLearningContentViewModel(items.First());
@@ -304,9 +338,9 @@ public class ContentFilesViewUt
     public void ClickPreviewButton_CallsPresentationLogic()
     {
         var items = PresentationLogicSetItems();
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         var previewButton = systemUnderTest.Find("button.show-content-preview");
         previewButton.Click();
         _presentationLogic.Received().ShowLearningContentAsync(items.First());

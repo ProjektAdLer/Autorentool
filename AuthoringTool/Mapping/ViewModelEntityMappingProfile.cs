@@ -2,10 +2,10 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Action;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Question;
-using BusinessLogic.Entities.LearningContent.AdaptivityContent.Trigger;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.PresentationLogic;
@@ -214,6 +214,7 @@ public class ViewModelEntityMappingProfile : Profile
                 RemapWithoutUpdate();
                 return;
             }
+
             context.Mapper.Map(entity.LearningContent, vm.LearningContent);
         }
         catch

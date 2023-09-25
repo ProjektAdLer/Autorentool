@@ -3,7 +3,7 @@
 <MudDialog>
     <DialogContent>
         <MudText>
-            @Localizer["UnsavedWorldDialog.Content.Text", WorldName]
+            @((MarkupString)Localizer["UnsavedWorldDialog.Content.Text", WorldName].Value)
         </MudText>
     </DialogContent>
     <DialogActions>

@@ -6,6 +6,7 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -259,6 +260,7 @@ public class Startup
 
     private void ConfigureCommandFactories(IServiceCollection services)
     {
+        services.AddSingleton<ITaskCommandFactory, TaskCommandFactory>();
         services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
         services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
         services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();

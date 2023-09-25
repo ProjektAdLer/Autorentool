@@ -10,12 +10,14 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Element;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -29,7 +31,9 @@ namespace IntegrationTest.Forms.Element;
 public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, LearningElementFormModel, LearningElement>
 {
     [SetUp]
+#pragma warning disable CS0108, CS0114
     public void Setup()
+#pragma warning restore CS0108, CS0114
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         LearningContentViewModels = new ILearningContentViewModel[]
@@ -50,12 +54,14 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.ComponentFactories.AddStub<NoContentWarning>();
     }
 
-    public ILearningWorldPresenter WorldPresenter { get; set; }
-    public ILearningSpacePresenter SpacePresenter { get; set; }
-    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    public IElementModelHandler ElementModelHandler { get; set; }
-    public IPresentationLogic PresentationLogic { get; set; }
-    public ILearningContentViewModel[] LearningContentViewModels { get; set; }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+    private ILearningSpacePresenter SpacePresenter { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    private IElementModelHandler ElementModelHandler { get; set; }
+    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningContentViewModel[] LearningContentViewModels { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private const string Expected = "test";
 
@@ -81,10 +87,30 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
 
-        var systemUnderTest = GetRenderedComponent();
+        GetRenderedComponent();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels.First()));
         SelectedViewModelsProvider.Received(1).SetLearningContent(null, null);
+    }
+
+    [Test]
+    public void Initialize_AdaptivityElementModeTrue_SetsContentInFormModel()
+    {
+        Assert.That(FormModel.LearningContent, Is.Null);
+        GetFormWithPopoverProvider(adaptivityElementMode: true);
+        
+        Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentViewModel>());
+    }
+
+    [Test]
+    public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
+    {
+        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        Assert.That(() => collapsables.Single(collapsable =>
+                collapsable.Instance.Title == "CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"),
+            Throws.Nothing);
     }
 
     [Test]
@@ -208,6 +234,21 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }
+    
+    [Test]
+    public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
+    {
+         var dialogServiceMock = Substitute.For<IDialogService>();
+         Context.Services.AddSingleton(dialogServiceMock);
+        
+        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        
+        var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
+        button.Find("button").Click();
+
+        await dialogServiceMock.Received(1).ShowAsync<AdaptivityContentDialog>(Arg.Any<string>(),
+            Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+    }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
     {
@@ -263,17 +304,18 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         );
     }
 
-    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null)
+    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null, bool adaptivityElementMode = false)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.RenderComponent<CreateElementForm>(p =>
         {
             p.Add(c => c.OnSubmitted, onSubmitted.Value);
             p.Add(c => c.DebounceInterval, 0);
+            p.Add(c => c.AdaptivityElementMode, adaptivityElementMode);
         });
     }
 
-    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null)
+    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null, bool adaptivityElementMode = false)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.Render(builder =>
@@ -283,6 +325,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             builder.OpenComponent<CreateElementForm>(1);
             builder.AddAttribute(2, nameof(CreateElementForm.OnSubmitted), onSubmitted);
             builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
+            builder.AddAttribute(4, nameof(CreateElementForm.AdaptivityElementMode), adaptivityElementMode);
             builder.CloseComponent();
         });
     }

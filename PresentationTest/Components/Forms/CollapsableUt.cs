@@ -21,6 +21,12 @@ public class CollapsableUt
         _ctx.ComponentFactories.AddStub<MudIcon>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     [Test]
     public void Constructor_SetsParameters()
     {

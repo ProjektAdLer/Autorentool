@@ -3,6 +3,7 @@ using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -10,6 +11,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 
@@ -411,6 +413,31 @@ public interface IPresentationLogic
     /// <returns>The loaded Learning Content view model.</returns>
     /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
     Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
+
+    /// <summary>
+    /// Creates a Adaptivity Task in the given Adaptivity Content.
+    /// </summary>
+    /// <param name="adaptivityContentVm">The Adaptivity Content to create the Task in.</param>
+    /// <param name="name">The name of the Task.</param>
+    void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name);
+
+    /// <summary>
+    /// Edits a given Adaptivity Task
+    /// </summary>
+    /// <param name="adaptivityTaskVm">The Task to edit.</param>
+    /// <param name="name">The new name for the Task.</param>
+    /// <param name="minimumRequiredDifficulty">The minimum required Difficulty for the Task.</param>
+    void EditAdaptivityTask(IAdaptivityTaskViewModel adaptivityTaskVm, string name,
+        QuestionDifficulty? minimumRequiredDifficulty);
+
+    /// <summary>
+    /// Deletes a given Adaptivity Task from the given Adaptivity Content.
+    /// </summary>
+    /// <param name="adaptivityContentVm">The Adaptivity Content to delete the Task from.</param>
+    /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
+    void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+        IAdaptivityTaskViewModel adaptivityTaskVm);
+
 
     /// <summary>
     /// Gets all content files in the appdata folder.

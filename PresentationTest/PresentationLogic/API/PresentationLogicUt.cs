@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -63,6 +64,7 @@ public class PresentationLogicUt
         Substitute.For<ILogger<BatchCommandFactory>>();
         var mockHybridSupportWrapper = Substitute.For<IHybridSupportWrapper>();
         var mockShellWrapper = Substitute.For<IShellWrapper>();
+        var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
         var mockConditionCommandFactory = Substitute.For<IConditionCommandFactory>();
         var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
         var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
@@ -75,10 +77,9 @@ public class PresentationLogicUt
         //Act
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper,
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
-            mockHybridSupportWrapper,
-            mockShellWrapper, mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory,
-            mockPathwayCommandFactory, mockSpaceCommandFactory, mockTopicCommandFactory, mockWorldCommandFactory,
-            mockBatchCommandFactory);
+            mockHybridSupportWrapper, mockShellWrapper, mockTaskCommandFactory, mockConditionCommandFactory,
+            mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory, mockSpaceCommandFactory,
+            mockTopicCommandFactory, mockWorldCommandFactory, mockBatchCommandFactory);
         Assert.Multiple(() =>
         {
             //Assert
@@ -136,7 +137,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -236,7 +237,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -294,7 +295,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -575,7 +576,8 @@ public class PresentationLogicUt
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            elementCommandFactory: mockElementCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+            elementCommandFactory: mockElementCommandFactory,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, positionX: 3, positionY: 4);
@@ -1107,7 +1109,7 @@ public class PresentationLogicUt
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ))
             .Returns(mockBatchCommand);
 
@@ -1137,7 +1139,7 @@ public class PresentationLogicUt
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ));
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -1678,7 +1680,7 @@ public class PresentationLogicUt
         var learningWorldViewModel = Substitute.For<ILearningWorldViewModel>();
         learningWorldViewModel.Id.Returns(guid);
         authoringToolWorkspaceVm.LearningWorlds
-            .Returns(new List<ILearningWorldViewModel> { learningWorldViewModel });
+            .Returns(new List<ILearningWorldViewModel> {learningWorldViewModel});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport,
@@ -1712,7 +1714,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
         mockBusinessLogic.GetSavedLearningWorldPaths()
-            .Returns(new List<SavedLearningWorldPath> { savedLearningWorldPath });
+            .Returns(new List<SavedLearningWorldPath> {savedLearningWorldPath});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -2246,6 +2248,7 @@ public class PresentationLogicUt
         IServiceProvider? serviceProvider = null,
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
+        ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
         ILayoutCommandFactory? layoutCommandFactory = null,
@@ -2264,6 +2267,8 @@ public class PresentationLogicUt
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
+
+        taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
         elementCommandFactory ??= Substitute.For<IElementCommandFactory>();
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
@@ -2275,8 +2280,8 @@ public class PresentationLogicUt
 
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger,
-            hybridSupportWrapper, shellWrapper,
-            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+            hybridSupportWrapper, shellWrapper, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
+            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory,
+            batchCommandFactory);
     }
 }

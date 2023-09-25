@@ -25,4 +25,10 @@ public class MudBlazorTestFixture<T> where T : ComponentBase
         Context.Services.AddSingleton(Localizer);
         Context.Services.AddLogging(builder => builder.AddProvider(NullLoggerProvider.Instance));
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        Context.Dispose();
+    }
 }
