@@ -12,6 +12,7 @@ using MudBlazor;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using NUnit.Framework;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Element;
@@ -218,6 +219,21 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("btn-standard rounded").Find("button").Click();
 
         WorldPresenter.Received(1).ShowSelectedElementContentAsync(vm);
+    }
+    
+    [Test]
+    public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
+    {
+         var dialogServiceMock = Substitute.For<IDialogService>();
+         Context.Services.AddSingleton(dialogServiceMock);
+        
+        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        
+        var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
+        button.Find("button").Click();
+
+        await dialogServiceMock.Received(1).ShowAsync<AdaptivityContentDialog>(Arg.Any<string>(),
+            Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
     }
 
     private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Element;
@@ -19,6 +20,7 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using PresentationTest;
 using Shared;
 using TestHelpers;
 
@@ -28,7 +30,9 @@ namespace IntegrationTest.Forms.Element;
 public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, LearningElementFormModel, LearningElement>
 {
     [SetUp]
+#pragma warning disable CS0108, CS0114
     public void Setup()
+#pragma warning restore CS0108, CS0114
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         LearningContentViewModels = new ILearningContentViewModel[]
@@ -48,12 +52,14 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.Services.AddSingleton(localizer);
     }
 
-    public ILearningWorldPresenter WorldPresenter { get; set; }
-    public ILearningSpacePresenter SpacePresenter { get; set; }
-    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    public IElementModelHandler ElementModelHandler { get; set; }
-    public IPresentationLogic PresentationLogic { get; set; }
-    public ILearningContentViewModel[] LearningContentViewModels { get; set; }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+    private ILearningSpacePresenter SpacePresenter { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    private IElementModelHandler ElementModelHandler { get; set; }
+    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningContentViewModel[] LearningContentViewModels { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private const string Expected = "test";
 
@@ -79,7 +85,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
 
-        var systemUnderTest = GetRenderedComponent();
+        GetRenderedComponent();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels.First()));
         SelectedViewModelsProvider.Received(1).SetLearningContent(null, null);
@@ -89,7 +95,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_AdaptivityElementModeTrue_SetsContentInFormModel()
     {
         Assert.That(FormModel.LearningContent, Is.Null);
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        GetFormWithPopoverProvider(adaptivityElementMode: true);
         
         Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentViewModel>());
     }
@@ -214,6 +220,21 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
                     Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
             TimeSpan.FromSeconds(2));
         Assert.That(callbackCalledCount, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
+    {
+         var dialogServiceMock = Substitute.For<IDialogService>();
+         Context.Services.AddSingleton(dialogServiceMock);
+        
+        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        
+        var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
+        button.Find("button").Click();
+
+        await dialogServiceMock.Received(1).ShowAsync<AdaptivityContentDialog>(Arg.Any<string>(),
+            Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)

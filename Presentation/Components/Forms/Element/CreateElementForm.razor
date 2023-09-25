@@ -118,7 +118,9 @@
             <Collapsable Style="" Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
                 <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</MudText><br/>
                 <div class="flex flex-col items-center justify-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OpenAdaptivityContentDialog">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" Class="add-tasks" OnClick="OpenAdaptivityContentDialog">
+                        @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
+                    </MudButton>
                 </div>
             </Collapsable>
         }
