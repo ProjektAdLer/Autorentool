@@ -3,7 +3,7 @@ namespace Generator.DSL.AdaptivityElement;
 public interface IAdaptivityQuestionJson : IHasType
 {
     string QuestionType { get; set; }
-    string QuestionId { get; set; }
+    int QuestionId { get; set; }
     string QuestionUUID { get; set; }
     int QuestionDifficulty { get; set; }
     string QuestionText { get; set; }
