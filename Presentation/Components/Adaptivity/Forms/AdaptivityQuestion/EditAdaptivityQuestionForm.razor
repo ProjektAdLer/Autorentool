@@ -8,7 +8,7 @@
 @using System.Diagnostics.CodeAnalysis
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_editQuestionForm"
           OnValidSubmit="OnValidSubmit"
-          SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
+          SnackbarMessage=@Localizer["EditAdaptivityQuestionForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer"
           CustomValidatorFunc="ValidateModel">
     <Fields>
@@ -16,7 +16,7 @@
         <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudText>Title</MudText>
 
-            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text#####"]</MudText>
+            <MudText Typo="Typo.caption">@Localizer["EditAdaptivityQuestionForm.Field.QuestionText.Text"]</MudText>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                           For="@(() => FormModel.Text)"
                           Lines="3"
@@ -24,9 +24,10 @@
                           DebounceInterval="DebounceInterval"
                           Class="pb-4 mt-0"/>
 
-            <MudText>Switch for only one answer</MudText>
+            <MudText>###Switch for only one answer###</MudText>
         </div>
 
+        <MudText>@Localizer["EditAdaptivityQuestionForm.Text.Choices"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
             @foreach (var choice in FormDataContainer.FormModel.Choices)
             {
@@ -36,9 +37,11 @@
                                  CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
                     <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
                 </div>
+                <br/>
             }
-
         </div>
+
+        <MudText>@Localizer["EditAdaptivityQuestionForm.Text.AddChoice"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
 
             <span class="inline-flex">
@@ -50,7 +53,7 @@
 
     </Fields>
     <FooterButtons>
-        <MudButton OnClick="() => { _editQuestionForm?.SubmitAsync(); }">Übernehmen</MudButton>
+        <MudButton OnClick="() => { _editQuestionForm?.SubmitAsync(); }">@Localizer["EditAdaptivityQuestionForm.Button.Edit"]</MudButton>
     </FooterButtons>
 </BaseForm>
 
@@ -60,7 +63,7 @@
     public IMultipleChoiceQuestionViewModel QuestionToEdit { get; set; } = null!;
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    internal IStringLocalizer<CreateAdaptivityQuestionForm> Localizer { get; set; }
+    internal IStringLocalizer<EditAdaptivityQuestionForm> Localizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IFormDataContainer<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion> FormDataContainer { get; set; }

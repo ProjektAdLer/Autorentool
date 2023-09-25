@@ -1,30 +1,30 @@
+@using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Shared.Adaptivity
-@using Presentation.PresentationLogic.API
+@using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
-<h3>AdaptivityContentDialog</h3>
 <MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Style="border: 2px solid black; margin: 5px;"
           FixedHeader="true"
           FixedFooter="false" CustomFooter="true"
           Bordered="true">
     <HeaderContent>
-        <MudTh>Aufgaben</MudTh>
-        <MudTh>verpflichtende Aufgabe</MudTh>
-        <MudTh>leicht</MudTh>
-        <MudTh>mittelschwer</MudTh>
-        <MudTh>schwer</MudTh>
+        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]</MudTh>
+        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]</MudTh>
+        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Easy"]</MudTh>
+        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Medium"]</MudTh>
+        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Hard"]</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Aufgaben">
+        <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
             <span class="inline-flex">
                 <MudTextField DebounceInterval="300" OnDebounceIntervalElapsed="(t) => RenameTask(context, t)" Value="@context.Name"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
             </span>
         </MudTd>
-        <MudTd DataLabel="verpflichtende Aufgabe">
+        <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]">
             <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
         </MudTd>
-        <MudTd DataLabel="leicht">
+        <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Easy"]">
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Easy))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Easy)"
@@ -34,15 +34,15 @@
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Easy))
             {
                 <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Easy).ToString()</MudText>
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Easy)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Easy)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Easy)"/>
             }
             else
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Easy)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Easy)"/>
             }
         </MudTd>
-        <MudTd DataLabel="mittelschwer">
+        <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Medium"]">
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Medium))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Medium)"
@@ -52,15 +52,15 @@
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Medium))
             {
                 <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Medium).ToString()</MudText>
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Medium)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Medium)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Medium)"/>
             }
             else
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Medium)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Medium)"/>
             }
         </MudTd>
-        <MudTd DataLabel="schwer">
+        <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Hard"]">
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Hard))
             {
                 <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(QuestionDifficulty.Hard)"
@@ -70,41 +70,44 @@
             @if (HasTaskQuestionWithQuestionDifficulty(context, QuestionDifficulty.Hard))
             {
                 <MudText>@context.Questions.First(x => x.Difficulty == QuestionDifficulty.Hard).ToString()</MudText>
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => EditQuestion(context, QuestionDifficulty.Hard)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Hard)"/>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, QuestionDifficulty.Hard)"/>
             }
             else
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddQuestion(context, QuestionDifficulty.Hard)"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="() => AddOrEditQuestion(context, QuestionDifficulty.Hard)"/>
             }
         </MudTd>
     </RowTemplate>
     <FooterContent>
         <MudTFootRow>
-            <MudTd DataLabel="Aufgaben">
+            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
                 <span class="inline-flex">
                     <MudTextField T="string" @bind-Value="@_newTaskName"/>
                     <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
                 </span>
             </MudTd>
-            <MudTd DataLabel="verpflichtende Aufgabe"/>
-            <MudTd DataLabel="leicht"/>
-            <MudTd DataLabel="mittelschwer"/>
-            <MudTd DataLabel="schwer"/>
+            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]"/>
+            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Easy"]"/>
+            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Medium"]"/>
+            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Hard"]"/>
         </MudTFootRow>
     </FooterContent>
 </MudTable>
 
 @code {
 
-    [Parameter, EditorRequired]
-    public IAdaptivityContentViewModel MyContent { get; set; } = null!;
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IDialogService DialogService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<AdaptivityContentDialog> Localizer { get; set; }
+
+    [Parameter, EditorRequired]
+    public IAdaptivityContentViewModel MyContent { get; set; } = null!;
 
     private string _newTaskName = "";
 
@@ -132,28 +135,17 @@
         PresentationLogic.DeleteAdaptivityTask(MyContent, task);
     }
 
-    private async void AddQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
+    private async void AddOrEditQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
     {
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = false,
         };
         var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("AdaptivityQuestionDialogTitle", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
         var result = await dialog.Result;
         await InvokeAsync(StateHasChanged);
-    }
-
-    private Task EditQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
-    {
-        var options = new DialogOptions
-        {
-            DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
-        };
-        return DialogService.ShowAsync<AdaptivityQuestionDialog>("AdaptivityQuestionDialogTitle", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
     }
 
     private void RemoveQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)

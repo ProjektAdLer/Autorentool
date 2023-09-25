@@ -9,7 +9,7 @@
 @using System.Diagnostics.CodeAnalysis
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_createQuestionForm"
           OnValidSubmit="OnValidSubmit"
-          SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
+          SnackbarMessage=@Localizer["CreateAdaptivityQuestionForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer"
           CustomValidatorFunc="ValidateModel">
     <Fields>
@@ -17,7 +17,7 @@
         <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudText>Title</MudText>
 
-            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text#####"]</MudText>
+            <MudText Typo="Typo.caption">@Localizer["CreateAdaptivityQuestionForm.Field.QuestionText.Text"]</MudText>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                           For="@(() => FormModel.Text)"
                           Lines="3"
@@ -31,6 +31,7 @@
             </MudCheckBox>
         </div>
 
+        <MudText>@Localizer["CreateAdaptivityQuestionForm.Text.Choices"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
             @foreach (var choice in FormDataContainer.FormModel.Choices)
             {
@@ -40,9 +41,11 @@
                                  CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
                     <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
                 </div>
+                <br/>
             }
-
         </div>
+
+        <MudText>@Localizer["CreateAdaptivityQuestionForm.Text.AddChoice"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
 
             <span class="inline-flex">
@@ -54,7 +57,7 @@
 
     </Fields>
     <FooterButtons>
-        <MudButton OnClick="() => { _createQuestionForm?.SubmitAsync(); }">Hinzufügen</MudButton>
+        <MudButton OnClick="() => { _createQuestionForm?.SubmitAsync(); }">@Localizer["CreateAdaptivityQuestionForm.Button.Create"]</MudButton>
     </FooterButtons>
 </BaseForm>
 
@@ -100,11 +103,6 @@
 
     private bool _newChoiceChecked = false;
     private string _newChoiceText = "";
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
 
     private void OnValidSubmit(MultipleChoiceQuestionFormModel model)
     {
