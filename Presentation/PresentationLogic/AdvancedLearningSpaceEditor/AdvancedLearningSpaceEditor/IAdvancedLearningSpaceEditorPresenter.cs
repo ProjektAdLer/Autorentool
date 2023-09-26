@@ -9,11 +9,12 @@ public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged, 
 {
     IAdvancedComponentViewModel? SelectedAdvancedComponentViewModel { get; set; }
     IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel { get; }
-    void RightClickOnAdvancedComponent();
-    void DeleteSelectedAdvancedComponent();
-    void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs);
     void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj);
-
+    void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs);
+    void DeleteSelectedAdvancedComponent();
+    void RightClickOnAdvancedComponent();
+    void HideRightClickMenu();
     void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace);
     void CreateAdvancedLearningElementSlot(double positionX = 50, double positionY = 50);
+    void CreateAdvancedDecoration(double positionX = 50, double positionY = 50);
 }

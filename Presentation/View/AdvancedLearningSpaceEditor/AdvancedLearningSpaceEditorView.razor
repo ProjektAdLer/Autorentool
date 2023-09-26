@@ -127,7 +127,7 @@
         </button>
         <button
             class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
-            @onclick=CreateAdvancedLearningElementSlot>
+            @onclick=CreateAdvancedDecoration>
             <div class="h-[45px]">
                 <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
             </div>
@@ -175,6 +175,10 @@
     private void CreateAdvancedLearningElementSlot()
     {
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedLearningElementSlot();
+    }
+    private void CreateAdvancedDecoration()
+    {
+        AdvancedLearningSpaceEditorPresenter.CreateAdvancedDecoration();
     }
 
     private string getSpaceCornerPointsString()

@@ -7,6 +7,7 @@ public interface IAdvancedLearningSpaceLayoutViewModel
 {
     IDictionary<int, ILearningElementViewModel> LearningElements { get; set; }
     IDictionary<int, IAdvancedLearningElementSlotViewModel>  AdvancedLearningElementSlots { get; set; }
+    IDictionary<int, IAdvancedDecorationViewModel> AdvancedDecorations { get; set; }
     int Capacity { get; }
     int Count { get; }
     IEnumerable<int> UsedIndices { get; }
@@ -17,4 +18,5 @@ public interface IAdvancedLearningSpaceLayoutViewModel
     void RemoveElement(int index);
     void ClearAllElements();
     void AddAdvancedLearningElementSlot(Guid spaceId, int slotKey, double positionX, double positionY);
+    void AddAdvancedDecoration(Guid spaceId, int decorationKey, double positionX, double positionY);
 }

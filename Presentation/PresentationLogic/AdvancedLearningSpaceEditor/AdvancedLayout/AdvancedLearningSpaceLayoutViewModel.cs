@@ -15,6 +15,7 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     {
         _learningElements = new Dictionary<int, ILearningElementViewModel>();
         _advancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlotViewModel>();
+        _advancedDecorations = new Dictionary<int, IAdvancedDecorationViewModel>();
     }
 
     public IDictionary<int, ILearningElementViewModel> LearningElements
@@ -27,6 +28,12 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     {
         get => _advancedLearningElementSlots;
         set =>_advancedLearningElementSlots = value;
+    }
+
+    public IDictionary<int, IAdvancedDecorationViewModel> AdvancedDecorations
+    {
+        get => _advancedDecorations;
+        set => _advancedDecorations = value;
     }
 
 
@@ -46,7 +53,7 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     private IDictionary<int, ILearningElementViewModel> _learningElements;
     private IDictionary<int, IAdvancedLearningElementSlotViewModel> _advancedLearningElementSlots;
-
+    private IDictionary<int, IAdvancedDecorationViewModel> _advancedDecorations;
     public ILearningElementViewModel GetElement(int index)
     {
         return _learningElements[index];
@@ -74,6 +81,10 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     public void AddAdvancedLearningElementSlot(Guid spaceId, int slotKey, double positionX, double positionY)
     {
         AdvancedLearningElementSlots.Add(slotKey, new AdvancedLearningElementSlotViewModel(spaceId, slotKey, positionX, positionY));
+    }
+    public void AddAdvancedDecoration(Guid spaceId, int decorationKey, double positionX, double positionY)
+    {
+        AdvancedDecorations.Add(decorationKey, new AdvancedDecorationViewModel(spaceId, decorationKey, positionX, positionY));
     }
 
 }
