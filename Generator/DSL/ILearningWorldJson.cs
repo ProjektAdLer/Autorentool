@@ -17,5 +17,5 @@ public interface ILearningWorldJson : IHasType
     List<LearningSpaceJson> Spaces { get; set; }
 
     // for the correct structure the elements are added to the learning World
-    List<LearningElementJson> Elements { get; set; }
+    List<IElementJson> Elements { get; set; }
 }

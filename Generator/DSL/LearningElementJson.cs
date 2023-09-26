@@ -23,6 +23,23 @@ public class LearningElementJson : ILearningElementJson
         ElementModel = elementModel;
     }
 
+    public LearningElementJson(int elementId, string elementUuid, string elementName, string elementCategory,
+        string elementFileType, int learningSpaceParentId, int elementMaxScore, string elementModel,
+        string? elementDescription = null, string[]? elementGoals = null)
+    {
+        ElementId = elementId;
+        ElementUUID = elementUuid;
+        ElementName = elementName;
+        Url = "";
+        ElementDescription = elementDescription ?? "";
+        ElementGoals = elementGoals ?? new[] { "" };
+        ElementCategory = elementCategory;
+        ElementFileType = elementFileType;
+        LearningSpaceParentId = learningSpaceParentId;
+        ElementMaxScore = elementMaxScore;
+        ElementModel = elementModel;
+    }
+
     public string Url { get; set; }
 
     public string Type => JsonTypes.LearningElementType;

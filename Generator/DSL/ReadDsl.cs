@@ -108,7 +108,7 @@ public class ReadDsl : IReadDsl
     {
         _learningWorldJson = new LearningWorldJson("Value",
             "", new List<TopicJson>(),
-            new List<LearningSpaceJson>(), new List<LearningElementJson>());
+            new List<LearningSpaceJson>(), new List<IElementJson>());
         _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
         _listH5PElements = new List<LearningElementJson>();
         _listResourceElements = new List<LearningElementJson>();
@@ -134,7 +134,7 @@ public class ReadDsl : IReadDsl
         {
             if (element.ElementFileType == "h5p")
             {
-                _listH5PElements.Add(element);
+                _listH5PElements.Add((LearningElementJson)element);
             }
         }
 
@@ -152,7 +152,7 @@ public class ReadDsl : IReadDsl
                 or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
-                _listResourceElements.Add(resource);
+                _listResourceElements.Add((LearningElementJson)resource);
             }
         }
 
@@ -168,7 +168,7 @@ public class ReadDsl : IReadDsl
         {
             if (label.ElementFileType is "label")
             {
-                _listLabelElements.Add(label);
+                _listLabelElements.Add((LearningElementJson)label);
             }
         }
 
@@ -207,7 +207,7 @@ public class ReadDsl : IReadDsl
         {
             if (url.ElementFileType is "url")
             {
-                _listUrlElements.Add(url);
+                _listUrlElements.Add((LearningElementJson)url);
             }
         }
 
@@ -226,7 +226,8 @@ public class ReadDsl : IReadDsl
                 foreach (var elementInSpace in space.SpaceSlotContents)
                 {
                     if (elementInSpace != null)
-                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
+                        _listAllElementsOrdered.Add(
+                            (LearningElementJson)documentRootJson.World.Elements[(int)elementInSpace - 1]);
                 }
             }
         }

@@ -23,7 +23,7 @@ public static class JsonTypes
 
     public const string AdaptivityQuestionAnswerType = "AdaptivityQuestionAnswer";
 
-    public const string AdaptivityCommentActionType = "CommentAction";
-    public const string AdaptivityElementReferenceActionType = "AdaptivityReferenceAction";
-    public const string AdaptivityContentReferenceActionType = "AdaptivityContentReferenceAction";
+    public const string CommentActionType = "CommentAction";
+    public const string ElementReferenceActionType = "AdaptivityReferenceAction";
+    public const string ContentReferenceActionType = "AdaptivityContentReferenceAction";
 }

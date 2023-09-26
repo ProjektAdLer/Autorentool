@@ -2,13 +2,12 @@ namespace Generator.DSL.AdaptivityElement;
 
 public class CommentActionJson : IAdaptivityActionJson
 {
-    public CommentActionJson(string type, string commentText)
+    public CommentActionJson(string commentText)
     {
-        Type = type;
         CommentText = commentText;
     }
 
     public string CommentText { get; set; }
 
-    public string Type { get; }
+    public string Type => JsonTypes.CommentActionType;
 }

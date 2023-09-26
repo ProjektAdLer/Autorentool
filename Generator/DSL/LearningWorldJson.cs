@@ -4,7 +4,7 @@ public class LearningWorldJson : ILearningWorldJson
 {
     // the lmsElementIdentifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
     public LearningWorldJson(string worldName, string worldUuid, List<TopicJson> topics,
-        List<LearningSpaceJson> spaces, List<LearningElementJson> elements, string? worldDescription = null,
+        List<LearningSpaceJson> spaces, List<IElementJson> elements, string? worldDescription = null,
         string[]? worldGoals = null, string? evaluationLink = null)
     {
         WorldName = worldName;
@@ -36,5 +36,5 @@ public class LearningWorldJson : ILearningWorldJson
     public List<LearningSpaceJson> Spaces { get; set; }
 
     // for the correct structure the elements are added to the learning World
-    public List<LearningElementJson> Elements { get; set; }
+    public List<IElementJson> Elements { get; set; }
 }
