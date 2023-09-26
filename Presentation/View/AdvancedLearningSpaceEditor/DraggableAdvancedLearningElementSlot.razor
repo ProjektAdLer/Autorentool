@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 @using Presentation.View.LearningElement
 <h3>DraggableAdvancedLearningElementSlot</h3>
 <MudDropZone
@@ -21,16 +22,24 @@
             OnClicked="@LearningSpaceP.ClickedLearningElement"/>
     </ItemRenderer>
     <ChildContent>
-        @* @if (!LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(@AdvancedComponent.SlotKey)) *@
-        @* { *@
-        @*     <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon> *@
-        @* } *@
+        @{
+            var advancedSpaceVm = LearningSpaceP.LearningSpaceVm as AdvancedLearningSpaceViewModel;
+            if (advancedSpaceVm == null || advancedSpaceVm.GetType() != typeof(AdvancedLearningSpaceViewModel))
+            {
+                throw new Exception("LearningSpaceP.LearningSpaceVm is not of type AdvancedLearningSpaceViewModel");
+            }
+            if (!advancedSpaceVm.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.ContainsKey(AdvancedComponent.SlotKey))
+            {
+                <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+            }
+        }
     </ChildContent>
 </MudDropZone>
 @* insert draggable code here haha *@
 @code {
     [Inject, AllowNull]
     public ILearningSpacePresenter LearningSpaceP { get; set; }
+    
     [Parameter, EditorRequired]
     public IAdvancedLearningElementSlotViewModel AdvancedComponent { get; set; } = null!;
 
