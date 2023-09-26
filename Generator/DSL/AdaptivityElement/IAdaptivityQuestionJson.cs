@@ -8,4 +8,5 @@ public interface IAdaptivityQuestionJson : IHasType
     int QuestionDifficulty { get; set; }
     string QuestionText { get; set; }
     List<IAdaptivityRuleJson> AdaptivityRules { get; set; }
+    List<IChoiceJson> Choices { get; set; }
 }
