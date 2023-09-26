@@ -163,14 +163,14 @@ public static class ViewModelProvider
             choiceViewModels.First(), QuestionDifficulty.Medium, choiceViewModels);
     }
 
-    private static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
+    public static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
     {
         var choiceViewModels = new List<ChoiceViewModel> {GetChoice(), GetChoice()};
         return new MultipleChoiceMultipleResponseQuestionViewModel("questionTitle", 1, "question text",
             QuestionDifficulty.Hard, choiceViewModels, choiceViewModels);
     }
 
-    private static AdaptivityTaskViewModel GetAdaptivityTask()
+    public static AdaptivityTaskViewModel GetAdaptivityTask()
     {
         return new AdaptivityTaskViewModel(
             new List<IAdaptivityQuestionViewModel>

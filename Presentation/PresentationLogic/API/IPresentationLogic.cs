@@ -564,6 +564,10 @@ public interface IPresentationLogic
         string title, string questionText, ICollection<ChoiceViewModel> choices,
         ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
 
+    void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel task,
+        IMultipleChoiceQuestionViewModel question, bool isSingleResponse, string title, string text,
+        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+
     void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
 
     #region BackendAccess

@@ -4,6 +4,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Adaptivity;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Adaptivity.Question;
 
@@ -149,6 +150,87 @@ public class QuestionCommandFactoryUt
             Assert.That(resultCasted.CorrectChoices, Is.EqualTo(correctChoices));
             Assert.That(resultCasted.ExpectedCompletionTime, Is.EqualTo(expectedCompletionTime));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+        });
+    }
+
+    [Test]
+    public void
+        GetEditMultipleChoiceQuestionWithTypeChangeCommand_MultipleResponseToSingleResponse_ReturnsEditMultipleChoiceQuestionWithTypeChange()
+    {
+        var task = EntityProvider.GetAdaptivityTask();
+        var question = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
+        var isSingleResponse = true;
+        var title = "NewTitle";
+        var text = "NewText";
+        var choice1 = new Choice("Choice1");
+        var choice2 = new Choice("Choice2");
+        var correctChoice = new Choice("CorrectChoice");
+        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var correctChoices = new List<Choice>() {correctChoice};
+        var expectedCompletionTime = 20;
+        Action<AdaptivityTask> mappingAction = _ => { };
+
+        // Act
+        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse,
+            title, text, choices, correctChoices, expectedCompletionTime, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<EditMultipleChoiceQuestionWithTypeChange>());
+        var resultCasted = result as EditMultipleChoiceQuestionWithTypeChange;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.Task, Is.EqualTo(task));
+            Assert.That(resultCasted.Question, Is.EqualTo(question));
+            Assert.That(resultCasted.IsSingleResponse, Is.EqualTo(isSingleResponse));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+            Assert.That(resultCasted.MultipleResponseQuestion, Is.Null);
+            Assert.That(resultCasted.SingleResponseQuestion, Is.Not.Null);
+            Assert.That(resultCasted.SingleResponseQuestion!.Title, Is.EqualTo(title));
+            Assert.That(resultCasted.SingleResponseQuestion.Text, Is.EqualTo(text));
+            Assert.That(resultCasted.SingleResponseQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(resultCasted.SingleResponseQuestion.CorrectChoice, Is.EqualTo(correctChoices.First()));
+            Assert.That(resultCasted.SingleResponseQuestion.ExpectedCompletionTime, Is.EqualTo(expectedCompletionTime));
+        });
+    }
+
+    [Test]
+    public void
+        GetEditMultipleChoiceQuestionWithTypeChangeCommand_SingleResponseToMultipleResponse_ReturnsEditMultipleChoiceQuestionWithTypeChange()
+    {
+        var task = EntityProvider.GetAdaptivityTask();
+        var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
+        var isSingleResponse = false;
+        var title = "NewTitle";
+        var text = "NewText";
+        var choice1 = new Choice("Choice1");
+        var choice2 = new Choice("Choice2");
+        var correctChoice = new Choice("CorrectChoice");
+        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var correctChoices = new List<Choice>() {correctChoice};
+        var expectedCompletionTime = 20;
+        Action<AdaptivityTask> mappingAction = _ => { };
+
+        // Act
+        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse,
+            title, text, choices, correctChoices, expectedCompletionTime, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<EditMultipleChoiceQuestionWithTypeChange>());
+        var resultCasted = result as EditMultipleChoiceQuestionWithTypeChange;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.Task, Is.EqualTo(task));
+            Assert.That(resultCasted.Question, Is.EqualTo(question));
+            Assert.That(resultCasted.IsSingleResponse, Is.EqualTo(isSingleResponse));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+            Assert.That(resultCasted.MultipleResponseQuestion, Is.Not.Null);
+            Assert.That(resultCasted.SingleResponseQuestion, Is.Null);
+            Assert.That(resultCasted.MultipleResponseQuestion!.Title, Is.EqualTo(title));
+            Assert.That(resultCasted.MultipleResponseQuestion.Text, Is.EqualTo(text));
+            Assert.That(resultCasted.MultipleResponseQuestion.Choices, Is.EqualTo(choices));
+            Assert.That(resultCasted.MultipleResponseQuestion.CorrectChoices, Is.EqualTo(correctChoices));
+            Assert.That(resultCasted.MultipleResponseQuestion.ExpectedCompletionTime,
+                Is.EqualTo(expectedCompletionTime));
         });
     }
 

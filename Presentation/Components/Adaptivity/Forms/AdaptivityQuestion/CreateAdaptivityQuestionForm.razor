@@ -29,7 +29,6 @@
                           Label="@Localizer["CreateAdaptivityQuestionForm.Field.QuestionText.Text"]"
                           Class="pb-4 mt-0"/>
 
-            <MudText>Switch for only one answer</MudText>
             <MudCheckBox @bind-Checked="FormDataContainer.FormModel.IsSingleResponse"
                          For="@(() => FormModel.IsSingleResponse)" Label="IsSingleResponse">
             </MudCheckBox>
@@ -43,7 +42,7 @@
                     <MudCheckBox T="bool"
                                  Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
                                  CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
-                    <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
+                    <MudTextField T="string" For="@(() => FormModel.Choices.Single(x => x.Id == choice.Id).Text)" @bind-Value="@choice.Text"></MudTextField>
                     <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
                 </div>
                 <br/>

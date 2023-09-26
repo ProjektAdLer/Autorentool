@@ -1,4 +1,5 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Adaptivity.Forms.Models
 @using Presentation.Components.Forms
@@ -28,7 +29,9 @@
                           Label="@Localizer["EditAdaptivityQuestionForm.Field.QuestionText.Text"]"
                           Class="pb-4 mt-0"/>
 
-            <MudText>###Switch for only one answer###</MudText>
+            <MudCheckBox @bind-Checked="FormDataContainer.FormModel.IsSingleResponse"
+                         For="@(() => FormModel.IsSingleResponse)" Label="IsSingleResponse">
+            </MudCheckBox>
         </div>
 
         <MudText>@Localizer["EditAdaptivityQuestionForm.Text.Choices"]</MudText>
@@ -66,6 +69,9 @@
 
     [Parameter, EditorRequired]
     public IMultipleChoiceQuestionViewModel QuestionToEdit { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public IAdaptivityTaskViewModel Task { get; set; } = null!;
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<EditAdaptivityQuestionForm> Localizer { get; set; }
@@ -117,6 +123,11 @@
 
     private void OnValidSubmit(MultipleChoiceQuestionFormModel model)
     {
+        if ((QuestionToEdit is MultipleChoiceMultipleResponseQuestionViewModel && model.IsSingleResponse) ||
+            (QuestionToEdit is MultipleChoiceSingleResponseQuestionViewModel && !model.IsSingleResponse))
+        {
+            PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+        }
         switch (QuestionToEdit)
         {
             case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:

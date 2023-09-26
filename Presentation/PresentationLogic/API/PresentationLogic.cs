@@ -759,6 +759,7 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
     public void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
@@ -767,6 +768,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.EditAdaptivityTask"/>
     public void EditAdaptivityTask(IAdaptivityTaskViewModel adaptivityTaskVm, string name,
         QuestionDifficulty? minimumRequiredDifficulty)
     {
@@ -776,6 +778,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
     public void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
@@ -791,6 +794,7 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningContent(content, null);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceSingleResponseQuestion"/>
     public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
         QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
         ChoiceViewModel correctChoice, int expectedCompletionTime)
@@ -804,6 +808,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceMultipleResponseQuestion"/>
     public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
         QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
         ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
@@ -817,6 +822,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceSingleResponseQuestion"/>
     public void EditMultipleChoiceSingleResponseQuestion(
         MultipleChoiceSingleResponseQuestionViewModel questionViewModel, string title,
         string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
@@ -831,6 +837,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceMultipleResponseQuestion"/>
     public void EditMultipleChoiceMultipleResponseQuestion(
         MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string title, string questionText,
         ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
@@ -844,6 +851,25 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceQuestionWithTypeChange"/>
+    public void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel taskViewModel,
+        IMultipleChoiceQuestionViewModel question,
+        bool isSingleResponse, string title, string text, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var questionEntity = Mapper.Map<IMultipleChoiceQuestion>(question);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(taskEntity,
+            questionEntity,
+            isSingleResponse, title, text, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityQuestion"/>
     public void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel taskViewModel, IAdaptivityQuestionViewModel question)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);

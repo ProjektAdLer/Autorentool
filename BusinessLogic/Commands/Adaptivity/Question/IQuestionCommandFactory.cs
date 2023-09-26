@@ -41,6 +41,13 @@ public interface IQuestionCommandFactory
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction);
 
     /// <summary>
+    /// Creates a command to edit a multiple choice question with a type change.
+    /// </summary>
+    IEditMultipleChoiceQuestionWithTypeChange GetEditMultipleChoiceQuestionWithTypeChangeCommand(AdaptivityTask task,
+        IMultipleChoiceQuestion question, bool isSingleResponse, string title, string text, ICollection<Choice> choices,
+        ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction);
+
+    /// <summary>
     /// Creates a command to delete a question.
     /// </summary>
     IDeleteAdaptivityQuestion GetDeleteCommand(AdaptivityTask task, IAdaptivityQuestion question,

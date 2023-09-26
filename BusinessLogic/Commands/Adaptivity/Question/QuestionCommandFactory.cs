@@ -54,6 +54,16 @@ public class QuestionCommandFactory : IQuestionCommandFactory
             LoggerFactory.CreateLogger<EditMultipleChoiceMultipleResponseQuestion>());
     }
 
+    public IEditMultipleChoiceQuestionWithTypeChange GetEditMultipleChoiceQuestionWithTypeChangeCommand(
+        AdaptivityTask task,
+        IMultipleChoiceQuestion question, bool isSingleResponse, string title, string text, ICollection<Choice> choices,
+        ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
+    {
+        return new EditMultipleChoiceQuestionWithTypeChange(task, question, isSingleResponse, title, text, choices,
+            correctChoices, expectedCompletionTime, mappingAction,
+            LoggerFactory.CreateLogger<EditMultipleChoiceQuestionWithTypeChange>());
+    }
+
     public IDeleteAdaptivityQuestion GetDeleteCommand(AdaptivityTask task, IAdaptivityQuestion question,
         Action<AdaptivityTask> mappingAction)
     {
