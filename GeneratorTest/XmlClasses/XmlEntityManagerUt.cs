@@ -45,7 +45,10 @@ public class XmlEntityManagerUt
             "", "", "", "", "h5p", 0, 2, "");
         var learningElementJson2 = new LearningElementJson(2,
             "", "", "", "", "json", 0, 3, "");
-        var learningElementList = new List<LearningElementJson> { learningElementJson1, learningElementJson2 };
+        var learningElementList = new List<IElementJson> { learningElementJson1, learningElementJson2 };
+        var convertedList = learningElementList
+            .OfType<LearningElementJson>()
+            .ToList();
         var learningWorldJson = new LearningWorldJson("world", "", topicsList, learningSpacesList, learningElementList);
 
         var mockLabelsElementJson = new LearningElementJson(2, "", "", "", "", "mp4", 1, 2, "");
@@ -55,7 +58,7 @@ public class XmlEntityManagerUt
         mockReadDsl.GetLabelElementList().Returns(labelJsonList);
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetSectionList().Returns(learningSpacesList);
-        mockReadDsl.GetElementsOrderedList().Returns(learningElementList);
+        mockReadDsl.GetElementsOrderedList().Returns(convertedList);
         mockReadDsl.GetLabelElementList().Returns(labelJsonList);
 
         // Act

@@ -39,7 +39,7 @@ public class ReadDslUt
         var learningElementJson4 = new LearningElementJson(4,
             "", "element4", "", "", "label", 1, 4, "");
 
-        var learningElementList = new List<LearningElementJson>
+        var learningElementList = new List<IElementJson>
             { learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4 };
 
         var learningWorldJson = new LearningWorldJson("world", "",
@@ -98,7 +98,7 @@ public class ReadDslUt
 
         var learningWorldJson = new LearningWorldJson("world", "",
             topicsList, new List<LearningSpaceJson>(),
-            new List<LearningElementJson>(), "", new[] { "" });
+            new List<IElementJson>(), "", new[] { "" });
 
         var rootJson = new DocumentRootJson("0.3", "0.3.2", "marvin", "de", learningWorldJson);
 

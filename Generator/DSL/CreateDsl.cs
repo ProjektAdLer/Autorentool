@@ -517,7 +517,7 @@ public class CreateDsl : ICreateDsl
         return adaptivityRules;
     }
 
-    // <summary>
+    /// <summary>
     /// Maps a multiple choice question to its corresponding JSON representations of choices in the ATF.
     /// </summary>
     /// <param name="question">The multiple choice question.</param>

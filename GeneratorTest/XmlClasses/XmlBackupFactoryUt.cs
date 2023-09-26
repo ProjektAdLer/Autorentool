@@ -55,7 +55,7 @@ public class XmlBackupFactoryUt
         var mockSections = Substitute.For<IMoodleBackupXmlSections>();
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
         var mockLearningWorld = new LearningWorldJson("world", "",
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
+            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<IElementJson>());
 
         var mockLearningElement = new LearningElementJson(1, "", "", "", "h5p", "", 2, 2, "");
         List<LearningElementJson> learningElementJsons = new();
@@ -124,9 +124,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -190,9 +190,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "", "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -253,9 +253,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -296,7 +296,7 @@ public class XmlBackupFactoryUt
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
 
         var mockLearningWorld = new LearningWorldJson("world", "",
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
+            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<IElementJson>());
 
         var mockLearningElement1 = new LearningElementJson(1, "", "element1", "", "", "h5p", 0, 2, "");
         var mockLearningElement2 = new LearningElementJson(2, "", "element2", "", "", "url", 0, 2, "");
@@ -370,9 +370,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -400,9 +400,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -430,9 +430,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
@@ -466,9 +466,9 @@ public class XmlBackupFactoryUt
                 new(1,
                     "", "space", new List<int?> { 1 }, 0, "", "")
             },
-            new List<LearningElementJson>
+            new List<IElementJson>
             {
-                new(1, "", "", "", "", "h5p",
+                new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
         mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());

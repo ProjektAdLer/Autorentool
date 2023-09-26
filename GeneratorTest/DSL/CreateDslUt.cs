@@ -356,7 +356,7 @@ public class CreateDslUt
             //Assert
             Assert.That(e.Message,
                 Is.EqualTo(
-                    "The given LearningContent Type of element a is not supported (Parameter 'LearningContent')"));
+                    "The given LearningContent Type of file FileName is not supported (Parameter 'Type')"));
         }
     }
 
@@ -461,7 +461,7 @@ public class CreateDslUt
             //Assert
             Assert.That(e.Message,
                 Is.EqualTo(
-                    "The given LearningContent of element a is either FileContent or LinkContent (Parameter 'LearningContent')"));
+                    "The given LearningContent of element a is neither FileContent, LinkContent or AdaptivityContent (Parameter 'LearningContent')"));
         }
     }
 }
