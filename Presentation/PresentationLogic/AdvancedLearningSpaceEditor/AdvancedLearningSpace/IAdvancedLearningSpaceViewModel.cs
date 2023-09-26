@@ -7,6 +7,7 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLea
 public interface IAdvancedLearningSpaceViewModel :  ILearningSpaceViewModel
 {
     IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots { get; }
+    IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations { get; }
     IAdvancedLearningSpaceLayoutViewModel AdvancedLearningSpaceLayout { get; set; }
 }
     

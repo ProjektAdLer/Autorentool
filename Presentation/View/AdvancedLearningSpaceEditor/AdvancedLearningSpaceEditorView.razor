@@ -102,13 +102,27 @@
                 }
 
                 @* draw decorations *@
-                @* @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null) *@
-                @* { *@
-                @*     @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecoration) *@
-                @*     { *@
-                @*     } *@
-                @* } *@
-                
+                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                {
+                    @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecorations)
+                    {
+                        <polyline points="65,65 65,75 75,75 75,65 65,65">
+
+                        </polyline>
+                @* <DraggableAdvancedDecoration ObjectName="advancedComponentDecoration" *@
+                        @*                              AdvancedComponent="advancedComponentDecoration" *@
+                        @*                              AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter" *@
+                        @*                              OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel" *@
+                        @*                              OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent" *@
+                        @*                              OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent" *@
+                        @*                              OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent" *@
+                        @*                              ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
+                        @*                              OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
+                        @*                              AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"> *@
+                        @* </DraggableAdvancedDecoration> *@
+                    }
+                }
+
                 @* draw doors *@
                 @* draw spawnpoint *@
             </svg>
@@ -169,13 +183,13 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
-    
-    
+
 
     private void CreateAdvancedLearningElementSlot()
     {
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedLearningElementSlot();
     }
+
     private void CreateAdvancedDecoration()
     {
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedDecoration();

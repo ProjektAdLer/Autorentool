@@ -171,6 +171,8 @@ public class AdvancedLearningSpaceViewModel : ISerializableViewModel, IAdvancedL
 
     public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
         AdvancedLearningSpaceLayout.ContainedAdvancedLearningElementSlots;
+    public IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations =>
+        AdvancedLearningSpaceLayout.ContainedAdvancedDecorations;
 
     // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
     public bool InternalUnsavedChanges { get; private set; }

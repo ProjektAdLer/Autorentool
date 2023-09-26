@@ -13,6 +13,7 @@ public interface IAdvancedLearningSpaceLayoutViewModel
     IEnumerable<int> UsedIndices { get; }
     IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
     IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots { get; }
+    IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations { get; }
     ILearningElementViewModel? GetElement(int index);
     void PutElement(int index, ILearningElementViewModel element);
     void RemoveElement(int index);

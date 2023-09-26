@@ -50,6 +50,8 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
         _advancedLearningElementSlots.Values;
+    public IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations =>
+        _advancedDecorations.Values;
 
     private IDictionary<int, ILearningElementViewModel> _learningElements;
     private IDictionary<int, IAdvancedLearningElementSlotViewModel> _advancedLearningElementSlots;
