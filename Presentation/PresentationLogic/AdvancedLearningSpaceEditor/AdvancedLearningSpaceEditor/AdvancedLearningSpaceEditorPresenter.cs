@@ -56,11 +56,14 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
 
     }
 
-    public void CreateAdvancedLearningElementSlot(double positionX = 0, double positionY = 0)
+    public void CreateAdvancedLearningElementSlot(double positionX = 50D, double positionY = 50D)
     {
         if (AdvancedLearningSpaceViewModel == null)
             throw new ApplicationException("AdvancedLearningSpaceViewModel is null!");
-        AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AddAdvancedLearningElementSlot();
+        var spaceId = AdvancedLearningSpaceViewModel.Id;
+        var slotKey = AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.Count;
+        
+        AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AddAdvancedLearningElementSlot(spaceId, slotKey, positionX, positionY);
     }
     public void CreateAdvancedComponent()
     {

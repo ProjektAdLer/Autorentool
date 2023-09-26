@@ -71,12 +71,9 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public void ClearAllElements() => _learningElements.Clear();
 
-    public void AddAdvancedLearningElementSlot()
+    public void AddAdvancedLearningElementSlot(Guid spaceId, int slotKey, double positionX, double positionY)
     {
-        Console.WriteLine(AdvancedLearningElementSlots);
-        // Schreibt in 1 beim ersten durchlauf?
-        var slotCount = AdvancedLearningElementSlots.Count();
-        AdvancedLearningElementSlots.Add(slotCount, new AdvancedLearningElementSlotViewModel());
+        AdvancedLearningElementSlots.Add(slotKey, new AdvancedLearningElementSlotViewModel(spaceId, slotKey, positionX, positionY));
     }
 
 }

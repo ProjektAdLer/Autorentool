@@ -15,5 +15,5 @@ public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged, 
     void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj);
 
     void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace);
-    void CreateAdvancedLearningElementSlot(double positionX = 0, double positionY = 0);
+    void CreateAdvancedLearningElementSlot(double positionX = 50, double positionY = 50);
 }

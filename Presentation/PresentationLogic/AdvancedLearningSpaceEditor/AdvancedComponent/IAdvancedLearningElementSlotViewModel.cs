@@ -2,4 +2,7 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedCom
 
 public interface IAdvancedLearningElementSlotViewModel : IAdvancedComponentViewModel
 {
+    string Identifier { get;}
+    Guid SpaceId { get; }
+    int SlotKey { get; }
 }

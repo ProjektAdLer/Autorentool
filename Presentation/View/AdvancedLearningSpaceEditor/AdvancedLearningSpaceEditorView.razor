@@ -5,9 +5,12 @@
 @using Shared
 @using ElectronNET.API.Entities
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.View.LearningElement
 @ChildContent
 
-<section class="p-2 gap-1 flex flex-col justify-start">
+<section class="w-[680px] p-2 gap-1 flex flex-col justify-start">
     <div class="gap-8 flex justify-between items-start">
         <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
             <h3 class="text-base text-adlerblue-600 space-theme">
@@ -28,19 +31,31 @@
         </div>
     </div>
 
-    <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
-        <div class="h-[375px]">
-            <svg width="750" height="375">
+    <div class="bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
+        <div class="h-[375px] w-[650px]">
+            <div class="h-[0px]">
+                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                {
+                    @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
+                    {
+                        <DraggableAdvancedLearningElementSlot
+                            AdvancedComponent="advancedComponentSlot">
+                        </DraggableAdvancedLearningElementSlot>
+                    }
+                }
+            </div>
+
+            <svg width="650" height="375" overflow="scroll">
                 @* draw outline *@
-                <polygon points="20,20 20,350 730,350 730,20" style="fill:green;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9"/>
+                <polygon points="20,20 20,350 630,350 630,20" style="fill:green;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9"/>
                 @* draw grid *@
-                @for (int i = 30; i < 730; i += 10)
+                @for (int i = 30; i < 630; i += 10)
                 {
                     <line x1="@i" y1="20" x2="@i" y2="350" style="stroke:#d6d5d5;stroke-width:1"/>
                 }
                 @for (int i = 30; i < 350; i += 10)
                 {
-                    <line x1="20" y1="@i" x2="730" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
+                    <line x1="20" y1="@i" x2="630" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
                 }
                 @* draw space *@
                 @* TODO: Doubleclick functionality *@
@@ -56,6 +71,7 @@
                         Use Buttons below to add element slots or decorations.
                     </title>
                 </polyline>
+
                 @foreach (var cornerPoint in getSpaceCornerPoints())
                 {
                     // TODO: Drag and Drop functionality
@@ -67,56 +83,38 @@
                     </circle>
                 }
                 @* draw elementslots *@
-                @* WISO BRAUCHE ICH HIER NE NEUE LISTE WENNS NULL IST??? (glaube uch die abfrage ist noch etwas wrong...)*@
-                @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel?.ContainedAdvancedLearningElementSlots ?? new List<AdvancedLearningElementSlotViewModel>())
+                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
                 {
-                    <rect x="@advancedComponentSlot.PositionX" y="@advancedComponentSlot.PositionY" style="fill:purple;fill-opacity:0.1">
-                        @{
-                            Console.WriteLine("ADVANCEDCOMPSLOT: " + advancedComponentSlot);
-                        }
-                        <title>
-                            Learning Element Slot.
-                            Drag and Drop to move.
-                        </title>
-                    </rect>
+                    @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
+                    {
+                        <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot"
+                                                              AdvancedComponent="advancedComponentSlot"
+                                                              AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter"
+                                                              OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
+                                                              OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
+                                                              OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
+                                                              OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
+                                                              ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
+                                                              OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu"
+                                                              AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter">
+                        </DraggableAdvancedLearningElementSlot>
+                    }
                 }
+
                 @* draw decorations *@
+                @* @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null) *@
+                @* { *@
+                @*     @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecoration) *@
+                @*     { *@
+                @*     } *@
+                @* } *@
+                
                 @* draw doors *@
                 @* draw spawnpoint *@
 
-            </svg>
+                                    </
+                                    svg>
         </div>
-
-        @* <div style="clip-path: polygon(0% 0%,  0% 60%, 60% 60%, 60% 0%);"> *@
-        @*     Raum content *@
-        @*     <div class="rounded-lg w-full grow overflow-scroll"> *@
-        @*         <svg xmlns="http://www.w3.org/2000/svg" class="h-[350px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]" *@
-        @*              @onmousemove=@(e => MouseService.FireMove(this, e)) *@
-        @*                          @onmouseup=@(e => MouseService.FireUp(this, e)) *@
-        @*                          @onmouseleave=@(e => MouseService.FireOut(this, e))> *@
-        @*             @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null) *@
-        @*             { *@
-        @*                 @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots) *@
-        @*                 { *@
-        @*                     <DraggableAdvancedLearningElementSlot ObjectName="learningElementSlot" *@
-        @*                                                           AdvancedComponent="advancedComponentSlot" *@
-        @*                                                           AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter" *@
-        @*                                                           OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel" *@
-        @*                                                           OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent" *@
-        @*                                                           OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent" *@
-        @*                                                           OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent" *@
-        @*                                                           $1$ ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" #1# *@
-        @*                                                           $1$ OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" #1# *@
-        @*                                                           AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"> *@
-        @*                     </DraggableAdvancedLearningElementSlot> *@
-        @*                 } *@
-        @*             } *@
-        @*             <!-- The RightClickMenu might lies behind other spaces.  *@
-        @*             This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. --> *@
-        @*             <!--<use xlink:href="#rightClickMenu" />--> *@
-        @*         </svg> *@
-        @*     </div> *@
-        @* </div> *@
     </div>
     <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated">
         <button
@@ -173,6 +171,8 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+    
+    
 
     private void CreateAdvancedLearningElementSlot()
     {
