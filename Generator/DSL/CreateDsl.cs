@@ -2,11 +2,15 @@
 using System.IO.Abstractions;
 using System.Text;
 using System.Text.Json;
+using Generator.DSL.AdaptivityElement;
 using Generator.WorldExport;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Action;
+using PersistEntities.LearningContent.Question;
 using Shared;
+using Shared.Adaptivity;
 using Shared.Extensions;
 
 namespace Generator.DSL;
@@ -182,7 +186,7 @@ public class CreateDsl : ICreateDsl
         Uuid = guid.ToString();
         _listAllLearningElements = new List<ILearningElementPe>();
         LearningWorldJson = new LearningWorldJson("", "", new List<TopicJson>(), new List<LearningSpaceJson>(),
-            new List<LearningElementJson>(), "", Array.Empty<string>());
+            new List<IElementJson>(), "", Array.Empty<string>());
     }
 
     private void InitializeLearningWorldProperties(LearningWorldPe learningWorld)
@@ -362,56 +366,201 @@ public class CreateDsl : ICreateDsl
     private void CreateAndStoreLearningElementData(ref int learningElementId, int learningSpaceId,
         ILearningElementPe element, List<int?> listLearningSpaceElements)
     {
-        var elementType = GetElementType(element);
-        var elementCategory = GetElementCategory(element);
-        var url = GetElementUrl(element);
-
         learningElementId++;
-        var learningElementJson = new LearningElementJson(learningElementId, element.Id.ToString(), element.Name, url,
-            elementCategory, elementType, learningSpaceId, element.Points, element.ElementModel.ToString(),
-            element.Description, element.Goals.Split("\n"));
+        IElementJson elementJson;
 
-        if (element.LearningContent is not LinkContentPe)
+        switch (element.LearningContent)
         {
-            ElementsWithFileContent.Add(element);
+            case FileContentPe fileContentPe:
+                var elementCategory = MapFileContentToElementCategory(fileContentPe);
+                elementJson = new LearningElementJson(learningElementId, element.Id.ToString(), element.Name,
+                    elementCategory, fileContentPe.Type, learningSpaceId, element.Points,
+                    element.ElementModel.ToString(),
+                    element.Description, element.Goals.Split("\n"));
+                ElementsWithFileContent.Add(element);
+                break;
+            case LinkContentPe linkContentPe:
+                elementJson = new LearningElementJson(learningElementId, element.Id.ToString(), element.Name,
+                    linkContentPe.Link,
+                    "video", "url", learningSpaceId, element.Points, element.ElementModel.ToString(),
+                    element.Description, element.Goals.Split("\n"));
+                break;
+            case AdaptivityContentPe adaptivityContentPe:
+                var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
+                elementJson = new AdaptivityElementJson(learningElementId, element.Id.ToString(), element.Name,
+                    "adaptivity", "adaptivity", learningSpaceId, element.Points, element.ElementModel.ToString(),
+                    adaptivityContent, element.Description, element.Goals.Split("\n"));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
+                    $"The given LearningContent of element {element.Name} is neither FileContent, LinkContent or AdaptivityContent");
         }
 
         listLearningSpaceElements.Add(learningElementId);
-        LearningWorldJson.Elements.Add(learningElementJson);
+        LearningWorldJson.Elements.Add(elementJson);
     }
 
-    private static string GetElementType(ILearningElementPe element)
+    /// <summary>
+    /// Maps the content of a file to its corresponding category.
+    /// </summary>
+    /// <param name="fileContent">The file content to be examined.</param>
+    /// <returns>The category of the element based on the file type. </returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    private static string MapFileContentToElementCategory(IFileContentPe fileContent)
     {
-        return element.LearningContent switch
+        return fileContent.Type switch
         {
-            FileContentPe fileContent => fileContent.Type,
-            LinkContentPe => "url",
-            _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
-                $"The given LearningContent of element {element.Name} is either FileContent or LinkContent")
+            { } type when FileContentIsTextType(type) => "image",
+            { } type when FileContentIsImageType(type) => "text",
+            "h5p" => "h5p",
+            "pdf" => "pdf",
+            _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
+                $"The given LearningContent Type of file {fileContent.Name} is not supported")
         };
     }
 
-    private static string GetElementCategory(ILearningElementPe element)
-    {
-        return element.LearningContent switch
-        {
-            FileContentPe { Type: var type } when IsImageType(type) => "image",
-            FileContentPe { Type: var type } when IsTextType(type) => "text",
-            FileContentPe { Type: "h5p" } => "h5p",
-            FileContentPe { Type: "pdf" } => "pdf",
-            LinkContentPe => "video",
-            _ => throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
-                $"The given LearningContent Type of element {element.Name} is not supported")
-        };
-    }
+    /// <summary>
+    /// Determines whether a given file content type is an image.
+    /// </summary>
+    private static bool FileContentIsImageType(string type) =>
+        new[] { "png", "jpg", "bmp", "webp", "jpeg" }.Contains(type);
 
-    private static bool IsImageType(string type) => new[] { "png", "jpg", "bmp", "webp", "jpeg" }.Contains(type);
-
-    private static bool IsTextType(string type) =>
+    /// <summary>
+    /// Determines whether a given file content type is text.
+    /// </summary>
+    private static bool FileContentIsTextType(string type) =>
         new[] { "txt", "c", "h", "cpp", "cc", "c++", "py", "js", "php", "html", "css" }.Contains(type);
 
-    private static string GetElementUrl(ILearningElementPe element) =>
-        element.LearningContent is LinkContentPe link ? link.Link : "";
+    /// <summary>
+    /// Maps an adaptivity content object to its corresponding JSON representation in the ATF.
+    /// </summary>
+    /// <param name="adaptivityContent">The adaptivity content to be converted.</param>
+    /// <returns>Returns the JSON representation of the adaptivity content.</returns>
+    private IAdaptivityContentJson MapAdaptivityContentPeToJson(IAdaptivityContentPe adaptivityContent)
+    {
+        var adaptivityTasks = MapAdaptivityTasksPeToJson(adaptivityContent.Tasks);
+        return new AdaptivityContentJson(adaptivityContent.Name, false, adaptivityTasks);
+    }
+
+    /// <summary>
+    /// Maps a collection of adaptivity content tasks to their corresponding JSON representations in the ATF.
+    /// </summary>
+    /// <param name="adaptivityContentTasks">The adaptivity content tasks to be converted.</param>
+    /// <returns>
+    /// Returns a list of JSON representations of the adaptivity content tasks.
+    /// </returns>
+    private List<IAdaptivityTaskJson> MapAdaptivityTasksPeToJson(ICollection<IAdaptivityTaskPe> adaptivityContentTasks)
+    {
+        var adaptivityTasks = new List<IAdaptivityTaskJson>();
+        var taskId = 1;
+        foreach (var task in adaptivityContentTasks)
+        {
+            var optional = task.MinimumRequiredDifficulty == null;
+            var adaptivityQuestions = MapAdaptivityQuestionsPeToJson(task.Questions);
+            adaptivityTasks.Add(new AdaptivityTaskJson(taskId, task.Id.ToString(), task.Name, optional,
+                MapRequiredTaskDifficultyToInt(task.MinimumRequiredDifficulty), adaptivityQuestions));
+            taskId++;
+        }
+
+        return adaptivityTasks;
+    }
+
+    /// <summary>
+    /// Maps a collection of task questions to their corresponding JSON representations in the ATF.
+    /// </summary>
+    /// <param name="taskQuestions">The task questions to be converted.</param>
+    /// <returns>
+    /// Returns a list of JSON representations of the task questions.
+    /// </returns>
+    private List<IAdaptivityQuestionJson> MapAdaptivityQuestionsPeToJson(
+        ICollection<IAdaptivityQuestionPe> taskQuestions)
+    {
+        var adaptivityQuestions = new List<IAdaptivityQuestionJson>();
+        var questionId = 1;
+        foreach (var question in taskQuestions)
+        {
+            var questionType = question switch
+            {
+                MultipleChoiceSingleResponseQuestionPe => "singleResponse",
+                MultipleChoiceMultipleResponseQuestionPe => "multipleResponse",
+                _ => ""
+            };
+            var adaptivityRules = MapAdaptivityRulesPeToJson(question.Rules);
+            var choices = MapChoicesPeToJson((IMultipleChoiceQuestionPe)question);
+            adaptivityQuestions.Add(new AdaptivityQuestionJson(questionType, questionId, question.Id.ToString(),
+                MapRequiredQuestionDifficultyToInt(question.Difficulty), ((IMultipleChoiceQuestionPe)question).Text,
+                adaptivityRules, choices));
+            questionId++;
+        }
+
+        return adaptivityQuestions;
+    }
+
+    /// <summary>
+    /// Maps a collection of question rules to their corresponding JSON representations in the ATF.
+    /// </summary>
+    /// <param name="questionRules">The question rules to be converted.</param>
+    /// <returns>
+    /// Returns a list of JSON representations of the question rules.
+    /// </returns>
+    private List<IAdaptivityRuleJson> MapAdaptivityRulesPeToJson(ICollection<IAdaptivityRulePe> questionRules)
+    {
+        var adaptivityRules = new List<IAdaptivityRuleJson>();
+        var triggerId = 1;
+        foreach (var rule in questionRules)
+        {
+            adaptivityRules.Add(new AdaptivityRuleJson(triggerId, "incorrect",
+                new CommentActionJson(((CommentActionPe)rule.Action).Comment)));
+            triggerId++;
+        }
+
+        return adaptivityRules;
+    }
+
+    // <summary>
+    /// Maps a multiple choice question to its corresponding JSON representations of choices in the ATF.
+    /// </summary>
+    /// <param name="question">The multiple choice question.</param>
+    /// <returns>
+    /// Returns a list of JSON representations of the choices for the question.
+    /// </returns>
+    private List<IChoiceJson> MapChoicesPeToJson(IMultipleChoiceQuestionPe question)
+    {
+        return (from choice in question.Choices
+            let isCorrect = question.CorrectChoices.Contains(choice)
+            select new ChoiceJson(choice.Text, isCorrect)).Cast<IChoiceJson>().ToList();
+    }
+
+    /// <summary>
+    /// Converts a question difficulty to its corresponding integer representation in the ATF.
+    /// </summary>
+    private static int MapRequiredQuestionDifficultyToInt(QuestionDifficulty questionDifficulty)
+    {
+        return questionDifficulty switch
+        {
+            QuestionDifficulty.Easy => 0,
+            QuestionDifficulty.Medium => 1,
+            QuestionDifficulty.Hard => 2,
+            _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
+                questionDifficulty, null)
+        };
+    }
+
+    /// <summary>
+    /// Converts a task's minimum required difficulty to its corresponding integer representation in the ATF.
+    /// </summary>
+    private static int MapRequiredTaskDifficultyToInt(QuestionDifficulty? taskMinimumRequiredDifficulty)
+    {
+        return taskMinimumRequiredDifficulty switch
+        {
+            QuestionDifficulty.Easy => 000,
+            QuestionDifficulty.Medium => 100,
+            QuestionDifficulty.Hard => 200,
+            null => 000,
+            _ => throw new ArgumentOutOfRangeException(nameof(taskMinimumRequiredDifficulty),
+                taskMinimumRequiredDifficulty, null)
+        };
+    }
 
     /// <summary>
     /// Creates learning space requirements
