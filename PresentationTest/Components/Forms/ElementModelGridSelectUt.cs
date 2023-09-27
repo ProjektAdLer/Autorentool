@@ -3,6 +3,7 @@ using System.Linq;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
@@ -23,10 +24,14 @@ public class ElementModelGridSelectUt
             .Returns(x => x.Arg<ElementModel>().ToString());
 
         var testContext = new TestContext();
+        var mockMudPopoverService = Substitute.For<IMudPopoverService>();
+        var mockPopoverService = Substitute.For<IPopoverService>();
         testContext.Services.AddSingleton(Substitute.For<IStringLocalizer<ElementModelGridSelect>>());
         testContext.Services.AddSingleton(_elementModelHandler);
+        testContext.Services.AddSingleton(mockMudPopoverService);
+        testContext.Services.AddSingleton(mockPopoverService);
 
-        _component =
+        _systemUnderTest =
             testContext.RenderComponent<ElementModelGridSelect>(
                 (nameof(ElementModelGridSelect.Elements), _elementModels));
     }
@@ -34,13 +39,13 @@ public class ElementModelGridSelectUt
     [TearDown]
     public void TearDown()
     {
-        _component.Dispose();
+        _systemUnderTest.Dispose();
     }
 
-    private IRenderedComponent<ElementModelGridSelect> _component = null!;
+    private IRenderedComponent<ElementModelGridSelect> _systemUnderTest = null!;
 
     private readonly IEnumerable<ElementModel> _elementModels = new List<ElementModel>
-        {ElementModel.l_random, ElementModel.l_h5p_slotmachine_1, ElementModel.l_text_bookshelf_1};
+        { ElementModel.l_random, ElementModel.l_h5p_slotmachine_1, ElementModel.l_text_bookshelf_1 };
 
     private IElementModelHandler _elementModelHandler = null!;
 
@@ -48,15 +53,15 @@ public class ElementModelGridSelectUt
     public void ClickingItemShouldChangeValue()
     {
         const ElementModel elementModelToSelect = ElementModel.l_h5p_slotmachine_1;
-        var imgElements = _component.FindAll("img");
+        var imgElements = _systemUnderTest.FindAll("img");
 
         var imgToClick = imgElements.FirstOrDefault(img => img.GetAttribute("src") == elementModelToSelect.ToString());
         Assert.That(imgToClick, Is.Not.Null);
 
-        Assert.That(_component.Instance.Value, Is.Not.EqualTo(elementModelToSelect));
+        Assert.That(_systemUnderTest.Instance.Value, Is.Not.EqualTo(elementModelToSelect));
 
         imgToClick!.Click();
 
-        Assert.That(_component.Instance.Value, Is.EqualTo(elementModelToSelect));
+        Assert.That(_systemUnderTest.Instance.Value, Is.EqualTo(elementModelToSelect));
     }
 }

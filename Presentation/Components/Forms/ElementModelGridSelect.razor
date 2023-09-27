@@ -9,24 +9,24 @@
     {
         var classString = elementModel == Value ? "bg-adlerblue-600" : "hover:bg-adlergrey-100";
         <MudListItem Value="@(elementModel)"
-                                 Class="@classString"
-                                 OnClick="() => OnItemClick(elementModel)">
+                     Class="@classString"
+                     OnClick="() => OnItemClick(elementModel)">
             <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Duration="Double.Epsilon">
-            <ChildContent> 
-                <div class="flex flex-row items-center gap-2">
-                    <img class="flex w-10 h-8 drop-shadow px-1"
-                         src="@ElementModelHandler.GetIconForElementModel(elementModel)"
-                         alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>
-                </div>
-            </ChildContent>
-            
-            <TooltipContent>
-                <div class="flex justify-center items-center w-56 h-64">
-                    <MudImage Src="@ElementModelHandler.GetIconForElementModel(elementModel)" Width="180"></MudImage>
-                </div>
-            </TooltipContent>
-                    
-            
+                <ChildContent>
+                    <div class="flex flex-row items-center gap-2">
+                        <img class="flex w-10 h-8 drop-shadow px-1"
+                             src="@ElementModelHandler.GetIconForElementModel(elementModel)"
+                             alt="@Localizer["CreateElement.Fields.Collapsable.3DRepresentation.Alt"]"/>
+                    </div>
+                </ChildContent>
+
+                <TooltipContent>
+                    <div class="flex justify-center items-center w-56 h-64">
+                        <MudImage Src="@ElementModelHandler.GetIconForElementModel(elementModel)" Width="180"></MudImage>
+                    </div>
+                </TooltipContent>
+
+
             </MudTooltip>
         </MudListItem>
     }
