@@ -1,6 +1,6 @@
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityElementJson : IElementJson
+public interface IAdaptivityElementJson : IInternalElementJson
 {
     IAdaptivityContentJson AdaptivityContent { get; set; }
 }
