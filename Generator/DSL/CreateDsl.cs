@@ -223,9 +223,8 @@ public class CreateDsl : ICreateDsl
     /// <param name="objectInPathWays">All objects in pathway of the learning world.</param>
     private void MapLearningSpacesToLearningWorldJson(List<IObjectInPathWayPe> objectInPathWays)
     {
-        // Starting Value for Learning Space Ids and Learning Element Ids in the DSL-Document
+        // Starting Value for Learning Space Ids in the DSL-Document
         var learningSpaceId = 1;
-        var learningElementId = 0;
 
         ListLearningSpaces.AddRange(GetLearningSpacesInOrder(objectInPathWays));
 
@@ -234,10 +233,12 @@ public class CreateDsl : ICreateDsl
 
         ListLearningSpaces = IncrementDuplicateLearningElementNames(ListLearningSpaces);
 
+        var dictionaryIdToElement = CreateLearningElementToIdDictionary();
+
         foreach (var space in ListLearningSpaces)
         {
             _listLearningSpaceElements =
-                GenerateElementIdsForLearningSpace(space, ref learningElementId, learningSpaceId);
+                MapLearningSpaceElementsToIds(space, dictionaryIdToElement, learningSpaceId);
             _booleanAlgebraRequirements = GetRequiredSpacesToEnter(space);
 
             AssignTopicToSpace(space, learningSpaceId);
@@ -249,6 +250,27 @@ public class CreateDsl : ICreateDsl
 
             learningSpaceId++;
         }
+    }
+
+    /// <summary>
+    /// Creates a dictionary mapping unique IDs to learning elements across all learning spaces.
+    /// </summary>
+    /// <returns>A dictionary with unique IDs as keys and learning elements as values.</returns>
+    private Dictionary<int, ILearningElementPe> CreateLearningElementToIdDictionary()
+    {
+        var idToElementId = 1;
+        var idToElement = new Dictionary<int, ILearningElementPe>();
+        foreach (var space in ListLearningSpaces)
+        {
+            for (var i = 0; i <= GetMaxSlotNumber(space); i++)
+            {
+                if (!space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
+                idToElement.Add(idToElementId, element);
+                idToElementId++;
+            }
+        }
+
+        return idToElement;
     }
 
     /// <summary>
@@ -309,14 +331,15 @@ public class CreateDsl : ICreateDsl
     }
 
     /// <summary>
-    /// Generates a list of element IDs for the provided learning space, incrementing the learning element ID as needed.
+    /// Maps the elements of the given learning space to their respective IDs, generating a sequential list. 
+    /// If an element doesn't exist for a particular slot, a null is added to the list.
     /// </summary>
-    /// <param name="space">The learning space for which element IDs should be generated.</param>
-    /// <param name="learningElementId">Reference to the current learning element ID. This will be incremented during the method's execution.</param>
+    /// <param name="space">The learning space whose elements are to be mapped to their IDs.</param>
+    /// <param name="idToElement">Dictionary mapping element IDs to their respective learning elements.</param>
     /// <param name="learningSpaceId">The ID of the learning space being processed.</param>
-    /// <returns>A list of element IDs for the learning space.</returns>
-    private List<int?> GenerateElementIdsForLearningSpace(LearningSpacePe space, ref int learningElementId,
-        int learningSpaceId)
+    /// <returns>A sequential list of element IDs for the learning space, with nulls for missing elements.</returns>
+    private List<int?> MapLearningSpaceElementsToIds(LearningSpacePe space,
+        IDictionary<int, ILearningElementPe> idToElement, int learningSpaceId)
     {
         var maxSlotNumber = GetMaxSlotNumber(space);
         var listLearningSpaceElements = new List<int?>();
@@ -325,8 +348,9 @@ public class CreateDsl : ICreateDsl
         {
             if (space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
             {
-                CreateAndStoreLearningElementData(ref learningElementId, learningSpaceId, element,
-                    listLearningSpaceElements);
+                var elementId = idToElement.First(x => x.Value == element).Key;
+                MapLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
+                listLearningSpaceElements.Add(elementId);
             }
             else
             {
@@ -357,46 +381,47 @@ public class CreateDsl : ICreateDsl
     }
 
     /// <summary>
-    /// Creates the necessary data for a learning element and stores it in the provided list.
+    /// Maps a learning element to the learning elements of LearningWorldJson.
     /// </summary>
-    /// <param name="learningElementId">Reference to the current learning element ID. This will be incremented during the method's execution.</param>
     /// <param name="learningSpaceId">The ID of the learning space associated with the learning element.</param>
-    /// <param name="element">The learning element for which data should be created and stored.</param>
-    /// <param name="listLearningSpaceElements">The list in which to store the generated element ID.</param>
-    private void CreateAndStoreLearningElementData(ref int learningElementId, int learningSpaceId,
-        ILearningElementPe element, List<int?> listLearningSpaceElements)
+    /// <param name="learningElementId">The ID of the learning element.</param>
+    /// <param name="learningElement">The learning element to be mapped.</param>
+    private void MapLearningElementToLearningWorldJson(int learningSpaceId, int learningElementId,
+        ILearningElementPe learningElement)
     {
-        learningElementId++;
         IElementJson elementJson;
 
-        switch (element.LearningContent)
+        switch (learningElement.LearningContent)
         {
             case FileContentPe fileContentPe:
                 var elementCategory = MapFileContentToElementCategory(fileContentPe);
-                elementJson = new LearningElementJson(learningElementId, element.Id.ToString(), element.Name,
-                    elementCategory, fileContentPe.Type, learningSpaceId, element.Points,
-                    element.ElementModel.ToString(),
-                    element.Description, element.Goals.Split("\n"));
-                ElementsWithFileContent.Add(element);
+                elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
+                    learningElement.Name,
+                    elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
+                    learningElement.ElementModel.ToString(),
+                    learningElement.Description, learningElement.Goals.Split("\n"));
+                ElementsWithFileContent.Add(learningElement);
                 break;
             case LinkContentPe linkContentPe:
-                elementJson = new LearningElementJson(learningElementId, element.Id.ToString(), element.Name,
+                elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
+                    learningElement.Name,
                     linkContentPe.Link,
-                    "video", "url", learningSpaceId, element.Points, element.ElementModel.ToString(),
-                    element.Description, element.Goals.Split("\n"));
+                    "video", "url", learningSpaceId, learningElement.Points, learningElement.ElementModel.ToString(),
+                    learningElement.Description, learningElement.Goals.Split("\n"));
                 break;
             case AdaptivityContentPe adaptivityContentPe:
                 var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
-                elementJson = new AdaptivityElementJson(learningElementId, element.Id.ToString(), element.Name,
-                    "adaptivity", "adaptivity", learningSpaceId, element.Points, element.ElementModel.ToString(),
-                    adaptivityContent, element.Description, element.Goals.Split("\n"));
+                elementJson = new AdaptivityElementJson(learningElementId, learningElement.Id.ToString(),
+                    learningElement.Name,
+                    "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
+                    learningElement.ElementModel.ToString(),
+                    adaptivityContent, learningElement.Description, learningElement.Goals.Split("\n"));
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(element.LearningContent),
-                    $"The given LearningContent of element {element.Name} is neither FileContent, LinkContent or AdaptivityContent");
+                throw new ArgumentOutOfRangeException(nameof(learningElement.LearningContent),
+                    $"The given LearningContent of element {learningElement.Name} is neither FileContent, LinkContent or AdaptivityContent");
         }
 
-        listLearningSpaceElements.Add(learningElementId);
         LearningWorldJson.Elements.Add(elementJson);
     }
 
