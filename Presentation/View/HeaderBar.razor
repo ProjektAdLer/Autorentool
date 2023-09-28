@@ -18,7 +18,7 @@
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySaveAsync"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave"></MudIconButton>
         <div>
             <MudIconButton Class="p-1 undo-button" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
                            Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
@@ -352,12 +352,12 @@
         }
     }
 
-    private async Task TrySaveAsync()
+    private void TrySave()
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
         try
         {
-            await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+            PresentationLogic.SaveLearningWorld(SelectedViewModelsProvider.LearningWorld);
         }
         catch (SerializationException e)
         {

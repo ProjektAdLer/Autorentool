@@ -115,7 +115,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningWorldAsync(ILearningWorldViewModel learningWorldViewModel);
+    void SaveLearningWorld(ILearningWorldViewModel learningWorldViewModel);
 
     /// <summary>
     /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.

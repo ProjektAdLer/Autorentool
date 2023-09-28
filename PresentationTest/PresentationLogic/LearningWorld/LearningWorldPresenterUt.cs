@@ -71,9 +71,9 @@ public class LearningWorldPresenterUt
             errorService: mockErrorService,
             logger: mockLogger);
 
-        await systemUnderTest.SaveLearningWorldAsync();
+        systemUnderTest.SaveLearningWorld();
 
-        await mockPresentationLogic.Received().SaveLearningWorldAsync(Arg.Is<LearningWorldViewModel>(x => x == world));
+        mockPresentationLogic.Received().SaveLearningWorld(Arg.Is<LearningWorldViewModel>(x => x == world));
     }
 
 
@@ -89,7 +89,7 @@ public class LearningWorldPresenterUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider,
             errorService: mockErrorService);
 
-        await systemUnderTest.SaveLearningWorldAsync();
+        systemUnderTest.SaveLearningWorld();
 
         mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }
