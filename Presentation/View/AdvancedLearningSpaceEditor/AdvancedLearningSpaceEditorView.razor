@@ -34,6 +34,7 @@
     <div class="bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
         <div class="h-[375px] w-[650px]">
             <div class="h-[0px]">
+                draw element slots (in eigenem div, wegen mud blazor)
                 @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
                 {
                     @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
@@ -81,23 +82,6 @@
                             Drag and Drop to move corner point. Doubleclick to delete corner point.
                         </title>
                     </circle>
-                }
-                @* draw elementslots *@
-                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-                {
-                    @foreach (var advancedComponentLearningElementSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
-                    {
-                        <DraggableAdvancedLearningElementSlot AdvancedComponent="advancedComponentLearningElementSlot"
-                        >
-                        </DraggableAdvancedLearningElementSlot>
-                        // OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel"
-                        // OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
-                        // OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent"
-                        // OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
-                        // ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
-                        // OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu"
-                        // AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"
-                    }
                 }
 
                 @* draw decorations *@

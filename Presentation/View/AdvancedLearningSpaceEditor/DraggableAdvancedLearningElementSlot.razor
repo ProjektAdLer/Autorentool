@@ -4,7 +4,6 @@
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 @using Presentation.View.LearningElement
-<h3>DraggableAdvancedLearningElementSlot</h3>
 <MudDropZone
     T="ILearningElementViewModel"
     Identifier="@AdvancedComponent.Identifier"
@@ -14,6 +13,7 @@
     >
 
     <ItemRenderer>
+        @* this is only to drag and drop the element itself, not the slot *@
         <DragDropLearningElement
             LearningElement="@context"
             OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
