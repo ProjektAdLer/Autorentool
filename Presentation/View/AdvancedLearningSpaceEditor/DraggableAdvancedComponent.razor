@@ -40,9 +40,7 @@
     // Overwrite nullability warning below because service may never be null
     [Parameter, EditorRequired]
     public IAdvancedLearningSpaceEditorPresenter AdvancedEditorPresenter { get; set; } = null!;
-    [Parameter, EditorRequired]
-    public IAdvancedPositioningService AdvancedPositioningService { get; set; } = null!;
-    
+
     [Inject] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 

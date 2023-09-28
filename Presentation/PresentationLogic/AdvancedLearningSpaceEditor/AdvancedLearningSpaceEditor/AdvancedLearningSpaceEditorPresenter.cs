@@ -85,16 +85,6 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
             positionX, positionY);
     }
 
-    public void CreateAdvancedComponent()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DeleteAdvancedComponent(IAdvancedComponentViewModel targetObject)
-    {
-        throw new NotImplementedException();
-    }
-
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

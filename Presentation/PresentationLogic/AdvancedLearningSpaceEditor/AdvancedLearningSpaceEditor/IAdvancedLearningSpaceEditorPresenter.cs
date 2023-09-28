@@ -5,7 +5,7 @@ using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearnin
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 
-public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged, IAdvancedPositioningService
+public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged
 {
     IAdvancedComponentViewModel? SelectedAdvancedComponentViewModel { get; set; }
     IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel { get; }
