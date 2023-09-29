@@ -8,6 +8,8 @@
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.View.LearningElement
+@using Presentation.Components
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor
 @ChildContent
 
 <section class="w-[680px] p-2 gap-1 flex flex-col justify-start">
@@ -42,6 +44,11 @@
                         <DraggableAdvancedLearningElementSlot
                             AdvancedComponent="advancedComponentSlot">
                         </DraggableAdvancedLearningElementSlot>
+
+                        // OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
+                        // OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
+                        // ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
+                        // OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu"
                     }
                 }
             </div>
@@ -60,28 +67,31 @@
                 }
                 @* draw space *@
                 @* TODO: Doubleclick functionality *@
-                <polyline points="@getSpaceCornerPointsString()" style="stroke:yellow;stroke-width:3;stroke-opacity:0.9;fill-opacity:0">
+                <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:3;stroke-opacity:0.9;fill-opacity:0">
                     <title>
                         Spaceoutline.
                         Doubleclick to insert new corner point.
                     </title>
                 </polyline>
-                <polyline points="@getSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
+                <polyline points="@GetSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
                     <title>
                         Space.
                         Use Buttons below to add element slots or decorations.
                     </title>
                 </polyline>
 
-                @foreach (var cornerPoint in getSpaceCornerPoints())
+                @foreach (var (cornerPointKey, cornerPoint) in GetSpaceCornerPoints())
                 {
-                    // TODO: Drag and Drop functionality
-                    // TODO: Doubleclick functionality
-                    <circle cx="@cornerPoint.X" cy="@cornerPoint.Y" r="5" fill="red" stroke="black">
-                        <title>
-                            Drag and Drop to move corner point. Doubleclick to delete corner point.
-                        </title>
-                    </circle>
+                    <Draggable
+                        LearningObject="cornerPoint"
+                        @bind-X="cornerPoint.X"
+                        @bind-Y="cornerPoint.Y">
+                        <circle r="5" fill="red" stroke="black">
+                            <title>
+                                Drag and Drop to move corner point. Doubleclick to delete corner point.
+                            </title>
+                        </circle>
+                    </Draggable>
                 }
 
                 @* draw decorations *@
@@ -92,9 +102,8 @@
                         <polyline points="60,60 60,80 80,80 80,60 60,60">
 
                         </polyline>
-                @* <DraggableAdvancedDecoration ObjectName="advancedComponentDecoration" *@
+                        @* <DraggableAdvancedDecoration  *@
                         @*                              AdvancedComponent="advancedComponentDecoration" *@
-                        @*                              AdvancedPositioningService="AdvancedLearningSpaceEditorPresenter" *@
                         @*                              OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel" *@
                         @*                              OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent" *@
                         @*                              OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent" *@
@@ -178,23 +187,18 @@
         AdvancedLearningSpaceEditorPresenter.CreateAdvancedDecoration();
     }
 
-    private string getSpaceCornerPointsString()
+    private string GetSpaceCornerPointsString()
     {
     // raw space coords need to be offset to be centered somewhat ok.
     // AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel?.SpaceCornerPoints ?? "";
         return "50,50 50,200 500,200 500,50 50,50";
     }
 
-    private List<Point> getSpaceCornerPoints()
+    private IDictionary<int, DoublePoint> GetSpaceCornerPoints()
     {
-    //ideally there is one base method to grab the corners and these two methods here just put them in the right format.
-        return (new List<Point>(new Point[]
-        {
-            new Point { X = 50, Y = 50 },
-            new Point { X = 50, Y = 200 },
-            new Point { X = 500, Y = 200 },
-            new Point { X = 500, Y = 50 }
-        }));
+        return AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null 
+            ? AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints 
+            : new Dictionary<int, DoublePoint>();
     }
 
 }

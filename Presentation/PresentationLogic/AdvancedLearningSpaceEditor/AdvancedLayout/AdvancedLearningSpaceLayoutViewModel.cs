@@ -16,6 +16,13 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         _learningElements = new Dictionary<int, ILearningElementViewModel>();
         _advancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlotViewModel>();
         _advancedDecorations = new Dictionary<int, IAdvancedDecorationViewModel>();
+        _advancedCornerPoints = new Dictionary<int, DoublePoint>()
+        {
+            {0, new DoublePoint {X=50, Y=50}},
+            {1, new DoublePoint { X = 50, Y = 200 }},
+            {2, new DoublePoint { X = 500, Y = 200 }},
+            {3, new DoublePoint { X = 500, Y = 50 }}
+        };
     }
 
     public IDictionary<int, ILearningElementViewModel> LearningElements
@@ -35,6 +42,13 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         get => _advancedDecorations;
         set => _advancedDecorations = value;
     }
+    
+    public IDictionary<int, DoublePoint> AdvancedCornerPoints
+    {
+        get => _advancedCornerPoints;
+        set => _advancedCornerPoints = value;
+    }
+
 
 
     public int Capacity => 0;
@@ -52,10 +66,14 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         _advancedLearningElementSlots.Values;
     public IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations =>
         _advancedDecorations.Values;
+    public IEnumerable<DoublePoint> ContainedAdvancedCornerPoints =>
+        _advancedCornerPoints.Values;
 
     private IDictionary<int, ILearningElementViewModel> _learningElements;
     private IDictionary<int, IAdvancedLearningElementSlotViewModel> _advancedLearningElementSlots;
     private IDictionary<int, IAdvancedDecorationViewModel> _advancedDecorations;
+    private IDictionary<int, DoublePoint> _advancedCornerPoints;
+
     public ILearningElementViewModel GetElement(int index)
     {
         return _learningElements[index];
