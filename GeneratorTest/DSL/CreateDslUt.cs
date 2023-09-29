@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared;
 using TestHelpers;
 
@@ -267,7 +268,12 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
+        var learningElementContentSpace1 = new List<(FileContentPe, string)>
+        {
+            ((FileContentPe)ele1.LearningContent, ele1.Name),
+            ((FileContentPe)ele2.LearningContent, ele2.Name), ((FileContentPe)ele4.LearningContent, ele4.Name),
+            ((FileContentPe)ele5.LearningContent, ele5.Name)
+        };
 
         //Act
         systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
@@ -282,7 +288,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
-            Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
+            Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(learningElementContentSpace1));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceName, Is.EqualTo(space1.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].SpaceName, Is.EqualTo(space3.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[2].SpaceName, Is.EqualTo(space2.Name));

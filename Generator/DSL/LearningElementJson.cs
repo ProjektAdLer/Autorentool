@@ -1,4 +1,6 @@
-﻿namespace Generator.DSL;
+﻿using System.Text.Json.Serialization;
+
+namespace Generator.DSL;
 
 /// <summary>
 /// Every Learning Element, either in the world, in a topic or in a space.
@@ -6,6 +8,7 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
+    [JsonConstructor]
     public LearningElementJson(int elementId, string elementUuid, string elementName,
         string url, string elementCategory, string elementFileType, int learningSpaceParentId,
         int elementMaxScore, string elementModel, string? elementDescription = null, string[]? elementGoals = null)
@@ -42,7 +45,6 @@ public class LearningElementJson : ILearningElementJson
 
     public string Url { get; set; }
 
-    public string Type => JsonTypes.LearningElementType;
     public int ElementId { get; set; }
 
     public string ElementUUID { get; set; }

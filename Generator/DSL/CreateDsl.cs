@@ -26,9 +26,11 @@ public class CreateDsl : ICreateDsl
     private List<ILearningElementPe> _listAllLearningElements;
     private List<int?> _listLearningSpaceElements;
     private string _xmlFilesForExportPath;
+    public Dictionary<int, ContentReferenceActionPe> DictionaryIdToContentReferenceAction;
+    public Dictionary<int, ILearningElementPe> DictionaryIdToLearningElement;
     public Dictionary<int, Guid> DictionarySpaceIdToGuid;
-    public List<ILearningElementPe> ElementsWithFileContent;
     public LearningWorldJson LearningWorldJson;
+    public List<(IFileContentPe, string)> ListFileContent;
     public List<LearningSpacePe> ListLearningSpaces;
     public List<TopicPe> ListTopics;
     public string Uuid;
@@ -171,17 +173,20 @@ public class CreateDsl : ICreateDsl
             : $"({nestedExpression}){conditionSymbol}";
     }
 
-    [MemberNotNull(nameof(ElementsWithFileContent), nameof(ListLearningSpaces), nameof(ListTopics),
+    [MemberNotNull(nameof(ListFileContent), nameof(ListLearningSpaces), nameof(ListTopics),
         nameof(_listLearningSpaceElements), nameof(_booleanAlgebraRequirements), nameof(DictionarySpaceIdToGuid),
-        nameof(Uuid), nameof(_listAllLearningElements), nameof(LearningWorldJson))]
+        nameof(DictionaryIdToLearningElement), nameof(DictionaryIdToContentReferenceAction), nameof(Uuid),
+        nameof(_listAllLearningElements), nameof(LearningWorldJson))]
     private void Initialize()
     {
-        ElementsWithFileContent = new List<ILearningElementPe>();
+        ListFileContent = new List<(IFileContentPe, string)>();
         ListLearningSpaces = new List<LearningSpacePe>();
         ListTopics = new List<TopicPe>();
         _listLearningSpaceElements = new List<int?>();
         _booleanAlgebraRequirements = "";
         DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
+        DictionaryIdToLearningElement = new Dictionary<int, ILearningElementPe>();
+        DictionaryIdToContentReferenceAction = new Dictionary<int, ContentReferenceActionPe>();
         var guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _listAllLearningElements = new List<ILearningElementPe>();
@@ -233,12 +238,12 @@ public class CreateDsl : ICreateDsl
 
         ListLearningSpaces = IncrementDuplicateLearningElementNames(ListLearningSpaces);
 
-        var dictionaryIdToElement = CreateLearningElementToIdDictionary();
+        WriteDictionaries();
 
         foreach (var space in ListLearningSpaces)
         {
             _listLearningSpaceElements =
-                MapLearningSpaceElementsToIds(space, dictionaryIdToElement, learningSpaceId);
+                MapLearningSpaceElementsToIds(space, learningSpaceId);
             _booleanAlgebraRequirements = GetRequiredSpacesToEnter(space);
 
             AssignTopicToSpace(space, learningSpaceId);
@@ -253,24 +258,48 @@ public class CreateDsl : ICreateDsl
     }
 
     /// <summary>
-    /// Creates a dictionary mapping unique IDs to learning elements across all learning spaces.
+    /// Populates the dictionaries with learning elements and content reference actions.
     /// </summary>
-    /// <returns>A dictionary with unique IDs as keys and learning elements as values.</returns>
-    private Dictionary<int, ILearningElementPe> CreateLearningElementToIdDictionary()
+    private void WriteDictionaries()
     {
         var idToElementId = 1;
-        var idToElement = new Dictionary<int, ILearningElementPe>();
         foreach (var space in ListLearningSpaces)
         {
             for (var i = 0; i <= GetMaxSlotNumber(space); i++)
             {
                 if (!space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
-                idToElement.Add(idToElementId, element);
+                DictionaryIdToLearningElement.Add(idToElementId, element);
                 idToElementId++;
+                idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
             }
         }
+    }
 
-        return idToElement;
+    /// <summary>
+    /// Adds content reference actions to the dictionary based on the provided learning element.
+    /// </summary>
+    /// <param name="element">The learning element from which content reference actions are extracted.</param>
+    /// <param name="idToElementId">The current ID to be used for dictionary entries.</param>
+    /// <returns>The updated ID after adding entries to the dictionary.</returns>
+    private int AddContentReferenceActionsToDictionary(ILearningElementPe element, int idToElementId)
+    {
+        if (element.LearningContent is not IAdaptivityContentPe adaptivityContentPe)
+            return idToElementId;
+
+        var contentReferenceActions = adaptivityContentPe.Tasks
+            .SelectMany(task => task.Questions)
+            .SelectMany(question => question.Rules)
+            .Select(rule => rule.Action as ContentReferenceActionPe)
+            .Where(action => action != null)
+            .Cast<ContentReferenceActionPe>();
+
+        foreach (var contentReferenceActionPe in contentReferenceActions)
+        {
+            DictionaryIdToContentReferenceAction.Add(idToElementId, contentReferenceActionPe);
+            idToElementId++;
+        }
+
+        return idToElementId;
     }
 
     /// <summary>
@@ -335,11 +364,9 @@ public class CreateDsl : ICreateDsl
     /// If an element doesn't exist for a particular slot, a null is added to the list.
     /// </summary>
     /// <param name="space">The learning space whose elements are to be mapped to their IDs.</param>
-    /// <param name="idToElement">Dictionary mapping element IDs to their respective learning elements.</param>
     /// <param name="learningSpaceId">The ID of the learning space being processed.</param>
     /// <returns>A sequential list of element IDs for the learning space, with nulls for missing elements.</returns>
-    private List<int?> MapLearningSpaceElementsToIds(LearningSpacePe space,
-        IDictionary<int, ILearningElementPe> idToElement, int learningSpaceId)
+    private List<int?> MapLearningSpaceElementsToIds(LearningSpacePe space, int learningSpaceId)
     {
         var maxSlotNumber = GetMaxSlotNumber(space);
         var listLearningSpaceElements = new List<int?>();
@@ -348,8 +375,8 @@ public class CreateDsl : ICreateDsl
         {
             if (space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
             {
-                var elementId = idToElement.First(x => x.Value == element).Key;
-                MapLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
+                var elementId = DictionaryIdToLearningElement.First(x => x.Value == element).Key;
+                MapInternalLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
                 listLearningSpaceElements.Add(elementId);
             }
             else
@@ -386,7 +413,7 @@ public class CreateDsl : ICreateDsl
     /// <param name="learningSpaceId">The ID of the learning space associated with the learning element.</param>
     /// <param name="learningElementId">The ID of the learning element.</param>
     /// <param name="learningElement">The learning element to be mapped.</param>
-    private void MapLearningElementToLearningWorldJson(int learningSpaceId, int learningElementId,
+    private void MapInternalLearningElementToLearningWorldJson(int learningSpaceId, int learningElementId,
         ILearningElementPe learningElement)
     {
         IElementJson elementJson;
@@ -400,7 +427,7 @@ public class CreateDsl : ICreateDsl
                     elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
                     learningElement.ElementModel.ToString(),
                     learningElement.Description, learningElement.Goals.Split("\n"));
-                ElementsWithFileContent.Add(learningElement);
+                ListFileContent.Add((fileContentPe, learningElement.Name));
                 break;
             case LinkContentPe linkContentPe:
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
@@ -534,12 +561,70 @@ public class CreateDsl : ICreateDsl
         var triggerId = 1;
         foreach (var rule in questionRules)
         {
-            adaptivityRules.Add(new AdaptivityRuleJson(triggerId, "incorrect",
-                new CommentActionJson(((CommentActionPe)rule.Action).Comment)));
+            var adaptivityAction = MapAdaptivityActionPeToJson(rule.Action);
+            adaptivityRules.Add(new AdaptivityRuleJson(triggerId, "incorrect", adaptivityAction));
             triggerId++;
         }
 
         return adaptivityRules;
+    }
+
+    /// <summary>
+    /// Maps an <see cref="IAdaptivityActionPe"/> object to its corresponding JSON representation.
+    /// </summary>
+    /// <param name="adaptivityAction">The adaptivity action to map.</param>
+    /// <returns>An object that implements the <see cref="IAdaptivityActionJson"/> interface.</returns>
+    /// <exception cref="NotImplementedException">Thrown when attempting to map an unsupported <see cref="ContentReferenceActionPe"/> type.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the adaptivity action type is not supported.</exception>
+    private IAdaptivityActionJson MapAdaptivityActionPeToJson(IAdaptivityActionPe adaptivityAction)
+    {
+        switch (adaptivityAction)
+        {
+            case CommentActionPe commentActionPe:
+                return new CommentActionJson(commentActionPe.Comment);
+            case ContentReferenceActionPe contentReferenceActionPe:
+                MapContentToBaseLearningElement(contentReferenceActionPe);
+                return new ContentReferenceActionJson(DictionaryIdToContentReferenceAction
+                    .First(x => x.Value.Id == contentReferenceActionPe.Id).Key);
+            case ElementReferenceActionPe elementReferenceActionPe:
+                return new ElementReferenceActionJson(DictionaryIdToLearningElement
+                    .First(x => x.Value.Id == elementReferenceActionPe.ElementId).Key);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(adaptivityAction),
+                    $"The adaptivityAction {adaptivityAction} is not supported");
+        }
+    }
+
+    /// <summary>
+    /// Maps the provided <see cref="ContentReferenceActionPe"/> content to its corresponding <see cref="BaseLearningElementJson"/> representation in the ATF
+    /// and adds it to the LearningWorldJson.Elements collection.
+    /// </summary>
+    /// <param name="contentReferenceAction">The content reference action containing the content to map.</param>
+    /// <exception cref="ArgumentException">Thrown when trying to reference from <see cref="AdaptivityContentPe"/> to <see cref="AdaptivityContentPe"/>, as this is not supported.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the content type within <paramref name="contentReferenceAction"/> is not supported.</exception>
+    private void MapContentToBaseLearningElement(ContentReferenceActionPe contentReferenceAction)
+    {
+        BaseLearningElementJson baseLearningElement;
+        var elementId = DictionaryIdToContentReferenceAction.First(x => x.Value.Id == contentReferenceAction.Id).Key;
+        switch (contentReferenceAction.Content)
+        {
+            case FileContentPe fileContentPe:
+                baseLearningElement = new BaseLearningElementJson(elementId,
+                    contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
+                    MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
+                ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                break;
+            case LinkContentPe linkContentPe:
+                baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),
+                    linkContentPe.Name, linkContentPe.Link, "video", "url");
+                break;
+            case AdaptivityContentPe:
+                throw new ArgumentException("Reference from AdaptivityContent to AdaptivityContent is not supported");
+            default:
+                throw new ArgumentOutOfRangeException(nameof(contentReferenceAction));
+        }
+
+        LearningWorldJson.Elements.Add(baseLearningElement);
     }
 
     /// <summary>
@@ -671,23 +756,22 @@ public class CreateDsl : ICreateDsl
     /// All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
     /// After the files are added to the Backup-Structure, these Files will be deleted.
     /// </summary>
-    /// <exception cref="FileNotFoundException">Thrown when the content of a learning element could not be found at the specified path.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the content could not be found at the specified path.</exception>
     private void CopyLearningElementFiles()
     {
-        foreach (var learningElement in ElementsWithFileContent)
+        // The "name" attribute in ListFileContent refers to the learning element's name, if present, or the file name if no corresponding learning element exists.
+        foreach (var (fileContent, name) in ListFileContent)
         {
             try
             {
-                //we know that all elements in this list have a FileContent, so we can safely cast it. - n.stich
-                var castedFileContent = (FileContentPe)learningElement.LearningContent;
-                _fileSystem.File.Copy(castedFileContent.Filepath,
-                    _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
-                Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", castedFileContent.Filepath);
+                _fileSystem.File.Copy(fileContent.Filepath,
+                    _fileSystem.Path.Join("XMLFilesForExport", $"{name}.{fileContent.Type}"));
+                Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", fileContent.Filepath);
             }
             catch (FileNotFoundException)
             {
                 throw new FileNotFoundException(
-                    $"The Content {learningElement.LearningContent.Name} of the LearningElement {learningElement.Name} could not be found at Path {((FileContentPe)learningElement.LearningContent).Filepath}.");
+                    $"The Content {fileContent.Name} could not be found at Path {fileContent.Filepath}.");
             }
         }
     }

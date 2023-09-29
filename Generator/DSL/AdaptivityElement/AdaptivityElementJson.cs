@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
 public class AdaptivityElementJson : IAdaptivityElementJson
 {
+    [JsonConstructor]
     public AdaptivityElementJson(int elementId, string elementUuid, string elementName,
         string elementCategory, string elementFileType, int learningSpaceParentId,
         int elementMaxScore, string elementModel, IAdaptivityContentJson adaptivityContent,
@@ -20,7 +23,6 @@ public class AdaptivityElementJson : IAdaptivityElementJson
         AdaptivityContent = adaptivityContent;
     }
 
-    public string Type => JsonTypes.AdaptivityElementType;
     public int ElementId { get; set; }
     public string ElementUUID { get; set; }
     public string ElementName { get; set; }
