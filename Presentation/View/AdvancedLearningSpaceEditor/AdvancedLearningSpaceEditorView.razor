@@ -39,7 +39,7 @@
              @onmouseup=@(e => MouseService.FireUp(this, e))
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
             <div class="h-[0px]">
-                draw element slots (in eigenem div, wegen mud blazor)
+                @* draw elementslots (in eigenem div, wegen mud blazor) *@
                 @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
                 {
                     @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
@@ -195,9 +195,17 @@
 
     private string GetSpaceCornerPointsString()
     {
-    // raw space coords need to be offset to be centered somewhat ok.
-    // AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel?.SpaceCornerPoints ?? "";
-        return "50,50 50,200 500,200 500,50 50,50";
+        var cornerPointString = "";
+        if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+        {
+            foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+            {
+                cornerPointString += $"{cornerPoint.X},{cornerPoint.Y} ";
+            }
+            cornerPointString += $"{AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints[0].X},{AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints[0].Y} ";
+            return cornerPointString;
+        }
+        return "";
     }
 
     private IDictionary<int, DoublePoint> GetSpaceCornerPoints()
