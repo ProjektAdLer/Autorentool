@@ -124,6 +124,7 @@ public static class EntityProvider
             nameof(LearningSpace) => GetLearningSpace() as TEntity,
             nameof(LearningElement) => GetLearningElement() as TEntity,
             nameof(LinkContent) => GetLinkContent() as TEntity,
+            nameof(IMultipleChoiceQuestion) => GetMultipleChoiceMultipleResponseQuestion() as TEntity,
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
