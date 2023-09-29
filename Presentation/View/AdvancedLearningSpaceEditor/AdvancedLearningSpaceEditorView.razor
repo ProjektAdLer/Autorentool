@@ -34,7 +34,10 @@
     </div>
 
     <div class="bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
-        <div class="h-[375px] w-[650px]">
+        <div class="h-[375px] w-[650px]"
+             @onmousemove=@(e => MouseService.FireMove(this, e))
+             @onmouseup=@(e => MouseService.FireUp(this, e))
+             @onmouseleave=@(e => MouseService.FireOut(this, e))>
             <div class="h-[0px]">
                 draw element slots (in eigenem div, wegen mud blazor)
                 @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
@@ -79,19 +82,22 @@
                         Use Buttons below to add element slots or decorations.
                     </title>
                 </polyline>
-
-                @foreach (var (cornerPointKey, cornerPoint) in GetSpaceCornerPoints())
+                @* draw corner points *@
+                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
                 {
-                    <Draggable
-                        LearningObject="cornerPoint"
-                        @bind-X="cornerPoint.X"
-                        @bind-Y="cornerPoint.Y">
-                        <circle r="5" fill="red" stroke="black">
-                            <title>
-                                Drag and Drop to move corner point. Doubleclick to delete corner point.
-                            </title>
-                        </circle>
-                    </Draggable>
+                    @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+                    {
+                        <Draggable
+                            LearningObject="cornerPoint"
+                            @bind-X="cornerPoint.X"
+                            @bind-Y="cornerPoint.Y">
+                            <circle r="5" fill="red" stroke="black">
+                                <title>
+                                    Drag and Drop to move corner point. Doubleclick to delete corner point.
+                                </title>
+                            </circle>
+                        </Draggable>
+                    }
                 }
 
                 @* draw decorations *@
@@ -196,8 +202,8 @@
 
     private IDictionary<int, DoublePoint> GetSpaceCornerPoints()
     {
-        return AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null 
-            ? AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints 
+        return AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null
+            ? AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints
             : new Dictionary<int, DoublePoint>();
     }
 
