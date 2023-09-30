@@ -13,173 +13,203 @@
 @ChildContent
 
 <section class="w-[680px] p-2 gap-1 flex flex-col justify-start">
-    <div class="gap-8 flex justify-between items-start">
-        <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
-            <h3 class="text-base text-adlerblue-600 space-theme">
-                <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Theme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
-            </h3>
-            @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
-            <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
-                <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Goals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
-            </h3>
-        </label>
-        <div class="min-w-max">
-            <h3 class="text-base text-adlerblue-600 space-workload">
-                <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Workload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span>
-            </h3>
-            <h3 class="text-base text-adlerblue-600 space-points">
-                <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Points.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
-            </h3>
-        </div>
+<div class="gap-8 flex justify-between items-start">
+    <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
+        <h3 class="text-base text-adlerblue-600 space-theme">
+            <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Theme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme
+        </h3>
+        @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
+        <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
+            <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Goals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
+        </h3>
+    </label>
+    <div class="min-w-max">
+        <h3 class="text-base text-adlerblue-600 space-workload">
+            <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Workload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span>
+        </h3>
+        <h3 class="text-base text-adlerblue-600 space-points">
+            <span class="text-adlergrey-600">@Localizer["AdvancedLearningSpaceEditor.Points.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
+        </h3>
     </div>
+</div>
 
-    <div class="bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
-        <div class="h-[375px] w-[650px]"
-             @onmousemove=@(e => MouseService.FireMove(this, e))
+<div class="bg-adlerbgbright border-2 border-b-adlerdeactivated flex-col items-start">
+    <div class="h-[375px] w-[650px]"
+         @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
-            <div class="h-[0px]">
-                @* draw elementslots (in eigenem div, wegen mud blazor) *@
-                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+        <div class="h-[0px]">
+            @* draw elementslots (in eigenem div, wegen mud blazor) *@
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
                 {
-                    @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
-                    {
-                            <DraggableAdvancedLearningElementSlot
-                                AdvancedComponent="advancedComponentSlot">
-                            </DraggableAdvancedLearningElementSlot>
-                        // OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
-                        // OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
-                        // ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
-                        // OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu"
-                    }
+                    <DraggableAdvancedLearningElementSlot
+                        AdvancedComponent="advancedComponentSlot">
+                    </DraggableAdvancedLearningElementSlot>
+                    // OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
+                    // OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
+                    // ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
+                    // OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu"
                 }
-            </div>
-
-            <svg width="650" height="375" overflow="scroll">
-                @* draw outline *@
-                <polygon points="20,20 20,350 630,350 630,20" style="fill:green;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9"/>
-                @* draw grid *@
-                @for (int i = 30; i < 630; i += 10)
-                {
-                    <line x1="@i" y1="20" x2="@i" y2="350" style="stroke:#d6d5d5;stroke-width:1"/>
-                }
-                @for (int i = 30; i < 350; i += 10)
-                {
-                    <line x1="20" y1="@i" x2="630" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
-                }
-                @* draw space *@
-                @* TODO: Doubleclick functionality *@
-                <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:3;stroke-opacity:0.9;fill-opacity:0">
-                    <title>
-                        Spaceoutline.
-                        Doubleclick to insert new corner point.
-                    </title>
-                </polyline>
-                <polyline points="@GetSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
-                    <title>
-                        Space.
-                        Use Buttons below to add element slots or decorations.
-                    </title>
-                </polyline>
-                @* draw corner points *@
-                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-                {
-                    // falsche stelle? Es wäre besser wenn das passiert wenn das draggable released wird.
-                    @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
-                    {
-                        cornerPoint.X = Math.Round(cornerPoint.X / 10) * 10;
-                        cornerPoint.Y = Math.Round(cornerPoint.Y / 10) * 10;
-                    }
-                    @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
-                    {
-                        <Draggable
-                            LearningObject="cornerPoint"
-                            @bind-X="cornerPoint.X"
-                            @bind-Y="cornerPoint.Y">
-                            <circle r="5" fill="red" stroke="black">
-                                <title>
-                                    Drag and Drop to move corner point. Doubleclick to delete corner point.
-                                </title>
-                            </circle>
-                        </Draggable>
-                    }
-                }
-
-                @* draw decorations *@
-                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-                {
-                    @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecorations)
-                    {
-                        <Draggable
-                            LearningObject="advancedComponentDecoration"
-                            @bind-X="advancedComponentDecoration.PositionX"
-                            @bind-Y="advancedComponentDecoration.PositionY">
-                            <rect width="20" height="20" x="-10" y="-10" fill="green" stroke="black" opacity="60%">
-                                <title>
-                                    Drag and Drop to move decoration. Doubleclick to delete corner point.
-                                </title>
-                            </rect>
-                            @* onDoubleClick="@(() => AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent(advancedComponentDecoration))" *@
-                        </Draggable>
-                    }
-                }
-                @* draw learning element slot outlines *@
-                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-                {
-                    @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
-                    {
-                        <Draggable
-                            LearningObject="advancedComponentSlot"
-                            @bind-X="advancedComponentSlot.PositionX"
-                            @bind-Y="advancedComponentSlot.PositionY">
-                            <rect width="40" height="40" x="-20" y="-20" fill="gray" stroke="black" opacity="30%">
-                                <title>
-                                    Learning element slot outline.
-                                    Doubleclick to insert new corner point.
-                                </title>
-                            </rect>
-                        </Draggable>
-                    }
-                }
-
-
-                @* draw doors *@
-                @* draw spawnpoint *@
-            </svg>
+            }
         </div>
+
+        <svg width="650" height="375" overflow="scroll">
+            @* draw outline *@
+            <polygon points="20,20 20,350 630,350 630,20" style="fill:green;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9"/>
+            @* draw grid *@
+            @for (int i = 30; i < 630; i += 10)
+            {
+                <line x1="@i" y1="20" x2="@i" y2="350" style="stroke:#d6d5d5;stroke-width:1"/>
+            }
+            @for (int i = 30; i < 350; i += 10)
+            {
+                <line x1="20" y1="@i" x2="630" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
+            }
+            @* draw space *@
+            <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:10;stroke-opacity:0.5;fill-opacity:0">
+                <title>
+                    Spaceoutline.
+                    Doubleclick to insert new corner point.
+                </title>
+            </polyline>
+            <polyline points="@GetSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
+                <title>
+                    Space.
+                    Use Buttons below to add element slots or decorations.
+                </title>
+            </polyline>
+            @* draw corner points *@
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                // falsche stelle? Es wäre besser wenn das passiert wenn das draggable released wird.
+                @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+                {
+                    cornerPoint.X = Math.Round(cornerPoint.X / 10) * 10;
+                    cornerPoint.Y = Math.Round(cornerPoint.Y / 10) * 10;
+                }
+                @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+                {
+                    <Draggable
+                        LearningObject="cornerPoint"
+                        @bind-X="cornerPoint.X"
+                        @bind-Y="cornerPoint.Y">
+                        <circle r="5" fill="red" stroke="black">
+                            <title>
+                                Drag and Drop to move corner point. Doubleclick to delete corner point.
+                            </title>
+                        </circle>
+                    </Draggable>
+                }
+            }
+
+            @* draw decorations *@
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecorations)
+                {
+                    <Draggable
+                        LearningObject="advancedComponentDecoration"
+                        @bind-X="advancedComponentDecoration.PositionX"
+                        @bind-Y="advancedComponentDecoration.PositionY">
+                        <rect width="20" height="20" x="-10" y="-10" fill="green" stroke="black" opacity="60%">
+                            <title>
+                                Drag and Drop to move decoration. Doubleclick to delete corner point.
+                            </title>
+                        </rect>
+                        @* onDoubleClick="@(() => AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent(advancedComponentDecoration))" *@
+                    </Draggable>
+                }
+            }
+            @* draw learning element slot outlines *@
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
+                {
+                    <Draggable
+                        LearningObject="advancedComponentSlot"
+                        @bind-X="advancedComponentSlot.PositionX"
+                        @bind-Y="advancedComponentSlot.PositionY">
+                        <rect width="40" height="40" x="-20" y="-20" fill="gray" stroke="black" opacity="30%">
+                            <title>
+                                Learning element slot outline.
+                                Doubleclick to insert new corner point.
+                            </title>
+                        </rect>
+                    </Draggable>
+                }
+            }
+            @* draw doors *@
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                var entryDoorPosition = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.EntryDoorPosition;
+                {
+                    <Draggable
+                        LearningObject="entryDoorPosition"
+                        @bind-X="entryDoorPosition.X"
+                        @bind-Y="entryDoorPosition.Y">
+                        <rect width="10" height="30" x="-5" y="-15" fill="green" opacity="80%">
+                            <title>
+                                Entrydoor. Drag along Spaceoutline to place.
+                            </title>
+                        </rect>
+                        @* Todo: Arrow, shape? *@
+                    </Draggable>
+                }
+            }
+            @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+            {
+                var exitDoorPosition = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.ExitDoorPosition;
+                {
+                    <Draggable
+                        LearningObject="exitDoorPosition"
+                        @bind-X="exitDoorPosition.X"
+                        @bind-Y="exitDoorPosition.Y">
+                        <rect width="10" height="30" x="-5" y="-15" fill="red" opacity="80%">
+                            <title>
+                                Exitdoor. Drag along Spaceoutline to place.
+                            </title>
+                        </rect>
+                        @* Todo: Arrow, shape? *@
+                    </Draggable>
+                }
+            }
+        </svg>
     </div>
-    <div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated">
-        <button
-            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
-            @onclick=CreateAdvancedLearningElementSlot>
-            <div class="h-[45px]">
-                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/learning-element-slot-icon-nobg.png" class="pointer-events-none w-8 h-8">
-            </div>
-            <div class="h-[45px]">
-                @Localizer["AdvancedLearningSpaceEditor.LearningElementSlots.Title"]
-            </div>
-        </button>
-        <button
-            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
-            @onclick=CreateAdvancedDecoration>
-            <div class="h-[45px]">
-                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
-            </div>
-            <div class="h-[45px]">
-                @Localizer["AdvancedLearningSpaceEditor.Decorations.Title"]
-            </div>
-        </button>
-        <button
-            class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
-            @onclick=CreateAdvancedLearningElementSlot>
-            <div class="h-[45px]">
-                <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/door-icon-nobg.png" class="pointer-events-none w-8 h-8">
-            </div>
-            <div class="h-[45px]">
-                @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
-            </div>
-        </button>
-    </div>
+</div>
+<div class="w-full bg-adlerbgbright border-2 border-b-adlerdeactivated">
+    <button
+        class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+        @onclick=CreateAdvancedLearningElementSlot>
+        <div class="h-[45px]">
+            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/learning-element-slot-icon-nobg.png" class="pointer-events-none w-8 h-8">
+        </div>
+        <div class="h-[45px]">
+            @Localizer["AdvancedLearningSpaceEditor.LearningElementSlots.Title"]
+        </div>
+    </button>
+    <button
+        class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+        @onclick=CreateAdvancedDecoration>
+        <div class="h-[45px]">
+            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/decoration-nobg.png" class="pointer-events-none w-8 h-8">
+        </div>
+        <div class="h-[45px]">
+            @Localizer["AdvancedLearningSpaceEditor.Decorations.Title"]
+        </div>
+    </button>
+    <button
+        class="h-[90px] w-[90px] hover:bg-gray-700 hover:text-white rounded-md px-2 py-1 text-sm font-medium flex-col m-0.5 ml-5"
+        @onclick=CreateAdvancedLearningElementSlot>
+        <div class="h-[45px]">
+            <img src="CustomIcons/AdvancedLearningRoomGeneratorIcons/door-icon-nobg.png" class="pointer-events-none w-8 h-8">
+        </div>
+        <div class="h-[45px]">
+            @Localizer["AdvancedLearningSpaceEditor.Doors.Title"]
+        </div>
+    </button>
+</div>
 </section>
 
 

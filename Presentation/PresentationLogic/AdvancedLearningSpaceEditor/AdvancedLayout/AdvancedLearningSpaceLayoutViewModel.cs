@@ -6,7 +6,6 @@ namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLay
 
 public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayoutViewModel
 {
-
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
@@ -18,11 +17,13 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         _advancedDecorations = new Dictionary<int, IAdvancedDecorationViewModel>();
         _advancedCornerPoints = new Dictionary<int, DoublePoint>()
         {
-            {0, new DoublePoint {X=50, Y=50}},
-            {1, new DoublePoint { X = 50, Y = 200 }},
-            {2, new DoublePoint { X = 500, Y = 200 }},
-            {3, new DoublePoint { X = 500, Y = 50 }}
+            { 0, new DoublePoint { X = 50, Y = 50 } },
+            { 1, new DoublePoint { X = 50, Y = 200 } },
+            { 2, new DoublePoint { X = 500, Y = 200 } },
+            { 3, new DoublePoint { X = 500, Y = 50 } }
         };
+        _entryDoorPosition = new DoublePoint { X = 50, Y = 125 };
+        _exitDoorPosition = new DoublePoint { X = 500, Y = 125 };
     }
 
     public IDictionary<int, ILearningElementViewModel> LearningElements
@@ -34,7 +35,7 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     public IDictionary<int, IAdvancedLearningElementSlotViewModel> AdvancedLearningElementSlots
     {
         get => _advancedLearningElementSlots;
-        set =>_advancedLearningElementSlots = value;
+        set => _advancedLearningElementSlots = value;
     }
 
     public IDictionary<int, IAdvancedDecorationViewModel> AdvancedDecorations
@@ -42,18 +43,25 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         get => _advancedDecorations;
         set => _advancedDecorations = value;
     }
-    
+
     public IDictionary<int, DoublePoint> AdvancedCornerPoints
     {
         get => _advancedCornerPoints;
         set => _advancedCornerPoints = value;
     }
 
+    public DoublePoint EntryDoorPosition
+    {
+        get => _entryDoorPosition;
+        set => _entryDoorPosition = value;
+    }
 
+    public DoublePoint ExitDoorPosition
+    {
+        get => _exitDoorPosition;
+        set => _exitDoorPosition = value;
+    }
 
-    public int Capacity => 0;
-    //TODO: Fix capacity
-        // FloorPlanViewModel.Capacity;
     public int Count => ContainedLearningElements.Count();
 
     public IEnumerable<int> UsedIndices =>
@@ -64,8 +72,10 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public IEnumerable<IAdvancedLearningElementSlotViewModel> ContainedAdvancedLearningElementSlots =>
         _advancedLearningElementSlots.Values;
+
     public IEnumerable<IAdvancedDecorationViewModel> ContainedAdvancedDecorations =>
         _advancedDecorations.Values;
+
     public IEnumerable<DoublePoint> ContainedAdvancedCornerPoints =>
         _advancedCornerPoints.Values;
 
@@ -73,6 +83,8 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     private IDictionary<int, IAdvancedLearningElementSlotViewModel> _advancedLearningElementSlots;
     private IDictionary<int, IAdvancedDecorationViewModel> _advancedDecorations;
     private IDictionary<int, DoublePoint> _advancedCornerPoints;
+    private DoublePoint _entryDoorPosition;
+    private DoublePoint _exitDoorPosition;
 
     public ILearningElementViewModel GetElement(int index)
     {
@@ -83,9 +95,9 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
     {
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index), index,
-                $"Index is out of range for the current floor plan with max capacity of " 
+                $"Index is out of range for the current floor plan with max capacity of "
                 // + $"{FloorPlanViewModel.Capacity}"
-                );
+            );
         _learningElements[index] = element;
     }
 
@@ -100,11 +112,13 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
 
     public void AddAdvancedLearningElementSlot(Guid spaceId, int slotKey, double positionX, double positionY)
     {
-        AdvancedLearningElementSlots.Add(slotKey, new AdvancedLearningElementSlotViewModel(spaceId, slotKey, positionX, positionY));
-    }
-    public void AddAdvancedDecoration(Guid spaceId, int decorationKey, double positionX, double positionY)
-    {
-        AdvancedDecorations.Add(decorationKey, new AdvancedDecorationViewModel(spaceId, decorationKey, positionX, positionY));
+        AdvancedLearningElementSlots.Add(slotKey,
+            new AdvancedLearningElementSlotViewModel(spaceId, slotKey, positionX, positionY));
     }
 
+    public void AddAdvancedDecoration(Guid spaceId, int decorationKey, double positionX, double positionY)
+    {
+        AdvancedDecorations.Add(decorationKey,
+            new AdvancedDecorationViewModel(spaceId, decorationKey, positionX, positionY));
+    }
 }

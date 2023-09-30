@@ -9,7 +9,8 @@ public interface IAdvancedLearningSpaceLayoutViewModel
     IDictionary<int, IAdvancedLearningElementSlotViewModel>  AdvancedLearningElementSlots { get; set; }
     IDictionary<int, IAdvancedDecorationViewModel> AdvancedDecorations { get; set; }
     IDictionary<int, DoublePoint> AdvancedCornerPoints { get; set; }
-    int Capacity { get; }
+    DoublePoint EntryDoorPosition { get; set; }
+    DoublePoint ExitDoorPosition { get; set; }
     int Count { get; }
     IEnumerable<int> UsedIndices { get; }
     IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
