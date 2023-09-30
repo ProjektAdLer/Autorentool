@@ -8,8 +8,9 @@
 <MudDropZone
     T="ILearningElementViewModel"
     Identifier="@AdvancedComponent.Identifier"
-    class="rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center hover:bg-adlerblue-300"
+    class="rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-0 m-0 w-[20px] h-[20px] flex justify-center items-center"
     style="position:relative; top:50px; left: 50px;"
+    @* top:@AdvancedComponent.PositionY-10; left:@AdvancedComponent.PositionX-10 *@
     @onclick="() => LearningSpaceP.ClickOnSlot(AdvancedComponent.SlotKey)"
     >
 

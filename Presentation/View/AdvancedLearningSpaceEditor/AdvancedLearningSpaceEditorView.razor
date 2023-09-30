@@ -44,10 +44,9 @@
                 {
                     @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
                     {
-                        <DraggableAdvancedLearningElementSlot
-                            AdvancedComponent="advancedComponentSlot">
-                        </DraggableAdvancedLearningElementSlot>
-
+                            <DraggableAdvancedLearningElementSlot
+                                AdvancedComponent="advancedComponentSlot">
+                            </DraggableAdvancedLearningElementSlot>
                         // OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent"
                         // OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent"
                         // ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
@@ -85,6 +84,12 @@
                 @* draw corner points *@
                 @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
                 {
+                    // falsche stelle? Es wäre besser wenn das passiert wenn das draggable released wird.
+                    @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+                    {
+                        cornerPoint.X = Math.Round(cornerPoint.X / 10) * 10;
+                        cornerPoint.Y = Math.Round(cornerPoint.Y / 10) * 10;
+                    }
                     @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
                     {
                         <Draggable
@@ -105,21 +110,38 @@
                 {
                     @foreach (var advancedComponentDecoration in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedDecorations)
                     {
-                        <polyline points="60,60 60,80 80,80 80,60 60,60">
-
-                        </polyline>
-                        @* <DraggableAdvancedDecoration  *@
-                        @*                              AdvancedComponent="advancedComponentDecoration" *@
-                        @*                              OnClickedDraggable="@AdvancedLearningSpaceEditorPresenter.SetSelectedAdvancedComponentViewModel" *@
-                        @*                              OnDraggedDraggable="@AdvancedLearningSpaceEditorPresenter.DragSelectedAdvancedComponent" *@
-                        @*                              OnClickedDeleteObject="@AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent" *@
-                        @*                              OnRightClickedDraggable="@AdvancedLearningSpaceEditorPresenter.RightClickOnAdvancedComponent" *@
-                        @*                              ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject" *@
-                        @*                              OnCloseRightClickMenu="@AdvancedLearningSpaceEditorPresenter.HideRightClickMenu" *@
-                        @*                              AdvancedEditorPresenter="@AdvancedLearningSpaceEditorPresenter"> *@
-                        @* </DraggableAdvancedDecoration> *@
+                        <Draggable
+                            LearningObject="advancedComponentDecoration"
+                            @bind-X="advancedComponentDecoration.PositionX"
+                            @bind-Y="advancedComponentDecoration.PositionY">
+                            <rect width="20" height="20" x="-10" y="-10" fill="green" stroke="black" opacity="60%">
+                                <title>
+                                    Drag and Drop to move decoration. Doubleclick to delete corner point.
+                                </title>
+                            </rect>
+                            @* onDoubleClick="@(() => AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent(advancedComponentDecoration))" *@
+                        </Draggable>
                     }
                 }
+                @* draw learning element slot outlines *@
+                @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+                {
+                    @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
+                    {
+                        <Draggable
+                            LearningObject="advancedComponentSlot"
+                            @bind-X="advancedComponentSlot.PositionX"
+                            @bind-Y="advancedComponentSlot.PositionY">
+                            <rect width="40" height="40" x="-20" y="-20" fill="gray" stroke="black" opacity="30%">
+                                <title>
+                                    Learning element slot outline.
+                                    Doubleclick to insert new corner point.
+                                </title>
+                            </rect>
+                        </Draggable>
+                    }
+                }
+
 
                 @* draw doors *@
                 @* draw spawnpoint *@
