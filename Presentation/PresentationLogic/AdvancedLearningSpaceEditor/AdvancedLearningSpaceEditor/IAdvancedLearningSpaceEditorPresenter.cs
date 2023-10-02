@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Microsoft.AspNetCore.Components;
 using Presentation.Components;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
@@ -11,7 +12,7 @@ public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged
     IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel { get; }
     void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj);
     void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs);
-    void DeleteAdvancedDecoration(object advancedDecorationViewModel);
+    void DeleteAdvancedDecoration(IAdvancedDecorationViewModel advancedDecorationViewModel);
     void RightClickOnAdvancedComponent();
     void HideRightClickMenu();
     void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace);
