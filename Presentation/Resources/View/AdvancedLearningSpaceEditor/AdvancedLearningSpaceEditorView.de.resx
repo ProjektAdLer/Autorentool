@@ -35,4 +35,8 @@
     <data name="AdvancedLearningSpaceEditor.Goals.Text" xml:space="preserve">
         <value>Ziele:</value>
     </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceOutline" xml:space="preserve">
+        <value>Raumbegrenzung.
+Doppelklick, um neuen Eckpunkt einzufügen.</value>
+    </data>
 </root>
