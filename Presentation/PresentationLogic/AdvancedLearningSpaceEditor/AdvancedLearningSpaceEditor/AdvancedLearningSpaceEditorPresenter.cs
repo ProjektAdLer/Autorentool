@@ -45,8 +45,10 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
         throw new NotImplementedException();
     }
 
-    public void DeleteSelectedAdvancedComponent()
+    public void DeleteAdvancedDecoration(object advancedDecorationViewModel)
     {
+        if(advancedDecorationViewModel is not IAdvancedDecorationViewModel advancedDecorationVm)
+            throw new ArgumentException("advancedDecorationViewModel must be of type IAdvancedDecorationViewModel");
     }
 
     public void RightClickOnAdvancedComponent()

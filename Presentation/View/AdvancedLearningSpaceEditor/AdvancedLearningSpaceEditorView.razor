@@ -105,7 +105,8 @@
                     <AdvancedDraggable
                         LearningObject="advancedComponentDecoration"
                         @bind-X="advancedComponentDecoration.PositionX"
-                        @bind-Y="advancedComponentDecoration.PositionY">
+                        @bind-Y="advancedComponentDecoration.PositionY"
+                        OnDoubleClicked="@AdvancedLearningSpaceEditorPresenter.DeleteAdvancedDecoration">
                         <rect width="20" height="20" x="-10" y="-10" fill="lime" stroke="black" opacity="60%">
                             <title>
                                 Drag and Drop to move decoration. Doubleclick to delete corner point.
@@ -156,7 +157,6 @@
                               <polygon class="cls-2" points="1077.87 1403.7 870.59 1378.83 944.42 1868 1077.87 1868 1211.32 1868 1285.14 1378.83 1077.87 1403.7"/>
                             </g>
                           </svg>
-                        @* onDoubleClick="@(() => AdvancedLearningSpaceEditorPresenter.DeleteSelectedAdvancedComponent(advancedComponentDecoration))" *@
                     </AdvancedDraggable>
                 }
             }

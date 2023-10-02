@@ -11,7 +11,7 @@ public interface IAdvancedLearningSpaceEditorPresenter: INotifyPropertyChanged
     IAdvancedLearningSpaceViewModel? AdvancedLearningSpaceViewModel { get; }
     void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj);
     void DragSelectedAdvancedComponent(object sender, DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs);
-    void DeleteSelectedAdvancedComponent();
+    void DeleteAdvancedDecoration(object advancedDecorationViewModel);
     void RightClickOnAdvancedComponent();
     void HideRightClickMenu();
     void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace);
