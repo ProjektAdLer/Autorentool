@@ -184,8 +184,9 @@
             {
                 var entryDoorPosition = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.EntryDoorPosition;
                 {
-                    <AdvancedDraggable
+                    <AdvancedDraggableOnWall
                         LearningObject="entryDoorPosition"
+                        CornerPoints="AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints"
                         @bind-X="entryDoorPosition.X"
                         @bind-Y="entryDoorPosition.Y">
                         <rect width="10" height="30" x="-5" y="-15" fill="green" opacity="80%">
@@ -193,15 +194,16 @@
                                 Entrydoor. Drag along Spaceoutline to place.
                             </title>
                         </rect>
-                    </AdvancedDraggable>
+                    </AdvancedDraggableOnWall>
                 }
             }
             @if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
             {
                 var exitDoorPosition = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.ExitDoorPosition;
                 {
-                    <AdvancedDraggable
+                    <AdvancedDraggableOnWall
                         LearningObject="exitDoorPosition"
+                        CornerPoints="AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints"
                         @bind-X="exitDoorPosition.X"
                         @bind-Y="exitDoorPosition.Y">
                         <rect width="10" height="30" x="-5" y="-15" fill="red" opacity="80%">
@@ -209,7 +211,7 @@
                                 Exitdoor. Drag along Spaceoutline to place.
                             </title>
                         </rect>
-                    </AdvancedDraggable>
+                    </AdvancedDraggableOnWall>
                 }
             }
         </svg>
