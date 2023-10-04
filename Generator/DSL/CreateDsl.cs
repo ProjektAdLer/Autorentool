@@ -462,8 +462,8 @@ public class CreateDsl : ICreateDsl
     {
         return fileContent.Type switch
         {
-            { } type when FileContentIsTextType(type) => "image",
-            { } type when FileContentIsImageType(type) => "text",
+            { } type when FileContentIsTextType(type) => "text",
+            { } type when FileContentIsImageType(type) => "image",
             "h5p" => "h5p",
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),

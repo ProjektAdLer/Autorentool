@@ -14,7 +14,7 @@ namespace GeneratorTest.DSL;
 public class CreateDslUt
 {
     [Test]
-    public void CreateDSL_DefineLogicalExpression_RequirementDefined()
+    public void GenerateAndExportLearningWorldJson_DefineLogicalExpression_RequirementDefined()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -82,7 +82,7 @@ public class CreateDslUt
 
 
     [Test]
-    public void CreateDSL_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
+    public void GenerateAndExportLearningWorldJson_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
     {
         //Arrange
         var mockElement1 = PersistEntityProvider.GetLearningElement(name: "Same Name Element");
@@ -161,7 +161,7 @@ public class CreateDslUt
     }
 
     [Test]
-    public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
+    public void GenerateAndExportLearningWorldJson_WriteLearningWorld_DSLDocumentWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -212,31 +212,49 @@ public class CreateDslUt
                         ele1
                     },
                     {
-                        1,
+                        3,
                         ele2
-                    },
+                    }
+                },
+                FloorPlanName = FloorPlanEnum.R_20X20_6L
+            }
+        };
+        var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = new Dictionary<int, ILearningElementPe>()
+                {
                     {
                         2,
                         ele3
                     },
                     {
-                        3,
+                        5,
                         ele4
-                    },
-                    {
-                        4,
-                        ele5
                     }
-                }
+                },
+                FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
         var space3 = new LearningSpacePe("c", "ff", "ff", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
-                FloorPlanEnum.R_20X30_8L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>(), topic2)
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = new Dictionary<int, ILearningElementPe>()
+                {
+                    {
+                        6,
+                        ele5
+                    }
+                },
+                FloorPlanName = FloorPlanEnum.L_32X31_10L
+            }
+        };
         var space4 = new LearningSpacePe("d", "ff", "ff", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
@@ -268,7 +286,7 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementContentSpace1 = new List<(FileContentPe, string)>
+        var listFileContent = new List<(FileContentPe, string)>
         {
             ((FileContentPe)ele1.LearningContent, ele1.Name),
             ((FileContentPe)ele2.LearningContent, ele2.Name), ((FileContentPe)ele4.LearningContent, ele4.Name),
@@ -288,7 +306,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
-            Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(learningElementContentSpace1));
+            Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(listFileContent));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceName, Is.EqualTo(space1.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].SpaceName, Is.EqualTo(space3.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[2].SpaceName, Is.EqualTo(space2.Name));
@@ -303,12 +321,88 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].RequiredSpacesToEnter,
                 Is.EqualTo("(3)^(2)"));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(5));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementName, Is.EqualTo(ele1.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementId, Is.EqualTo(1));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementUUID, Is.EqualTo(ele1.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementFileType, Is.EqualTo("h5p"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementCategory, Is.EqualTo("h5p"));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementMaxScore,
+                Is.EqualTo(ele1.Points));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementDescription,
+                Is.EqualTo(ele1.Description));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
+                Is.EqualTo(ele1.Goals.Split("\n")));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
+                Is.EqualTo(ele1.ElementModel.ToString()));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementName, Is.EqualTo(ele2.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementId, Is.EqualTo(2));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementUUID, Is.EqualTo(ele2.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementFileType, Is.EqualTo("png"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementCategory, Is.EqualTo("image"));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementMaxScore,
+                Is.EqualTo(ele2.Points));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementDescription,
+                Is.EqualTo(ele2.Description));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
+                Is.EqualTo(ele2.Goals.Split("\n")));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
+                Is.EqualTo(ele2.ElementModel.ToString()));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementName, Is.EqualTo(ele5.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementId, Is.EqualTo(3));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementUUID, Is.EqualTo(ele5.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementFileType, Is.EqualTo("pdf"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementCategory, Is.EqualTo("pdf"));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementMaxScore,
+                Is.EqualTo(ele5.Points));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementDescription,
+                Is.EqualTo(ele5.Description));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
+                Is.EqualTo(ele5.Goals.Split("\n")));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
+                Is.EqualTo(ele5.ElementModel.ToString()));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementName, Is.EqualTo(ele3.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementId, Is.EqualTo(4));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementUUID, Is.EqualTo(ele3.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementFileType, Is.EqualTo("url"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementCategory, Is.EqualTo("video"));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementMaxScore,
+                Is.EqualTo(ele5.Points));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementDescription,
+                Is.EqualTo(ele5.Description));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementGoals,
+                Is.EqualTo(ele5.Goals.Split("\n")));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementModel,
+                Is.EqualTo(ele5.ElementModel.ToString()));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementName, Is.EqualTo(ele4.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementId, Is.EqualTo(5));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementUUID, Is.EqualTo(ele4.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementFileType, Is.EqualTo("txt"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementCategory, Is.EqualTo("text"));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[4]).ElementMaxScore,
+                Is.EqualTo(ele4.Points));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[4]).ElementDescription,
+                Is.EqualTo(ele4.Description));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[4]).ElementGoals,
+                Is.EqualTo(ele4.Goals.Split("\n")));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[4]).ElementModel,
+                Is.EqualTo(ele4.ElementModel.ToString()));
+            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[4]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
     }
 
     [Test]
-    public void CreateDSL_WriteLearningWorld_UnsupportedTypeExceptionThrown()
+    public void GenerateAndExportLearningWorldJson_WriteLearningWorld_UnsupportedTypeExceptionThrown()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -367,7 +461,7 @@ public class CreateDslUt
     }
 
     [Test]
-    public void WriteLearningWorld_UnsupportedFloorPlanNameExceptionThrown()
+    public void GenerateAndExportLearningWorldJson_UnsupportedFloorPlanNameExceptionThrown()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -415,7 +509,7 @@ public class CreateDslUt
     }
 
     [Test]
-    public void WriteLearningWorld_InvalidLearningContentTypeExceptionThrown()
+    public void GenerateAndExportLearningWorldJson_InvalidLearningContentTypeExceptionThrown()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
