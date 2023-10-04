@@ -58,8 +58,8 @@ public class R20X206LViewModel : IFloorPlanViewModel
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point {X = 0, Y = 8}, new Point {X = 0, Y = 12}),
-        (new Point {X = 8, Y = 20}, new Point {X = 12, Y = 20})
+        (new Point {X = 0, Y = 13}, new Point {X = 0, Y = 8}),
+        (new Point {X = 8, Y = 20}, new Point {X = 11, Y = 20})
     };
 
     public string GetIcon => Icon;
