@@ -107,6 +107,7 @@ public static class ViewModelProvider
     {
         var world = GetLearningWorld();
         var space = GetLearningSpaceWithElement();
+        space.RequiredPoints = 1;
         world.LearningSpaces.Add(space);
         return world;
     }

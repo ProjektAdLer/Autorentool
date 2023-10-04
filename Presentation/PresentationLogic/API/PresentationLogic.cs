@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
@@ -61,7 +62,8 @@ public class PresentationLogic : IPresentationLogic
         ISpaceCommandFactory spaceCommandFactory,
         ITopicCommandFactory topicCommandFactory,
         IWorldCommandFactory worldCommandFactory,
-        IBatchCommandFactory batchCommandFactory)
+        IBatchCommandFactory batchCommandFactory,
+        IFileSystem fileSystem)
     {
         Logger = logger;
         Configuration = configuration;
@@ -80,6 +82,7 @@ public class PresentationLogic : IPresentationLogic
         TopicCommandFactory = topicCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
+        FileSystem = fileSystem;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
 
@@ -98,6 +101,7 @@ public class PresentationLogic : IPresentationLogic
     public ITopicCommandFactory TopicCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
+    internal IFileSystem FileSystem { get; }
 
     public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
@@ -113,15 +117,6 @@ public class PresentationLogic : IPresentationLogic
     {
         add => BusinessLogic.OnCommandUndoRedoOrExecute += value;
         remove => BusinessLogic.OnCommandUndoRedoOrExecute -= value;
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.ConstructBackupAsync"/>
-    public async Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel)
-    {
-        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
-        BusinessLogic.ConstructBackup(entity, filepath);
-        return filepath;
     }
 
     /// <inheritdoc cref="IPresentationLogic.UndoCommand"/>
@@ -947,10 +942,23 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public async Task UploadLearningWorldToBackendAsync(string filepath,
-        IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
+    public async Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+        CancellationToken cancellationToken)
     {
-        await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
+        var basePath = ApplicationPaths.SavedWorldsFolder;
+        var fileName = $"{world.Name}.mbz";
+        var filepath = Path.Join(basePath, fileName);
+        try
+        {
+            BusinessLogic.ConstructBackup(entity, filepath);
+            await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+        }
+        finally
+        {
+            //delete file after upload or exception
+            FileSystem.File.Delete(filepath);
+        }
     }
 
     #endregion

@@ -42,17 +42,6 @@ public interface IPresentationLogic
     bool CanRedo { get; }
 
     /// <summary>
-    /// Asynchronously constructs a backup for a Learning World.
-    /// </summary>
-    /// <param name="learningWorldViewModel">The Learning World view model to backup.</param>
-    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. 
-    /// The task result contains the file path of the backup.</returns>
-    /// <remarks>
-    /// This method prompts the user to select a file for saving the backup, and then constructs the backup using the selected file path.
-    /// </remarks>
-    Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
-
-    /// <summary>
     /// Calls the business logic method to undo the last executed command.
     /// </summary>
     void UndoCommand();
@@ -553,8 +542,7 @@ public interface IPresentationLogic
     Task Login(string username, string password);
     void Logout();
 
-    Task UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
-        CancellationToken? cancellationToken = null);
-
+    Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+        CancellationToken cancellationToken);
     #endregion
 }

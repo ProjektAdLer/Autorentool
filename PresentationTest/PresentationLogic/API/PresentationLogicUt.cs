@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -107,6 +109,7 @@ public class PresentationLogicUt
         //Arrange
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockFileSystem = new MockFileSystem();
         mockDialogManager
             .ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
             .Returns("supersecretfilepath");
@@ -116,14 +119,24 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(viewModel).Returns(entity);
         var serviceProvider = new ServiceCollection();
         serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
+        var mockProgress = Substitute.For<IProgress<int>>();
+        var cancellationToken = new CancellationToken();
+        var expectedFilepath = Path.Join(ApplicationPaths.SavedWorldsFolder, viewModel.Name + ".mbz");
+
+        mockBusinessLogic
+            .When(x => x.ConstructBackup(entity, expectedFilepath))
+            .Do(_ => mockFileSystem.AddFile(expectedFilepath, new MockFileData("whatever")));
 
         var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic, mockMapper,
-            serviceProvider: serviceProvider.BuildServiceProvider());
+            serviceProvider: serviceProvider.BuildServiceProvider(), fileSystem: mockFileSystem);
         //Act
-        await systemUnderTest.ConstructBackupAsync(viewModel);
+        await systemUnderTest.ConstructAndUploadBackupAsync(viewModel, mockProgress, cancellationToken);
 
         //Assert
-        mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath.mbz");
+        mockBusinessLogic.Received().ConstructBackup(entity, expectedFilepath);
+        await mockBusinessLogic.Received()
+            .UploadLearningWorldToBackendAsync(expectedFilepath, mockProgress, cancellationToken);
+        Assert.That(mockFileSystem.FileExists(expectedFilepath), Is.False);
     }
 
     [Test]
@@ -2166,21 +2179,6 @@ public class PresentationLogicUt
         mockBusinessLogic.Received().Logout();
     }
 
-    [Test]
-    public async Task UploadLearningWorldToBackend_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockProgress = Substitute.For<IProgress<int>>();
-        const string filepath = "filepath";
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-
-        var cancellationToken = new CancellationToken();
-        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress, cancellationToken);
-
-        await mockBusinessLogic.Received().UploadLearningWorldToBackendAsync(filepath, mockProgress, cancellationToken);
-    }
-
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IApplicationConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
@@ -2195,7 +2193,8 @@ public class PresentationLogicUt
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
-        IBatchCommandFactory? batchCommandFactory = null)
+        IBatchCommandFactory? batchCommandFactory = null,
+        IFileSystem? fileSystem = null)
     {
         configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -2206,6 +2205,7 @@ public class PresentationLogicUt
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
+        fileSystem ??= new MockFileSystem();
 
         taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
@@ -2221,6 +2221,6 @@ public class PresentationLogicUt
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger,
             hybridSupportWrapper, shellWrapper, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
             layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory,
-            batchCommandFactory);
+            batchCommandFactory, fileSystem);
     }
 }
