@@ -13,7 +13,45 @@ namespace Generator.XmlClasses;
 /// </summary>
 public class XmlCourseFactory : IXmlCourseFactory
 {
-    private LearningWorldJson _learningWorld;
+    private ILearningWorldJson _learningWorld;
+    public IReadDsl ReadDsl;
+
+
+    public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory = null,
+        ICourseCourseXmlCourse? courseCourseXmlCourse = null,
+        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual = null,
+        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest = null,
+        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolSelf = null,
+        ICourseEnrolmentsXmlEnrols? courseEnrolmentsXmlEnrols = null,
+        ICourseEnrolmentsXmlEnrolments? courseEnrolmentsXmlEnrolments = null,
+        ICourseInforefXmlRole? courseInforefXmlRole = null,
+        ICourseInforefXmlRoleref? courseInforefXmlRoleref = null,
+        ICourseInforefXmlInforef? courseInforefXmlInforef = null,
+        ICourseRolesXmlRoles? courseRolesXmlRoles = null,
+        ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null)
+    {
+        CourseCourseXmlCategory = courseCourseXmlCategory ?? new CourseCourseXmlCategory();
+        CourseCourseXmlCourse = courseCourseXmlCourse ?? new CourseCourseXmlCourse();
+
+        CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrolManual ?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrolGuest ?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolSelf = courseEnrolmentsXmlEnrolSelf ?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrols = courseEnrolmentsXmlEnrols ?? new CourseEnrolmentsXmlEnrols();
+        CourseEnrolmentsXmlEnrolments = courseEnrolmentsXmlEnrolments ?? new CourseEnrolmentsXmlEnrolments();
+
+        CourseInforefXmlRole = courseInforefXmlRole ?? new CourseInforefXmlRole();
+        CourseInforefXmlRoleref = courseInforefXmlRoleref ?? new CourseInforefXmlRoleref();
+        CourseInforefXmlInforef = courseInforefXmlInforef ?? new CourseInforefXmlInforef();
+
+        CourseRolesXmlRoles = courseRolesXmlRoles ?? new CourseRolesXmlRoles();
+
+        CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault ??
+                                                             new CourseCompletiondefaultXmlCourseCompletionDefaults();
+
+        ReadDsl = readDsl;
+        _learningWorld = ReadDsl.GetLearningWorld();
+    }
+
     internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
     internal ICourseCourseXmlCourse CourseCourseXmlCourse { get; }
     internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolManual { get; }
@@ -25,40 +63,12 @@ public class XmlCourseFactory : IXmlCourseFactory
     internal ICourseInforefXmlRole CourseInforefXmlRole { get; }
     internal ICourseInforefXmlRoleref CourseInforefXmlRoleref { get; }
     internal ICourseRolesXmlRoles CourseRolesXmlRoles { get; }
-    internal ICourseCompletiondefaultXmlCourseCompletionDefaults CourseCompletiondefaultXmlCourseCompletionDefaults { get; }
-    public IReadDsl ReadDsl;
 
-    
-    
-    public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory=null, ICourseCourseXmlCourse? courseCourseXmlCourse=null,
-        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual=null, ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest=null,
-        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolSelf=null, ICourseEnrolmentsXmlEnrols? courseEnrolmentsXmlEnrols=null, 
-        ICourseEnrolmentsXmlEnrolments? courseEnrolmentsXmlEnrolments=null, ICourseInforefXmlRole? courseInforefXmlRole=null, 
-        ICourseInforefXmlRoleref? courseInforefXmlRoleref=null, ICourseInforefXmlInforef? courseInforefXmlInforef=null, 
-        ICourseRolesXmlRoles? courseRolesXmlRoles=null, ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault=null)
+    internal ICourseCompletiondefaultXmlCourseCompletionDefaults CourseCompletiondefaultXmlCourseCompletionDefaults
     {
-        
-        CourseCourseXmlCategory = courseCourseXmlCategory?? new CourseCourseXmlCategory();
-        CourseCourseXmlCourse = courseCourseXmlCourse?? new CourseCourseXmlCourse();
-
-        CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrolManual?? new CourseEnrolmentsXmlEnrol();
-        CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrolGuest?? new CourseEnrolmentsXmlEnrol();
-        CourseEnrolmentsXmlEnrolSelf = courseEnrolmentsXmlEnrolSelf?? new CourseEnrolmentsXmlEnrol();
-        CourseEnrolmentsXmlEnrols = courseEnrolmentsXmlEnrols?? new CourseEnrolmentsXmlEnrols();
-        CourseEnrolmentsXmlEnrolments = courseEnrolmentsXmlEnrolments?? new CourseEnrolmentsXmlEnrolments();
-
-        CourseInforefXmlRole = courseInforefXmlRole?? new CourseInforefXmlRole();
-        CourseInforefXmlRoleref = courseInforefXmlRoleref?? new CourseInforefXmlRoleref();
-        CourseInforefXmlInforef = courseInforefXmlInforef?? new CourseInforefXmlInforef();
-
-        CourseRolesXmlRoles = courseRolesXmlRoles?? new CourseRolesXmlRoles();
-        
-        CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault?? new CourseCompletiondefaultXmlCourseCompletionDefaults();
-        
-        ReadDsl = readDsl;
-        _learningWorld = ReadDsl.GetLearningWorld();
+        get;
     }
-    
+
     /// <summary>
     /// Use all the methods of the current class
     /// </summary>
@@ -66,21 +76,21 @@ public class XmlCourseFactory : IXmlCourseFactory
     {
         //Sets the parameter and creates Course/course.xml
         CreateCourseCourseXml();
-        
+
         //Sets the parameter and creates Course/enrolments.xml
         CreateCourseEnrolmentsXml();
-        
+
         //Sets the parameter and creates Course/inforef.xml
         CreateCourseInforefXml();
-        
+
         //Sets the parameter and creates Course/roles.xml
         CreateCourseRolesXml();
-        
+
         //Sets the parameter and creates Course/completiondefault.xml
         CreateCourseCompletiondefault();
     }
-    
-    
+
+
     public void CreateCourseCourseXml()
     {
         //set parameters of the course/course.xml file
@@ -97,11 +107,12 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
         CourseCourseXmlCourse.IdNumber = _learningWorld.WorldName;
-        CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
+        CourseCourseXmlCourse.Category =
+            CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
         CourseCourseXmlCourse.PluginLocalAdlerCourse.AdlerCourse.Uuid = _learningWorld.WorldUUID;
-        
+
         //create course/course.xml file
-        CourseCourseXmlCourse.Serialize(); 
+        CourseCourseXmlCourse.Serialize();
     }
 
     public void CreateCourseEnrolmentsXml()
@@ -113,7 +124,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolManual.RoleId = "5";
         CourseEnrolmentsXmlEnrolManual.EnrolMethod = "manual";
         CourseEnrolmentsXmlEnrolManual.Status = "1";
-        
+
         CourseEnrolmentsXmlEnrolGuest.Id = "2";
         CourseEnrolmentsXmlEnrolGuest.RoleId = "0";
         CourseEnrolmentsXmlEnrolGuest.EnrolMethod = "guest";
@@ -130,12 +141,16 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolSelf.CustomInt5 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt6 = "1";
 
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol ??
+                                            new CourseEnrolmentsXmlEnrol());
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol ??
+                                            new CourseEnrolmentsXmlEnrol());
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol ??
+                                            new CourseEnrolmentsXmlEnrol());
 
-        CourseEnrolmentsXmlEnrolments.Enrols = CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols ?? new CourseEnrolmentsXmlEnrols();
-        
+        CourseEnrolmentsXmlEnrolments.Enrols =
+            CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols ?? new CourseEnrolmentsXmlEnrols();
+
         //create course/enrolments.xml file
         CourseEnrolmentsXmlEnrolments.Serialize();
     }
@@ -144,8 +159,9 @@ public class XmlCourseFactory : IXmlCourseFactory
     {
         //set parameters of the course/inforef.xml file
         CourseInforefXmlRoleref.Role = CourseInforefXmlRole as CourseInforefXmlRole ?? new CourseInforefXmlRole();
-        CourseInforefXmlInforef.Roleref = CourseInforefXmlRoleref as CourseInforefXmlRoleref ?? new CourseInforefXmlRoleref();
-        
+        CourseInforefXmlInforef.Roleref =
+            CourseInforefXmlRoleref as CourseInforefXmlRoleref ?? new CourseInforefXmlRoleref();
+
         //create course/inforef.xml file
         CourseInforefXmlInforef.Serialize();
     }
@@ -162,5 +178,4 @@ public class XmlCourseFactory : IXmlCourseFactory
         //The file is empty, therefore no parameters need to be set yet.
         CourseCompletiondefaultXmlCourseCompletionDefaults.Serialize();
     }
-
 }

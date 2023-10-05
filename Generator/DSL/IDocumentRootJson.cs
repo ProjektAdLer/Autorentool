@@ -1,7 +1,9 @@
-﻿
+﻿using System.Text.Json.Serialization;
+
 namespace Generator.DSL;
 
+[JsonDerivedType(typeof(DocumentRootJson), typeDiscriminator: JsonTypes.AtfType)]
 public interface IDocumentRootJson
 {
-    LearningWorldJson World { get; set; }
+    ILearningWorldJson World { get; set; }
 }

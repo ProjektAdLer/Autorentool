@@ -17,7 +17,7 @@ public class ReadDslUt
         var mockLogger = Substitute.For<ILogger<ReadDsl>>();
 
         var topicsJson = new TopicJson(1, "A", new List<int> { 1, 2 });
-        var topicsList = new List<TopicJson> { topicsJson };
+        var topicsList = new List<ITopicJson> { topicsJson };
 
         var learningSpacesJson1 = new LearningSpaceJson(1, "",
             "space1", new List<int?> { 1, 2 }, 0, "spacedescription1", "", "", new[] { "spacegoals1" });
@@ -25,7 +25,7 @@ public class ReadDslUt
         var learningSpacesJson2 = new LearningSpaceJson(2, "", "space2",
             new List<int?>(), 0, "", "", "", new[] { "spacegoals2" });
 
-        var learningSpacesList = new List<LearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
+        var learningSpacesList = new List<ILearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
 
         var learningElementJson1 = new LearningElementJson(1,
             "", "element1", "", "", "h5p", 1, 1, "");
@@ -39,7 +39,7 @@ public class ReadDslUt
         var learningElementJson4 = new LearningElementJson(4,
             "", "element4", "", "", "label", 1, 4, "");
 
-        var learningElementList = new List<LearningElementJson>
+        var learningElementList = new List<IElementJson>
             { learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4 };
 
         var learningWorldJson = new LearningWorldJson("world", "",
@@ -93,12 +93,12 @@ public class ReadDslUt
 
         var topicsJson = new TopicJson(1, "A",
             new List<int> { 1, 2 });
-        var topicsList = new List<TopicJson> { topicsJson };
+        var topicsList = new List<ITopicJson> { topicsJson };
 
 
         var learningWorldJson = new LearningWorldJson("world", "",
-            topicsList, new List<LearningSpaceJson>(),
-            new List<LearningElementJson>(), "", new[] { "" });
+            topicsList, new List<ILearningSpaceJson>(),
+            new List<IElementJson>(), "", new[] { "" });
 
         var rootJson = new DocumentRootJson("0.3", "0.3.2", "marvin", "de", learningWorldJson);
 

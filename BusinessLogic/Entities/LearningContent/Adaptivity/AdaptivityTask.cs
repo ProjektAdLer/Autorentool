@@ -84,7 +84,7 @@ public class AdaptivityTask : IAdaptivityTask
         internal AdaptivityTaskMemento(ICollection<IAdaptivityQuestion> questions,
             QuestionDifficulty? minimumRequiredDifficulty, string name)
         {
-            Questions = questions;
+            Questions = questions.ToList();
             MinimumRequiredDifficulty = minimumRequiredDifficulty;
             Name = name;
         }

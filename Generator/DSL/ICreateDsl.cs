@@ -9,6 +9,5 @@ public interface ICreateDsl
     /// </summary>
     /// <param name="learningWorld">The learning world to be written to the DSL document</param>
     /// <exception cref="ArgumentOutOfRangeException">The world contains an element whos content type is not supported.</exception>
-    /// Information about the learningWorld, topics, spaces and elements
-    string WriteLearningWorld(LearningWorldPe learningWorld);
+    string GenerateAndExportLearningWorldJson(LearningWorldPe learningWorld);
 }

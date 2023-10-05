@@ -47,7 +47,10 @@
 
     private void OnFloorPlanButtonSelected(FloorPlanEnum floorPlan, MouseEventArgs args)
     {
-        LearningSpacePresenter.SetLearningSpaceLayout(floorPlan);
+        if (LearningSpaceViewModel.LearningSpaceLayout.FloorPlanName != floorPlan)
+        {
+            LearningSpacePresenter.SetLearningSpaceLayout(floorPlan);
+        }
     }
 
     private bool IsFloorPlanActive(FloorPlanEnum floorPlan)

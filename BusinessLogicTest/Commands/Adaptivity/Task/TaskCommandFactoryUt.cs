@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Shared.Adaptivity;
 using TestHelpers;
 
-namespace BusinessLogicTest.Commands.Adaptivity;
+namespace BusinessLogicTest.Commands.Adaptivity.Task;
 
 [TestFixture]
 public class TaskCommandFactoryUt

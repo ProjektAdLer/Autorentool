@@ -1,6 +1,7 @@
 using AutoMapper;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
-using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -10,19 +11,20 @@ namespace AuthoringTool.Mapping;
 
 public class ViewModelFormModelMappingProfile : Profile
 {
-    public static Action<IMapperConfigurationExpression> Configure => cfg =>
-    {
-        cfg.AddProfile(new ViewModelFormModelMappingProfile());
-        cfg.AddCollectionMappersOnce();
-    };
-    
     private ViewModelFormModelMappingProfile()
     {
         CreateWorldMap();
         CreateSpaceMap();
         CreateElementMap();
         CreateLinkContentMap();
+        CreateAdaptivityQuestionMap();
     }
+
+    public static Action<IMapperConfigurationExpression> Configure => cfg =>
+    {
+        cfg.AddProfile(new ViewModelFormModelMappingProfile());
+        cfg.AddCollectionMappersOnce();
+    };
 
     private void CreateLinkContentMap()
     {
@@ -46,5 +48,14 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         CreateMap<LearningWorldViewModel, LearningWorldFormModel>()
             .ReverseMap();
+    }
+
+    private void CreateAdaptivityQuestionMap()
+    {
+        CreateMap<IMultipleChoiceQuestionViewModel, MultipleChoiceQuestionFormModel>();
+        CreateMap<MultipleChoiceMultipleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => false));
+        CreateMap<MultipleChoiceSingleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => true));
     }
 }
