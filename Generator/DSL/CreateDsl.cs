@@ -255,6 +255,8 @@ public class CreateDsl : ICreateDsl
 
             learningSpaceId++;
         }
+
+        LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
     }
 
     /// <summary>
