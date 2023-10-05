@@ -1,0 +1,22 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Shared.Adaptivity
+@using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
+<MudDialog>
+    <DialogContent>
+        <AdaptivityQuestionFormContainer Task="Task" Difficulty="Difficulty" QuestionToEdit="Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty)"></AdaptivityQuestionFormContainer>
+    </DialogContent>
+</MudDialog>
+
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IAdaptivityTaskViewModel Task { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public QuestionDifficulty Difficulty { get; set; }
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = default!;
+
+}

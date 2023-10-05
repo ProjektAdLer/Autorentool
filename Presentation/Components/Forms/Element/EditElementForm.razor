@@ -262,9 +262,9 @@
         };
         var parameters = new DialogParameters
         {
-            {nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent}
+            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent }
         };
-        var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>("AdaptivityContentDialogTitle", parameters, options);
+        var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>(Localizer["EditElementForm.AdaptivityContent.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
     }

@@ -6,6 +6,7 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -14,8 +15,10 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.Validation;
+using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using FluentValidation;
@@ -155,6 +158,10 @@ public class Startup
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
+        services.AddSingleton<IValidator<MultipleChoiceSingleResponseQuestion>,
+            MultipleChoiceSingleResponseQuestionValidator>();
+        services.AddSingleton<IValidator<MultipleChoiceMultipleResponseQuestion>,
+            MultipleChoiceMultipleResponseQuestionValidator>();
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
@@ -260,6 +267,7 @@ public class Startup
 
     private void ConfigureCommandFactories(IServiceCollection services)
     {
+        services.AddSingleton<IQuestionCommandFactory, QuestionCommandFactory>();
         services.AddSingleton<ITaskCommandFactory, TaskCommandFactory>();
         services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
         services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();

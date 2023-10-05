@@ -23,7 +23,7 @@ public static class PersistEntityProvider
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, "LSPg" + append, 4,
             Theme.Campus,
-            learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
+            learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan)),
             positionX, positionY, inBoundObjects, outBoundObjects, assignedTopic);
     }
 
@@ -101,14 +101,14 @@ public static class PersistEntityProvider
 
     public static IAdaptivityContentPe GetAdaptivityContent()
     {
-        var tasks = new List<IAdaptivityTaskPe> { GetAdaptivityTask() };
+        var tasks = new List<IAdaptivityTaskPe> {GetAdaptivityTask()};
         return new AdaptivityContentPe("foo", tasks);
     }
 
     public static IAdaptivityContentPe GetAdaptivityContentFullStructure()
     {
         var tasks = new List<IAdaptivityTaskPe>
-            { GetAdaptivityTask(), GetAdaptivityTask(GetMultipleChoiceMultipleResponseAdaptivityQuestion()) };
+            {GetAdaptivityTask(), GetAdaptivityTask(GetMultipleChoiceMultipleResponseAdaptivityQuestion())};
         tasks[1].Questions.First().Rules.Add(GetAdaptivityRule(GetTimeTrigger(), GetContentReferenceAction()));
         tasks[1].Questions.First().Rules.Add(GetAdaptivityRule(GetCompositeTrigger(), GetElementReferenceAction()));
         return new AdaptivityContentPe("foo", tasks);
@@ -147,7 +147,7 @@ public static class PersistEntityProvider
     {
         return new TimeTriggerPe(123, TimeFrameType.Until);
     }
-    
+
     private static IAdaptivityTriggerPe GetCompositeTrigger()
     {
         return new CompositeTriggerPe(ConditionEnum.And, GetCorrectnessTrigger(), GetTimeTrigger());
@@ -156,25 +156,24 @@ public static class PersistEntityProvider
     private static IAdaptivityTaskPe GetAdaptivityTask(IAdaptivityQuestionPe? question = null)
     {
         question ??= GetMultipleChoiceSingleResponseAdaptivityQuestion();
-        var questions = new List<IAdaptivityQuestionPe> { question };
+        var questions = new List<IAdaptivityQuestionPe> {question};
         return new AdaptivityTaskPe(questions, QuestionDifficulty.Hard, "taskname");
     }
 
     private static IAdaptivityQuestionPe GetMultipleChoiceSingleResponseAdaptivityQuestion()
     {
-        var choices = new List<ChoicePe> { GetAdaptivityChoice() };
-        var rules = new List<IAdaptivityRulePe> { GetAdaptivityRule() };
-        return new MultipleChoiceSingleResponseQuestionPe(123, choices, "questiontext", choices[0],
-            QuestionDifficulty.Easy,
-            rules);
+        var choices = new List<ChoicePe> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRulePe> {GetAdaptivityRule()};
+        return new MultipleChoiceSingleResponseQuestionPe("questionTitle", 123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy, rules);
     }
 
     private static IAdaptivityQuestionPe GetMultipleChoiceMultipleResponseAdaptivityQuestion()
     {
-        var choices = new List<ChoicePe> { GetAdaptivityChoice() };
-        var rules = new List<IAdaptivityRulePe> { GetAdaptivityRule() };
-        return new MultipleChoiceMultipleResponseQuestionPe(123, choices, choices, rules, "questiontext",
-            QuestionDifficulty.Easy);
+        var choices = new List<ChoicePe> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRulePe> {GetAdaptivityRule()};
+        return new MultipleChoiceMultipleResponseQuestionPe("questionTitle", 123, choices, choices, rules,
+            "questionText", QuestionDifficulty.Easy);
     }
 
     private static ChoicePe GetAdaptivityChoice()

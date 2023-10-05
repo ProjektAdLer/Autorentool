@@ -124,6 +124,7 @@ public static class EntityProvider
             nameof(LearningSpace) => GetLearningSpace() as TEntity,
             nameof(LearningElement) => GetLearningElement() as TEntity,
             nameof(LinkContent) => GetLinkContent() as TEntity,
+            nameof(IMultipleChoiceQuestion) => GetMultipleChoiceMultipleResponseQuestion() as TEntity,
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
@@ -163,9 +164,25 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestion(123, choices, "questiontext", choices[0],
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy,
             rules);
+    }
+
+    public static MultipleChoiceMultipleResponseQuestion GetMultipleChoiceMultipleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceMultipleResponseQuestion("questionTitle", 123, choices, choices, rules, "questionText",
+            QuestionDifficulty.Easy);
+    }
+
+    public static MultipleChoiceSingleResponseQuestion GetMultipleChoiceSingleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy, rules);
     }
 
     private static Choice GetAdaptivityChoice()

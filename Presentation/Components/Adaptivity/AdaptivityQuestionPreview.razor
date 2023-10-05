@@ -1,0 +1,54 @@
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Shared.Adaptivity
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+<MudCard Outlined="true" Style="padding: 4px; outline: thin solid black;">
+    <MudText Typo="Typo.h5">
+        @(
+                        AdaptivityQuestion.Difficulty switch
+                        {
+                            QuestionDifficulty.Easy=> Localizer["AdaptivityQuestionPreview.Header.EasyQuestion"],
+                            QuestionDifficulty.Medium=> Localizer["AdaptivityQuestionPreview.Header.MediumQuestion"],
+                            QuestionDifficulty.Hard=> Localizer["AdaptivityQuestionPreview.Header.HardQuestion"],
+                            _ => ""
+                            }
+            )
+    </MudText>
+
+    <MudText Typo="Typo.h6">@AdaptivityQuestion.Title</MudText>
+    <MudText Typo="Typo.body1">
+        @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
+        {
+            <p>@multipleChoiceQuestion.Text</p>
+        }
+    </MudText>
+    @foreach (var rule in AdaptivityQuestion.Rules)
+    {
+        @switch (rule.Action)
+        {
+            case CommentActionViewModel commentAction:
+                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
+                <MudText Typo="Typo.body1">@commentAction.Comment</MudText>
+                break;
+            case ContentReferenceActionViewModel contentReferenceAction:
+                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
+                <MudText Typo="Typo.body1">@contentReferenceAction.Content</MudText>
+                break;
+            case ElementReferenceActionViewModel elementReferenceAction:
+                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
+                <MudText Typo="Typo.body1">@elementReferenceAction.ElementId</MudText>
+                break;
+        }
+    }
+
+</MudCard>
+
+@code {
+
+    [Inject]
+    internal IStringLocalizer<AdaptivityQuestionPreview> Localizer { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public IAdaptivityQuestionViewModel AdaptivityQuestion { get; set; } = null!;
+
+}

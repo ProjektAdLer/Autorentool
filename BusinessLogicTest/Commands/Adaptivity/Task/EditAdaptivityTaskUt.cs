@@ -1,11 +1,11 @@
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
-using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared.Adaptivity;
+using TestHelpers;
 
-namespace BusinessLogicTest.Commands.Adaptivity;
+namespace BusinessLogicTest.Commands.Adaptivity.Task;
 
 [TestFixture]
 public class EditAdaptivityTaskUt
@@ -14,31 +14,50 @@ public class EditAdaptivityTaskUt
     public void Execute_EditsAdaptivityTask()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Easy, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        var oldName = adaptivityTask.Name;
         var name = "NewTaskName";
+        Assert.That(oldName, Is.Not.EqualTo(name));
         var minimumRequiredDifficulty = QuestionDifficulty.Medium;
+        var oldMinimumRequiredDifficulty = adaptivityTask.MinimumRequiredDifficulty;
+        Assert.That(oldMinimumRequiredDifficulty, Is.Not.EqualTo(minimumRequiredDifficulty));
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditAdaptivityTask(adaptivityTask, name, minimumRequiredDifficulty, mappingAction,
             new NullLogger<EditAdaptivityTask>());
 
+        // Assert before execution
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Name, Is.EqualTo(oldName));
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(oldMinimumRequiredDifficulty));
+            Assert.That(actionWasInvoked, Is.False);
+        });
+
         // Act
         command.Execute();
 
         // Assert
-        Assert.That(adaptivityTask.Name, Is.EqualTo(name));
-        Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(minimumRequiredDifficulty));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Name, Is.EqualTo(name));
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(minimumRequiredDifficulty));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
     public void Undo_UndoesEditAdaptivityTask()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Easy, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        var oldName = adaptivityTask.Name;
         var name = "NewTaskName";
+        Assert.That(oldName, Is.Not.EqualTo(name));
+        var oldMinimumRequiredDifficulty = adaptivityTask.MinimumRequiredDifficulty;
         var minimumRequiredDifficulty = QuestionDifficulty.Medium;
+        Assert.That(oldMinimumRequiredDifficulty, Is.Not.EqualTo(minimumRequiredDifficulty));
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
 
@@ -51,16 +70,19 @@ public class EditAdaptivityTaskUt
         command.Undo();
 
         // Assert
-        Assert.That(adaptivityTask.Name, Is.EqualTo("Task1"));
-        Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(QuestionDifficulty.Easy));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Name, Is.EqualTo(oldName));
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(oldMinimumRequiredDifficulty));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
     public void Redo_RedoEditsAdaptivityTask()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Easy, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var name = "NewTaskName";
         var minimumRequiredDifficulty = QuestionDifficulty.Medium;
         var actionWasInvoked = false;
@@ -76,16 +98,19 @@ public class EditAdaptivityTaskUt
         command.Redo();
 
         // Assert
-        Assert.That(adaptivityTask.Name, Is.EqualTo(name));
-        Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(minimumRequiredDifficulty));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Name, Is.EqualTo(name));
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(minimumRequiredDifficulty));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
         // Arrange
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Easy, "Task1");
+        var adaptivityTask = EntityProvider.GetAdaptivityTask();
         var name = "NewTaskName";
         var minimumRequiredDifficulty = QuestionDifficulty.Medium;
         var actionWasInvoked = false;

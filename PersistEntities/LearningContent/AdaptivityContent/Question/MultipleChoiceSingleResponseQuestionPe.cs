@@ -10,10 +10,12 @@ namespace PersistEntities.LearningContent.Question;
 [KnownType(typeof(AdaptivityRulePe))]
 public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
 {
-    public MultipleChoiceSingleResponseQuestionPe(int expectedCompletionTime, ICollection<ChoicePe> choices,
-        string text, ChoicePe correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRulePe> rules)
+    public MultipleChoiceSingleResponseQuestionPe(string title, int expectedCompletionTime,
+        ICollection<ChoicePe> choices, string text, ChoicePe correctChoice, QuestionDifficulty difficulty,
+        ICollection<IAdaptivityRulePe> rules)
     {
         Id = Guid.NewGuid();
+        Title = title;
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         Text = text;
@@ -28,6 +30,7 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
     private MultipleChoiceSingleResponseQuestionPe()
     {
         Id = Guid.Empty;
+        Title = null!;
         ExpectedCompletionTime = 0;
         Choices = null!;
         Text = null!;
@@ -36,15 +39,17 @@ public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
         Rules = null!;
     }
 
-    [IgnoreDataMember] public Guid Id { get; private set; }
     [DataMember] public ChoicePe CorrectChoice { get; set; }
+
+    [IgnoreDataMember] public Guid Id { get; private set; }
+    [DataMember] public string Title { get; set; }
     [DataMember] public int ExpectedCompletionTime { get; set; }
     [DataMember] public QuestionDifficulty Difficulty { get; set; }
     [DataMember] public ICollection<IAdaptivityRulePe> Rules { get; set; }
     [DataMember] public ICollection<ChoicePe> Choices { get; set; }
-    [IgnoreDataMember] public ICollection<ChoicePe> CorrectChoices => new List<ChoicePe> { CorrectChoice };
+    [IgnoreDataMember] public ICollection<ChoicePe> CorrectChoices => new List<ChoicePe> {CorrectChoice};
     [DataMember] public string Text { get; set; }
-    
+
     [OnDeserializing]
     [UsedImplicitly]
     private void OnDeserializing(StreamingContext context)
