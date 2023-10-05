@@ -223,16 +223,16 @@ public class CreateDslUt
             new ContentReferenceActionPe(content6));
 
         var question1 =
-            new MultipleChoiceSingleResponseQuestionPe(0,
-                new List<ChoicePe> { choice1, choice2 }, "Die Stadt Aschaffenburg hat insgesamt 10 Stadtteile", choice1,
-                QuestionDifficulty.Easy, new List<IAdaptivityRulePe> { rule1 });
-        var question2 = new MultipleChoiceMultipleResponseQuestionPe(0,
-            new List<ChoicePe> { choice3, choice4, choice5, choice6 }, new List<ChoicePe> { choice3, choice4 },
-            new List<IAdaptivityRulePe> { rule2 }, "Welche der folgenden Stadtteile gehören zu Aschaffenburg?",
+            new MultipleChoiceSingleResponseQuestionPe("Aschaffenburg Stadtteile einfach", 0,
+                new List<ChoicePe> {choice1, choice2}, "Die Stadt Aschaffenburg hat insgesamt 10 Stadtteile", choice1,
+                QuestionDifficulty.Easy, new List<IAdaptivityRulePe> {rule1});
+        var question2 = new MultipleChoiceMultipleResponseQuestionPe("Aschaffenburg Stadtteile mittelschwer", 0,
+            new List<ChoicePe> {choice3, choice4, choice5, choice6}, new List<ChoicePe> {choice3, choice4},
+            new List<IAdaptivityRulePe> {rule2}, "Welche der folgenden Stadtteile gehören zu Aschaffenburg?",
             QuestionDifficulty.Medium);
-        var question3 = new MultipleChoiceSingleResponseQuestionPe(0,
-            new List<ChoicePe> { choice1, choice2 }, "Schwere Frage 1", choice2, QuestionDifficulty.Hard,
-            new List<IAdaptivityRulePe> { rule3 });
+        var question3 = new MultipleChoiceSingleResponseQuestionPe("Aschaffenburg Stadtteile schwer", 0,
+            new List<ChoicePe> {choice1, choice2}, "Schwere Frage 1", choice2, QuestionDifficulty.Hard,
+            new List<IAdaptivityRulePe> {rule3});
 
         var task1 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> { question1, question2 },
             QuestionDifficulty.Medium, "Stadtteile AB");
