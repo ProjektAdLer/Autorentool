@@ -6,7 +6,7 @@
 @using System.Numerics
 @typeparam T
 
-<g transform="translate @RoundDoublePointOntoWall(X, Y)" @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
+<g transform="@ComputeTransformString(X, Y)" @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
     @ChildContent
 </g>
 
@@ -160,11 +160,12 @@
         MouseService.OnOut -= OnUpOrOut;
     }
 
-    private (double, double) RoundDoublePointOntoWall(double mousePointerX, double mousePointerY)
+    private string ComputeTransformString(double mousePointerX, double mousePointerY)
     {
         var mousePointer = new Vector2((float)mousePointerX, (float)mousePointerY);
         var closestPoint = new Vector2();
         var shortestDistance = float.MaxValue;
+        var rotation = 0f;
         for (int i = 0; i < CornerPoints!.Count; i++)
         {
             var wallPoint1 = new Vector2((float)CornerPoints[i].X, (float)CornerPoints[i].Y);
@@ -174,9 +175,10 @@
             {
                 shortestDistance = distance;
                 closestPoint = closestLocalPoint;
+                rotation = this.ComputeRotation(wallPoint1, wallPoint2);
             }
         }
-        return (closestPoint.X, closestPoint.Y);
+        return ("translate(" + closestPoint.X + ", " + closestPoint.Y + ") rotate(" + rotation +")");
     }
 
     private float ComputeDistance(Vector2 mousePoint, Vector2 wallPoint1, Vector2 wallPoint2, out Vector2 closestPoint)
@@ -204,4 +206,10 @@
         return Vector2.Distance(mousePoint, closestPoint);
     }
 
+    private float ComputeRotation(Vector2 wallPoint1, Vector2 wallPoint2)
+    {
+        var wallVector = wallPoint2 - wallPoint1;
+        var rotation = (Math.Atan2(wallVector.Y, wallVector.X) * 180 / Math.PI) -90;
+        return (float)rotation;
+    }
 }
