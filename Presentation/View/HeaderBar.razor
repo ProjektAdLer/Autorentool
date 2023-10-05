@@ -18,7 +18,9 @@
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave"
+                       Disabled="SaveButtonDisabled">
+        </MudIconButton>
         <div>
             <MudIconButton Class="p-1 undo-button" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
                            Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
@@ -142,6 +144,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<HeaderBar> Logger { get; set; }
 
+    private bool SaveButtonDisabled => SelectedViewModelsProvider.LearningWorld is not { UnsavedChanges: true };
+
 
     private bool _popoverOpen;
 
@@ -179,14 +183,14 @@
         var world = SelectedViewModelsProvider.LearningWorld;
         if (world == null) return;
         if (!IsLearningWorldValid(world)) return;
-        //check if lms is connected here before generating the backup just to save time
+    //check if lms is connected here before generating the backup just to save time
         if (!await PresentationLogic.IsLmsConnected())
         {
             await ShowNotLoggedInDialog();
             return;
         }
-        
-        //present "Upload/Cancel" dialog
+
+    //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
             { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
@@ -207,10 +211,10 @@
                 options);
         var result = await dialog.Result;
 
-        //if not cancelled, upload LearningWorld
+    //if not cancelled, upload LearningWorld
         if (result.Canceled) return;
-        
-        //present progress dialog
+
+    //present progress dialog
         var cancellationTokenSource = new CancellationTokenSource();
         var progress = new Progress<int>();
         options = new DialogOptions
@@ -249,7 +253,7 @@
         {
             dialogReference.Close();
         }
-        
+
         Snackbar.Add(Localizer["Export.SnackBar.Message"], Severity.Success);
         _popoverOpen = true;
         StateHasChanged();
@@ -333,10 +337,14 @@
 
     private void TrySave()
     {
-        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        var learningWorldViewModel = SelectedViewModelsProvider.LearningWorld;
+        if (learningWorldViewModel is null) return;
+        if (!learningWorldViewModel.UnsavedChanges) return;
         try
         {
-            PresentationLogic.SaveLearningWorld(SelectedViewModelsProvider.LearningWorld);
+            PresentationLogic.SaveLearningWorld(learningWorldViewModel);
+            var snackbarString = Localizer["SaveWorld.Success.Snackbar.Message", learningWorldViewModel.Name].Value;
+            Snackbar.Add(snackbarString, Severity.Success);
         }
         catch (SerializationException e)
         {

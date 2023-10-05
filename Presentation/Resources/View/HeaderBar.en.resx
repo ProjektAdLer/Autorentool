@@ -105,4 +105,7 @@
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
     </data>
+    <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
+        <value>Sucessfully saved world {0}</value>
+    </data>
 </root>

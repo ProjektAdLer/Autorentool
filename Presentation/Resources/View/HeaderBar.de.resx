@@ -105,4 +105,7 @@
     <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
         <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an, um Lernwelten in das Backend hochzuladen.</value>
     </data>
+    <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
+        <value>Welt {0} erfolgreich gespeichert</value>
+    </data>
 </root>
