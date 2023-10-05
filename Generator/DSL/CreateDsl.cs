@@ -190,7 +190,7 @@ public class CreateDsl : ICreateDsl
         var guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _listAllLearningElements = new List<ILearningElementPe>();
-        LearningWorldJson = new LearningWorldJson("", "", new List<TopicJson>(), new List<LearningSpaceJson>(),
+        LearningWorldJson = new LearningWorldJson("", "", new List<ITopicJson>(), new List<ILearningSpaceJson>(),
             new List<IElementJson>(), "", Array.Empty<string>());
     }
 
@@ -718,7 +718,7 @@ public class CreateDsl : ICreateDsl
     /// Creates a new <see cref="DocumentRootJson"/> object using the class properties.
     /// </summary>
     /// <returns></returns>
-    private DocumentRootJson CreateRootJson()
+    private IDocumentRootJson CreateRootJson()
     {
         return new DocumentRootJson(AtfVersion, Constants.ApplicationVersion, _author, _language,
             LearningWorldJson);
@@ -729,7 +729,7 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="rootJson">The <see cref="DocumentRootJson"/> object to serialize.</param>
     /// <returns>A formatted JSON string representation of the provided <see cref="DocumentRootJson"/>.</returns>
-    private static string SerializeRootJson(DocumentRootJson rootJson)
+    private static string SerializeRootJson(IDocumentRootJson rootJson)
     {
         var options = new JsonSerializerOptions
             { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
