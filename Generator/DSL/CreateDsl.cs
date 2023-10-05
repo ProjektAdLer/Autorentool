@@ -17,23 +17,23 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    private const string AtfVersion = "0.4";
+    private const string AtfVersion = "2.0";
     private readonly IFileSystem _fileSystem;
     private string _author;
     private string _booleanAlgebraRequirements;
+    private Dictionary<int, ContentReferenceActionPe> _dictionaryIdToContentReferenceAction;
+    private Dictionary<int, ILearningElementPe> _dictionaryIdToLearningElement;
     private string _dslPath;
     private string _language;
     private List<ILearningElementPe> _listAllLearningElements;
     private List<int?> _listLearningSpaceElements;
     private string _xmlFilesForExportPath;
-    public Dictionary<int, ContentReferenceActionPe> DictionaryIdToContentReferenceAction;
-    public Dictionary<int, ILearningElementPe> DictionaryIdToLearningElement;
-    public Dictionary<int, Guid> DictionarySpaceIdToGuid;
-    public LearningWorldJson LearningWorldJson;
-    public List<(IFileContentPe, string)> ListFileContent;
-    public List<LearningSpacePe> ListLearningSpaces;
-    public List<TopicPe> ListTopics;
-    public string Uuid;
+    internal Dictionary<int, Guid> DictionarySpaceIdToGuid;
+    internal LearningWorldJson LearningWorldJson;
+    internal List<(IFileContentPe, string)> ListFileContent;
+    internal List<LearningSpacePe> ListLearningSpaces;
+    internal List<TopicPe> ListTopics;
+    internal string Uuid;
 
     /// <summary>
     /// Read the PersistEntities and create a Dsl Document with a specified syntax.
@@ -80,7 +80,8 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
     /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
-    public static List<LearningSpacePe> IncrementDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
+    internal static List<LearningSpacePe> IncrementDuplicateLearningElementNames(
+        List<LearningSpacePe> listLearningSpace)
     {
         // Extract all learning elements from the list of learning spaces
         var allLearningElements = listLearningSpace
@@ -127,7 +128,7 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="pathWayCondition"></param>
     /// <returns>A string that describes a boolean algebra expression</returns>
-    public string DefineLogicalExpression(PathWayConditionPe pathWayCondition)
+    internal string DefineLogicalExpression(PathWayConditionPe pathWayCondition)
     {
         var conditionSymbol = GetConditionSymbol(pathWayCondition.Condition);
         var conditionExpression = new StringBuilder();
@@ -175,7 +176,7 @@ public class CreateDsl : ICreateDsl
 
     [MemberNotNull(nameof(ListFileContent), nameof(ListLearningSpaces), nameof(ListTopics),
         nameof(_listLearningSpaceElements), nameof(_booleanAlgebraRequirements), nameof(DictionarySpaceIdToGuid),
-        nameof(DictionaryIdToLearningElement), nameof(DictionaryIdToContentReferenceAction), nameof(Uuid),
+        nameof(_dictionaryIdToLearningElement), nameof(_dictionaryIdToContentReferenceAction), nameof(Uuid),
         nameof(_listAllLearningElements), nameof(LearningWorldJson))]
     private void Initialize()
     {
@@ -185,8 +186,8 @@ public class CreateDsl : ICreateDsl
         _listLearningSpaceElements = new List<int?>();
         _booleanAlgebraRequirements = "";
         DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
-        DictionaryIdToLearningElement = new Dictionary<int, ILearningElementPe>();
-        DictionaryIdToContentReferenceAction = new Dictionary<int, ContentReferenceActionPe>();
+        _dictionaryIdToLearningElement = new Dictionary<int, ILearningElementPe>();
+        _dictionaryIdToContentReferenceAction = new Dictionary<int, ContentReferenceActionPe>();
         var guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _listAllLearningElements = new List<ILearningElementPe>();
@@ -270,7 +271,7 @@ public class CreateDsl : ICreateDsl
             for (var i = 0; i <= GetMaxSlotNumber(space); i++)
             {
                 if (!space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
-                DictionaryIdToLearningElement.Add(idToElementId, element);
+                _dictionaryIdToLearningElement.Add(idToElementId, element);
                 idToElementId++;
                 idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
             }
@@ -297,7 +298,7 @@ public class CreateDsl : ICreateDsl
 
         foreach (var contentReferenceActionPe in contentReferenceActions)
         {
-            DictionaryIdToContentReferenceAction.Add(idToElementId, contentReferenceActionPe);
+            _dictionaryIdToContentReferenceAction.Add(idToElementId, contentReferenceActionPe);
             idToElementId++;
         }
 
@@ -377,7 +378,7 @@ public class CreateDsl : ICreateDsl
         {
             if (space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
             {
-                var elementId = DictionaryIdToLearningElement.First(x => x.Value == element).Key;
+                var elementId = _dictionaryIdToLearningElement.First(x => x.Value == element).Key;
                 MapInternalLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
                 listLearningSpaceElements.Add(elementId);
             }
@@ -586,10 +587,10 @@ public class CreateDsl : ICreateDsl
                 return new CommentActionJson(commentActionPe.Comment);
             case ContentReferenceActionPe contentReferenceActionPe:
                 MapContentToBaseLearningElement(contentReferenceActionPe);
-                return new ContentReferenceActionJson(DictionaryIdToContentReferenceAction
+                return new ContentReferenceActionJson(_dictionaryIdToContentReferenceAction
                     .First(x => x.Value.Id == contentReferenceActionPe.Id).Key);
             case ElementReferenceActionPe elementReferenceActionPe:
-                return new ElementReferenceActionJson(DictionaryIdToLearningElement
+                return new ElementReferenceActionJson(_dictionaryIdToLearningElement
                     .First(x => x.Value.Id == elementReferenceActionPe.ElementId).Key);
             default:
                 throw new ArgumentOutOfRangeException(nameof(adaptivityAction),
@@ -607,7 +608,7 @@ public class CreateDsl : ICreateDsl
     private void MapContentToBaseLearningElement(ContentReferenceActionPe contentReferenceAction)
     {
         BaseLearningElementJson baseLearningElement;
-        var elementId = DictionaryIdToContentReferenceAction.First(x => x.Value.Id == contentReferenceAction.Id).Key;
+        var elementId = _dictionaryIdToContentReferenceAction.First(x => x.Value.Id == contentReferenceAction.Id).Key;
         switch (contentReferenceAction.Content)
         {
             case FileContentPe fileContentPe:
