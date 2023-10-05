@@ -960,6 +960,20 @@ public class PresentationLogic : IPresentationLogic
             FileSystem.File.Delete(filepath);
         }
     }
+    
+#if DEBUG
+    
+    public void ConstructDebugBackup(ILearningWorldViewModel world)
+    {
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
+        var basePath = ApplicationPaths.SavedWorldsFolder;
+        var fileName = $"{world.Name}.mbz";
+        var filepath = Path.Join(basePath, fileName);
+        BusinessLogic.ConstructBackup(entity, filepath);
+        Logger.LogDebug("Written debug backup to {Filepath}", filepath);
+    }
+    
+#endif
 
     #endregion
 }

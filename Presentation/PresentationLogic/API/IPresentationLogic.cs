@@ -545,4 +545,8 @@ public interface IPresentationLogic
     Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
         CancellationToken cancellationToken);
     #endregion
+
+    #if DEBUG
+    void ConstructDebugBackup(ILearningWorldViewModel world);
+    #endif
 }

@@ -34,6 +34,13 @@
             <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
         </button>
 
+        @if (_debugBuild)
+        {
+            <button @onclick="DebugButtonClick" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                DEBUG BACKUP
+            </button>
+        }
+
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
@@ -148,6 +155,22 @@
 
 
     private bool _popoverOpen;
+    private bool _debugBuild = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+#if DEBUG
+        _debugBuild = true;
+#endif
+    }
+
+    private void DebugButtonClick()
+    {
+#if DEBUG
+        PresentationLogic.ConstructDebugBackup(SelectedViewModelsProvider.LearningWorld!);
+#endif
+    }
 
     private void TogglePopover()
     {
