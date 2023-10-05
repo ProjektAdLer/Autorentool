@@ -1,6 +1,9 @@
-﻿namespace Generator.DSL;
+﻿using System.Text.Json.Serialization;
 
-public interface ILearningSpaceJson : IHasType
+namespace Generator.DSL;
+
+[JsonDerivedType(typeof(LearningSpaceJson), typeDiscriminator: JsonTypes.LearningSpaceType)]
+public interface ILearningSpaceJson
 {
     int SpaceId { get; set; }
 
@@ -18,4 +21,6 @@ public interface ILearningSpaceJson : IHasType
     string SpaceTemplate { get; set; }
 
     string SpaceTemplateStyle { get; set; }
+    string SpaceName { get; set; }
+    int RequiredPointsToComplete { get; set; }
 }

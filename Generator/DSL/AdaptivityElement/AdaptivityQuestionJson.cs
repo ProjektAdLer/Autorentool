@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
 public class AdaptivityQuestionJson : IAdaptivityQuestionJson
 {
+    [JsonConstructor]
     public AdaptivityQuestionJson(string questionType, int questionId, string questionUuid, int questionDifficulty,
         string questionText, List<IAdaptivityRuleJson> adaptivityRules, List<IChoiceJson> choices)
     {
@@ -14,7 +17,6 @@ public class AdaptivityQuestionJson : IAdaptivityQuestionJson
         Choices = choices;
     }
 
-    public string Type => JsonTypes.AdaptivityQuestionType;
     public string QuestionType { get; set; }
     public int QuestionId { get; set; }
     public string QuestionUUID { get; set; }

@@ -1,7 +1,10 @@
-﻿namespace Generator.DSL;
+﻿using System.Text.Json.Serialization;
+
+namespace Generator.DSL;
 
 public class TopicJson : ITopicJson
 {
+    [JsonConstructor]
     public TopicJson(int topicId, string topicName, List<int> topicContents)
     {
         TopicId = topicId;
@@ -17,6 +20,4 @@ public class TopicJson : ITopicJson
 
     // Which spaces are in a topic
     public List<int> TopicContents { get; set; }
-
-    public string Type => JsonTypes.TopicType;
 }

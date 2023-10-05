@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityQuestionJson : IHasType
+[JsonDerivedType(typeof(AdaptivityQuestionJson), typeDiscriminator: JsonTypes.AdaptivityQuestionType)]
+public interface IAdaptivityQuestionJson
 {
     string QuestionType { get; set; }
     int QuestionId { get; set; }

@@ -9,7 +9,7 @@ namespace Generator.DSL;
 public class ReadDsl : IReadDsl
 {
     private readonly IFileSystem _fileSystem;
-    private LearningWorldJson _learningWorldJson;
+    private ILearningWorldJson _learningWorldJson;
     private List<LearningElementJson> _listAllElementsOrdered;
     private List<LearningElementJson> _listH5PElements;
     private List<LearningElementJson> _listLabelElements;
@@ -56,7 +56,7 @@ public class ReadDsl : IReadDsl
     }
 
     /// <inheritdoc cref="IReadDsl.GetLearningWorld"/>
-    public LearningWorldJson GetLearningWorld()
+    public ILearningWorldJson GetLearningWorld()
     {
         return _learningWorldJson;
     }
@@ -68,11 +68,11 @@ public class ReadDsl : IReadDsl
     }
 
     /// <inheritdoc cref="IReadDsl.GetSectionList"/>
-    public List<LearningSpaceJson> GetSectionList()
+    public List<ILearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, "", "",
             new List<int?>(), -1, "", "");
-        var spaceList = new List<LearningSpaceJson> { space };
+        var spaceList = new List<ILearningSpaceJson> { space };
         spaceList.AddRange(_rootJson.World.Spaces);
         return spaceList;
     }
@@ -107,8 +107,8 @@ public class ReadDsl : IReadDsl
     private void Initialize()
     {
         _learningWorldJson = new LearningWorldJson("Value",
-            "", new List<TopicJson>(),
-            new List<LearningSpaceJson>(), new List<IElementJson>());
+            "", new List<ITopicJson>(),
+            new List<ILearningSpaceJson>(), new List<IElementJson>());
         _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
         _listH5PElements = new List<LearningElementJson>();
         _listResourceElements = new List<LearningElementJson>();

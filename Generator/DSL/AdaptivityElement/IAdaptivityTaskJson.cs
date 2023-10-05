@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityTaskJson : IHasType
+[JsonDerivedType(typeof(AdaptivityTaskJson), typeDiscriminator: JsonTypes.AdaptivityTaskType)]
+public interface IAdaptivityTaskJson
 {
     int TaskId { get; set; }
     string TaskUUID { get; set; }

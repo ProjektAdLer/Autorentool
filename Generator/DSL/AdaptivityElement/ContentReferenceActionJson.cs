@@ -8,6 +8,4 @@ public class ContentReferenceActionJson : IAdaptivityActionJson
     }
 
     public int ElementId { get; set; }
-
-    public string Type => JsonTypes.ContentReferenceActionType;
 }

@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
 public class AdaptivityTaskJson : IAdaptivityTaskJson
 {
+    [JsonConstructor]
     public AdaptivityTaskJson(int taskId, string taskUuid, string taskTitle, bool optional,
         int requiredDifficulty, List<IAdaptivityQuestionJson> adaptivityQuestions)
     {
@@ -13,7 +16,6 @@ public class AdaptivityTaskJson : IAdaptivityTaskJson
         AdaptivityQuestions = adaptivityQuestions;
     }
 
-    public string Type => JsonTypes.AdaptivityTaskType;
     public int TaskId { get; set; }
     public string TaskUUID { get; set; }
     public string TaskTitle { get; set; }

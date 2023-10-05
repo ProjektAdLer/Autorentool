@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Generator.DSL.AdaptivityElement;
 
-public interface IAdaptivityContentJson : IHasType
+[JsonDerivedType(typeof(AdaptivityContentJson), typeDiscriminator: JsonTypes.AdaptivityContentType)]
+public interface IAdaptivityContentJson
 {
     string IntroText { get; set; }
     bool ShuffleTasks { get; set; }

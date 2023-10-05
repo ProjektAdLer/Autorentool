@@ -50,7 +50,7 @@ public class XmlCourseFactoryUt
         var mockPluginLocalAdlerCourse = Substitute.For<CourseCourseXmlPluginLocalAdlerCourse>();
         mockCourseCourse.PluginLocalAdlerCourse = mockPluginLocalAdlerCourse;
         var mockLearningWorld = new LearningWorldJson("world", "12345",
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<IElementJson>());
+            new List<ITopicJson>(), new List<ILearningSpaceJson>(), new List<IElementJson>());
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
 
@@ -98,7 +98,7 @@ public class XmlCourseFactoryUt
         var mockPluginLocalAdlerCourse = Substitute.For<CourseCourseXmlPluginLocalAdlerCourse>();
         mockCourseCourse.PluginLocalAdlerCourse = mockPluginLocalAdlerCourse;
         var mockLearningWorld = new LearningWorldJson("world", "12345",
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<IElementJson>());
+            new List<ITopicJson>(), new List<ILearningSpaceJson>(), new List<IElementJson>());
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
 

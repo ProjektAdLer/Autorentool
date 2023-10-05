@@ -1,6 +1,9 @@
-﻿namespace Generator.DSL;
+﻿using System.Text.Json.Serialization;
 
-public interface ILearningWorldJson : IHasType
+namespace Generator.DSL;
+
+[JsonDerivedType(typeof(LearningWorldJson), typeDiscriminator: JsonTypes.LearningWorldType)]
+public interface ILearningWorldJson
 {
     string WorldName { get; set; }
 
@@ -11,10 +14,10 @@ public interface ILearningWorldJson : IHasType
     string[] WorldGoals { get; set; }
 
     // for the correct structure the topics are added to the learning World
-    List<TopicJson> Topics { get; set; }
+    List<ITopicJson> Topics { get; set; }
 
     // for the correct structure the Spaces are added to the learning World
-    List<LearningSpaceJson> Spaces { get; set; }
+    List<ILearningSpaceJson> Spaces { get; set; }
 
     // for the correct structure the elements are added to the learning World
     List<IElementJson> Elements { get; set; }

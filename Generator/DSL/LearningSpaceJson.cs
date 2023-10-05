@@ -1,4 +1,6 @@
-﻿namespace Generator.DSL;
+﻿using System.Text.Json.Serialization;
+
+namespace Generator.DSL;
 
 /// <summary>
 /// This class has all the information about the Space
@@ -6,6 +8,7 @@
 public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
+    [JsonConstructor]
     public LearningSpaceJson(int spaceId, string spaceUuid, string spaceName,
         List<int?> spaceSlotContents, int requiredPointsToComplete, string spaceTemplate, string spaceTemplateStyle,
         string? spaceDescription = null, string[]? spaceGoals = null, string? requiredSpacesToEnter = null)
@@ -22,15 +25,13 @@ public class LearningSpaceJson : ILearningSpaceJson
         SpaceTemplateStyle = spaceTemplateStyle;
     }
 
+    public string[] SpaceGoals { get; set; }
+
     //A Name for the Learning Space
     public string SpaceName { get; set; }
 
-    public string[] SpaceGoals { get; set; }
-
     // Maximum Points and Points that are needed to complete the Space
     public int RequiredPointsToComplete { get; set; }
-
-    public string Type => JsonTypes.LearningSpaceType;
 
     public int SpaceId { get; set; }
 
