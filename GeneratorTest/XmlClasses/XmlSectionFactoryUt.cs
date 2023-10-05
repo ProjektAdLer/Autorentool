@@ -43,13 +43,13 @@ public class XmlSectionFactoryUt
 
         var mockContent = new List<int?>();
         mockContent.Add(1);
-        var worldData = new LearningSpaceJson(0, "", "", new List<int?>(), -1, "","");
+        var worldData = new LearningSpaceJson(0, "", "", new List<int?>(), -1, "", "");
         var learningSpaceJson1 =
-            new LearningSpaceJson(1, "", "s", mockContent, 0, "","", requiredSpacesToEnter: "1");
+            new LearningSpaceJson(1, "", "s", mockContent, 0, "", "", requiredSpacesToEnter: "1");
         var learningSpaceJson2 =
-            new LearningSpaceJson(2, "", "s", mockContent, 0, "","", requiredSpacesToEnter: "2");
+            new LearningSpaceJson(2, "", "s", mockContent, 0, "", "", requiredSpacesToEnter: "2");
 
-        var learningSpaceList = new List<LearningSpaceJson>();
+        var learningSpaceList = new List<ILearningSpaceJson>();
         learningSpaceList.Add(worldData);
         learningSpaceList.Add(learningSpaceJson1);
         learningSpaceList.Add(learningSpaceJson2);

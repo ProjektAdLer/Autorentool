@@ -19,13 +19,13 @@ public interface IReadDsl
     /// <summary>
     /// Retrieves the current learning world object.
     /// </summary>
-    LearningWorldJson GetLearningWorld();
+    ILearningWorldJson GetLearningWorld();
 
     /// <summary>
     /// Retrieves the list of learning spaces, including an initial empty space.
     /// </summary>
     /// <returns>A list of LearningSpaceJson objects that represent the learning spaces.</returns>
-    List<LearningSpaceJson> GetSectionList();
+    List<ILearningSpaceJson> GetSectionList();
 
     /// <summary>
     /// Retrieves the list of resource elements.

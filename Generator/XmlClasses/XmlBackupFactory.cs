@@ -17,7 +17,7 @@ public class XmlBackupFactory : IXmlBackupFactory
 {
     private readonly string _currentTime;
     private readonly List<LearningElementJson> _learningElement;
-    private readonly LearningWorldJson _learningWorld;
+    private readonly ILearningWorldJson _learningWorld;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
     internal IGradebookXmlGradeItem GradebookXmlGradeItem;
