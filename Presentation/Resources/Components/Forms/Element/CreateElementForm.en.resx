@@ -95,4 +95,7 @@
     <data name="CreateElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
         <value>3D representation icon</value>
     </data>
+    <data name="CreateElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
+        <value>Edit adaptivity content</value>
+    </data>
 </root>

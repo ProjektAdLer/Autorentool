@@ -38,4 +38,7 @@
     <data name="AdaptivityContentDialog.Table.Header.Hard" xml:space="preserve">
         <value>Schwer</value>
     </data>
+    <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
+        <value>Neue Aufgabe {0}</value>
+    </data>
 </root>

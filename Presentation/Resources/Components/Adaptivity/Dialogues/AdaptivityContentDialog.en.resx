@@ -30,4 +30,7 @@
     <data name="AdaptivityContentDialog.Table.Header.Hard" xml:space="preserve">
         <value>Hard</value>
     </data>
+    <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
+        <value>New task {0}</value>
+    </data>
 </root>
