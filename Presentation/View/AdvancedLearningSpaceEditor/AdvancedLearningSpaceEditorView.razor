@@ -111,51 +111,8 @@
                             Drag and Drop to move decoration. Doubleclick to delete corner point.
                         </title>
                     </rect>
-                    @* Following svg is just the flower *@
-                    <svg x="-21" y="-20" width="2000" height="2000">
-                        <defs>
-                            <style>                          
-                                .cls-2 {
-                                  stroke-width: 60px;
-                                  stroke-opacity: 0.5;
-                                }
-                          
-                                .cls-2, .cls-3 {
-                                  stroke: #172d4d;
-                                  fill-opacity: 0;
-                                  stroke-linecap: round;
-                                  stroke-linejoin: round;
-                                  stroke-opacity: 0.5;
-                                }
-                          
-                                .cls-3 {
-                                  fill-opacity: 0;
-                                  stroke-width: 50px;
-                                  stroke-opacity: 0.5;
-                                }
-                              </style>
-                        </defs>
-                        <g transform="scale(0.02)">
-                            <path class="cls-2" d="m1091.05,1515l-36.36-525.39s29.09,140.51,269.1,97.75,7.27-274.91-269.1-103.86-538.19,189.38-472.74,122.18,276.37-360.44,472.74-116.07"/>
-                            <line class="cls-2" x1="1055.2" y1="993" x2="1046.2" y2="678"/>
-                            <g>
-                                <ellipse class="cls-3" cx="1030.25" cy="638.26" rx="142.64" ry="51.87" transform="translate(67.8 1374.79) rotate(-69.2)"/>
-                                <ellipse class="cls-3" cx="952.78" cy="584.52" rx="142.64" ry="51.87" transform="translate(-154.99 733.82) rotate(-39.2)"/>
-                                <ellipse class="cls-3" cx="1134.44" cy="647.65" rx="51.87" ry="142.64" transform="translate(-88.99 189.8) rotate(-9.2)"/>
-                                <ellipse class="cls-3" cx="1277.77" cy="529.95" rx="51.87" ry="142.64" transform="translate(328.69 1536.33) rotate(-69.2)"/>
-                                <ellipse class="cls-3" cx="1224.03" cy="607.42" rx="51.87" ry="142.64" transform="translate(-108.41 910.43) rotate(-39.2)"/>
-                                <ellipse class="cls-3" cx="1287.16" cy="425.77" rx="142.64" ry="51.87" transform="translate(-51.53 211.37) rotate(-9.2)"/>
-                                <ellipse class="cls-3" cx="1169.47" cy="282.43" rx="142.64" ry="51.87" transform="translate(490.23 1275.44) rotate(-69.2)"/>
-                                <ellipse class="cls-3" cx="1246.94" cy="336.17" rx="142.64" ry="51.87" transform="translate(68.2 863.85) rotate(-39.2)"/>
-                                <ellipse class="cls-3" cx="1065.28" cy="273.05" rx="51.87" ry="142.64" transform="translate(-29.96 173.91) rotate(-9.2)"/>
-                                <ellipse class="cls-3" cx="908.24" cy="490.6" rx="142.64" ry="51.87" transform="translate(-66.78 151.59) rotate(-9.2)"/>
-                                <ellipse class="cls-3" cx="921.95" cy="390.74" rx="51.87" ry="142.64" transform="translate(229.34 1113.9) rotate(-69.2)"/>
-                                <ellipse class="cls-3" cx="975.68" cy="313.27" rx="51.87" ry="142.64" transform="translate(21.62 687.24) rotate(-39.2)"/>
-                                <circle class="cls-3" cx="1097.7" cy="462.51" r="62.67"/>
-                            </g>
-                            <polygon class="cls-2" points="1077.87 1403.7 870.59 1378.83 944.42 1868 1077.87 1868 1211.32 1868 1285.14 1378.83 1077.87 1403.7"/>
-                        </g>
-                    </svg>
+                    @((MarkupString)DrawFlowerSvg())
+                    
                 </AdvancedDraggable>
                     // OnDoubleClicked="@AdvancedLearningSpaceEditorPresenter.DeleteAdvancedDecoration"
                 }
@@ -298,9 +255,6 @@
 
     private IDictionary<int, DoublePoint> GetSpaceCornerPoints()
     {
-        if(AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
-            Console.WriteLine(AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints.Values);
-        else Console.WriteLine("hahahahaha");
         return AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null
             ? AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints
             : new Dictionary<int, DoublePoint>();
@@ -308,7 +262,59 @@
 
     private string DrawFlowerSvg()
     {
-        return ("");
+        return @"<svg x=""-21"" y=""-20"" width=""2000"" height=""2000"">
+                        <defs>
+                            <style>                          
+                                .cls-2 {
+                                  stroke-width: 60px;
+                                  stroke-opacity: 0.5;
+                                }
+                          
+                                .cls-2, .cls-3 {
+                                  stroke: #172d4d;
+                                  fill-opacity: 0;
+                                  stroke-linecap: round;
+                                  stroke-linejoin: round;
+                                  stroke-opacity: 0.5;
+                                }
+                          
+                                .cls-3 {
+                                  fill-opacity: 0;
+                                  stroke-width: 50px;
+                                  stroke-opacity: 0.5;
+                                }
+                              </style>
+                        </defs>
+                        <g transform=""scale(0.02)"">
+                            <path class=""cls-2"" d=""m1091.05,1515l-36.36-525.39s29.09,140.51,269.1,97.75,7.27-274.91-269.1-103.86-538.19,189.38-472.74,122.18,276.37-360.44,472.74-116.07""/>
+                            <line class=""cls-2"" x1=""1055.2"" y1=""993"" x2=""1046.2"" y2=""678""/>
+                            <g>
+                                <ellipse class=""cls-3"" cx=""1030.25"" cy=""638.26"" rx=""142.64"" ry=""51.87"" transform=""translate(67.8 1374.79) rotate(-69.2)""/>
+                                <ellipse class=""cls-3"" cx=""952.78"" cy=""584.52"" rx=""142.64"" ry=""51.87"" transform=""translate(-154.99 733.82) rotate(-39.2)""/>
+                                <ellipse class=""cls-3"" cx=""1134.44"" cy=""647.65"" rx=""51.87"" ry=""142.64"" transform=""translate(-88.99 189.8) rotate(-9.2)""/>
+                                <ellipse class=""cls-3"" cx=""1277.77"" cy=""529.95"" rx=""51.87"" ry=""142.64"" transform=""translate(328.69 1536.33) rotate(-69.2)""/>
+                                <ellipse class=""cls-3"" cx=""1224.03"" cy=""607.42"" rx=""51.87"" ry=""142.64"" transform=""translate(-108.41 910.43) rotate(-39.2)""/>
+                                <ellipse class=""cls-3"" cx=""1287.16"" cy=""425.77"" rx=""142.64"" ry=""51.87"" transform=""translate(-51.53 211.37) rotate(-9.2)""/>
+                                <ellipse class=""cls-3"" cx=""1169.47"" cy=""282.43"" rx=""142.64"" ry=""51.87"" transform=""translate(490.23 1275.44) rotate(-69.2)""/>
+                                <ellipse class=""cls-3"" cx=""1246.94"" cy=""336.17"" rx=""142.64"" ry=""51.87"" transform=""translate(68.2 863.85) rotate(-39.2)""/>
+                                <ellipse class=""cls-3"" cx=""1065.28"" cy=""273.05"" rx=""51.87"" ry=""142.64"" transform=""translate(-29.96 173.91) rotate(-9.2)""/>
+                                <ellipse class=""cls-3"" cx=""908.24"" cy=""490.6"" rx=""142.64"" ry=""51.87"" transform=""translate(-66.78 151.59) rotate(-9.2)""/>
+                                <ellipse class=""cls-3"" cx=""921.95"" cy=""390.74"" rx=""51.87"" ry=""142.64"" transform=""translate(229.34 1113.9) rotate(-69.2)""/>
+                                <ellipse class=""cls-3"" cx=""975.68"" cy=""313.27"" rx=""51.87"" ry=""142.64"" transform=""translate(21.62 687.24) rotate(-39.2)""/>
+                                <circle class=""cls-3"" cx=""1097.7"" cy=""462.51"" r=""62.67""/>
+                            </g>
+                            <polygon class=""cls-2"" points=""1077.87 1403.7 870.59 1378.83 944.42 1868 1077.87 1868 1211.32 1868 1285.14 1378.83 1077.87 1403.7""/>
+                        </g>
+                    </svg>";
+    }
+
+    public void DeleteCornerPoint(int cornerPointKey)
+    {
+        // 1. Get CornerPoints
+        // 2 Get Mouse Position
+        // 3 get closest corner Point
+        // 4 Delete cornerpoint
+        // AdvancedLearningSpaceEditorPresenter.DeleteCornerPoint(cornerPointKey);
     }
 
 }

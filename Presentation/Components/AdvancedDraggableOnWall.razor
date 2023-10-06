@@ -178,7 +178,7 @@
                 rotation = this.ComputeRotation(wallPoint1, wallPoint2);
             }
         }
-        return ("translate(" + closestPoint.X + ", " + closestPoint.Y + ") rotate(" + rotation +")");
+        return "translate(" + Math.Round(closestPoint.X) + ", " + Math.Round(closestPoint.Y) + ") rotate(" + Math.Round(rotation) + ")";
     }
 
     private float ComputeDistance(Vector2 mousePoint, Vector2 wallPoint1, Vector2 wallPoint2, out Vector2 closestPoint)
