@@ -43,19 +43,18 @@
                                  Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
                                  CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
                     <MudTextField T="string" For="() => choice.Text" @bind-Value="@choice.Text"></MudTextField>
-                    <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+
+                    <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
+
                 </div>
                 <br/>
             }
         </div>
 
-        <MudText>@Localizer["EditAdaptivityQuestionForm.Text.AddChoice"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
 
             <span class="inline-flex">
-                <MudCheckBox T="bool" @bind-Checked="@_newChoiceChecked"></MudCheckBox>
-                <MudTextField T="string" @bind-Value="@_newChoiceText"></MudTextField>
-                <MudIconButton OnClick="AddChoice" Icon="@Icons.Material.Filled.Add"/>
+                <MudButton OnClick="AddChoice" EndIcon="@Icons.Material.Filled.Add">@Localizer["EditAdaptivityQuestionForm.Text.AddChoice"]</MudButton>
             </span>
         </div>
 
@@ -105,10 +104,6 @@
     private BaseForm<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>? _editQuestionForm;
 
 
-    private bool _newChoiceChecked = false;
-    private string _newChoiceText = "";
-
-
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
@@ -146,17 +141,9 @@
 
     private void AddChoice()
     {
-        if (_newChoiceText == "")
-        {
-            _newChoiceText = Localizer["EditAdaptivityQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1);
-        }
-        FormDataContainer.FormModel.Choices.Add(new ChoiceViewModel(_newChoiceText));
-        if (_newChoiceChecked)
-        {
-            FormDataContainer.FormModel.CorrectChoices.Add(FormDataContainer.FormModel.Choices.Last());
-        }
-        _newChoiceChecked = false;
-        _newChoiceText = "";
+        FormDataContainer.FormModel.Choices.Add(
+            new ChoiceViewModel(Localizer["EditAdaptivityQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1))
+            );
     }
 
     private void RemoveChoice(ChoiceViewModel choice)
