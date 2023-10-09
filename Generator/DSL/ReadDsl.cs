@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Text.Json;
+using Generator.DSL.AdaptivityElement;
 using Microsoft.Extensions.Logging;
 using Shared;
 
@@ -10,13 +11,14 @@ public class ReadDsl : IReadDsl
 {
     private readonly IFileSystem _fileSystem;
     private ILearningWorldJson _learningWorldJson;
-    private List<LearningElementJson> _listAllElementsOrdered;
-    private List<LearningElementJson> _listH5PElements;
-    private List<LearningElementJson> _listLabelElements;
-    private List<LearningElementJson> _listResourceElements;
-    private List<LearningElementJson> _listUrlElements;
+    private List<IAdaptivityElementJson> _listAdaptivityElements;
+    private List<IElementJson> _listAllElementsOrdered;
+    private List<ILearningElementJson> _listH5PElements;
+    private List<ILearningElementJson> _listResourceElements;
+    private List<ILearningElementJson> _listUrlElements;
     private ILogger<ReadDsl> _logger;
     private DocumentRootJson _rootJson;
+    private LearningElementJson _worldAttributes;
 
 
     public ReadDsl(IFileSystem fileSystem, ILogger<ReadDsl> logger)
@@ -46,7 +48,6 @@ public class ReadDsl : IReadDsl
 
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
-        GetLabelElements(_rootJson);
         GetWorldAttributes(_rootJson);
         GetUrlElements(_rootJson);
         GetElementsOrdered(_rootJson);
@@ -59,8 +60,14 @@ public class ReadDsl : IReadDsl
         return _learningWorldJson;
     }
 
+    /// <inheritdoc cref="IReadDsl.GetWorldAttributes"/>
+    public LearningElementJson GetWorldAttributes()
+    {
+        return _worldAttributes;
+    }
+
     /// <inheritdoc cref="IReadDsl.GetH5PElementsList"/>
-    public List<LearningElementJson> GetH5PElementsList()
+    public List<ILearningElementJson> GetH5PElementsList()
     {
         return _listH5PElements;
     }
@@ -76,43 +83,39 @@ public class ReadDsl : IReadDsl
     }
 
     /// <inheritdoc cref="IReadDsl.GetResourceElementList"/>
-    public List<LearningElementJson> GetResourceElementList()
+    public List<ILearningElementJson> GetResourceElementList()
     {
         return _listResourceElements;
     }
 
-    /// <inheritdoc cref="IReadDsl.GetLabelElementList"/>
-    public List<LearningElementJson> GetLabelElementList()
-    {
-        return _listLabelElements;
-    }
-
     /// <inheritdoc cref="IReadDsl.GetUrlElementList"/>
-    public List<LearningElementJson> GetUrlElementList()
+    public List<ILearningElementJson> GetUrlElementList()
     {
         return _listUrlElements;
     }
 
     /// <inheritdoc cref="IReadDsl.GetElementsOrderedList"/>
-    public List<LearningElementJson> GetElementsOrderedList()
+    public List<IElementJson> GetElementsOrderedList()
     {
         return _listAllElementsOrdered;
     }
 
-    [MemberNotNull(nameof(_learningWorldJson), nameof(_rootJson), nameof(_listH5PElements),
-        nameof(_listResourceElements), nameof(_listLabelElements), nameof(_listUrlElements),
-        nameof(_listAllElementsOrdered))]
+    [MemberNotNull(nameof(_learningWorldJson), nameof(_worldAttributes), nameof(_rootJson),
+        nameof(_listH5PElements), nameof(_listResourceElements), nameof(_listUrlElements),
+        nameof(_listAllElementsOrdered), nameof(_listAdaptivityElements))]
     private void Initialize()
     {
         _learningWorldJson = new LearningWorldJson("Value",
             "", new List<ITopicJson>(),
             new List<ILearningSpaceJson>(), new List<IElementJson>());
-        _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
-        _listH5PElements = new List<LearningElementJson>();
-        _listResourceElements = new List<LearningElementJson>();
-        _listLabelElements = new List<LearningElementJson>();
-        _listUrlElements = new List<LearningElementJson>();
-        _listAllElementsOrdered = new List<LearningElementJson>();
+        _worldAttributes = new LearningElementJson(0, "", "", "", "", "", 0, 0, "");
+        _rootJson = new DocumentRootJson(Constants.AtfVersion, Constants.ApplicationVersion, "", "",
+            _learningWorldJson);
+        _listH5PElements = new List<ILearningElementJson>();
+        _listResourceElements = new List<ILearningElementJson>();
+        _listUrlElements = new List<ILearningElementJson>();
+        _listAdaptivityElements = new List<IAdaptivityElementJson>();
+        _listAllElementsOrdered = new List<IElementJson>();
     }
 
     /// <summary>
@@ -158,22 +161,6 @@ public class ReadDsl : IReadDsl
     }
 
     /// <summary>
-    /// Extracts label elements from the provided DocumentRootJson object and adds them to the label elements list.
-    /// </summary>
-    private void GetLabelElements(DocumentRootJson documentRootJson)
-    {
-        foreach (var label in documentRootJson.World.Elements)
-        {
-            if (label.ElementFileType is "label")
-            {
-                _listLabelElements.Add((LearningElementJson)label);
-            }
-        }
-
-        _logger.LogTrace("Found {Count} label elements", _listLabelElements.Count);
-    }
-
-    /// <summary>
     /// Retrieves world attributes from the provided DocumentRootJson object and adds them to the ordered elements list.
     /// </summary>
     private void GetWorldAttributes(DocumentRootJson documentRootJson)
@@ -187,13 +174,13 @@ public class ReadDsl : IReadDsl
 
         var lastId = documentRootJson.World.Elements.Count + 1;
 
-        var worldAttributes = new LearningElementJson(lastId, "",
+        _worldAttributes = new LearningElementJson(lastId, "",
             documentRootJson.World.WorldDescription, "",
             "World Attributes", "label", 0,
             0, "", documentRootJson.World.WorldDescription,
             documentRootJson.World.WorldGoals);
 
-        _listAllElementsOrdered.Add(worldAttributes);
+        _listAllElementsOrdered.Add(_worldAttributes);
     }
 
     /// <summary>
@@ -224,8 +211,7 @@ public class ReadDsl : IReadDsl
                 foreach (var elementInSpace in space.SpaceSlotContents)
                 {
                     if (elementInSpace != null)
-                        _listAllElementsOrdered.Add(
-                            (LearningElementJson)documentRootJson.World.Elements[(int)elementInSpace - 1]);
+                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
                 }
             }
         }

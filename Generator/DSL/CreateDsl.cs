@@ -17,7 +17,6 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    private const string AtfVersion = "2.0";
     private readonly IFileSystem _fileSystem;
     private string _author;
     private string _booleanAlgebraRequirements;
@@ -721,7 +720,7 @@ public class CreateDsl : ICreateDsl
     /// <returns></returns>
     private IDocumentRootJson CreateRootJson()
     {
-        return new DocumentRootJson(AtfVersion, Constants.ApplicationVersion, _author, _language,
+        return new DocumentRootJson(Constants.AtfVersion, Constants.ApplicationVersion, _author, _language,
             LearningWorldJson);
     }
 

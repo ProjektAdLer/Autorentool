@@ -75,7 +75,7 @@ public class XmlResourceFactoryUt
         var txtDocument = new LearningElementJson(11, "", "Document", "", "", "txt", 1, learningEvl, "");
 
 
-        var resourceList = new List<LearningElementJson>
+        var resourceList = new List<ILearningElementJson>
         {
             jsonDocument,
             pngDocument,

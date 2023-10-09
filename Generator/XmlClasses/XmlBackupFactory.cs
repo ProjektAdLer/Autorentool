@@ -16,7 +16,7 @@ namespace Generator.XmlClasses;
 public class XmlBackupFactory : IXmlBackupFactory
 {
     private readonly string _currentTime;
-    private readonly List<LearningElementJson> _learningElement;
+    private readonly List<IElementJson> _learningElement;
     private readonly ILearningWorldJson _learningWorld;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
@@ -293,7 +293,19 @@ public class XmlBackupFactory : IXmlBackupFactory
             var learningElementId = element.ElementId.ToString();
             var learningElementType = element.ElementFileType;
             var learningElementName = element.ElementName;
-            var learningElementSectionId = element.LearningSpaceParentId.ToString();
+            var learningElementSectionId = "";
+            switch (element)
+            {
+                case IInternalElementJson internalElementJson:
+                    learningElementSectionId = internalElementJson.LearningSpaceParentId.ToString();
+                    break;
+                case IBaseLearningElementJson:
+                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(element));
+            }
+
             if (learningElementType == "h5p")
             {
                 learningElementType = "h5pactivity";

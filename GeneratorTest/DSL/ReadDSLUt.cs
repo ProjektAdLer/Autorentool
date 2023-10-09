@@ -59,7 +59,7 @@ public class ReadDslUt
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
         var elementsOrderedList = systemUnderTest.GetElementsOrderedList();
-        var getLabelsList = systemUnderTest.GetLabelElementList();
+        var getWorldAttributes = systemUnderTest.GetWorldAttributes();
         var getUrlList = systemUnderTest.GetUrlElementList();
 
         Assert.Multiple(() =>
@@ -75,7 +75,16 @@ public class ReadDslUt
 
             //Elements + World Description & Goals (As they are created as Labels in Moodle)
             Assert.That(elementsOrderedList, Has.Count.EqualTo(3));
-            Assert.That(getLabelsList, Has.Count.EqualTo(1));
+            Assert.That(getWorldAttributes.ElementName, Is.EqualTo("World Description"));
+            Assert.That(getWorldAttributes.ElementDescription, Is.EqualTo("World Description"));
+            Assert.That(getWorldAttributes.ElementMaxScore, Is.EqualTo(0));
+            Assert.That(getWorldAttributes.LearningSpaceParentId, Is.EqualTo(0));
+            Assert.That(getWorldAttributes.ElementFileType, Is.EqualTo("label"));
+            Assert.That(getWorldAttributes.Url, Is.EqualTo(""));
+            Assert.That(getWorldAttributes.ElementCategory, Is.EqualTo("World Attributes"));
+            Assert.That(getWorldAttributes.ElementId, Is.EqualTo(5));
+            Assert.That(getWorldAttributes.ElementUUID, Is.EqualTo(""));
+            Assert.That(getWorldAttributes.ElementModel, Is.EqualTo(""));
 
             Assert.That(listSpace.Count, Is.EqualTo(3));
 

@@ -2,4 +2,5 @@
 
 public interface ILearningElementJson : IElementJson
 {
+    string Url { get; set; }
 }

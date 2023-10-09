@@ -68,7 +68,7 @@ public class XmlH5PFactoryUt
 
         var h5PElement2 = new LearningElementJson(2, "", "element2", "", "h5p", "h5p", 1, 3, "");
 
-        var h5PList = new List<LearningElementJson>
+        var h5PList = new List<ILearningElementJson>
         {
             h5PElement1, h5PElement2
         };
@@ -116,7 +116,7 @@ public class XmlH5PFactoryUt
 
         var h5PElement2 = new LearningElementJson(2, "", "element2", "", "h5p", "h5p", 1, 1, "");
 
-        var h5PList = new List<LearningElementJson>
+        var h5PList = new List<ILearningElementJson>
         {
             h5PElement1, h5PElement2
         };

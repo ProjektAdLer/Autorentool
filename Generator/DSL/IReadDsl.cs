@@ -14,12 +14,17 @@ public interface IReadDsl
     /// Retrieves the list of H5P elements.
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the H5P elements.</returns>
-    List<LearningElementJson> GetH5PElementsList();
+    List<ILearningElementJson> GetH5PElementsList();
 
     /// <summary>
     /// Retrieves the current learning world object.
     /// </summary>
     ILearningWorldJson GetLearningWorld();
+
+    /// <summary>
+    /// Retrieves the learning world attributes.
+    /// </summary>
+    LearningElementJson GetWorldAttributes();
 
     /// <summary>
     /// Retrieves the list of learning spaces, including an initial empty space.
@@ -31,23 +36,17 @@ public interface IReadDsl
     /// Retrieves the list of resource elements.
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the resource elements.</returns>
-    List<LearningElementJson> GetResourceElementList();
-
-    /// <summary>
-    /// Retrieves the list of label elements.
-    /// </summary>
-    /// <returns>A list of LearningElementJson objects that represent the label elements.</returns>
-    List<LearningElementJson> GetLabelElementList();
+    List<ILearningElementJson> GetResourceElementList();
 
     /// <summary>
     /// Retrieves the list of URL elements.
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the URL elements.</returns>
-    List<LearningElementJson> GetUrlElementList();
+    List<ILearningElementJson> GetUrlElementList();
 
     /// <summary>
     /// Retrieves the list of elements in their correct order.
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the ordered elements.</returns>
-    List<LearningElementJson> GetElementsOrderedList();
+    List<IElementJson> GetElementsOrderedList();
 }

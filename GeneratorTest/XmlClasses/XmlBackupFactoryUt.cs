@@ -58,14 +58,13 @@ public class XmlBackupFactoryUt
             new List<ITopicJson>(), new List<ILearningSpaceJson>(), new List<IElementJson>());
 
         var mockLearningElement = new LearningElementJson(1, "", "", "", "h5p", "", 2, 2, "");
-        List<LearningElementJson> learningElementJsons = new();
-        learningElementJsons.Add(mockLearningElement);
+        List<ILearningElementJson> learningElementJsons = new() { mockLearningElement };
 
-        var mockLearningSpaceContent = new List<int?>();
-        mockLearningSpaceContent.Add(mockLearningElement.ElementId);
+        List<IElementJson> elementJsons = new() { mockLearningElement };
+
+        var mockLearningSpaceContent = new List<int?> { mockLearningElement.ElementId };
         var mockLearningSpace = new LearningSpaceJson(1, "", "", mockLearningSpaceContent, 0, "", "");
-        List<ILearningSpaceJson> learningSpacesJsons = new();
-        learningSpacesJsons.Add(mockLearningSpace);
+        List<ILearningSpaceJson> learningSpacesJsons = new() { mockLearningSpace };
 
         var mockDslDocumentJson = new LearningElementJson(2, "", "", "", "", "json", 0, 8, "");
         var mockSpaceElementJson = new LearningElementJson(3, "", "", "", "space", "", 9, 3, "");
@@ -73,11 +72,11 @@ public class XmlBackupFactoryUt
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson> { mockDslDocumentJson });
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson> { mockDslDocumentJson });
 
         learningElementJsons.Add(mockDslDocumentJson);
         learningElementJsons.Add(mockSpaceElementJson);
-        mockReadDsl.GetElementsOrderedList().Returns(learningElementJsons);
+        mockReadDsl.GetElementsOrderedList().Returns(elementJsons);
 
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
 
@@ -129,9 +128,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var xmlBackupFactory = new XmlBackupFactory(mockReadDsl);
 
@@ -195,9 +194,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "", "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var mockGradeItems = Substitute.For<IGradebookXmlGradeItems>();
         var mockGradeCategories = Substitute.For<IGradebookXmlGradeCategories>();
@@ -258,9 +257,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
         var mockGroups = Substitute.For<IGroupsXmlGroups>();
         var mockGroupingsList = new GroupsXmlGroupingsList();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, groupsXmlGroups: mockGroups,
@@ -300,14 +299,21 @@ public class XmlBackupFactoryUt
 
         var mockLearningElement1 = new LearningElementJson(1, "", "element1", "", "", "h5p", 0, 2, "");
         var mockLearningElement2 = new LearningElementJson(2, "", "element2", "", "", "url", 0, 2, "");
-        List<LearningElementJson> learningElementJsons = new();
-        learningElementJsons.Add(mockLearningElement1);
-        learningElementJsons.Add(mockLearningElement2);
+        List<ILearningElementJson> learningElementJsons = new()
+        {
+            mockLearningElement1,
+            mockLearningElement2
+        };
+
+        List<IElementJson> elementJsons = new()
+        {
+            mockLearningElement1,
+            mockLearningElement2
+        };
 
         var mockLearningSpaceContent = new List<int?> { mockLearningElement1.ElementId };
         var mockLearningSpace = new LearningSpaceJson(1, "", "", mockLearningSpaceContent, 0, "", "");
-        List<ILearningSpaceJson> learningSpacesJsons = new();
-        learningSpacesJsons.Add(mockLearningSpace);
+        List<ILearningSpaceJson> learningSpacesJsons = new() { mockLearningSpace };
 
 
         var mockDslDocumentJson = new LearningElementJson(2, "", "", "", "", "json", 0, 2, "");
@@ -315,11 +321,11 @@ public class XmlBackupFactoryUt
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson> { mockDslDocumentJson });
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson> { mockDslDocumentJson });
 
         learningElementJsons.Add(mockDslDocumentJson);
 
-        mockReadDsl.GetElementsOrderedList().Returns(learningElementJsons);
+        mockReadDsl.GetElementsOrderedList().Returns(elementJsons);
 
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, moodleBackupXmlDetail: mockDetail,
             moodleBackupXmlDetails: mockDetails,
@@ -344,15 +350,12 @@ public class XmlBackupFactoryUt
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("url"));
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Title, Is.EqualTo("element2"));
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Directory,
-                Is.EqualTo("activities/url_" + mockDslDocumentJson.ElementId.ToString()));
+                Is.EqualTo("activities/url_" + mockDslDocumentJson.ElementId));
 
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Level, Is.EqualTo("activity"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Name,
-                Is.EqualTo("url_" + mockDslDocumentJson.ElementId.ToString() + "_included"));
+                Is.EqualTo("url_" + mockDslDocumentJson.ElementId + "_included"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Value, Is.EqualTo("1"));
-
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[7].Section,
-                Is.EqualTo("section_" + mockLearningSpace.SpaceId.ToString()));
 
             Assert.That(systemUnderTest.MoodleBackupXmlInformation, Is.EqualTo(mockInformation));
             systemUnderTest.MoodleBackupXmlMoodleBackup.Received().Serialize();
@@ -375,9 +378,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, outcomesXmlOutcomesDefinition: mockOutcomes);
@@ -405,9 +408,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var mockQuestion = Substitute.For<IQuestionsXmlQuestionsCategories>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, questionsXmlQuestionsCategories: mockQuestion);
@@ -435,9 +438,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var mockRolesDefinition = Substitute.For<IRolesXmlRolesDefinition>();
         var mockRole = new RolesXmlRole();
@@ -471,9 +474,9 @@ public class XmlBackupFactoryUt
                 new LearningElementJson(1, "", "", "", "", "h5p",
                     0, 2, "")
             });
-        mockReadDsl.GetResourceElementList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var mockScales = Substitute.For<IScalesXmlScalesDefinition>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, scalesXmlScalesDefinition: mockScales);

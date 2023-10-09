@@ -114,7 +114,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public void CreateH5PFileFactory()
     {
         // Get all the H5P elements that are in the DSL Document
-        List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+        List<ILearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
 
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
@@ -126,7 +126,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         FileManager.SetXmlFilesList(_filesXmlFilesList);
     }
 
-    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList)
+    public void ReadH5PListAndSetParameters(List<ILearningElementJson> h5PElementsList)
     {
         // For Each H5P element in the list 
         // (for files.xml) set the H5P element id, name, hash value, copy the File to the needed location in the backup structure
@@ -137,10 +137,23 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementId = h5PElement.ElementId.ToString();
             H5PElementUuid = h5PElement.ElementUUID;
             H5PElementName = h5PElement.ElementName;
-            H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementFileType;
-            H5PElementDesc = h5PElement.ElementDescription ?? "";
-            H5PElementPoints = h5PElement.ElementMaxScore;
+
+            switch (h5PElement)
+            {
+                case BaseLearningElementJson:
+                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
+                    // Description immer leer?
+                    // Points immer 0?
+                    break;
+                case LearningElementJson learningElementJson:
+                    H5PElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();
+                    H5PElementDesc = learningElementJson.ElementDescription ?? "";
+                    H5PElementPoints = learningElementJson.ElementMaxScore;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(h5PElement));
+            }
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.ElementName + "." + h5PElement.ElementFileType));

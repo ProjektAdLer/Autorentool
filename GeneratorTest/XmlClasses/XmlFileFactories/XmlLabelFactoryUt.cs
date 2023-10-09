@@ -78,6 +78,8 @@ public class XmlLabelFactoryUt
         var mockLabelActivity = Substitute.For<IActivitiesLabelXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        var mockPluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
+        mockModule.PluginLocalAdlerModule = mockPluginLocalAdlerModule;
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFileref = Substitute.For<IActivitiesInforefXmlFileref>();
         var mockInforefGradeItem = Substitute.For<ActivitiesInforefXmlGradeItem>();
@@ -90,13 +92,8 @@ public class XmlLabelFactoryUt
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
         var mockElementJson = new LearningElementJson(1, "", "element1", "", "", "h5p", 1, 2, "");
-        var mockLabelsElementJson = new LearningElementJson(2, "", "element2", "", "mp4", "mp4", 1, 2, "");
 
-        var elementJsonList = new List<LearningElementJson> { mockElementJson };
-        var labelJsonList = new List<LearningElementJson> { mockLabelsElementJson };
-
-        mockReadDsl.GetElementsOrderedList().Returns(elementJsonList);
-        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
+        mockReadDsl.GetWorldAttributes().Returns(mockElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();
@@ -104,7 +101,7 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            mockReadDsl.Received().GetElementsOrderedList();
+            mockReadDsl.Received().GetWorldAttributes();
             Assert.That(systemUnderTest.LabelId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.LabelName, Is.EqualTo("element1"));
             Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo("1"));
@@ -139,14 +136,7 @@ public class XmlLabelFactoryUt
         var mockLabelsElementJson = new LearningElementJson(2, "", "",
             "", "World Attributes", "World Attributes", 1, 0, "", "World Description", new[] { "World Goals" });
 
-        var mockElementJson = new LearningElementJson(1, "", "",
-            "", "", "h5p", 0, 7, "");
-
-        var spaceJsonList = new List<LearningElementJson> { mockElementJson };
-        var labelJsonList = new List<LearningElementJson> { mockLabelsElementJson };
-
-        mockReadDsl.GetElementsOrderedList().Returns(spaceJsonList);
-        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
+        mockReadDsl.GetWorldAttributes().Returns(mockLabelsElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();
