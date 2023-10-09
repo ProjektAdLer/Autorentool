@@ -32,15 +32,13 @@ public class ReadDsl : IReadDsl
     {
         Initialize();
 
-        var filepathDsl = dslPath;
-
         if (rootJsonForTest != null)
         {
             _rootJson = rootJsonForTest;
         }
         else
         {
-            var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
+            var jsonString = _fileSystem.File.ReadAllText(dslPath);
             var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ??
                         throw new InvalidOperationException("Could not deserialize DSL_Document");

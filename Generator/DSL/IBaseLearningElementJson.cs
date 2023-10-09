@@ -1,5 +1,5 @@
 namespace Generator.DSL;
 
-public interface IBaseLearningElementJson : IElementJson
+public interface IBaseLearningElementJson : ILearningElementJson
 {
 }

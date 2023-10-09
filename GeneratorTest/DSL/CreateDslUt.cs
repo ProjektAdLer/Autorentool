@@ -224,15 +224,15 @@ public class CreateDslUt
 
         var question1 =
             new MultipleChoiceSingleResponseQuestionPe("Aschaffenburg Stadtteile einfach", 0,
-                new List<ChoicePe> {choice1, choice2}, "Die Stadt Aschaffenburg hat insgesamt 10 Stadtteile", choice1,
-                QuestionDifficulty.Easy, new List<IAdaptivityRulePe> {rule1});
+                new List<ChoicePe> { choice1, choice2 }, "Die Stadt Aschaffenburg hat insgesamt 10 Stadtteile", choice1,
+                QuestionDifficulty.Easy, new List<IAdaptivityRulePe> { rule1 });
         var question2 = new MultipleChoiceMultipleResponseQuestionPe("Aschaffenburg Stadtteile mittelschwer", 0,
-            new List<ChoicePe> {choice3, choice4, choice5, choice6}, new List<ChoicePe> {choice3, choice4},
-            new List<IAdaptivityRulePe> {rule2}, "Welche der folgenden Stadtteile gehören zu Aschaffenburg?",
+            new List<ChoicePe> { choice3, choice4, choice5, choice6 }, new List<ChoicePe> { choice3, choice4 },
+            new List<IAdaptivityRulePe> { rule2 }, "Welche der folgenden Stadtteile gehören zu Aschaffenburg?",
             QuestionDifficulty.Medium);
         var question3 = new MultipleChoiceSingleResponseQuestionPe("Aschaffenburg Stadtteile schwer", 0,
-            new List<ChoicePe> {choice1, choice2}, "Schwere Frage 1", choice2, QuestionDifficulty.Hard,
-            new List<IAdaptivityRulePe> {rule3});
+            new List<ChoicePe> { choice1, choice2 }, "Schwere Frage 1", choice2, QuestionDifficulty.Hard,
+            new List<IAdaptivityRulePe> { rule3 });
 
         var task1 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> { question1, question2 },
             QuestionDifficulty.Medium, "Stadtteile AB");
@@ -383,15 +383,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementUUID, Is.EqualTo(ele1.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementFileType, Is.EqualTo("h5p"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementCategory, Is.EqualTo("h5p"));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementMaxScore,
                 Is.EqualTo(ele1.Points));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementDescription,
                 Is.EqualTo(ele1.Description));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
                 Is.EqualTo(ele1.Goals.Split("\n")));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
                 Is.EqualTo(ele1.ElementModel.ToString()));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementName, Is.EqualTo(ele2.Name));
@@ -399,15 +399,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementUUID, Is.EqualTo(ele2.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementFileType, Is.EqualTo("png"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementCategory, Is.EqualTo("image"));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementMaxScore,
                 Is.EqualTo(ele2.Points));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementDescription,
                 Is.EqualTo(ele2.Description));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
                 Is.EqualTo(ele2.Goals.Split("\n")));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
                 Is.EqualTo(ele2.ElementModel.ToString()));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementName, Is.EqualTo(ele5.Name));
@@ -415,15 +415,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementUUID, Is.EqualTo(ele5.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementFileType, Is.EqualTo("pdf"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementCategory, Is.EqualTo("pdf"));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementMaxScore,
                 Is.EqualTo(ele5.Points));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementDescription,
                 Is.EqualTo(ele5.Description));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
                 Is.EqualTo(ele5.Goals.Split("\n")));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
                 Is.EqualTo(ele5.ElementModel.ToString()));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
             //AdaptivityElement with ContentReferenceAction
@@ -616,15 +616,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementUUID, Is.EqualTo(ele3.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementFileType, Is.EqualTo("url"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementCategory, Is.EqualTo("video"));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementMaxScore,
                 Is.EqualTo(ele3.Points));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementDescription,
                 Is.EqualTo(ele3.Description));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementGoals,
                 Is.EqualTo(ele3.Goals.Split("\n")));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementModel,
                 Is.EqualTo(ele3.ElementModel.ToString()));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementName, Is.EqualTo(ele4.Name));
@@ -632,15 +632,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementUUID, Is.EqualTo(ele4.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementFileType, Is.EqualTo("txt"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementCategory, Is.EqualTo("text"));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementMaxScore,
                 Is.EqualTo(ele4.Points));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementDescription,
                 Is.EqualTo(ele4.Description));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementGoals,
                 Is.EqualTo(ele4.Goals.Split("\n")));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementModel,
                 Is.EqualTo(ele4.ElementModel.ToString()));
-            Assert.That(((ILearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[7].ElementName, Is.EqualTo(ele6.Name));
