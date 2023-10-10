@@ -75,8 +75,7 @@
                 </polyline>
                 <polyline points="@GetSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
                     <title>
-                        Space.
-                        Use Buttons below to add element slots or decorations.
+                        @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceFillout"]
                     </title>
                 </polyline>
                 @* draw corner points *@
@@ -90,7 +89,7 @@
                     @bind-Y="cornerPoint.Y">
                     <circle r="5" fill="red" stroke="black">
                         <title>
-                            Drag and Drop to move corner point. Doubleclick to delete corner point.
+                            @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.CornerPoint"]
                         </title>
                     </circle>
                 </AdvancedDraggable>
@@ -108,7 +107,7 @@
                     @bind-Y="advancedComponentDecoration.PositionY">
                     <rect width="40" height="40" x="-20" y="-20" fill="lime" stroke="black" opacity="60%">
                         <title>
-                            Drag and Drop to move decoration. Doubleclick to delete corner point.
+                            @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.Decoration"]
                         </title>
                     </rect>
                     @((MarkupString)DrawFlowerSvg())
@@ -127,8 +126,7 @@
                     @bind-Y="advancedComponentSlot.PositionY">
                     <rect width="40" height="40" x="-20" y="-20" fill="gray" stroke="black" opacity="30%">
                         <title>
-                            Learning element slot outline.
-                            Doubleclick to insert new corner point.
+                            @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.ElementSlotOutline"]
                         </title>
                     </rect>
                 </AdvancedDraggable>
@@ -145,7 +143,7 @@
             @bind-Y="entryDoorPosition.Y">
             <rect width="10" height="30" x="-5" y="-15" fill="green" opacity="80%">
                 <title>
-                    Entrydoor. Drag along Spaceoutline to place.
+                    @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.Entrydoor"]
                 </title>
             </rect>
 
@@ -162,7 +160,7 @@
             @bind-Y="exitDoorPosition.Y">
             <rect width="10" height="30" x="-5" y="-15" fill="red" opacity="80%">
                 <title>
-                    Exitdoor. Drag along Spaceoutline to place.
+                    @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.Exitdoor"]
                 </title>
             </rect>
         </AdvancedDraggableOnWall>

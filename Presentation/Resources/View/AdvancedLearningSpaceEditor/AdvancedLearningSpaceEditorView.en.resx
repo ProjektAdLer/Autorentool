@@ -39,4 +39,28 @@
         <value>Spaceoutline.
 Doubleclick to insert new corner point.</value>
     </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceFillout" xml:space="preserve">
+        <value>Space.
+Use Buttons below to add learning element slots or decorations.</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.CornerPoint" xml:space="preserve">
+        <value>Corner Point.
+Drag and Drop to move. Doubleclick to delete.</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.Decoration" xml:space="preserve">
+        <value>Decoration.
+Drag and Drop to move. Doubleclick to delete.</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.ElementSlotOutline" xml:space="preserve">
+        <value>Learning element slot position.
+Doubleclick to delete.</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.Entrydoor" xml:space="preserve">
+        <value>Entrydoor. 
+Drag along Spaceoutline to position.</value>
+    </data>
+    <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.Exitdoor" xml:space="preserve">
+        <value>Exitdoor. 
+Drag along Spaceoutline to position.</value>
+    </data>
 </root>
