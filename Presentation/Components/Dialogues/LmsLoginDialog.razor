@@ -1,8 +1,8 @@
 @using Presentation.PresentationLogic.API
 @using Shared.Configuration
 @using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.ErrorManagement.BackendAccess
+@using System.Diagnostics.CodeAnalysis
 <MudDialog Class="relative flex rounded-lg bg-gradient-to-br from-adlerbggradientfrom to-adlerbggradientto w-[420px] h-[400px]">
     <TitleContent>
         <div class="flex flex-row gap-3 justify-center items-center">
@@ -15,7 +15,7 @@
     <DialogContent>
         @if (_isLmsConnected)
         {
-            <div class="flex flex-col justify-center py-7">
+            <div class="logged-in-container flex flex-col justify-center py-7">
                 <p class="flex justify-center font-bold text-2xl text-adlerdarkblue-200 opacity-50">@Localizer["DialogContent.LoggedIn.Header"]</p>
                 <div class="flex flex-row gap-1.5 justify-center">
                     <p class="text-lg text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
@@ -26,6 +26,13 @@
         }
         else
         {
+            @if (_spinnerActive)
+            {
+                <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
+                </div>
+                <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
+                                     Color="Color.Primary" Size="Size.Large"/>
+            }
             <div class="flex flex-col">
                 <MudForm>
                     <div class="flex flex-col">
@@ -41,10 +48,25 @@
                                       AdornmentAriaLabel=@Localizer["DialogContent.Button.ShowPassword"] Required="true"/>
                         @if (_showErrorInvalidCredentials)
                         {
-                            <MudText Color="Color.Error" Typo="Typo.subtitle2">@Localizer["DialogContent.Error.WrongUserOrPassword"]</MudText>
+                            <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                @Localizer["DialogContent.Error.WrongUserOrPassword"]
+                            </MudText>
+                        }
+                        @if (_showErrorApiUnreachable)
+                        {
+                            <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                @Localizer["DialogContent.Error.APIUnreachable"]
+                            </MudText>
+                        }
+                        @if (_showErrorTokenInvalid)
+                        {
+                            <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                @Localizer["DialogContent.Error.TokenInvalid"]
+                            </MudText>
                         }
                     </div>
                     <div class="flex flex-col">
+                        <!--TODO: Password reset link and API link should be set in the config - we need a proper configuration dialog -->
                         <a href="https://moodle.projekt-adler.eu/login/forgot_password.php" target="_blank" title=@Localizer["DialogContent.Button.ForgotPassword.Title"] class="pb-2">
                             @Localizer["DialogContent.Button.ForgotPassword"]
                         </a>
@@ -57,7 +79,6 @@
     </DialogContent>
 </MudDialog>
 
-<!--TODO: Should be set in the config-->
 
 @code {
 
@@ -65,10 +86,10 @@
     MudDialogInstance? MudDialog { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    IApplicationConfiguration Configuration { get; set; }
+    internal IApplicationConfiguration Configuration { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LmsLoginDialog> Localizer { get; set; }
@@ -81,13 +102,16 @@
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
     private bool _showErrorInvalidCredentials = false;
+    private bool _showErrorApiUnreachable = false;
     private bool _isLmsConnected = false;
 
     private bool _isPasswordVisible = false;
+    private bool _showErrorTokenInvalid = false;
+    private bool _spinnerActive = false;
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
-    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
 
     protected override void OnParametersSet()
     {
@@ -98,52 +122,105 @@
         _password = "";
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
-        CheckIfLmsIsConnected();
+        UpdateLmsIsConnected();
         MudDialog?.SetOptions(Options);
     }
 
-    private async void CheckIfLmsIsConnected()
+    private async void UpdateLmsIsConnected()
     {
-        _isLmsConnected = await PresentationLogic.IsLmsConnected();
-        StateHasChanged();
+        try
+        {
+            StartSpinner();
+            _isLmsConnected = await PresentationLogic.IsLmsConnected();
+        }
+        catch (BackendApiUnreachableException)
+        {
+            _showErrorApiUnreachable = true;
+        }
+        catch (BackendInvalidTokenException)
+        {
+            _showErrorTokenInvalid = true;
+            Logout();
+        }
+        finally
+        {
+            StopSpinner();
+            StateHasChanged();
+        }
     }
+
+    private void StartSpinner() => _spinnerActive = true;
+    private void StopSpinner() => _spinnerActive = false;
 
     private async void SubmitForm()
     {
+    //TODO: redo form as MudForm with proper validation
         if (_backendUrl == "" || _username == "" || _password == "") return;
+        if (!_backendUrl.StartsWith("http://") && !_backendUrl.StartsWith("https://"))
+        {
+            _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
+            return;
+        }
         Configuration[IApplicationConfiguration.BackendBaseUrl] = _backendUrl;
         Configuration[IApplicationConfiguration.BackendUsername] = _username;
         try
         {
-            await PresentationLogic.Login(_username, _password);
-
-            _showErrorInvalidCredentials = false;
-            _errorInvalidUrlMessage = "";
-            CheckIfLmsIsConnected();
+            StartSpinner();
+            await LoginAsync();
         }
         catch (BackendInvalidLoginException)
         {
-            _showErrorInvalidCredentials = true;
-            _errorInvalidUrlMessage = "";
-            _password = "";
-            StateHasChanged();
+            HandleInvalidLoginException();
         }
         catch (BackendInvalidUrlException e)
         {
-            _showErrorInvalidCredentials = false;
-            _errorInvalidUrlMessage = e.Message;
-            StateHasChanged();
+            HandleInvalidUrlException(e);
+        }
+        catch (BackendApiUnreachableException)
+        {
+            _showErrorApiUnreachable = true;
         }
         catch (Exception e)
         {
             Logger.LogError(e, "Error from Backend_GetUserTokenAsync");
         }
+        finally
+        {
+            StopSpinner();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoginAsync()
+    {
+        await PresentationLogic.Login(_username, _password);
+        _showErrorInvalidCredentials = false;
+        _showErrorApiUnreachable = false;
+        _showErrorTokenInvalid = false;
+        _errorInvalidUrlMessage = "";
+        UpdateLmsIsConnected();
     }
 
     private void Logout()
     {
         PresentationLogic.Logout();
-        CheckIfLmsIsConnected();
+        UpdateLmsIsConnected();
+    }
+
+    private void HandleInvalidLoginException()
+    {
+        _showErrorInvalidCredentials = true;
+        _errorInvalidUrlMessage = "";
+        _password = "";
+        StateHasChanged();
+    }
+
+    // ReSharper disable once SuggestBaseTypeForParameter
+    private void HandleInvalidUrlException(BackendInvalidUrlException e)
+    {
+        _showErrorInvalidCredentials = false;
+        _errorInvalidUrlMessage = e.Message;
+        StateHasChanged();
     }
 
     private void OnKeyPress(KeyboardEventArgs eventArgs)

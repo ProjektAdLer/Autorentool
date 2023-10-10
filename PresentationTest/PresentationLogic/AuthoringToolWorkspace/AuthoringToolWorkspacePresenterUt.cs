@@ -38,17 +38,17 @@ public class AuthoringToolWorkspacePresenterUt
             selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.AuthoringToolWorkspaceVm.LearningWorlds.Add(
-            new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo"));
+            new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo", "Foo"));
 
-        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g");
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g", "e");
 
-        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g");
+        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g", "e");
     }
 
     [Test]
     public async Task DeleteLearningWorld_CallsSaveLearningWorldAsync_WhenUnsavedChangesAndYesResponse()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };
@@ -65,13 +65,13 @@ public class AuthoringToolWorkspacePresenterUt
 
         await systemUnderTest.DeleteLearningWorld(learningWorld);
 
-        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+        presentationLogic.Received().SaveLearningWorld(learningWorld);
     }
 
     [Test]
     public async Task DeleteLearningWorld_CallsDeleteLearningWorld_WhenNoUnsavedChangesOrNoResponse()
     {
-        var learningWorld = new LearningWorldViewModel("saved", "f", "f", "f", "f", "f")
+        var learningWorld = new LearningWorldViewModel("saved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = false
         };
@@ -94,7 +94,7 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public async Task DeleteLearningWorld_CallsErrorService_WhenUnexpectedDialogResultType()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };
@@ -118,7 +118,7 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public async Task DeleteLearningWorld_AbortsWhenDialogCanceled()
     {
-        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };
@@ -146,30 +146,30 @@ public class AuthoringToolWorkspacePresenterUt
     public async Task SaveLearningWorldAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f");
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
             selectedViewModelsProvider: selectedViewModelsProvider);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
-        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
+        presentationLogic.Received().SaveLearningWorld(learningWorld);
     }
 
     [Test]
     public async Task SaveLearningWorldAsync_SerializationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f");
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
-            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
             .Do(_ => throw new SerializationException("test"));
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
         errorService.Received().SetError("Error while saving world", "test");
     }
 
@@ -177,16 +177,16 @@ public class AuthoringToolWorkspacePresenterUt
     public async Task SaveLearningWorldAsync_InvalidOperationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f");
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
-            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
             .Do(_ => throw new InvalidOperationException("test"));
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
         errorService.Received().SetError("Error while saving world", "test");
     }
 
@@ -194,11 +194,11 @@ public class AuthoringToolWorkspacePresenterUt
     public async Task OnBeforeShutdown_CallsDialogService_ForEveryUnsavedWorld_AndCallsSaveOnYesResponse()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };
-        var savedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var savedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = false
         };
@@ -234,7 +234,7 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.OnBeforeShutdownAsync(null, args);
         Assert.Multiple(() =>
         {
-            presentationLogic.Received().SaveLearningWorldAsync(unsavedWorld);
+            presentationLogic.Received().SaveLearningWorld(unsavedWorld);
             Assert.That(wasCalled);
         });
     }
@@ -243,7 +243,7 @@ public class AuthoringToolWorkspacePresenterUt
     public async Task OnBeforeShutdown_CallsDialogService_CancelsShutdownOnCancelReturnValue()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };
@@ -265,7 +265,7 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.OnBeforeShutdownAsync(null, args);
         Assert.Multiple(() =>
         {
-            presentationLogic.DidNotReceive().SaveLearningWorldAsync(unsavedWorld);
+            presentationLogic.DidNotReceive().SaveLearningWorld(unsavedWorld);
             Assert.That(wasCalled);
             Assert.That(args.CancelShutdownState);
         });
@@ -275,7 +275,7 @@ public class AuthoringToolWorkspacePresenterUt
     public async Task OnBeforeShutdown_CallsErrorService_WhenUnexpectedDialogResultTypeReturned()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f")
         {
             UnsavedChanges = true
         };

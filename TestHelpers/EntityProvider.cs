@@ -1,6 +1,13 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using Shared;
+using Shared.Adaptivity;
 
 namespace TestHelpers;
 
@@ -13,16 +20,17 @@ public static class EntityProvider
 
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
-        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append)
-            { UnsavedChanges = unsavedChanges };
+        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
+                "g" + append)
+            {UnsavedChanges = unsavedChanges};
     }
 
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
         return new LearningSpace("a", "d", "e", 4, Theme.Campus,
-                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
-            { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
+            {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
@@ -33,7 +41,7 @@ public static class EntityProvider
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
-        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
+        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> {{1, GetLearningElement()}},
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -43,7 +51,7 @@ public static class EntityProvider
     {
         return new LearningElement("a" + append, content!, "d" + append, "e" + append,
             LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
-            positionY: positionY) { UnsavedChanges = unsavedChanges };
+            positionY: positionY) {UnsavedChanges = unsavedChanges};
     }
 
     public static PathWayCondition GetPathWayCondition()
@@ -74,7 +82,7 @@ public static class EntityProvider
     public static SavedLearningWorldPath GetSavedLearningWorldPath()
     {
         return new SavedLearningWorldPath
-            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1" };
+            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1"};
     }
 
     public static LearningWorld GetLearningWorldWithSpace()
@@ -116,6 +124,75 @@ public static class EntityProvider
             nameof(LearningSpace) => GetLearningSpace() as TEntity,
             nameof(LearningElement) => GetLearningElement() as TEntity,
             nameof(LinkContent) => GetLinkContent() as TEntity,
+            nameof(IMultipleChoiceQuestion) => GetMultipleChoiceMultipleResponseQuestion() as TEntity,
             _ => throw new ArgumentOutOfRangeException()
         })!;
+
+    public static IAdaptivityAction GetContentReferenceAction()
+    {
+        return new ContentReferenceAction(GetLinkContent());
+    }
+
+    public static AdaptivityContent GetAdaptivityContent()
+    {
+        var tasks = new List<IAdaptivityTask> {GetAdaptivityTask()};
+        return new AdaptivityContent(tasks);
+    }
+
+    public static AdaptivityTask GetAdaptivityTask()
+    {
+        var questions = new List<IAdaptivityQuestion> {GetAdaptivityQuestion()};
+        return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
+    }
+
+    private static IAdaptivityRule GetAdaptivityRule()
+    {
+        return new AdaptivityRule(GetAdaptivityTrigger(), GetAdaptivityAction());
+    }
+
+    private static IAdaptivityAction GetAdaptivityAction()
+    {
+        return new CommentAction("comment");
+    }
+
+    private static IAdaptivityTrigger GetAdaptivityTrigger()
+    {
+        return new CorrectnessTrigger(AnswerResult.Correct);
+    }
+
+    private static IAdaptivityQuestion GetAdaptivityQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy,
+            rules);
+    }
+
+    public static MultipleChoiceMultipleResponseQuestion GetMultipleChoiceMultipleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceMultipleResponseQuestion("questionTitle", 123, choices, choices, rules, "questionText",
+            QuestionDifficulty.Easy);
+    }
+
+    public static MultipleChoiceSingleResponseQuestion GetMultipleChoiceSingleResponseQuestion()
+    {
+        var choices = new List<Choice> {GetAdaptivityChoice()};
+        var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
+        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy, rules);
+    }
+
+    private static Choice GetAdaptivityChoice()
+    {
+        return new Choice("a choice");
+    }
+
+    public static ILearningElement GetLearningElement(IAdaptivityContent content)
+    {
+        return new LearningElement("name", content, "description", "goals", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_deskpc_1);
+    }
 }

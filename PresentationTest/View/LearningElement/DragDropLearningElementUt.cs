@@ -10,6 +10,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningElement;
@@ -35,6 +36,12 @@ public class DragDropLearningElementUt
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
     }
 
     private TestContext _ctx;

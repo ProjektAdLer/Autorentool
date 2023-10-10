@@ -15,8 +15,10 @@ public class WorldCommandFactory : IWorldCommandFactory
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
         string shortname, string authors, string language, string description, string goals,
+        string evaluationLink,
         Action<AuthoringToolWorkspace> mappingAction) =>
         new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description, goals,
+            evaluationLink,
             mappingAction, LoggerFactory.CreateLogger<CreateLearningWorld>());
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace,
@@ -30,8 +32,9 @@ public class WorldCommandFactory : IWorldCommandFactory
             LoggerFactory.CreateLogger<DeleteLearningWorld>());
 
     public IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
-        string language, string description, string goals, Action<LearningWorld> mappingAction) =>
-        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals,
+        string language, string description, string goals, string evaluationLink,
+        Action<LearningWorld> mappingAction) =>
+        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals, evaluationLink,
             mappingAction, LoggerFactory.CreateLogger<EditLearningWorld>());
 
     public ILoadLearningWorld GetLoadCommand(AuthoringToolWorkspace workspace, string filepath,
@@ -45,6 +48,7 @@ public class WorldCommandFactory : IWorldCommandFactory
             LoggerFactory.CreateLogger<LoadLearningWorld>());
 
     public ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld,
-        string filepath) =>
-        new SaveLearningWorld(businessLogic, learningWorld, filepath, LoggerFactory.CreateLogger<SaveLearningWorld>());
+        string filepath, Action<LearningWorld> mappingAction) =>
+        new SaveLearningWorld(businessLogic, learningWorld, filepath, mappingAction,
+            LoggerFactory.CreateLogger<SaveLearningWorld>());
 }

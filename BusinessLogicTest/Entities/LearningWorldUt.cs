@@ -17,6 +17,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "eva";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -31,8 +32,8 @@ public class LearningWorldUt
 
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
-            learningSpaces, pathWayConditions, pathWays, topics);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath: savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         Assert.Multiple(() =>
         {
@@ -42,6 +43,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
             Assert.That(systemUnderTest.LearningPathways, Is.EqualTo(pathWays));
@@ -60,6 +62,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "eva";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -70,8 +73,8 @@ public class LearningWorldUt
         var topic1 = new Topic("topic1");
         var topics = new List<Topic> { topic1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
-            learningSpaces, pathWayConditions, pathWays, topics);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
 
@@ -81,6 +84,7 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
+        var evaluationLinkChanged = "new evaluation link";
         var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
         var newElement = EntityProvider.GetLearningElement();
         var space2 = new LearningSpace("gg", "gg", "gg", 5, Theme.Campus);
@@ -95,6 +99,7 @@ public class LearningWorldUt
         systemUnderTest.Language = languageChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
+        systemUnderTest.EvaluationLink = evaluationLinkChanged;
         systemUnderTest.SavePath = savePathChanged;
         systemUnderTest.LearningSpaces.Add(space2);
         systemUnderTest.PathWayConditions.Add(condition2);
@@ -111,6 +116,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(languageChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
+            Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLinkChanged));
             Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePathChanged));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
@@ -136,6 +142,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePath));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
@@ -157,12 +164,13 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string evaluationLink = "https://";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var learningSpaces = new List<ILearningSpace> { space1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
-            learningSpaces);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            savePath: savePath, learningSpaces);
 
 
         var mementoMock = new MementoMock();

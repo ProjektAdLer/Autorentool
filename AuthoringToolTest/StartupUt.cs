@@ -17,9 +17,11 @@ using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
 using Generator.DSL;
 using Generator.WorldExport;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 using Presentation.Components.Forms.Element;
@@ -42,8 +44,9 @@ public class StartupUt
     {
         var configuration = new ConfigurationManager();
         configuration["foo"] = "bar";
+        var environment = Substitute.For<IWebHostEnvironment>();
 
-        var systemUnderTest = new Startup(configuration);
+        var systemUnderTest = new Startup(configuration, environment);
 
         Assert.That(systemUnderTest.Configuration, Is.SameAs(configuration));
         Assert.That(systemUnderTest.Configuration["foo"], Is.EqualTo("bar"));
@@ -206,10 +209,11 @@ public class StartupUt
     }
 
 
-    private Startup GetStartupForTesting(IConfiguration? configuration = null)
+    private Startup GetStartupForTesting(IConfiguration? configuration = null, IWebHostEnvironment? environment = null)
     {
         configuration ??= new ConfigurationManager();
-        return new Startup(configuration);
+        environment ??= Substitute.For<IWebHostEnvironment>();
+        return new Startup(configuration, environment);
     }
 
     private void ConfigureServicesCoreTest(Type requiredType)

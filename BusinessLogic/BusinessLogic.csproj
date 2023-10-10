@@ -15,8 +15,8 @@
       <Compile Remove="Entities\LearningContent\LearningContent.cs" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.4.0" />
-      <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+      <PackageReference Include="FluentValidation" Version="11.7.1" />
+      <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Resources" />

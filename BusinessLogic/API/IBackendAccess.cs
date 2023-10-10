@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Entities.BackendAccess;
+using BusinessLogic.ErrorManagement.BackendAccess;
 
 namespace BusinessLogic.API;
 
@@ -11,12 +12,33 @@ public interface IBackendAccess
     /// <param name="password">The Password used to log into the LMS</param>
     /// <returns>A Token to pass to all other LMS Functions</returns>
     /// <exception cref="ErrorManagement.BackendAccess.BackendInvalidLoginException">
-    /// Thrown when the login credentials are invalid.
+    /// Login credentials are invalid.
+    /// </exception>
+    /// <exception cref="BackendApiUnreachableException">
+    /// The API healthcheck failed, the API is not reachable.
     /// </exception>
     public Task<UserToken> GetUserTokenAsync(string username, string password);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    /// <exception cref="BackendApiUnreachableException">
+    /// The API healthcheck failed, the API is not reachable.
+    /// </exception>
     public Task<UserInformation> GetUserInformationAsync(UserToken token);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="token"></param>
+    /// <param name="backupPath"></param>
+    /// <param name="awtPath"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="progress"></param>
+    /// <returns></returns>
     public Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
-        IProgress<int>? mockProgress = null);
+        IProgress<int>? progress = null,
+        CancellationToken? cancellationToken = null);
 }

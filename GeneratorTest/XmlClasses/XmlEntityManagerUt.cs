@@ -35,17 +35,20 @@ public class XmlEntityManagerUt
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
 
         var topicsJson = new TopicJson(1, "Topic", new List<int> { 1 });
-        var topicsList = new List<TopicJson> { topicsJson };
+        var topicsList = new List<ITopicJson> { topicsJson };
         var learningSpacesJson1 = new LearningSpaceJson(1, "", "space1",
             new List<int?> { 1, 2 }, 0, "", "");
         var learningSpacesJson2 = new LearningSpaceJson(1, "", "space2",
             new List<int?> { 3, 4 }, 0, "", "");
-        var learningSpacesList = new List<LearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
+        var learningSpacesList = new List<ILearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
         var learningElementJson1 = new LearningElementJson(1,
             "", "", "", "", "h5p", 0, 2, "");
         var learningElementJson2 = new LearningElementJson(2,
             "", "", "", "", "json", 0, 3, "");
-        var learningElementList = new List<LearningElementJson> { learningElementJson1, learningElementJson2 };
+        var learningElementList = new List<IElementJson> { learningElementJson1, learningElementJson2 };
+        var convertedList = learningElementList
+            .OfType<LearningElementJson>()
+            .ToList();
         var learningWorldJson = new LearningWorldJson("world", "", topicsList, learningSpacesList, learningElementList);
 
         var mockLabelsElementJson = new LearningElementJson(2, "", "", "", "", "mp4", 1, 2, "");
@@ -55,7 +58,7 @@ public class XmlEntityManagerUt
         mockReadDsl.GetLabelElementList().Returns(labelJsonList);
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetSectionList().Returns(learningSpacesList);
-        mockReadDsl.GetElementsOrderedList().Returns(learningElementList);
+        mockReadDsl.GetElementsOrderedList().Returns(convertedList);
         mockReadDsl.GetLabelElementList().Returns(labelJsonList);
 
         // Act

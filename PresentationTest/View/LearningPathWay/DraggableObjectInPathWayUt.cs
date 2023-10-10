@@ -37,6 +37,12 @@ public class DraggableObjectInPathWay
         _ctx.Services.AddSingleton(_localizer);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;

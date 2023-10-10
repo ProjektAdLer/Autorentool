@@ -29,12 +29,13 @@ public class WorldCommandFactoryUt
         var authors = "WorldAuthors";
         var language = "WorldLanguage";
         var description = "WorldDescription";
+        var evaluationLink = "WorldEvaluationLink";
         var goals = "WorldGoals";
         Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals, mappingAction);
+            description, goals, evaluationLink, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -48,6 +49,7 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.LearningWorld.Language, Is.EqualTo(language));
             Assert.That(resultCasted.LearningWorld.Description, Is.EqualTo(description));
             Assert.That(resultCasted.LearningWorld.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningWorld.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }
@@ -105,12 +107,13 @@ public class WorldCommandFactoryUt
         var authors = "NewAuthors";
         var language = "NewLanguage";
         var description = "NewDescription";
+        var evaluationLink = "NewEvaluationLink";
         var goals = "NewGoals";
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals, mappingAction);
+            description, goals, evaluationLink, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());
@@ -124,6 +127,7 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.Language, Is.EqualTo(language));
             Assert.That(resultCasted.Description, Is.EqualTo(description));
             Assert.That(resultCasted.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }
@@ -185,8 +189,9 @@ public class WorldCommandFactoryUt
         var businessLogic = Substitute.For<IBusinessLogic>();
         var learningWorld = EntityProvider.GetLearningWorld();
         var filepath = "FilePath";
+        Action<LearningWorld> mappingAction = _ => { };
         // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath);
+        var result = _factory.GetSaveCommand(businessLogic, learningWorld, filepath, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<SaveLearningWorld>());

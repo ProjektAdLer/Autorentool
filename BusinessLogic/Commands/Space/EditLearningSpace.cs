@@ -81,10 +81,11 @@ public class EditLearningSpace : IEditLearningSpace
         Execute();
     }
 
-    private bool AnyChanges() =>
+    public bool AnyChanges() =>
         LearningSpace.Name != SpaceName ||
         LearningSpace.Description != Description ||
         LearningSpace.Goals != Goals ||
         LearningSpace.AssignedTopic != Topic ||
-        LearningSpace.RequiredPoints != RequiredPoints;
+        LearningSpace.RequiredPoints != RequiredPoints ||
+        LearningSpace.Theme != Theme;
 }

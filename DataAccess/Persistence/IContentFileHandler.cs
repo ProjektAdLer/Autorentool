@@ -1,3 +1,4 @@
+using BusinessLogic.ErrorManagement.DataAccess;
 using PersistEntities.LearningContent;
 
 namespace DataAccess.Persistence;
@@ -16,6 +17,7 @@ public interface IContentFileHandler
     /// <returns>A content object referencing the file.</returns>
     /// <exception cref="ArgumentException">The <paramref name="filepath"/> was null or whitespace.</exception>
     /// <exception cref="IOException">The file at <paramref name="filepath"/> has a length of 0 and is empty.</exception>
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
     /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
     /// we don't copy the file and use the existing one instead.</remarks>
     public Task<ILearningContentPe> LoadContentAsync(string filepath);
@@ -27,6 +29,7 @@ public interface IContentFileHandler
     /// <param name="stream">The stream to be written.</param>
     /// <returns>A content object referencing the file.</returns>
     /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
     /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
     /// we don't copy the stream and use the existing one instead.</remarks>
     public Task<ILearningContentPe> LoadContentAsync(string name, Stream stream);

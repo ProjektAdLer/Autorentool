@@ -1,5 +1,6 @@
 @typeparam TForm where TForm : new()
 @typeparam TEntity
+@using MudBlazor.Utilities
 @using System.Diagnostics.CodeAnalysis
 @implements IBaseForm
 
@@ -11,7 +12,7 @@
     </MudButtonGroup>
 </MudCardActions>
 
-<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
+<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
     <MudCardContent>
         @Fields
         @if (SubmitErrorMessage != null)
@@ -43,6 +44,9 @@
     [Parameter, EditorRequired]
     public EventCallback<TForm> OnValidSubmit { get; set; }
 
+    [Parameter]
+    public EventCallback<TForm> OnValidFieldChange { get; set; }
+
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string SnackbarMessage { get; set; }
 
@@ -64,17 +68,20 @@
 
     internal string? SubmitErrorMessage { get; set; }
 
+    [Parameter]
+    public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
+
     //Wrapper function around ValidateAsync to only validate a given property
     //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
     //If we want to do Func<T, Task<IEnumerable<string>> then we have to handle every type of field separately, 
     //for example for T=string for text inputs, T=int for number inputs etc.
     //By the way, this information is not written anywhere in the documentation and I had to dive pretty deep into the
     //framework to find this out :) - n.stich
-    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (_, propertyName) =>
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => CustomValidatorFunc ?? (async (_, propertyName) =>
     {
         var modelEntity = FormDataContainer.GetMappedEntity();
         return await Validator.ValidateAsync(modelEntity, propertyName);
-    };
+    });
 
     public void Reset()
     {
@@ -98,6 +105,16 @@
                 SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
             }
         }
+    }
+
+
+    private async Task FieldChanged(FormFieldChangedEventArgs e)
+    {
+    //quit early if nobody is listening anyway
+        if (!OnValidFieldChange.HasDelegate) return;
+        if (_form == null) throw new ApplicationException("_form is null");
+        await _form.Validate();
+        if (_form.IsValid) await OnValidFieldChange.InvokeAsync(FormDataContainer.FormModel);
     }
 
 }

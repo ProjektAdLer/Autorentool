@@ -3,5 +3,5 @@
 public class ErrorBE
 {
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    public string? Detail { get; }
+    public string? Detail { set; get; }
 }

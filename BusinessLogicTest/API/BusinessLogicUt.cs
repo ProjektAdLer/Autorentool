@@ -4,9 +4,12 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Shared;
 using Shared.Command;
@@ -569,21 +572,21 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningContent("foobar");
+        systemUnderTest.LoadLearningContentAsync("foobar");
 
-        mockDataAccess.Received().LoadLearningContent("foobar");
+        mockDataAccess.Received().LoadLearningContentAsync("foobar");
     }
 
     [Test]
-    public void LoadLearningContent_ReturnsLearningElement()
+    public async Task LoadLearningContent_ReturnsLearningElement()
     {
         var learningContent = new FileContent("fa", "a", "");
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningContent("foobar").Returns(learningContent);
+        mockDataAccess.LoadLearningContentAsync("foobar").Returns(learningContent);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningContent("foobar");
+        var learningElementActual = await systemUnderTest.LoadLearningContentAsync("foobar");
 
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
@@ -805,44 +808,44 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void LoadLearningContentFromStream_CallsDataAccess()
+    public async Task LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningContent("filename.extension", stream);
+        await systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
-        mockDataAccess.Received().LoadLearningContent("filename.extension", stream);
+        mockDataAccess.Received().LoadLearningContentAsync("filename.extension", stream);
     }
 
     [Test]
-    public void LoadLearningContentFromStream_ReturnsLearningElement()
+    public async Task LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var learningContent = new FileContent("filename", "extension", "");
         var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
+        mockDataAccess.LoadLearningContentAsync("filename.extension", stream).Returns(learningContent);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningContent("filename.extension", stream);
+        var learningElementActual = await systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
 
     [Test]
-    public void LoadLearningContentFromStream_IOException_CallsErrorManager()
+    public async Task LoadLearningContentFromStream_IOException_CallsErrorManager()
     {
         var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(_ => { throw new IOException(); });
+        mockDataAccess.LoadLearningContentAsync("filename.extension", stream).ThrowsAsync<IOException>();
 
         var errorManager = Substitute.For<IErrorManager>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: mockDataAccess, errorManager: errorManager);
 
-        systemUnderTest.LoadLearningContent("filename.extension", stream);
+        await systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
         errorManager.Received().LogAndRethrowError(Arg.Any<IOException>());
     }
@@ -916,9 +919,10 @@ public class BusinessLogicUt
         backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
             .Returns(Task.FromResult(userInformation));
         var mockConfiguration = Substitute.For<IApplicationConfiguration>();
-        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        mockConfiguration[IApplicationConfiguration.BackendBaseUrl] = "some url";
 
-        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(fakeConfiguration: mockConfiguration, apiAccess: backendAccess);
 
         await systemUnderTest.Login(username, password);
 
@@ -932,7 +936,7 @@ public class BusinessLogicUt
         const string filepath = "filepath";
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath);
+        systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
 
         worldGenerator.Received().ExtractAtfFromBackup(filepath);
     }
@@ -952,7 +956,7 @@ public class BusinessLogicUt
         var mockProgress = Substitute.For<IProgress<int>>();
         mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
+        systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
 
         backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);

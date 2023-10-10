@@ -11,7 +11,7 @@ public class EditLearningWorldUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva")
         {
             UnsavedChanges = false
         };
@@ -21,11 +21,13 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
@@ -37,6 +39,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("eva"));
             Assert.That(world.UnsavedChanges, Is.False);
         });
 
@@ -51,6 +54,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
     }
@@ -58,18 +62,20 @@ public class EditLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva");
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -79,9 +85,9 @@ public class EditLearningWorldUt
     }
 
     [Test]
-    public void UndoRedo_UndoesAndRedoesEditLearningSpace()
+    public void UndoRedo_UndoesAndRedoesEditLearningWorld()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva")
         {
             UnsavedChanges = false
         };
@@ -91,11 +97,13 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var evaluationLink = "el";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                mappingAction,
                 new NullLogger<EditLearningWorld>());
 
         Assert.Multiple(() =>
@@ -107,6 +115,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("eva"));
             Assert.That(world.UnsavedChanges, Is.False);
         });
 
@@ -121,6 +130,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
@@ -136,6 +146,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("eva"));
             Assert.That(world.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
@@ -151,6 +162,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.EvaluationLink, Is.EqualTo("el"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
     }

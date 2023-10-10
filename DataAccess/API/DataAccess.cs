@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Persistence;
 using PersistEntities;
 using PersistEntities.LearningContent;
@@ -13,9 +14,18 @@ namespace DataAccess.API;
 
 public class DataAccess : IDataAccess
 {
-    public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
-        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
-        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
+    public readonly IContentFileHandler ContentFileHandler;
+    public readonly IFileSystem FileSystem;
+    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
+    public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
+    public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+
+    public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
+
+    public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
+        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement,
+        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler,
+        IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -27,15 +37,8 @@ public class DataAccess : IDataAccess
         Mapper = mapper;
     }
 
-    public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
-    public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
-    public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
-    public readonly IContentFileHandler ContentFileHandler;
-    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
-    public readonly IFileSystem FileSystem;
-    public IApplicationConfiguration Configuration { get; }
     public IMapper Mapper { get; }
-    
+    public IApplicationConfiguration Configuration { get; }
 
 
     public void SaveLearningWorldToFile(LearningWorld world, string filepath)
@@ -83,16 +86,18 @@ public class DataAccess : IDataAccess
         return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
-    public ILearningContent LoadLearningContent(string filepath)
+    /// <inheritdoc cref="IDataAccess.LoadLearningContentAsync(string)"/>
+    public async Task<ILearningContent> LoadLearningContentAsync(string filepath)
     {
-        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(filepath).Result);
+        return Mapper.Map<ILearningContent>(await ContentFileHandler.LoadContentAsync(filepath));
     }
 
-    public ILearningContent LoadLearningContent(string name, Stream stream)
+    /// <inheritdoc cref="IDataAccess.LoadLearningContentAsync(string,Stream)"/>
+    public async Task<ILearningContent> LoadLearningContentAsync(string name, Stream stream)
     {
-        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(name, stream).Result);
+        return Mapper.Map<ILearningContent>(await ContentFileHandler.LoadContentAsync(name, stream));
     }
-    
+
     /// <inheritdoc cref="IDataAccess.GetAllContent"/>
     public IEnumerable<ILearningContent> GetAllContent()
     {
@@ -121,7 +126,7 @@ public class DataAccess : IDataAccess
     {
         return WorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path);
     }
-    
+
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
     {
         WorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);

@@ -34,6 +34,15 @@ public class MainLayoutUt
         _ctx.ComponentFactories.AddStub<CultureSelector>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
+    private TestContext _ctx;
+    private IStringLocalizer<MainLayout> _stringLocalizer;
+
     [Test]
     public void Constructor_InjectsDependencies()
     {
@@ -66,7 +75,4 @@ public class MainLayoutUt
                 .Add(p => p.Body, body)
         );
     }
-
-    private TestContext _ctx;
-    private IStringLocalizer<MainLayout> _stringLocalizer;
 }

@@ -8,6 +8,7 @@ namespace PersistEntities;
 [DataContract]
 [KnownType(typeof(FileContentPe))]
 [KnownType(typeof(LinkContentPe))]
+[KnownType(typeof(AdaptivityContentPe))]
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe learningContent,

@@ -16,7 +16,11 @@
 
     private void OpenLmsDialog()
     {
-        DialogService.ShowAsync<LmsLoginDialog>();
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = true,
+        };
+        DialogService.ShowAsync<LmsLoginDialog>("Login", options);
         InvokeAsync(StateHasChanged);
     }
 

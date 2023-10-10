@@ -1,8 +1,10 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Shared
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using BusinessLogic.Entities.LearningContent
+@using BusinessLogic.ErrorManagement.DataAccess
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
 <header class="m-2 rounded-lg">
@@ -16,25 +18,27 @@
 
         @if (Working)
         {
-            <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
-            </div>
             <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
                                  Color="Color.Primary" Size="Size.Large"/>
         }
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
+
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
                        Accept="@AllowedFileEndings.EndingsCommaSeparated"
-                       InputClass="absolute w-full h-full opacity-0 z-10"
+                       InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
                 <MudPaper Class="@PaperClasses" Outlined="true">
-                    <MudText Typo="Typo.body1" Class="break-word w-80" Align="Align.Center">
-                        @Localizer["FileUpload.ButtonTemplate.Text1"]<br/>
-                        @Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]
-                    </MudText>
+                    <div class="h-32 flex flex-col justify-center items-center">
+                        <img class="w-9" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
+                        <h1 class="flex text-base justify-center break-word w-[40rem] font-bold text-adlerdarkblue mx-4">@Localizer["FileUpload.ButtonTemplate.Text1"]</h1>
+                        <p class="flex justify-center text-sm text-center break-word w-[40rem] mx-4">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</p>
+                    </div>
                 </MudPaper>
+
             </ButtonTemplate>
         </MudFileUpload>
+
     </div>
     <Collapsable Title=@Localizer["Collapsable.Title"] Collapsed="true">
         <AddLinkForm/>
@@ -46,34 +50,36 @@
 
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IDialogService DialogService { get; set; }
+    internal IDialogService DialogService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IPresentationLogic PresentationLogic { get; set; }
+    internal IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private ILogger<ContentFilesAdd> Logger { get; set; }
+    internal ILogger<ContentFilesAdd> Logger { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
+    internal IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IErrorService ErrorService { get; set; }
+    internal IErrorService ErrorService { get; set; }
 
-    [CascadingParameter]
-    public ContentFilesContainer? ContentFilesContainer { get; set; }
+    [CascadingParameter(Name = "RerenderContentContainer")]
+    public Func<Task>? RerenderContentFilesContainer { get; set; }
 
 
     private string DragClass { get; set; } = "";
-    private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
+    private string PaperClasses => $"h-32 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
     private bool Working { get; set; } = false;
 
-    //iterates all files, copies them into a new stream and passes said stream to presentation logic
-    private void OnFilesChanged(InputFileChangeEventArgs obj)
+    /// <summary>
+    /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
+    /// </summary>
+    private async Task OnFilesChangedAsync(InputFileChangeEventArgs obj)
     {
     //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
     //indefinitely for no apparent reason
-        Task.Run(async () =>
+        try
         {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             ToggleSpinner();
@@ -84,8 +90,8 @@
 
             foreach (var file in files)
             {
-                var fileEnding = file.Name.Split(".").Select(s => "." + s).LastOrDefault();
-                if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.ToLowerInvariant()))
+                var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
+                if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
                 {
                     await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
                     continue;
@@ -94,11 +100,15 @@
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
-            if (ContentFilesContainer is null) throw new InvalidOperationException("ContentFilesContainer cascading parameter not set");
-            await ContentFilesContainer.RerenderAsync();
+            var rerenderTask = RerenderContentFilesContainer?.Invoke();
+            if (rerenderTask is not null)
+                await rerenderTask;
+        }
+        finally
+        {
             ToggleSpinner();
             ClearDragClass();
-        });
+        }
     }
 
     private async Task HandleFileAsync(IBrowserFile file)
@@ -114,22 +124,36 @@
         }
 
         Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
-        await using var stream = file.OpenReadStream(1_000_000_000);
-        Logger.LogTrace("BrowserFileStream opened");
-
+        Stream stream;
+        try
+        {
+            stream = file.OpenReadStream(1_000_000_000);
+            Logger.LogTrace("BrowserFileStream opened");
+        }
+        catch (IOException)
+        {
+            ErrorService.SetError(Localizer["FileTooBig.Error.Title"], Localizer["FileTooBig.Error.Text"]);
+            return;
+        }
         Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
+        await stream.DisposeAsync();
+
+        var fileName = PathHelper.TrimFileName(file.Name);
 
         Logger.LogTrace("Calling LoadLearningContentViewModel");
-    //TODO: report when a file with same content already exists
         try
         {
-            PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+            await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
         }
         catch (IOException e)
         {
             ErrorService.SetError("Error while loading content", e.Message);
+        }
+        catch (HashExistsException hEEx)
+        {
+            await InvokeAsync(() => { DialogService.ShowMessageBox("Duplicate file", $"File with same content as '{file.Name}' already exists in content folder in file '{hEEx.DuplicateFileName}'"); });
         }
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }

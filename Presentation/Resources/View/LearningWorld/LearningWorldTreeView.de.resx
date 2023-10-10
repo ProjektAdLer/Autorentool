@@ -24,12 +24,12 @@
         </value>
     </resheader>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Arbeitslast: </value>
+        <value>Arbeitsaufwand: </value>
     </data>
     <data name="OverView.Points" xml:space="preserve">
-        <value>Punkte:</value>
+        <value>Gesamtpunkte:</value>
     </data>
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
-        <value> min.</value>
+        <value> min</value>
     </data>
 </root>

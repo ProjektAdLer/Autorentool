@@ -6,6 +6,8 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -14,8 +16,10 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.Validation;
+using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using FluentValidation;
@@ -24,6 +28,7 @@ using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using Presentation.Components.Culture;
 using Presentation.Components.Forms;
@@ -41,6 +46,9 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.MyLearningWorlds;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Serilog;
+using Serilog.Settings.Configuration;
+using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -51,12 +59,14 @@ namespace AuthoringTool;
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
 
     public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -72,10 +82,30 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+        var logFileName = Environment.IsDevelopment() ? "log-dev.txt" : "log.txt";
+        var logFilePath = Path.Combine(ApplicationPaths.LogsFolder, logFileName);
+        try
+        {
+            var options = new ConfigurationReaderOptions(typeof(ConsoleLoggerExtensions).Assembly);
+            var loggerConfig = new LoggerConfiguration();
+            loggerConfig.ReadFrom.Configuration(Configuration, options)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .WriteTo.File(path: logFilePath, buffered: false, rollOnFileSizeLimit: true,
+                    fileSizeLimitBytes: 100000000,
+                    retainedFileCountLimit: 5);
+            Log.Logger = loggerConfig.CreateLogger();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
         services.AddLogging(builder =>
         {
             builder.ClearProviders();
-            builder.AddConsole();
+            builder.AddSerilog(dispose: true);
             builder.SetMinimumLevel(LogLevel.Trace);
         });
 
@@ -131,6 +161,10 @@ public class Startup
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
+        services.AddSingleton<IValidator<MultipleChoiceSingleResponseQuestion>,
+            MultipleChoiceSingleResponseQuestionValidator>();
+        services.AddSingleton<IValidator<MultipleChoiceMultipleResponseQuestion>,
+            MultipleChoiceMultipleResponseQuestionValidator>();
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
@@ -149,7 +183,7 @@ public class Startup
         services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
-            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
@@ -232,11 +266,13 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager)p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
     }
 
     private void ConfigureCommandFactories(IServiceCollection services)
     {
+        services.AddSingleton<IQuestionCommandFactory, QuestionCommandFactory>();
+        services.AddSingleton<ITaskCommandFactory, TaskCommandFactory>();
         services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
         services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
         services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
@@ -266,7 +302,7 @@ public class Startup
         app.UseStaticFiles();
 
         // Add localization cultures
-        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var supportedCultures = new[] {"de-DE", "en-DE"};
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
@@ -276,6 +312,7 @@ public class Startup
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
+        ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
 
         app.UseRouting();
 

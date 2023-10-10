@@ -3,6 +3,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
@@ -234,17 +235,17 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public ILearningContent LoadLearningContent(string filepath)
+    public async Task<ILearningContent> LoadLearningContentAsync(string filepath)
     {
-        var content = DataAccess.LoadLearningContent(filepath);
-        return content;
+        return await DataAccess.LoadLearningContentAsync(filepath);
     }
 
-    public ILearningContent LoadLearningContent(string name, Stream stream)
+    /// <inheritdoc cref="IBusinessLogic.LoadLearningContentAsync(string,System.IO.Stream)"/>
+    public async Task<ILearningContent> LoadLearningContentAsync(string name, Stream stream)
     {
         try
         {
-            return DataAccess.LoadLearningContent(name, stream);
+            return await DataAccess.LoadLearningContentAsync(name, stream);
         }
         catch (IOException e)
         {
@@ -344,16 +345,22 @@ public class BusinessLogic : IBusinessLogic
 
     private async Task UpdateUserInformation()
     {
-        if (Configuration[IApplicationConfiguration.BackendToken] != "")
-        {
-            _userInformation =
-                await BackendAccess.GetUserInformationAsync(
-                    new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
-        }
-        else
+        if (Configuration[IApplicationConfiguration.BackendToken] == "")
         {
             Logout();
+            return;
         }
+
+        if (Configuration[IApplicationConfiguration.BackendBaseUrl] == "")
+        {
+            Logger.LogWarning("Tried to update user information without a backend url - logging out");
+            Logout();
+            return;
+        }
+
+        _userInformation =
+            await BackendAccess.GetUserInformationAsync(
+                new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
     }
 
     public async Task Login(string username, string password)
@@ -388,12 +395,21 @@ public class BusinessLogic : IBusinessLogic
         Logger.LogTrace("Logged out user");
     }
 
-    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
+    public async Task UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
+        CancellationToken? cancellationToken = null)
     {
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
-        BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
-            filepath, atfPath, progress);
-        Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
+        try
+        {
+            await BackendAccess.UploadLearningWorldAsync(
+                new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+                filepath, atfPath, progress, cancellationToken);
+            Logger.LogTrace("Uploaded learning world to backend from backupPath: {Path}", filepath);
+        }
+        catch (HttpRequestException httpReqEx)
+        {
+            ErrorManager.LogAndRethrowError(httpReqEx);
+        }
     }
 
     #endregion

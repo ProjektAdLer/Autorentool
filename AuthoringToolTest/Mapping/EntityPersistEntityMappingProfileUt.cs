@@ -1,12 +1,13 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using Shared;
+using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
 
@@ -19,6 +20,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Language = "language";
     private const string Description = "description";
     private const string Goals = "goals";
+    private const string EvaluationLink = "https://www.projekt-alder.eu/evaluation";
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
@@ -36,6 +38,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewLanguage = "newLanguage";
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
+    private const string NewEvaluationLink = "https://www.projekt-alder.eu/newEvaluation";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
@@ -183,9 +186,9 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithoutLearningSpaces_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", "");
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
+            savePath: SavePath, new List<ILearningSpace>());
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -198,6 +201,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.EvaluationLink = NewEvaluationLink;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>();
 
@@ -211,10 +215,10 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithUnplacedLearningElements_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath);
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -231,6 +235,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.EvaluationLink = NewEvaluationLink;
         destination.SavePath = NewSavePath;
         destination.UnplacedLearningElements = new List<ILearningElementPe>
         {
@@ -252,12 +257,12 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithEmptyLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<ILearningSpace>());
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            EvaluationLink, savePath: SavePath, new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -274,6 +279,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.EvaluationLink = NewEvaluationLink;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
@@ -296,15 +302,15 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpaceAndLearningPathWay_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<ILearningSpace>());
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            EvaluationLink, savePath: SavePath, new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         var space2 = GetTestableSpace();
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
@@ -339,6 +345,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.EvaluationLink = NewEvaluationLink;
         destination.SavePath = NewSavePath;
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnum.And, 2, 1);
@@ -404,8 +411,8 @@ public class EntityPersistEntityMappingProfileUt
         MapLearningWorldAndLearningWorldPersistEntity_WithMultipleLearningSpacesAndLearningPathWays_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<ILearningSpace>());
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            EvaluationLink, savePath: SavePath, new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         space1.Name = "space1";
         var space2 = GetTestableSpace();
@@ -461,6 +468,20 @@ public class EntityPersistEntityMappingProfileUt
             .Excluding(obj => obj.InternalUnsavedChanges)
         );
         Assert.That(restoredWorld.UnsavedChanges, Is.False);
+    }
+
+    [Test]
+    public void MapAdaptivityContentEntity_FullStructure_ToPeAndBack()
+    {
+        var content = EntityProvider.GetAdaptivityContent();
+        var element = EntityProvider.GetLearningElement(content);
+        
+        var systemUnderTest = CreateTestableMapper();
+        
+        var elementPe = systemUnderTest.Map<LearningElementPe>(element);
+
+        systemUnderTest.Map(elementPe, element);
+        var restoredElement = systemUnderTest.Map<LearningElement>(elementPe);
     }
 
     private static FileContent GetTestableContent()

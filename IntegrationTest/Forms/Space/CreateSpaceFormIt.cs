@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,15 +20,18 @@ namespace IntegrationTest.Forms.Space;
 [TestFixture]
 public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpaceFormModel, LearningSpace>
 {
-    private ILearningWorldPresenter WorldPresenter { get; set; }
-    private const string Expected = "test";
-
     [SetUp]
     public void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper.Initialize(themeLocalizer);
         Context.Services.AddSingleton(WorldPresenter);
     }
+
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+    private const string Expected = "test";
 
     [Test]
     public void Render_InjectsDependencies()
@@ -136,9 +140,9 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+                return (string) FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                     ? Enumerable.Empty<string>()
-                    : new[] { "Must be test" };
+                    : new[] {"Must be test"};
             }
         );
     }
@@ -158,7 +162,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
                     Theme t => t == Theme.Campus,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
+                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
             }
         );
     }

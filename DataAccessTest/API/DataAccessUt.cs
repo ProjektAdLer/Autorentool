@@ -163,7 +163,7 @@ public class DataAccessUt
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
 
-        systemUnderTest.LoadLearningContent("C:/nonsense");
+        systemUnderTest.LoadLearningContentAsync("C:/nonsense");
 
         mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
@@ -175,12 +175,10 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
         var stream = Substitute.For<MemoryStream>();
 
-        systemUnderTest.LoadLearningContent("filename.extension", stream);
+        systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
         mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }
-
-    #region SavedLearningWorldPaths
 
     [Test]
     public void GetSavedLearningWorldPaths_CallsWorldSavePathsHandler()
@@ -200,8 +198,8 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
         var expectedPaths = new List<SavedLearningWorldPath>
         {
-            new() {Id = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "name", Path = "C:/nonsense"},
-            new() {Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "name2", Path = "C:/nonsense2"}
+            new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "name", Path = "C:/nonsense" },
+            new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "name2", Path = "C:/nonsense2" }
         };
         mockWorldSavePathsHandler.GetSavedLearningWorldPaths().Returns(expectedPaths);
 
@@ -273,8 +271,6 @@ public class DataAccessUt
         mockWorldSavePathsHandler.Received().RemoveSavedLearningWorldPath(path);
     }
 
-    #endregion
-
     [Test]
     [TestCaseSource(typeof(FindSuitableNewSavePathTestCases))]
     public void FindSuitableNewSavePath_FindsSuitablePath(IFileSystem mockFileSystem, string targetFolder,
@@ -328,7 +324,7 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), emptyFile}
+                    { Path.Combine("directory", "foo.bar"), emptyFile }
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_1.bar")
             };
@@ -336,9 +332,9 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), emptyFile},
-                    {Path.Combine("directory", "foo_1.bar"), emptyFile},
-                    {Path.Combine("directory", "foo_2.bar"), emptyFile}
+                    { Path.Combine("directory", "foo.bar"), emptyFile },
+                    { Path.Combine("directory", "foo_1.bar"), emptyFile },
+                    { Path.Combine("directory", "foo_2.bar"), emptyFile }
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_3.bar")
             };
@@ -346,7 +342,7 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "poo.bar"), emptyFile}
+                    { Path.Combine("directory", "poo.bar"), emptyFile }
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo.bar")
             };

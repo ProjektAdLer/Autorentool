@@ -23,11 +23,11 @@ public interface IMediator : INotifyPropertyChanged
     /// <summary>
     /// Indicates whether the world view is open.
     /// </summary>
-    bool WorldViewOpen { get; }
+    bool WorldPathwayViewOpen { get; }
     /// <summary>
     /// Indicates whether the world overview is open.
     /// </summary>
-    bool WorldOverviewOpen { get; }
+    bool WorldTreeViewOpen { get; }
 
     bool OverwriteElementEdit { get; set; }
 
@@ -54,11 +54,11 @@ public interface IMediator : INotifyPropertyChanged
     /// <summary>
     /// Requests the opening of the world view.
     /// </summary>
-    void RequestOpenWorldView();
+    void RequestOpenPathwayView();
     /// <summary>
     /// Requests the opening of the world overview.
     /// </summary>
-    void RequestOpenWorldOverview();
+    void RequestOpenWorldTreeView();
     /// <summary>
     /// Requests toggling the world dialog.
     /// </summary>
@@ -78,11 +78,11 @@ public interface IMediator : INotifyPropertyChanged
     /// <summary>
     /// Requests toggling the world view.
     /// </summary>
-    void RequestToggleWorldView();
+    void RequestToggleWorldPathwayView();
     /// <summary>
     /// Requests toggling the world overview.
     /// </summary>
-    void RequestToggleWorldOverview();
+    void RequestToggleWorldTreeView();
 
     /// <summary>
     /// Closes every dialog and view.

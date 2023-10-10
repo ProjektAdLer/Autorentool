@@ -2,9 +2,9 @@
 
 namespace BusinessLogic.ErrorManagement.BackendAccess;
 
-/**
- * This exception is thrown when the entered URL is invalid
- */
+/// <summary>
+/// This exception is thrown when the entered URL is invalid
+/// </summary>
 public class BackendInvalidUrlException : Exception
 {
     public BackendInvalidUrlException()

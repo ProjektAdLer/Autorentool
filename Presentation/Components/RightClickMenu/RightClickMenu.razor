@@ -8,19 +8,36 @@
 
 <g transform="translate(@_x, @_y)" cursor="@_cursor" id="rightClickMenu">
     @foreach (var (item, position) in MenuEntries.Select((item, position) => (item, position * _heightOfMenuItem)))
-    {
-        <g transform="translate(0, @position)">
+    {   
+            <g transform="translate(0, @position)">
+            <rect x="0" y="0" rx="5" ry="5" width="@_widthOfMenuItem" height="@(MenuEntries.Count * _heightOfMenuItem)" style="fill:rgba(251,251,251,0.1)/*#b32121*/; "/>
+            </g>
+            <g transform="translate(0, @position)">
             <Clickable OnClickedParam="LearningObject" OnClicked="(T? _) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
-                <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:rgba(233,233,233,0.5)"/>
-                <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" style="fill:rgb(23,45,76)" font-family="Roboto, Verdana">@item.DisplayedText</text>
+            <rect filter="url(#f1)" rx="5" ry="5" x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:white/*rgba(251,251,251,0.1)*/; stroke:rgba(251,251,251,0.1); stroke-width:2;"/>
+            <defs>
+                <filter id="f1" x="0" y="0" width="200%" height="200%">
+                  <feOffset result="offOut" in="SourceAlpha" dx="-1" dy="-1" />
+                  <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4" />
+                  <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                </filter>
+            </defs>
+                <text x="@(_widthOfMenuItem / 5)" y="35" text-anchor="start" font-size="@_fontSizeOfMenuItem" style="fill:rgb(23,45,76);" font-family="Roboto, Verdana">@item.DisplayedText</text>
             </Clickable>
         </g>
     }
 
     <g transform="translate(0, @(MenuEntries.Count * _heightOfMenuItem))">
         <Clickable OnClickedParam="LearningObject" OnClicked="(T? _) => OnClose.InvokeAsync()">
-            <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:rgba(233,233,233,0.5)"/>
-            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Roboto, Verdana" style="fill:rgb(23,45,76)">Close</text>
+            <rect class="rect-hover" filter="url(#f1)" x="0" y="0" rx="5" ry="5" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:white/*rgba(251,251,251,0.1)*/; stroke:rgba(251,251,251,0.1); stroke-width:2;"/>
+                <defs>
+                    <filter id="f1" x="0" y="0" width="200%" height="200%">
+                      <feOffset result="offOut" in="SourceAlpha" dx="-1" dy="-1" />
+                      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4" />
+                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                    </filter>
+                </defs>
+            <text x="@(_widthOfMenuItem / 5)" y="35" text-anchor="start" font-size="@_fontSizeOfMenuItem" font-family="Roboto, Verdana" style="fill:rgb(23,45,76);">Close</text>
         </Clickable>
     </g>
 </g>
@@ -48,8 +65,9 @@
 
     private string _cursor = "grab";
 
-    private readonly int _heightOfMenuItem = 20;
-    private readonly int _widthOfMenuItem = 73;
+    private readonly int _heightOfMenuItem = 52;
+    private readonly int _widthOfMenuItem = 78;
+    private readonly int _fontSizeOfMenuItem = 16;
 
     protected override void OnParametersSet()
     {

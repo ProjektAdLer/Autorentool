@@ -9,10 +9,11 @@ public class CreateLearningWorld : ICreateLearningWorld
     private IMemento? _memento;
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors, string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction,
+        string authors, string language, string description, string goals, string evaluationLink,
+        Action<AuthoringToolWorkspace> mappingAction,
         ILogger<CreateLearningWorld> logger)
     {
-        LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
+        LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink);
         AuthoringToolWorkspace = authoringToolWorkspace;
         MappingAction = mappingAction;
         Logger = logger;

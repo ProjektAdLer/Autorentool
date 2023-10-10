@@ -18,8 +18,10 @@
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySaveAsync"></MudIconButton>
-        <div>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave"
+                       Disabled="SaveButtonDisabled">
+        </MudIconButton>
+        <div class="flex">
             <MudIconButton Class="p-1 undo-button" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
                            Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
             </MudIconButton>
@@ -27,10 +29,17 @@
                            Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
-        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+        <button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled.Upload"></MudIcon>
             <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
-        </Button>
+        </button>
+
+        @if (_debugBuild)
+        {
+            <button @onclick="DebugButtonClick" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                DEBUG BACKUP
+            </button>
+        }
 
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
@@ -142,9 +151,26 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<HeaderBar> Logger { get; set; }
 
-    private string _filepath = "";
+    private bool SaveButtonDisabled => SelectedViewModelsProvider.LearningWorld is not { UnsavedChanges: true };
+
 
     private bool _popoverOpen;
+    private bool _debugBuild = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+#if DEBUG
+        _debugBuild = true;
+#endif
+    }
+
+    private void DebugButtonClick()
+    {
+#if DEBUG
+        PresentationLogic.ConstructDebugBackup(SelectedViewModelsProvider.LearningWorld!);
+#endif
+    }
 
     private void TogglePopover()
     {
@@ -178,15 +204,59 @@
     private async void ExportLearningWorld()
     {
         var world = SelectedViewModelsProvider.LearningWorld;
-    //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
         if (world == null) return;
-
         if (!IsLearningWorldValid(world)) return;
+    //check if lms is connected here before generating the backup just to save time
+        if (!await PresentationLogic.IsLmsConnected())
+        {
+            await ShowNotLoggedInDialog();
+            return;
+        }
+
+    //present "Upload/Cancel" dialog
+        var parameters = new DialogParameters
+        {
+            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
+            { "SubmitButtonColor", Color.Success },
+            {
+                "DialogText",
+                Localizer["Dialog.UploadLearningWorld.DialogText", world.Name].ToString()
+            },
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+        };
+        var dialog =
+            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"].ToString(), parameters,
+                options);
+        var result = await dialog.Result;
+
+    //if not cancelled, upload LearningWorld
+        if (result.Canceled) return;
+
+    //present progress dialog
+        var cancellationTokenSource = new CancellationTokenSource();
+        var progress = new Progress<int>();
+        options = new DialogOptions
+        {
+            CloseButton = false,
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true,
+        };
+        parameters = new DialogParameters
+        {
+            { nameof(UploadProgressDialog.Progress), progress },
+            { nameof(UploadProgressDialog.CancellationTokenSource), cancellationTokenSource }
+        };
+
+        var dialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
 
         try
         {
-            _filepath = await PresentationLogic.ConstructBackupAsync(world);
-            Snackbar.Add(Localizer["Export.SnackBar.Message", _filepath], Severity.Success);
+            await PresentationLogic.ConstructAndUploadBackupAsync(world, progress, cancellationTokenSource.Token);
         }
         catch (OperationCanceledException)
         {
@@ -198,19 +268,17 @@
             ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
             return;
         }
-
-        if (await PresentationLogic.IsLmsConnected())
+        catch (Exception ex)
         {
-            await UploadLearningWorld();
+            ErrorService.SetError(ex);
         }
-        else
+        finally
         {
-            await ShowNotLoggedInDialog();
+            dialogReference.Close();
         }
 
+        Snackbar.Add(Localizer["Export.SnackBar.Message"], Severity.Success);
         _popoverOpen = true;
-
-
         StateHasChanged();
     }
 
@@ -266,51 +334,6 @@
         await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
     }
 
-    private async Task UploadLearningWorld()
-    {
-        if (SelectedViewModelsProvider.LearningWorld == null) return;
-    //present "Upload/Cancel" dialog
-        var parameters = new DialogParameters
-        {
-            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
-            { "SubmitButtonColor", Color.Success },
-            {
-                "DialogText",
-                Localizer["Dialog.UploadLearningWorld.DialogText", SelectedViewModelsProvider.LearningWorld.Name, _filepath].ToString()
-            },
-        };
-        var options = new DialogOptions
-        {
-            CloseButton = true,
-            CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
-        };
-        var dialog =
-            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"].ToString(), parameters,
-                options);
-        var result = await dialog.Result;
-
-    //if not cancelled, upload LearningWorld
-        if (!result.Canceled)
-        {
-            var progress = new Progress<int>();
-            options = new DialogOptions
-            {
-                CloseButton = false,
-                CloseOnEscapeKey = false,
-                DisableBackdropClick = true,
-            };
-            parameters = new DialogParameters
-            {
-                { "Progress", progress }
-            };
-
-            await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
-
-            PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
-        }
-    }
-
     private void OnClickUndo()
     {
         try
@@ -335,12 +358,16 @@
         }
     }
 
-    private async Task TrySaveAsync()
+    private void TrySave()
     {
-        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        var learningWorldViewModel = SelectedViewModelsProvider.LearningWorld;
+        if (learningWorldViewModel is null) return;
+        if (!learningWorldViewModel.UnsavedChanges) return;
         try
         {
-            await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
+            PresentationLogic.SaveLearningWorld(learningWorldViewModel);
+            var snackbarString = Localizer["SaveWorld.Success.Snackbar.Message", learningWorldViewModel.Name].Value;
+            Snackbar.Add(snackbarString, Severity.Success);
         }
         catch (SerializationException e)
         {

@@ -2,23 +2,24 @@
 @using Shared
 @using System.Diagnostics.CodeAnalysis
 <MudItem>
-    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
-        <MudCardHeader Class="flex justify-center items-center break-word w-full">
+    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40 mt-1 relative group/card hover:bg-[rgba(229,213,184,0.5)]">
+        <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-10 absolute inset-x-[60%] inset-y-[40%] w-24 h-24">
+        <MudCardHeader Class="z-10 flex justify-center items-center break-word w-full">
             <CardHeaderContent>
-                <MudText Class="break-all">
+                <MudText Class="text-xl tracking-wider mt-8 font-bold break-all">
                     @LearningWorldPath!.Name
                 </MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
-                        Class="close-button"
+                        Class="close-button absolute -right-1 -top-1 w-9 btn-standard rounded-full"
                         Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
             </CardHeaderActions>
         </MudCardHeader>
-        <MudCardContent Class="flex justify-center">
-            <MudButton Size="Size.Large" @onclick="OnOpenButtonPressed" Class="open-button">
-                @Localizer["LearningWorldCard.Button.Open.Text"]
-            </MudButton>
+        <button @onclick="OnOpenButtonPressed" title="@Localizer["LearningWorldCard.Button.Open.Title"]" class="open-button group-hover/card:visible group-hover/card:opacity-100 invisible text-xl absolute top-[25%] left-[16%] btn-standard uppercase p-8 rounded-lg drop-shadow">
+            @Localizer["LearningWorldCard.Button.Open.Text"]
+        </button>
+        <MudCardContent Class="">
         </MudCardContent>
     </MudCard>
 </MudItem>

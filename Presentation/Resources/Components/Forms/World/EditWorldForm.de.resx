@@ -24,10 +24,10 @@
         </value>
     </resheader>
     <data name="EditWorldForm.Header.Title" xml:space="preserve">
-        <value>Lernwelt editieren</value>
+        <value>Lernwelt bearbeiten</value>
     </data>
     <data name="EditWorldForm.SnackbarMessage" xml:space="preserve">
-        <value>Welt aktualisiert</value>
+        <value>Lernwelt aktualisiert</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>Allgemein</value>
@@ -48,9 +48,15 @@
         <value>Sprache</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text" xml:space="preserve">
         <value>Kurzname</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text" xml:space="preserve">
+        <value>Link zur Evaluation</value>
+    </data>
+    <data name="EditWorldForm.Text" xml:space="preserve">
+        <value>* Erforderliche Angabe</value>
     </data>
 </root>

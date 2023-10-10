@@ -16,10 +16,6 @@ namespace PresentationTest.Components;
 [TestFixture]
 public class LmsLoginButtonUt
 {
-    private TestContext _context;
-    private IDialogService _dialogService;
-    private IStringLocalizer<LmsLoginButton> _localizer;
-
     [SetUp]
     public void Setup()
     {
@@ -30,12 +26,22 @@ public class LmsLoginButtonUt
         _context.Services.AddSingleton(_dialogService);
         _context.Services.AddSingleton(_localizer);
     }
-    
+
+    [TearDown]
+    public void TearDown()
+    {
+        _context.Dispose();
+    }
+
+    private TestContext _context;
+    private IDialogService _dialogService;
+    private IStringLocalizer<LmsLoginButton> _localizer;
+
     [Test]
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = CreateTestableLmsLoginButtonComponent();
-        
+
         Assert.That(systemUnderTest.Instance.DialogService, Is.EqualTo(_dialogService));
         Assert.That(systemUnderTest.Instance.Localizer, Is.EqualTo(_localizer));
     }
@@ -51,7 +57,7 @@ public class LmsLoginButtonUt
             systemUnderTest.InvokeAsync(() =>
                 ((EventCallback<MouseEventArgs>)button.Instance.Parameters["OnClick"]).InvokeAsync(null));
 
-            _dialogService.Received().ShowAsync<LmsLoginDialog>();
+            _dialogService.Received().ShowAsync<LmsLoginDialog>(Arg.Any<string>(), Arg.Any<DialogOptions>());
         }
     }
 

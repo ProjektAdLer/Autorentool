@@ -13,9 +13,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-    <PackageReference Include="MudBlazor" Version="6.6.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+    <PackageReference Include="MudBlazor" Version="6.10.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
@@ -127,6 +127,38 @@
     <EmbeddedResource Update="Resources\Components\RightClickMenu\RightClickMenu.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>RightClickMenu.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\CloseAppButton.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CloseAppButton.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\CloseAppButton.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CloseAppButton.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadProgressDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadProgressDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadProgressDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadProgressDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TableSelect.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TableSelect.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NoContentWarning.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NoContentWarning.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

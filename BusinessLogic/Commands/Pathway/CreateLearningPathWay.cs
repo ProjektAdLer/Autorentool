@@ -92,7 +92,7 @@ public class CreateLearningPathWay : ICreateLearningPathWay
         Execute();
     }
 
-    private bool IsCircular(LearningPathway learningPathway)
+    private bool IsCircular(ILearningPathway learningPathway)
     {
         var isCircular = false;
         var sourceObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == learningPathway.SourceObject.Id);

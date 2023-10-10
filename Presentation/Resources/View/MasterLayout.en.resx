@@ -16,37 +16,37 @@
         </value>
     </resheader>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value>Import Files</value>
+        <value>Files and links</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
-        <value>LearningElementMetadata</value>
+        <value>Learning element details</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
-        <value>LearningPathWays</value>
+        <value>Connections between learning spaces</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
-        <value>LearningSpaceMetadata</value>
+        <value>Learning space details</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
-        <value>LearningWorldMetadata</value>
+        <value>Learning world details</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
-        <value>LearningWorldOverView</value>
+        <value>Hierarchical structure of the learning world</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value>import-files</value>
+        <value>Import files icon</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
-        <value>learningelement-metadata</value>
+        <value>Learning element metadata icon</value>
     </data>
     <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
-        <value>learningspace-metadata</value>
+        <value>Learning space metadata icon</value>
     </data>
     <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
-        <value>learningworld-metadata</value>
+        <value>Learning world metadata icon</value>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
-        <value>learning pathways</value>
+        <value>Learning Path Ways Icon</value>
     </data>
     <data name="SideBarContent.LearningWorldOverView.Alt" xml:space="preserve">
         <value>learning world overview</value>

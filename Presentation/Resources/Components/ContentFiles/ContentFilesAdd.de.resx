@@ -24,27 +24,30 @@
         </value>
     </resheader>
     <data name="Header.Text" xml:space="preserve">
-        <value>Dateiimport</value>
+        <value>Dateien und Links hinzufügen</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
-        <value>Ziehen Sie Dateien hierher, oder klicken Sie, um sie hinzuzufügen.</value>
+        <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="Invocation.MessageBox.Message" xml:space="preserve">
-        <value/>
+        <value>Inkompatible Dateiendung</value>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
         <value>Datei leer</value>
     </data>
     <data name="DialogService.MessageBox.Message" xml:space="preserve">
-        <value>Die Datei {0} war leer, sie wird übersprungen</value>
+        <value>Die Datei &lt;b&gt;{0}&lt;/b&gt; war leer. Sie wird übersprungen.</value>
     </data>
     <data name="Collapsable.Title" xml:space="preserve">
         <value>Link hinzufügen</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
-        <value>Erlaubte Dateiendungen: {0}</value>
+        <value>Erlaubte Dateiendungen: {0}.</value>
+    </data>
+    <data name="FileTooBig.Error.Title" xml:space="preserve">
+        <value>Datei zu groß</value>
+    </data>
+    <data name="FileTooBig.Error.Message" xml:space="preserve">
+        <value>Die maximal unterstützte Dateigröße für Dateien beträgt 1 Gigabyte.</value>
     </data>
 </root>

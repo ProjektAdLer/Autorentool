@@ -1,13 +1,18 @@
 ﻿using BusinessLogic.API;
+using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 
@@ -38,17 +43,6 @@ public interface IPresentationLogic
     bool CanRedo { get; }
 
     /// <summary>
-    /// Asynchronously constructs a backup for a Learning World.
-    /// </summary>
-    /// <param name="learningWorldViewModel">The Learning World view model to backup.</param>
-    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation. 
-    /// The task result contains the file path of the backup.</returns>
-    /// <remarks>
-    /// This method prompts the user to select a file for saving the backup, and then constructs the backup using the selected file path.
-    /// </remarks>
-    Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
-
-    /// <summary>
     /// Calls the business logic method to undo the last executed command.
     /// </summary>
     void UndoCommand();
@@ -70,14 +64,15 @@ public interface IPresentationLogic
     /// Creates a new learning world in the authoring tool workspace with the corresponding command.
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to create the learning world in.</param>
+    /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
-    /// <param name="name"></param>
+    /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals);
+        string authors, string language, string description, string goals, string evaluationLink);
 
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
@@ -89,8 +84,9 @@ public interface IPresentationLogic
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
+    /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals);
+        string language, string description, string goals, string evaluationLink);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.
@@ -109,7 +105,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningWorldAsync(ILearningWorldViewModel learningWorldViewModel);
+    void SaveLearningWorld(ILearningWorldViewModel learningWorldViewModel);
 
     /// <summary>
     /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.
@@ -420,7 +416,33 @@ public interface IPresentationLogic
     /// <param name="name">The name of the Learning Content.</param>
     /// <param name="stream">The stream containing the data for the Learning Content.</param>
     /// <returns>The loaded Learning Content view model.</returns>
-    ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
+    Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
+
+    /// <summary>
+    /// Creates a Adaptivity Task in the given Adaptivity Content.
+    /// </summary>
+    /// <param name="adaptivityContentVm">The Adaptivity Content to create the Task in.</param>
+    /// <param name="name">The name of the Task.</param>
+    void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name);
+
+    /// <summary>
+    /// Edits a given Adaptivity Task
+    /// </summary>
+    /// <param name="adaptivityTaskVm">The Task to edit.</param>
+    /// <param name="name">The new name for the Task.</param>
+    /// <param name="minimumRequiredDifficulty">The minimum required Difficulty for the Task.</param>
+    void EditAdaptivityTask(IAdaptivityTaskViewModel adaptivityTaskVm, string name,
+        QuestionDifficulty? minimumRequiredDifficulty);
+
+    /// <summary>
+    /// Deletes a given Adaptivity Task from the given Adaptivity Content.
+    /// </summary>
+    /// <param name="adaptivityContentVm">The Adaptivity Content to delete the Task from.</param>
+    /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
+    void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+        IAdaptivityTaskViewModel adaptivityTaskVm);
+
 
     /// <summary>
     /// Gets all content files in the appdata folder.
@@ -529,13 +551,41 @@ public interface IPresentationLogic
 
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
+    void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
+        string title, string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime);
+
+    void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
+        string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+
+
+    void EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestionViewModel question,
+        string title, string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime);
+
+    void EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestionViewModel question,
+        string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+
+    void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel task,
+        IMultipleChoiceQuestionViewModel question, bool isSingleResponse, string title, string text,
+        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+
+    void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
     string LoginName { get; }
     Task Login(string username, string password);
     void Logout();
-    void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
 
+    Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+        CancellationToken cancellationToken);
     #endregion
+
+    #if DEBUG
+    void ConstructDebugBackup(ILearningWorldViewModel world);
+    #endif
 }

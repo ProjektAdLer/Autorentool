@@ -23,14 +23,16 @@ public class UserBackendServicesUt
     {
         // Arrange
         var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(new HttpClient(new MockHttpMessageHandler()));
 
         // Act
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: httpClientFactory);
 
         // Assert
-        Assert.Multiple(
-            () => { Assert.That(userWebApiServices.Configuration, Is.EqualTo(applicationConfiguration)); }
-        );
+        Assert.That(userWebApiServices.Configuration, Is.EqualTo(applicationConfiguration));
     }
 
     [Test]
@@ -124,12 +126,16 @@ public class UserBackendServicesUt
     {
         var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("invalidUrl");
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(new HttpClient(new MockHttpMessageHandler()));
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: httpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
-        Assert.That(ex!.Message, Is.EqualTo("Invalid URL."));
+        Assert.That(ex!.Message, Is.EqualTo("There is no AdLer Backend at the given URL."));
     }
 
     [Test]
@@ -268,7 +274,7 @@ public class UserBackendServicesUt
         // Assert
         var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
-        Assert.That(ex!.Message, Is.EqualTo("Das Ergebnis der Backend Api konnte nicht gelesen werden"));
+        Assert.That(ex!.Message, Is.EqualTo("Http response could not be deserialized."));
     }
 
     [Test]
@@ -304,9 +310,12 @@ public class UserBackendServicesUt
         var mockfileSystem = new MockFileSystem();
         mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
         //mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(new HttpClient(new MockHttpMessageHandler()));
 
         var userWebApiServices =
-            CreateTestableUserWebApiServices(fileSystem: mockfileSystem);
+            CreateTestableUserWebApiServices(fileSystem: mockfileSystem, httpClientFactory: httpClientFactory);
 
         // Act
         // Assert
@@ -321,9 +330,12 @@ public class UserBackendServicesUt
         var mockfileSystem = new MockFileSystem();
         //mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
         mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(new HttpClient(new MockHttpMessageHandler()));
 
         var userWebApiServices =
-            CreateTestableUserWebApiServices(fileSystem: mockfileSystem);
+            CreateTestableUserWebApiServices(fileSystem: mockfileSystem, httpClientFactory: httpClientFactory);
 
         // Act
         // Assert

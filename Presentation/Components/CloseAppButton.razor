@@ -1,4 +1,14 @@
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Culture
 @using Presentation.PresentationLogic
+@using System.Diagnostics.CodeAnalysis
 @inherits ComponentBase
 @inject IShutdownManager ShutdownManager
-<button class="btn-standard w-8 bg-red-400 text-2xl font-bold" @onclick="async () => await ShutdownManager.RequestShutdownAsync()">X</button>
+<button title=@Localizer["CloseAppButton.Hover"].Value class="btn-standard w-8 bg-red-400 text-2xl font-bold" @onclick="async () => await ShutdownManager.RequestShutdownAsync()">X</button>
+
+@code
+{
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    public IStringLocalizer<CloseAppButton> Localizer { get; set; }
+}

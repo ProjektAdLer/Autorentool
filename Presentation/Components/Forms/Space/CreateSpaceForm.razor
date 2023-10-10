@@ -10,7 +10,8 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
@@ -23,18 +24,17 @@
                    LabelPosition="LabelPosition.Start">
         </MudSwitch>
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
-                     @bind-Collapsed="_collapsedGeneral">
+                                           @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
-                              Label=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]
-                              />
+                              Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
             </div>
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
-                     @bind-Collapsed="_collapsedConditions">
+                                           @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -49,22 +49,23 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]
-                     @bind-Collapsed="_collapsedTheme">
+                                           @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
-                           Label="@nameof(FormDataContainer.FormModel.Theme)"
+                <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
+                           AnchorOrigin="Origin.BottomCenter"
+                           Label=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
                            For="@(() => FormModel.Theme)">
                     @foreach (var theme in _themes)
                     {
-                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                        <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
                     }
                 </MudSelect>
             </div>
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]
-                     @bind-Collapsed="_collapsedGoals">
+                                           @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -117,14 +118,14 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
-    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
 
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints, model.Theme, model.AdvancedMode, positionX: 0, positionY: 0);
+            model.Goals, (int) model.RequiredPoints, model.Theme, model.AdvancedMode, positionX: 0, positionY: 0);
     }
 
 }

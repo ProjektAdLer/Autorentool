@@ -5,24 +5,28 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateElementForm.Header.Text"]</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
+<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateElementForm.Text"]</MudText>
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit"
-          SnackbarMessage=@Localizer["CreateElementForm.SnackbarMessage"]
+          SnackbarMessage=@(!AdaptivityElementMode ? Localizer["CreateElementForm.SnackbarMessage"] : Localizer["CreateAdaptivityElementForm.SnackbarMessage"])
           FormDataContainer="FormDataContainer">
     <Fields>
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
-                     @bind-Collapsed="_collapsedGeneral">
+                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -48,68 +52,93 @@
                                  DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
-                                 Class="pb-4"/>
+                                 Class="pb-6"/>
 
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
                            Immediate="false"
-                           Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
-                           For="@(() => FormModel.Difficulty)">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">@Localizer["CreateElementForm.Difficulty.Easy"]</MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">@Localizer["CreateElementForm.Difficulty.Medium"]</MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">@Localizer["CreateElementForm.Difficulty.Hard"]</MudSelectItem>
+                           Label="@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
+                           For="@(() => FormModel.Difficulty)"
+                           Variant="Variant.Outlined">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["CreateElementForm.Difficulty.Easy"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["CreateElementForm.Difficulty.Medium"]
+                        </div>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                        <div class="flex flex-row items-center gap-2">
+                            <MudIcon Class="flex w-8 h-6 drop-shadow px-1" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["CreateElementForm.Difficulty.Hard"]
+                        </div>
+                    </MudSelectItem>
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["CreateElementForm.Difficulty.None"]</MudSelectItem>
                 </MudSelect>
-
             </div>
         </Collapsable>
-
-        <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
-            <TableSelect
-                T="ILearningContentViewModel"
-                Class=""
-                @bind-Value="FormDataContainer.FormModel.LearningContent"
-                For="@(() => FormModel.LearningContent)"
-                Elements="WorldPresenter.GetAllContent()"
-                FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
-                <HeaderContent>
-                    <MudTh></MudTh>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Type</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd Class="px-1.5">
-                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
-                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
-                    </MudTd>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Type">
-                        @if (context is FileContentViewModel fileContentContext)
-                        {
-                            @fileContentContext.Type
-                        }
-                        else
-                        {
-                            <span>Link</span>
-                        }
-                    </MudTd>
-                </RowTemplate>
-            </TableSelect>
-        </Collapsable>
+        @if (!AdaptivityElementMode)
+        {
+            <Collapsable Style="" Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+                <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</MudText>
+                @if (!WorldPresenter.GetAllContent().Any())
+                {
+                    <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
+                }
+                else
+                {
+                    <TableSelect
+                        T="ILearningContentViewModel"
+                        @bind-Value="FormDataContainer.FormModel.LearningContent"
+                        For="@(() => FormModel.LearningContent)"
+                        Elements="WorldPresenter.GetAllContent()"
+                        FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                        <HeaderContent>
+                            <MudTh></MudTh>
+                            <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
+                            <MudTh>@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd Class="px-1.5">
+                                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                               OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                            </MudTd>
+                            <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
+                            <MudTd Class="cursor-pointer" DataLabel="Type">
+                                @if (context is FileContentViewModel fileContentContext)
+                                {
+                                    @fileContentContext.Type
+                                }
+                                else
+                                {
+                                    <span>Link</span>
+                                }
+                            </MudTd>
+                        </RowTemplate>
+                    </TableSelect>
+                }
+            </Collapsable>
+        }
+        else
+        {
+            <Collapsable Style="" Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
+                <MudText Class="ml-4" Typo="Typo.caption">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</MudText><br/>
+                <div class="flex flex-col items-center justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" Class="add-tasks" OnClick="OpenAdaptivityContentDialog">
+                        @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
+                    </MudButton>
+                </div>
+            </Collapsable>
+        }
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
-                           AnchorOrigin="Origin.BottomCenter"
-                           For="@(() => FormModel.ElementModel)"
-                           Variant="Variant.Outlined">
-                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent))
-                    {
-                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
-                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@
-                        </MudSelectItem>
-                    }
-                </MudSelect>
+                <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                                        For="@(() => FormModel.ElementModel)"
+                                        Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null)">
+                </ElementModelGridSelect>
             </div>
         </Collapsable>
 
@@ -161,17 +190,24 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IDialogService DialogService { get; set; }
+
     [Parameter]
     public EventCallback OnSubmitted { get; set; }
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 
+    [Parameter]
+    public bool AdaptivityElementMode { get; set; }
+
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
+    private bool _collapsedTasks = false;
     private bool _collapsedElementModel = true;
     private bool _collapsedGoals = true;
 
@@ -198,9 +234,31 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        if (AdaptivityElementMode)
+        {
+            FormDataContainer.FormModel.LearningContent = new AdaptivityContentViewModel();
+            return;
+        }
         if (SelectedViewModelsProvider.LearningContent == null) return;
         FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
         SelectedViewModelsProvider.SetLearningContent(null, null);
+    }
+
+    private async void OpenAdaptivityContentDialog()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+        };
+        var parameters = new DialogParameters
+        {
+            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent }
+        };
+        var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>(Localizer["CreateElementForm.AdaptivityContent.Dialog.Title"], parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
     }
 
 }

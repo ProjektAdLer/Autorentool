@@ -19,7 +19,7 @@
         <value>Edit learning world</value>
     </data>
     <data name="EditWorldForm.SnackbarMessage" xml:space="preserve">
-        <value>World updated</value>
+        <value>Learning world updated</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>
@@ -34,7 +34,7 @@
         <value>Goals</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text" xml:space="preserve">
         <value>Shortname</value>
@@ -44,5 +44,11 @@
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Text" xml:space="preserve">
         <value>Language</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text" xml:space="preserve">
+        <value>Link to evaluation</value>
+    </data>
+    <data name="EditWorldForm.Text" xml:space="preserve">
+        <value>* Required information</value>
     </data>
 </root>

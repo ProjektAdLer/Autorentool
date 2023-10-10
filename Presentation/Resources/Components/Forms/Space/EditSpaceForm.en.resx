@@ -15,7 +15,7 @@
         <value>Edit learning space</value>
     </data>
     <data name="EditSpaceForm.SnackbarMessage" xml:space="preserve">
-        <value>Space updated</value>
+        <value>Learning space updated</value>
     </data>
     <data name="EditSpaceForm.Button.New.Text" xml:space="preserve">
         <value>New</value>
@@ -30,7 +30,7 @@
         <value>Theme</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Completion conditions</value>
+        <value>Completion condition</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
         <value>Floor plan</value>
@@ -45,13 +45,16 @@
         <value>LearningWorldVm is null</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.General.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
-        <value>Required points</value>
+        <value>Required points to complete the learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme</value>
+        <value>Theme of learning space</value>
+    </data>
+    <data name="EditSpaceForm.Text" xml:space="preserve">
+        <value>* Required information</value>
     </data>
     <data name="EditSpaceForm.Header.AdvancedTitle" xml:space="preserve">
         <value>Edit advanced learning space</value>

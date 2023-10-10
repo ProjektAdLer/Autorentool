@@ -2,7 +2,14 @@
 @using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
-        <MudText>@DialogText</MudText>
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        @if (DialogText != "")
+        {
+            <MudText>@((MarkupString)DialogText)</MudText>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@Localizer["GenericCancellationConfirmationDialog.Button.Cancel.Text"]</MudButton>
@@ -18,8 +25,21 @@
     [CascadingParameter]
     public MudDialogInstance? MudDialog { get; set; }
 
+    /// <summary>
+    /// The text to display in the dialog.
+    /// </summary>
+    /// <remarks>You must either provide a string here or a RenderFragment for <see cref="ChildContent"/>,
+    /// in which case this parameter should be set to the empty string, otherwise both will be displayed.</remarks>
     [Parameter, EditorRequired, AllowNull]
     public string DialogText { get; set; }
+
+    /// <summary>
+    /// The render fragment to display in the dialog.
+    /// </summary>
+    /// <remarks>If you provide this parameter, <see cref="DialogText"/> should be set to the empty string,
+    /// otherwise both will be displayed.</remarks>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public string? SubmitButtonText { get; set; }

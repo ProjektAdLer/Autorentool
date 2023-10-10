@@ -9,7 +9,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, string savePath, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null,
+        string goals, string evaluationLink, string savePath, List<LearningSpacePe>? learningSpaces = null,
+        List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
     {
         Id = Guid.NewGuid();
@@ -19,6 +20,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = language;
         Description = description;
         Goals = goals;
+        EvaluationLink = evaluationLink;
         SavePath = savePath;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
@@ -39,6 +41,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = "";
         Description = "";
         Goals = "";
+        EvaluationLink = "";
         SavePath = "";
         LearningSpaces = new List<LearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
@@ -46,38 +49,40 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         UnplacedLearningElements = new List<ILearningElementPe>();
         Topics = new List<TopicPe>();
     }
-    
-    [IgnoreDataMember]
-    public Guid Id { get; set; }
 
-    [DataMember]
-    public List<LearningSpacePe> LearningSpaces { get; set; }
-    [DataMember]
-    public List<LearningPathwayPe> LearningPathways { get; set; }
-    [DataMember]
-    public List<PathWayConditionPe> PathWayConditions { get; set; }
+    [IgnoreDataMember] public Guid Id { get; set; }
+
+    [DataMember] public List<LearningPathwayPe> LearningPathways { get; set; }
+
+    [DataMember] public List<PathWayConditionPe> PathWayConditions { get; set; }
+
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> ObjectsInPathWaysPe =>
         new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
-    [DataMember]
-    public List<TopicPe> Topics { get; set; }
-    [DataMember]
-    public string Name { get; set; }
-    [DataMember]
-    public string Shortname { get; set; }
-    [DataMember]
-    public string Authors { get; set; }
-    [DataMember]
-    public string Language { get; set; }
-    [DataMember]
-    public string Description { get; set; }
-    [DataMember]
-    public string Goals { get; set; }
-    [DataMember]
-    public string SavePath { get; set; }
-    [DataMember]
-    public ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
+
+    [DataMember] public List<TopicPe> Topics { get; set; }
+
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
+
+    [DataMember] public List<LearningSpacePe> LearningSpaces { get; set; }
+
+    [DataMember] public string Name { get; set; }
+
+    [DataMember] public string Shortname { get; set; }
+
+    [DataMember] public string Authors { get; set; }
+
+    [DataMember] public string Language { get; set; }
+
+    [DataMember] public string Description { get; set; }
+
+    [DataMember] public string Goals { get; set; }
+
+    [DataMember] public string EvaluationLink { get; set; }
+
+    [DataMember] public string SavePath { get; set; }
+
+    [DataMember] public ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
 
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)

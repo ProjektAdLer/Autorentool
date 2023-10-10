@@ -65,10 +65,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals)
+        string goals, string evaluationLink)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals);
+            description, goals, evaluationLink);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>
@@ -86,17 +86,17 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is true) await SaveLearningWorldAsync(learningWorld);
+            if (result.Data is true) SaveLearningWorld(learningWorld);
         }
 
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
-    internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
+    internal void SaveLearningWorld(ILearningWorldViewModel world)
     {
         try
         {
-            await _presentationLogic.SaveLearningWorldAsync(world);
+            _presentationLogic.SaveLearningWorld(world);
         }
         catch (SerializationException e)
         {
@@ -130,7 +130,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is true) await SaveLearningWorldAsync(world);
+            if (result.Data is true) SaveLearningWorld(world);
         }
     }
 

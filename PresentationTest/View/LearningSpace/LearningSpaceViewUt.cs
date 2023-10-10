@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
+using Shared;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;
@@ -28,11 +29,25 @@ public class LearningSpaceViewUt
         _mediator = Substitute.For<ISelectedViewModelsProvider>();
         _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper.Initialize(themeLocalizer);
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddSingleton(_localizer);
         _ctx.Services.AddLogging();
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _ctx.Dispose();
+    }
+
+    private TestContext _ctx;
+    private ILearningSpacePresenter _learningSpacePresenter;
+    private ISelectedViewModelsProvider _mediator;
+    private IStringLocalizer<LearningSpaceView> _localizer;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -75,10 +90,10 @@ public class LearningSpaceViewUt
         //TODO Use this for LmsLoginDialogUt
         var spaceWorkload = systemUnderTest.Find("h3.space-workload");
         spaceWorkload.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600""> min.</span></h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></h3>");
         var spacePoints = systemUnderTest.Find("h3.space-points");
         spacePoints.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 8</h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></h3>");
     }
 
     [Test]
@@ -93,16 +108,18 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("h3.space-theme");
         elementName.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceTheme.Text</span>Campus</h3>");
+            @"<h3 class=""text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.Campus</h3>");
         var elementDescription = systemUnderTest.Find("h3.space-goals");
         elementDescription.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"" ><span class=""text-adlergrey-600"" >LearningSpace.SpaceGoals.Text</span></h3>");
+            @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"">
+                  <span class=""text-adlergrey-600"">LearningSpace.SpaceGoals.Text</span>
+              </h3>");
     }
 
     [Test]
     public void Render_NoLearningObjectSelected_DoesNotRenderLearningObjectSection()
     {
-        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?)null);
+        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
         Assert.That(_learningSpacePresenter.LearningSpaceVm, Is.Null);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
@@ -127,9 +144,4 @@ public class LearningSpaceViewUt
                 .Add(p => p.ChildContent, childContent)
         );
     }
-
-    private TestContext _ctx;
-    private ILearningSpacePresenter _learningSpacePresenter;
-    private ISelectedViewModelsProvider _mediator;
-    private IStringLocalizer<LearningSpaceView> _localizer;
 }

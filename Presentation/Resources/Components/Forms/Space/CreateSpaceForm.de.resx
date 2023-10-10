@@ -27,7 +27,7 @@
         <value>Lernraum erstellen</value>
     </data>
     <data name="CreateSpaceForm.SnackbarMessage" xml:space="preserve">
-        <value>Raum aktualisiert</value>
+        <value>Lernraum erstellt</value>
     </data>
     <data name="CreateSpaceForm.Button.New.Text" xml:space="preserve">
         <value>Neu</value>
@@ -36,13 +36,13 @@
         <value>Allgemein</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Abschlussbedingungen</value>
+        <value>Abschlussbedingung</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
         <value>Grundriss</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Design</value>
+        <value>Thema</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
@@ -57,10 +57,16 @@
         <value>LearningWorldVm ist null</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
-        <value>Name</value>
+        <value>Name*</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
-        <value>Benötigte Punkte</value>
+        <value>Benötigte Punkte für das Abschließen des Lernraums</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Thema des Lernraums</value>
+    </data>
+    <data name="CreateSpaceForm.Text" xml:space="preserve">
+        <value>* Erforderliche Angabe</value>
     </data>
     <data name="CreateSpaceForm.Switch.AdvancedSwitch.Title" xml:space="preserve">
         <value>Erweiterter Modus</value>

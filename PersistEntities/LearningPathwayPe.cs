@@ -1,6 +1,10 @@
-﻿namespace PersistEntities;
+﻿using System.Runtime.Serialization;
 
-public class LearningPathwayPe: ILearningPathWayPe
+namespace PersistEntities;
+
+[Serializable]
+[DataContract]
+public class LearningPathwayPe : ILearningPathWayPe
 {
     protected LearningPathwayPe()
     {
@@ -9,13 +13,22 @@ public class LearningPathwayPe: ILearningPathWayPe
         SourceObject = null!;
         TargetObject = null!;
     }
-    
+
     public LearningPathwayPe(IObjectInPathWayPe sourceObject, IObjectInPathWayPe targetObject)
     {
         SourceObject = sourceObject;
         TargetObject = targetObject;
     }
-    
-    public IObjectInPathWayPe SourceObject { get; set; }
-    public IObjectInPathWayPe TargetObject { get; set; }
+
+    [IgnoreDataMember] public Guid Id { get; set; }
+
+    [DataMember] public IObjectInPathWayPe SourceObject { get; set; }
+
+    [DataMember] public IObjectInPathWayPe TargetObject { get; set; }
+
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

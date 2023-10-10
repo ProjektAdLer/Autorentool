@@ -141,23 +141,24 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningWorld"/>
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals)
+        string goals, string evaluationLink)
     {
         if (!CheckLearningWorldNotNull("EditLearningWorld"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals);
+        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals,
+            evaluationLink);
     }
 
-    /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorldAsync"/>
-    public async Task SaveLearningWorldAsync()
+    /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorld"/>
+    public void SaveLearningWorld()
     {
         if (!CheckLearningWorldNotNull("SaveLearningWorldAsync"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm!);
+        _presentationLogic.SaveLearningWorld((LearningWorldViewModel)LearningWorldVm!);
     }
 
     #endregion

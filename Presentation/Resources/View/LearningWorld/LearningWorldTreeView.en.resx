@@ -16,12 +16,12 @@
         </value>
     </resheader>
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
-        <value> min.</value>
+        <value> min</value>
     </data>
     <data name="OverView.Workload" xml:space="preserve">
         <value>Workload: </value>
     </data>
     <data name="OverView.Points" xml:space="preserve">
-        <value>Points:</value>
+        <value>Total points:</value>
     </data>
 </root>

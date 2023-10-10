@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Dialog.Content.Line1.Text" xml:space="preserve">
+        <value>Wollen Sie das Lernelement ersetzen?</value>
+    </data>
+    <data name="Dialog.Content.Line2.Text" xml:space="preserve">
+        <value>Dadurch wird das aktuelle Lernelement zu den nicht platzierten Lernelementen in der Lernwelt verschoben.</value>
+    </data>
+    <data name="Dialog.Button.Replace.Text" xml:space="preserve">
+        <value>Ersetzen</value>
+    </data>
+    <data name="Dialog.Button.Cancel.Text" xml:space="preserve">
+        <value>Abbrechen</value>
+    </data>
+</root>

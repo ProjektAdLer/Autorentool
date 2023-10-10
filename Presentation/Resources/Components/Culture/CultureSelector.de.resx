@@ -31,9 +31,9 @@
         <value>EN</value>
     </data>
     <data name="Localizer.German.Short.Text.Hover" xml:space="preserve">
-        <value>Deutsch</value>
+        <value>Sprache: Deutsch</value>
     </data>
     <data name="Localizer.English.Short.Text.Hover" xml:space="preserve">
-        <value>Englisch</value>
+        <value>Sprache: Englisch</value>
     </data>
 </root>

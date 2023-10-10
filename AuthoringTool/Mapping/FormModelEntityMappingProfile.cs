@@ -1,18 +1,14 @@
 using AutoMapper;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.LinkContent;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 
 namespace AuthoringTool.Mapping;
 
 public class FormModelEntityMappingProfile : Profile
 {
-    public static Action<IMapperConfigurationExpression> Configure => cfg =>
-    {
-        cfg.AddProfile(new FormModelEntityMappingProfile());
-        cfg.AddCollectionMappersOnce();
-    };
-
     private FormModelEntityMappingProfile()
     {
         DisableConstructorMapping();
@@ -20,7 +16,14 @@ public class FormModelEntityMappingProfile : Profile
         CreateSpaceMap();
         CreateElementMap();
         CreateContentMap();
+        CreateAdaptivityQuestionMap();
     }
+
+    public static Action<IMapperConfigurationExpression> Configure => cfg =>
+    {
+        cfg.AddProfile(new FormModelEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
+    };
 
     private void CreateContentMap()
     {
@@ -40,5 +43,15 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateWorldMap()
     {
         CreateMap<LearningWorldFormModel, LearningWorld>();
+    }
+
+    private void CreateAdaptivityQuestionMap()
+    {
+        CreateMap<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>()
+            .ConstructUsing((formModel, context) => formModel.IsSingleResponse
+                ? context.Mapper.Map<MultipleChoiceSingleResponseQuestion>(formModel)
+                : context.Mapper.Map<MultipleChoiceMultipleResponseQuestion>(formModel));
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>();
     }
 }

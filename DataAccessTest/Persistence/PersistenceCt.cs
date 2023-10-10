@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Question;
 using Shared;
 using TestHelpers;
 
@@ -87,31 +89,41 @@ public class PersistenceCt
             .Excluding(obj => obj.LearningSpaces[0].LearningSpaceLayout.LearningElements[0].Id)
         );
 
-        Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
-        Assert.That(restoredWorld.LearningSpaces[0].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
-        Assert.That(restoredWorld.LearningSpaces[1].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
-        Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
-        Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
-        Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
-        Assert.That(restoredWorld.LearningSpaces[1].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[1]));
-        Assert.That(restoredWorld.PathWayConditions[1].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
+        Assert.Multiple(() =>
+        {
+            Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningSpaces[0].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
+            Assert.That(restoredWorld.LearningSpaces[1].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
+            Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[0]));
+            Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[1]));
+            Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningSpaces[1].OutBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[1]));
+            Assert.That(restoredWorld.PathWayConditions[1].InBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[1]));
 
-        Assert.That(restoredWorld.LearningPathways[0].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[0]));
-        Assert.That(restoredWorld.LearningPathways[0].TargetObject, Is.EqualTo(restoredWorld.PathWayConditions[0]));
-        Assert.That(restoredWorld.LearningPathways[1].SourceObject, Is.EqualTo(restoredWorld.PathWayConditions[0]));
-        Assert.That(restoredWorld.LearningPathways[1].TargetObject, Is.EqualTo(restoredWorld.LearningSpaces[1]));
-        Assert.That(restoredWorld.LearningPathways[2].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[1]));
-        Assert.That(restoredWorld.LearningPathways[2].TargetObject, Is.EqualTo(restoredWorld.PathWayConditions[1]));
+            Assert.That(restoredWorld.LearningPathways[0].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[0]));
+            Assert.That(restoredWorld.LearningPathways[0].TargetObject, Is.EqualTo(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningPathways[1].SourceObject, Is.EqualTo(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningPathways[1].TargetObject, Is.EqualTo(restoredWorld.LearningSpaces[1]));
+            Assert.That(restoredWorld.LearningPathways[2].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[1]));
+            Assert.That(restoredWorld.LearningPathways[2].TargetObject, Is.EqualTo(restoredWorld.PathWayConditions[1]));
 
-        Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
-        Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
-        Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
-        Assert.That(initialTopicId, Is.Not.EqualTo(restoredWorld.Topics.First().Id));
-        Assert.That(initialElementId,
-            Is.Not.EqualTo(
-                restoredWorld.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Id));
-        Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
-        Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));
+            Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
+            Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
+            Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
+            Assert.That(initialTopicId, Is.Not.EqualTo(restoredWorld.Topics.First().Id));
+            Assert.That(initialElementId,
+                Is.Not.EqualTo(
+                    restoredWorld.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Id));
+            Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
+            Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));
+            Assert.That(restoredWorld.LearningPathways.Select(pw => pw.Id), Is.All.Not.EqualTo(Guid.Empty));
+        });
     }
 
     [Test]
@@ -416,6 +428,65 @@ public class PersistenceCt
 
         Assert.That(actual.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements.First(),
             Is.Not.EqualTo(actual.LearningSpaces[1].LearningSpaceLayout.ContainedLearningElements.First()));
+    }
+
+    [Test]
+    public void SaveAndLoadWorld_WithAdaptivityContentElement_RestoresCorrectly()
+    {
+        var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
+        var element = PersistEntityProvider.GetLearningElement(content: content);
+        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
+            {
+                {
+                    0,
+                    element
+                }
+            }, FloorPlanEnum.R_20X30_8L));
+        var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
+            { space1 });
+
+        var mockFileSystem = new MockFileSystem();
+
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem: mockFileSystem);
+
+        systemUnderTest.SaveToDisk(world, "foobar.txt");
+
+        var actual = systemUnderTest.LoadFromDisk("foobar.txt");
+
+        var actualContent = actual.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().LearningContent as IAdaptivityContentPe;
+        var actualQuestion = actualContent.Tasks.First().Questions.First() as MultipleChoiceSingleResponseQuestionPe;
+        Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoice));
+        Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoices.First()));
+
+        actual.Should().BeEquivalentTo(
+            world, options => options.IgnoringCyclicReferences()
+                .Excluding(obj => obj.Id)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.LearningSpaces).Exclude(obj => obj.AssignedTopic)
+                .For(obj => obj.Topics).Exclude(obj => obj.Id)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
+                .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
+                .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
+                .Exclude(obj => obj.Id)
+                .Excluding(obj => obj.LearningPathways)
+                .Excluding(obj => obj.LearningSpaces[0].LearningSpaceLayout.LearningElements[0].Id)
+        );
+
+        actualContent.Should().BeEquivalentTo(content, options =>
+        {
+            options.For(content => content.Tasks).Exclude(task => task.Id);
+            options.For(content => content.Tasks).For(task => task.Questions).Exclude(question => question.Id);
+            options.For(content => content.Tasks).For(task => task.Questions).For(question => question.Rules)
+                .Exclude(rule => rule.Action.Id);
+            return options;
+        });
     }
 
     private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null,

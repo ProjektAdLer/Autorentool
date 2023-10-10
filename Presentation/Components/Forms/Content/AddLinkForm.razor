@@ -2,23 +2,26 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
-@using BusinessLogic.Entities.LearningContent
+@using BusinessLogic.Entities.LearningContent.LinkContent
 @using AutoMapper
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
                       DebounceInterval="DebounceInterval"
-                      Label=@Localizer["AddLinkForm.Field.Name.Text"]/>
+                      Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
                       For="@(() => FormModel.Link)"
                       DebounceInterval="DebounceInterval"
-                      Label=@Localizer["AddLinkForm.Field.Link.Text"]/>
+                      Label="@Localizer["AddLinkForm.Field.Link.Text"]"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Material.Filled.Link"/>
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>

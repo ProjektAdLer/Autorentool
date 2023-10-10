@@ -23,13 +23,13 @@
         </value>
     </resheader>
     <data name="LearningSpace.Title.Text" xml:space="preserve">
-        <value>Lernraum Editor</value>
+        <value>Lernraum-Editor</value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Punkte: </value>
+        <value>Abschlussbedingung:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Arbeitslast: </value>
+        <value>Arbeitsaufwand: </value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Ausgewähltes Lernelement:</value>
@@ -54,6 +54,12 @@
     </data>
     <data name="Error.ExceptionWrapper.LoadLearningElement.Message" xml:space="preserve">
         <value>Lade Lernelement</value>
+    </data>
+    <data name="LearningSpace.SpaceWorkload.Text.Additional" xml:space="preserve">
+        <value> min</value>
+    </data>
+    <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
+        <value>Punkte</value>
     </data>
     <data name="LearningSpace.AdvancedSpaceTitle.Text" xml:space="preserve">
         <value>Erweiterter Lernraum</value>

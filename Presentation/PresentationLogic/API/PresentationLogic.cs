@@ -1,6 +1,9 @@
+using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Question;
+using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -11,11 +14,18 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -23,6 +33,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 
@@ -48,6 +59,8 @@ public class PresentationLogic : IPresentationLogic
         ILogger<PresentationLogic> logger,
         IHybridSupportWrapper hybridSupportWrapper,
         IShellWrapper shellWrapper,
+        IQuestionCommandFactory questionCommandFactory,
+        ITaskCommandFactory taskCommandFactory,
         IConditionCommandFactory conditionCommandFactory,
         IElementCommandFactory elementCommandFactory,
         ILayoutCommandFactory layoutCommandFactory,
@@ -56,7 +69,8 @@ public class PresentationLogic : IPresentationLogic
         IAdvancedLearningSpaceCommandFactory advancedLearningSpaceCommandFactory,
         ITopicCommandFactory topicCommandFactory,
         IWorldCommandFactory worldCommandFactory,
-        IBatchCommandFactory batchCommandFactory)
+        IBatchCommandFactory batchCommandFactory,
+        IFileSystem fileSystem)
     {
         Logger = logger;
         Configuration = configuration;
@@ -66,6 +80,8 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider = selectedViewModelsProvider;
         HybridSupportWrapper = hybridSupportWrapper;
         ShellWrapper = shellWrapper;
+        QuestionCommandFactory = questionCommandFactory;
+        TaskCommandFactory = taskCommandFactory;
         ConditionCommandFactory = conditionCommandFactory;
         ElementCommandFactory = elementCommandFactory;
         LayoutCommandFactory = layoutCommandFactory;
@@ -75,6 +91,7 @@ public class PresentationLogic : IPresentationLogic
         TopicCommandFactory = topicCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
+        FileSystem = fileSystem;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
 
@@ -84,6 +101,8 @@ public class PresentationLogic : IPresentationLogic
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
     internal IHybridSupportWrapper HybridSupportWrapper { get; }
     internal IShellWrapper ShellWrapper { get; }
+    public IQuestionCommandFactory QuestionCommandFactory { get; }
+    public ITaskCommandFactory TaskCommandFactory { get; }
     public IConditionCommandFactory ConditionCommandFactory { get; }
     public IElementCommandFactory ElementCommandFactory { get; }
     public ILayoutCommandFactory LayoutCommandFactory { get; }
@@ -93,6 +112,7 @@ public class PresentationLogic : IPresentationLogic
     public ITopicCommandFactory TopicCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
+    internal IFileSystem FileSystem { get; }
 
     public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
@@ -108,15 +128,6 @@ public class PresentationLogic : IPresentationLogic
     {
         add => BusinessLogic.OnCommandUndoRedoOrExecute += value;
         remove => BusinessLogic.OnCommandUndoRedoOrExecute -= value;
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.ConstructBackupAsync"/>
-    public async Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel)
-    {
-        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
-        BusinessLogic.ConstructBackup(entity, filepath);
-        return filepath;
     }
 
     /// <inheritdoc cref="IPresentationLogic.UndoCommand"/>
@@ -146,14 +157,14 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals,
+            description, goals, evaluationLink,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -162,13 +173,20 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals,
+            goals, evaluationLink,
             world => CMapper.Map(world, learningWorldVm));
+        //quit early if there are no changes
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning world command, quitting before executing command");
+            return;
+        }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -187,18 +205,34 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningWorld(null, command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
-    public async Task SaveLearningWorldAsync(ILearningWorldViewModel learningWorldViewModel)
+    /// <inheritdoc cref="IPresentationLogic.SaveLearningWorld"/>
+    public void SaveLearningWorld(ILearningWorldViewModel learningWorldViewModel)
     {
-        ElectronCheck();
-        var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
+        var filepath = learningWorldViewModel.SavePath;
+        if (string.IsNullOrWhiteSpace(filepath))
+        {
+            filepath = GetWorldFilepath();
+        }
+
+        Logger.LogTrace("Saving world to {Path}", filepath);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath);
+        var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath,
+            world => CMapper.Map(world, learningWorldViewModel));
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
-        learningWorldViewModel.UnsavedChanges = false;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
             { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
+        return;
+
+        string GetWorldFilepath()
+        {
+            var basePath = ApplicationPaths.SavedWorldsFolder;
+            var random = new Random();
+            //get random number between 0 and 999999 and pad with zeros in file name to prevent collisions
+            var fileName = $"{learningWorldViewModel.Name}-{random.Next(0, 1000000):000000}.{WorldFileEnding}";
+            filepath = Path.Join(basePath, fileName);
+            return filepath;
+        }
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -277,6 +311,12 @@ public class PresentationLogic : IPresentationLogic
         var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
             topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning space command, quitting before executing command");
+            return;
+        }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -489,11 +529,19 @@ public class PresentationLogic : IPresentationLogic
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
+        //copy list of elements before
+        var elementsInWorldBefore = learningWorldVm.UnplacedLearningElements.ToList();
+
         var command = ElementCommandFactory.GetCreateUnplacedCommand(learningWorldEntity, name, contentEntity,
             description, goals,
             difficulty, elementModel, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+
+        //as there should only be one new element, we can take new list - old list = new element
+        var elementsInWorldAfter = learningWorldVm.UnplacedLearningElements;
+        var newElement = elementsInWorldAfter.Except(elementsInWorldBefore).First();
+        SelectedViewModelsProvider.SetLearningElement(newElement, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
@@ -505,11 +553,19 @@ public class PresentationLogic : IPresentationLogic
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
+        //copy list of elements before
+        var elementsInSpaceBefore = parentSpaceVm.ContainedLearningElements.ToList();
+
         var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, name, contentEntity,
             description,
             goals, difficulty, elementModel, workload, points, positionX, positionY,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
+
+        //as there should only be one new element, we can take new list - old list = new element
+        var elementsInSpaceAfter = parentSpaceVm.ContainedLearningElements;
+        var newElement = elementsInSpaceAfter.Except(elementsInSpaceBefore).First();
+        SelectedViewModelsProvider.SetLearningElement(newElement, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
@@ -526,6 +582,12 @@ public class PresentationLogic : IPresentationLogic
         var command = ElementCommandFactory.GetEditCommand(elementEntity, parentSpaceEntity, name, description,
             goals, difficulty, elementModel, workload, points, contentEntity,
             element => CMapper.Map(element, learningElementVm));
+        if (!command.AnyChanges())
+        {
+            Logger.LogInformation("No changes in edit learning element command, quitting before executing command");
+            return;
+        }
+
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -643,6 +705,7 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningElement(parentSpaceVm.ContainedLearningElements.Last(), command);
     }
 
+
     /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
     public async Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
     {
@@ -729,17 +792,132 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModel"/>
-    public ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
+    /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModelAsync"/>
+    public async Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream)
     {
-        var entity = BusinessLogic.LoadLearningContent(name, stream);
+        var entity = await BusinessLogic.LoadLearningContentAsync(name, stream);
 
         return Mapper.Map<ILearningContentViewModel>(entity);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
+    public void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name)
+    {
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
+        var command = TaskCommandFactory.GetCreateCommand(contentEntity, name,
+            content => CMapper.Map(content, adaptivityContentVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditAdaptivityTask"/>
+    public void EditAdaptivityTask(IAdaptivityTaskViewModel adaptivityTaskVm, string name,
+        QuestionDifficulty? minimumRequiredDifficulty)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(adaptivityTaskVm);
+        var command = TaskCommandFactory.GetEditCommand(taskEntity, name, minimumRequiredDifficulty,
+            task => CMapper.Map(task, adaptivityTaskVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    public void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+        IAdaptivityTaskViewModel adaptivityTaskVm)
+    {
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
+        var taskEntity = Mapper.Map<AdaptivityTask>(adaptivityTaskVm);
+        var command = TaskCommandFactory.GetDeleteCommand(contentEntity, taskEntity,
+            content => CMapper.Map(content, adaptivityContentVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void SetSelectedLearningContentViewModel(ILearningContentViewModel content)
     {
         SelectedViewModelsProvider.SetLearningContent(content, null);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceSingleResponseQuestion"/>
+    public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
+        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ChoiceViewModel correctChoice, int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
+        var command = QuestionCommandFactory.GetCreateMultipleChoiceSingleResponseQuestionCommand(taskEntity,
+            difficulty, title, questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            task => CMapper.Map(taskEntity, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceMultipleResponseQuestion"/>
+    public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
+        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetCreateMultipleChoiceMultipleResponseQuestionCommand(taskEntity,
+            difficulty, title, questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceSingleResponseQuestion"/>
+    public void EditMultipleChoiceSingleResponseQuestion(
+        MultipleChoiceSingleResponseQuestionViewModel questionViewModel, string title,
+        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        int expectedCompletionTime)
+    {
+        var questionEntity = Mapper.Map<MultipleChoiceSingleResponseQuestion>(questionViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity, title,
+            questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            question => CMapper.Map(question, questionViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceMultipleResponseQuestion"/>
+    public void EditMultipleChoiceMultipleResponseQuestion(
+        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string title, string questionText,
+        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
+    {
+        var questionEntity = Mapper.Map<MultipleChoiceMultipleResponseQuestion>(questionViewModel);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity, title,
+            questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            question => CMapper.Map(question, questionViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceQuestionWithTypeChange"/>
+    public void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel taskViewModel,
+        IMultipleChoiceQuestionViewModel question,
+        bool isSingleResponse, string title, string text, ICollection<ChoiceViewModel> choices,
+        ICollection<ChoiceViewModel> correctChoices,
+        int expectedCompletionTime)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var questionEntity = Mapper.Map<IMultipleChoiceQuestion>(question);
+        var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
+        var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
+        var command = QuestionCommandFactory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(taskEntity,
+            questionEntity,
+            isSingleResponse, title, text, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityQuestion"/>
+    public void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel taskViewModel, IAdaptivityQuestionViewModel question)
+    {
+        var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var command = QuestionCommandFactory.GetDeleteCommand(taskEntity, questionEntity,
+            task => CMapper.Map(task, taskViewModel));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <summary>
@@ -888,10 +1066,38 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
+    public async Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+        CancellationToken cancellationToken)
     {
-        BusinessLogic.UploadLearningWorldToBackend(filepath, progress);
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
+        var basePath = ApplicationPaths.SavedWorldsFolder;
+        var fileName = $"{world.Name}.mbz";
+        var filepath = Path.Join(basePath, fileName);
+        try
+        {
+            BusinessLogic.ConstructBackup(entity, filepath);
+            await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+        }
+        finally
+        {
+            //delete file after upload or exception
+            FileSystem.File.Delete(filepath);
+        }
     }
+    
+#if DEBUG
+    
+    public void ConstructDebugBackup(ILearningWorldViewModel world)
+    {
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
+        var basePath = ApplicationPaths.SavedWorldsFolder;
+        var fileName = $"{world.Name}.mbz";
+        var filepath = Path.Join(basePath, fileName);
+        BusinessLogic.ConstructBackup(entity, filepath);
+        Logger.LogDebug("Written debug backup to {Filepath}", filepath);
+    }
+    
+#endif
 
     #endregion
 }

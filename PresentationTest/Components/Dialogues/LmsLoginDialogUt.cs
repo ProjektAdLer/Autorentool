@@ -48,6 +48,12 @@ public class LmsLoginDialogUt
         _context.ComponentFactories.AddStub<MudButton>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _context.Dispose();
+    }
+
     [Test]
     public void OnParametersSet_CallsPresentationLogic()
     {

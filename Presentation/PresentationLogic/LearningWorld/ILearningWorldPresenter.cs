@@ -60,13 +60,14 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="language">The language of the learning world.</param>
     /// <param name="description">The description of the learning world.</param>
     /// <param name="goals">The goals of the learning world.</param>
+    /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals);
+        string goals, string evaluationLink);
 
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
-    Task SaveLearningWorldAsync();
+    void SaveLearningWorld();
 
     /// <summary>
     /// Asynchronously saves the selected learning space associated with the current learning world.

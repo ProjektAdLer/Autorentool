@@ -1,0 +1,128 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningElement
+@using System.Diagnostics.CodeAnalysis
+@using System.Text
+@using Presentation.PresentationLogic.LearningElement
+<div class="w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated">
+    <div class="drop-shadow-xl w-full h-full">
+        <div class="mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
+
+            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
+            {
+                var x = i;
+                var identifier = LearningSpace.Id.ToString() + x;
+
+                <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                             Class="@GetSlotStyleString(x)"
+                             style="@GetSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
+                             @onclick="() => ClickOnSlot(x)">
+                    <ItemRenderer>
+                        <DragDropLearningElement
+                            LearningElement="@context"
+                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
+                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
+                            OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                            OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                    </ItemRenderer>
+                    <ChildContent>
+                        @if (!LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(x))
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                        }
+                    </ChildContent>
+                </MudDropZone>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    public ILearningSpacePresenter LearningSpaceP { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    [Parameter, EditorRequired]
+    public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
+
+    private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\" viewBox=\"-1 -1 34 34\">"
+                                           + GetSvgPolygonString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
+                                           + GetSvgDoorsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
+                                           + "</svg>";
+
+    private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
+    {
+        var cornerPointsString = new StringBuilder();
+        cornerPointsString.Append("clip-path: polygon(");
+        foreach (var cornerPoint in floorPlan.CornerPoints)
+        {
+            cornerPointsString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
+        }
+        if (floorPlan.CornerPoints.Any())
+        {
+            cornerPointsString.Length -= 2;
+        }
+        else
+        {
+            cornerPointsString.Append("0% 0%");
+        }
+        cornerPointsString.Append(");");
+        return cornerPointsString.ToString();
+    }
+
+    private string GetSvgPolygonString(IFloorPlanViewModel floorPlan)
+    {
+        var polygonPointsString = new StringBuilder();
+        polygonPointsString.Append("<polygon points=\"");
+
+        foreach (var cornerPoint in floorPlan.CornerPoints)
+        {
+            polygonPointsString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
+        }
+
+        polygonPointsString.Append("\" style=\"fill:%23e9f2fa\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
+        return polygonPointsString.ToString();
+    }
+
+    private string GetSvgDoorsString(IFloorPlanViewModel floorPlan)
+    {
+        var doorsString = new StringBuilder();
+        foreach (var (p1, p2) in  floorPlan.DoorPositions)
+        {
+            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgba(204,204,204);stroke-width:0.5\" />");
+        }
+        return doorsString.ToString();
+    }
+
+    private string GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    {
+        var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
+        var slotPositionString = new StringBuilder();
+        slotPositionString.Append("position: absolute; ");
+        slotPositionString.Append($"top: {(int) ((slotPosition.Y + 1) / 35.0 * 100)}%; ");
+        slotPositionString.Append($"left: {(int) ((slotPosition.X + 1) / 35.0 * 100)}%; ");
+        slotPositionString.Append("transform: translate(-70%, -100%);");
+        return slotPositionString.ToString();
+    }
+
+    private string GetSlotStyleString(int position)
+    {
+        if (LearningSpaceP.LearningSpaceVm == null) return "";
+
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
+        {
+            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-24 h-3 flex justify-center items-center";
+        }
+        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-24 h-3 flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
+    }
+
+    private void ClickOnSlot(int i)
+    {
+        LearningSpaceP.ClickOnSlot(i);
+    }
+
+}

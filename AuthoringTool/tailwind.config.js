@@ -107,14 +107,17 @@ module.exports = {
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
-                formerror: "rgb(244,67,54)"
+                formerror: "rgb(244,67,54)",
+                adlergreybright: "#fafafa",
             },
             fontFamily: {
                 'sans': ['Roboto']
             }
         },
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/container-queries'),
+    ],
     safelist: [
         'right-0',
         'left-0',
