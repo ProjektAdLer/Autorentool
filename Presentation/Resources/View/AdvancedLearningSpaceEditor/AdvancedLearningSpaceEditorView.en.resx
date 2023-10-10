@@ -49,11 +49,11 @@ Drag and Drop to move. Doubleclick to delete.</value>
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.Decoration" xml:space="preserve">
         <value>Decoration.
-Drag and Drop to move. Doubleclick to delete.</value>
+Drag and Drop to move. Rightclick to rotate. Doubleclick to delete.</value>
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.ElementSlotOutline" xml:space="preserve">
         <value>Learning element slot position.
-Doubleclick to delete.</value>
+Drag and Drop to move. Rightclick to rotate. Doubleclick to delete.</value>
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.Entrydoor" xml:space="preserve">
         <value>Entrydoor. 
