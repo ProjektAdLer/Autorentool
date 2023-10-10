@@ -39,7 +39,7 @@
              @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
-            <div class="h-[0px]">
+            <div class="relative h-[0px]">
                 @* draw elementslots (in eigenem div, wegen mud blazor) *@
 
                 @foreach (var advancedComponentSlot in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.ContainedAdvancedLearningElementSlots)
