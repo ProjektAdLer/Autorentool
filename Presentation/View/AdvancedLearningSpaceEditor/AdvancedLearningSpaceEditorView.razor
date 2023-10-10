@@ -86,7 +86,9 @@
                 <AdvancedDraggable
                     LearningObject="cornerPoint"
                     @bind-X="cornerPoint.X"
-                    @bind-Y="cornerPoint.Y">
+                    @bind-Y="cornerPoint.Y"
+                    OnDoubleClicked="@DeleteCornerPoint"
+                    T="DoublePoint">
                     <circle r="5" fill="red" stroke="black">
                         <title>
                             @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.CornerPoint"]
@@ -307,7 +309,7 @@
                     </svg>";
     }
 
-    public void DeleteCornerPoint(int cornerPointKey)
+    public void DeleteCornerPoint(DoublePoint cornerPoint)
     {
         // 1. Get CornerPoints
         // 2 Get Mouse Position

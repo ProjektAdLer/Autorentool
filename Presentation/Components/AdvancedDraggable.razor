@@ -2,6 +2,7 @@
 @inject ILogger<Draggable<T>> Logger;
 @implements IDisposable
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor
 @typeparam T
 
 <g transform="translate(@RoundDoublePoint(X), @RoundDoublePoint(Y))" @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
