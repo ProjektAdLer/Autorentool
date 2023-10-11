@@ -312,11 +312,11 @@
     {
         var cornerPointDictionary = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel!.AdvancedLearningSpaceLayout.AdvancedCornerPoints;
         var cornerPointKey = cornerPointDictionary.FirstOrDefault(x => x.Value == cornerPoint).Key;
-        cornerPointDictionary.Remove(cornerPointKey);
         for (int i = cornerPointKey+1; i < cornerPointDictionary.Count; i++)
         {
             cornerPointDictionary[i-1] = cornerPointDictionary[i];
         }
+        cornerPointDictionary.Remove(cornerPointDictionary.Count-1);
     }
 
 }
