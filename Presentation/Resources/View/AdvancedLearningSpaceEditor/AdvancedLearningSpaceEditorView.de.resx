@@ -37,7 +37,7 @@
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceOutline" xml:space="preserve">
         <value>Raumbegrenzung.
-Doppelklick, um neuen Eckpunkt einzufügen.</value>
+Rechtsklick, um neuen Eckpunkt einzufügen.</value>
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceFillout" xml:space="preserve">
         <value>Raum.

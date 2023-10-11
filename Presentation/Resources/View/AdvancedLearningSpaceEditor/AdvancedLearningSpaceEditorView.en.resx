@@ -37,7 +37,7 @@
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceOutline" xml:space="preserve">
         <value>Spaceoutline.
-Doubleclick to insert new corner point.</value>
+Rightclick to insert new corner point.</value>
     </data>
     <data name="AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceFillout" xml:space="preserve">
         <value>Space.
