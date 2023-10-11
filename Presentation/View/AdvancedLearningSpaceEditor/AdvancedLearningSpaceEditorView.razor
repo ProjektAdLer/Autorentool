@@ -10,6 +10,7 @@
 @using Presentation.View.LearningElement
 @using Presentation.Components
 @using Presentation.PresentationLogic.AdvancedLearningSpaceEditor
+@using System.Numerics
 @ChildContent
 
 <section class="w-[680px] p-2 gap-1 flex flex-col justify-start">
@@ -68,11 +69,13 @@
                     <line x1="20" y1="@i" x2="630" y2="@i" style="stroke:#d6d5d5;stroke-width:1"/>
                 }
                 @* draw space *@
-                <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:10;stroke-opacity:0.5;fill-opacity:0">
+                
+                <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:10;stroke-opacity:0.5;fill-opacity:0" onmousedown="@AddCornerPoint">
                     <title>
                         @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceOutline"]
                     </title>
                 </polyline>
+                
                 <polyline points="@GetSpaceCornerPointsString()" style="fill:blue;fill-opacity:0.1">
                     <title>
                         @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceFillout"]
@@ -310,6 +313,7 @@
 
     private void DeleteCornerPoint(DoublePoint cornerPoint)
     {
+        //fragen ob das eig in presenter soll
         var cornerPointDictionary = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel!.AdvancedLearningSpaceLayout.AdvancedCornerPoints;
         var cornerPointKey = cornerPointDictionary.FirstOrDefault(x => x.Value == cornerPoint).Key;
         for (int i = cornerPointKey+1; i < cornerPointDictionary.Count; i++)
@@ -318,5 +322,15 @@
         }
         cornerPointDictionary.Remove(cornerPointDictionary.Count-1);
     }
-
+    
+    private void AddCornerPoint(MouseEventArgs e)
+    {
+    // Check if it was a rightclick
+        if (e.Button == 2)
+        {
+            var mouseLocation = new Vector2((float)e.OffsetX, (float)e.OffsetY);
+            var cornerPoints = this.GetSpaceCornerPoints();
+        }
+        var cornerPointDictionary = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel!.AdvancedLearningSpaceLayout.AdvancedCornerPoints;
+    }
 }
