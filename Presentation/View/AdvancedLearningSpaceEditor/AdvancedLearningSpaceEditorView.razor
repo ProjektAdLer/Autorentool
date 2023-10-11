@@ -82,7 +82,6 @@
 
                 @foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
                 {
-                    
                 <AdvancedDraggable
                     LearningObject="cornerPoint"
                     @bind-X="cornerPoint.X"
@@ -309,13 +308,15 @@
                     </svg>";
     }
 
-    public void DeleteCornerPoint(DoublePoint cornerPoint)
+    private void DeleteCornerPoint(DoublePoint cornerPoint)
     {
-        // 1. Get CornerPoints
-        // 2 Get Mouse Position
-        // 3 get closest corner Point
-        // 4 Delete cornerpoint
-        // AdvancedLearningSpaceEditorPresenter.DeleteCornerPoint(cornerPointKey);
+        var cornerPointDictionary = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel!.AdvancedLearningSpaceLayout.AdvancedCornerPoints;
+        var cornerPointKey = cornerPointDictionary.FirstOrDefault(x => x.Value == cornerPoint).Key;
+        cornerPointDictionary.Remove(cornerPointKey);
+        for (int i = cornerPointKey+1; i < cornerPointDictionary.Count; i++)
+        {
+            cornerPointDictionary[i-1] = cornerPointDictionary[i];
+        }
     }
 
 }
