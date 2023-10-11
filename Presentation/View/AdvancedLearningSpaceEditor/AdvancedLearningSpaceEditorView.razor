@@ -330,7 +330,57 @@
         {
             var mouseLocation = new Vector2((float)e.OffsetX, (float)e.OffsetY);
             var cornerPoints = this.GetSpaceCornerPoints();
+            //Everything below can potentially move to editorpresenter or maybe even somewhere else entirely?
+            
+            //Compute the wall that is closest to mouse location, then add a corner point to that wall
+            var closestWallPoint = new Vector2();
+            var closestPoint = new Vector2();
+            var shortestDistance = float.MaxValue;
+            for (int i = 0; i < cornerPoints!.Count; i++)
+            {
+                var wallPoint1 = new Vector2((float)cornerPoints[i].X, (float)cornerPoints[i].Y);
+                var wallPoint2 = new Vector2((float)cornerPoints[i + 1 < cornerPoints.Count ? i + 1 : 0].X, (float)cornerPoints[i + 1 < cornerPoints.Count ? i + 1 : 0].Y);
+                var distance = this.ComputeDistance(mouseLocation, wallPoint1, wallPoint2, out Vector2 closestLocalPoint);
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    closestPoint = closestLocalPoint;
+                    closestWallPoint = wallPoint1;
+                }
+            }
+            var closestWallPointIndex = cornerPoints.FirstOrDefault(x => x.Value.X == closestWallPoint.X && x.Value.Y == closestWallPoint.Y).Key;
+            var closestDoublePoint = new DoublePoint{X = closestPoint.X, Y = closestPoint.Y};
+            cornerPoints.Add(cornerPoints.Count, cornerPoints[cornerPoints.Count-1]);
+            for (int i = cornerPoints.Count-1; i > closestWallPointIndex+1; i--)
+            {
+                cornerPoints[i] = cornerPoints[i-1];
+            }
+            
+            cornerPoints[closestWallPointIndex + 1] = closestDoublePoint;
         }
-        var cornerPointDictionary = AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel!.AdvancedLearningSpaceLayout.AdvancedCornerPoints;
+    }
+    private float ComputeDistance(Vector2 mousePoint, Vector2 wallPoint1, Vector2 wallPoint2, out Vector2 closestPoint)
+    {
+        Vector2 wallVector = wallPoint2 - wallPoint1;
+        Vector2 mouseVector = mousePoint - wallPoint1;
+
+        float wallProjection = Vector2.Dot(mouseVector, wallVector);
+        float wallLength = wallVector.LengthSquared();
+        float distance = wallProjection / wallLength;
+
+        if (distance <= 0)
+        {
+            closestPoint = wallPoint1;
+        }
+        else if (distance >= 1)
+        {
+            closestPoint = wallPoint2;
+        }
+        else
+        {
+            closestPoint = wallPoint1 + distance * wallVector;
+        }
+
+        return Vector2.Distance(mousePoint, closestPoint);
     }
 }
