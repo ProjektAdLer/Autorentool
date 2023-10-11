@@ -9,15 +9,15 @@
     </label>
 </foreignobject>
 
-@((MarkupString)String.Format(Text, ObjectName, ObjectInPathWay.PositionX, ObjectInPathWay.PositionY))
+
+@GetFormattedString
 
 @code {
 
-    // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<PathWayConditionViewModel> OnSwitchPathWayCondition { get; set; }
 
     private void HandleCheckboxChanged()
@@ -25,35 +25,23 @@
         OnSwitchPathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay);
     }
 
-    private bool ConditionValue
+    private string ConditionValue => ((PathWayConditionViewModel)ObjectInPathWay).Condition switch
     {
-        get
-        {
-            return ((PathWayConditionViewModel)ObjectInPathWay).Condition switch
-            {
-                ConditionEnum.And => true,
-                ConditionEnum.Or => false,
-                _ => false
-                };
-        }
-    }
+        ConditionEnum.And => "true",
+        ConditionEnum.Or => "false",
+        _ => "false"
+        };
 
     private string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
 
-    private string Text
+    private string Text => ((PathWayConditionViewModel)ObjectInPathWay).Condition switch
     {
-        get
-        {
-            switch (((PathWayConditionViewModel)ObjectInPathWay).Condition)
-            {
-                case ConditionEnum.Or:
-                    return @"<text x={1} y={2} font-size=""12"" transform=""translate(43,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
-                case ConditionEnum.And:
-                    return @"<text x={1} y={2} font-size=""12"" transform=""translate(12,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
-                default:
-                    throw new ApplicationException("No valid condition set");
-            }
-        }
-    }
+        ConditionEnum.Or => @"<text x={1} y={2} font-size=""12"" transform=""translate(43,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>",
+        ConditionEnum.And => @"<text x={1} y={2} font-size=""12"" transform=""translate(12,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>",
+        _ => throw new ApplicationException("No valid condition set")
+        };
+
+    internal MarkupString GetFormattedString => (MarkupString)string
+        .Format(Text, ObjectName, ObjectInPathWay.PositionX, ObjectInPathWay.PositionY);
 
 }
