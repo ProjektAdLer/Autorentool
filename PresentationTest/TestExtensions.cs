@@ -192,12 +192,27 @@ public static class TestExtensions
     public class MockNavigationManager
         : NavigationManager
     {
-        public MockNavigationManager() : base() =>
-            this.Initialize("http://localhost:2112/", "http://localhost:2112/test");
+        private readonly List<string> _invokedUris;
+
+        public MockNavigationManager() : base()
+        {
+            _invokedUris = new List<string>();
+            Initialize("http://localhost:2112/", "http://localhost:2112/test");
+        }
 
         public bool WasNavigateInvoked { get; private set; }
+        public IEnumerable<string> InvokedUris => _invokedUris;
 
-        protected override void NavigateToCore(string uri, bool forceLoad) =>
-            this.WasNavigateInvoked = true;
+        protected override void NavigateToCore(string uri, bool forceLoad)
+        {
+            WasNavigateInvoked = true;
+            _invokedUris.Add(uri);
+        }
+
+        public void Reset()
+        {
+            WasNavigateInvoked = false;
+            _invokedUris.Clear();
+        }
     }
 }

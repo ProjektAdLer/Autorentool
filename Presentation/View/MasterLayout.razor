@@ -1,10 +1,12 @@
 @page "/app"
 @using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.Layout
 @using Presentation.View.LearningSpace
 @using Presentation.View.LearningWorld
 @using Presentation.PresentationLogic.DropZone
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningSpace
 @using BusinessLogic.Commands
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -14,8 +16,6 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
-@using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
@@ -128,27 +128,27 @@
 @code {
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public IMediator Mediator { get; set; }
+    internal IMediator Mediator { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
+    internal ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public IOnUndoRedo OnUndoRedoEventSource { get; set; }
+    internal IOnUndoRedo OnUndoRedoEventSource { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    IStringLocalizer<MasterLayout> Localizer { get; set; }
-    
+    internal IStringLocalizer<MasterLayout> Localizer { get; set; }
+
     [Inject, AllowNull] //see above
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
+
     [Inject, AllowNull]
     internal NavigationManager NavManager { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    public IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
+    internal IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 
 
     protected override void OnInitialized()
@@ -163,11 +163,16 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        //if no world is selected (after hot reload for example), navigate to overview
+        OnAfterRenderInternal(firstRender);
+    }
+
+    internal void OnAfterRenderInternal(bool firstRender)
+    {
+    //if no world is selected (after hot reload for example), navigate to overview
         if (SelectedViewModelsProvider.LearningWorld is null) NavManager.NavigateTo("/MyLearningWorldsOverview");
-        //only open tabs if it's our first render after being created
+    //only open tabs if it's our first render after being created
         if (!firstRender) return;
-        //open left and right tabs
+    //open left and right tabs
         Mediator.RequestOpenWorldDialog();
         Mediator.RequestOpenPathwayView();
     }
@@ -192,6 +197,7 @@
         Mediator.PropertyChanged -= MediatorOnPropertyChanged;
         OnUndoRedoEventSource.OnRedo -= OnUndoRedo;
         OnUndoRedoEventSource.OnUndo -= OnUndoRedo;
+        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }
