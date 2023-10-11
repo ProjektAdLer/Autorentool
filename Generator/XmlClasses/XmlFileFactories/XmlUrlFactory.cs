@@ -114,8 +114,6 @@ public class XmlUrlFactory : IXmlUrlFactory
                     UrlDescription = learningElementJson.ElementDescription ?? "";
                     UrlPoints = learningElementJson.ElementMaxScore;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(url));
             }
 
             SetParametersActivityUrl();

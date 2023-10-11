@@ -43,7 +43,7 @@ public class ReadDsl : IReadDsl
             var jsonString = _fileSystem.File.ReadAllText(dslPath);
             var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ??
-                        throw new InvalidOperationException("Could not deserialize DSL_Document");
+                        throw new InvalidOperationException("Could not deserialize ATF_Document");
         }
 
         GetH5PElements(_rootJson);
@@ -192,7 +192,7 @@ public class ReadDsl : IReadDsl
         {
             if (url.ElementFileType is "url")
             {
-                _listUrlElements.Add((LearningElementJson)url);
+                _listUrlElements.Add((ILearningElementJson)url);
             }
         }
 

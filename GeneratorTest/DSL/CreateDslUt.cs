@@ -352,7 +352,7 @@ public class CreateDslUt
         systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
 
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "ATF_Document.json");
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Uuid, Is.Not.Null);

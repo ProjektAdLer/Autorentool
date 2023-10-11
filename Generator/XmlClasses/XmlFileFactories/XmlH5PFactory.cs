@@ -151,8 +151,6 @@ public class XmlH5PFactory : IXmlH5PFactory
                     H5PElementDesc = learningElementJson.ElementDescription ?? "";
                     H5PElementPoints = learningElementJson.ElementMaxScore;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(h5PElement));
             }
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,

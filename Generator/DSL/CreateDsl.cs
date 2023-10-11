@@ -743,7 +743,7 @@ public class CreateDsl : ICreateDsl
     {
         var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
         _xmlFilesForExportPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport");
-        _dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "DSL_Document.json");
+        _dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "ATF_Document.json");
 
         if (_fileSystem.Directory.Exists(_xmlFilesForExportPath))
         {

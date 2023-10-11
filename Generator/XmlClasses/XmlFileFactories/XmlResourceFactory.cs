@@ -130,8 +130,6 @@ public class XmlResourceFactory : IXmlResourceFactory
                     FileElementPoints = learningElementJson.ElementMaxScore;
                     FileElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(resource));
             }
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
