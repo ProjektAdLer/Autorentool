@@ -18,9 +18,9 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         _advancedCornerPoints = new Dictionary<int, DoublePoint>()
         {
             { 0, new DoublePoint { X = 50, Y = 50 } },
-            { 1, new DoublePoint { X = 50, Y = 200 } },
+            { 1, new DoublePoint { X = 500, Y = 50 } },
             { 2, new DoublePoint { X = 500, Y = 200 } },
-            { 3, new DoublePoint { X = 500, Y = 50 } }
+            { 3, new DoublePoint { X = 50, Y = 200 } }
         };
         _entryDoorPosition = new DoublePoint { X = 50, Y = 125 };
         _exitDoorPosition = new DoublePoint { X = 500, Y = 125 };
