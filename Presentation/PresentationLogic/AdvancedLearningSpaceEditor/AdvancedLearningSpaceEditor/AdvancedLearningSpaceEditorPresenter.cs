@@ -32,34 +32,6 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
         private set => SetField(ref _advancedLearningSpaceVm, value);
     }
 
-    public IAdvancedComponentViewModel? SelectedAdvancedComponentViewModel { get; set; }
-
-    public void SetSelectedAdvancedComponentViewModel(IAdvancedComponentViewModel obj)
-    {
-        SelectedAdvancedComponentViewModel = obj;
-    }
-
-    public void DragSelectedAdvancedComponent(object sender,
-        DraggedEventArgs<IAdvancedComponentViewModel> draggedEventArgs)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DeleteAdvancedDecoration( IAdvancedDecorationViewModel advancedDecorationViewModel)
-    {
-        if(advancedDecorationViewModel is not IAdvancedDecorationViewModel advancedDecorationVm)
-            throw new ArgumentException("advancedDecorationViewModel must be of type IAdvancedDecorationViewModel");
-    }
-
-    public void RightClickOnAdvancedComponent()
-    {
-    }
-
-    public void HideRightClickMenu()
-    {
-    }
-
-
     public void SetAdvancedLearningSpace(AdvancedLearningSpaceViewModel advSpace)
     {
         AdvancedLearningSpaceViewModel = advSpace;
