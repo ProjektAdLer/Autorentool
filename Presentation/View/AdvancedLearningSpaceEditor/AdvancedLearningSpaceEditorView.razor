@@ -108,12 +108,15 @@
                 <AdvancedDraggable
                     LearningObject="advancedComponentDecoration"
                     @bind-X="advancedComponentDecoration.PositionX"
-                    @bind-Y="advancedComponentDecoration.PositionY">
-                    <rect width="40" height="40" x="-20" y="-20" fill="lime" stroke="black" opacity="60%">
+                    @bind-Y="advancedComponentDecoration.PositionY"
+                    OnRightClicked="@RotateAdvancedComponent"
+                    T="IAdvancedComponentViewModel">
+                    <rect width="40" height="40" x="-20" y="-20" transform="rotate(@advancedComponentDecoration.Rotation)" fill="lime" stroke="black" opacity="60%">
                         <title>
                             @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.Decoration"]
                         </title>
                     </rect>
+                    <polyline points="-5,-5 5,-5 5,10 10,10 0,18 -10,10 -5,10 -5,-5" transform="rotate(@advancedComponentDecoration.Rotation)" fill="gray" opacity="50%"/>
                     @((MarkupString)DrawFlowerSvg())
                     
                 </AdvancedDraggable>
@@ -127,13 +130,15 @@
                 <AdvancedDraggable
                     LearningObject="advancedComponentSlot"
                     @bind-X="advancedComponentSlot.PositionX"
-                    @bind-Y="advancedComponentSlot.PositionY">
+                    @bind-Y="advancedComponentSlot.PositionY"
+                    OnRightClicked="@RotateAdvancedComponent"
+                    T="IAdvancedComponentViewModel">
                     <rect width="40" height="40" x="-20" y="-20" fill="gray" stroke="black" opacity="30%">
                         <title>
                             @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.ElementSlotOutline"]
                         </title>
                     </rect>
-                    <polyline points="-5,-5 5,-5 5,10 10,10 0,18 -10,10 -5,10 -5,-5" fill="gray" opacity="50%"/>
+                    <polyline points="-5,-5 5,-5 5,10 10,10 0,18 -10,10 -5,10 -5,-5" transform="rotate(@advancedComponentSlot.Rotation)" fill="gray" opacity="50%"/>
                 </AdvancedDraggable>
                 }
 
@@ -265,7 +270,7 @@
 
     private string DrawFlowerSvg()
     {
-        return @"<svg x=""-21"" y=""-20"" width=""2000"" height=""2000"">
+        return @"<svg x=""-16"" y=""-20"" width=""2000"" height=""2000"">
                         <defs>
                             <style>                          
                                 .cls-2 {
@@ -288,7 +293,7 @@
                                 }
                               </style>
                         </defs>
-                        <g transform=""scale(0.02)"">
+                        <g transform=""scale(0.015)"">
                             <path class=""cls-2"" d=""m1091.05,1515l-36.36-525.39s29.09,140.51,269.1,97.75,7.27-274.91-269.1-103.86-538.19,189.38-472.74,122.18,276.37-360.44,472.74-116.07""/>
                             <line class=""cls-2"" x1=""1055.2"" y1=""993"" x2=""1046.2"" y2=""678""/>
                             <g>
@@ -382,5 +387,10 @@
         }
 
         return Vector2.Distance(mousePoint, closestPoint);
+    }
+    private void RotateAdvancedComponent(IAdvancedComponentViewModel advancedComponent)
+    {
+     advancedComponent.Rotation += 90;
+        
     }
 }
