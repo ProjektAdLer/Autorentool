@@ -33,4 +33,13 @@
     <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
         <value>New task {0}</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Easy" xml:space="preserve">
+        <value>Easy Question</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Medium" xml:space="preserve">
+        <value>Medium Question</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Hard" xml:space="preserve">
+        <value>Hard Question</value>
+    </data>
 </root>

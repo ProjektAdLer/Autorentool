@@ -41,4 +41,13 @@
     <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
         <value>Neue Aufgabe {0}</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Easy" xml:space="preserve">
+        <value>Einfache Frage</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Hard" xml:space="preserve">
+        <value>Schwere Frage</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.Question.Medium" xml:space="preserve">
+        <value>Mittelschwere Frage</value>
+    </data>
 </root>
