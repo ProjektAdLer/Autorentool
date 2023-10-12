@@ -52,6 +52,8 @@ public class FormModelEntityMappingProfile : Profile
                 ? context.Mapper.Map<MultipleChoiceSingleResponseQuestion>(formModel)
                 : context.Mapper.Map<MultipleChoiceMultipleResponseQuestion>(formModel));
         CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>();
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoice, opt => opt.MapFrom(x => x.CorrectChoices.First()));
     }
 }

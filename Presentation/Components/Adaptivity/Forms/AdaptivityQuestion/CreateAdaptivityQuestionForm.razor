@@ -6,6 +6,7 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
 @using BusinessLogic.Entities.LearningContent.Adaptivity.Question
+@using AutoMapper
 @using System.Diagnostics.CodeAnalysis
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_createQuestionForm"
           OnValidSubmit="OnValidSubmit"
@@ -29,25 +30,51 @@
                           Label="@Localizer["CreateAdaptivityQuestionForm.Field.QuestionText.Text"]"
                           Class="pb-4 mt-0"/>
 
-            <MudCheckBox @bind-Checked="FormDataContainer.FormModel.IsSingleResponse"
+            <MudCheckBox T="bool" Checked="FormDataContainer.FormModel.IsSingleResponse" CheckedChanged="b => IsSingleResponseChanged((bool) b!)"
                          For="@(() => FormModel.IsSingleResponse)" Label="IsSingleResponse">
             </MudCheckBox>
         </div>
 
         <MudText>@Localizer["CreateAdaptivityQuestionForm.Text.Choices"]</MudText>
         <div class="rounded-lg w-4/4 px-4">
-            @foreach (var choice in FormDataContainer.FormModel.Choices)
+            <br/>
+            @if (FormModel.IsSingleResponse)
             {
-                <div class="inline-flex">
-                    <MudCheckBox T="bool"
-                                 Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
-                                 CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
-                    <MudTextField T="string" For="@(() => FormModel.Choices.Single(x => x.Id == choice.Id).Text)" @bind-Value="@choice.Text"></MudTextField>
+                <MudRadioGroup T="ChoiceViewModel" SelectedOption="FormModel.CorrectChoices.First()" SelectedOptionChanged="ChangeCorrectChoice">
+                    @foreach (var choice in FormDataContainer.FormModel.Choices)
+                    {
+                        <div class="inline-flex">
+                            <MudRadio Option="choice"/>
+                            <MudForm Model="choice" Validation="ValidateChoiceModel">
+                                <MudTextField T="string" For="@(() => choice.Text)"
+                                              @bind-Value="@choice.Text">
+                                </MudTextField>
+                            </MudForm>
+                            <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
 
-                    <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
+                        </div>
+                        <br/>
+                    }
+                </MudRadioGroup>
+            }
+            else
+            {
+                @foreach (var choice in FormDataContainer.FormModel.Choices)
+                {
+                    <div class="inline-flex">
+                        <MudCheckBox T="bool"
+                                     Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                     CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"/>
 
-                </div>
-                <br/>
+                        <MudForm Model="choice" Validation="ValidateChoiceModel">
+                            <MudTextField T="string" For="@(() => choice.Text)"
+                                          @bind-Value="@choice.Text">
+                            </MudTextField>
+                        </MudForm>
+                        <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
+                    </div>
+                    <br/>
+                }
             }
         </div>
 
@@ -66,12 +93,17 @@
 
 @code {
 
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<CreateAdaptivityQuestionForm> Localizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IFormDataContainer<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion> FormDataContainer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IMapper Mapper { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    private IValidationWrapper<Choice> ChoiceValidator { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
@@ -115,10 +147,7 @@
     {
         if (model.IsSingleResponse)
         {
-            if (model.CorrectChoices.Count == 1)
-            {
-                PresentationLogic.CreateMultipleChoiceSingleResponseQuestion(Task, Difficulty, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
-            }
+            PresentationLogic.CreateMultipleChoiceSingleResponseQuestion(Task, Difficulty, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
         }
         else
         {
@@ -131,9 +160,8 @@
 
     private void AddChoice()
     {
-        FormDataContainer.FormModel.Choices.Add(
-            new ChoiceViewModel(Localizer["CreateAdaptivityQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1))
-            );
+        var choice = new ChoiceViewModel(Localizer["CreateAdaptivityQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1));
+        FormDataContainer.FormModel.Choices.Add(choice);
     }
 
     private void RemoveChoice(ChoiceViewModel choice)
@@ -166,5 +194,36 @@
             _ => throw new ArgumentOutOfRangeException(nameof(modelEntity), "Model entity is not a valid type")
             };
     });
+
+    private Func<object, string, Task<IEnumerable<string>>> ValidateChoiceModel => (async (obj, propertyName) =>
+    {
+        var modelEntity = Mapper.Map<ChoiceViewModel, Choice>((ChoiceViewModel) obj);
+        return await ChoiceValidator.ValidateAsync(modelEntity, propertyName);
+    });
+
+    private void ChangeCorrectChoice(ChoiceViewModel correctChoice)
+    {
+        FormModel.CorrectChoices.Clear();
+        FormModel.CorrectChoices.Add(correctChoice);
+    }
+
+    private void IsSingleResponseChanged(bool isSingleResponse)
+    {
+        FormModel.IsSingleResponse = isSingleResponse;
+        if (!FormModel.IsSingleResponse) return;
+        switch (FormModel.CorrectChoices.Count)
+        {
+            case > 1:
+            {
+                var correctChoice = FormModel.CorrectChoices.First();
+                FormModel.CorrectChoices.Clear();
+                FormModel.CorrectChoices.Add(correctChoice);
+                break;
+            }
+            case 0:
+                FormModel.CorrectChoices.Add(FormModel.Choices.First());
+                break;
+        }
+    }
 
 }
