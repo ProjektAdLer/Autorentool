@@ -4,7 +4,9 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -573,4 +575,11 @@ public interface IPresentationLogic
     #if DEBUG
     void ConstructDebugBackup(ILearningWorldViewModel world);
     #endif
+    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
+        IAdaptivityActionViewModel action);
+
+    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
+    void EditCommentAction(CommentActionViewModel action, string comment);
+    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content);
+    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid);
 }

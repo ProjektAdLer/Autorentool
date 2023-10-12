@@ -21,6 +21,7 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
         Action = null!;
     }
 
+    public Guid Id { get; private set; }
     public IAdaptivityTriggerViewModel Trigger { get; set; }
     public IAdaptivityActionViewModel Action { get; set; }
 }
