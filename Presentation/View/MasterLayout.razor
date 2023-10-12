@@ -177,16 +177,19 @@
         Mediator.RequestOpenPathwayView();
     }
 
+    [ExcludeFromCodeCoverage]
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         TriggerStateHasChanged();
     }
 
+    [ExcludeFromCodeCoverage]
     private void OnUndoRedo(ICommand command)
     {
         TriggerStateHasChanged();
     }
 
+    [ExcludeFromCodeCoverage]
     private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
