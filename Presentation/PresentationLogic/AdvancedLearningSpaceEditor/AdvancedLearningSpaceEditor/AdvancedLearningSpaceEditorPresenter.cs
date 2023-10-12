@@ -128,4 +128,23 @@ public class AdvancedLearningSpaceEditorPresenter : IAdvancedLearningSpaceEditor
         Logger.LogError("Error in {Operation}: {ErrorDetail}", operation, errorDetail);
         _errorService.SetError("Operation failed", userMessage);
     }
+    public void DeleteAdvancedComponent(IAdvancedComponentViewModel advancedComponentViewModel)
+    {
+        if (AdvancedLearningSpaceViewModel == null)
+        {
+            throw new ApplicationException("AdvancedLearningSpaceViewModel is null!");
+        }
+        if (advancedComponentViewModel.GetType() == typeof(AdvancedDecorationViewModel))
+        {
+            var decorationDictionary = AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedDecorations;
+            var decorationKey = decorationDictionary.FirstOrDefault(x => x.Value == advancedComponentViewModel).Key;
+            decorationDictionary.Remove(decorationKey);
+        }
+        else if (advancedComponentViewModel.GetType() == typeof(AdvancedLearningElementSlotViewModel))
+        {
+            var slotDictionary = AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots;
+            var slotKey = slotDictionary.FirstOrDefault(x => x.Value == advancedComponentViewModel).Key;
+            slotDictionary.Remove(slotKey);
+        }
+    }
 }
