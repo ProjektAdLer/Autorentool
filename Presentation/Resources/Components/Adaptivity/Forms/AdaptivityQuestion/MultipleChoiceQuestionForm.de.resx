@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -23,25 +24,31 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="CreateAdaptivityQuestionForm.Field.QuestionText.Text" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Field.QuestionText.Text" xml:space="preserve">
         <value>Fragetext</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.SnackbarMessage" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Create.SnackbarMessage" xml:space="preserve">
         <value>Frage erstellt</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.Text.AddChoice" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Text.AddChoice" xml:space="preserve">
         <value>Antworten hinzufügen</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.Button.Create" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Button.Create" xml:space="preserve">
         <value>Erstellen</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.Text.Choices" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Text.Choices" xml:space="preserve">
         <value>Antwortmöglichkeiten</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Text.Choice" xml:space="preserve">
         <value>Antwortmöglichkeit</value>
     </data>
-    <data name="CreateAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
+    <data name="MultipleChoiceQuestionForm.Field.Title.Text" xml:space="preserve">
         <value>Titel</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Edit.SnackbarMessage" xml:space="preserve">
+        <value>Frage aktualisiert</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Button.Edit" xml:space="preserve">
+        <value>Übernehmen</value>
     </data>
 </root>

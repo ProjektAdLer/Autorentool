@@ -1,9 +1,17 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
 <MudDialog>
     <DialogContent>
-        <AdaptivityQuestionFormContainer Task="Task" Difficulty="Difficulty" QuestionToEdit="Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty)"></AdaptivityQuestionFormContainer>
+        @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
+        {
+            <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit"></MultipleChoiceQuestionForm>
+        }
+        else
+        {
+            <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></MultipleChoiceQuestionForm>
+        }
     </DialogContent>
 </MudDialog>
 
