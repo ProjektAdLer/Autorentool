@@ -8,9 +8,11 @@ public class AdvancedDecorationViewModel : IAdvancedDecorationViewModel
         DecorationKey = decorationKey;
         PositionX = positionX;
         PositionY = positionY;
+        Rotation = 0;
     }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public int Rotation { get; set; }
     public string Identifier => SpaceId + DecorationKey.ToString();
     public Guid SpaceId { get; }
     public int DecorationKey { get; }
