@@ -49,4 +49,25 @@ public class ElementReferenceAction : IAdaptivityAction
     {
         return !Equals(left, right);
     }
+
+    public IMemento GetMemento() => new ElementReferenceActionMemento(Id, ElementId);
+
+    public void RestoreMemento(IMemento memento)
+    {
+        if (memento is not ElementReferenceActionMemento eram)
+            throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
+        Id = eram.Id;
+        ElementId = eram.ElementId;
+    }
+
+    private record ElementReferenceActionMemento : IMemento
+    {
+        public ElementReferenceActionMemento(Guid id, Guid elementId)
+        {
+            Id = id;
+            ElementId = elementId;
+        }
+        internal Guid Id { get; }
+        internal Guid ElementId { get; }
+    }
 }

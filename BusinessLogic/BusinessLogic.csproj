@@ -13,6 +13,9 @@
     <ItemGroup>
       <Compile Remove="Entities\LearningElementDifficultyEnum.cs" />
       <Compile Remove="Entities\LearningContent\LearningContent.cs" />
+      <Compile Remove="Commands\Adaptivity\Action\IDeleteAdaptivityAction.cs" />
+      <Compile Remove="Commands\Adaptivity\Action\DeleteAdaptivityAction.cs" />
+      <Compile Remove="Commands\Adaptivity\Action\CommentAction\IEditCommentAction.cs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.7.1" />

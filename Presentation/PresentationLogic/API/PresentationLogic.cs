@@ -21,7 +21,9 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -888,6 +890,41 @@ public class PresentationLogic : IPresentationLogic
         var command = QuestionCommandFactory.GetDeleteCommand(taskEntity, questionEntity,
             task => CMapper.Map(task, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
+        IAdaptivityActionViewModel action)
+    {
+        //map to entity
+        //create adaptivity rule command (questionE, triggerE, actionE)
+        //
+        
+    }
+
+    public void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule)
+    {
+        
+    }
+
+    public void EditCommentAction(CommentActionViewModel action, string comment)
+    {
+        //map to entity
+        //create command
+        //execute command (map entity in vm)
+    }
+
+    public void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content)
+    {
+        //map to entity
+        //create command
+        //execute command (map entity in vm)
+    }
+
+    public void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid)
+    {
+        //map to entity
+        //create command
+        //execute command (map entity in vm)
     }
 
     /// <summary>
