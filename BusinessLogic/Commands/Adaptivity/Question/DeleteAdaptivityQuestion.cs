@@ -33,6 +33,10 @@ public class DeleteAdaptivityQuestion : IDeleteAdaptivityQuestion
         if (questionToDelete != null)
         {
             Task.Questions.Remove(questionToDelete);
+            if (Task.MinimumRequiredDifficulty == questionToDelete.Difficulty)
+            {
+                Task.MinimumRequiredDifficulty = Task.Questions.Any() ? Task.Questions.Min(x => x.Difficulty) : null;
+            }
 
             Logger.LogTrace(
                 "Deleted AdaptivityQuestion {AdaptivityQuestionName} ({AdaptivityQuestionId}) in AdaptivityTask {AdaptivityTaskName}",
