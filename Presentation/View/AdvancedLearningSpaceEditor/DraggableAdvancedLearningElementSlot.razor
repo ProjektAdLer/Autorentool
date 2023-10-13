@@ -8,14 +8,14 @@
 <MudDropZone
     T="ILearningElementViewModel"
     Identifier="@AdvancedComponent.Identifier"
-    class="absolute rounded-lg border-2 border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center"
+    class="absolute cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-24 h-3 flex justify-center items-center over:bg-adlerblue-300 hover:border-adlerblue-300"
     style="@GenerateStyleString()"
     
     @onclick="() => LearningSpaceP.ClickOnSlot(AdvancedComponent.SlotKey)"
     >
 
     <ItemRenderer>
-        @* this is only to drag and drop the element itself, not the slot *@
+        @* this is only to insert the element itself, not the draggable slotposition *@
         <DragDropLearningElement
             LearningElement="@context"
             OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
@@ -37,7 +37,6 @@
         }
     </ChildContent>
 </MudDropZone>
-@* insert draggable code here haha *@
 @code {
     [Inject, AllowNull]
     public ILearningSpacePresenter LearningSpaceP { get; set; }
@@ -47,7 +46,7 @@
 
     private string GenerateStyleString()
     {
-        return "top:" + (AdvancedComponent.PositionY - 110) + "px; left:" + (AdvancedComponent.PositionX - 88) +"px;";
+        return "top:" + (AdvancedComponent.PositionY - 110) + "px; left:" + (AdvancedComponent.PositionX - 82) +"px;";
     }
 
 }
