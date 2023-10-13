@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Adaptivity.Action;
 
-class AdaptivityActionCommandFactory : IAdaptivityActionCommandFactory
+public class AdaptivityActionCommandFactory : IAdaptivityActionCommandFactory
 {
     public AdaptivityActionCommandFactory(ILoggerFactory loggerFactory)
     {
