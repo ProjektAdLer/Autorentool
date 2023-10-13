@@ -17,9 +17,9 @@ internal class DeleteAdaptivityRule : IDeleteAdaptivityRule
     }
 
     public string Name => nameof(DeleteAdaptivityRule);
-    private IAdaptivityQuestion Question { get; }
-    private IAdaptivityRule Rule { get; }
-    private Action<IAdaptivityQuestion> MappingAction { get; }
+    internal IAdaptivityQuestion Question { get; }
+    internal IAdaptivityRule Rule { get; }
+    internal Action<IAdaptivityQuestion> MappingAction { get; }
     private ILogger<DeleteAdaptivityRule> Logger { get; }
     private IMemento? Memento { get; set; }
 
@@ -29,6 +29,7 @@ internal class DeleteAdaptivityRule : IDeleteAdaptivityRule
 
         var rule = Question.Rules.Single(q => q.Id == Rule.Id);
         Question.Rules.Remove(rule);
+        MappingAction.Invoke(Question);
 
         Logger.LogTrace("Deleted AdaptivityRule {AdaptivityRuleId} from AdaptivityQuestion {AdaptivityQuestionId}",
             Rule.Id, Question.Id);
@@ -39,6 +40,7 @@ internal class DeleteAdaptivityRule : IDeleteAdaptivityRule
         if (Memento == null) throw new InvalidOperationException("Memento is null");
 
         Question.RestoreMemento(Memento);
+        MappingAction.Invoke(Question);
 
         Logger.LogTrace("Undne deletion of Rule in Question {QuestionId}. Trigger: {Trigger}, Action: {Action}",
             Question.Id, Rule.Trigger, Rule.Action);

@@ -20,9 +20,9 @@ internal class CreateAdaptivityRule : ICreateAdaptivityRule
     }
 
     public string Name => nameof(CreateAdaptivityRule);
-    private IAdaptivityQuestion Question { get; }
-    private IAdaptivityRule Rule { get; }
-    private Action<IAdaptivityQuestion> MappingAction { get; }
+    internal IAdaptivityQuestion Question { get; }
+    internal IAdaptivityRule Rule { get; }
+    internal Action<IAdaptivityQuestion> MappingAction { get; }
     private ILogger<CreateAdaptivityRule> Logger { get; }
     private IMemento? Memento { get; set; }
 
@@ -31,6 +31,7 @@ internal class CreateAdaptivityRule : ICreateAdaptivityRule
         Memento = Question.GetMemento();
         
         Question.Rules.Add(Rule);
+        MappingAction.Invoke(Question);
 
         Logger.LogTrace(
             "Created Rule in Question {QuestionId}. Trigger: {Trigger}, Action: {Action}",
@@ -45,6 +46,7 @@ internal class CreateAdaptivityRule : ICreateAdaptivityRule
         }
 
         Question.RestoreMemento(Memento);
+        MappingAction.Invoke(Question);
         
         Logger.LogTrace(
             "Undone creation of Rule in Question {QuestionId}. Trigger: {Trigger}, Action: {Action}",
