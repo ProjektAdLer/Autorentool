@@ -17,7 +17,7 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuesti
     {
         Id = id.ToString();
         Answertext = answertext;
-        Fraction = fraction.ToString(CultureInfo.InvariantCulture);
+        Fraction = fraction.ToString("F7", CultureInfo.InvariantCulture);
     }
 
     [XmlAttribute(AttributeName = "id")] public string Id { get; set; }

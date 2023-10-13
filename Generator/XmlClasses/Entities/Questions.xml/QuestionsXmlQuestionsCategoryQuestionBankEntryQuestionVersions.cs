@@ -20,5 +20,5 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersions
     [XmlElement(ElementName = "status")] public string Status { get; set; } = "ready";
 
     [XmlElement(ElementName = "questions")]
-    public List<QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions> Questions { get; } = new();
+    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions Questions { get; set; } = new();
 }

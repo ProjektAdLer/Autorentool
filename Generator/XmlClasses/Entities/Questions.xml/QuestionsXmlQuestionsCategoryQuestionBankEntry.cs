@@ -10,9 +10,9 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntry
         IdNumber = "";
     }
 
-    public QuestionsXmlQuestionsCategoryQuestionBankEntry(int id, Guid idNumber)
+    public QuestionsXmlQuestionsCategoryQuestionBankEntry(int id, string idNumber)
     {
-        IdNumber = idNumber.ToString();
+        IdNumber = idNumber;
         Id = id.ToString();
     }
 

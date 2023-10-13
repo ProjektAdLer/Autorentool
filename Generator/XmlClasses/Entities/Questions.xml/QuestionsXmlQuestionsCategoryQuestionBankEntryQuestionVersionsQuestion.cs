@@ -8,17 +8,12 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
     {
         Id = "0";
         QuestionText = "";
-        PluginQTypeMultichoiceQuestion =
-            new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion();
     }
 
-    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion(int id, string questionText,
-        QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion
-            pluginQTypeMultichoiceQuestion)
+    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion(int id, string questionText)
     {
         Id = id.ToString();
         QuestionText = questionText;
-        PluginQTypeMultichoiceQuestion = pluginQTypeMultichoiceQuestion;
     }
 
     [XmlAttribute(AttributeName = "id")] public string Id { get; set; }
@@ -64,7 +59,7 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
 
     [XmlElement(ElementName = "plugin_qtype_multichoice_question")]
     public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion
-        PluginQTypeMultichoiceQuestion { get; set; }
+        PluginQTypeMultichoiceQuestion { get; set; } = new();
 
     [XmlElement(ElementName = "plugin_qbank_comment_question")]
     public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQbankCommentQuestion

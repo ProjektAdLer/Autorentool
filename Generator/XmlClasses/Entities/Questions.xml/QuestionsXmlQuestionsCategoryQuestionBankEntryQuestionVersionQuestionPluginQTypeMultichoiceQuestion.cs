@@ -6,25 +6,14 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuesti
 {
     public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion()
     {
-        Multichoice =
-            new
-                QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice();
-    }
-
-    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion(
-        QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice
-            multichoice)
-    {
-        Multichoice = multichoice;
     }
 
     [XmlElement(ElementName = "answers")]
-    public List<
-            QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers>
+    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers
         Answers { get; set; } = new();
 
     [XmlElement(ElementName = "multichoice")]
     public
         QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice
-        Multichoice { get; set; }
+        Multichoice { get; set; } = new();
 }
