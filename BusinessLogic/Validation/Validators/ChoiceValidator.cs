@@ -1,8 +1,10 @@
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using FluentValidation;
+using JetBrains.Annotations;
 
 namespace BusinessLogic.Validation.Validators;
 
+[UsedImplicitly]
 public class ChoiceValidator : AbstractValidator<Choice>
 {
     public ChoiceValidator()
