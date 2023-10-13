@@ -1,4 +1,6 @@
-﻿namespace Generator.DSL;
+﻿using Generator.DSL.AdaptivityElement;
+
+namespace Generator.DSL;
 
 public interface IReadDsl
 {
@@ -43,6 +45,12 @@ public interface IReadDsl
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the URL elements.</returns>
     List<ILearningElementJson> GetUrlElementList();
+
+    /// <summary>
+    /// Retrieves the list of adaptivity elements.
+    /// </summary>
+    /// <returns>A list of IAdaptivityElementJson objects that represent the adaptivity elements. </returns>
+    List<IAdaptivityElementJson> GetAdaptivityElementsList();
 
     /// <summary>
     /// Retrieves the list of elements in their correct order.

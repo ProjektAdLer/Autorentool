@@ -15,7 +15,12 @@ public interface IXmlBackupFactory
     void CreateGroupsXml();
     void CreateMoodleBackupXml();
     void CreateOutcomesXml();
+
+    /// <summary>
+    /// Generates and serializes an XML representation of questions based on adaptivity elements.
+    /// </summary>
     void CreateQuestionsXml();
+
     void CreateRolesXml();
     void CreateScalesXml();
 }

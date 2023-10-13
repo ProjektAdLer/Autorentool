@@ -50,6 +50,7 @@ public class ReadDsl : IReadDsl
         GetResourceElements(_rootJson);
         GetWorldAttributes(_rootJson);
         GetUrlElements(_rootJson);
+        GetAdaptivityElements(_rootJson);
         GetElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -92,6 +93,12 @@ public class ReadDsl : IReadDsl
     public List<ILearningElementJson> GetUrlElementList()
     {
         return _listUrlElements;
+    }
+
+    /// <inheritdoc cref="IReadDsl.GetAdaptivityElementsList"/>
+    public List<IAdaptivityElementJson> GetAdaptivityElementsList()
+    {
+        return _listAdaptivityElements;
     }
 
     /// <inheritdoc cref="IReadDsl.GetElementsOrderedList"/>
@@ -197,6 +204,18 @@ public class ReadDsl : IReadDsl
         }
 
         _logger.LogTrace("Found {Count} URL elements", _listUrlElements.Count);
+    }
+
+    /// <summary>
+    /// Extracts adaptivity elements from the provided DocumentRootJson object and adds them to the adaptivity elements list.
+    /// </summary>
+    private void GetAdaptivityElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var element in documentRootJson.World.Elements.Where(
+                     element => element.ElementFileType is "adaptivity"))
+        {
+            _listAdaptivityElements.Add((IAdaptivityElementJson)element);
+        }
     }
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿using Generator.DSL;
+﻿using Bunit.Extensions;
+using Generator.DSL;
+using Generator.DSL.AdaptivityElement;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
@@ -455,9 +457,37 @@ public class XmlBackupFactory : IXmlBackupFactory
         OutcomesXmlOutcomesDefinition.Serialize();
     }
 
+    /// <inheritdoc cref="IXmlBackupFactory.CreateQuestionsXml"/>
     public void CreateQuestionsXml()
     {
-        //create questions.xml file
+        var listAdaptivityElements = ReadDsl.GetAdaptivityElementsList();
+
+        if (listAdaptivityElements.IsNullOrEmpty())
+        {
+            QuestionsXmlQuestionsCategories.Serialize();
+            return;
+        }
+
+        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top");
+        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name");
+
+        var questionId = 1;
+        var answerId = 1;
+
+        var questions = listAdaptivityElements.SelectMany(ae => ae.AdaptivityContent.AdaptivityTask)
+            .SelectMany(t => t.AdaptivityQuestions).ToList();
+
+
+        foreach (var questionBankEntryXml in questions.Select(question =>
+                     CreateQuestionBankEntryXml(question, ref questionId, ref answerId)))
+        {
+            questionCategory4.QuestionBankEntries.QuestionBankEntries.Add(questionBankEntryXml);
+            questionId++;
+        }
+
+        QuestionsXmlQuestionsCategories.QuestionCategory.Add(questionCategory3);
+        QuestionsXmlQuestionsCategories.QuestionCategory.Add(questionCategory4);
+
         QuestionsXmlQuestionsCategories.Serialize();
     }
 
@@ -474,5 +504,70 @@ public class XmlBackupFactory : IXmlBackupFactory
     {
         //create scales.xml file
         ScalesXmlScalesDefinition.Serialize();
+    }
+
+    /// <summary>
+    /// Creates an XML representation for a given adaptivity question.
+    /// </summary>
+    /// <param name="question">The adaptivity question to be processed.</param>
+    /// <param name="questionId">Reference to the current question ID, used for generating unique IDs.</param>
+    /// <param name="answerId">Reference to the current answer ID, used for generating unique IDs for answers.</param>
+    /// <returns>Returns the XML representation of the processed adaptivity question.</returns>
+    private QuestionsXmlQuestionsCategoryQuestionBankEntry CreateQuestionBankEntryXml(IAdaptivityQuestionJson question,
+        ref int questionId, ref int answerId)
+    {
+        var questionBankEntryXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntry(questionId, question.QuestionUUID);
+        var questionVersionXml = new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersions(questionId);
+        var questionXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion(questionId,
+                question.QuestionText);
+
+        var pluginQTypeMultiChoiceQuestionXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion();
+        var answersXml = CreateAnswersXml(question.Choices, ref answerId);
+
+        var isSingleResponse = question.QuestionType == "single";
+        var singleResponseInt = isSingleResponse ? 1 : 0;
+        var multiChoiceXml =
+            new
+                QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice(
+                    questionId, singleResponseInt);
+
+        pluginQTypeMultiChoiceQuestionXml.Answers = answersXml;
+        pluginQTypeMultiChoiceQuestionXml.Multichoice = multiChoiceXml;
+        questionXml.PluginQTypeMultichoiceQuestion = pluginQTypeMultiChoiceQuestionXml;
+        questionVersionXml.Questions.Question.Add(questionXml);
+        questionBankEntryXml.QuestionVersion.QuestionVersions.Add(questionVersionXml);
+
+        return questionBankEntryXml;
+    }
+
+    /// <summary>
+    /// Creates an XML representation for the answers of a given adaptivity question.
+    /// </summary>
+    /// <param name="choices">A list of choices representing possible answers for the adaptivity question.</param>
+    /// <param name="answerId">Reference to the current answer ID, used for generating unique IDs for answers.</param>
+    /// <returns>Returns the XML representation of the answers for the adaptivity question.</returns>
+    private static
+        QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers
+        CreateAnswersXml(List<IChoiceJson> choices, ref int answerId)
+    {
+        var answersXml =
+            new
+                QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers();
+        var numCorrectChoices = choices.Count(x => x.IsCorrect);
+
+        foreach (var choice in choices)
+        {
+            var fraction = choice.IsCorrect ? 1.0 / numCorrectChoices : 0;
+            answersXml.Answer.Add(
+                new
+                    QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswer(
+                        answerId, choice.AnswerText, fraction));
+            answerId++;
+        }
+
+        return answersXml;
     }
 }
