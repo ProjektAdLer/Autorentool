@@ -2,7 +2,9 @@ using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Action;
 using BusinessLogic.Commands.Adaptivity.Question;
+using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -14,7 +16,9 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -69,7 +73,10 @@ public class PresentationLogic : IPresentationLogic
         ITopicCommandFactory topicCommandFactory,
         IWorldCommandFactory worldCommandFactory,
         IBatchCommandFactory batchCommandFactory,
-        IFileSystem fileSystem)
+        IAdaptivityRuleCommandFactory adaptivityRuleCommandFactory,
+        IAdaptivityActionCommandFactory adaptivityActionCommandFactory,
+        IFileSystem fileSystem
+    )
     {
         Logger = logger;
         Configuration = configuration;
@@ -89,6 +96,8 @@ public class PresentationLogic : IPresentationLogic
         TopicCommandFactory = topicCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
+        AdaptivityRuleCommandFactory = adaptivityRuleCommandFactory;
+        AdaptivityActionCommandFactory = adaptivityActionCommandFactory;
         FileSystem = fileSystem;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
@@ -109,6 +118,8 @@ public class PresentationLogic : IPresentationLogic
     public ITopicCommandFactory TopicCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
+    public IAdaptivityRuleCommandFactory AdaptivityRuleCommandFactory { get; }
+    public IAdaptivityActionCommandFactory AdaptivityActionCommandFactory { get; }
     internal IFileSystem FileSystem { get; }
 
     public IApplicationConfiguration Configuration { get; }
@@ -895,36 +906,46 @@ public class PresentationLogic : IPresentationLogic
     public void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
         IAdaptivityActionViewModel action)
     {
-        //map to entity
-        //create adaptivity rule command (questionE, triggerE, actionE)
-        //
-        
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var triggerEntity = Mapper.Map<IAdaptivityTrigger>(trigger);
+        var actionEntity = Mapper.Map<IAdaptivityAction>(action);
+        var command = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity, actionEntity,
+            entity => CMapper.Map(entity, question));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule)
     {
-        
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var ruleEntity = Mapper.Map<IAdaptivityRule>(rule);
+        var command = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity,
+            entity => CMapper.Map(entity, question));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void EditCommentAction(CommentActionViewModel action, string comment)
     {
-        //map to entity
-        //create command
-        //execute command (map entity in vm)
+        var actionEntity = Mapper.Map<CommentAction>(action);
+        var command = AdaptivityActionCommandFactory.GetEditCommentAction(actionEntity, comment,
+            entity => CMapper.Map(entity, action));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content)
     {
-        //map to entity
-        //create command
-        //execute command (map entity in vm)
+        var actionEntity = Mapper.Map<ContentReferenceAction>(action);
+        var contentEntity = Mapper.Map<ILearningContent>(content);
+        var command = AdaptivityActionCommandFactory.GetEditContentReferenceAction(actionEntity, contentEntity,
+            entity => CMapper.Map(entity, action));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid)
     {
-        //map to entity
-        //create command
-        //execute command (map entity in vm)
+        var actionEntity = Mapper.Map<ElementReferenceAction>(action);
+        var command = AdaptivityActionCommandFactory.GetEditElementReferenceAction(actionEntity, elementGuid,
+            entity => CMapper.Map(entity, action));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <summary>
@@ -1091,9 +1112,9 @@ public class PresentationLogic : IPresentationLogic
             FileSystem.File.Delete(filepath);
         }
     }
-    
+
 #if DEBUG
-    
+
     public void ConstructDebugBackup(ILearningWorldViewModel world)
     {
         var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
@@ -1103,7 +1124,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ConstructBackup(entity, filepath);
         Logger.LogDebug("Written debug backup to {Filepath}", filepath);
     }
-    
+
 #endif
 
     #endregion
