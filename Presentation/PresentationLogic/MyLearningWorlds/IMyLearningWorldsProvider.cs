@@ -6,7 +6,7 @@ public interface IMyLearningWorldsProvider
 {
     IEnumerable<SavedLearningWorldPath> GetLoadedLearningWorlds();
     IEnumerable<SavedLearningWorldPath> GetSavedLearningWorlds();
-    void OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath);
+    bool OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath);
     void CreateLearningWorld();
     void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath);
     Task<bool> LoadSavedLearningWorld();

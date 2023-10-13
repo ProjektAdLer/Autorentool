@@ -8,6 +8,7 @@ namespace PersistEntities.LearningContent.Question;
 /// Represents a question with multiple different choices but only one response (and therefore only one correct choice).
 /// </summary>
 [KnownType(typeof(AdaptivityRulePe))]
+[DataContract(IsReference = true)]
 public class MultipleChoiceSingleResponseQuestionPe : IMultipleChoiceQuestionPe
 {
     public MultipleChoiceSingleResponseQuestionPe(string title, int expectedCompletionTime,

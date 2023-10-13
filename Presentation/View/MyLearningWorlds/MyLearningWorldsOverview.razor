@@ -97,8 +97,9 @@
 
     private void OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
     {
-        MyLearningWorldsProvider.OpenLearningWorld(savedLearningWorldPath);
-        OnClickMyLearningWorldsOverview();
+        var success = MyLearningWorldsProvider.OpenLearningWorld(savedLearningWorldPath);
+        if(success)
+            OnClickMyLearningWorldsOverview();
     }
 
     private async Task OnCloseWorldAsync(SavedLearningWorldPath savedLearningWorldPath)

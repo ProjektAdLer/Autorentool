@@ -584,13 +584,15 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
-            .AfterMap((entity, vm, context) => vm.CorrectChoices = vm.Choices.Where(choicevm =>
-                entity.CorrectChoices.Any(choiceentity => choiceentity.Id.Equals(choicevm.Id))).ToList())
+            .AfterMap((entity, vm, context) =>
+                vm.CorrectChoices = vm.Choices.Where(choicevm =>
+                    entity.CorrectChoices.Any(choiceentity => choiceentity.Id.Equals(choicevm.Id))).ToList())
             .ReverseMap()
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
-            .AfterMap((vm, entity, context) => entity.CorrectChoices = entity.Choices.Where(choiceentity =>
-                vm.CorrectChoices.Any(choicevm => choicevm.Id.Equals(choicevm.Id))).ToList());
+            .AfterMap((vm, entity, context) =>
+                entity.CorrectChoices = entity.Choices.Where(choiceentity =>
+                    vm.CorrectChoices.Any(choicevm => choiceentity.Id.Equals(choicevm.Id))).ToList());
     }
 
     private void CreateChoiceMap()
