@@ -23,7 +23,7 @@ public class EditElementReferenceActionUt
         Assert.Multiple(() =>
         {
             Assert.That(sut.Action, Is.EqualTo(action));
-            Assert.That(sut.NewElementId, Is.EqualTo(id));
+            Assert.That(sut.ElementId, Is.EqualTo(id));
             Assert.That(sut.MappingAction, Is.EqualTo(mappingAction));
         });
     }
