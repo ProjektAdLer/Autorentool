@@ -1,0 +1,73 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
+@using Shared.Adaptivity
+<MudForm @ref="_form">
+    <MudCard>
+        <MudCardContent>
+            <MudTextField @bind-Value="_comment" T="string" Label="Comment" Required="true"
+                          RequiredError="Comment is required"/>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Color="Color.Success" OnClick="SubmitAsync">Submit</MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudForm>
+
+@code {
+
+    [Inject, AllowNull] //allow null as injected - n.stich
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+    [Parameter]
+    public CommentActionViewModel? ExistingAction { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null as we editor require it - n.stich
+    public IAdaptivityQuestionViewModel Question { get; set; }
+    
+    [CascadingParameter, AllowNull] //injected by MudDialog - n.stich
+    public MudDialogInstance DialogInstance { get; set; }
+    
+
+    private MudForm _form = null!;
+    private string _comment = null!; //set in OnParametersSet
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _comment = ExistingAction?.Comment ?? "";
+    }
+
+    private async Task SubmitAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        try
+        {
+            if (ExistingAction is not null)
+            {
+                if(_comment == ExistingAction.Comment)
+                {
+                    DialogInstance.Close();
+                    return;
+                }
+                PresentationLogic.EditCommentAction(ExistingAction, _comment);
+            }
+            else
+            {
+                PresentationLogic.CreateAdaptivityRule(
+                    Question,
+                    new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
+                    new CommentActionViewModel(_comment)
+                );
+            }
+        }
+        finally
+        {
+            DialogInstance.Close();
+        }
+    }
+}

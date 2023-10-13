@@ -1,0 +1,43 @@
+@typeparam T where T : notnull
+@using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
+@inherits MudBaseInput<T>
+<div class="h-full w-full">
+    @if (Error)
+    {
+        <MudText Class="text-formerror">@ErrorText</MudText>
+    }
+    <div class="grid grid-cols-4 gap-4">
+        @foreach (var element in Elements)
+        {
+            <MudPaper @onclick="() => SelectAsync(element)" Class="@GetCssBuilder(element)">
+                @ElementTemplate(element)
+            </MudPaper>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter, EditorRequired, AllowNull]
+    public IEnumerable<T> Elements { get; set; }
+
+    [Parameter, EditorRequired, AllowNull]
+    public RenderFragment<T> ElementTemplate { get; set; }
+    
+    private string GetCssBuilder(T element) => new CssBuilder("w-32 h-32 text-clip")
+        .AddClass("bg-adlergrey-100", element.Equals(Value))
+        .Build();
+
+    private async Task SelectAsync(T element)
+    {
+        if (element.Equals(Value))
+        {
+            await SetValueAsync(default!);
+        }
+        else
+        {
+            await SetValueAsync(element);
+        }
+    }
+}
