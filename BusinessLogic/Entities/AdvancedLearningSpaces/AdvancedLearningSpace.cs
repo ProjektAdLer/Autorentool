@@ -132,8 +132,6 @@ public class AdvancedLearningSpace : IAdvancedLearningSpace
         internal string Description { get; }
         internal string Goals { get; }
         internal int RequiredPoints { get; }
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future
         internal Theme Theme { get; }
         internal IAdvancedLearningSpaceLayout AdvancedLearningSpaceLayout { get; }
         internal double PositionX { get; }

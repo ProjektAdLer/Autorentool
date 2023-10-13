@@ -30,6 +30,8 @@
             {
                 throw new Exception("LearningSpaceP.LearningSpaceVm is not of type AdvancedLearningSpaceViewModel");
             }
+            // Always contains a key, value is AdvancedLearningElmentSlotViewModel
+            // TODO: Needs different check
             if (!advancedSpaceVm.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.ContainsKey(AdvancedComponent.SlotKey))
             {
                 <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
