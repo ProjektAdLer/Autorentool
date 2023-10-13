@@ -128,7 +128,7 @@ public static class EntityProvider
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
-    public static IAdaptivityAction GetContentReferenceAction()
+    public static ContentReferenceAction GetContentReferenceAction()
     {
         return new ContentReferenceAction(GetLinkContent());
     }
@@ -194,5 +194,15 @@ public static class EntityProvider
     {
         return new LearningElement("name", content, "description", "goals", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_deskpc_1);
+    }
+
+    public static CommentAction GetCommentAction()
+    {
+        return new CommentAction("default comment");
+    }
+
+    public static ElementReferenceAction GetElementReferenceAction()
+    {
+        return new ElementReferenceAction(Guid.NewGuid());
     }
 }

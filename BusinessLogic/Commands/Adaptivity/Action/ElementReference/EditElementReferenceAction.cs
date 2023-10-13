@@ -6,18 +6,18 @@ namespace BusinessLogic.Commands.Adaptivity.Action.ElementReference;
 
 class EditElementReferenceAction : IEditElementReferenceAction
 {
-    public EditElementReferenceAction(ElementReferenceAction action, Guid newElementId,
+    public EditElementReferenceAction(ElementReferenceAction action, Guid elementId,
         Action<ElementReferenceAction> mappingAction, ILogger<EditElementReferenceAction> logger)
     {
         Action = action;
-        NewElementId = newElementId;
+        ElementId = elementId;
         MappingAction = mappingAction;
         Logger = logger;
     }
 
     public string Name => nameof(EditElementReferenceAction);
     internal ElementReferenceAction Action { get; }
-    internal Guid NewElementId { get; }
+    internal Guid ElementId { get; }
     internal Action<ElementReferenceAction> MappingAction { get; }
     private ILogger<EditElementReferenceAction> Logger { get; }
     private IMemento? Memento { get; set; }
@@ -26,7 +26,7 @@ class EditElementReferenceAction : IEditElementReferenceAction
     {
         Memento = Action.GetMemento();
 
-        Action.ElementId = NewElementId;
+        Action.ElementId = ElementId;
         MappingAction.Invoke(Action);
 
         Logger.LogTrace("Edited ElementReferenceAction {ElementReferenceActionId} in AdaptivityRule {AdaptivityRuleId}",
