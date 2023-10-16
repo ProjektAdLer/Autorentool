@@ -471,7 +471,6 @@ public class XmlBackupFactory : IXmlBackupFactory
         var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top");
         var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name");
 
-        var questionId = 1;
         var answerId = 1;
 
         var questions = listAdaptivityElements.SelectMany(ae => ae.AdaptivityContent.AdaptivityTask)
@@ -479,10 +478,9 @@ public class XmlBackupFactory : IXmlBackupFactory
 
 
         foreach (var questionBankEntryXml in questions.Select(question =>
-                     CreateQuestionBankEntryXml(question, ref questionId, ref answerId)))
+                     CreateQuestionBankEntryXml(question, question.QuestionId, ref answerId)))
         {
             questionCategory4.QuestionBankEntries.QuestionBankEntries.Add(questionBankEntryXml);
-            questionId++;
         }
 
         QuestionsXmlQuestionsCategories.QuestionCategory.Add(questionCategory3);
@@ -514,7 +512,7 @@ public class XmlBackupFactory : IXmlBackupFactory
     /// <param name="answerId">Reference to the current answer ID, used for generating unique IDs for answers.</param>
     /// <returns>Returns the XML representation of the processed adaptivity question.</returns>
     private QuestionsXmlQuestionsCategoryQuestionBankEntry CreateQuestionBankEntryXml(IAdaptivityQuestionJson question,
-        ref int questionId, ref int answerId)
+        int questionId, ref int answerId)
     {
         var questionBankEntryXml =
             new QuestionsXmlQuestionsCategoryQuestionBankEntry(questionId, question.QuestionUUID);
