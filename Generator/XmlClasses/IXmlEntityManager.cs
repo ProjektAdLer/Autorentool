@@ -9,6 +9,5 @@ public interface IXmlEntityManager
         IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
         IXmlBackupFactory? xmlBackupFactory = null,
         IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,
-        IXmlUrlFactory? xmlUrlFactory = null);
-    
+        IXmlUrlFactory? xmlUrlFactory = null, IXmlAdaptivityFactory? xmlAdaptivityFactory = null);
 }

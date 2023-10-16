@@ -10,6 +10,7 @@ public class XmlEntityManager : IXmlEntityManager
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     private IFileSystem _fileSystem;
+    private IXmlAdaptivityFactory? _xmlAdaptivityFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
     private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlH5PFactory? _xmlH5PFactory;
@@ -28,7 +29,7 @@ public class XmlEntityManager : IXmlEntityManager
         IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
         IXmlBackupFactory? xmlBackupFactory = null,
         IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,
-        IXmlUrlFactory? xmlUrlFactory = null)
+        IXmlUrlFactory? xmlUrlFactory = null, IXmlAdaptivityFactory? xmlAdaptivityFactory = null)
     {
         var filemanager = new XmlFileManager();
 
@@ -40,6 +41,9 @@ public class XmlEntityManager : IXmlEntityManager
 
         _xmlUrlFactory = xmlUrlFactory ?? new XmlUrlFactory(readDsl);
         _xmlUrlFactory.CreateUrlFactory();
+
+        _xmlAdaptivityFactory = xmlAdaptivityFactory ?? new XmlAdaptivityFactory(readDsl);
+        _xmlAdaptivityFactory.CreateXmlAdaptivityFactory();
 
         _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
         _xmlResourceFactory.CreateResourceFactory();
