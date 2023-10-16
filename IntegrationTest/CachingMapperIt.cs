@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using AuthoringTool.Mapping;
 using AutoMapper;
@@ -210,7 +212,8 @@ public class CachingMapperIt
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
-        IBatchCommandFactory? batchCommandFactory = null)
+        IBatchCommandFactory? batchCommandFactory = null,
+        IFileSystem? fileSystem = null)
     {
         configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -231,10 +234,11 @@ public class CachingMapperIt
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
+        fileSystem ??= new MockFileSystem();
 
-        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
-            serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
-            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);
+        return new PresentationLogic(configuration, businessLogic, mapper,
+            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
+            shellWrapper, questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory, layoutCommandFactory,
+            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory, fileSystem);
     }
 }

@@ -146,14 +146,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             evaluationLink);
     }
 
-    /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorldAsync"/>
-    public async Task SaveLearningWorldAsync()
+    /// <inheritdoc cref="ILearningWorldPresenter.SaveLearningWorld"/>
+    public void SaveLearningWorld()
     {
         if (!CheckLearningWorldNotNull("SaveLearningWorldAsync"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm!);
+        _presentationLogic.SaveLearningWorld((LearningWorldViewModel)LearningWorldVm!);
     }
 
     #endregion

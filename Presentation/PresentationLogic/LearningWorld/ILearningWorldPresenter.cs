@@ -66,7 +66,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
-    Task SaveLearningWorldAsync();
+    void SaveLearningWorld();
 
     /// <summary>
     /// Asynchronously saves the selected learning space associated with the current learning world.

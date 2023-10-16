@@ -86,17 +86,17 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is true) await SaveLearningWorldAsync(learningWorld);
+            if (result.Data is true) SaveLearningWorld(learningWorld);
         }
 
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
-    internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
+    internal void SaveLearningWorld(ILearningWorldViewModel world)
     {
         try
         {
-            await _presentationLogic.SaveLearningWorldAsync(world);
+            _presentationLogic.SaveLearningWorld(world);
         }
         catch (SerializationException e)
         {
@@ -130,7 +130,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is true) await SaveLearningWorldAsync(world);
+            if (result.Data is true) SaveLearningWorld(world);
         }
     }
 

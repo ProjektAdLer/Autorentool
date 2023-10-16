@@ -65,7 +65,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         await systemUnderTest.DeleteLearningWorld(learningWorld);
 
-        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+        presentationLogic.Received().SaveLearningWorld(learningWorld);
     }
 
     [Test]
@@ -152,8 +152,8 @@ public class AuthoringToolWorkspacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
             selectedViewModelsProvider: selectedViewModelsProvider);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
-        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
+        presentationLogic.Received().SaveLearningWorld(learningWorld);
     }
 
     [Test]
@@ -163,13 +163,13 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f");
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
-            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
             .Do(_ => throw new SerializationException("test"));
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
         errorService.Received().SetError("Error while saving world", "test");
     }
 
@@ -180,13 +180,13 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f");
         var errorService = Substitute.For<IErrorService>();
         presentationLogic
-            .When(x => x.SaveLearningWorldAsync(Arg.Any<ILearningWorldViewModel>()))
+            .When(x => x.SaveLearningWorld(Arg.Any<ILearningWorldViewModel>()))
             .Do(_ => throw new InvalidOperationException("test"));
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, errorService: errorService);
 
-        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        systemUnderTest.SaveLearningWorld(learningWorld);
         errorService.Received().SetError("Error while saving world", "test");
     }
 
@@ -234,7 +234,7 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.OnBeforeShutdownAsync(null, args);
         Assert.Multiple(() =>
         {
-            presentationLogic.Received().SaveLearningWorldAsync(unsavedWorld);
+            presentationLogic.Received().SaveLearningWorld(unsavedWorld);
             Assert.That(wasCalled);
         });
     }
@@ -265,7 +265,7 @@ public class AuthoringToolWorkspacePresenterUt
         await systemUnderTest.OnBeforeShutdownAsync(null, args);
         Assert.Multiple(() =>
         {
-            presentationLogic.DidNotReceive().SaveLearningWorldAsync(unsavedWorld);
+            presentationLogic.DidNotReceive().SaveLearningWorld(unsavedWorld);
             Assert.That(wasCalled);
             Assert.That(args.CancelShutdownState);
         });
