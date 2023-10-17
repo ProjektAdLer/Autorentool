@@ -3,19 +3,40 @@
 @using Shared
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
-<div class="flex flex-col justify-center py-2 w-full rounded-lg bg-adlergrey-100">
-    <div class="flex flex-row justify-evenly">
-        @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
-        {
-            <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
-                           Color="IsFloorPlanActive(floorPlan) ? Color.Info : Color.Error"
-                           Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
-                           Style="@GetStyle(floorPlan)"
-                           Size="Size.Large">
-                @FloorPlanLocalizer[$"FloorPlanEnum.{floorPlan.ToString()}.DisplayName"]
-            </MudIconButton>
-        }
-    </div>
+<div class="grid grid-cols-3 gap-4">
+    @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
+    {
+        <MudListItem OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
+                     Class="px-0">
+            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Duration="Double.Epsilon" Arrow="true">
+                <ChildContent>
+                    <div class="flex flex-col justify-center items-center gap-1 cursor-pointer py-2 hover:bg-adlergrey-100">
+                        <MudIcon Class="inset-0 p-0 w-12 2xl:w-16 h-full"
+                                 Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
+                                 Style="@GetStyle(floorPlan)"></MudIcon>
+                        <MudText Style="@GetStyle(floorPlan)" Class="drop-shadow-none text-xs 2xl:text-sm text-adlergrey-500 text-center">@FloorPlanLocalizer[$"FloorPlanEnum.{floorPlan.ToString()}.DisplayName"]</MudText>
+                    </div>
+                </ChildContent>
+        
+                <TooltipContent>
+                    <MudCarousel TData="object" Class="mud-with-full" Style="height:300px; width:300px" ShowArrows="false" ShowBullets="true" AutoCycle="true">
+                            <MudCarouselItem>
+                                <div class="d-flex" style="height:100%">
+                                    <MudIcon Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon" Class="mx-auto my-auto w-64 h-48" />
+                                </div>
+                            </MudCarouselItem>
+                        <MudCarouselItem>
+                            <div class="flex flex-col gap-2">
+                                <MudText>Darstellung in der 3D-Lernumgebung</MudText>
+                                <MudImage Src="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetPreviewImage" Class="w-full"></MudImage>
+                            </div>
+                        </MudCarouselItem>
+                        </MudCarousel>
+                </TooltipContent>
+
+            </MudTooltip>
+        </MudListItem>
+    }
 </div>
 
 
@@ -61,8 +82,8 @@
     private string GetStyle(FloorPlanEnum floorPlan)
     {
         return IsFloorPlanActive(floorPlan) ?
-            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px); -webkit-filter: drop-shadow(0 0 5px);" :
-            "filter: grayscale(70%); -webkit-filter: grayscale(70%);";
+            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px #5caae5); -webkit-filter: drop-shadow(0 0 5px #5caae5);":
+            "filter: grayscale(70%); -webkit-filter: grayscale(70%); opacity(0.50); -webkit-filter: opacity(0.50);";
     }
 
 }

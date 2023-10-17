@@ -46,29 +46,29 @@ public class L32X3110LViewModel : IFloorPlanViewModel
         new() {X = 0, Y = 0},
         new() {X = 32, Y = 0},
         new() {X = 32, Y = 31},
-        new() {X = 19, Y = 31},
-        new() {X = 19, Y = 17},
+        new() {X = 16, Y = 31},
+        new() {X = 16, Y = 17},
         new() {X = 0, Y = 17}
     };
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 6, Y = 2},
-        new() {X = 14, Y = 2},
-        new() {X = 22, Y = 2},
-        new() {X = 30, Y = 11},
-        new() {X = 30, Y = 19},
-        new() {X = 30, Y = 27},
-        new() {X = 21, Y = 27},
-        new() {X = 21, Y = 19},
-        new() {X = 14, Y = 15},
-        new() {X = 6, Y = 15}
+        new() {X = 8, Y = 5},
+        new() {X = 18, Y = 5},
+        new() {X = 28, Y = 5},
+        new() {X = 30, Y = 14},
+        new() {X = 30, Y = 22},
+        new() {X = 30, Y = 30},
+        new() {X = 22, Y = 30},
+        new() {X = 22, Y = 22},
+        new() {X = 14, Y = 17},
+        new() {X = 6, Y = 17}
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
         (new Point {X = 0, Y = 11}, new Point {X = 0, Y = 6}),
-        (new Point {X = 24, Y = 31}, new Point {X = 27, Y = 31})
+        (new Point {X = 22, Y = 31}, new Point {X = 27, Y = 31})
     };
 
     public string GetIcon => Icon;

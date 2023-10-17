@@ -12,7 +12,7 @@
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start">
-                <MudCardContent Class="relative flex w-24 h-12 p-0">
+                <MudCardContent Class="relative flex justify-center w-[68px] 2xl:w-[100px] h-[40px] 2xl:h-[48px] 2500p:w-[132px] 2500p:h-[56px] p-0">
                     <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
                         <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
@@ -22,7 +22,7 @@
                         var item = LearningElement;
                         var text = item.Name;
                     }
-                    <MudListItem Class="text-md font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
+                    <MudListItem Class="text-[11px] 2xl:text-sm font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
 
                 </MudCardContent>
             </section>
