@@ -295,7 +295,7 @@ public class PresentationLogic : IPresentationLogic
     public void DeleteAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm, IAdvancedLearningSpaceViewModel advancedLearningSpaceVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetDeleteAdvancedLearningSpaceCommand(worldEntity, advancedSpaceEntity,
             world => CMapper.Map(world, learningWorldVm));
@@ -308,7 +308,7 @@ public class PresentationLogic : IPresentationLogic
     public void EditAdvancedLearningSpace(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, string name,
         string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm)
     {
-        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetEditAdvancedLearningSpaceCommand(advancedSpaceEntity, name, description, goals, requiredPoints, theme,
@@ -323,12 +323,12 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    /// <inheritdoc cref="IPresentationLogic.PlaceAdvancedLearningElementFromUnplaced"/>
-    public void PlaceAdvancedLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+    /// <inheritdoc cref="IPresentationLogic.PlaceLearningElementInAdvancedSlotFromUnplaced"/>
+    public void PlaceLearningElementInAdvancedSlotFromUnplaced(ILearningWorldViewModel learningWorldVm,
         IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetPlaceFromUnplacedCommand(worldEntity, advancedSpaceEntity, elementEntity,
@@ -342,11 +342,11 @@ public class PresentationLogic : IPresentationLogic
         }
     }
     
-    /// <inheritdoc cref="IPresentationLogic.SwitchAdvancedLearningElementSlot"/>
-    public void SwitchAdvancedLearningElementSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm,
+    /// <inheritdoc cref="IPresentationLogic.SwitchAdvancedSlot"/>
+    public void SwitchAdvancedSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm,
         ILearningElementViewModel learningElementVm, int newSlotIndex)
     {
-        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        var advancedSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetPlaceFromAdvancedLayoutCommand(advancedSpaceEntity, elementEntity, newSlotIndex,
@@ -360,10 +360,10 @@ public class PresentationLogic : IPresentationLogic
     }
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInAdvancedSlot"/>
-    public void AddAdvancedLearningElement(IAdvancedLearningSpaceViewModel parentSpaceVm, int slotIndex,
+    public void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel parentSpaceVm, int slotIndex,
         ILearningElementViewModel learningElementVm)
     {
-        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(parentSpaceVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(parentSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetCreateElementInSlotCommand(parentSpaceEntity, slotIndex, elementEntity,
@@ -378,7 +378,7 @@ public class PresentationLogic : IPresentationLogic
         ILearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpace>(parentSpaceVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(parentSpaceVm);
 
         var command = AdvancedLearningSpaceCommandFactory.GetDeleteElementInSlotCommand(elementEntity, parentSpaceEntity, slotIndex,
             parent => CMapper.Map(parent, parentSpaceVm));

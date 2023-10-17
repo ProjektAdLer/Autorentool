@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -147,6 +148,7 @@ public interface IPresentationLogic
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
+    #region Advanced Space Gen
     /// <summary>
     /// Creates a new advanced learning space in the given learning world with the corresponding command.
     /// </summary>
@@ -162,7 +164,60 @@ public interface IPresentationLogic
     void CreateAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
-
+    /// <summary>
+    /// Deletes an advanced learning space in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">The containing world viewmodel.</param>
+    /// <param name="advancedLearningSpaceVm">The advanced space viewmodel to be deleted.</param>
+    void DeleteAdvancedLearningSpace(ILearningWorldViewModel learningWorldVm, IAdvancedLearningSpaceViewModel advancedLearningSpaceVm);
+    /// <summary>
+    /// Edits an advanced learning space.
+    /// </summary>
+    /// <param name="advancedLearningSpaceVm">The advanced space in question.</param>
+    /// <param name="name">The name of the space.</param>
+    /// <param name="description">The description of the space.</param>
+    /// <param name="goals">The goals of the space.</param>
+    /// <param name="requiredPoints">The points required to access the space.</param>
+    /// <param name="theme">The theme of the space.</param>
+    /// <param name="topicVm">The topic associated with the space. Can be null.</param>
+    void EditAdvancedLearningSpace(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, string name,
+        string description, string goals, int requiredPoints, Theme theme, 
+        ITopicViewModel? topicVm = null);
+    /// <summary>
+    /// Places a learning element in an advanced learning space.
+    /// </summary>
+    /// <param name="learningWorldViewModel">The world, containing the element.</param>
+    /// <param name="advancedLearningSpaceVm">The target space.</param>
+    /// <param name="learningElementVm">The element to be placed.</param>
+    /// <param name="slotIndex">The target slot.</param>
+    void PlaceLearningElementInAdvancedSlotFromUnplaced(ILearningWorldViewModel learningWorldViewModel, 
+        IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, ILearningElementViewModel learningElementVm, 
+        int slotIndex);
+    /// <summary>
+    /// Places a learning element from one advanced slot into another.
+    /// </summary>
+    /// <param name="advancedLearningSpaceVm">The containing space.</param>
+    /// <param name="learningElementVm">The element to be placed.</param>
+    /// <param name="newSlotIndex">The target slot.</param>
+    void SwitchAdvancedSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, 
+        ILearningElementViewModel learningElementVm, int newSlotIndex);
+    /// <summary>
+    /// Adds a learning element to an advanced learning space (in a slot).
+    /// </summary>
+    /// <param name="advancedLearningSpaceVm">The target learning space.</param>
+    /// <param name="slotIndex">The target slot.</param>
+    /// <param name="learningElementVm">The learning element to be added.</param>
+    void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, int slotIndex,
+        ILearningElementViewModel learningElementVm);
+    /// <summary>
+    /// Deletes a learning element from an advanced learning space (from a slot).
+    /// </summary>
+    /// <param name="advancedLearningSpaceVm">The learning space containing the element.</param>
+    /// <param name="slotIndex">The current slot index of the element.</param>
+    /// <param name="learningElementVm">The element to be deleted.</param>
+    void DeleteAdvancedLearningElementInSpace(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, int slotIndex,
+        ILearningElementViewModel learningElementVm);
+    #endregion
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
     /// </summary>

@@ -1,4 +1,5 @@
 ﻿using MudBlazor;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -78,6 +79,10 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
             throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
         }
 
+        // if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
+        // {
+        //     PresentationL.Ad
+        // }
         PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
             element);
     }

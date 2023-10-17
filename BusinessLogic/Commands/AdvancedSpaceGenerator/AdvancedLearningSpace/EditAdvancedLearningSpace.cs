@@ -82,7 +82,7 @@ public class EditAdvancedLearningSpace : IEditAdvancedLearningSpace
         Execute();
     }
 
-    private bool AnyChanges() =>
+    public bool AnyChanges() =>
         AdvancedLearningSpace.Name != SpaceName ||
         AdvancedLearningSpace.Description != Description ||
         AdvancedLearningSpace.Goals != Goals ||
