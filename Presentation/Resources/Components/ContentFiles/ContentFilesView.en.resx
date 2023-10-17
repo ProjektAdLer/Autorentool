@@ -22,7 +22,7 @@
         <value>Delete</value>
     </data>
     <data name="Content.MudTh.NewElement" xml:space="preserve">
-        <value>New Element</value>
+        <value>New</value>
     </data>
     <data name="Content.MudTh.Preview" xml:space="preserve">
         <value>Preview</value>
@@ -34,7 +34,7 @@
         <value>Show filepath</value>
     </data>
     <data name="PagerContent.Button.Text" xml:space="preserve">
-        <value>Open folder</value>
+        <value>open</value>
     </data>
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
         <value>Do you really want to delete content entry &lt;b&gt;{0}&lt;/b&gt;? If you delete content which an learning element inside a learning world is using, you won't be able to generate that learning world anymore until you add it back!</value>
@@ -62,5 +62,14 @@
     </data>
     <data name="WarningDialog.Title" xml:space="preserve">
         <value>Confirm deletion</value>
+    </data>
+    <data name="Content.MudTd.Delete" xml:space="preserve">
+        <value>Delete file/link</value>
+    </data>
+    <data name="Content.MudTd.NewElement" xml:space="preserve">
+        <value>Create new learning element</value>
+    </data>
+    <data name="Content.MudTd.Preview" xml:space="preserve">
+        <value>Preview file/link</value>
     </data>
 </root>

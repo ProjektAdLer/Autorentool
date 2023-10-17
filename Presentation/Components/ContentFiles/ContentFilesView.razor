@@ -10,44 +10,66 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
-<MudTable Items="Items" Class="my-4 w-full grow h-full flex flex-col flex-nowrap border-adlergrey-200"
-          Dense="true" Virtualize="true" Filter="Filter" Outlined="true" Hover="true">
+
+<style type="text/css">  
+   .mud-table-toolbar {
+   padding:  0;
+   margin:  0;
+   }
+   
+   th.mud-table-cell {
+   padding: 7px 0 0 0;
+   }      
+</style>
+
+<MudTable Items="Items" Class="w-full h-full flex flex-col flex-nowrap mb-2 px-0 mx-0"
+          Virtualize="true" Filter="Filter" Hover="true" Striped="true" HeaderClass="table-head-bordered" CustomHeader="true" FixedHeader="true">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
-        <MudSpacer/>
-        <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        <div class="bg-adlerbgbright rounded-lg flex flex-row gap-2 p-2">
+            <p class="text-sm 2xl:text-base font-bold leading-tight">@Localizer["Header"]</p>
+            <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        </div>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>@Localizer["Content.MudTh.Delete"]</MudTh>
-        <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Ascending"
-                               SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
-                @Localizer["Content.MudTh.Name"]
-            </MudTableSortLabel>
-        </MudTh>
-        <MudTh>
-            <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
-                @Localizer["Content.MudTh.Type"]
-            </MudTableSortLabel>
-        </MudTh>
-        <MudTh>@Localizer["Content.MudTh.NewElement"]</MudTh>
-        <MudTh>@Localizer["Content.MudTh.Preview"]</MudTh>
-        @if (_showFilepath)
-        {
-            <MudTh>@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
-        }
+        <MudTHeadRow Class="header-centered">
+            <MudTh Class="pl-2 cursor-default">@Localizer["Content.MudTh.Delete"]</MudTh>
+            <MudTh Class="px-2">
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                   SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
+                    @Localizer["Content.MudTh.Name"]
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
+                    @Localizer["Content.MudTh.Type"]
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh Class="cursor-default text-center">@Localizer["Content.MudTh.NewElement"]</MudTh>
+            <MudTh Class="cursor-default text-center">@Localizer["Content.MudTh.Preview"]</MudTh>
+            @if (_showFilepath)
+            {
+                <MudTh>@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
+            }
+        </MudTHeadRow>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Delete" Class="px-1.5">
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)"/>
+        <MudTd Class="py-0" DataLabel="Delete">
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                           Class="py-2" 
+                           OnClick="() => Delete(context)"
+                           Title="@Localizer["Content.MudTd.Delete"]"/>
         </MudTd>
-        <MudTd DataLabel="Name" Class="px-1.5">
-            <MudTooltip Text="@context.Name" Arrow="true" Placement="Placement.Right">
-                <p class="w-fit max-w-[10rem] text-ellipsis overflow-hidden">@context.Name</p>
+        <MudTd Class="py-0" DataLabel="Name">
+            <MudTooltip Text="@context.Name"
+                        Arrow="true"
+                        Placement="Placement.Right"
+                        Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                        Duration="Double.Epsilon">
+                <p class="pt-2 cursor-default max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
             </MudTooltip>
         </MudTd>
-        <MudTd DataLabel="Type" Class="px-1.5">
+        <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
             @if (context is FileContentViewModel fileContentContext)
             {
                 @fileContentContext.Type
@@ -57,19 +79,21 @@
                 <span>Link</span>
             }
         </MudTd>
-        <MudTd Class="px-1.5">
+        <MudTd Class="p-0">
             <MudIconButton Icon="@Icons.Material.Filled.Create"
-                           Class="create-element-with-content"
-                           OnClick="() => NewElementWithContent(context)"/>
+                           Class="create-element-with-content py-2"
+                           OnClick="() => NewElementWithContent(context)"
+                           Title="@Localizer["Content.MudTd.NewElement"]"/>
         </MudTd>
-        <MudTd Class="px-1.5">
+        <MudTd Class="py-0">
             <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                           Class="flex justify-center show-content-preview"
-                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                           Class="show-content-preview py-2"
+                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
+                           Title="@Localizer["Content.MudTd.Preview"]"/>
         </MudTd>
         @if (_showFilepath)
         {
-            <MudTd DataLabel="Filepath/Link" Class="px-1.5">
+            <MudTd Class="py-0" DataLabel="Filepath/Link">
                 @switch (context)
                 {
                     case FileContentViewModel fileContentContext:
@@ -84,16 +108,21 @@
     </RowTemplate>
     <PagerContent>
         <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
-        <div class="max-h-40% min-h-fit shrink grow flex flex-row m-1">
-            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Info">@Localizer["PagerContent.Filepath.Text"]</MudSwitch>
-            <MudSpacer/>
-            <MudButton OnClick="OpenContentFilesFolder" Variant="Variant.Filled" Class="btn-standard ">@Localizer["PagerContent.Button.Text"]</MudButton>
+        <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center mb-2 justify-between">
+            <div class="flex justify-center items-center">
+                <MudSwitch Class="pl-2 w-12" @bind-Checked="_showFilepath" Color="Color.Info"></MudSwitch>
+                <p class="text-xs flex justify-start">@Localizer["PagerContent.Filepath.Text"]</p>
+            </div>
+            <button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
+                <MudIcon Icon="@Icons.Material.Filled.FolderOpen"></MudIcon>
+                <p class="pl-1 font-bold uppercase">@Localizer["PagerContent.Button.Text"]</p>
+            </button>
         </div>
+            
     </PagerContent>
 </MudTable>
 
 @code {
-
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
