@@ -23,6 +23,7 @@ public class XmlEntityManagerUt
         var mockSectionFactory = Substitute.For<IXmlSectionFactory>();
         var mockLabelFactory = Substitute.For<IXmlLabelFactory>();
         var mockUrlFactory = Substitute.For<IXmlUrlFactory>();
+        var mockAdaptivityFactory = Substitute.For<IXmlAdaptivityFactory>();
 
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -56,7 +57,7 @@ public class XmlEntityManagerUt
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlEntityManager();
         systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory,
-            mockBackupFactory, mockSectionFactory, mockLabelFactory, mockUrlFactory);
+            mockBackupFactory, mockSectionFactory, mockLabelFactory, mockUrlFactory, mockAdaptivityFactory);
 
         // Assert
         Assert.Multiple(() =>
@@ -65,6 +66,10 @@ public class XmlEntityManagerUt
             mockH5PFactory.Received().CreateH5PFileFactory();
             mockCourseFactory.Received().CreateXmlCourseFactory();
             mockBackupFactory.Received().CreateXmlBackupFactory();
+            mockSectionFactory.Received().CreateSectionFactory();
+            mockLabelFactory.Received().CreateLabelFactory();
+            mockUrlFactory.Received().CreateUrlFactory();
+            mockAdaptivityFactory.Received().CreateXmlAdaptivityFactory();
         });
     }
 }
