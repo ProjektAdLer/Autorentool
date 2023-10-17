@@ -69,4 +69,6 @@ public class R20X308LViewModel : IFloorPlanViewModel
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/R8-Floorplan-Example.png";
 }

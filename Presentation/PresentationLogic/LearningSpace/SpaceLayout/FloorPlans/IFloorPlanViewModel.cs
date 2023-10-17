@@ -28,4 +28,6 @@ public interface IFloorPlanViewModel
     IList<(Point, Point)> DoorPositions { get; }
 
     string GetIcon { get; }
+
+    string GetPreviewImage { get; }
 }

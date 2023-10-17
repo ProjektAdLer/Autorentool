@@ -63,4 +63,6 @@ public class R20X206LViewModel : IFloorPlanViewModel
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/R6-Floorplan-Example.png";
 }

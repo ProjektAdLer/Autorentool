@@ -72,4 +72,6 @@ public class L32X3110LViewModel : IFloorPlanViewModel
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/L-Floorplan-Example.png";
 }
