@@ -8,6 +8,11 @@
 @using BusinessLogic.Entities.LearningContent.Adaptivity.Question
 @using AutoMapper
 @using System.Diagnostics.CodeAnalysis
+<MudText Typo="Typo.h6">
+    @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
+        ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
+        : Localizer["MultipleChoiceQuestionForm.TitleContent.Edit." + Difficulty])
+</MudText>
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_questionForm"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Create.SnackbarMessage"] : Localizer["MultipleChoiceQuestionForm.Edit.SnackbarMessage"])
@@ -142,7 +147,7 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        if (QuestionToEdit == null)
+        if (QuestionToEdit == null && FormDataContainer.FormModel.Choices.Count == 0)
         {
             AddChoice();
             AddChoice();

@@ -51,4 +51,22 @@
     <data name="MultipleChoiceQuestionForm.Button.Edit" xml:space="preserve">
         <value>Übernehmen</value>
     </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Easy" xml:space="preserve">
+        <value>Erstellen einer leichten Frage</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Medium" xml:space="preserve">
+        <value>Erstellen einer mittelschweren Frage</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Hard" xml:space="preserve">
+        <value>Erstellen einer schweren Frage</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Easy" xml:space="preserve">
+        <value>Bearbeiten der einfachen Frage</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Hard" xml:space="preserve">
+        <value>Bearbeiten der schweren Frage</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Medium" xml:space="preserve">
+        <value>Bearbeiten der mittelschweren Frage</value>
+    </data>
 </root>

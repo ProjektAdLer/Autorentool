@@ -1,22 +1,50 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
+@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
-<MudDialog>
-    <DialogContent>
-        @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
-        {
-            <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit"></MultipleChoiceQuestionForm>
-        }
-        else
-        {
-            <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></MultipleChoiceQuestionForm>
-        }
-    </DialogContent>
-</MudDialog>
+<div style="display: flex;">
+    @if (_isSidePanelOpen)
+    {
+        <div style="position: relative; width: 300px; height: 100%; transition: left 0.3s;">
+            <MudText Typo="Typo.h6">
+                @(Task.Questions.FirstOrDefault(x => x.Difficulty != Difficulty) == null
+                    ? Localizer["AdaptivityQuestionDialog.Sidebar.Header.NoQuestions"]
+                    : Localizer["AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions"])
+            </MudText>
+            @foreach (var difficulty in Enum.GetValues(typeof(QuestionDifficulty)).Cast<QuestionDifficulty>())
+            {
+                if (difficulty != Difficulty &&
+                    Task.Questions.FirstOrDefault(x => x.Difficulty == difficulty) is {} questionWithOtherDifficulty)
+                {
+                    <AdaptivityQuestionPreview AdaptivityQuestion="questionWithOtherDifficulty"></AdaptivityQuestionPreview>
+                }
+            }
+        </div>
+    }
+    <MudToggleIconButton Style="height: 80vh" Icon="@Icons.Material.Filled.ArrowRight" ToggledIcon="@Icons.Material.Filled.ArrowLeft" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
 
+    <div style="flex-grow: 1; overflow: auto;">
+        <MudDialog>
+            <DialogContent>
+                @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
+                {
+                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit"></MultipleChoiceQuestionForm>
+                }
+                else
+                {
+                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></MultipleChoiceQuestionForm>
+                }
+            </DialogContent>
+        </MudDialog>
+    </div>
+</div>
 
 @code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<AdaptivityQuestionDialog> Localizer { get; set; }
 
     [Parameter, EditorRequired]
     public IAdaptivityTaskViewModel Task { get; set; } = null!;
@@ -26,5 +54,7 @@
 
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; } = default!;
+
+    private bool _isSidePanelOpen = false;
 
 }

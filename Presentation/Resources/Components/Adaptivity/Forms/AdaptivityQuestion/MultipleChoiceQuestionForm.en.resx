@@ -42,4 +42,22 @@
     <data name="MultipleChoiceQuestionForm.Text.Choices" xml:space="preserve">
         <value>Choices</value>
     </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Easy" xml:space="preserve">
+        <value>Creating an easy question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Hard" xml:space="preserve">
+        <value>Creating a medium question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Medium" xml:space="preserve">
+        <value>Creating a hard question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Easy" xml:space="preserve">
+        <value>Edit the easy question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Hard" xml:space="preserve">
+        <value>Edit the medium question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Medium" xml:space="preserve">
+        <value>Edit the hard question</value>
+    </data>
 </root>
