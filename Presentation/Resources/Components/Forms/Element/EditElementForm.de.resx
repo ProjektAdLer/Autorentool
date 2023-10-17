@@ -60,7 +60,7 @@
         <value>Leicht</value>
     </data>
     <data name="EditElementForm.Difficulty.Medium" xml:space="preserve">
-        <value>Normal</value>
+        <value>Mittelschwer</value>
     </data>
     <data name="EditElementForm.Difficulty.Hard" xml:space="preserve">
         <value>Schwer</value>
