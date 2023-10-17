@@ -8,12 +8,11 @@ using NUnit.Framework;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
 using Shared;
-using TestContext = Bunit.TestContext;
 
-namespace PresentationTest.Components.Forms;
+namespace IntegrationTest.Forms;
 
 [TestFixture]
-public class ElementModelGridSelectUt
+public class ElementModelGridSelectIt : MudBlazorTestFixture<ElementModelGridSelect>
 {
     [SetUp]
     public void SetUp()
@@ -22,25 +21,24 @@ public class ElementModelGridSelectUt
         _elementModelHandler.GetIconForElementModel(Arg.Any<ElementModel>())
             .Returns(x => x.Arg<ElementModel>().ToString());
 
-        var testContext = new TestContext();
-        testContext.Services.AddSingleton(Substitute.For<IStringLocalizer<ElementModelGridSelect>>());
-        testContext.Services.AddSingleton(_elementModelHandler);
+        Context.Services.AddSingleton(Substitute.For<IStringLocalizer<ElementModelGridSelect>>());
+        Context.Services.AddSingleton(_elementModelHandler);
 
-        _component =
-            testContext.RenderComponent<ElementModelGridSelect>(
+        _systemUnderTest =
+            Context.RenderComponent<ElementModelGridSelect>(
                 (nameof(ElementModelGridSelect.Elements), _elementModels));
     }
 
     [TearDown]
     public void TearDown()
     {
-        _component.Dispose();
+        _systemUnderTest.Dispose();
     }
 
-    private IRenderedComponent<ElementModelGridSelect> _component = null!;
+    private IRenderedComponent<ElementModelGridSelect> _systemUnderTest = null!;
 
     private readonly IEnumerable<ElementModel> _elementModels = new List<ElementModel>
-        {ElementModel.l_random, ElementModel.l_h5p_slotmachine_1, ElementModel.l_text_bookshelf_1};
+        { ElementModel.l_random, ElementModel.l_h5p_slotmachine_1, ElementModel.l_text_bookshelf_1 };
 
     private IElementModelHandler _elementModelHandler = null!;
 
@@ -48,15 +46,18 @@ public class ElementModelGridSelectUt
     public void ClickingItemShouldChangeValue()
     {
         const ElementModel elementModelToSelect = ElementModel.l_h5p_slotmachine_1;
-        var imgElements = _component.FindAll("img");
+        var imgElements = _systemUnderTest.FindAll("img");
 
         var imgToClick = imgElements.FirstOrDefault(img => img.GetAttribute("src") == elementModelToSelect.ToString());
-        Assert.That(imgToClick, Is.Not.Null);
 
-        Assert.That(_component.Instance.Value, Is.Not.EqualTo(elementModelToSelect));
+        Assert.Multiple(() =>
+        {
+            Assert.That(imgToClick, Is.Not.Null);
+            Assert.That(_systemUnderTest.Instance.Value, Is.Not.EqualTo(elementModelToSelect));
+        });
 
         imgToClick!.Click();
 
-        Assert.That(_component.Instance.Value, Is.EqualTo(elementModelToSelect));
+        Assert.That(_systemUnderTest.Instance.Value, Is.EqualTo(elementModelToSelect));
     }
 }

@@ -20,6 +20,7 @@ public class ViewModelFormModelMappingProfile : Profile
         CreateElementMap();
         CreateContentMap();
         CreateAdaptivityQuestionMap();
+        CreateAdaptivityQuestionMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>

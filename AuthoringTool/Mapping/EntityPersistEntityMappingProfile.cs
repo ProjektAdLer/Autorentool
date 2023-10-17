@@ -351,11 +351,23 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<MultipleChoiceSingleResponseQuestion, MultipleChoiceSingleResponseQuestionPe>()
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionPe>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
+            .AfterMap((x, y, _) => y.CorrectChoice = y.Choices.Single(choice => choice.Id == x.CorrectChoice.Id))
             .ReverseMap()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
+            .AfterMap((x, y, _) => y.CorrectChoice = y.Choices.Single(choice => choice.Id == x.CorrectChoice.Id))
             .IncludeBase<IAdaptivityQuestionPe, IAdaptivityQuestion>();
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionPe>()
-            .ReverseMap();
+            .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionPe>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((x, y, _) =>
+                y.CorrectChoices = y.Choices.Where(choice => x.CorrectChoices.Any(c => c.Id == choice.Id)).ToList())
+            .ReverseMap()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((x, y, _) =>
+                y.CorrectChoices = y.Choices.Where(choice => x.CorrectChoices.Any(c => c.Id == choice.Id)).ToList())
+            .IncludeBase<IAdaptivityQuestionPe, IAdaptivityQuestion>();
     }
 
     private void CreateChoiceMap()

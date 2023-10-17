@@ -115,7 +115,9 @@ module.exports = {
             }
         },
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/container-queries'),
+    ],
     safelist: [
         'right-0',
         'left-0',

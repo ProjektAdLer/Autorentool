@@ -8,6 +8,7 @@ namespace PersistEntities.LearningContent.Question;
 /// Represents a question with multiple different choices and multiple responses.
 /// </summary>
 [KnownType(typeof(AdaptivityRulePe))]
+[DataContract(IsReference = true)]
 public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionPe
 {
     public MultipleChoiceMultipleResponseQuestionPe(string title, int expectedCompletionTime,

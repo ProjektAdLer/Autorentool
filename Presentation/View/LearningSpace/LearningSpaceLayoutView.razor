@@ -93,7 +93,7 @@
         var doorsString = new StringBuilder();
         foreach (var (p1, p2) in  floorPlan.DoorPositions)
         {
-            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:%238b4513;stroke-width:0.5\" />");
+            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgba(204,204,204);stroke-width:0.5\" />");
         }
         return doorsString.ToString();
     }

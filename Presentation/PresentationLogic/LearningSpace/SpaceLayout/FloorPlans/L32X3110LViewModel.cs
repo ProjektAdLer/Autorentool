@@ -67,9 +67,11 @@ public class L32X3110LViewModel : IFloorPlanViewModel
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point {X = 0, Y = 6}, new Point {X = 0, Y = 10}),
-        (new Point {X = 24, Y = 31}, new Point {X = 28, Y = 31})
+        (new Point {X = 0, Y = 11}, new Point {X = 0, Y = 6}),
+        (new Point {X = 24, Y = 31}, new Point {X = 27, Y = 31})
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/L-Floorplan-Example.png";
 }

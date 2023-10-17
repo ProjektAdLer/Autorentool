@@ -57,7 +57,7 @@ public class WorldGeneratorUt
         // Assert
         Assert.Multiple(() =>
         {
-            mockCreateDsl.Received().WriteLearningWorld(Arg.Any<LearningWorldPe>());
+            mockCreateDsl.Received().GenerateAndExportLearningWorldJson(Arg.Any<LearningWorldPe>());
             mockReadDsl.Received().ReadLearningWorld("", Arg.Any<DocumentRootJson?>());
             mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>());
             mockBackupFileGen.Received().WriteBackupFile("DestinationPath");
