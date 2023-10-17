@@ -12,34 +12,41 @@
 {
     <div class="mx-2 rounded-lg">
         <div class="flex justify-center p-2">
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
+            <p class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</p>
         </div>
     </div>
-    <div class="p-2 flex justify-start space-x-2">
+    <div class="p-2 flex justify-start items-center space-x-2">
         <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
-        <p class="text-lg text-adlerblue-600 truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
+        <p class="text-sm 2xl:text-lg text-adlerblue-600 font-bold truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
     </div>
     @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
     {
-        <section class="p-2 gap-1 flex flex-col justify-start">
-            <div class="gap-8 flex justify-between items-start">
-                <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
-                    <h3 class="text-base text-adlerblue-600 space-theme">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
-                    </h3>
-                    <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals
-                    </h3>
+        <section class="p-2 flex flex-col justify-start">
+            <div class="gap-2 flex justify-between items-start">
+                <label id="learning-element-info" class="font-medium flex flex-col w-3/5">
+                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-theme">
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
+                    </p>
+                    <div class="flex flex-row justify-start items-center gap-1">
+                        <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
+                    <MudTooltip Text="@LearningSpaceP.LearningSpaceVm?.Goals"
+                                Placement="Placement.Right"
+                                Duration="Double.Epsilon"
+                                Class="bg-adlergrey-200 drop-shadow-xl h-fit w-40 text-adlergrey-800"
+                                Arrow="true">
+                        <p class="text-sm 2xl:text-base w-[8rem] 2xl:w-[24rem] text-adlerblue-600 truncate text-ellipsis">@LearningSpaceP.LearningSpaceVm?.Goals</p>
+                    </MudTooltip>
+                    </div>
                 </label>
-                <div class="min-w-max">
-                    <h3 class="text-base text-adlerblue-600 space-workload">
+                <div class="w-2/5">
+                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-workload">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
-                    </h3>
-                    <h3 class="text-base text-adlerblue-600 space-points">
+                    </p>
+                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-points">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.RequiredPoints
                         <span class="text-adlergrey-600"> / </span> @LearningSpaceP.LearningSpaceVm?.Points
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text.Points.Suffix"]</span>
-                    </h3>
+                    </p>
                     @ChildContent
                 </div>
             </div>

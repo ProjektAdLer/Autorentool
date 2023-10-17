@@ -68,4 +68,7 @@
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
     </data>
+    <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
+        <value>Fahren Sie mit der Maus über die Grundrisse, um diese vergrößert anzeigen zu lassen und zusätzlich die spätere Raumansicht in der 3D-Lernumgebung anzuschauen. </value>
+    </data>
 </root>

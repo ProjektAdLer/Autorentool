@@ -56,4 +56,7 @@
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Required information</value>
     </data>
+    <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
+        <value />
+    </data>
 </root>

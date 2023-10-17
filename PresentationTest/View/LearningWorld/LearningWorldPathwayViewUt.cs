@@ -131,11 +131,11 @@ public class LearningWorldPathwayViewUt
 
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        var h3 = systemUnderTest.FindAllOrFail("h3").ToList();
-        h3[0].MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></h3>");
-        h3[1].MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
+        var p = systemUnderTest.FindAllOrFail("p").ToList();
+        p[1].MarkupMatches(
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></p>");
+        p[2].MarkupMatches(
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</p>");
     }
 
     [Test]
