@@ -1,5 +1,4 @@
-﻿using Bunit.Extensions;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.DSL.AdaptivityElement;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
@@ -462,7 +461,7 @@ public class XmlBackupFactory : IXmlBackupFactory
     {
         var listAdaptivityElements = ReadDsl.GetAdaptivityElementsList();
 
-        if (listAdaptivityElements.IsNullOrEmpty())
+        if (listAdaptivityElements.Count == 0)
         {
             QuestionsXmlQuestionsCategories.Serialize();
             return;
