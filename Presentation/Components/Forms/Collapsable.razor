@@ -1,4 +1,4 @@
-<div class="gap-2 px-0.5 my-4 @Style">
+<div class="gap-2 my-4 @Style">
     <div class="flex flex-row toggler" @onclick="@Toggle">
         @if (Collapsed)
         {
@@ -8,12 +8,12 @@
         {
             <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
         }
-        <h3 class="text-adlergrey-800 font-bold text-lg"> @Title </h3>
+        <p class="text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
     </div>
 
     @if (!Collapsed)
     {
-        <div class="mt-0 pb-1 inner">
+        <div class="mt-0 inner">
             @ChildContent
         </div>
     }

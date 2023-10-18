@@ -40,27 +40,29 @@ public class R20X206LViewModel : IFloorPlanViewModel
 
     public IList<Point> CornerPoints { get; } = new List<Point>
     {
-        new() {X = 0, Y = 0},
-        new() {X = 20, Y = 0},
-        new() {X = 20, Y = 20},
-        new() {X = 0, Y = 20}
+        new() {X = 4, Y = 0},
+        new() {X = 28, Y = 0},
+        new() {X = 28, Y = 22},
+        new() {X = 4, Y = 22}
     };
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 3, Y = 3},
-        new() {X = 10, Y = 3},
-        new() {X = 17, Y = 3},
-        new() {X = 17, Y = 10},
-        new() {X = 17, Y = 17},
-        new() {X = 3, Y = 17}
+        new() {X = 10, Y = 5},
+        new() {X = 18, Y = 5},
+        new() {X = 26, Y = 5},
+        new() {X = 26, Y = 14},
+        new() {X = 26, Y = 22},
+        new() {X = 10, Y = 22}
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point {X = 0, Y = 13}, new Point {X = 0, Y = 8}),
-        (new Point {X = 8, Y = 20}, new Point {X = 11, Y = 20})
+        (new Point {X = 4, Y = 13}, new Point {X = 4, Y = 8}),
+        (new Point {X = 14, Y = 22}, new Point {X = 19, Y = 22})
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/R6-Floorplan-Example.png";
 }

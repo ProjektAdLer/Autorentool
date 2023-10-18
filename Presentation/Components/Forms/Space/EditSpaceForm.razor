@@ -9,7 +9,7 @@
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
@@ -49,6 +49,9 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
+            @*<MudText Typo="Typo.caption">
+                                @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
+            </MudText>*@
             <div class="flex rounded-lg w-4/4 px-1 pb-2">
                 <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
             </div>
@@ -91,9 +94,9 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew"
-                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form"
-                       OnClick="OnResetAsync">
+        <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
+                       OnClick="@OnResetAsync" 
+                       Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
         </MudIconButton>
     </FooterButtons>
 </BaseForm>

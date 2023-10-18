@@ -88,12 +88,12 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         //TODO Use this for LmsLoginDialogUt
-        var spaceWorkload = systemUnderTest.Find("h3.space-workload");
+        var spaceWorkload = systemUnderTest.Find("p.space-workload");
         spaceWorkload.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></h3>");
-        var spacePoints = systemUnderTest.Find("h3.space-points");
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
+        var spacePoints = systemUnderTest.Find("p.space-points");
         spacePoints.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></h3>");
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></p>");
     }
 
     [Test]
@@ -106,14 +106,14 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var elementName = systemUnderTest.Find("h3.space-theme");
+        var elementName = systemUnderTest.Find("p.space-theme");
         elementName.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.Campus</h3>");
-        var elementDescription = systemUnderTest.Find("h3.space-goals");
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.Campus</p>");
+        var elementDescription = systemUnderTest.Find("p.space-goals");
         elementDescription.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"">
-                  <span class=""text-adlergrey-600"">LearningSpace.SpaceGoals.Text</span>
-              </h3>");
+            @"<p class=""text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals"">
+                LearningSpace.SpaceGoals.Text
+              </p>");
     }
 
     [Test]

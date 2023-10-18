@@ -2,9 +2,10 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Actio
 
 public class ElementReferenceActionViewModel : IAdaptivityActionViewModel
 {
-    public ElementReferenceActionViewModel(Guid elementId)
+    public ElementReferenceActionViewModel(Guid elementId, string comment)
     {
         ElementId = elementId;
+        Comment = comment;
         Id = Guid.NewGuid();
     }
 
@@ -14,9 +15,11 @@ public class ElementReferenceActionViewModel : IAdaptivityActionViewModel
     private ElementReferenceActionViewModel()
     {
         ElementId = Guid.Empty;
+        Comment = "";
         Id = Guid.Empty;
     }
 
     public Guid ElementId { get; set; }
+    public string Comment { get; set; }
     public Guid Id { get; private set; }
 }

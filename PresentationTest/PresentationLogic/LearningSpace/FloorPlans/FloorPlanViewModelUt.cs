@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
@@ -9,6 +10,16 @@ namespace PresentationTest.PresentationLogic.LearningSpace.FloorPlans;
 [TestFixture]
 public class FloorPlanViewModelUt
 {
+    [SetUp]
+    public void SetUp()
+    {
+        var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
+        _iconDirectory = Path.Combine(projectDirectory, "AuthoringTool", "wwwroot");
+    }
+
+    private string _iconDirectory = "";
+
     [Test]
     public void TestAllFloorPlanViewModels()
     {
@@ -39,6 +50,7 @@ public class FloorPlanViewModelUt
             var elementSlotPositions = viewModel.ElementSlotPositions;
             var doorPositions = viewModel.DoorPositions;
             var icon = viewModel.GetIcon;
+            var iconPreview = viewModel.GetPreviewImage;
 
             // Assert
             Assert.Multiple(() =>
@@ -48,6 +60,8 @@ public class FloorPlanViewModelUt
                 Assert.That(elementSlotPositions, Is.Not.Empty);
                 Assert.That(doorPositions, Is.Not.Empty);
                 Assert.That(icon, Has.Length.GreaterThan(0));
+                Assert.That(File.Exists(Path.Combine(_iconDirectory, iconPreview)), Is.True,
+                    $"Icon file does not exist for FloorPlan: {viewModel}");
             });
         }
     }
