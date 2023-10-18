@@ -9,11 +9,6 @@ public class MultipleChoiceQuestionValidator : AbstractValidator<IMultipleChoice
 {
     public MultipleChoiceQuestionValidator()
     {
-        RuleFor(x => x.Title)
-            .NotEmpty()
-            .WithMessage("Question title is required.")
-            .MaximumLength(100)
-            .WithMessage("Question title cannot be longer than 100 characters.");
         RuleFor(x => x.Text)
             .NotEmpty()
             .WithMessage("Question text is required.")

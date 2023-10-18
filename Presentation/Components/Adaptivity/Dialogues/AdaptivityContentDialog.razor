@@ -34,7 +34,6 @@
                                          ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                          ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
 
-                    <MudText>@question.Title</MudText>
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, difficulty)"/>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"/>
                     <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">

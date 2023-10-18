@@ -7,11 +7,10 @@ namespace BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 /// </summary>
 public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
 {
-    public MultipleChoiceSingleResponseQuestion(string title, int expectedCompletionTime, ICollection<Choice> choices,
+    public MultipleChoiceSingleResponseQuestion(int expectedCompletionTime, ICollection<Choice> choices,
         string text, Choice correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRule> rules)
     {
         Id = Guid.NewGuid();
-        Title = title;
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         Text = text;
@@ -26,7 +25,6 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
     private MultipleChoiceSingleResponseQuestion()
     {
         Id = Guid.Empty;
-        Title = null!;
         ExpectedCompletionTime = 0;
         Choices = null!;
         Text = null!;
@@ -38,7 +36,6 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
     public Choice CorrectChoice { get; set; }
 
     public Guid Id { get; private set; }
-    public string Title { get; set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRule> Rules { get; set; }
@@ -57,7 +54,7 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
 
     public IMemento GetMemento()
     {
-        return new MultipleChoiceSingleResponseQuestionMemento(Title, ExpectedCompletionTime, Choices, Text,
+        return new MultipleChoiceSingleResponseQuestionMemento(ExpectedCompletionTime, Choices, Text,
             CorrectChoice, Difficulty, Rules);
     }
 
@@ -68,7 +65,6 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
             throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
         }
 
-        Title = multipleChoiceSingleResponseQuestionMemento.Title;
         ExpectedCompletionTime = multipleChoiceSingleResponseQuestionMemento.ExpectedCompletionTime;
         Choices = multipleChoiceSingleResponseQuestionMemento.Choices;
         Text = multipleChoiceSingleResponseQuestionMemento.Text;
@@ -104,11 +100,10 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
 
     private record MultipleChoiceSingleResponseQuestionMemento : IMemento
     {
-        internal MultipleChoiceSingleResponseQuestionMemento(string title, int expectedCompletionTime,
+        internal MultipleChoiceSingleResponseQuestionMemento(int expectedCompletionTime,
             ICollection<Choice> choices,
             string text, Choice correctChoice, QuestionDifficulty difficulty, ICollection<IAdaptivityRule> rules)
         {
-            Title = title;
             ExpectedCompletionTime = expectedCompletionTime;
             Choices = choices.ToList();
             Text = text;
@@ -117,7 +112,6 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
             Rules = rules.ToList();
         }
 
-        internal string Title { get; }
         internal int ExpectedCompletionTime { get; }
         internal ICollection<Choice> Choices { get; }
         internal string Text { get; }
