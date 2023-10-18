@@ -55,7 +55,9 @@
                                               @bind-Value="@choice.Text">
                                 </MudTextField>
                             </MudForm>
-                            <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
+                            <MudIconButton OnClick="() => RemoveChoice(choice)"
+                                           Icon="@Icons.Material.Filled.Delete"
+                                           Disabled="FormModel.Choices.Count <= 2"/>
 
                         </div>
                         <br/>
@@ -76,7 +78,9 @@
                                           @bind-Value="@choice.Text">
                             </MudTextField>
                         </MudForm>
-                        <MudIconButton OnClick="() => RemoveChoice(choice)" Icon="@Icons.Material.Filled.Delete" Disabled="FormModel.Choices.Count <= 2"></MudIconButton>
+                        <MudIconButton OnClick="() => RemoveChoice(choice)"
+                                       Icon="@Icons.Material.Filled.Delete"
+                                       Disabled="FormModel.Choices.Count <= 2"/>
                     </div>
                     <br/>
                 }
@@ -86,7 +90,11 @@
         <div class="rounded-lg w-4/4 px-4">
 
             <span class="inline-flex">
-                <MudButton OnClick="AddChoice" EndIcon="@Icons.Material.Filled.Add">@Localizer["MultipleChoiceQuestionForm.Text.AddChoice"]</MudButton>
+                <MudButton OnClick="AddChoice"
+                           Disabled="@(FormModel.Choices.Count >= 10)"
+                           EndIcon="@Icons.Material.Filled.Add">
+                    @Localizer["MultipleChoiceQuestionForm.Text.AddChoice"]
+                </MudButton>
             </span>
         </div>
 
@@ -182,11 +190,13 @@
     {
         if (model.IsSingleResponse)
         {
-            PresentationLogic.CreateMultipleChoiceSingleResponseQuestion(Task, Difficulty, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+            PresentationLogic.CreateMultipleChoiceSingleResponseQuestion(Task, Difficulty, model.Title, model.Text,
+                model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
         }
         else
         {
-            PresentationLogic.CreateMultipleChoiceMultipleResponseQuestion(Task, Difficulty, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+            PresentationLogic.CreateMultipleChoiceMultipleResponseQuestion(Task, Difficulty, model.Title, model.Text,
+                model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
         }
     }
 
@@ -195,15 +205,18 @@
         if ((QuestionToEdit is MultipleChoiceMultipleResponseQuestionViewModel && model.IsSingleResponse) ||
             (QuestionToEdit is MultipleChoiceSingleResponseQuestionViewModel && !model.IsSingleResponse))
         {
-            PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+            PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse,
+                model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
         }
         switch (QuestionToEdit)
         {
             case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Title,
+                    model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
                 break;
             case MultipleChoiceMultipleResponseQuestionViewModel multipleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Title,
+                    model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(QuestionToEdit), "Question to edit is not a valid type");
