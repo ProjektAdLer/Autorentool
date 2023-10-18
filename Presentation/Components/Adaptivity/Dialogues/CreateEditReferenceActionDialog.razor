@@ -1,4 +1,5 @@
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms;
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
@@ -12,22 +13,24 @@
 @using Shared.Adaptivity
 <div class="w-[800px] h-80 flex flex-col">
     <MudTabs @ref="_tabs" Class="h-full">
-        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="Content">
+        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]">
             <!-- Content reference -->
             <MudForm @ref="_form">
-                <GridSelect Elements="LearningContents" @bind-Value="_learningContent" Required="true" RequiredError="LearningContent is required">
+                <GridSelect Elements="LearningContents" @bind-Value="_learningContent" Required="true"
+                            RequiredError="@Localizer["Content.RequiredError.Text"]">
                     <ElementTemplate>
-                        <MudText Typo="Typo.body1" Align="Align.Center">Content @context.Name</MudText>
+                        <MudText Typo="Typo.body1" Align="Align.Center">@Localizer["Content.Text"] @context.Name</MudText>
                     </ElementTemplate>
                 </GridSelect>
             </MudForm>
         </MudTabPanel>
-        <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="Elements">
+        <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]">
             <!-- Element reference -->
             <MudForm @ref="_form">
-                <GridSelect Elements="LearningElements" @bind-Value="_learningElement" Required="true" RequiredError="LearningElement is required">
+                <GridSelect Elements="LearningElements" @bind-Value="_learningElement" Required="true"
+                            RequiredError="@Localizer["Element.RequiredError.Text"]">
                     <ElementTemplate>
-                        <div>Element @context.Name</div>
+                        <div>@Localizer["Element.Text"] @context.Name</div>
                     </ElementTemplate>
                 </GridSelect>
             </MudForm>
@@ -35,7 +38,7 @@
     </MudTabs>
     <div class="fixed bottom-0 right-0 border-adlergrey-200">
         <MudButton Color="Color.Success" @onclick="SubmitAsync">
-            Submit
+            @Localizer["Button.Submit.Text"]
         </MudButton>
     </div>
 </div>
@@ -47,6 +50,9 @@
 
     [Inject, AllowNull]
     internal ILearningWorldPresenter LearningWorldPresenter { get; set; }
+    
+    [Inject, AllowNull]
+    internal IStringLocalizer<CreateEditReferenceActionDialog> Localizer { get; set; }
 
     [Parameter]
     public IAdaptivityActionViewModel? ExistingAction { get; set; }

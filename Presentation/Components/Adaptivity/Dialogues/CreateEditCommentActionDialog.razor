@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
@@ -7,11 +8,11 @@
 <MudForm @ref="_form">
     <MudCard>
         <MudCardContent>
-            <MudTextField @bind-Value="_comment" T="string" Label="Comment" Required="true"
-                          RequiredError="Comment is required"/>
+            <MudTextField @bind-Value="_comment" T="string" Label="@Localizer["Comment.Label.Text"]" Required="true"
+                          RequiredError="@Localizer["Comment.RequiredError.Text"]"/>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Color="Color.Success" OnClick="SubmitAsync">Submit</MudButton>
+            <MudButton Color="Color.Success" OnClick="SubmitAsync">@Localizer["Button.Submit.Text"]</MudButton>
         </MudCardActions>
     </MudCard>
 </MudForm>
@@ -20,6 +21,9 @@
 
     [Inject, AllowNull] //allow null as injected - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
+    
+    [Inject, AllowNull]
+    internal IStringLocalizer<CreateEditCommentActionDialog> Localizer { get; set; }
 
     [Parameter]
     public CommentActionViewModel? ExistingAction { get; set; }
