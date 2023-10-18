@@ -33,4 +33,7 @@
     <data name="Button.Submit.Text" xml:space="preserve">
         <value>Ok</value>
     </data>
+    <data name="Comment.Label.Text" xml:space="preserve">
+        <value>Kommentar</value>
+    </data>
 </root>

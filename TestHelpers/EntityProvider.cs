@@ -234,8 +234,9 @@ public static class EntityProvider
         return new CommentAction("default comment");
     }
 
-    public static ElementReferenceAction GetElementReferenceAction()
+    public static ElementReferenceAction GetElementReferenceAction(Guid? guid = null, string message = "")
     {
-        return new ElementReferenceAction(Guid.NewGuid());
+        guid ??= Guid.NewGuid();
+        return new ElementReferenceAction(guid.Value, message);
     }
 }

@@ -931,19 +931,22 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content)
+    public void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
+        string comment)
     {
         var actionEntity = Mapper.Map<ContentReferenceAction>(action);
         var contentEntity = Mapper.Map<ILearningContent>(content);
         var command = AdaptivityActionCommandFactory.GetEditContentReferenceAction(actionEntity, contentEntity,
+            comment,
             entity => CMapper.Map(entity, action));
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid)
+    public void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment)
     {
         var actionEntity = Mapper.Map<ElementReferenceAction>(action);
         var command = AdaptivityActionCommandFactory.GetEditElementReferenceAction(actionEntity, elementGuid,
+            comment,
             entity => CMapper.Map(entity, action));
         BusinessLogic.ExecuteCommand(command);
     }

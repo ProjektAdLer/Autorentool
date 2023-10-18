@@ -2544,17 +2544,18 @@ public class PresentationLogicUt
         var elementReferenceActionViewModel = ViewModelProvider.GetElementReferenceAction();
         var elementReferenceActionEntity = EntityProvider.GetElementReferenceAction();
         var guid = Guid.NewGuid();
+        var comment = "somecomment";
         
         mapper.Map<ElementReferenceAction>(elementReferenceActionViewModel).Returns(elementReferenceActionEntity);
         
         var editCommand = Substitute.For<IEditElementReferenceAction>();
-        adaptivityActionCommandFactory.GetEditElementReferenceAction(elementReferenceActionEntity, guid, Arg.Any<Action<ElementReferenceAction>>()).Returns(editCommand);
+        adaptivityActionCommandFactory.GetEditElementReferenceAction(elementReferenceActionEntity, guid, comment, Arg.Any<Action<ElementReferenceAction>>()).Returns(editCommand);
         
         var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
         
-        systemUnderTest.EditElementReferenceAction(elementReferenceActionViewModel, guid);
+        systemUnderTest.EditElementReferenceAction(elementReferenceActionViewModel, guid, comment);
         
-        adaptivityActionCommandFactory.Received().GetEditElementReferenceAction(elementReferenceActionEntity, guid, Arg.Any<Action<ElementReferenceAction>>());
+        adaptivityActionCommandFactory.Received().GetEditElementReferenceAction(elementReferenceActionEntity, guid, comment, Arg.Any<Action<ElementReferenceAction>>());
         businessLogic.Received().ExecuteCommand(editCommand);
     }
 
@@ -2568,18 +2569,19 @@ public class PresentationLogicUt
         var commentActionEntity = EntityProvider.GetContentReferenceAction();
         var contentViewModel = Substitute.For<ILearningContentViewModel>();
         var contentEntity = Substitute.For<ILearningContent>();
+        var comment = "somestring";
         
         mapper.Map<ContentReferenceAction>(commentActionViewModel).Returns(commentActionEntity);
         mapper.Map<ILearningContent>(contentViewModel).Returns(contentEntity);
         
         var editCommand = Substitute.For<IEditContentReferenceAction>();
-        adaptivityActionCommandFactory.GetEditContentReferenceAction(commentActionEntity, contentEntity, Arg.Any<Action<ContentReferenceAction>>()).Returns(editCommand);
+        adaptivityActionCommandFactory.GetEditContentReferenceAction(commentActionEntity, contentEntity, comment, Arg.Any<Action<ContentReferenceAction>>()).Returns(editCommand);
         
         var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
         
-        systemUnderTest.EditContentReferenceAction(commentActionViewModel, contentViewModel);
+        systemUnderTest.EditContentReferenceAction(commentActionViewModel, contentViewModel, comment);
         
-        adaptivityActionCommandFactory.Received().GetEditContentReferenceAction(commentActionEntity, contentEntity, Arg.Any<Action<ContentReferenceAction>>());
+        adaptivityActionCommandFactory.Received().GetEditContentReferenceAction(commentActionEntity, contentEntity, comment, Arg.Any<Action<ContentReferenceAction>>());
         businessLogic.Received().ExecuteCommand(editCommand);
     }
     

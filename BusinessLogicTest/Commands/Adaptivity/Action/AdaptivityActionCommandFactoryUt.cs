@@ -43,10 +43,11 @@ class AdaptivityActionCommandFactoryUt
         var systemUnderTest = CreateSystemUnderTest();
         var action = EntityProvider.GetContentReferenceAction();
         var content = Substitute.For<ILearningContent>();
+        var comment = "somecomment";
         Action<ContentReferenceAction> mappingAction = _ => { };
 
         // Act
-        var result = systemUnderTest.GetEditContentReferenceAction(action, content, mappingAction);
+        var result = systemUnderTest.GetEditContentReferenceAction(action, content, comment, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditContentReferenceAction>());
@@ -55,6 +56,7 @@ class AdaptivityActionCommandFactoryUt
         {
             Assert.That(castedResult.Action, Is.EqualTo(action));
             Assert.That(castedResult.Content, Is.EqualTo(content));
+            Assert.That(castedResult.Comment, Is.EqualTo(comment));
             Assert.That(castedResult.MappingAction, Is.EqualTo(mappingAction));
         });
 
@@ -67,10 +69,11 @@ class AdaptivityActionCommandFactoryUt
         var factory = CreateSystemUnderTest();
         var action = EntityProvider.GetElementReferenceAction();
         var elementId = Guid.NewGuid();
+        var comment = "somecomment";
         Action<ElementReferenceAction> mappingAction = _ => { };
 
         // Act
-        var result = factory.GetEditElementReferenceAction(action, elementId, mappingAction);
+        var result = factory.GetEditElementReferenceAction(action, elementId, comment, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditElementReferenceAction>());
@@ -79,6 +82,7 @@ class AdaptivityActionCommandFactoryUt
         {
             Assert.That(castedResult.Action, Is.EqualTo(action));
             Assert.That(castedResult.ElementId, Is.EqualTo(elementId));
+            Assert.That(castedResult.Comment, Is.EqualTo(comment));
             Assert.That(castedResult.MappingAction, Is.EqualTo(mappingAction));
         });
     }

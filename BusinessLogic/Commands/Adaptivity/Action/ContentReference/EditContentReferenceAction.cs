@@ -8,10 +8,12 @@ namespace BusinessLogic.Commands.Adaptivity.Action.ContentReference;
 class EditContentReferenceAction : IEditContentReferenceAction
 {
     public EditContentReferenceAction(ContentReferenceAction action, ILearningContent content,
+        string comment,
         Action<ContentReferenceAction> mappingAction, ILogger<EditContentReferenceAction> logger)
     {
         Action = action;
         Content = content;
+        Comment = comment;
         MappingAction = mappingAction;
         Logger = logger;
     }
@@ -19,6 +21,7 @@ class EditContentReferenceAction : IEditContentReferenceAction
     public string Name => nameof(EditContentReferenceAction);
     internal ContentReferenceAction Action { get; }
     internal ILearningContent Content { get; }
+    public string Comment { get; }
     internal Action<ContentReferenceAction> MappingAction { get; }
     private ILogger<EditContentReferenceAction> Logger { get; }
     private IMemento? Memento { get; set; }
@@ -29,6 +32,7 @@ class EditContentReferenceAction : IEditContentReferenceAction
         Memento = Action.GetMemento();
 
         Action.Content = Content;
+        Action.Comment = Comment;
         MappingAction.Invoke(Action);
 
         Logger.LogTrace("Edited ContentReferenceAction {ContentReferenceActionId}", Action.Id);

@@ -580,6 +580,7 @@ public interface IPresentationLogic
 
     void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
     void EditCommentAction(CommentActionViewModel action, string comment);
-    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content);
-    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid);
+    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
+        string comment);
+    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
 }

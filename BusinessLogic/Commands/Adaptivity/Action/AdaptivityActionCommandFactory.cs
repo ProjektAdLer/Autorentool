@@ -23,17 +23,18 @@ public class AdaptivityActionCommandFactory : IAdaptivityActionCommandFactory
     }
 
     public IEditContentReferenceAction GetEditContentReferenceAction(ContentReferenceAction action,
-        ILearningContent content,
+        ILearningContent content, string comment,
         Action<ContentReferenceAction> mappingAction)
     {
-        return new EditContentReferenceAction(action, content, mappingAction,
+        return new EditContentReferenceAction(action, content, comment, mappingAction,
             LoggerFactory.CreateLogger<EditContentReferenceAction>());
     }
 
     public IEditElementReferenceAction GetEditElementReferenceAction(ElementReferenceAction action, Guid elementId,
+        string comment,
         Action<ElementReferenceAction> mappingAction)
     {
-        return new EditElementReferenceAction(action, elementId, mappingAction,
+        return new EditElementReferenceAction(action, elementId, comment, mappingAction,
             LoggerFactory.CreateLogger<EditElementReferenceAction>());
     }
 }

@@ -16,16 +16,18 @@ public class EditContentReferenceActionUt
     {
         var oldContent = EntityProvider.GetFileContent();
         var newContent = EntityProvider.GetLinkContent();
-        var action = new ContentReferenceAction(oldContent);
+        var action = EntityProvider.GetContentReferenceAction(oldContent);
         var mappingAction = new Action<ContentReferenceAction>(_ => { });
         var logger = new NullLogger<EditContentReferenceAction>();
+        var comment = "somecomment";
 
-        var sut = CreateSystemUnderTest(action, newContent, mappingAction, logger);
+        var sut = CreateSystemUnderTest(action, newContent, comment, mappingAction, logger);
 
         Assert.Multiple(() =>
         {
             Assert.That(sut.Action, Is.EqualTo(action));
             Assert.That(sut.Content, Is.EqualTo(newContent));
+            Assert.That(sut.Comment, Is.EqualTo(comment));
             Assert.That(sut.MappingAction, Is.EqualTo(mappingAction));
         });
     }
@@ -35,23 +37,25 @@ public class EditContentReferenceActionUt
     {
         var oldContent = EntityProvider.GetFileContent();
         var newContent = EntityProvider.GetLinkContent();
-        var action = new ContentReferenceAction(oldContent);
+        var action = EntityProvider.GetContentReferenceAction(oldContent);
         var actionCalled = false;
+        var comment = "somecomment";
         var mappingAction = new Action<ContentReferenceAction>(a =>
         {
             Assert.That(a, Is.EqualTo(action));
             Assert.That(a.Content, Is.EqualTo(newContent));
             actionCalled = true;
         });
-        
-        var sut = CreateSystemUnderTest(action, newContent, mappingAction);
-        
+
+        var sut = CreateSystemUnderTest(action, newContent, comment, mappingAction);
+
         sut.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionCalled, Is.True);
             Assert.That(action.Content, Is.EqualTo(newContent));
+            Assert.That(action.Comment, Is.EqualTo(comment));
         });
     }
 
@@ -60,8 +64,9 @@ public class EditContentReferenceActionUt
     {
         var oldContent = EntityProvider.GetFileContent();
         var newContent = EntityProvider.GetLinkContent();
-        var action = new ContentReferenceAction(oldContent);
+        var action = EntityProvider.GetContentReferenceAction(oldContent);
         var actionCallCount = 0;
+        var comment = "somecomment";
         var mappingAction = new Action<ContentReferenceAction>(a =>
         {
             actionCallCount++;
@@ -71,17 +76,18 @@ public class EditContentReferenceActionUt
                 Assert.That(a.Content, Is.EqualTo(oldContent));
             }
         });
-        
-        var sut = CreateSystemUnderTest(action, newContent, mappingAction);
-        
+
+        var sut = CreateSystemUnderTest(action, newContent, comment, mappingAction);
+
         sut.Execute();
         action.Content = EntityProvider.GetLinkContent();
         sut.Undo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionCallCount, Is.EqualTo(2));
             Assert.That(action.Content, Is.EqualTo(oldContent));
+            Assert.That(action.Comment, Is.EqualTo(""));
         });
     }
 
@@ -90,20 +96,20 @@ public class EditContentReferenceActionUt
     {
         var oldContent = EntityProvider.GetFileContent();
         var newContent = EntityProvider.GetLinkContent();
-        var action = new ContentReferenceAction(oldContent);
+        var action = EntityProvider.GetContentReferenceAction(oldContent);
         var actionCallCount = 0;
         var mappingAction = new Action<ContentReferenceAction>(a =>
         {
             actionCallCount++;
             Assert.That(a, Is.EqualTo(action));
         });
-        
-        var sut = CreateSystemUnderTest(action, newContent, mappingAction);
-        
+
+        var sut = CreateSystemUnderTest(action, newContent, mappingAction: mappingAction);
+
         sut.Execute();
         sut.Undo();
         sut.Redo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actionCallCount, Is.EqualTo(3));
@@ -112,14 +118,14 @@ public class EditContentReferenceActionUt
     }
 
     private EditContentReferenceAction CreateSystemUnderTest(ContentReferenceAction? action = null,
-        ILearningContent? content = null, Action<ContentReferenceAction>? mappingAction = null,
+        ILearningContent? content = null, string comment = "", Action<ContentReferenceAction>? mappingAction = null,
         ILogger<EditContentReferenceAction>? logger = null)
     {
-        action ??= new ContentReferenceAction(EntityProvider.GetFileContent());
+        action ??= EntityProvider.GetContentReferenceAction();
         content ??= EntityProvider.GetLinkContent();
         mappingAction ??= _ => { };
         logger ??= new NullLogger<EditContentReferenceAction>();
 
-        return new EditContentReferenceAction(action, content, mappingAction, logger);
+        return new EditContentReferenceAction(action, content, comment, mappingAction, logger);
     }
 }

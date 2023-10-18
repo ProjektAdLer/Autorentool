@@ -11,8 +11,10 @@ public interface IAdaptivityActionCommandFactory
     IEditCommentAction GetEditCommentAction(CommentAction action, string comment, Action<CommentAction> mappingAction);
 
     IEditContentReferenceAction GetEditContentReferenceAction(ContentReferenceAction action, ILearningContent content,
+        string comment,
         Action<ContentReferenceAction> mappingAction);
  
     IEditElementReferenceAction GetEditElementReferenceAction(ElementReferenceAction action, Guid elementId,
+        string comment,
         Action<ElementReferenceAction> mappingAction);
 }

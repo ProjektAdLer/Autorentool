@@ -16,6 +16,7 @@
         <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]">
             <!-- Content reference -->
             <MudForm @ref="_form">
+                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
                 <GridSelect Elements="LearningContents" @bind-Value="_learningContent" Required="true"
                             RequiredError="@Localizer["Content.RequiredError.Text"]">
                     <ElementTemplate>
@@ -27,6 +28,7 @@
         <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]">
             <!-- Element reference -->
             <MudForm @ref="_form">
+                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
                 <GridSelect Elements="LearningElements" @bind-Value="_learningElement" Required="true"
                             RequiredError="@Localizer["Element.RequiredError.Text"]">
                     <ElementTemplate>
@@ -72,6 +74,7 @@
     private MudTabPanel _elementPanel = null!;
     private ILearningContentViewModel _learningContent = null!;
     private ILearningElementViewModel _learningElement = null!;
+    private string _comment = "";
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -84,10 +87,12 @@
             case ContentReferenceActionViewModel cravm:
                 _tabs.ActivatePanel(_contentPanel);
                 _learningContent = GetLearningContentViewModel(cravm.Content);
+                _comment = cravm.Comment;
                 break;
             case ElementReferenceActionViewModel eravm:
                 _tabs.ActivatePanel(_elementPanel);
                 _learningElement = LearningElements.Single(lc => eravm.ElementId == lc.Id);
+                _comment = eravm.Comment;
                 break;
         }
     }
@@ -101,23 +106,23 @@
         {
             switch (ExistingAction)
             {
-                case ContentReferenceActionViewModel cravm when cravm.Content.Equals(_learningContent):
+                case ContentReferenceActionViewModel cravm when cravm.Content.Equals(_learningContent) && cravm.Comment.Equals(_comment):
                     DialogInstance.Close();
                     return;
                 case ContentReferenceActionViewModel cravm:
-                    PresentationLogic.EditContentReferenceAction(cravm, _learningContent);
+                    PresentationLogic.EditContentReferenceAction(cravm, _learningContent, _comment);
                     break;
-                case ElementReferenceActionViewModel eravm when eravm.ElementId == _learningElement.Id:
+                case ElementReferenceActionViewModel eravm when eravm.ElementId == _learningElement.Id && eravm.Comment.Equals(_comment):
                     DialogInstance.Close();
                     return;
                 case ElementReferenceActionViewModel eravm:
-                    PresentationLogic.EditElementReferenceAction(eravm, _learningElement.Id);
+                    PresentationLogic.EditElementReferenceAction(eravm, _learningElement.Id, _comment);
                     break;
                 default:
                 {
                     IAdaptivityActionViewModel action = _tabs.ActivePanel == _contentPanel
-                        ? new ContentReferenceActionViewModel(_learningContent)
-                        : new ElementReferenceActionViewModel(_learningElement.Id);
+                        ? new ContentReferenceActionViewModel(_learningContent, _comment)
+                        : new ElementReferenceActionViewModel(_learningElement.Id, _comment);
                     PresentationLogic.CreateAdaptivityRule(
                         Question,
                         new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
