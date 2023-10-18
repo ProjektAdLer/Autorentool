@@ -62,7 +62,7 @@ public interface IAdvancedLearningSpaceCommandFactory
     ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
         Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex, string name,
         ILearningContent learningContent, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ElementModel elementModel, int workload, int points, double positionX, double positionY,
+        ElementModel elementModel, int workload, int points, 
         Action<IAdvancedLearningSpace> mappingAction);
     
     /// <summary>

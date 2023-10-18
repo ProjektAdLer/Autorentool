@@ -204,11 +204,19 @@ public interface IPresentationLogic
     /// <summary>
     /// Adds a learning element to an advanced learning space (in a slot).
     /// </summary>
-    /// <param name="advancedLearningSpaceVm">The target learning space.</param>
+    /// <param name="parentSpaceVm">The target advanced learning space.</param>
     /// <param name="slotIndex">The target slot.</param>
-    /// <param name="learningElementVm">The learning element to be added.</param>
-    void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, int slotIndex,
-        ILearningElementViewModel learningElementVm);
+    /// <param name="name">The name of the element.</param>
+    /// <param name="learningContentVm">The learning content viewmodel.</param>
+    /// <param name="description">The description of the element.</param>
+    /// <param name="goals">The goals associated with the element.</param>
+    /// <param name="difficulty">The difficulty of the element.</param>
+    /// <param name="elementModel">The model that should be used to depict the element.</param>
+    /// <param name="workload">The workload of the elements content.</param>
+    /// <param name="points">The points the element gives.</param>
+    void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel parentSpaceVm, int slotIndex,
+        string name, ILearningContentViewModel learningContentVm, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
     /// <summary>
     /// Deletes a learning element from an advanced learning space (from a slot).
     /// </summary>

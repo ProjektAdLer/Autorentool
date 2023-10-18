@@ -178,9 +178,19 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveSlotInSpace,
-            name, learningContent, description,
-            goals, difficulty, elementModel, workload, points);
+        if (LearningSpaceVm!.GetType() == typeof(AdvancedLearningSpaceViewModel))
+        {
+            _presentationLogic.AddLearningElementToAdvancedSlot((LearningSpaceVm as AdvancedLearningSpaceViewModel)!,
+                _selectedViewModelsProvider.ActiveSlotInSpace, name, learningContent, description,
+                goals, difficulty, elementModel, workload, points);
+        }
+        else
+        {
+            _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveSlotInSpace,
+                name, learningContent, description,
+                goals, difficulty, elementModel, workload, points);
+        }
+ 
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 

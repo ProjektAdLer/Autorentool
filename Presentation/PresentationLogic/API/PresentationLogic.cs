@@ -361,16 +361,16 @@ public class PresentationLogic : IPresentationLogic
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInAdvancedSlot"/>
     public void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel parentSpaceVm, int slotIndex,
-        ILearningElementViewModel learningElementVm)
+        string name, ILearningContentViewModel learningContentVm, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(parentSpaceVm);
-        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-
-        var command = AdvancedLearningSpaceCommandFactory.GetCreateElementInSlotCommand(parentSpaceEntity, slotIndex, elementEntity,
+        var learningContent = Mapper.Map<ILearningContent>(learningContentVm);
+        
+        var command = AdvancedLearningSpaceCommandFactory.GetCreateElementInSlotCommand(parentSpaceEntity, slotIndex, 
+            name, learningContent, description, goals, difficulty, elementModel, workload, points,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-
-        // SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
     }
     
     /// <inheritdoc cref="IPresentationLogic.DeleteAdvancedLearningElement"/>

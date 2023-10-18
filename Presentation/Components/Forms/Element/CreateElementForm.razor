@@ -12,6 +12,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
@@ -26,7 +27,7 @@
     <Fields>
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
-                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
+                                                                                                                                                                                                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"

@@ -114,7 +114,8 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         {
             if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
             {
-                PresentationL.SwitchAdvancedSlot((AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm, dropItem.Item, slotId);
+                PresentationL.SwitchAdvancedSlot((AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm, dropItem.Item,
+                    slotId);
             }
             else
             {
@@ -134,8 +135,9 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
             {
                 if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
                 {
-                    PresentationL.AddLearningElementToAdvancedSlot((AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm,
-                        slotId, dropItem.Item);
+                    PresentationL.PlaceLearningElementInAdvancedSlotFromUnplaced(WorldP.LearningWorldVm,
+                        (AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm,
+                        dropItem.Item, slotId);
                 }
                 else
                 {

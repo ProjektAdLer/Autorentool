@@ -14,13 +14,11 @@ public class CreateLearningElementInAdvancedSlot : ICreateLearningElementInAdvan
 
     public CreateLearningElementInAdvancedSlot(AdvancedLearningSpace parentSpace, int slotIndex, string name,
         ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
-        double positionY,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, 
         Action<AdvancedLearningSpace> mappingAction, ILogger<CreateLearningElementInAdvancedSlot> logger)
     {
         LearningElement = new LearningElement(name, learningContent, description, goals,
-            difficulty, elementModel, parentSpace, workload: workload, points: points, positionX: positionX,
-            positionY: positionY);
+            difficulty, elementModel, parentSpace, workload: workload, points: points);
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
         MappingAction = mappingAction;

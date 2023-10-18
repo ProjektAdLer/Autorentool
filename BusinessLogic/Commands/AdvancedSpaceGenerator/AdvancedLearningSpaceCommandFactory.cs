@@ -78,10 +78,9 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
     public ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
         Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex,
         string name, ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
-        double positionY, Action<IAdvancedLearningSpace> mappingAction) =>
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, Action<IAdvancedLearningSpace> mappingAction) =>
         new CreateLearningElementInAdvancedSlot(parentSpace, slotIndex, name, learningContent, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, mappingAction,
+            difficulty, elementModel, workload, points, mappingAction,
             LoggerFactory.CreateLogger<CreateLearningElementInAdvancedSlot>());
 
 
