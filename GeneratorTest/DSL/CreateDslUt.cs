@@ -218,9 +218,9 @@ public class CreateDslUt
         var rule1 = new AdaptivityRulePe(new CorrectnessTriggerPe(AnswerResult.Incorrect),
             new CommentActionPe("Bla bla bla"));
         var rule2 = new AdaptivityRulePe(new CorrectnessTriggerPe(AnswerResult.Incorrect),
-            new ElementReferenceActionPe(ele1.Id));
+            PersistEntityProvider.GetElementReferenceAction(ele1.Id));
         var rule3 = new AdaptivityRulePe(new CorrectnessTriggerPe(AnswerResult.Incorrect),
-            new ContentReferenceActionPe(content6));
+            PersistEntityProvider.GetContentReferenceAction(content6));
 
         var question1 =
             new MultipleChoiceSingleResponseQuestionPe("Aschaffenburg Stadtteile einfach", 0,

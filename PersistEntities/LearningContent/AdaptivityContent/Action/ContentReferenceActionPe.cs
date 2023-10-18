@@ -10,11 +10,12 @@ public class ContentReferenceActionPe : IAdaptivityActionPe
     /// </summary>
     /// <param name="content">Content to be referenced. Must not be <see cref="IAdaptivityContentPe"/>.</param>
     /// <exception cref="ArgumentException">Content was <see cref="IAdaptivityContentPe"/>.</exception>
-    public ContentReferenceActionPe(ILearningContentPe content)
+    public ContentReferenceActionPe(ILearningContentPe content, string comment)
     {
         if (content is IAdaptivityContentPe)
             throw new ArgumentException("Content cannot be an adaptivity content", nameof(content));
         Content = content;
+        Comment = comment;
         Id = Guid.NewGuid();
     }
 
@@ -24,10 +25,12 @@ public class ContentReferenceActionPe : IAdaptivityActionPe
     private ContentReferenceActionPe()
     {
         Content = null!;
+        Comment = "";
         Id = Guid.Empty;
     }
 
     [DataMember] public ILearningContentPe Content { get; set; }
+    [DataMember] public string Comment { get; set; }
     [IgnoreDataMember] public Guid Id { get; private set; }
 
     [OnDeserializing]

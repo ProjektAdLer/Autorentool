@@ -135,14 +135,16 @@ public static class ViewModelProvider
         return new CommentActionViewModel("a comment");
     }
 
-    public static ElementReferenceActionViewModel GetElementReferenceAction()
+    public static ElementReferenceActionViewModel GetElementReferenceAction(Guid? elementGuid = null, string comment = "")
     {
-        return new ElementReferenceActionViewModel(Guid.NewGuid());
+        elementGuid ??= Guid.NewGuid();
+        return new ElementReferenceActionViewModel(elementGuid.Value, comment);
     }
 
-    public static ContentReferenceActionViewModel GetContentReferenceAction()
+    public static ContentReferenceActionViewModel GetContentReferenceAction(ILearningContentViewModel? content = null, string comment = "")
     {
-        return new ContentReferenceActionViewModel(GetFileContent());
+        content ??= GetFileContent();
+        return new ContentReferenceActionViewModel(content, comment);
     }
 
     public static AdaptivityRuleViewModel GetRule(IAdaptivityQuestionViewModel? question = null)

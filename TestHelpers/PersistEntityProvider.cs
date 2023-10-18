@@ -127,15 +127,16 @@ public static class PersistEntityProvider
         return new CommentActionPe("comment");
     }
 
-    public static IAdaptivityActionPe GetContentReferenceAction()
+    public static IAdaptivityActionPe GetContentReferenceAction(FileContentPe? fileContentPe = null, string comment = "")
     {
-        return new ContentReferenceActionPe(GetLinkContent());
+        fileContentPe ??= GetFileContent();
+        return new ContentReferenceActionPe(fileContentPe, comment);
     }
 
-    private static IAdaptivityActionPe GetElementReferenceAction(Guid? elementId = null)
+    public static IAdaptivityActionPe GetElementReferenceAction(Guid? elementId = null, string comment = "")
     {
         elementId ??= Guid.NewGuid();
-        return new ElementReferenceActionPe(elementId.Value);
+        return new ElementReferenceActionPe(elementId.Value, comment);
     }
 
     private static IAdaptivityTriggerPe GetCorrectnessTrigger()

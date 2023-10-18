@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent;
 using Shared;
 using Shared.Adaptivity;
 
@@ -128,9 +129,10 @@ public static class EntityProvider
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
-    public static IAdaptivityAction GetContentReferenceAction()
+    public static IAdaptivityAction GetContentReferenceAction(ILearningContent? content = null, string comment = "")
     {
-        return new ContentReferenceAction(GetLinkContent());
+        content ??= GetLinkContent();
+        return new ContentReferenceAction(content, comment);
     }
 
     public static AdaptivityContent GetAdaptivityContent()
