@@ -65,7 +65,7 @@
                     }
 
                     @* draw space *@
-                    <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:10;stroke-opacity:0.5;fill-opacity:0" onmousedown="@AddCornerPoint">
+                    <polyline points="@GetSpaceCornerPointsString()" style="stroke:yellow;stroke-width:10;stroke-opacity:0.5;fill-opacity:0" @onmousedown="@(AddCornerPoint)">
                         <title>
                             @Localizer["AdvancedLearningSpaceEditor.SpaceDescriptions.SpaceOutline"]
                         </title>
