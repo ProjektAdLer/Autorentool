@@ -512,7 +512,7 @@ public class CreateDsl : ICreateDsl
             var optional = task.MinimumRequiredDifficulty == null;
             var adaptivityQuestions = MapAdaptivityQuestionsPeToJson(task.Questions);
             adaptivityTasks.Add(new AdaptivityTaskJson(taskId, task.Id.ToString(), task.Name, optional,
-                MapRequiredTaskDifficultyToInt(task.MinimumRequiredDifficulty), adaptivityQuestions));
+                MapRequiredQuestionDifficultyToInt(task.MinimumRequiredDifficulty), adaptivityQuestions));
             taskId++;
         }
 
@@ -608,17 +608,18 @@ public class CreateDsl : ICreateDsl
     {
         BaseLearningElementJson baseLearningElement;
         var elementId = _dictionaryIdToContentReferenceAction.First(x => x.Value.Id == contentReferenceAction.Id).Key;
+        var parentId = ListLearningSpaces.Count + 1;
         switch (contentReferenceAction.Content)
         {
             case FileContentPe fileContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
-                    MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
+                    MapFileContentToElementCategory(fileContentPe), fileContentPe.Type, parentId);
                 ListFileContent.Add((fileContentPe, fileContentPe.Name));
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),
-                    linkContentPe.Name, linkContentPe.Link, "video", "url");
+                    linkContentPe.Name, linkContentPe.Link, "video", "url", parentId);
                 break;
             case AdaptivityContentPe:
                 throw new ArgumentException("Reference from AdaptivityContent to AdaptivityContent is not supported");
@@ -646,31 +647,16 @@ public class CreateDsl : ICreateDsl
     /// <summary>
     /// Converts a question difficulty to its corresponding integer representation in the ATF.
     /// </summary>
-    private static int MapRequiredQuestionDifficultyToInt(QuestionDifficulty questionDifficulty)
+    private static int MapRequiredQuestionDifficultyToInt(QuestionDifficulty? questionDifficulty)
     {
         return questionDifficulty switch
-        {
-            QuestionDifficulty.Easy => 0,
-            QuestionDifficulty.Medium => 1,
-            QuestionDifficulty.Hard => 2,
-            _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
-                questionDifficulty, null)
-        };
-    }
-
-    /// <summary>
-    /// Converts a task's minimum required difficulty to its corresponding integer representation in the ATF.
-    /// </summary>
-    private static int MapRequiredTaskDifficultyToInt(QuestionDifficulty? taskMinimumRequiredDifficulty)
-    {
-        return taskMinimumRequiredDifficulty switch
         {
             QuestionDifficulty.Easy => 000,
             QuestionDifficulty.Medium => 100,
             QuestionDifficulty.Hard => 200,
             null => 000,
-            _ => throw new ArgumentOutOfRangeException(nameof(taskMinimumRequiredDifficulty),
-                taskMinimumRequiredDifficulty, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
+                questionDifficulty, null)
         };
     }
 
