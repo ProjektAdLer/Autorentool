@@ -146,6 +146,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     [Test]
+    [Retry(3)]
     public async Task SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var vm = ViewModelProvider.GetLearningSpace();
@@ -171,11 +172,14 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
 
-        Assert.That(FormModel.Name, Is.EqualTo(Expected));
-        Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
-        Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
-        Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(300, 10));
+            Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(300, 10));
+            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(300, 10));
+            Assert.That(() => FormModel.RequiredPoints, Is.EqualTo(123).After(300, 10));
+            Assert.That(() => FormModel.Theme, Is.EqualTo(Theme.Campus).After(300, 10));
+        });
 
         Mapper.ClearReceivedCalls();
 

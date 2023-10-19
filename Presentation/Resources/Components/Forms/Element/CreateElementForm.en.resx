@@ -98,4 +98,7 @@
     <data name="CreateElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
         <value>Edit adaptivity content</value>
     </data>
+    <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
+        <value>Representation in the 3D learning environment</value>
+    </data>
 </root>

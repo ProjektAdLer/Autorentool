@@ -57,6 +57,7 @@
 
     <ItemGroup>
       <Folder Include="View" />
+      <Folder Include="wwwroot\CustomIcons\FloorPlans" />
       <Folder Include="wwwroot\fonts" />
     </ItemGroup>
 

@@ -5,30 +5,45 @@
 @using Microsoft.Extensions.Localization
 @using Shared.Localization
 
-<div class="flex flex-col items-center mx-4">
+<style type="text/css">  
+   .mud-table-toolbar {
+   padding:  0;
+   margin:  0;
+   }
+   
+   th.mud-table-cell {
+   padding: 7px 0 0 0;
+   }      
+</style>
+
+<div class="flex flex-col items-center mx-2 2xl:mx-4">
     @if (Error)
     {
         <MudText Class="text-formerror">@ErrorText</MudText>
     }
-    <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
-              Class="@TableClasses" Outlined="true" Style="border-color: rgb(204,204,204)"
+    <div class="w-full grow h-full flex flex-col flex-nowrap mb-2 px-0 mx-0">
+    <MudTable Items="@Elements" Hover="true" @ref="_mudTable" HeaderClass="table-head-bordered" CustomHeader="true"
+              Class="@TableClasses" Virtualize="true" Striped="true" FixedHeader="true"
               RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
               Filter="Filter" Dense="true">
         <ToolBarContent>
-            <MudTextField @bind-Value="_searchString"
-                          Immediate="true"
-                          Placeholder="@Localizer["TableSelect.Placeholder"]"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+            <div class="bg-adlerbgbright rounded-lg flex flex-row gap-2 pb-2 px-2 w-full">
+                <MudTextField @bind-Value="_searchString"
+                              Immediate="true"
+                              Placeholder="@Localizer["TableSelect.Placeholder"]"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Outlined.Search"/>
+            </div>
         </ToolBarContent>
         <HeaderContent>
-            @HeaderContent
+            <MudTHeadRow Class="header-centered">@HeaderContent</MudTHeadRow>
         </HeaderContent>
         <RowTemplate>
             @RowTemplate.Invoke(context)
         </RowTemplate>
-    </MudTable>     
-</div>
+    </MudTable>   
+        </div>
+    </div>
 
 @code {
 

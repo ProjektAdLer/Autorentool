@@ -127,15 +127,17 @@ public static class PersistEntityProvider
         return new CommentActionPe("comment");
     }
 
-    public static IAdaptivityActionPe GetContentReferenceAction()
+    public static IAdaptivityActionPe GetContentReferenceAction(FileContentPe? fileContentPe = null,
+        string comment = "")
     {
-        return new ContentReferenceActionPe(GetLinkContent());
+        fileContentPe ??= GetFileContent();
+        return new ContentReferenceActionPe(fileContentPe, comment);
     }
 
-    private static IAdaptivityActionPe GetElementReferenceAction(Guid? elementId = null)
+    public static IAdaptivityActionPe GetElementReferenceAction(Guid? elementId = null, string comment = "")
     {
         elementId ??= Guid.NewGuid();
-        return new ElementReferenceActionPe(elementId.Value);
+        return new ElementReferenceActionPe(elementId.Value, comment);
     }
 
     private static IAdaptivityTriggerPe GetCorrectnessTrigger()
@@ -164,7 +166,7 @@ public static class PersistEntityProvider
     {
         var choices = new List<ChoicePe> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRulePe> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestionPe("questionTitle", 123, choices, "questionText", choices[0],
+        return new MultipleChoiceSingleResponseQuestionPe(123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy, rules);
     }
 
@@ -172,7 +174,7 @@ public static class PersistEntityProvider
     {
         var choices = new List<ChoicePe> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRulePe> {GetAdaptivityRule()};
-        return new MultipleChoiceMultipleResponseQuestionPe("questionTitle", 123, choices, choices, rules,
+        return new MultipleChoiceMultipleResponseQuestionPe(123, choices, choices, rules,
             "questionText", QuestionDifficulty.Easy);
     }
 

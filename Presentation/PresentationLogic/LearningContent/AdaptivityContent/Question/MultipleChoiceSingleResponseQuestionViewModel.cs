@@ -7,12 +7,11 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Quest
 /// </summary>
 public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQuestionViewModel
 {
-    public MultipleChoiceSingleResponseQuestionViewModel(string title, int expectedCompletionTime, string text,
+    public MultipleChoiceSingleResponseQuestionViewModel(int expectedCompletionTime, string text,
         ChoiceViewModel correctChoice, QuestionDifficulty difficulty, ICollection<ChoiceViewModel> choices,
         ICollection<IAdaptivityRuleViewModel>? rules = null)
     {
         Id = Guid.NewGuid();
-        Title = title;
         ExpectedCompletionTime = expectedCompletionTime;
         Text = text;
         CorrectChoice = correctChoice;
@@ -27,7 +26,6 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
     private MultipleChoiceSingleResponseQuestionViewModel()
     {
         Id = Guid.Empty;
-        Title = null!;
         ExpectedCompletionTime = 0;
         Choices = null!;
         Text = null!;
@@ -39,7 +37,6 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
     public ChoiceViewModel CorrectChoice { get; set; }
 
     public Guid Id { get; private set; }
-    public string Title { get; set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRuleViewModel> Rules { get; set; }

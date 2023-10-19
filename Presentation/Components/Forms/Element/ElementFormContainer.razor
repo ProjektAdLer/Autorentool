@@ -7,7 +7,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningElement
-<MudCard Class="overflow-auto">
+<MudCard Class="overflow-auto w-[70%]">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
         <MudTabs TabHeaderClass="sticky top-0 z-10 backdrop-blur-sm bg-adlerdeactivated/[.50]">
@@ -33,10 +33,10 @@
 
 </MudCard>
 
-<div class="flex flex-col items-center w-32 h-full bg-adlerdeactivated rounded-lg">
-    <p class="text-center mx-1 py-2 text-adlergrey-500 font-bold">@Localizer["ElementFormContainer.UnplacedElements.Title"]</p>
+<div class="flex flex-col items-center w-[30%] h-full bg-adlerdeactivated rounded-lg px-1.5">
+    <p class="text-xs 2xl:text-sm text-center mx-1 py-2 text-adlergrey-500 font-bold">@Localizer["ElementFormContainer.UnplacedElements.Title"]</p>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                 Class="overflow-y-auto overflow-x-hidden rounded-lg border-2 border-solid p-2 m-3 h-[85svh] w-11/12 bg-white">
+                 Class="overflow-y-auto overflow-x-hidden rounded-lg border-2 border-solid h-[85svh] w-full bg-white flex justify-center pt-1 px-1">
         <ItemRenderer>
         <DragDropLearningElement
                 LearningElement="@context"

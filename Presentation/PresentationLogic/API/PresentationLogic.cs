@@ -216,7 +216,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
+            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
         return;
 
         string GetWorldFilepath()
@@ -430,7 +430,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
+                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -807,42 +807,42 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceSingleResponseQuestion"/>
     public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceViewModel> choices,
         ChoiceViewModel correctChoice, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
         var command = QuestionCommandFactory.GetCreateMultipleChoiceSingleResponseQuestionCommand(taskEntity,
-            difficulty, title, questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
+            difficulty, questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
             task => CMapper.Map(taskEntity, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceMultipleResponseQuestion"/>
     public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty, string title, string questionText, ICollection<ChoiceViewModel> choices,
+        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceViewModel> choices,
         ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
         var command = QuestionCommandFactory.GetCreateMultipleChoiceMultipleResponseQuestionCommand(taskEntity,
-            difficulty, title, questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            difficulty, questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
             task => CMapper.Map(task, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceSingleResponseQuestion"/>
     public void EditMultipleChoiceSingleResponseQuestion(
-        MultipleChoiceSingleResponseQuestionViewModel questionViewModel, string title,
+        MultipleChoiceSingleResponseQuestionViewModel questionViewModel,
         string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
         int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceSingleResponseQuestion>(questionViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoiceEntity = Mapper.Map<Choice>(correctChoice);
-        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity, title,
+        var command = QuestionCommandFactory.GetEditMultipleChoiceSingleResponseQuestionCommand(questionEntity,
             questionText, choicesEntity, correctChoiceEntity, expectedCompletionTime,
             question => CMapper.Map(question, questionViewModel));
         BusinessLogic.ExecuteCommand(command);
@@ -850,13 +850,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceMultipleResponseQuestion"/>
     public void EditMultipleChoiceMultipleResponseQuestion(
-        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string title, string questionText,
+        MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string questionText,
         ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceMultipleResponseQuestion>(questionViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
         var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
-        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity, title,
+        var command = QuestionCommandFactory.GetEditMultipleChoiceMultipleResponseQuestionCommand(questionEntity,
             questionText, choicesEntity, correctChoicesEntity, expectedCompletionTime,
             question => CMapper.Map(question, questionViewModel));
         BusinessLogic.ExecuteCommand(command);
@@ -865,7 +865,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceQuestionWithTypeChange"/>
     public void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel taskViewModel,
         IMultipleChoiceQuestionViewModel question,
-        bool isSingleResponse, string title, string text, ICollection<ChoiceViewModel> choices,
+        bool isSingleResponse, string text, ICollection<ChoiceViewModel> choices,
         ICollection<ChoiceViewModel> correctChoices,
         int expectedCompletionTime)
     {
@@ -875,7 +875,7 @@ public class PresentationLogic : IPresentationLogic
         var correctChoicesEntity = Mapper.Map<ICollection<Choice>>(correctChoices);
         var command = QuestionCommandFactory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(taskEntity,
             questionEntity,
-            isSingleResponse, title, text, choicesEntity, correctChoicesEntity, expectedCompletionTime,
+            isSingleResponse, text, choicesEntity, correctChoicesEntity, expectedCompletionTime,
             task => CMapper.Map(task, taskViewModel));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -902,7 +902,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -934,7 +934,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -1054,9 +1054,9 @@ public class PresentationLogic : IPresentationLogic
             FileSystem.File.Delete(filepath);
         }
     }
-    
+
 #if DEBUG
-    
+
     public void ConstructDebugBackup(ILearningWorldViewModel world)
     {
         var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
@@ -1066,7 +1066,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ConstructBackup(entity, filepath);
         Logger.LogDebug("Written debug backup to {Filepath}", filepath);
     }
-    
+
 #endif
 
     #endregion
