@@ -46,11 +46,20 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
     public bool IsItemInDropZone(ILearningElementViewModel item, string dropzoneIdentifier)
     {
-        if (item.Parent != null)
+        if (item.Parent is LearningSpaceViewModel)
         {
             return
                 item.Parent.Id.ToString() +
                 item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key
+                == dropzoneIdentifier;
+        }
+
+        if (item.Parent is AdvancedLearningSpaceViewModel advancedLearningSpaceViewModel)
+        {
+            return
+                advancedLearningSpaceViewModel.Id.ToString() +
+                advancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.LearningElements
+                    .First(kvP => kvP.Value.Equals(item)).Key
                 == dropzoneIdentifier;
         }
 
@@ -81,9 +90,8 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
         if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
         {
-            var slotId = int.Parse(dropItem.DropzoneIdentifier.Substring(Guid.Empty.ToString().Length));
-            PresentationL.DeleteAdvancedLearningElementInSpace((AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm,
-                slotId, element);
+            PresentationL.RemoveLearningElementFromAdvancedSlot(WorldP.LearningWorldVm, (AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm,
+                element);
         }
         else
         {

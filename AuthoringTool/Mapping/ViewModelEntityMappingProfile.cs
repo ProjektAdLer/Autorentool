@@ -10,6 +10,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -26,6 +27,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
+using Shared;
 
 namespace AuthoringTool.Mapping;
 
@@ -83,36 +85,51 @@ public class ViewModelEntityMappingProfile : Profile
 
     private void CreateAdvancedLearningSpaceLayoutMap()
     {
-        CreateMap<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
-            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
-
-        CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
         CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore());
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedDecorations, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .AfterMap(MapAdvancedSpaceLayoutElements)
+            .AfterMap((entity, vm) =>
+            {
+                vm.AdvancedLearningElementSlots.Clear();
+                foreach (var (key, value) in entity.AdvancedLearningElementSlots)
+                {
+                    vm.AdvancedLearningElementSlots.Add(key,
+                        new AdvancedLearningElementSlotViewModel(Guid.Empty, key, value.PositionX, value.PositionY));
+                }
+            });
 
+        CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .AfterMap((vm, entity) =>
+            {
+                entity.AdvancedLearningElementSlots.Clear();
+                foreach (var (key, value) in vm.AdvancedLearningElementSlots)
+                {
+                    entity.AdvancedLearningElementSlots.Add(key,
+                        new Coordinate{PositionX = value.PositionX, PositionY = value.PositionY, Rotation = value.Rotation});
+                }
+            });
+            
         CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
             .As<AdvancedLearningSpaceLayoutViewModel>();
         CreateMap<AdvancedLearningSpaceLayoutViewModel, IAdvancedLearningSpaceLayout>()
             .As<AdvancedLearningSpaceLayout>();
         
         CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
-            /// your config here!
-            .ForMember(x => x.UsedIndices, opt => opt.Ignore()) 
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
-            .IncludeBase<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
+            // .ForMember(x => x.UsedIndices, opt => opt.Ignore()) 
+            // .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            // .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
+
             .ReverseMap()
-            /// your config here! aber andersrum
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, IAdvancedLearningSpaceLayout>()
+            .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
             ;
+        
     }
 
     private static void MapSpaceLayoutElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
@@ -144,8 +161,40 @@ public class ViewModelEntityMappingProfile : Profile
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
+    private static void MapAdvancedSpaceLayoutElements(IAdvancedLearningSpaceLayout source, AdvancedLearningSpaceLayoutViewModel destination,
+        ResolutionContext ctx)
+    {
+        //gather view models for all elements that are in source but not in destination
+        var sourceNewElementsViewModels = source.LearningElements
+            .Where(x => !SameIdAtSameIndexWithAdvancedLayout(destination, x))
+            .Select(tup =>
+                new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
+                    ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
+
+        //remove all elements from destination that are not in source
+        foreach (var (key, _) in destination.LearningElements.Where(x =>
+                     !source.LearningElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id)))
+        {
+            destination.LearningElements.Remove(key);
+        }
+
+        //map all elements that are in source and destination already into the respective destination element
+        foreach (var (key, value) in destination.LearningElements)
+        {
+            var entity = source.LearningElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(entity.Value, value);
+        }
+
+        destination.LearningElements = sourceNewElementsViewModels
+            .Union(destination.LearningElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
 
     private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
+        KeyValuePair<int, ILearningElement> kvp) =>
+        destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+    private static bool SameIdAtSameIndexWithAdvancedLayout(IAdvancedLearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
@@ -323,6 +372,13 @@ public class ViewModelEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+            })
+            .AfterMap((entity, vm) =>
+            {
+                foreach (var (_,value) in vm.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots)
+                {
+                    value.SpaceId = entity.Id;
                 }
             })
             .ReverseMap()

@@ -1,12 +1,12 @@
-using BusinessLogic.API;
-using BusinessLogic.Commands.AdvancedSpace.AdvancedLayout;
-using BusinessLogic.Commands.AdvancedSpace.Elements;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedLayout;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.Elements;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using Shared;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator;
 
 public interface IAdvancedLearningSpaceCommandFactory
 {
@@ -21,14 +21,14 @@ public interface IAdvancedLearningSpaceCommandFactory
     /// Creates a command to create a learning space.
     /// </summary>
     ICreateAdvancedLearningSpace GetCreateAdvancedLearningSpaceCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction);
 
     /// <summary>
     /// Creates a command to delete a learning space.
     /// </summary>
     IDeleteAdvancedLearningSpace GetDeleteAdvancedLearningSpaceCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction);
 
     /// <summary>
@@ -44,7 +44,7 @@ public interface IAdvancedLearningSpaceCommandFactory
     /// Creates a command to place learning elements from unplaced
     /// </summary>
     IPlaceLearningElementInAdvancedLayoutFromUnplaced GetPlaceFromUnplacedCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace, ILearningElement learningElement,
+        AdvancedLearningSpace advancedLearningSpace, ILearningElement learningElement,
         int newSlotIndex,
         Action<LearningWorld> mappingAction);
 
@@ -52,15 +52,22 @@ public interface IAdvancedLearningSpaceCommandFactory
     /// Creates a command to place learning elements from advanced layout
     /// </summary>
     IPlaceLearningElementInAdvancedLayoutFromAdvancedLayout GetPlaceFromAdvancedLayoutCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, ILearningElement learningElement,
+        AdvancedLearningSpace parentSpace, ILearningElement learningElement,
         int newSlotIndex,
         Action<IAdvancedLearningSpace> mappingAction);
+    
+    /// <summary>
+    /// Creates a command to remove element from AdvancedSpace and place into unplaced.
+    /// </summary>
+    IRemoveLearningElementFromAdvancedLayout GetRemoveFromAdvancedLayoutCommand(
+        LearningWorld learningWorld, AdvancedLearningSpace parentSpace, ILearningElement learningElement,
+        Action<ILearningWorld> mappingAction);
 
     /// <summary>
     /// Creates a command to create a learning element in an advanced slot
     /// </summary>
     ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex, string name,
+        AdvancedLearningSpace parentSpace, int slotIndex, string name,
         ILearningContent learningContent, string description, string goals, LearningElementDifficultyEnum difficulty,
         ElementModel elementModel, int workload, int points, 
         Action<IAdvancedLearningSpace> mappingAction);
@@ -69,13 +76,13 @@ public interface IAdvancedLearningSpaceCommandFactory
     /// Creates a command to create a learning element in an advanced slot
     /// </summary>
     ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex, LearningElement learningElement,
+        AdvancedLearningSpace parentSpace, int slotIndex, LearningElement learningElement,
         Action<IAdvancedLearningSpace> mappingAction);
 
         /// <summary>
     /// Creates a command to delete a learning element from an advanced space
     /// </summary>
     IDeleteLearningElementInAdvancedSpace GetDeleteElementInSlotCommand(
-        LearningElement learningElement, Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex,
+        LearningElement learningElement, AdvancedLearningSpace parentSpace, int slotIndex,
         Action<IAdvancedLearningSpace> mappingAction);
 }

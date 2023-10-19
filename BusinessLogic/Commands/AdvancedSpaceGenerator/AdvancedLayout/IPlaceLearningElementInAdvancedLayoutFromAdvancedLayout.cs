@@ -1,4 +1,4 @@
-namespace BusinessLogic.Commands.AdvancedSpace.AdvancedLayout;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedLayout;
 
 public interface IPlaceLearningElementInAdvancedLayoutFromAdvancedLayout: IUndoCommand
 {

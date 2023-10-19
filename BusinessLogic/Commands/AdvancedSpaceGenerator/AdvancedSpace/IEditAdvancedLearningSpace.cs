@@ -1,4 +1,4 @@
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
 
 public interface IEditAdvancedLearningSpace :IUndoCommand
 {

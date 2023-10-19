@@ -1,9 +1,10 @@
+using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
 
 public class EditAdvancedLearningSpace : IEditAdvancedLearningSpace
 {

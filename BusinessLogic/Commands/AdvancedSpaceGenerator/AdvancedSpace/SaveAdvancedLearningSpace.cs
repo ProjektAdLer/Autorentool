@@ -1,12 +1,12 @@
 using BusinessLogic.API;
-using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
 
 public class SaveAdvancedLearningSpace : ISaveAdvancedLearningSpace
 {
-    public SaveAdvancedLearningSpace(IBusinessLogic businessLogic, Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace, string filepath,
+    public SaveAdvancedLearningSpace(IBusinessLogic businessLogic, AdvancedLearningSpace advancedLearningSpace, string filepath,
         ILogger<SaveAdvancedLearningSpace> logger)
     {
         BusinessLogic = businessLogic;
@@ -16,7 +16,7 @@ public class SaveAdvancedLearningSpace : ISaveAdvancedLearningSpace
     }
 
     internal IBusinessLogic BusinessLogic { get; }
-    internal Entities.AdvancedLearningSpaces.AdvancedLearningSpace AdvancedLearningSpace { get; }
+    internal AdvancedLearningSpace AdvancedLearningSpace { get; }
     internal string Filepath { get; }
     private ILogger<SaveAdvancedLearningSpace> Logger { get; }
     public string Name => nameof(SaveAdvancedLearningSpace);

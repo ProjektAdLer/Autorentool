@@ -1,8 +1,9 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
 
 public class CreateAdvancedLearningSpace: ICreateAdvancedLearningSpace
 {
@@ -12,14 +13,14 @@ public class CreateAdvancedLearningSpace: ICreateAdvancedLearningSpace
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction, ILogger<CreateAdvancedLearningSpace> logger)
     {
-        AdvancedLearningSpace = new Entities.AdvancedLearningSpaces.AdvancedLearningSpace(name, description, goals, requiredPoints, theme, positionX: positionX,
+        AdvancedLearningSpace = new AdvancedLearningSpace(name, description, goals, requiredPoints, theme, positionX: positionX,
             positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
         Logger = logger;
     }
 
-    public CreateAdvancedLearningSpace(LearningWorld learningWorld, Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+    public CreateAdvancedLearningSpace(LearningWorld learningWorld, AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction, ILogger<CreateAdvancedLearningSpace> logger)
     {
         AdvancedLearningSpace = advancedLearningSpace;
@@ -29,7 +30,7 @@ public class CreateAdvancedLearningSpace: ICreateAdvancedLearningSpace
     }
 
     internal LearningWorld LearningWorld { get; }
-    internal Entities.AdvancedLearningSpaces.AdvancedLearningSpace AdvancedLearningSpace { get; }
+    internal AdvancedLearningSpace AdvancedLearningSpace { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private ILogger<CreateAdvancedLearningSpace> Logger { get; }
     public string Name => nameof(CreateAdvancedLearningSpace);

@@ -202,6 +202,14 @@ public interface IPresentationLogic
     void SwitchAdvancedSlot(IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, 
         ILearningElementViewModel learningElementVm, int newSlotIndex);
     /// <summary>
+    /// Removes a learning element from an advanced space and places it in unplaced.
+    /// </summary>
+    /// <param name="learningWorldVm">The containing world.</param>
+    /// <param name="advancedLearningSpaceVm">The containing space.</param>
+    /// <param name="learningElementVm">The target element.</param>
+    void RemoveLearningElementFromAdvancedSlot(ILearningWorldViewModel learningWorldVm,
+        IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, ILearningElementViewModel learningElementVm);
+    /// <summary>
     /// Adds a learning element to an advanced learning space (in a slot).
     /// </summary>
     /// <param name="parentSpaceVm">The target advanced learning space.</param>

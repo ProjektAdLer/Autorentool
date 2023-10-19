@@ -1,9 +1,8 @@
-using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessLogic.Commands.AdvancedSpace.AdvancedLayout;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedLayout;
 
 public class PlaceLearningElementInAdvancedLayoutFromAdvancedLayout : IPlaceLearningElementInAdvancedLayoutFromAdvancedLayout
 {

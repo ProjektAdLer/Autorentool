@@ -1,9 +1,8 @@
-using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessLogic.Commands.AdvancedSpace.Elements;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.Elements;
 
 public class DeleteLearningElementInAdvancedSpace : IDeleteLearningElementInAdvancedSpace
 {

@@ -1,11 +1,10 @@
-using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace BusinessLogic.Commands.AdvancedSpace.Elements;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.Elements;
 
 public class CreateLearningElementInAdvancedSlot : ICreateLearningElementInAdvancedSlot
 {

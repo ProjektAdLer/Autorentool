@@ -1,13 +1,14 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Microsoft.Extensions.Logging;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
 
 public class DeleteAdvancedLearningSpace : IDeleteAdvancedLearningSpace
 {
     private IMemento? _memento;
 
-    public DeleteAdvancedLearningSpace(LearningWorld learningWorld, Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+    public DeleteAdvancedLearningSpace(LearningWorld learningWorld, AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction, ILogger<DeleteAdvancedLearningSpace> logger)
     {
         LearningWorld = learningWorld;
@@ -17,7 +18,7 @@ public class DeleteAdvancedLearningSpace : IDeleteAdvancedLearningSpace
     }
 
     internal LearningWorld LearningWorld { get; }
-    internal Entities.AdvancedLearningSpaces.AdvancedLearningSpace AdvancedLearningSpace { get; }
+    internal AdvancedLearningSpace AdvancedLearningSpace { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private ILogger<DeleteAdvancedLearningSpace> Logger { get; }
     public string Name => nameof(DeleteAdvancedLearningSpace);

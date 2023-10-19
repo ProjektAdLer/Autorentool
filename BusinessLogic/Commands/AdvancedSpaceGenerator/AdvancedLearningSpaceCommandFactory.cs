@@ -1,14 +1,13 @@
-using BusinessLogic.API;
-using BusinessLogic.Commands.AdvancedSpace.AdvancedLayout;
-using BusinessLogic.Commands.AdvancedSpace.Elements;
-using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedLayout;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.AdvancedSpace;
+using BusinessLogic.Commands.AdvancedSpaceGenerator.Elements;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace BusinessLogic.Commands.Space.AdvancedLearningSpace;
+namespace BusinessLogic.Commands.AdvancedSpaceGenerator;
 
 public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommandFactory
 {
@@ -31,13 +30,13 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
             topic, mappingAction, LoggerFactory.CreateLogger<CreateAdvancedLearningSpace>());
 
     public ICreateAdvancedLearningSpace GetCreateAdvancedLearningSpaceCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction) =>
         new CreateAdvancedLearningSpace(learningWorld, advancedLearningSpace, mappingAction,
             LoggerFactory.CreateLogger<CreateAdvancedLearningSpace>());
 
     public IDeleteAdvancedLearningSpace GetDeleteAdvancedLearningSpaceCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace,
+        AdvancedLearningSpace advancedLearningSpace,
         Action<LearningWorld> mappingAction) =>
         new DeleteAdvancedLearningSpace(learningWorld, advancedLearningSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteAdvancedLearningSpace>());
@@ -56,7 +55,7 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
     #region AdvancedLearningSpaceLayout
 
     public IPlaceLearningElementInAdvancedLayoutFromUnplaced GetPlaceFromUnplacedCommand(LearningWorld learningWorld,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace advancedLearningSpace, ILearningElement learningElement,
+        AdvancedLearningSpace advancedLearningSpace, ILearningElement learningElement,
         int newSlotIndex,
         Action<LearningWorld> mappingAction) =>
         new PlaceLearningElementInAdvancedLayoutFromUnplaced(learningWorld, advancedLearningSpace, learningElement,
@@ -64,11 +63,18 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
             mappingAction, LoggerFactory.CreateLogger<PlaceLearningElementInAdvancedLayoutFromUnplaced>());
 
     public IPlaceLearningElementInAdvancedLayoutFromAdvancedLayout GetPlaceFromAdvancedLayoutCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace,
+        AdvancedLearningSpace parentSpace,
         ILearningElement learningElement, int newSlotIndex, Action<IAdvancedLearningSpace> mappingAction) =>
         new PlaceLearningElementInAdvancedLayoutFromAdvancedLayout(parentSpace, learningElement, newSlotIndex,
             mappingAction,
             LoggerFactory.CreateLogger<PlaceLearningElementInAdvancedLayoutFromAdvancedLayout>());
+
+    public IRemoveLearningElementFromAdvancedLayout GetRemoveFromAdvancedLayoutCommand(LearningWorld learningWorld,
+        AdvancedLearningSpace parentSpace, ILearningElement learningElement,
+        Action<ILearningWorld> mappingAction)
+        =>
+            new RemoveLearningElementFromAdvancedLayout(learningWorld, parentSpace, learningElement, mappingAction,
+                LoggerFactory.CreateLogger<RemoveLearningElementFromAdvancedLayout>());
 
     #endregion
 
@@ -76,23 +82,24 @@ public class AdvancedLearningSpaceCommandFactory : IAdvancedLearningSpaceCommand
     #region Elements
 
     public ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex,
+        AdvancedLearningSpace parentSpace, int slotIndex,
         string name, ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, Action<IAdvancedLearningSpace> mappingAction) =>
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        Action<IAdvancedLearningSpace> mappingAction) =>
         new CreateLearningElementInAdvancedSlot(parentSpace, slotIndex, name, learningContent, description, goals,
             difficulty, elementModel, workload, points, mappingAction,
             LoggerFactory.CreateLogger<CreateLearningElementInAdvancedSlot>());
 
 
     public ICreateLearningElementInAdvancedSlot GetCreateElementInSlotCommand(
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex,
+        AdvancedLearningSpace parentSpace, int slotIndex,
         LearningElement learningElement, Action<IAdvancedLearningSpace> mappingAction) =>
         new CreateLearningElementInAdvancedSlot(parentSpace, slotIndex, learningElement, mappingAction,
             LoggerFactory.CreateLogger<CreateLearningElementInAdvancedSlot>());
 
 
     public IDeleteLearningElementInAdvancedSpace GetDeleteElementInSlotCommand(LearningElement learningElement,
-        Entities.AdvancedLearningSpaces.AdvancedLearningSpace parentSpace, int slotIndex,
+        AdvancedLearningSpace parentSpace, int slotIndex,
         Action<IAdvancedLearningSpace> mappingAction) =>
         new DeleteLearningElementInAdvancedSpace(learningElement, parentSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInAdvancedSpace>());

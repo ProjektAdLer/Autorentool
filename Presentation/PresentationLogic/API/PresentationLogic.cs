@@ -4,12 +4,12 @@ using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Task;
+using BusinessLogic.Commands.AdvancedSpaceGenerator;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
-using BusinessLogic.Commands.Space.AdvancedLearningSpace;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
@@ -358,8 +358,20 @@ public class PresentationLogic : IPresentationLogic
             SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
         }
     }
+    /// <inheritdoc cref="IPresentationLogic.RemoveLearningElementFromAdvancedSlot"/>
+    public void RemoveLearningElementFromAdvancedSlot(ILearningWorldViewModel learningWorldVm,
+        IAdvancedLearningSpaceViewModel advancedLearningSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.AdvancedLearningSpaces.AdvancedLearningSpace>(advancedLearningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = AdvancedLearningSpaceCommandFactory.GetRemoveFromAdvancedLayoutCommand(worldEntity, spaceEntity, elementEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
     
-    /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInAdvancedSlot"/>
+    /// <inheritdoc cref="IPresentationLogic.AddLearningElementToAdvancedSlot"/>
     public void AddLearningElementToAdvancedSlot(IAdvancedLearningSpaceViewModel parentSpaceVm, int slotIndex,
         string name, ILearningContentViewModel learningContentVm, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
