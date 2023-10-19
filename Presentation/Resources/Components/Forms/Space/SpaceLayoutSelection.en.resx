@@ -14,4 +14,7 @@
     <data name="ArgumentException.Message" xml:space="preserve">
         <value>LearningSpaceViewModel does not match LearningSpacePresenter.LearningSpaceVm</value>
     </data>
+    <data name="SpaceLayoutSelection.MudTooltip.CarouselText" xml:space="preserve">
+        <value>Presentation in the 3D learning environment</value>
+    </data>
 </root>
