@@ -1,10 +1,10 @@
 using System.Xml.Serialization;
 
-namespace Generator.XmlClasses.Entities._activities.AdLerAdaptivity.xml;
+namespace Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 
-public class ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityAttempt
+public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityAttempt
 {
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityAttempt()
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityAttempt()
     {
     }
 

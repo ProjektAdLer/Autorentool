@@ -1,18 +1,18 @@
 using System.Xml.Serialization;
 using Generator.WorldExport;
 
-namespace Generator.XmlClasses.Entities._activities.AdLerAdaptivity.xml;
+namespace Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 
 [XmlRoot(ElementName = "activity")]
-public class ActivitiesAdLerAdaptivityXmlActivity : IActivitiesAdLerAdaptivityXmlActivity
+public class ActivitiesAdleradaptivityXmlActivity : IActivitiesAdleradaptivityXmlActivity
 {
-    public ActivitiesAdLerAdaptivityXmlActivity()
+    public ActivitiesAdleradaptivityXmlActivity()
     {
         Id = "0";
         ModuleId = "0";
     }
 
-    public ActivitiesAdLerAdaptivityXmlActivity(string id)
+    public ActivitiesAdleradaptivityXmlActivity(string id)
     {
         Id = id;
         ModuleId = id;
@@ -33,5 +33,5 @@ public class ActivitiesAdLerAdaptivityXmlActivity : IActivitiesAdLerAdaptivityXm
     }
 
     [XmlElement("adleradaptivity")]
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivity AdlerAdaptivity { get; set; } = new();
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivity Adleradaptivity { get; set; } = new();
 }

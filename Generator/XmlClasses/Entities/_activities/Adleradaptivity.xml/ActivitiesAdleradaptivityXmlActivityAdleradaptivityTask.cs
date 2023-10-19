@@ -1,10 +1,10 @@
 using System.Xml.Serialization;
 
-namespace Generator.XmlClasses.Entities._activities.AdLerAdaptivity.xml;
+namespace Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 
-public class ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask
+public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask
 {
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask()
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask()
     {
         Id = "0";
         Title = "";
@@ -13,7 +13,7 @@ public class ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask
         RequiredDifficulty = "0";
     }
 
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask(int id, string title, string uuid, int optional,
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(int id, string title, string uuid, int optional,
         string requiredDifficulty)
     {
         Id = id.ToString();
@@ -34,5 +34,5 @@ public class ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask
     [XmlElement("required_difficulty")] public string RequiredDifficulty { get; set; }
 
     [XmlElement("questions")]
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTaskQuestions Questions { get; set; } = new();
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestions Questions { get; set; } = new();
 }

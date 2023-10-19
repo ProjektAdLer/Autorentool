@@ -2,7 +2,7 @@ using System.Globalization;
 using System.IO.Abstractions;
 using Generator.DSL;
 using Generator.DSL.AdaptivityElement;
-using Generator.XmlClasses.Entities._activities.AdLerAdaptivity.xml;
+using Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -26,7 +26,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradeBook = null,
-        IActivitiesAdLerAdaptivityXmlActivity? activityAdLerAdaptivityXmlActivity = null,
+        IActivitiesAdleradaptivityXmlActivity? activityAdLerAdaptivityXmlActivity = null,
         IActivitiesRolesXmlRoles? roles = null, IActivitiesModuleXmlModule? module = null,
         IActivitiesGradeHistoryXmlGradeHistory? gradeHistory = null,
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
@@ -51,8 +51,8 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
 
-        ActivitiesAdLerAdaptivityXmlActivity =
-            activityAdLerAdaptivityXmlActivity ?? new ActivitiesAdLerAdaptivityXmlActivity();
+        ActivitiesAdleradaptivityXmlActivity =
+            activityAdLerAdaptivityXmlActivity ?? new ActivitiesAdleradaptivityXmlActivity();
 
         _adaptivityElementId = "0";
         _adaptivityElementName = "";
@@ -72,7 +72,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
     private IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
 
     private IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    private IActivitiesAdLerAdaptivityXmlActivity ActivitiesAdLerAdaptivityXmlActivity { get; set; }
+    private IActivitiesAdleradaptivityXmlActivity ActivitiesAdleradaptivityXmlActivity { get; set; }
 
     private IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
 
@@ -120,40 +120,40 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesGradesXmlActivityGradebook.GradeItems =
             ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
 
-        ActivitiesGradesXmlActivityGradebook.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesGradesXmlActivityGradebook.Serialize("adleradaptivity", _adaptivityElementId);
 
-        //file activities/adaptivity_.../adlerAdaptivity.xml
-        ActivitiesAdLerAdaptivityXmlActivity = new ActivitiesAdLerAdaptivityXmlActivity(_adaptivityElementId);
+        //file activities/adaptivity_.../adleradaptivity.xml
+        ActivitiesAdleradaptivityXmlActivity = new ActivitiesAdleradaptivityXmlActivity(_adaptivityElementId);
 
-        ActivitiesAdLerAdaptivityXmlActivity.AdlerAdaptivity =
-            new ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivity(_adaptivityElementId, _adaptivityElementName);
+        ActivitiesAdleradaptivityXmlActivity.Adleradaptivity =
+            new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(_adaptivityElementId, _adaptivityElementName);
 
         foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTask)
         {
             var optional = task.Optional ? 1 : 0;
 
             var activitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask =
-                new ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask(task.TaskId, task.TaskTitle, task.TaskUUID,
+                new ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(task.TaskId, task.TaskTitle, task.TaskUUID,
                     optional, task.RequiredDifficulty.ToString());
 
             foreach (var question in task.AdaptivityQuestions)
             {
                 activitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask.Questions.Questions
-                    .Add(new ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTaskQuestion(question.QuestionId,
+                    .Add(new ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestion(question.QuestionId,
                         question.QuestionDifficulty));
             }
 
-            ActivitiesAdLerAdaptivityXmlActivity.AdlerAdaptivity.Tasks.Tasks
+            ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.Tasks.Tasks
                 .Add(activitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask);
         }
 
-        ActivitiesAdLerAdaptivityXmlActivity.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesAdleradaptivityXmlActivity.Serialize("adleradaptivity", _adaptivityElementId);
 
         //file activities/adaptivity_.../roles.xml
-        ActivitiesRolesXmlRoles.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesRolesXmlRoles.Serialize("adleradaptivity", _adaptivityElementId);
 
         //file activities/adaptivity_.../module.xml
-        ActivitiesModuleXmlModule.ModuleName = "adlerAdaptivity";
+        ActivitiesModuleXmlModule.ModuleName = "adleradaptivity";
         ActivitiesModuleXmlModule.ShowDescription = "1";
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.SectionId = _adaptivityElementParentSpaceId;
@@ -166,10 +166,10 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
             _adaptivityElementPoints.ToString("F5", CultureInfo.InvariantCulture);
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = _adaptivityElementUuid;
 
-        ActivitiesModuleXmlModule.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesModuleXmlModule.Serialize("adleradaptivity", _adaptivityElementId);
 
         //file activities/adaptivity_.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesGradeHistoryXmlGradeHistory.Serialize("adleradaptivity", _adaptivityElementId);
 
         //file activities/adaptivity_.../inforef.xml
         ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
@@ -180,13 +180,13 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
             ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
             new ActivitiesInforefXmlGradeItemref();
 
-        ActivitiesInforefXmlInforef.Serialize("adlerAdaptivity", _adaptivityElementId);
+        ActivitiesInforefXmlInforef.Serialize("adleradaptivity", _adaptivityElementId);
     }
 
     private void CreateActivityFolder(string moduleId)
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
-            "adlerAdaptivity_" + moduleId));
+            "adleradaptivity_" + moduleId));
     }
 }

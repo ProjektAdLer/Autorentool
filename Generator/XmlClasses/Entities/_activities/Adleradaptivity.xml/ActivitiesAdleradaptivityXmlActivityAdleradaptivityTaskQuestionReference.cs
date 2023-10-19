@@ -1,16 +1,16 @@
 using System.Xml.Serialization;
 
-namespace Generator.XmlClasses.Entities._activities.AdLerAdaptivity.xml;
+namespace Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 
-public class ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTaskQuestionReference
+public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestionReference
 {
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTaskQuestionReference()
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestionReference()
     {
         Id = "0";
         QuestionBankEntryId = "0";
     }
 
-    public ActivitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTaskQuestionReference(int id)
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestionReference(int id)
     {
         Id = id.ToString();
         QuestionBankEntryId = id.ToString();
