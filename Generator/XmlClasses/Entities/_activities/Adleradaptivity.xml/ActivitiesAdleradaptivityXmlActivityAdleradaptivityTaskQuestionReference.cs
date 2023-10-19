@@ -18,13 +18,13 @@ public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTaskQuestionRefe
 
     [XmlAttribute("id")] public string Id { get; set; }
 
-    [XmlAttribute("usingcontextid")] public string UsingContextId { get; set; } = "0";
+    [XmlElement("usingcontextid")] public string UsingContextId { get; set; } = "0";
 
-    [XmlAttribute("component")] public string Component { get; set; } = "mod_adleradaptivity";
+    [XmlElement("component")] public string Component { get; set; } = "mod_adleradaptivity";
 
-    [XmlAttribute("questionarea")] public string QuestionArea { get; set; } = "question";
+    [XmlElement("questionarea")] public string QuestionArea { get; set; } = "question";
 
-    [XmlAttribute("questionbankentryid")] public string QuestionBankEntryId { get; set; }
+    [XmlElement("questionbankentryid")] public string QuestionBankEntryId { get; set; }
 
-    [XmlAttribute("version")] public string Version { get; set; } = "1";
+    [XmlElement("version")] public string Version { get; set; } = "1";
 }

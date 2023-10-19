@@ -22,6 +22,8 @@ public class
 
     [XmlAttribute(AttributeName = "id")] public string Id { get; set; }
 
+    [XmlElement(ElementName = "layout")] public string Layout { get; set; } = "0";
+
     [XmlElement(ElementName = "single")] public string Single { get; set; }
 
     [XmlElement(ElementName = "shuffleanswers")]

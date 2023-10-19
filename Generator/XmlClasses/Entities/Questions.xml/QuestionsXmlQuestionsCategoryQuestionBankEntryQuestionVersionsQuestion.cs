@@ -32,7 +32,7 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
     public string GeneralFeedback { get; set; } = "";
 
     [XmlElement(ElementName = "generalfeedbackformat")]
-    public string GeneralFeedbackFormat { get; set; } = "";
+    public string GeneralFeedbackFormat { get; set; } = "1";
 
     [XmlElement(ElementName = "defaultmark")]
     public string DefaultMark { get; set; } = "1.0000000";
