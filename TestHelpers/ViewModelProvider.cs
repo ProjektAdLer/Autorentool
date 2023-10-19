@@ -130,9 +130,9 @@ public static class ViewModelProvider
         return new CompositeTriggerViewModel(type, leftSide, rightSide);
     }
 
-    public static CommentActionViewModel GetCommentAction()
+    public static CommentActionViewModel GetCommentAction(string? comment = null)
     {
-        return new CommentActionViewModel("a comment");
+        return new CommentActionViewModel(comment ?? "a comment");
     }
 
     public static ElementReferenceActionViewModel GetElementReferenceAction()
