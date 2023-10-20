@@ -51,7 +51,7 @@ public class MoodleBackupXmlInformationUt
             Assert.That(systemUnderTest.MnetRemoteUsers, Is.EqualTo("0"));
             Assert.That(systemUnderTest.IncludeFiles, Is.EqualTo("1"));
             Assert.That(systemUnderTest.IncludeFileReferencesToExternalContent, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.OriginalWwwRoot, Is.EqualTo("https://moodle.cluuub.xyz"));
+            Assert.That(systemUnderTest.OriginalWwwRoot, Is.EqualTo("https://moodle.projekt-adler.eu"));
             Assert.That(systemUnderTest.OriginalSiteIdentifierHash, Is.EqualTo("c9629ccd3c092478330b78bdf4dcdb18"));
             Assert.That(systemUnderTest.OriginalCourseId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.OriginalCourseFormat, Is.EqualTo("topics"));
