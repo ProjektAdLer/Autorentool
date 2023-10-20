@@ -13,7 +13,8 @@
 @using Shared.Adaptivity
 <div class="w-[800px] h-80 flex flex-col">
     <MudTabs @ref="_tabs" Class="h-full">
-        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]">
+        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
+                     Class="tab-panel-content">
             <!-- Content reference -->
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
@@ -25,7 +26,8 @@
                 </GridSelect>
             </MudForm>
         </MudTabPanel>
-        <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]">
+        <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
+                     Class="tab-panel-element">
             <!-- Element reference -->
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>

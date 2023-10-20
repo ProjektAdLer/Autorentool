@@ -50,17 +50,16 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
     [TearDown]
     public void Teardown()
     {
-        Dialog.Close();
         DialogProvider.Dispose();
     }
 
     [Test]
-    public void NoExistingAction_TextSet_CallsCreateAdaptivityRule()
+    public async Task NoExistingAction_TextSet_CallsCreateAdaptivityRule()
     {
         var textField = DialogProvider.FindComponent<MudTextField<string>>();
         textField.Find("input").Change("foo");
 
-        DialogProvider.FindComponent<MudButton>().Find("button").Click();
+        await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.Received(1).CreateAdaptivityRule(Question,
             Arg.Is<CorrectnessTriggerViewModel>(arg => arg.ExpectedAnswer == AnswerResult.Incorrect),
