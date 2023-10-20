@@ -53,12 +53,10 @@
         {
             if (ExistingAction is not null)
             {
-                if(_comment == ExistingAction.Comment)
+                if (_comment != ExistingAction.Comment)
                 {
-                    DialogInstance.Close();
-                    return;
+                    PresentationLogic.EditCommentAction(ExistingAction, _comment);
                 }
-                PresentationLogic.EditCommentAction(ExistingAction, _comment);
             }
             else
             {
