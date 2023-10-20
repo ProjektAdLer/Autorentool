@@ -6,14 +6,14 @@ public class AdaptivityContentJson : IAdaptivityContentJson
 {
     [JsonConstructor]
     public AdaptivityContentJson(string introText, bool shuffleTasks,
-        List<IAdaptivityTaskJson> adaptivityTask)
+        List<IAdaptivityTaskJson> adaptivityTasks)
     {
         IntroText = introText;
         ShuffleTasks = shuffleTasks;
-        AdaptivityTask = adaptivityTask;
+        AdaptivityTasks = adaptivityTasks;
     }
 
     public string IntroText { get; set; }
     public bool ShuffleTasks { get; set; }
-    public List<IAdaptivityTaskJson> AdaptivityTask { get; set; }
+    public List<IAdaptivityTaskJson> AdaptivityTasks { get; set; }
 }

@@ -141,7 +141,7 @@ public class CreateDslUt
             PersistEntityProvider.GetLearningSpace(name: "Space3", learningSpaceLayout: mockLearningSpaceLayout3);
 
 
-        var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
+        var mockSpaces = new List<LearningSpacePe> { mockSpace1, mockSpace2, mockSpace3 };
 
         var mockFileSystem = new MockFileSystem();
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
@@ -234,13 +234,13 @@ public class CreateDslUt
             new List<ChoicePe> { choice1, choice2 }, "Schwere Frage 1", choice2, QuestionDifficulty.Hard,
             new List<IAdaptivityRulePe> { rule3 });
 
-        var task1 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> {question1, question2},
+        var task1 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> { question1, question2 },
             QuestionDifficulty.Medium, "Stadtteile AB");
-        var task2 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> {question3},
+        var task2 = new AdaptivityTaskPe(new List<IAdaptivityQuestionPe> { question3 },
             null, "Schwere Frage 1");
 
         var adaptivityContent2 = new AdaptivityContentPe("Abschlussquiz zur Stadt Aschaffenburg",
-            new List<IAdaptivityTaskPe> {task1, task2});
+            new List<IAdaptivityTaskPe> { task1, task2 });
 
         var ele7 = PersistEntityProvider.GetLearningElement(name: "ele7", content: adaptivityContent2);
 
@@ -316,20 +316,20 @@ public class CreateDslUt
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
             new List<IObjectInPathWayPe>());
 
-        space1.OutBoundObjects = new List<IObjectInPathWayPe> {space2};
-        space2.InBoundObjects = new List<IObjectInPathWayPe> {space1};
+        space1.OutBoundObjects = new List<IObjectInPathWayPe> { space2 };
+        space2.InBoundObjects = new List<IObjectInPathWayPe> { space1 };
 
-        space2.OutBoundObjects = new List<IObjectInPathWayPe> {condition1};
-        condition1.InBoundObjects = new List<IObjectInPathWayPe> {space2, space3};
+        space2.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
+        condition1.InBoundObjects = new List<IObjectInPathWayPe> { space2, space3 };
 
-        space3.OutBoundObjects = new List<IObjectInPathWayPe> {condition1};
+        space3.OutBoundObjects = new List<IObjectInPathWayPe> { condition1 };
 
-        condition1.OutBoundObjects = new List<IObjectInPathWayPe> {space4};
-        space4.InBoundObjects = new List<IObjectInPathWayPe> {condition1};
+        condition1.OutBoundObjects = new List<IObjectInPathWayPe> { space4 };
+        space4.InBoundObjects = new List<IObjectInPathWayPe> { condition1 };
 
-        var learningSpaces = new List<LearningSpacePe> {space1, space2, space3, space4};
-        var conditions = new List<PathWayConditionPe> {condition1};
-        var topics = new List<TopicPe> {topic1, topic2};
+        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3, space4 };
+        var conditions = new List<PathWayConditionPe> { condition1 };
+        var topics = new List<TopicPe> { topic1, topic2 };
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
@@ -341,11 +341,11 @@ public class CreateDslUt
         //Every Element except Content with "url" is added to the comparison list.
         var listFileContent = new List<(FileContentPe, string)>
         {
-            ((FileContentPe) ele1.LearningContent, ele1.Name),
-            ((FileContentPe) ele2.LearningContent, ele2.Name),
-            ((FileContentPe) ele5.LearningContent, ele5.Name),
+            ((FileContentPe)ele1.LearningContent, ele1.Name),
+            ((FileContentPe)ele2.LearningContent, ele2.Name),
+            ((FileContentPe)ele5.LearningContent, ele5.Name),
             (content6, content6.Name),
-            ((FileContentPe) ele4.LearningContent, ele4.Name)
+            ((FileContentPe)ele4.LearningContent, ele4.Name)
         };
 
         //Act
@@ -383,15 +383,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementUUID, Is.EqualTo(ele1.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementFileType, Is.EqualTo("h5p"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementCategory, Is.EqualTo("h5p"));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[0]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementMaxScore,
                 Is.EqualTo(ele1.Points));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[0]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementDescription,
                 Is.EqualTo(ele1.Description));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
                 Is.EqualTo(ele1.Goals.Split("\n")));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
                 Is.EqualTo(ele1.ElementModel.ToString()));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementName, Is.EqualTo(ele2.Name));
@@ -399,15 +399,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementUUID, Is.EqualTo(ele2.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementFileType, Is.EqualTo("png"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementCategory, Is.EqualTo("image"));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[1]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementMaxScore,
                 Is.EqualTo(ele2.Points));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[1]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementDescription,
                 Is.EqualTo(ele2.Description));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
                 Is.EqualTo(ele2.Goals.Split("\n")));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
                 Is.EqualTo(ele2.ElementModel.ToString()));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementName, Is.EqualTo(ele5.Name));
@@ -415,15 +415,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementUUID, Is.EqualTo(ele5.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementFileType, Is.EqualTo("pdf"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementCategory, Is.EqualTo("pdf"));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[2]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementMaxScore,
                 Is.EqualTo(ele5.Points));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[2]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementDescription,
                 Is.EqualTo(ele5.Description));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
                 Is.EqualTo(ele5.Goals.Split("\n")));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
                 Is.EqualTo(ele5.ElementModel.ToString()));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
             //AdaptivityElement with ContentReferenceAction
@@ -432,176 +432,179 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementUUID, Is.EqualTo(ele7.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementFileType, Is.EqualTo("adaptivity"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementCategory, Is.EqualTo("adaptivity"));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).ElementMaxScore,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementMaxScore,
                 Is.EqualTo(ele7.Points));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).ElementDescription,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementDescription,
                 Is.EqualTo(ele7.Description));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).ElementGoals,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementGoals,
                 Is.EqualTo(ele7.Goals.Split("\n")));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).ElementModel,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementModel,
                 Is.EqualTo(ele7.ElementModel.ToString()));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent.IntroText,
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent.IntroText,
                 Is.EqualTo(adaptivityContent2.Name));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].TaskTitle, Is.EqualTo(task1.Name));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].TaskTitle, Is.EqualTo(task1.Name));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].TaskId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].TaskId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].TaskUUID, Is.EqualTo(task1.Id.ToString()));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].TaskUUID, Is.EqualTo(task1.Id.ToString()));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].Optional, Is.EqualTo(false));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].Optional, Is.EqualTo(false));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].RequiredDifficulty, Is.EqualTo(100));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].RequiredDifficulty, Is.EqualTo(100));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question1.Id.ToString()));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question1.Id.ToString()));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(0));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(0));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].QuestionText, Is.EqualTo(question1.Text));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionText, Is.EqualTo(question1.Text));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].AdaptivityRules[0].TriggerCondition, Is.EqualTo("incorrect"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].AdaptivityRules[0].TriggerCondition,
+                Is.EqualTo("incorrect"));
             Assert.That(
-                ((CommentActionJson) ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3])
-                    .AdaptivityContent.AdaptivityTask[0].AdaptivityQuestions[0].AdaptivityRules[0].AdaptivityAction)
+                ((CommentActionJson)((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3])
+                    .AdaptivityContent.AdaptivityTasks[0].AdaptivityQuestions[0].AdaptivityRules[0].AdaptivityAction)
                 .CommentText, Is.EqualTo("Bla bla bla"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].Choices[0].AnswerText, Is.EqualTo("Ja"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].Choices[0].AnswerText, Is.EqualTo("Ja"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].Choices[0].IsCorrect, Is.EqualTo(true));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].Choices[0].IsCorrect, Is.EqualTo(true));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].Choices[1].AnswerText, Is.EqualTo("Nein"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].Choices[1].AnswerText, Is.EqualTo("Nein"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[0].Choices[1].IsCorrect, Is.EqualTo(false));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[0].Choices[1].IsCorrect, Is.EqualTo(false));
 
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionType, Is.EqualTo("multipleResponse"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionType, Is.EqualTo("multipleResponse"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionId, Is.EqualTo(2));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionId, Is.EqualTo(2));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionUUID, Is.EqualTo(question2.Id.ToString()));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionUUID, Is.EqualTo(question2.Id.ToString()));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionDifficulty, Is.EqualTo(100));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionDifficulty, Is.EqualTo(100));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionText, Is.EqualTo(question2.Text));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionText, Is.EqualTo(question2.Text));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].AdaptivityRules[0].TriggerCondition, Is.EqualTo("incorrect"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].AdaptivityRules[0].TriggerCondition,
+                Is.EqualTo("incorrect"));
             Assert.That(
-                ((ElementReferenceActionJson) ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3])
-                    .AdaptivityContent.AdaptivityTask[0].AdaptivityQuestions[1].AdaptivityRules[0].AdaptivityAction)
+                ((ElementReferenceActionJson)((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3])
+                    .AdaptivityContent.AdaptivityTasks[0].AdaptivityQuestions[1].AdaptivityRules[0].AdaptivityAction)
                 .ElementId, Is.EqualTo(1));
 
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[0].AnswerText, Is.EqualTo("Österreicher Kolonie"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[0].AnswerText, Is.EqualTo("Österreicher Kolonie"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[0].IsCorrect, Is.EqualTo(true));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[0].IsCorrect, Is.EqualTo(true));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[1].AnswerText, Is.EqualTo("Obernauer Kolonie"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[1].AnswerText, Is.EqualTo("Obernauer Kolonie"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[1].IsCorrect, Is.EqualTo(true));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[1].IsCorrect, Is.EqualTo(true));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[2].AnswerText, Is.EqualTo("Nilkheimer Kolonie"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[2].AnswerText, Is.EqualTo("Nilkheimer Kolonie"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[2].IsCorrect, Is.EqualTo(false));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[2].IsCorrect, Is.EqualTo(false));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[3].AnswerText, Is.EqualTo("Schweinheimer Kolonie"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[3].AnswerText, Is.EqualTo("Schweinheimer Kolonie"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].Choices[3].IsCorrect, Is.EqualTo(false));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[0].AdaptivityQuestions[1].Choices[3].IsCorrect, Is.EqualTo(false));
 
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].TaskTitle, Is.EqualTo(task2.Name));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].TaskTitle, Is.EqualTo(task2.Name));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].TaskId, Is.EqualTo(2));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].TaskId, Is.EqualTo(2));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].TaskUUID, Is.EqualTo(task2.Id.ToString()));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].TaskUUID, Is.EqualTo(task2.Id.ToString()));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].Optional, Is.EqualTo(true));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].Optional, Is.EqualTo(true));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].RequiredDifficulty, Is.EqualTo(000));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].RequiredDifficulty, Is.EqualTo(000));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question3.Id.ToString()));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question3.Id.ToString()));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(200));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(200));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionText, Is.EqualTo(question3.Text));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionText, Is.EqualTo(question3.Text));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].AdaptivityRules[0].TriggerId, Is.EqualTo(1));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].AdaptivityRules[0].TriggerCondition, Is.EqualTo("incorrect"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].AdaptivityRules[0].TriggerCondition,
+                Is.EqualTo("incorrect"));
             Assert.That(
-                ((ContentReferenceActionJson) ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3])
-                    .AdaptivityContent.AdaptivityTask[1].AdaptivityQuestions[0].AdaptivityRules[0].AdaptivityAction)
+                ((ContentReferenceActionJson)((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3])
+                    .AdaptivityContent.AdaptivityTasks[1].AdaptivityQuestions[0].AdaptivityRules[0].AdaptivityAction)
                 .ElementId, Is.EqualTo(5));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].Choices[0].AnswerText, Is.EqualTo("Ja"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].Choices[0].AnswerText, Is.EqualTo("Ja"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].Choices[0].IsCorrect, Is.EqualTo(false));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].Choices[0].IsCorrect, Is.EqualTo(false));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].Choices[1].AnswerText, Is.EqualTo("Nein"));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].Choices[1].AnswerText, Is.EqualTo("Nein"));
             Assert.That(
-                ((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].Choices[1].IsCorrect, Is.EqualTo(true));
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
+                .AdaptivityTasks[1].AdaptivityQuestions[0].Choices[1].IsCorrect, Is.EqualTo(true));
 
             //Base Learning Element
             Assert.That(systemUnderTest.LearningWorldJson.Elements[4].ElementName, Is.EqualTo(content6.Name));
@@ -616,15 +619,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementUUID, Is.EqualTo(ele3.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementFileType, Is.EqualTo("url"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[5].ElementCategory, Is.EqualTo("video"));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[5]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementMaxScore,
                 Is.EqualTo(ele3.Points));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[5]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementDescription,
                 Is.EqualTo(ele3.Description));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[5]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementGoals,
                 Is.EqualTo(ele3.Goals.Split("\n")));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[5]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementModel,
                 Is.EqualTo(ele3.ElementModel.ToString()));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[5]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementName, Is.EqualTo(ele4.Name));
@@ -632,15 +635,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementUUID, Is.EqualTo(ele4.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementFileType, Is.EqualTo("txt"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[6].ElementCategory, Is.EqualTo("text"));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[6]).ElementMaxScore,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementMaxScore,
                 Is.EqualTo(ele4.Points));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[6]).ElementDescription,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementDescription,
                 Is.EqualTo(ele4.Description));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[6]).ElementGoals,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementGoals,
                 Is.EqualTo(ele4.Goals.Split("\n")));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[6]).ElementModel,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementModel,
                 Is.EqualTo(ele4.ElementModel.ToString()));
-            Assert.That(((LearningElementJson) systemUnderTest.LearningWorldJson.Elements[6]).LearningSpaceParentId,
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[7].ElementName, Is.EqualTo(ele6.Name));
@@ -648,15 +651,15 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson.Elements[7].ElementUUID, Is.EqualTo(ele6.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[7].ElementFileType, Is.EqualTo("adaptivity"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[7].ElementCategory, Is.EqualTo("adaptivity"));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[7]).ElementMaxScore,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementMaxScore,
                 Is.EqualTo(ele6.Points));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[7]).ElementDescription,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementDescription,
                 Is.EqualTo(ele6.Description));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[7]).ElementGoals,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementGoals,
                 Is.EqualTo(ele6.Goals.Split("\n")));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[7]).ElementModel,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementModel,
                 Is.EqualTo(ele6.ElementModel.ToString()));
-            Assert.That(((IAdaptivityElementJson) systemUnderTest.LearningWorldJson.Elements[7]).LearningSpaceParentId,
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
@@ -698,7 +701,7 @@ public class CreateDslUt
                 }
             }
         };
-        var learningSpaces = new List<LearningSpacePe> {space1};
+        var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
             savePath,
@@ -744,11 +747,11 @@ public class CreateDslUt
         {
             LearningSpaceLayout =
             {
-                FloorPlanName = (FloorPlanEnum) 999 // ungültiger FloorPlanName
+                FloorPlanName = (FloorPlanEnum)999 // ungültiger FloorPlanName
             }
         };
 
-        var learningSpaces = new List<LearningSpacePe> {space1};
+        var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
             savePath,
             learningSpaces);
@@ -804,7 +807,7 @@ public class CreateDslUt
             }
         };
 
-        var learningSpaces = new List<LearningSpacePe> {space1};
+        var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
             savePath,
             learningSpaces);

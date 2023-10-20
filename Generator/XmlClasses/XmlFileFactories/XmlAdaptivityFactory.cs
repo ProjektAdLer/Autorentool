@@ -128,7 +128,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesAdleradaptivityXmlActivity.Adleradaptivity =
             new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(_adaptivityElementId, _adaptivityElementName);
 
-        foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTask)
+        foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTasks)
         {
             var optional = task.Optional ? 1 : 0;
 

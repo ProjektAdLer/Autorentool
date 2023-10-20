@@ -522,7 +522,7 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         var answerId = 1;
 
-        var questions = listAdaptivityElements.SelectMany(ae => ae.AdaptivityContent.AdaptivityTask)
+        var questions = listAdaptivityElements.SelectMany(ae => ae.AdaptivityContent.AdaptivityTasks)
             .SelectMany(t => t.AdaptivityQuestions).ToList();
 
 
