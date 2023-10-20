@@ -493,7 +493,7 @@ public class CreateDsl : ICreateDsl
     private IAdaptivityContentJson MapAdaptivityContentPeToJson(IAdaptivityContentPe adaptivityContent)
     {
         var adaptivityTasks = MapAdaptivityTasksPeToJson(adaptivityContent.Tasks);
-        return new AdaptivityContentJson(adaptivityContent.Name, false, adaptivityTasks);
+        return new AdaptivityContentJson(adaptivityContent.Name, adaptivityTasks);
     }
 
     /// <summary>
@@ -587,10 +587,12 @@ public class CreateDsl : ICreateDsl
             case ContentReferenceActionPe contentReferenceActionPe:
                 MapContentToBaseLearningElement(contentReferenceActionPe);
                 return new ContentReferenceActionJson(_dictionaryIdToContentReferenceAction
-                    .First(x => x.Value.Id == contentReferenceActionPe.Id).Key);
+                        .First(x => x.Value.Id == contentReferenceActionPe.Id).Key,
+                    contentReferenceActionPe.Comment == "" ? null : contentReferenceActionPe.Comment);
             case ElementReferenceActionPe elementReferenceActionPe:
                 return new ElementReferenceActionJson(_dictionaryIdToLearningElement
-                    .First(x => x.Value.Id == elementReferenceActionPe.ElementId).Key);
+                        .First(x => x.Value.Id == elementReferenceActionPe.ElementId).Key,
+                    elementReferenceActionPe.Comment == "" ? null : elementReferenceActionPe.Comment);
             default:
                 throw new ArgumentOutOfRangeException(nameof(adaptivityAction),
                     $"The adaptivityAction {adaptivityAction} is not supported");

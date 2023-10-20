@@ -6,6 +6,5 @@ namespace Generator.DSL.AdaptivityElement;
 public interface IAdaptivityContentJson
 {
     string IntroText { get; set; }
-    bool ShuffleTasks { get; set; }
     List<IAdaptivityTaskJson> AdaptivityTasks { get; set; }
 }
