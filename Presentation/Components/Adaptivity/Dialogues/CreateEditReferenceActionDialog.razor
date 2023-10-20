@@ -3,6 +3,7 @@
 @using Presentation.Components.Forms;
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
@@ -54,7 +55,7 @@
 
     [Inject, AllowNull]
     internal ILearningWorldPresenter LearningWorldPresenter { get; set; }
-    
+
     [Inject, AllowNull]
     internal IStringLocalizer<CreateEditReferenceActionDialog> Localizer { get; set; }
 
@@ -67,7 +68,10 @@
     [CascadingParameter, AllowNull]
     public MudDialogInstance DialogInstance { get; set; }
 
-    private IEnumerable<ILearningElementViewModel> LearningElements => LearningWorldPresenter.LearningWorldVm!.AllLearningElements;
+    private IEnumerable<ILearningElementViewModel> LearningElements =>
+        LearningWorldPresenter.LearningWorldVm!.AllLearningElements
+            .Where(ele => ele.LearningContent is not AdaptivityContentViewModel);
+
     private IEnumerable<ILearningContentViewModel> LearningContents => PresentationLogic.GetAllContent();
 
     private MudForm _form = null!;
