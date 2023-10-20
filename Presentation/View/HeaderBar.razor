@@ -12,6 +12,9 @@
 @using System.Runtime.Serialization
 @using Presentation.Components.Culture
 @using Presentation.Components
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningElement
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -306,6 +309,15 @@
             }
         }
 
+        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
+            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+        {
+            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li>{Localizer["ErrorString.NoTasks.Message", learningElement.Name]}");
+            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
+                errorString.AppendLine($"<li>{Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]}");
+        }
+
         if (errorString.Length == "<ul>".Length) return true;
 
         errorString.Append("</ul>");
@@ -314,6 +326,13 @@
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
     }
+
+    private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
+        task => task.Questions
+            .Any(question => question.Rules
+                .Any(rule => rule.Action is ElementReferenceActionViewModel eravm &&
+                             world.UnplacedLearningElements.Any(unplacedEle =>
+                                 unplacedEle.Id == eravm.ElementId)));
 
     private async Task ShowNotLoggedInDialog()
     {

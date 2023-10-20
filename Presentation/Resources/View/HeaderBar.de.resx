@@ -108,4 +108,10 @@
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
         <value>Welt {0} erfolgreich gespeichert</value>
     </data>
+    <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element, welches nicht in einem Raum platziert wurde.</value>
+    </data>
+    <data name="ErrorString.NoTasks.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; enthält keine Aufgaben.</value>
+    </data>
 </root>
