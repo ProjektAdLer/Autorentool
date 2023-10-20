@@ -97,7 +97,7 @@ public class XmlCourseFactory : IXmlCourseFactory
 
         CourseCourseXmlCourse.Shortname = _learningWorld.WorldName;
         CourseCourseXmlCourse.Fullname = _learningWorld.WorldName;
-        CourseCourseXmlCourse.Format = "";
+        CourseCourseXmlCourse.Format = "topics";
         CourseCourseXmlCourse.BaseColour = "#009681";
         CourseCourseXmlCourse.CourseUseSubtiles = "0";
         CourseCourseXmlCourse.CourseShowTileProgress = "2";
