@@ -8,9 +8,10 @@
         <MudText Class="text-formerror">@ErrorText</MudText>
     }
     <div class="grid grid-cols-4 gap-4">
-        @foreach (var element in Elements)
+        @for (var i = 0; i<Elements.Count(); i++)
         {
-            <MudPaper @onclick="() => SelectAsync(element)" Class="@GetCssBuilder(element)">
+            var element = Elements.ElementAt(i);
+            <MudPaper @onclick="() => SelectAsync(element)" Class="@GetCssBuilder(element, i)">
                 @ElementTemplate(element)
             </MudPaper>
         }
@@ -25,8 +26,9 @@
     [Parameter, EditorRequired, AllowNull]
     public RenderFragment<T> ElementTemplate { get; set; }
     
-    private string GetCssBuilder(T element) => new CssBuilder("w-32 h-32 text-clip")
+    private string GetCssBuilder(T element, int i) => new CssBuilder("w-32 h-32 text-clip")
         .AddClass("bg-adlergrey-100", element.Equals(Value))
+        .AddClass($"element-{i}")
         .Build();
 
     private async Task SelectAsync(T element)
