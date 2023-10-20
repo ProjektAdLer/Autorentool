@@ -126,15 +126,15 @@
         if ((QuestionToEdit is MultipleChoiceMultipleResponseQuestionViewModel && model.IsSingleResponse) ||
             (QuestionToEdit is MultipleChoiceSingleResponseQuestionViewModel && !model.IsSingleResponse))
         {
-            PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+            PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
         }
         switch (QuestionToEdit)
         {
             case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion, model.Text, model.Choices, model.CorrectChoices.First(), model.ExpectedCompletionTime);
                 break;
             case MultipleChoiceMultipleResponseQuestionViewModel multipleResponseQuestion:
-                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Title, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+                PresentationLogic.EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion, model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(QuestionToEdit), "Question to edit is not a valid type");

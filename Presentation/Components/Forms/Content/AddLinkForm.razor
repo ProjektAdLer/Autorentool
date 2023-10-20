@@ -9,9 +9,11 @@
 @using System.Runtime.Serialization
 @using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.LearningContent.LinkContent
+
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
+        <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
                       DebounceInterval="DebounceInterval"

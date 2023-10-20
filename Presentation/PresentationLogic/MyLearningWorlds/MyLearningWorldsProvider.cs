@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Runtime.Serialization;
 using Presentation.PresentationLogic.API;
@@ -52,21 +53,21 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
             .Where(world => GetLoadedLearningWorlds().All(x => x.Id != world.Id));
     }
 
-    public void OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
+    public bool OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
     {
         if (GetLoadedLearningWorlds().Any(x => x.Id == savedLearningWorldPath.Id))
         {
             OpenLoadedLearningWorld(savedLearningWorldPath);
+            return true;
         }
-        else if (PresentationLogic.GetSavedLearningWorldPaths().Contains(savedLearningWorldPath))
+
+        if (PresentationLogic.GetSavedLearningWorldPaths().Contains(savedLearningWorldPath))
         {
-            LoadLearningWorldFromSaved(savedLearningWorldPath);
+            return LoadLearningWorldFromSaved(savedLearningWorldPath);
         }
-        else
-        {
-            Logger.LogDebug("Learning world {WorldName} is not loaded and not saved", savedLearningWorldPath.Name);
-            throw new ArgumentException("Learning world is not loaded and not saved");
-        }
+
+        Logger.LogDebug("Learning world {WorldName} is not loaded and not saved", savedLearningWorldPath.Name);
+        throw new ArgumentException("Learning world is not loaded and not saved");
     }
 
     public void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath)
@@ -107,7 +108,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
             await WorkspacePresenter.DeleteLearningWorld(learningWorld);
     }
 
-    private void LoadLearningWorldFromSaved(SavedLearningWorldPath savedLearningWorldPath)
+    private bool LoadLearningWorldFromSaved(SavedLearningWorldPath savedLearningWorldPath)
     {
         if (SavedPathExists(savedLearningWorldPath.Path))
         {
@@ -117,22 +118,32 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
                 PresentationLogic.LoadLearningWorldFromPath(WorkspaceVm,
                     savedLearningWorldPath.Path);
             }
-            catch (SerializationException e)
+            catch (SerializationException se)
             {
-                ErrorService.SetError("Error while Loading learning world", e.Message);
+                ErrorService.SetError("Error while Loading learning world", se.Message);
+                return false;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ioe)
             {
-                ErrorService.SetError("Error while Loading learning world", e.Message);
+                ErrorService.SetError("Error while Loading learning world", ioe.Message);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("Error while loading learning world: {Error}", e.ToString());
+                ErrorService.SetError(e);
+                return false;
             }
 
             PresentationLogic.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath,
                 WorkspaceVm.LearningWorlds.Last().Id);
+            return true;
         }
         else
         {
             Logger.LogDebug("Saved learning world {WorldName} does not exist anymore", savedLearningWorldPath.Name);
             DeletePathFromSavedLearningWorlds(savedLearningWorldPath);
+            return false;
         }
     }
 

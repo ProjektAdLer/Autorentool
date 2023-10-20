@@ -180,15 +180,15 @@ public static class CustomIcons
         </svg>";
 
     public const string DifficultyPolygonEasy = @"<svg>
-            <polygon fill=""green"" points=""13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10""></polygon>
+            <polygon fill=""rgb(191,137,112)"" points=""13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10""></polygon>
         </svg>";
 
     public const string DifficultyPolygonMedium = @"<svg>
-            <polygon fill=""orange"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
+            <polygon fill=""rgb(128,128,128)"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
         </svg>";
 
     public const string DifficultyPolygonHard = @"<svg>
-            <polygon fill=""red"" points=""13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1""></polygon>
+            <polygon fill=""rgb(229,189,115)"" points=""13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1""></polygon>
         </svg>";
 
     public const string DifficultyPolygonNone = @"<svg>

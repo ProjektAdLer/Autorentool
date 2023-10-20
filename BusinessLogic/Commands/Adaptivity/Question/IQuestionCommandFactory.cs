@@ -13,7 +13,7 @@ public interface IQuestionCommandFactory
     /// Creates a command to create a multiple choice single response question.
     /// </summary>
     ICreateMultipleChoiceSingleResponseQuestion GetCreateMultipleChoiceSingleResponseQuestionCommand(
-        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string title, string questionText,
+        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string questionText,
         ICollection<Choice> choices, Choice correctChoice, int expectedCompletionTime,
         Action<AdaptivityTask> mappingAction);
 
@@ -21,7 +21,7 @@ public interface IQuestionCommandFactory
     /// Creates a command to create a multiple choice multiple response question.
     /// </summary>
     ICreateMultipleChoiceMultipleResponseQuestion GetCreateMultipleChoiceMultipleResponseQuestionCommand(
-        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string title, string questionText,
+        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string questionText,
         ICollection<Choice> choices, ICollection<Choice> correctChoices, int expectedCompletionTime,
         Action<AdaptivityTask> mappingAction);
 
@@ -29,14 +29,14 @@ public interface IQuestionCommandFactory
     /// Creates a command to edit a multiple choice single response question.
     /// </summary>
     IEditMultipleChoiceSingleResponseQuestion GetEditMultipleChoiceSingleResponseQuestionCommand(
-        MultipleChoiceSingleResponseQuestion question, string title, string questionText, ICollection<Choice> choices,
+        MultipleChoiceSingleResponseQuestion question, string questionText, ICollection<Choice> choices,
         Choice correctChoice, int expectedCompletionTime, Action<MultipleChoiceSingleResponseQuestion> action);
 
     /// <summary>
     /// Creates a command to edit a multiple choice multiple response question.
     /// </summary>
     IEditMultipleChoiceMultipleResponseQuestion GetEditMultipleChoiceMultipleResponseQuestionCommand(
-        MultipleChoiceMultipleResponseQuestion question, string title, string questionText, ICollection<Choice> choices,
+        MultipleChoiceMultipleResponseQuestion question, string questionText, ICollection<Choice> choices,
         ICollection<Choice> correctChoices, int expectedCompletionTime,
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction);
 
@@ -44,7 +44,7 @@ public interface IQuestionCommandFactory
     /// Creates a command to edit a multiple choice question with a type change.
     /// </summary>
     IEditMultipleChoiceQuestionWithTypeChange GetEditMultipleChoiceQuestionWithTypeChangeCommand(AdaptivityTask task,
-        IMultipleChoiceQuestion question, bool isSingleResponse, string title, string text, ICollection<Choice> choices,
+        IMultipleChoiceQuestion question, bool isSingleResponse, string text, ICollection<Choice> choices,
         ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction);
 
     /// <summary>

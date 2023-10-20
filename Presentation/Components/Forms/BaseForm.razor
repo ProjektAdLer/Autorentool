@@ -4,7 +4,7 @@
 @using System.Diagnostics.CodeAnalysis
 @implements IBaseForm
 
-<MudCardActions Class="flex flex-col justify-center items-center">
+<MudCardActions Class="flex flex-col justify-center items-center p-0">
     <MudButtonGroup OverrideStyles="false">
         <CascadingValue Value="this">
             @HeaderButtons
@@ -13,7 +13,7 @@
 </MudCardActions>
 
 <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
-    <MudCardContent>
+    <MudCardContent Class="px-2 2xl:px-4">
         @Fields
         @if (SubmitErrorMessage != null)
         {

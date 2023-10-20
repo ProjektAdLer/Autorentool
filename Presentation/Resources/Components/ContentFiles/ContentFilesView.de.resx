@@ -30,7 +30,7 @@
         <value>Löschen</value>
     </data>
     <data name="Content.MudTh.NewElement" xml:space="preserve">
-        <value>Neues Element</value>
+        <value>Neu</value>
     </data>
     <data name="Content.MudTh.Preview" xml:space="preserve">
         <value>Vorschau</value>
@@ -45,7 +45,7 @@
         <value>Möchten Sie den Eintrag &lt;b&gt;{0}&lt;/b&gt; wirklich löschen? Wenn Sie eine Datei/Link löschen, welche in der Lernwelt verwendet wird, dann können Sie diese Lernwelt nicht mehr generieren, bis Sie die Datei/den Link wieder hinzufügen!</value>
     </data>
     <data name="PagerContent.Button.Text" xml:space="preserve">
-        <value>Ordner öffnen</value>
+        <value> öffnen</value>
     </data>
     <data name="MudTextField.Search.Placeholder" xml:space="preserve">
         <value>Suche</value>
@@ -70,5 +70,14 @@
     </data>
     <data name="WarningDialog.Title" xml:space="preserve">
         <value>Löschen bestätigen</value>
+    </data>
+    <data name="Content.MudTd.Delete" xml:space="preserve">
+        <value>Datei/Link löschen</value>
+    </data>
+    <data name="Content.MudTd.NewElement" xml:space="preserve">
+        <value>Neues Lernelement erstellen</value>
+    </data>
+    <data name="Content.MudTd.Preview" xml:space="preserve">
+        <value>Datei/Link als Vorschau anzeigen lassen</value>
     </data>
 </root>

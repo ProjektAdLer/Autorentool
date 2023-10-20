@@ -45,28 +45,30 @@ public class R20X308LViewModel : IFloorPlanViewModel
     public IList<Point> CornerPoints { get; } = new List<Point>
     {
         new() {X = 0, Y = 0},
-        new() {X = 30, Y = 0},
-        new() {X = 30, Y = 20},
+        new() {X = 32, Y = 0},
+        new() {X = 32, Y = 20},
         new() {X = 0, Y = 20}
     };
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 4, Y = 5},
-        new() {X = 12, Y = 5},
-        new() {X = 20, Y = 5},
-        new() {X = 28, Y = 5},
-        new() {X = 28, Y = 15},
-        new() {X = 20, Y = 15},
-        new() {X = 12, Y = 15},
-        new() {X = 4, Y = 15}
+        new() {X = 6, Y = 5},
+        new() {X = 14, Y = 5},
+        new() {X = 22, Y = 5},
+        new() {X = 30, Y = 5},
+        new() {X = 30, Y = 19},
+        new() {X = 22, Y = 19},
+        new() {X = 14, Y = 19},
+        new() {X = 6, Y = 19}
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
         (new Point {X = 0, Y = 12}, new Point {X = 0, Y = 7}),
-        (new Point {X = 22, Y = 20}, new Point {X = 25, Y = 20})
+        (new Point {X = 22, Y = 20}, new Point {X = 27, Y = 20})
     };
 
     public string GetIcon => Icon;
+
+    public string GetPreviewImage => "CustomIcons/FloorPlans/R8-Floorplan-Example.png";
 }

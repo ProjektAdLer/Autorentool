@@ -8,14 +8,14 @@ namespace PersistEntities.LearningContent.Question;
 /// Represents a question with multiple different choices and multiple responses.
 /// </summary>
 [KnownType(typeof(AdaptivityRulePe))]
+[DataContract(IsReference = true)]
 public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionPe
 {
-    public MultipleChoiceMultipleResponseQuestionPe(string title, int expectedCompletionTime,
+    public MultipleChoiceMultipleResponseQuestionPe(int expectedCompletionTime,
         ICollection<ChoicePe> choices, ICollection<ChoicePe> correctChoices, ICollection<IAdaptivityRulePe> rules,
         string text, QuestionDifficulty difficulty)
     {
         Id = Guid.NewGuid();
-        Title = title;
         ExpectedCompletionTime = expectedCompletionTime;
         Choices = choices;
         CorrectChoices = correctChoices;
@@ -30,7 +30,6 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
     private MultipleChoiceMultipleResponseQuestionPe()
     {
         Id = Guid.Empty;
-        Title = null!;
         ExpectedCompletionTime = 0;
         Choices = null!;
         CorrectChoices = null!;
@@ -40,7 +39,6 @@ public class MultipleChoiceMultipleResponseQuestionPe : IMultipleChoiceQuestionP
     }
 
     [IgnoreDataMember] public Guid Id { get; private set; }
-    [DataMember] public string Title { get; set; }
     [DataMember] public int ExpectedCompletionTime { get; set; }
     [DataMember] public QuestionDifficulty Difficulty { get; set; }
     [DataMember] public ICollection<IAdaptivityRulePe> Rules { get; set; }

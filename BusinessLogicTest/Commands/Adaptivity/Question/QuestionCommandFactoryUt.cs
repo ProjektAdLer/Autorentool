@@ -25,7 +25,6 @@ public class QuestionCommandFactoryUt
         // Arrange
         var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
         var difficulty = QuestionDifficulty.Medium;
-        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var correctChoice = new Choice("Choice1");
         var choices = new List<Choice>() {correctChoice};
@@ -34,7 +33,7 @@ public class QuestionCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateMultipleChoiceSingleResponseQuestionCommand(adaptivityTask, difficulty,
-            questionTitle, questionText, choices, correctChoice, expectedCompletionTime, mappingAction);
+            questionText, choices, correctChoice, expectedCompletionTime, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateMultipleChoiceSingleResponseQuestion>());
@@ -43,7 +42,6 @@ public class QuestionCommandFactoryUt
         {
             Assert.That(resultCasted!.AdaptivityTask, Is.EqualTo(adaptivityTask));
             Assert.That(resultCasted.Question.Difficulty, Is.EqualTo(difficulty));
-            Assert.That(resultCasted.Question.Title, Is.EqualTo(questionTitle));
             Assert.That(resultCasted.Question.Text, Is.EqualTo(questionText));
             Assert.That(resultCasted.Question.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.Question.CorrectChoice, Is.EqualTo(correctChoice));
@@ -59,7 +57,6 @@ public class QuestionCommandFactoryUt
         // Arrange
         var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), QuestionDifficulty.Medium, "Task1");
         var difficulty = QuestionDifficulty.Medium;
-        var questionTitle = "QuestionTitle";
         var questionText = "Question";
         var choice = new Choice("Choice1");
         var choices = new List<Choice>() {choice};
@@ -69,7 +66,7 @@ public class QuestionCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateMultipleChoiceMultipleResponseQuestionCommand(adaptivityTask, difficulty,
-            questionTitle, questionText, choices, correctChoices, expectedCompletionTime, mappingAction);
+            questionText, choices, correctChoices, expectedCompletionTime, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateMultipleChoiceMultipleResponseQuestion>());
@@ -78,7 +75,6 @@ public class QuestionCommandFactoryUt
         {
             Assert.That(resultCasted!.AdaptivityTask, Is.EqualTo(adaptivityTask));
             Assert.That(resultCasted.Question.Difficulty, Is.EqualTo(difficulty));
-            Assert.That(resultCasted.Question.Title, Is.EqualTo(questionTitle));
             Assert.That(resultCasted.Question.Text, Is.EqualTo(questionText));
             Assert.That(resultCasted.Question.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.Question.CorrectChoices, Is.EqualTo(correctChoices));
@@ -92,10 +88,8 @@ public class QuestionCommandFactoryUt
     {
         // Arrange
         var oldCorrectChoice = new Choice("OldCorrectChoice");
-        var question = new MultipleChoiceSingleResponseQuestion("OldQuestionTitle", 10,
-            new List<Choice>() {oldCorrectChoice}, "OldQuestionText", oldCorrectChoice, QuestionDifficulty.Easy,
-            new List<IAdaptivityRule>());
-        var questionTitle = "NewQuestionTitle";
+        var question = new MultipleChoiceSingleResponseQuestion(10, new List<Choice>() {oldCorrectChoice},
+            "OldQuestionText", oldCorrectChoice, QuestionDifficulty.Easy, new List<IAdaptivityRule>());
         var questionText = "NewQuestionText";
         var choices = new List<Choice>();
         var correctChoice = new Choice("NewCorrectChoice");
@@ -103,7 +97,7 @@ public class QuestionCommandFactoryUt
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditMultipleChoiceSingleResponseQuestionCommand(question, questionTitle, questionText,
+        var result = _factory.GetEditMultipleChoiceSingleResponseQuestionCommand(question, questionText,
             choices, correctChoice, expectedCompletionTime, mappingAction);
 
         // Assert
@@ -112,7 +106,6 @@ public class QuestionCommandFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(resultCasted!.Question, Is.EqualTo(question));
-            Assert.That(resultCasted.Title, Is.EqualTo(questionTitle));
             Assert.That(resultCasted.QuestionText, Is.EqualTo(questionText));
             Assert.That(resultCasted.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.CorrectChoice, Is.EqualTo(correctChoice));
@@ -125,9 +118,8 @@ public class QuestionCommandFactoryUt
     public void GetEditMultipleChoiceMultipleResponseQuestionCommand_ReturnsEditMultipleChoiceMultipleResponseQuestion()
     {
         // Arrange
-        var question = new MultipleChoiceMultipleResponseQuestion("OldQuestionTitle", 10, new List<Choice>(),
-            new List<Choice>(), new List<IAdaptivityRule>(), "OldQuestionText", QuestionDifficulty.Easy);
-        var questionTitle = "NewQuestionTitle";
+        var question = new MultipleChoiceMultipleResponseQuestion(10, new List<Choice>(), new List<Choice>(),
+            new List<IAdaptivityRule>(), "OldQuestionText", QuestionDifficulty.Easy);
         var questionText = "NewQuestionText";
         var choices = new List<Choice>();
         var correctChoices = new List<Choice>();
@@ -135,7 +127,7 @@ public class QuestionCommandFactoryUt
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditMultipleChoiceMultipleResponseQuestionCommand(question, questionTitle,
+        var result = _factory.GetEditMultipleChoiceMultipleResponseQuestionCommand(question,
             questionText, choices, correctChoices, expectedCompletionTime, mappingAction);
 
         // Assert
@@ -144,7 +136,6 @@ public class QuestionCommandFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(resultCasted!.Question, Is.EqualTo(question));
-            Assert.That(resultCasted.Title, Is.EqualTo(questionTitle));
             Assert.That(resultCasted.QuestionText, Is.EqualTo(questionText));
             Assert.That(resultCasted.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.CorrectChoices, Is.EqualTo(correctChoices));
@@ -160,7 +151,6 @@ public class QuestionCommandFactoryUt
         var task = EntityProvider.GetAdaptivityTask();
         var question = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
         var isSingleResponse = true;
-        var title = "NewTitle";
         var text = "NewText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -171,8 +161,8 @@ public class QuestionCommandFactoryUt
         Action<AdaptivityTask> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse,
-            title, text, choices, correctChoices, expectedCompletionTime, mappingAction);
+        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse, text,
+            choices, correctChoices, expectedCompletionTime, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditMultipleChoiceQuestionWithTypeChange>());
@@ -185,8 +175,7 @@ public class QuestionCommandFactoryUt
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
             Assert.That(resultCasted.MultipleResponseQuestion, Is.Null);
             Assert.That(resultCasted.SingleResponseQuestion, Is.Not.Null);
-            Assert.That(resultCasted.SingleResponseQuestion!.Title, Is.EqualTo(title));
-            Assert.That(resultCasted.SingleResponseQuestion.Text, Is.EqualTo(text));
+            Assert.That(resultCasted.SingleResponseQuestion!.Text, Is.EqualTo(text));
             Assert.That(resultCasted.SingleResponseQuestion.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.SingleResponseQuestion.CorrectChoice, Is.EqualTo(correctChoices.First()));
             Assert.That(resultCasted.SingleResponseQuestion.ExpectedCompletionTime, Is.EqualTo(expectedCompletionTime));
@@ -200,7 +189,6 @@ public class QuestionCommandFactoryUt
         var task = EntityProvider.GetAdaptivityTask();
         var question = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
         var isSingleResponse = false;
-        var title = "NewTitle";
         var text = "NewText";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
@@ -211,8 +199,8 @@ public class QuestionCommandFactoryUt
         Action<AdaptivityTask> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse,
-            title, text, choices, correctChoices, expectedCompletionTime, mappingAction);
+        var result = _factory.GetEditMultipleChoiceQuestionWithTypeChangeCommand(task, question, isSingleResponse, text,
+            choices, correctChoices, expectedCompletionTime, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditMultipleChoiceQuestionWithTypeChange>());
@@ -225,8 +213,7 @@ public class QuestionCommandFactoryUt
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
             Assert.That(resultCasted.MultipleResponseQuestion, Is.Not.Null);
             Assert.That(resultCasted.SingleResponseQuestion, Is.Null);
-            Assert.That(resultCasted.MultipleResponseQuestion!.Title, Is.EqualTo(title));
-            Assert.That(resultCasted.MultipleResponseQuestion.Text, Is.EqualTo(text));
+            Assert.That(resultCasted.MultipleResponseQuestion!.Text, Is.EqualTo(text));
             Assert.That(resultCasted.MultipleResponseQuestion.Choices, Is.EqualTo(choices));
             Assert.That(resultCasted.MultipleResponseQuestion.CorrectChoices, Is.EqualTo(correctChoices));
             Assert.That(resultCasted.MultipleResponseQuestion.ExpectedCompletionTime,
@@ -238,8 +225,8 @@ public class QuestionCommandFactoryUt
     public void GetDeleteCommand_ReturnsDeleteAdaptivityQuestion()
     {
         // Arrange
-        var question = new MultipleChoiceMultipleResponseQuestion("OldQuestionTitle", 10, new List<Choice>(),
-            new List<Choice>(), new List<IAdaptivityRule>(), "OldQuestionText", QuestionDifficulty.Easy);
+        var question = new MultipleChoiceMultipleResponseQuestion(10, new List<Choice>(), new List<Choice>(),
+            new List<IAdaptivityRule>(), "OldQuestionText", QuestionDifficulty.Easy);
         var task = new AdaptivityTask(new List<IAdaptivityQuestion>() {question}, QuestionDifficulty.Easy, "Task1");
         Action<AdaptivityTask> mappingAction = _ => { };
 

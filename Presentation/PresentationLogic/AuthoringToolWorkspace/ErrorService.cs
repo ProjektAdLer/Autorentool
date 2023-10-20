@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -19,6 +20,27 @@ public class ErrorService : IErrorService
 
     public void SetError(Exception exception)
     {
-        DialogService.ShowMessageBox("An error has occurred", (MarkupString)exception.Message);
+        DialogService.ShowMessageBox("An error has occurred", (MarkupString)GetFullExceptionMessage(exception));
+    }
+
+    /// <summary>
+    /// Gets exception message and all inner exception messages without stacktrace
+    /// </summary>
+    private static string GetFullExceptionMessage(Exception ex)
+    {
+        var exception = ex;
+        var sb = new StringBuilder();
+        while (true)
+        {
+            sb.AppendLine(exception.Message);
+            sb.Append("<br/>");
+            sb.Append("<br/>");
+            exception = exception.InnerException;
+            if (exception == null) break;
+            sb.AppendLine("Inner exception:");
+            sb.Append("<br/>");
+        }
+
+        return sb.ToString();
     }
 }

@@ -128,9 +128,10 @@ public static class EntityProvider
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
-    public static IAdaptivityAction GetContentReferenceAction()
+    public static IAdaptivityAction GetContentReferenceAction(ILearningContent? content = null, string comment = "")
     {
-        return new ContentReferenceAction(GetLinkContent());
+        content ??= GetLinkContent();
+        return new ContentReferenceAction(content, comment);
     }
 
     public static AdaptivityContent GetAdaptivityContent()
@@ -164,16 +165,15 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
-            QuestionDifficulty.Easy,
-            rules);
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy, rules);
     }
 
     public static MultipleChoiceMultipleResponseQuestion GetMultipleChoiceMultipleResponseQuestion()
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceMultipleResponseQuestion("questionTitle", 123, choices, choices, rules, "questionText",
+        return new MultipleChoiceMultipleResponseQuestion(123, choices, choices, rules, "questionText",
             QuestionDifficulty.Easy);
     }
 
@@ -181,7 +181,7 @@ public static class EntityProvider
     {
         var choices = new List<Choice> {GetAdaptivityChoice()};
         var rules = new List<IAdaptivityRule> {GetAdaptivityRule()};
-        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy, rules);
     }
 

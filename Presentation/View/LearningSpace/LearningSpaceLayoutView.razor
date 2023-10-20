@@ -84,7 +84,7 @@
             polygonPointsString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
         }
 
-        polygonPointsString.Append("\" style=\"fill:%23e9f2fa\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
+        polygonPointsString.Append("\" style=\"fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
         return polygonPointsString.ToString();
     }
 
@@ -115,9 +115,9 @@
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
         {
-            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white p-6 m-8 w-24 h-3 flex justify-center items-center";
+            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white w-[72px] 2xl:w-[104px] 2500p:w-[136px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center";
         }
-        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-24 h-3 flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
+        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default w-[72px] 2xl:w-[104px] 2500p:w-[136px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
     private void ClickOnSlot(int i)

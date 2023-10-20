@@ -11,12 +11,12 @@ public class CreateMultipleChoiceMultipleResponseQuestion : ICreateMultipleChoic
     private IMemento? _memento;
 
     public CreateMultipleChoiceMultipleResponseQuestion(AdaptivityTask adaptivityTask, QuestionDifficulty difficulty,
-        string title, string questionText, ICollection<Choice> choices, ICollection<Choice> correctChoices,
+        string questionText, ICollection<Choice> choices, ICollection<Choice> correctChoices,
         int expectedCompletionTime, Action<AdaptivityTask> mappingAction,
         ILogger<CreateMultipleChoiceMultipleResponseQuestion> logger)
     {
         AdaptivityTask = adaptivityTask;
-        Question = new MultipleChoiceMultipleResponseQuestion(title, expectedCompletionTime, choices, correctChoices,
+        Question = new MultipleChoiceMultipleResponseQuestion(expectedCompletionTime, choices, correctChoices,
             new List<IAdaptivityRule>(), questionText, difficulty);
         MappingAction = mappingAction;
         Logger = logger;
@@ -35,8 +35,8 @@ public class CreateMultipleChoiceMultipleResponseQuestion : ICreateMultipleChoic
         AdaptivityTask.Questions.Add(Question);
 
         Logger.LogTrace(
-            "Created MultipleChoiceMultipleResponseQuestion {QuestionTitle} ({QuestionText}) in AdaptivityTask {AdaptivityTaskName}",
-            Question.Title, Question.Text, AdaptivityTask.Name);
+            "Created MultipleChoiceMultipleResponseQuestion '{QuestionText}' in AdaptivityTask {AdaptivityTaskName}",
+            Question.Text, AdaptivityTask.Name);
 
         MappingAction.Invoke(AdaptivityTask);
     }
@@ -51,8 +51,8 @@ public class CreateMultipleChoiceMultipleResponseQuestion : ICreateMultipleChoic
         AdaptivityTask.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undone creation of MultipleChoiceMultipleResponseQuestion {QuestionTitle} ({QuestionText}). Restored AdaptivityTask {AdaptivityTaskName} to previous state",
-            Question.Title, Question.Text, AdaptivityTask.Name);
+            "Undone creation of MultipleChoiceMultipleResponseQuestion '{QuestionText}'. Restored AdaptivityTask {AdaptivityTaskName} to previous state",
+            Question.Text, AdaptivityTask.Name);
 
         MappingAction.Invoke(AdaptivityTask);
     }
