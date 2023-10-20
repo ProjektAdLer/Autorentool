@@ -135,13 +135,15 @@ public static class ViewModelProvider
         return new CommentActionViewModel("a comment");
     }
 
-    public static ElementReferenceActionViewModel GetElementReferenceAction(Guid? elementGuid = null, string comment = "")
+    public static ElementReferenceActionViewModel GetElementReferenceAction(Guid? elementGuid = null,
+        string comment = "")
     {
         elementGuid ??= Guid.NewGuid();
         return new ElementReferenceActionViewModel(elementGuid.Value, comment);
     }
 
-    public static ContentReferenceActionViewModel GetContentReferenceAction(ILearningContentViewModel? content = null, string comment = "")
+    public static ContentReferenceActionViewModel GetContentReferenceAction(ILearningContentViewModel? content = null,
+        string comment = "")
     {
         content ??= GetFileContent();
         return new ContentReferenceActionViewModel(content, comment);
@@ -162,14 +164,14 @@ public static class ViewModelProvider
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
     {
         var choiceViewModels = new List<ChoiceViewModel> {GetChoice()};
-        return new MultipleChoiceSingleResponseQuestionViewModel("questionTitle", 1, "question text",
+        return new MultipleChoiceSingleResponseQuestionViewModel(1, "question text",
             choiceViewModels.First(), QuestionDifficulty.Medium, choiceViewModels);
     }
 
     public static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
     {
         var choiceViewModels = new List<ChoiceViewModel> {GetChoice(), GetChoice()};
-        return new MultipleChoiceMultipleResponseQuestionViewModel("questionTitle", 1, "question text",
+        return new MultipleChoiceMultipleResponseQuestionViewModel(1, "question text",
             QuestionDifficulty.Hard, choiceViewModels, choiceViewModels);
     }
 

@@ -15,51 +15,48 @@ public class QuestionCommandFactory : IQuestionCommandFactory
     private ILoggerFactory LoggerFactory { get; }
 
     public ICreateMultipleChoiceSingleResponseQuestion GetCreateMultipleChoiceSingleResponseQuestionCommand(
-        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string title, string questionText,
-        ICollection<Choice> choices, Choice correctChoice, int expectedCompletionTime,
-        Action<AdaptivityTask> mappingAction)
+        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices,
+        Choice correctChoice, int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
     {
-        return new CreateMultipleChoiceSingleResponseQuestion(adaptivityTask, difficulty, title, questionText, choices,
+        return new CreateMultipleChoiceSingleResponseQuestion(adaptivityTask, difficulty, questionText, choices,
             correctChoice, expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<CreateMultipleChoiceSingleResponseQuestion>());
     }
 
     public ICreateMultipleChoiceMultipleResponseQuestion GetCreateMultipleChoiceMultipleResponseQuestionCommand(
-        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string title, string questionText,
-        ICollection<Choice> choices, ICollection<Choice> correctChoices, int expectedCompletionTime,
-        Action<AdaptivityTask> mappingAction)
+        AdaptivityTask adaptivityTask, QuestionDifficulty difficulty, string questionText, ICollection<Choice> choices,
+        ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
     {
-        return new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, title, questionText,
-            choices,
+        return new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText, choices,
             correctChoices, expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<CreateMultipleChoiceMultipleResponseQuestion>());
     }
 
     public IEditMultipleChoiceSingleResponseQuestion GetEditMultipleChoiceSingleResponseQuestionCommand(
-        MultipleChoiceSingleResponseQuestion question, string title, string questionText, ICollection<Choice> choices,
+        MultipleChoiceSingleResponseQuestion question, string questionText, ICollection<Choice> choices,
         Choice correctChoice, int expectedCompletionTime, Action<MultipleChoiceSingleResponseQuestion> mappingAction)
     {
-        return new EditMultipleChoiceSingleResponseQuestion(question, title, questionText, choices, correctChoice,
+        return new EditMultipleChoiceSingleResponseQuestion(question, questionText, choices, correctChoice,
             expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<EditMultipleChoiceSingleResponseQuestion>());
     }
 
     public IEditMultipleChoiceMultipleResponseQuestion GetEditMultipleChoiceMultipleResponseQuestionCommand(
-        MultipleChoiceMultipleResponseQuestion question, string title, string questionText, ICollection<Choice> choices,
+        MultipleChoiceMultipleResponseQuestion question, string questionText, ICollection<Choice> choices,
         ICollection<Choice> correctChoices, int expectedCompletionTime,
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction)
     {
-        return new EditMultipleChoiceMultipleResponseQuestion(question, title, questionText, choices, correctChoices,
+        return new EditMultipleChoiceMultipleResponseQuestion(question, questionText, choices, correctChoices,
             expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<EditMultipleChoiceMultipleResponseQuestion>());
     }
 
     public IEditMultipleChoiceQuestionWithTypeChange GetEditMultipleChoiceQuestionWithTypeChangeCommand(
-        AdaptivityTask task,
-        IMultipleChoiceQuestion question, bool isSingleResponse, string title, string text, ICollection<Choice> choices,
-        ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction)
+        AdaptivityTask task, IMultipleChoiceQuestion question, bool isSingleResponse, string text,
+        ICollection<Choice> choices, ICollection<Choice> correctChoices, int expectedCompletionTime,
+        Action<AdaptivityTask> mappingAction)
     {
-        return new EditMultipleChoiceQuestionWithTypeChange(task, question, isSingleResponse, title, text, choices,
+        return new EditMultipleChoiceQuestionWithTypeChange(task, question, isSingleResponse, text, choices,
             correctChoices, expectedCompletionTime, mappingAction,
             LoggerFactory.CreateLogger<EditMultipleChoiceQuestionWithTypeChange>());
     }

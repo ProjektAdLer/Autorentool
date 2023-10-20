@@ -168,7 +168,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -268,7 +268,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -326,7 +326,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> { worldEntity });
+            new List<ILearningWorld> {worldEntity});
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -1140,7 +1140,7 @@ public class PresentationLogicUt
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ))
             .Returns(mockBatchCommand);
 
@@ -1170,7 +1170,7 @@ public class PresentationLogicUt
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
+                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
             ));
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -1650,7 +1650,7 @@ public class PresentationLogicUt
         var learningWorldViewModel = Substitute.For<ILearningWorldViewModel>();
         learningWorldViewModel.Id.Returns(guid);
         authoringToolWorkspaceVm.LearningWorlds
-            .Returns(new List<ILearningWorldViewModel> { learningWorldViewModel });
+            .Returns(new List<ILearningWorldViewModel> {learningWorldViewModel});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport,
@@ -1684,7 +1684,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
         mockBusinessLogic.GetSavedLearningWorldPaths()
-            .Returns(new List<SavedLearningWorldPath> { savedLearningWorldPath });
+            .Returns(new List<SavedLearningWorldPath> {savedLearningWorldPath});
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -2205,7 +2205,6 @@ public class PresentationLogicUt
         var mockCorrectChoiceViewModel = mockQuestionViewModel.CorrectChoice;
         var mockCorrectChoiceEntity = mockQuestionEntity.CorrectChoice;
         const QuestionDifficulty difficulty = QuestionDifficulty.Easy;
-        const string title = "title";
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
         Substitute.For<ILogger<QuestionCommandFactory>>();
@@ -2219,7 +2218,7 @@ public class PresentationLogicUt
             .Map<Choice>(mockCorrectChoiceViewModel)
             .Returns(mockCorrectChoiceEntity);
         mockQuestionCommandFactory
-            .GetCreateMultipleChoiceSingleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty, title,
+            .GetCreateMultipleChoiceSingleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty,
                 questionText, mockChoicesEntity, mockCorrectChoiceEntity, expectedCompletionTime,
                 Arg.Any<Action<AdaptivityTask>>())
             .Returns(mockCommand);
@@ -2228,7 +2227,7 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
                 questionCommandFactory: mockQuestionCommandFactory);
 
-        systemUnderTest.CreateMultipleChoiceSingleResponseQuestion(mockAdaptivityTaskViewModel, difficulty, title,
+        systemUnderTest.CreateMultipleChoiceSingleResponseQuestion(mockAdaptivityTaskViewModel, difficulty,
             questionText, mockChoicesViewModel, mockCorrectChoiceViewModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
@@ -2253,7 +2252,6 @@ public class PresentationLogicUt
         var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
         const QuestionDifficulty difficulty = QuestionDifficulty.Easy;
-        const string title = "title";
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
         Substitute.For<ILogger<QuestionCommandFactory>>();
@@ -2267,7 +2265,7 @@ public class PresentationLogicUt
             .Map<ICollection<Choice>>(mockCorrectChoicesViewModel)
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
-            .GetCreateMultipleChoiceMultipleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty, title,
+            .GetCreateMultipleChoiceMultipleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty,
                 questionText, mockChoicesEntity, mockCorrectChoicesEntity, expectedCompletionTime,
                 Arg.Any<Action<AdaptivityTask>>())
             .Returns(mockCommand);
@@ -2276,7 +2274,7 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
                 questionCommandFactory: mockQuestionCommandFactory);
 
-        systemUnderTest.CreateMultipleChoiceMultipleResponseQuestion(mockAdaptivityTaskViewModel, difficulty, title,
+        systemUnderTest.CreateMultipleChoiceMultipleResponseQuestion(mockAdaptivityTaskViewModel, difficulty,
             questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
@@ -2298,7 +2296,6 @@ public class PresentationLogicUt
         var mockChoicesEntity = mockQuestionEntity.Choices;
         var mockCorrectChoiceViewModel = mockQuestionViewModel.CorrectChoice;
         var mockCorrectChoiceEntity = mockQuestionEntity.CorrectChoice;
-        const string title = "title";
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
         Substitute.For<ILogger<QuestionCommandFactory>>();
@@ -2312,7 +2309,7 @@ public class PresentationLogicUt
             .Map<Choice>(mockCorrectChoiceViewModel)
             .Returns(mockCorrectChoiceEntity);
         mockQuestionCommandFactory
-            .GetEditMultipleChoiceSingleResponseQuestionCommand(mockQuestionEntity, title,
+            .GetEditMultipleChoiceSingleResponseQuestionCommand(mockQuestionEntity,
                 questionText, mockChoicesEntity, mockCorrectChoiceEntity, expectedCompletionTime,
                 Arg.Any<Action<MultipleChoiceSingleResponseQuestion>>())
             .Returns(mockCommand);
@@ -2320,7 +2317,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             questionCommandFactory: mockQuestionCommandFactory);
 
-        systemUnderTest.EditMultipleChoiceSingleResponseQuestion(mockQuestionViewModel, title,
+        systemUnderTest.EditMultipleChoiceSingleResponseQuestion(mockQuestionViewModel,
             questionText, mockChoicesViewModel, mockCorrectChoiceViewModel, expectedCompletionTime);
 
         mockMapper.Received().Map<MultipleChoiceSingleResponseQuestion>(mockQuestionViewModel);
@@ -2342,7 +2339,6 @@ public class PresentationLogicUt
         var mockChoicesEntity = mockQuestionEntity.Choices;
         var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
-        const string title = "title";
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
         Substitute.For<ILogger<QuestionCommandFactory>>();
@@ -2356,7 +2352,7 @@ public class PresentationLogicUt
             .Map<ICollection<Choice>>(mockCorrectChoicesViewModel)
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
-            .GetEditMultipleChoiceMultipleResponseQuestionCommand(mockQuestionEntity, title,
+            .GetEditMultipleChoiceMultipleResponseQuestionCommand(mockQuestionEntity,
                 questionText, mockChoicesEntity, mockCorrectChoicesEntity, expectedCompletionTime,
                 Arg.Any<Action<MultipleChoiceMultipleResponseQuestion>>())
             .Returns(mockCommand);
@@ -2364,7 +2360,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             questionCommandFactory: mockQuestionCommandFactory);
 
-        systemUnderTest.EditMultipleChoiceMultipleResponseQuestion(mockQuestionViewModel, title,
+        systemUnderTest.EditMultipleChoiceMultipleResponseQuestion(mockQuestionViewModel,
             questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
 
         mockMapper.Received().Map<MultipleChoiceMultipleResponseQuestion>(mockQuestionViewModel);
@@ -2389,7 +2385,6 @@ public class PresentationLogicUt
         var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
         const bool isSingleResponse = true;
-        const string title = "title";
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
         Substitute.For<ILogger<QuestionCommandFactory>>();
@@ -2407,7 +2402,7 @@ public class PresentationLogicUt
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
             .GetEditMultipleChoiceQuestionWithTypeChangeCommand(mockAdaptivityTaskEntity, mockQuestionEntity,
-                isSingleResponse, title,
+                isSingleResponse,
                 questionText, mockChoicesEntity, mockCorrectChoicesEntity, expectedCompletionTime,
                 Arg.Any<Action<AdaptivityTask>>())
             .Returns(mockCommand);
@@ -2416,7 +2411,7 @@ public class PresentationLogicUt
             questionCommandFactory: mockQuestionCommandFactory);
 
         systemUnderTest.EditMultipleChoiceQuestionWithTypeChange(mockAdaptivityTaskViewModel, mockQuestionViewModel,
-            isSingleResponse, title,
+            isSingleResponse,
             questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);

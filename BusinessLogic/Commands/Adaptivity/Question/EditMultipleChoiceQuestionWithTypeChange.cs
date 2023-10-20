@@ -10,18 +10,18 @@ public class EditMultipleChoiceQuestionWithTypeChange : IEditMultipleChoiceQuest
     private IMemento? _memento;
 
     public EditMultipleChoiceQuestionWithTypeChange(AdaptivityTask task, IMultipleChoiceQuestion question,
-        bool isSingleResponse, string title, string text, ICollection<Choice> choices,
+        bool isSingleResponse, string text, ICollection<Choice> choices,
         ICollection<Choice> correctChoices, int expectedCompletionTime, Action<AdaptivityTask> mappingAction,
         ILogger<EditMultipleChoiceQuestionWithTypeChange> createLogger)
     {
         switch (question)
         {
             case MultipleChoiceMultipleResponseQuestion when isSingleResponse:
-                SingleResponseQuestion = new MultipleChoiceSingleResponseQuestion(title, expectedCompletionTime,
+                SingleResponseQuestion = new MultipleChoiceSingleResponseQuestion(expectedCompletionTime,
                     choices, text, correctChoices.First(), question.Difficulty, question.Rules);
                 break;
             case MultipleChoiceSingleResponseQuestion when !isSingleResponse:
-                MultipleResponseQuestion = new MultipleChoiceMultipleResponseQuestion(title, expectedCompletionTime,
+                MultipleResponseQuestion = new MultipleChoiceMultipleResponseQuestion(expectedCompletionTime,
                     choices, correctChoices, question.Rules, text, question.Difficulty);
                 break;
             default:
@@ -51,8 +51,8 @@ public class EditMultipleChoiceQuestionWithTypeChange : IEditMultipleChoiceQuest
         _memento = Task.GetMemento();
 
         Logger.LogTrace(
-            "Editing MultipleChoiceQuestion {QuestionTitle} ({QuestionId}). Previous Values: Type {PreviousType} Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.GetType().Name, Question.Title, Question.Text, Question.Choices,
+            "Editing MultipleChoiceQuestion ({QuestionId}). Previous Values: Type {PreviousType}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.GetType().Name, Question.Text, Question.Choices,
             Question.CorrectChoices, Question.ExpectedCompletionTime);
 
         var questionToDelete = Task.Questions.FirstOrDefault(q => q.Id == Question.Id);
@@ -75,8 +75,8 @@ public class EditMultipleChoiceQuestionWithTypeChange : IEditMultipleChoiceQuest
 
 
         Logger.LogTrace(
-            "Edited MultipleChoiceQuestion {QuestionTitle} ({QuestionId}). Updated Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoices,
+            "Edited MultipleChoiceQuestion ({QuestionId}). Updated Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.Text, Question.Choices, Question.CorrectChoices,
             Question.ExpectedCompletionTime);
 
         MappingAction.Invoke(Task);
@@ -92,8 +92,8 @@ public class EditMultipleChoiceQuestionWithTypeChange : IEditMultipleChoiceQuest
         Task.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undoing edit of MultipleChoiceQuestion {QuestionTitle} ({QuestionId}). Restored Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoices,
+            "Undoing edit of MultipleChoiceQuestion ({QuestionId}). Restored Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.Text, Question.Choices, Question.CorrectChoices,
             Question.ExpectedCompletionTime);
 
         MappingAction.Invoke(Task);

@@ -8,13 +8,12 @@ public class EditMultipleChoiceSingleResponseQuestion : IEditMultipleChoiceSingl
 {
     private IMemento? _memento;
 
-    public EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestion question, string title,
+    public EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestion question,
         string questionText, ICollection<Choice> choices, Choice correctChoice, int expectedCompletionTime,
         Action<MultipleChoiceSingleResponseQuestion> mappingAction,
         ILogger<EditMultipleChoiceSingleResponseQuestion> createLogger)
     {
         Question = question;
-        Title = title;
         QuestionText = questionText;
         Choices = choices;
         CorrectChoice = correctChoice;
@@ -24,7 +23,6 @@ public class EditMultipleChoiceSingleResponseQuestion : IEditMultipleChoiceSingl
     }
 
     internal MultipleChoiceSingleResponseQuestion Question { get; }
-    internal string Title { get; }
     internal string QuestionText { get; }
     internal ICollection<Choice> Choices { get; }
     internal Choice CorrectChoice { get; }
@@ -39,19 +37,18 @@ public class EditMultipleChoiceSingleResponseQuestion : IEditMultipleChoiceSingl
         _memento = Question.GetMemento();
 
         Logger.LogTrace(
-            "Editing MultipleChoiceSingleResponseQuestion {QuestionTitle} ({QuestionId}). Previous Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoice,
+            "Editing MultipleChoiceSingleResponseQuestion ({QuestionId}). Previous Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.Text, Question.Choices, Question.CorrectChoice,
             Question.ExpectedCompletionTime);
 
-        Question.Title = Title;
         Question.Text = QuestionText;
         Question.Choices = Choices;
         Question.CorrectChoice = CorrectChoice;
         Question.ExpectedCompletionTime = ExpectedCompletionTime;
 
         Logger.LogTrace(
-            "Edited MultipleChoiceSingleResponseQuestion {QuestionTitle} ({QuestionId}). Updated Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoice,
+            "Edited MultipleChoiceSingleResponseQuestion ({QuestionId}). Updated Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.Text, Question.Choices, Question.CorrectChoice,
             Question.ExpectedCompletionTime);
 
 
@@ -68,8 +65,8 @@ public class EditMultipleChoiceSingleResponseQuestion : IEditMultipleChoiceSingl
         Question.RestoreMemento(_memento);
 
         Logger.LogTrace(
-            "Undone editing of MultipleChoiceSingleResponseQuestion {QuestionTitle} ({QuestionId}). Restored to previous state. Previous Values: Title {PreviousTitle}, Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
-            Question.Title, Question.Id, Question.Title, Question.Text, Question.Choices, Question.CorrectChoice,
+            "Undone editing of MultipleChoiceSingleResponseQuestion ({QuestionId}). Restored to previous state. Previous Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoice {@PreviousCorrectChoice}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",
+            Question.Id, Question.Text, Question.Choices, Question.CorrectChoice,
             Question.ExpectedCompletionTime);
 
         MappingAction.Invoke(Question);

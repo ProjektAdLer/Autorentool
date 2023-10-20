@@ -6,7 +6,6 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
-using Presentation.PresentationLogic.LearningContent;
 using Shared;
 using Shared.Adaptivity;
 
@@ -197,16 +196,15 @@ public static class EntityProvider
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
-        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
-            QuestionDifficulty.Easy,
-            rules);
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questionText", choices[0],
+            QuestionDifficulty.Easy, rules);
     }
 
     public static MultipleChoiceMultipleResponseQuestion GetMultipleChoiceMultipleResponseQuestion()
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
-        return new MultipleChoiceMultipleResponseQuestion("questionTitle", 123, choices, choices, rules, "questionText",
+        return new MultipleChoiceMultipleResponseQuestion(123, choices, choices, rules, "questionText",
             QuestionDifficulty.Easy);
     }
 
@@ -214,7 +212,7 @@ public static class EntityProvider
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };
-        return new MultipleChoiceSingleResponseQuestion("questionTitle", 123, choices, "questionText", choices[0],
+        return new MultipleChoiceSingleResponseQuestion(123, choices, "questionText", choices[0],
             QuestionDifficulty.Easy, rules);
     }
 
