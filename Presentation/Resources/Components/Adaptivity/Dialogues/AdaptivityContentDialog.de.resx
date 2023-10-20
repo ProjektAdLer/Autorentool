@@ -50,4 +50,7 @@
     <data name="AdaptivityContentDialog.Table.Button.Question.Medium" xml:space="preserve">
         <value>Mittelschwere Frage</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Field.Name.RequiredError.Text" xml:space="preserve">
+        <value>Name für Aufgabe erforderlich!</value>
+    </data>
 </root>

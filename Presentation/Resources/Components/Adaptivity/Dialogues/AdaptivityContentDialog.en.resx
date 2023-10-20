@@ -42,4 +42,7 @@
     <data name="AdaptivityContentDialog.Table.Button.Question.Hard" xml:space="preserve">
         <value>Hard Question</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Field.Name.RequiredError.Text" xml:space="preserve">
+        <value>Name for task required!</value>
+    </data>
 </root>
