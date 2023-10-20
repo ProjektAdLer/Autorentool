@@ -121,6 +121,11 @@
     {
         await base.OnParametersSetAsync();
         await MapIntoContainer();
+        foreach (var task in MyContent.Tasks)
+        {
+            _nameValues.Add(task, task.Name);
+            _nameMudFormRefs.Add(task, null!);
+        }
     }
 
     private async Task MapIntoContainer()
