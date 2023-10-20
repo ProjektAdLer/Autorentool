@@ -7,10 +7,15 @@
     {
         <MudText Class="text-formerror">@ErrorText</MudText>
     }
+    @if (FilterFuncSearchableStrings is not null)
+    {
+        <MudTextField T="string" Placeholder="Search..." Immediate="true" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Outlined.Search" @bind-Value="_searchString"/>
+    }
     <div class="grid grid-cols-4 gap-4">
-        @for (var i = 0; i<Elements.Count(); i++)
+        @for (var i = 0; i < FilteredElements.Count(); i++)
         {
-            var element = Elements.ElementAt(i);
+            var element = FilteredElements.ElementAt(i);
             <MudPaper @onclick="() => SelectAsync(element)" Class="@GetCssBuilder(element, i)">
                 @ElementTemplate(element)
             </MudPaper>
@@ -25,7 +30,16 @@
 
     [Parameter, EditorRequired, AllowNull]
     public RenderFragment<T> ElementTemplate { get; set; }
-    
+
+    [Parameter]
+    public Func<T, IEnumerable<string>>? FilterFuncSearchableStrings { get; set; }
+
+    private IEnumerable<T> FilteredElements => FilterFuncSearchableStrings is null || string.IsNullOrWhiteSpace(_searchString) ?
+        Elements :
+        Elements.Where(ele => FilterFuncSearchableStrings(ele).Any(str => str.ToLower().Contains(_searchString.ToLower())));
+
+    private string? _searchString = "";
+
     private string GetCssBuilder(T element, int i) => new CssBuilder("w-32 h-32 text-clip")
         .AddClass("bg-adlergrey-100", element.Equals(Value))
         .AddClass($"element-{i}")
@@ -42,4 +56,5 @@
             await SetValueAsync(element);
         }
     }
+
 }
