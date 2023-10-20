@@ -17,7 +17,7 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    private const string AtfVersion = "2.0";
+    private const string AtfVersion = "Advanced Prototype";
     private readonly IFileSystem _fileSystem;
     private string _author;
     private string _booleanAlgebraRequirements;
