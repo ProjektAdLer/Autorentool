@@ -104,12 +104,6 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
     {
         if (dropItem.Item == null) return;
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-        var oldSlot = -1;
-        if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
-        {
-            oldSlot = dropItem.Item.Parent.LearningSpaceLayout.LearningElements
-                .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;
-        }
 
         var spaceId = dropItem.DropzoneIdentifier.Substring(0, Guid.Empty.ToString().Length);
         var spaceVm = WorldP.LearningWorldVm.LearningSpaces.FirstOrDefault(x => x.Id.ToString() == spaceId);
@@ -117,17 +111,34 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         if (spaceVm != SpaceP.LearningSpaceVm)
             throw new ApplicationException("The space to drop to is not the currently selected space");
         var slotId = int.Parse(dropItem.DropzoneIdentifier.Substring(Guid.Empty.ToString().Length));
+        
+        var oldSlot = -1;
+        
+        if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
+        {
+            if (spaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
+            {
+                oldSlot = ((AdvancedLearningSpaceViewModel)dropItem.Item.Parent).AdvancedLearningSpaceLayout.LearningElements
+                    .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;
+            }
+            else
+            {
+                oldSlot = dropItem.Item.Parent.LearningSpaceLayout.LearningElements
+                    .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;
+            }
+
+        }
 
         if (oldSlot >= 0)
         {
-            if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
+            if (spaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
             {
-                PresentationL.SwitchAdvancedSlot((AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm, dropItem.Item,
+                PresentationL.SwitchAdvancedSlot((AdvancedLearningSpaceViewModel)spaceVm, dropItem.Item,
                     slotId);
             }
             else
             {
-                PresentationL.SwitchLearningElementSlot(SpaceP.LearningSpaceVm, dropItem.Item, slotId);
+                PresentationL.SwitchLearningElementSlot(spaceVm, dropItem.Item, slotId);
             }
         }
         else
@@ -135,21 +146,21 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
             if (!WorldP.LearningWorldVm.UnplacedLearningElements.Contains(dropItem.Item))
                 throw new ApplicationException("DragDropItem should be in unplaced elements");
 
-            if (SpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(slotId))
+            if (spaceVm.LearningSpaceLayout.LearningElements.ContainsKey(slotId))
             {
                 SpaceP.OpenReplaceLearningElementDialog(WorldP.LearningWorldVm, dropItem.Item, slotId);
             }
             else
             {
-                if (SpaceP.LearningSpaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
+                if (spaceVm.GetType() == typeof(AdvancedLearningSpaceViewModel))
                 {
                     PresentationL.PlaceLearningElementInAdvancedSlotFromUnplaced(WorldP.LearningWorldVm,
-                        (AdvancedLearningSpaceViewModel)SpaceP.LearningSpaceVm,
+                        (AdvancedLearningSpaceViewModel)spaceVm,
                         dropItem.Item, slotId);
                 }
                 else
                 {
-                    PresentationL.DragLearningElementFromUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                    PresentationL.DragLearningElementFromUnplaced(WorldP.LearningWorldVm, spaceVm,
                         dropItem.Item, slotId);
                 }
             }
