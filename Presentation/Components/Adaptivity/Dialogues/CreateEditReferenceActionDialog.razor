@@ -20,7 +20,8 @@
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
                 <GridSelect Elements="LearningContents" @bind-Value="_learningContent" Required="true"
-                            RequiredError="@Localizer["Content.RequiredError.Text"]">
+                            RequiredError="@Localizer["Content.RequiredError.Text"]"
+                            FilterFuncSearchableStrings="content => new[] { content.Name }">
                     <ElementTemplate>
                         <MudText Typo="Typo.body1" Align="Align.Center">@Localizer["Content.Text"] @context.Name</MudText>
                     </ElementTemplate>
@@ -33,7 +34,8 @@
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
                 <GridSelect Elements="LearningElements" @bind-Value="_learningElement" Required="true"
-                            RequiredError="@Localizer["Element.RequiredError.Text"]">
+                            RequiredError="@Localizer["Element.RequiredError.Text"]"
+                            FilterFuncSearchableStrings="element => new[] { element.Name }">
                     <ElementTemplate>
                         <div>@Localizer["Element.Text"] @context.Name</div>
                     </ElementTemplate>
