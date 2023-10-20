@@ -43,7 +43,10 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
 
     [XmlElement(ElementName = "length")] public string Length { get; set; } = "1";
 
-    [XmlElement(ElementName = "stamp")] public string Stamp { get; set; } = "";
+    [XmlElement(ElementName = "stamp")]
+    public string Stamp { get; set; } = new(Enumerable
+        .Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 10)
+        .Select(s => s[new Random().Next(s.Length)]).ToArray());
 
     [XmlElement(ElementName = "timecreated")]
     public string TimeCreated { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();

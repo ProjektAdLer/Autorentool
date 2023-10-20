@@ -32,6 +32,7 @@ public class XmlEntityManager : IXmlEntityManager
         IXmlUrlFactory? xmlUrlFactory = null, IXmlAdaptivityFactory? xmlAdaptivityFactory = null)
     {
         var filemanager = new XmlFileManager();
+        var contextId = new Random().Next(1000, 9999);
 
         _xmlSectionFactory = xmlSectionFactory ?? new XmlSectionFactory(readDsl);
         _xmlSectionFactory.CreateSectionFactory();
@@ -51,10 +52,10 @@ public class XmlEntityManager : IXmlEntityManager
         _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();
 
-        _xmlCourseFactory = xmlCourseFactory ?? new XmlCourseFactory(readDsl);
+        _xmlCourseFactory = xmlCourseFactory ?? new XmlCourseFactory(readDsl, contextId);
         _xmlCourseFactory.CreateXmlCourseFactory();
 
-        _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readDsl);
+        _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readDsl, contextId);
         _xmlBackupFactory.CreateXmlBackupFactory();
     }
 

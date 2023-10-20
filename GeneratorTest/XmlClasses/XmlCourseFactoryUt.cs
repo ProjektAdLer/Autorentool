@@ -18,9 +18,10 @@ public class XmlCourseFactoryUt
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
 
         //Act
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl);
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId);
 
         //Assert
         Assert.Multiple(() =>
@@ -44,6 +45,7 @@ public class XmlCourseFactoryUt
     {
         //Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
 
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
@@ -70,7 +72,7 @@ public class XmlCourseFactoryUt
 
 
         //Act
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockCourseCategory, mockCourseCourse,
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId, mockCourseCategory, mockCourseCourse,
             mockEnrolManual, mockEnrolGuest, mockEnrolSelf, mockEnrols, mockEnrolments,
             mockInforefRole, mockInforefRoleref, mockInforefInforef, mockCourseRoles, mockCourseCompletiondefault);
 
@@ -91,7 +93,7 @@ public class XmlCourseFactoryUt
     public void CreateCourseCourseXml_CourseCategoryCourseCourse_AndSerializes()
     {
         //Arrange 
-
+        var mockContextId = 12345;
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
@@ -102,7 +104,7 @@ public class XmlCourseFactoryUt
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
 
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockCourseCategory, mockCourseCourse);
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId, mockCourseCategory, mockCourseCourse);
 
         //Act
         systemUnderTest.CreateCourseCourseXml();
@@ -134,6 +136,7 @@ public class XmlCourseFactoryUt
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
 
         var mockEnrolManual = new CourseEnrolmentsXmlEnrol();
         var mockEnrolGuest = new CourseEnrolmentsXmlEnrol();
@@ -146,7 +149,8 @@ public class XmlCourseFactoryUt
         enrolsList.Add(mockEnrolGuest);
         enrolsList.Add(mockEnrolSelf);
 
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseEnrolmentsXmlEnrolManual: mockEnrolManual,
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId,
+            courseEnrolmentsXmlEnrolManual: mockEnrolManual,
             courseEnrolmentsXmlEnrolGuest: mockEnrolGuest, courseEnrolmentsXmlEnrolSelf: mockEnrolSelf,
             courseEnrolmentsXmlEnrols: mockEnrols, courseEnrolmentsXmlEnrolments: mockEnrolments);
 
@@ -179,11 +183,13 @@ public class XmlCourseFactoryUt
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
         var mockInforefRole = new CourseInforefXmlRole();
         var mockInforefRoleref = new CourseInforefXmlRoleref();
         var mockInforefInforef = Substitute.For<ICourseInforefXmlInforef>();
 
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseInforefXmlInforef: mockInforefInforef,
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId,
+            courseInforefXmlInforef: mockInforefInforef,
             courseInforefXmlRoleref: mockInforefRoleref, courseInforefXmlRole: mockInforefRole);
 
         //Act
@@ -203,10 +209,11 @@ public class XmlCourseFactoryUt
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
         var mockCourseRoles = Substitute.For<ICourseRolesXmlRoles>();
 
 
-        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseRolesXmlRoles: mockCourseRoles);
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockContextId, courseRolesXmlRoles: mockCourseRoles);
 
         //Act
         systemUnderTest.CreateCourseRolesXml();
@@ -220,10 +227,12 @@ public class XmlCourseFactoryUt
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockContextId = 12345;
         var mockCourseCompletiondefault = Substitute.For<ICourseCompletiondefaultXmlCourseCompletionDefaults>();
 
         var systemUnderTest =
-            new XmlCourseFactory(mockReadDsl, courseCourseXmlCompletiondefault: mockCourseCompletiondefault);
+            new XmlCourseFactory(mockReadDsl, mockContextId,
+                courseCourseXmlCompletiondefault: mockCourseCompletiondefault);
 
         //Act
         systemUnderTest.CreateCourseCompletiondefault();

@@ -16,6 +16,7 @@ namespace Generator.XmlClasses;
 /// </summary>
 public class XmlBackupFactory : IXmlBackupFactory
 {
+    private readonly int _contextId;
     private readonly string _currentTime;
     private readonly List<IElementJson> _learningElements;
     private readonly ILearningWorldJson _learningWorld;
@@ -30,7 +31,7 @@ public class XmlBackupFactory : IXmlBackupFactory
     public IReadDsl ReadDsl;
 
 
-    public XmlBackupFactory(IReadDsl readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
+    public XmlBackupFactory(IReadDsl readDsl, int contextId, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems = null,
         IGradebookXmlGradeCategory? gradebookXmlGradeCategory = null,
         IGradebookXmlGradeCategories? gradebookXmlGradeCategories = null,
@@ -52,6 +53,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         IScalesXmlScalesDefinition? scalesXmlScalesDefinition = null)
     {
         ReadDsl = readDsl;
+        _contextId = contextId;
 
         GradebookXmlGradeItem = gradebookXmlGradeItem ?? new GradebookXmlGradeItem();
         GradebookXmlGradeItems = gradebookXmlGradeItems ?? new GradebookXmlGradeItems();
@@ -274,6 +276,8 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         MoodleBackupXmlSettingQuestionbank.Name = "questionbank";
 
+        MoodleBackupXmlSettingQuestionbank.Value = "1";
+
         MoodleBackupXmlSettingGroups.Name = "groups";
 
         MoodleBackupXmlSettingCompetencies.Name = "competencies";
@@ -480,6 +484,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.WorldName;
         MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.WorldName;
         MoodleBackupXmlInformation.OriginalCourseStartDate = _currentTime;
+        MoodleBackupXmlInformation.OriginalCourseContextId = _contextId.ToString();
         MoodleBackupXmlInformation.Details =
             MoodleBackupXmlDetails as MoodleBackupXmlDetails ?? new MoodleBackupXmlDetails();
         MoodleBackupXmlInformation.Contents =
@@ -512,8 +517,8 @@ public class XmlBackupFactory : IXmlBackupFactory
             return;
         }
 
-        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top");
-        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name");
+        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top", _contextId);
+        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name", _contextId);
 
         var answerId = 1;
 

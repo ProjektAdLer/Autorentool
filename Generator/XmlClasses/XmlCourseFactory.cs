@@ -17,7 +17,7 @@ public class XmlCourseFactory : IXmlCourseFactory
     public IReadDsl ReadDsl;
 
 
-    public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory = null,
+    public XmlCourseFactory(IReadDsl readDsl, int contextId, ICourseCourseXmlCategory? courseCourseXmlCategory = null,
         ICourseCourseXmlCourse? courseCourseXmlCourse = null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual = null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest = null,
@@ -31,7 +31,6 @@ public class XmlCourseFactory : IXmlCourseFactory
         ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null)
     {
         CourseCourseXmlCategory = courseCourseXmlCategory ?? new CourseCourseXmlCategory();
-        CourseCourseXmlCourse = courseCourseXmlCourse ?? new CourseCourseXmlCourse();
 
         CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrolManual ?? new CourseEnrolmentsXmlEnrol();
         CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrolGuest ?? new CourseEnrolmentsXmlEnrol();
@@ -49,6 +48,7 @@ public class XmlCourseFactory : IXmlCourseFactory
                                                              new CourseCompletiondefaultXmlCourseCompletionDefaults();
 
         ReadDsl = readDsl;
+        CourseCourseXmlCourse = courseCourseXmlCourse ?? new CourseCourseXmlCourse(contextId);
         _learningWorld = ReadDsl.GetLearningWorld();
     }
 

@@ -160,7 +160,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesModuleXmlModule.SectionNumber = _adaptivityElementParentSpaceId;
         ActivitiesModuleXmlModule.Added = _currentTime;
         ActivitiesModuleXmlModule.Id = _adaptivityElementId;
-        ActivitiesModuleXmlModule.Completion = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
         //AdlerScore can not be null at this point because it is set in the constructor
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax =
             _adaptivityElementPoints.ToString("F5", CultureInfo.InvariantCulture);
