@@ -50,7 +50,7 @@ public class XmlEntityManagerUt
         var learningWorldJson = new LearningWorldJson("world", "", topicsList, learningSpacesList, learningElementList);
 
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetSectionList().Returns(learningSpacesList);
+        mockReadDsl.GetSpaceList().Returns(learningSpacesList);
         mockReadDsl.GetElementsOrderedList().Returns(learningElementList);
 
         // Act

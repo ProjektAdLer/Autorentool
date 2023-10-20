@@ -105,9 +105,7 @@ public class XmlUrlFactory : IXmlUrlFactory
             switch (url)
             {
                 case BaseLearningElementJson:
-                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
-                    // Description immer leer?
-                    // Points immer 0?
+                    UrlParentSpaceId = (ReadDsl.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     UrlParentSpaceId = learningElementJson.LearningSpaceParentId.ToString();

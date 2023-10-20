@@ -52,7 +52,7 @@ public class ReadDslUt
         var systemUnderTest = new ReadDsl(mockFileSystem, mockLogger);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
-        var listSpace = systemUnderTest.GetSectionList();
+        var listSpace = systemUnderTest.GetSpaceList();
         var resourceList = systemUnderTest.GetResourceElementList();
 
         //Assert
@@ -86,7 +86,7 @@ public class ReadDslUt
             Assert.That(getWorldAttributes.ElementUUID, Is.EqualTo(""));
             Assert.That(getWorldAttributes.ElementModel, Is.EqualTo(""));
 
-            Assert.That(listSpace.Count, Is.EqualTo(3));
+            Assert.That(listSpace.Count, Is.EqualTo(2));
 
             //Currently all elements with Element-Type "mp4" are added to the list of Urls
             Assert.That(getUrlList, Has.Count.EqualTo(1));
@@ -116,7 +116,7 @@ public class ReadDslUt
         var systemUnderTest = new ReadDsl(mockFileSystem, mockLogger);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
-        var listSpace = systemUnderTest.GetSectionList();
+        var listSpace = systemUnderTest.GetSpaceList();
 
         //Assert
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
@@ -133,7 +133,7 @@ public class ReadDslUt
             Assert.That(getSpacesAndElementsList, Has.Count.EqualTo(0));
 
             //There is always at least 1 Section (Topic 0) in a Moodle Course
-            Assert.That(listSpace.Count, Is.EqualTo(1));
+            Assert.That(listSpace.Count, Is.EqualTo(0));
         });
     }
 }

@@ -13,8 +13,10 @@ public class ReadDsl : IReadDsl
     private ILearningWorldJson _learningWorldJson;
     private List<IAdaptivityElementJson> _listAdaptivityElements;
     private List<IElementJson> _listAllElementsOrdered;
+    private List<IBaseLearningElementJson> _listBaseLearningElements;
     private List<ILearningElementJson> _listH5PElements;
     private List<ILearningElementJson> _listResourceElements;
+    private List<ILearningSpaceJson> _listSpaces;
     private List<ILearningElementJson> _listUrlElements;
     private ILogger<ReadDsl> _logger;
     private DocumentRootJson _rootJson;
@@ -49,8 +51,10 @@ public class ReadDsl : IReadDsl
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
         GetWorldAttributes(_rootJson);
+        GetSpaces(_rootJson);
         GetUrlElements(_rootJson);
         GetAdaptivityElements(_rootJson);
+        GetBaseLearningElements(_rootJson);
         GetElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -73,14 +77,10 @@ public class ReadDsl : IReadDsl
         return _listH5PElements;
     }
 
-    /// <inheritdoc cref="IReadDsl.GetSectionList"/>
-    public List<ILearningSpaceJson> GetSectionList()
+    /// <inheritdoc cref="IReadDsl.GetSpaceList"/>
+    public List<ILearningSpaceJson> GetSpaceList()
     {
-        var space = new LearningSpaceJson(0, "", "",
-            new List<int?>(), -1, "", "");
-        var spaceList = new List<ILearningSpaceJson> { space };
-        spaceList.AddRange(_rootJson.World.Spaces);
-        return spaceList;
+        return _listSpaces;
     }
 
     /// <inheritdoc cref="IReadDsl.GetResourceElementList"/>
@@ -107,9 +107,15 @@ public class ReadDsl : IReadDsl
         return _listAllElementsOrdered;
     }
 
-    [MemberNotNull(nameof(_learningWorldJson), nameof(_worldAttributes), nameof(_rootJson),
-        nameof(_listH5PElements), nameof(_listResourceElements), nameof(_listUrlElements),
-        nameof(_listAllElementsOrdered), nameof(_listAdaptivityElements))]
+    /// <inheritdoc cref="IReadDsl.GetBaseLearningElementsList"/>
+    public List<IBaseLearningElementJson> GetBaseLearningElementsList()
+    {
+        return _listBaseLearningElements;
+    }
+
+    [MemberNotNull(nameof(_learningWorldJson), nameof(_listSpaces), nameof(_worldAttributes),
+        nameof(_rootJson), nameof(_listH5PElements), nameof(_listResourceElements), nameof(_listUrlElements),
+        nameof(_listAllElementsOrdered), nameof(_listAdaptivityElements), nameof(_listBaseLearningElements))]
     private void Initialize()
     {
         _learningWorldJson = new LearningWorldJson("Value",
@@ -118,17 +124,19 @@ public class ReadDsl : IReadDsl
         _worldAttributes = new LearningElementJson(0, "", "", "", "", "", 0, 0, "");
         _rootJson = new DocumentRootJson(Constants.AtfVersion, Constants.ApplicationVersion, "", "",
             _learningWorldJson);
+        _listSpaces = new List<ILearningSpaceJson>();
         _listH5PElements = new List<ILearningElementJson>();
         _listResourceElements = new List<ILearningElementJson>();
         _listUrlElements = new List<ILearningElementJson>();
         _listAdaptivityElements = new List<IAdaptivityElementJson>();
         _listAllElementsOrdered = new List<IElementJson>();
+        _listBaseLearningElements = new List<IBaseLearningElementJson>();
     }
 
     /// <summary>
     /// Sets the learning world object using the provided DocumentRootJson object.
     /// </summary>
-    private void SetLearningWorld(DocumentRootJson? documentRootJson)
+    private void SetLearningWorld(IDocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null) _learningWorldJson = documentRootJson.World;
     }
@@ -136,7 +144,7 @@ public class ReadDsl : IReadDsl
     /// <summary>
     /// Extracts H5P elements from the provided DocumentRootJson object and adds them to the H5P elements list.
     /// </summary>
-    private void GetH5PElements(DocumentRootJson documentRootJson)
+    private void GetH5PElements(IDocumentRootJson documentRootJson)
     {
         foreach (var element in documentRootJson.World.Elements)
         {
@@ -152,7 +160,7 @@ public class ReadDsl : IReadDsl
     /// <summary>
     /// Extracts resource elements (e.g., pdf, json, jpg, etc.) from the provided DocumentRootJson object and adds them to the resource elements list.
     /// </summary>
-    private void GetResourceElements(DocumentRootJson documentRootJson)
+    private void GetResourceElements(IDocumentRootJson documentRootJson)
     {
         foreach (var resource in documentRootJson.World.Elements)
         {
@@ -170,7 +178,7 @@ public class ReadDsl : IReadDsl
     /// <summary>
     /// Retrieves world attributes from the provided DocumentRootJson object and adds them to the ordered elements list.
     /// </summary>
-    private void GetWorldAttributes(DocumentRootJson documentRootJson)
+    private void GetWorldAttributes(IDocumentRootJson documentRootJson)
     {
         // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
         if (documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "")
@@ -191,9 +199,17 @@ public class ReadDsl : IReadDsl
     }
 
     /// <summary>
+    /// Extracts spaces from the provided DocumentRootJson object and adds them to the spaces list.
+    /// </summary>
+    private void GetSpaces(IDocumentRootJson rootJson)
+    {
+        _listSpaces = rootJson.World.Spaces;
+    }
+
+    /// <summary>
     /// Extracts URL elements from the provided DocumentRootJson object and adds them to the URL elements list.
     /// </summary>
-    private void GetUrlElements(DocumentRootJson documentRootJson)
+    private void GetUrlElements(IDocumentRootJson documentRootJson)
     {
         foreach (var url in documentRootJson.World.Elements)
         {
@@ -209,7 +225,7 @@ public class ReadDsl : IReadDsl
     /// <summary>
     /// Extracts adaptivity elements from the provided DocumentRootJson object and adds them to the adaptivity elements list.
     /// </summary>
-    private void GetAdaptivityElements(DocumentRootJson documentRootJson)
+    private void GetAdaptivityElements(IDocumentRootJson documentRootJson)
     {
         foreach (var element in documentRootJson.World.Elements.Where(
                      element => element.ElementFileType is "adaptivity"))
@@ -221,7 +237,7 @@ public class ReadDsl : IReadDsl
     /// <summary>
     /// Extracts ordered elements from the provided DocumentRootJson object and adds them to the ordered elements list.
     /// </summary>
-    private void GetElementsOrdered(DocumentRootJson? documentRootJson)
+    private void GetElementsOrdered(IDocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null)
         {
@@ -233,6 +249,17 @@ public class ReadDsl : IReadDsl
                         _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
                 }
             }
+
+            _listAllElementsOrdered.AddRange(_listBaseLearningElements);
         }
+    }
+
+    /// <summary>
+    /// Adds all BaseLearningElementJson elements from documentRootJson to _listBaseLearningElements.
+    /// </summary>
+    private void GetBaseLearningElements(IDocumentRootJson? documentRootJson)
+    {
+        _listBaseLearningElements.AddRange(documentRootJson?.World.Elements
+            .OfType<BaseLearningElementJson>() ?? Enumerable.Empty<BaseLearningElementJson>());
     }
 }

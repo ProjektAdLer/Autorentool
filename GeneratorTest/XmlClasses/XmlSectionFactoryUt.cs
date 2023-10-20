@@ -54,7 +54,8 @@ public class XmlSectionFactoryUt
         learningSpaceList.Add(learningSpaceJson1);
         learningSpaceList.Add(learningSpaceJson2);
 
-        mockReadDsl.GetSectionList().Returns(learningSpaceList);
+        mockReadDsl.GetSpaceList().Returns(learningSpaceList);
+        mockReadDsl.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
 
         // Act
         var systemUnderTest = new XmlSectionFactory(mockReadDsl, mockFileSystem, mockSection, mockInforef);

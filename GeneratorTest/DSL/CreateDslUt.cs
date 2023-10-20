@@ -510,7 +510,7 @@ public class CreateDslUt
                 .AdaptivityTask[0].AdaptivityQuestions[1].QuestionUUID, Is.EqualTo(question2.Id.ToString()));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionDifficulty, Is.EqualTo(1));
+                .AdaptivityTask[0].AdaptivityQuestions[1].QuestionDifficulty, Is.EqualTo(100));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTask[0].AdaptivityQuestions[1].QuestionText, Is.EqualTo(question2.Text));
@@ -576,7 +576,7 @@ public class CreateDslUt
                 .AdaptivityTask[1].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question3.Id.ToString()));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(2));
+                .AdaptivityTask[1].AdaptivityQuestions[0].QuestionDifficulty, Is.EqualTo(200));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTask[1].AdaptivityQuestions[0].QuestionText, Is.EqualTo(question3.Text));

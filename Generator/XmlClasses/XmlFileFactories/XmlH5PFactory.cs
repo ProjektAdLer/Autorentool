@@ -142,9 +142,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             switch (h5PElement)
             {
                 case BaseLearningElementJson:
-                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
-                    // Description immer leer?
-                    // Points immer 0?
+                    H5PElementParentSpaceString = (ReadDsl.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     H5PElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();

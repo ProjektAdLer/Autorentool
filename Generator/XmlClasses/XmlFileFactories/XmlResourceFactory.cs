@@ -121,9 +121,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             switch (resource)
             {
                 case BaseLearningElementJson:
-                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
-                    // Description immer leer?
-                    // Points immer 0?
+                    FileElementParentSpaceString = (ReadDsl.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     FileElementDesc = learningElementJson.ElementDescription ?? "";

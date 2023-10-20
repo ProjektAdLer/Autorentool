@@ -17,7 +17,7 @@ namespace Generator.XmlClasses;
 public class XmlBackupFactory : IXmlBackupFactory
 {
     private readonly string _currentTime;
-    private readonly List<IElementJson> _learningElement;
+    private readonly List<IElementJson> _learningElements;
     private readonly ILearningWorldJson _learningWorld;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
@@ -113,9 +113,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
 
         _learningWorld = readDsl.GetLearningWorld();
-        _learningElement = readDsl.GetElementsOrderedList();
-        //_learningElement = readDsl.GetResourceList();
-        //_learningElement.AddRange(readDsl.GetH5PElementsList());
+        _learningElements = readDsl.GetElementsOrderedList();
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -289,23 +287,17 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         //Every activity needs the following tags in the moodle_backup.xml file
         //The ElementType is different for some element types
-        foreach (var element in _learningElement)
+        foreach (var element in _learningElements)
         {
             var learningElementId = element.ElementId.ToString();
             var learningElementType = element.ElementFileType;
             var learningElementName = element.ElementName;
-            var learningElementSectionId = "";
-            switch (element)
+            var learningElementSectionId = element switch
             {
-                case IInternalElementJson internalElementJson:
-                    learningElementSectionId = internalElementJson.LearningSpaceParentId.ToString();
-                    break;
-                case IBaseLearningElementJson:
-                    //TODO: in welche Section werden BaseLearningElements zugeordnet?
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(element));
-            }
+                IInternalElementJson internalElementJson => internalElementJson.LearningSpaceParentId.ToString(),
+                IBaseLearningElementJson => (ReadDsl.GetSpaceList().Count + 1).ToString(),
+                _ => throw new ArgumentOutOfRangeException(nameof(element))
+            };
 
             if (learningElementType == "h5p")
             {
@@ -316,6 +308,11 @@ public class XmlBackupFactory : IXmlBackupFactory
                      or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 learningElementType = "resource";
+            }
+
+            if (learningElementType == "adaptivity")
+            {
+                learningElementType = "adleradaptivity";
             }
 
             if (MoodleBackupXmlActivityList != null)
@@ -344,10 +341,31 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
 
-        foreach (var section in ReadDsl.GetSectionList())
+
+        MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
         {
-            var sectionId = section.SpaceId.ToString();
-            var sectionName = section.SpaceName;
+            SectionId = "0",
+            Title = "",
+            Directory = "sections/section_0",
+        });
+
+        MoodleBackupXmlSections.Section = MoodleBackupXmlSectionList;
+
+        if (MoodleBackupXmlSettingList != null)
+        {
+            MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                "section_0_included", "1",
+                "section_0", true));
+
+            MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                "section_0_userinfo", "0",
+                "section_0", true));
+        }
+
+        foreach (var space in ReadDsl.GetSpaceList())
+        {
+            var sectionId = space.SpaceId.ToString();
+            var sectionName = space.SpaceName;
 
             if (MoodleBackupXmlSectionList != null)
             {
@@ -355,6 +373,33 @@ public class XmlBackupFactory : IXmlBackupFactory
                 {
                     SectionId = sectionId,
                     Title = sectionName,
+                    Directory = "sections/section_" + sectionId,
+                });
+
+                MoodleBackupXmlSections.Section = MoodleBackupXmlSectionList;
+            }
+
+            if (MoodleBackupXmlSettingList != null)
+            {
+                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                    "section_" + sectionId + "_included", "1",
+                    "section_" + sectionId, true));
+
+                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                    "section_" + sectionId + "_userinfo", "0",
+                    "section_" + sectionId, true));
+            }
+        }
+
+        if (ReadDsl.GetBaseLearningElementsList().Count > 0)
+        {
+            var sectionId = (ReadDsl.GetSpaceList().Count + 1).ToString();
+            if (MoodleBackupXmlSectionList != null)
+            {
+                MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
+                {
+                    SectionId = sectionId,
+                    Title = "Hinweise auf externes Lernmaterial",
                     Directory = "sections/section_" + sectionId,
                 });
 

@@ -74,13 +74,14 @@ public class XmlBackupFactoryUt
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
-        mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
+        mockReadDsl.GetSpaceList().Returns(learningSpacesJsons);
         mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson> { mockDslDocumentJson });
         mockReadDsl.GetAdaptivityElementsList().Returns(mockAdaptivityElements);
 
         learningElementJsons.Add(mockDslDocumentJson);
         learningElementJsons.Add(mockSpaceElementJson);
         mockReadDsl.GetElementsOrderedList().Returns(elementJsons);
+        mockReadDsl.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
 
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
 
@@ -201,6 +202,7 @@ public class XmlBackupFactoryUt
         mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
+        mockReadDsl.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
 
         var mockGradeItems = Substitute.For<IGradebookXmlGradeItems>();
         var mockGradeCategories = Substitute.For<IGradebookXmlGradeCategories>();
@@ -324,12 +326,13 @@ public class XmlBackupFactoryUt
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
-        mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
+        mockReadDsl.GetSpaceList().Returns(learningSpacesJsons);
         mockReadDsl.GetResourceElementList().Returns(new List<ILearningElementJson> { mockDslDocumentJson });
 
         learningElementJsons.Add(mockDslDocumentJson);
 
         mockReadDsl.GetElementsOrderedList().Returns(elementJsons);
+        mockReadDsl.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
 
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, moodleBackupXmlDetail: mockDetail,
             moodleBackupXmlDetails: mockDetails,

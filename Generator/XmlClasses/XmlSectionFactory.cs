@@ -30,16 +30,47 @@ public class XmlSectionFactory : IXmlSectionFactory
 
     public void CreateSectionFactory()
     {
-        LearningSpaceJsons = ReadDsl.GetSectionList();
+        LearningSpaceJsons = ReadDsl.GetSpaceList();
 
-        //Add A Section for every LearningSpace
-        foreach (var space in LearningSpaceJsons)
+        AddSectionForWorldAttributes();
+
+        AddSectionsForLearningSpaces(LearningSpaceJsons);
+
+        if (ReadDsl.GetBaseLearningElementsList().Count > 0) AddSectionForBaseLearningElements();
+    }
+
+    private void AddSectionForWorldAttributes()
+    {
+        CreateSectionsFolder("0");
+        CreateSectionInforefXml("0");
+        CreateSectionSectionXml("0", "", "", new List<int?>(),
+            "", null, -1);
+    }
+
+    private void AddSectionsForLearningSpaces(List<ILearningSpaceJson> spaces)
+    {
+        foreach (var space in spaces)
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml(space.SpaceId.ToString());
             CreateSectionSectionXml(space.SpaceId.ToString(), space.SpaceName, space.SpaceDescription,
                 space.SpaceSlotContents, space.SpaceUUID, space.RequiredSpacesToEnter, space.RequiredPointsToComplete);
         }
+    }
+
+    private void AddSectionForBaseLearningElements()
+    {
+        var baseLearningElements = ReadDsl.GetBaseLearningElementsList();
+        var baseLearningElementIds = baseLearningElements.Select(baseLearningElement => baseLearningElement.ElementId)
+            .Select(dummy => (int?)dummy).ToList();
+
+        var sectionId = (LearningSpaceJsons.Count + 1).ToString();
+
+        //Add a section for BaseLearningElements
+        CreateSectionsFolder(sectionId);
+        CreateSectionInforefXml(sectionId);
+        CreateSectionSectionXml(sectionId, "Hinweise auf externe Lerninhalte",
+            "", baseLearningElementIds, "", null, -1);
     }
 
     private void CreateSectionInforefXml(string sectionid)
@@ -61,6 +92,10 @@ public class XmlSectionFactory : IXmlSectionFactory
             SectionsSectionXmlSection.AvailabilityJson =
                 "{\"op\":\"&\",\"c\":[{\"type\":\"adler\",\"condition\":\"" + requiredSpacesToEnter +
                 "\"}],\"showc\":[true]}";
+        }
+        else
+        {
+            SectionsSectionXmlSection.AvailabilityJson = "$@NULL@$";
         }
 
         if (requiredPointsToComplete >= 0)

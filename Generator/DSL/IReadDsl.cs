@@ -32,7 +32,7 @@ public interface IReadDsl
     /// Retrieves the list of learning spaces, including an initial empty space.
     /// </summary>
     /// <returns>A list of LearningSpaceJson objects that represent the learning spaces.</returns>
-    List<ILearningSpaceJson> GetSectionList();
+    List<ILearningSpaceJson> GetSpaceList();
 
     /// <summary>
     /// Retrieves the list of resource elements.
@@ -57,4 +57,10 @@ public interface IReadDsl
     /// </summary>
     /// <returns>A list of LearningElementJson objects that represent the ordered elements.</returns>
     List<IElementJson> GetElementsOrderedList();
+
+    /// <summary>
+    /// Retrieves the list of base learning elements.
+    /// </summary>
+    /// <returns>A list of BaseLearningElementJson objects that represent the base learning elements.</returns>
+    List<IBaseLearningElementJson> GetBaseLearningElementsList();
 }

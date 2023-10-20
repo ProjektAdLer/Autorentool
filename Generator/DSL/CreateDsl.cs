@@ -614,12 +614,12 @@ public class CreateDsl : ICreateDsl
             case FileContentPe fileContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
-                    MapFileContentToElementCategory(fileContentPe), fileContentPe.Type, parentId);
+                    MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
                 ListFileContent.Add((fileContentPe, fileContentPe.Name));
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),
-                    linkContentPe.Name, linkContentPe.Link, "video", "url", parentId);
+                    linkContentPe.Name, linkContentPe.Link, "video", "url");
                 break;
             case AdaptivityContentPe:
                 throw new ArgumentException("Reference from AdaptivityContent to AdaptivityContent is not supported");
