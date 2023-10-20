@@ -33,7 +33,7 @@
                     @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
                 </MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                                 Min="1"
+                                 Min="0"
                                  For="@(() => FormModel.RequiredPoints)"
                                  DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
@@ -116,7 +116,6 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
             model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
     }
