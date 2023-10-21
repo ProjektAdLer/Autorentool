@@ -15,7 +15,6 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
-using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 
 namespace AuthoringTool.Mapping;
 
@@ -130,6 +129,12 @@ public class EntityPersistEntityMappingProfile : Profile
     private static bool
         SameIdAtSameIndex(ILearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+    // private static bool
+    //     SameIdAtSameIndex(IAdvancedLearningSpaceLayoutPe destination, KeyValuePair<int, ILearningElement> kvp) =>
+    //     destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+    // private static bool
+    //     SameIdAtSameIndex(IAdvancedLearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
+    //     destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CreatePathwayMaps()
     {
@@ -168,6 +173,7 @@ public class EntityPersistEntityMappingProfile : Profile
     {
         CreateMap<PathWayCondition, IObjectInPathWayPe>().As<PathWayConditionPe>();
         CreateMap<LearningSpace, IObjectInPathWayPe>().As<LearningSpacePe>();
+        CreateMap<AdvancedLearningSpace, IObjectInPathWayPe>().As<AdvancedLearningSpacePe>();
 
         CreateMap<LearningElement, ILearningElementPe>().As<LearningElementPe>();
         CreateMap<LearningElementPe, ILearningElement>().As<LearningElement>();
@@ -179,6 +185,10 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
         CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
         CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        // CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>().As<AdvancedLearningSpaceLayoutPe>();
+        // CreateMap<AdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>().As<AdvancedLearningSpaceLayout>();
+        // CreateMap<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>().As<AdvancedLearningSpaceLayoutPe>();
+        // CreateMap<IAdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>().As<AdvancedLearningSpaceLayout>();
     }
 
     private void CreateLearningElementMap()
@@ -209,7 +219,7 @@ public class EntityPersistEntityMappingProfile : Profile
 
     private void CreateAdvancedLearningSpaceLayoutMap()
     {
-        CreateMap<AdvancedLearningSpace, AdvancedLearningSpaceLayoutPe>()
+        CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
             .ReverseMap();
     }
     private void CreateAdvancedLearningSpaceMap()
