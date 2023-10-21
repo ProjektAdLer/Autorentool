@@ -10,8 +10,8 @@ namespace PersistEntities.AdvancedLearningSpaceGenerator;
 [KnownType(typeof(LearningElementPe))]
 public class AdvancedLearningSpaceLayoutPe : IAdvancedLearningSpaceLayoutPe, IExtensibleDataObject
 {
-    public AdvancedLearningSpaceLayoutPe(IDictionary<int, ILearningElementPe> learningElements, IDictionary<int, IAdvancedLearningElementSlotPe> advancedLearningElementSlots,
-        IDictionary<int, IAdvancedDecorationPe> advancedDecorations, IDictionary<int, DoublePoint> advancedCornerPoints, DoublePoint entryDoorPosition, DoublePoint exitDoorPosition)
+    public AdvancedLearningSpaceLayoutPe(IDictionary<int, ILearningElementPe> learningElements, IDictionary<int, Coordinate> advancedLearningElementSlots,
+        IDictionary<int, Coordinate> advancedDecorations, IDictionary<int, DoublePoint> advancedCornerPoints, DoublePoint entryDoorPosition, DoublePoint exitDoorPosition)
     {
         LearningElements = learningElements;
         AdvancedLearningElementSlots = advancedLearningElementSlots;
@@ -27,8 +27,8 @@ public class AdvancedLearningSpaceLayoutPe : IAdvancedLearningSpaceLayoutPe, IEx
     private AdvancedLearningSpaceLayoutPe()
     {
         LearningElements = new Dictionary<int, ILearningElementPe>();
-        AdvancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlotPe>();
-        AdvancedDecorations = new Dictionary<int, IAdvancedDecorationPe>();
+        AdvancedLearningElementSlots = new Dictionary<int, Coordinate>();
+        AdvancedDecorations = new Dictionary<int, Coordinate>();
         AdvancedCornerPoints = new Dictionary<int, DoublePoint>();
         EntryDoorPosition = new DoublePoint();
         ExitDoorPosition = new DoublePoint();
@@ -38,9 +38,9 @@ public class AdvancedLearningSpaceLayoutPe : IAdvancedLearningSpaceLayoutPe, IEx
     [DataMember]
     public IDictionary<int, ILearningElementPe> LearningElements { get; set; }
     [DataMember]
-    public IDictionary<int, IAdvancedLearningElementSlotPe> AdvancedLearningElementSlots { get; set; }
+    public IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; set; }
     [DataMember]
-    public IDictionary<int, IAdvancedDecorationPe> AdvancedDecorations { get; set; }
+    public IDictionary<int, Coordinate> AdvancedDecorations { get; set; }
     [DataMember]
     public IDictionary<int, DoublePoint> AdvancedCornerPoints { get; set; }
     [DataMember]
@@ -49,8 +49,8 @@ public class AdvancedLearningSpaceLayoutPe : IAdvancedLearningSpaceLayoutPe, IEx
     public DoublePoint ExitDoorPosition { get; set; }
 
     public IEnumerable<ILearningElementPe> ContainedLearningElements => LearningElements.Values;
-    public IEnumerable<IAdvancedLearningElementSlotPe> ContainedAdvancedLearningElementSlots => AdvancedLearningElementSlots.Values;
-    public IEnumerable<IAdvancedDecorationPe> ContainedAdvancedDecorations => AdvancedDecorations.Values;
+    public IEnumerable<Coordinate> ContainedAdvancedLearningElementSlots => AdvancedLearningElementSlots.Values;
+    public IEnumerable<Coordinate> ContainedAdvancedDecorations => AdvancedDecorations.Values;
     public IEnumerable<DoublePoint> ContainedAdvancedCornerPoints => AdvancedCornerPoints.Values;
     
 

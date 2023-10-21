@@ -37,8 +37,7 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateTopicMap();
         CreateAdaptivityMap();
         CreateAdvancedLearningSpaceMap();
-        CreateAdvancedLearningElementSlotMap();
-        CreateAdvancedDecorationMap();
+        CreateAdvancedLearningSpaceLayoutMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -207,6 +206,12 @@ public class EntityPersistEntityMappingProfile : Profile
                 }
             });
     }
+
+    private void CreateAdvancedLearningSpaceLayoutMap()
+    {
+        CreateMap<AdvancedLearningSpace, AdvancedLearningSpaceLayoutPe>()
+            .ReverseMap();
+    }
     private void CreateAdvancedLearningSpaceMap()
     {
         CreateMap<AdvancedLearningSpace, AdvancedLearningSpacePe>()
@@ -223,16 +228,6 @@ public class EntityPersistEntityMappingProfile : Profile
                     element.Parent = d;
                 }
             });
-    }
-    private void CreateAdvancedLearningElementSlotMap()
-    {
-        CreateMap<AdvancedLearningElementSlotViewModel, AdvancedLearningElementSlotPe>()
-            .ReverseMap();
-    }
-    private void CreateAdvancedDecorationMap()
-    {
-        CreateMap<AdvancedDecorationViewModel, AdvancedDecorationPe>()
-            .ReverseMap();
     }
     private void CreateLearningWorldMap()
     {

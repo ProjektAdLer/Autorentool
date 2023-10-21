@@ -26,8 +26,8 @@ public class AdvancedLearningSpacePe : IAdvancedLearningSpacePe, IExtensibleData
             FloorPlanEnum.R_20X20_6L);
         AdvancedLearningSpaceLayout = advancedLearningSpaceLayout ??
                                       new AdvancedLearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
-                                          new Dictionary<int, IAdvancedLearningElementSlotPe>(),
-                                          new Dictionary<int, IAdvancedDecorationPe>(),
+                                          new Dictionary<int, Coordinate>(),
+                                          new Dictionary<int, Coordinate>(),
                                           new Dictionary<int, DoublePoint>(),
                                           new DoublePoint(), new DoublePoint());
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
