@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -9,10 +10,12 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using PersistEntities;
+using PersistEntities.AdvancedLearningSpaceGenerator;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
+using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 
 namespace AuthoringTool.Mapping;
 
@@ -33,6 +36,9 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
         CreateAdaptivityMap();
+        CreateAdvancedLearningSpaceMap();
+        CreateAdvancedLearningElementSlotMap();
+        CreateAdvancedDecorationMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -218,7 +224,16 @@ public class EntityPersistEntityMappingProfile : Profile
                 }
             });
     }
-
+    private void CreateAdvancedLearningElementSlotMap()
+    {
+        CreateMap<AdvancedLearningElementSlotViewModel, AdvancedLearningElementSlotPe>()
+            .ReverseMap();
+    }
+    private void CreateAdvancedDecorationMap()
+    {
+        CreateMap<AdvancedDecorationViewModel, AdvancedDecorationPe>()
+            .ReverseMap();
+    }
     private void CreateLearningWorldMap()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
