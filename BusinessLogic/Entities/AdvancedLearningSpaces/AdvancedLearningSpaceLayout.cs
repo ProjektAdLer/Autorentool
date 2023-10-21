@@ -13,15 +13,20 @@ public class AdvancedLearningSpaceLayout : IAdvancedLearningSpaceLayout
     {
         LearningElements = new Dictionary<int, ILearningElement>();
         AdvancedLearningElementSlots = new Dictionary<int, Coordinate>();
+        AdvancedDecorations = new Dictionary<int, Coordinate>();
     }
 
-    public AdvancedLearningSpaceLayout(IDictionary<int, ILearningElement>? learningElements = null, IDictionary<int, Coordinate>? advancedLearningElementSlots = null)
+    public AdvancedLearningSpaceLayout(IDictionary<int, ILearningElement>? learningElements = null,
+        IDictionary<int, Coordinate>? advancedLearningElementSlots = null,
+        IDictionary<int, Coordinate>? advancedDecorations = null)
     {
         LearningElements = learningElements ?? new Dictionary<int, ILearningElement>();
         AdvancedLearningElementSlots = advancedLearningElementSlots ?? new Dictionary<int, Coordinate>();
+        AdvancedDecorations = advancedDecorations ?? new Dictionary<int, Coordinate>();
     }
 
     public IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; set; }
+    public IDictionary<int, Coordinate> AdvancedDecorations { get; set; }
 
     public IDictionary<int, ILearningElement> LearningElements { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningElements.Values;
@@ -54,6 +59,6 @@ public class AdvancedLearningSpaceLayout : IAdvancedLearningSpaceLayout
         }
 
         internal IDictionary<int, ILearningElement> LearningElements { get; }
-        internal IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; } 
+        internal IDictionary<int, Coordinate> AdvancedLearningElementSlots { get; }
     }
 }
