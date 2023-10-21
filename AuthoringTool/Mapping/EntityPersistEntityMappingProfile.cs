@@ -201,6 +201,23 @@ public class EntityPersistEntityMappingProfile : Profile
                 }
             });
     }
+    private void CreateAdvancedLearningSpaceMap()
+    {
+        CreateMap<AdvancedLearningSpace, AdvancedLearningSpacePe>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
+            .ReverseMap()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+    }
 
     private void CreateLearningWorldMap()
     {
