@@ -91,6 +91,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
             .ForMember(x => x.ContainedAdvancedDecorations, opt => opt.Ignore())
             .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore())
             .AfterMap(MapAdvancedSpaceLayoutElements)
             .AfterMap((entity, vm) =>
             {
@@ -99,6 +100,12 @@ public class ViewModelEntityMappingProfile : Profile
                 {
                     vm.AdvancedLearningElementSlots.Add(key,
                         new AdvancedLearningElementSlotViewModel(Guid.Empty, key, value.PositionX, value.PositionY));
+                }
+                vm.AdvancedDecorations.Clear();
+                foreach (var (key, value) in entity.AdvancedDecorations)
+                {
+                    vm.AdvancedDecorations.Add(key,
+                        new AdvancedDecorationViewModel(Guid.Empty, key, value.PositionX, value.PositionY));
                 }
             });
 
@@ -113,6 +120,12 @@ public class ViewModelEntityMappingProfile : Profile
                     entity.AdvancedLearningElementSlots.Add(key,
                         new Coordinate{PositionX = value.PositionX, PositionY = value.PositionY, Rotation = value.Rotation});
                 }
+                vm.AdvancedDecorations.Clear();
+                foreach (var (key, value) in entity.AdvancedDecorations)
+                {
+                    vm.AdvancedDecorations.Add(key,
+                        new AdvancedDecorationViewModel(Guid.Empty, key, value.PositionX, value.PositionY));
+                }
             });
             
         CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutViewModel>()
@@ -121,11 +134,7 @@ public class ViewModelEntityMappingProfile : Profile
             .As<AdvancedLearningSpaceLayout>();
         
         CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
-            // .ForMember(x => x.UsedIndices, opt => opt.Ignore()) 
-            // .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            // .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
             .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutViewModel>()
-
             .ReverseMap()
             .IncludeBase<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
             ;
