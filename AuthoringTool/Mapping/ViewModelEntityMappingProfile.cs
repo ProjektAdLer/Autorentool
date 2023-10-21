@@ -112,6 +112,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<IAdvancedLearningSpaceLayoutViewModel, AdvancedLearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore())
             .AfterMap((vm, entity) =>
             {
                 entity.AdvancedLearningElementSlots.Clear();
@@ -120,11 +121,11 @@ public class ViewModelEntityMappingProfile : Profile
                     entity.AdvancedLearningElementSlots.Add(key,
                         new Coordinate{PositionX = value.PositionX, PositionY = value.PositionY, Rotation = value.Rotation});
                 }
-                vm.AdvancedDecorations.Clear();
-                foreach (var (key, value) in entity.AdvancedDecorations)
+                entity.AdvancedDecorations.Clear();
+                foreach (var (key, value) in vm.AdvancedDecorations)
                 {
-                    vm.AdvancedDecorations.Add(key,
-                        new AdvancedDecorationViewModel(Guid.Empty, key, value.PositionX, value.PositionY));
+                    entity.AdvancedDecorations.Add(key,
+                        new Coordinate{PositionX = value.PositionX, PositionY = value.PositionY, Rotation = value.Rotation});
                 }
             });
             
