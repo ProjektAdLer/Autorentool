@@ -185,10 +185,17 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
         CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
         CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
-        // CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>().As<AdvancedLearningSpaceLayoutPe>();
-        // CreateMap<AdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>().As<AdvancedLearningSpaceLayout>();
-        // CreateMap<IAdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>().As<AdvancedLearningSpaceLayoutPe>();
-        // CreateMap<IAdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>().As<AdvancedLearningSpaceLayout>();
+
+        CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>()
+            .As<AdvancedLearningSpaceLayoutPe>();
+        CreateMap<AdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>()
+            .As<AdvancedLearningSpaceLayout>();
+
+        CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
+            .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
+            .ReverseMap()
+            .IncludeBase<IAdvancedLearningSpaceLayoutPe, AdvancedLearningSpaceLayout>()
+            ;
     }
 
     private void CreateLearningElementMap()
@@ -215,18 +222,45 @@ public class EntityPersistEntityMappingProfile : Profile
                     element.Parent = d;
                 }
             });
+
+        CreateMap<ILearningSpace, ILearningSpacePe>()
+            .ReverseMap();
     }
 
     private void CreateAdvancedLearningSpaceLayoutMap()
     {
+        CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.ContainedAdvancedDecorations, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore());
+
+
+        CreateMap<IAdvancedLearningSpaceLayoutPe, AdvancedLearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore());
+
+
+        CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>()
+            .As<AdvancedLearningSpaceLayoutPe>();
+        CreateMap<AdvancedLearningSpaceLayoutPe, IAdvancedLearningSpaceLayout>()
+            .As<AdvancedLearningSpaceLayout>();
+
         CreateMap<AdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
-            .ReverseMap();
+            .IncludeBase<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
+            .ReverseMap()
+            .IncludeBase<IAdvancedLearningSpaceLayoutPe, AdvancedLearningSpaceLayout>()
+            ;
     }
+
     private void CreateAdvancedLearningSpaceMap()
     {
         CreateMap<AdvancedLearningSpace, AdvancedLearningSpacePe>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<ILearningSpace, ILearningSpacePe>()
             .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
@@ -239,6 +273,7 @@ public class EntityPersistEntityMappingProfile : Profile
                 }
             });
     }
+
     private void CreateLearningWorldMap()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
