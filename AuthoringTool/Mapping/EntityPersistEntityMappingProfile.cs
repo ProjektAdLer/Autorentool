@@ -129,12 +129,6 @@ public class EntityPersistEntityMappingProfile : Profile
     private static bool
         SameIdAtSameIndex(ILearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
-    // private static bool
-    //     SameIdAtSameIndex(IAdvancedLearningSpaceLayoutPe destination, KeyValuePair<int, ILearningElement> kvp) =>
-    //     destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
-    // private static bool
-    //     SameIdAtSameIndex(IAdvancedLearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
-    //     destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CreatePathwayMaps()
     {
