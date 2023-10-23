@@ -226,15 +226,10 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<IAdvancedLearningSpaceLayout, AdvancedLearningSpaceLayoutPe>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.ContainedAdvancedLearningElementSlots, opt => opt.Ignore())
-            .ForMember(x => x.ContainedAdvancedDecorations, opt => opt.Ignore())
-            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
-            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore());
+            .ForMember(x => x.ContainedAdvancedDecorations, opt => opt.Ignore());
 
-
-        CreateMap<IAdvancedLearningSpaceLayoutPe, AdvancedLearningSpaceLayout>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.AdvancedLearningElementSlots, opt => opt.Ignore())
-            .ForMember(x => x.AdvancedDecorations, opt => opt.Ignore());
+            CreateMap<IAdvancedLearningSpaceLayoutPe, AdvancedLearningSpaceLayout>()
+                .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
 
         CreateMap<AdvancedLearningSpaceLayout, IAdvancedLearningSpaceLayoutPe>()
