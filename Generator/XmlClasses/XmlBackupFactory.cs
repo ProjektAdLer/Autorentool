@@ -517,8 +517,8 @@ public class XmlBackupFactory : IXmlBackupFactory
             return;
         }
 
-        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top", _contextId);
-        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name", _contextId);
+        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top", _contextId, 0);
+        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name", _contextId, 3);
 
         var answerId = 1;
 

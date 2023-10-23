@@ -6,15 +6,17 @@ public class QuestionsXmlQuestionsCategory
 {
     public QuestionsXmlQuestionsCategory()
     {
+        Parent = "0";
         Name = "";
         Id = "0";
         ContextId = "0";
     }
 
-    public QuestionsXmlQuestionsCategory(int id, string name, int contextId)
+    public QuestionsXmlQuestionsCategory(int id, string name, int contextId, int parent)
     {
         Id = id.ToString();
         Name = name;
+        Parent = parent.ToString();
         ContextId = contextId.ToString();
     }
 
@@ -41,7 +43,7 @@ public class QuestionsXmlQuestionsCategory
         .Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 10)
         .Select(s => s[new Random().Next(s.Length)]).ToArray());
 
-    [XmlElement(ElementName = "parent")] public string Parent { get; set; } = "3";
+    [XmlElement(ElementName = "parent")] public string Parent { get; set; }
 
     [XmlElement(ElementName = "sortorder")]
     public string SortOrder { get; set; } = "0";
