@@ -115,11 +115,6 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         CreateActivityFolder(_adaptivityElementId);
 
         //file activities/adaptivity_.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ??
-                                                  new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlActivityGradebook.GradeItems =
-            ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
-
         ActivitiesGradesXmlActivityGradebook.Serialize("adleradaptivity", _adaptivityElementId);
 
         //file activities/adaptivity_.../adleradaptivity.xml

@@ -574,8 +574,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion();
         var answersXml = CreateAnswersXml(question.Choices, ref answerId);
 
-        var isSingleResponse = question.QuestionType is ResponseType.singleResponse;
-        var singleResponseInt = isSingleResponse ? 1 : 0;
+        var singleResponseInt = question.QuestionType is ResponseType.singleResponse ? 1 : 0;
         var multiChoiceXml =
             new
                 QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice(
