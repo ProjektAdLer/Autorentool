@@ -603,10 +603,11 @@ public class XmlBackupFactory : IXmlBackupFactory
             new
                 QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers();
         var numCorrectChoices = choices.Count(x => x.IsCorrect);
+        var numIncorrectChoices = choices.Count(x => !x.IsCorrect);
 
         foreach (var choice in choices)
         {
-            var fraction = choice.IsCorrect ? 1.0 / numCorrectChoices : 0;
+            var fraction = choice.IsCorrect ? 1.0 / numCorrectChoices : -1.0 / numIncorrectChoices;
             answersXml.Answer.Add(
                 new
                     QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswer(
