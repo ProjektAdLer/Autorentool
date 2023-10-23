@@ -34,7 +34,8 @@ public class WorldGenerator : IWorldGenerator
     {
         try
         {
-            var dslPath = CreateDsl.GenerateAndExportLearningWorldJson(Mapper.Map<LearningWorldPe>(learningWorld));
+            var mappedWorldPe = Mapper.Map<LearningWorldPe>(learningWorld);
+            var dslPath = CreateDsl.GenerateAndExportLearningWorldJson(mappedWorldPe);
             ReadDsl.ReadLearningWorld(dslPath);
             BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
             BackupFile.WriteBackupFile(filepath);

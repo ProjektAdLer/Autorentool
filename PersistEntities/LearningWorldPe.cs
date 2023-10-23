@@ -9,7 +9,7 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string savePath, List<LearningSpacePe>? learningSpaces = null,
+        string goals, string evaluationLink, string savePath, List<ILearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
     {
@@ -22,7 +22,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Goals = goals;
         EvaluationLink = evaluationLink;
         SavePath = savePath;
-        LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
+        LearningSpaces = learningSpaces ?? new List<ILearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
         LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
         UnplacedLearningElements = new List<ILearningElementPe>();
@@ -43,7 +43,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Goals = "";
         EvaluationLink = "";
         SavePath = "";
-        LearningSpaces = new List<LearningSpacePe>();
+        LearningSpaces = new List<ILearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
         LearningPathways = new List<LearningPathwayPe>();
         UnplacedLearningElements = new List<ILearningElementPe>();
@@ -64,7 +64,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
-    [DataMember] public List<LearningSpacePe> LearningSpaces { get; set; }
+    [DataMember] public List<ILearningSpacePe> LearningSpaces { get; set; }
 
     [DataMember] public string Name { get; set; }
 
