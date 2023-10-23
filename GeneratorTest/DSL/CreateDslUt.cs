@@ -463,7 +463,7 @@ public class CreateDslUt
                 .AdaptivityTasks[0].RequiredDifficulty, Is.EqualTo(100));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
+                .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionType, Is.EqualTo(ResponseType.singleResponse));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTasks[0].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
@@ -502,7 +502,7 @@ public class CreateDslUt
 
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionType, Is.EqualTo("multipleResponse"));
+                .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionType, Is.EqualTo(ResponseType.multipleResponse));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTasks[0].AdaptivityQuestions[1].QuestionId, Is.EqualTo(2));
@@ -569,7 +569,7 @@ public class CreateDslUt
                 .AdaptivityTasks[1].RequiredDifficulty, Is.EqualTo(000));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo("singleResponse"));
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo(ResponseType.singleResponse));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));

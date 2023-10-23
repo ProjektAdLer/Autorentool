@@ -5,7 +5,7 @@ namespace Generator.DSL.AdaptivityElement;
 [JsonDerivedType(typeof(AdaptivityQuestionJson), typeDiscriminator: JsonTypes.AdaptivityQuestionType)]
 public interface IAdaptivityQuestionJson
 {
-    string QuestionType { get; set; }
+    ResponseType QuestionType { get; set; }
     int QuestionId { get; set; }
     string QuestionUUID { get; set; }
     int QuestionDifficulty { get; set; }

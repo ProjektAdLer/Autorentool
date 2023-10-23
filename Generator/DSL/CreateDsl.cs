@@ -535,9 +535,9 @@ public class CreateDsl : ICreateDsl
         {
             var questionType = question switch
             {
-                MultipleChoiceSingleResponseQuestionPe => "singleResponse",
-                MultipleChoiceMultipleResponseQuestionPe => "multipleResponse",
-                _ => ""
+                MultipleChoiceSingleResponseQuestionPe => ResponseType.singleResponse,
+                MultipleChoiceMultipleResponseQuestionPe => ResponseType.multipleResponse,
+                _ => throw new ArgumentOutOfRangeException($"ResponseType of Question {question.Id} is not supported")
             };
             var adaptivityRules = MapAdaptivityRulesPeToJson(question.Rules);
             var choices = MapChoicesPeToJson((IMultipleChoiceQuestionPe)question);

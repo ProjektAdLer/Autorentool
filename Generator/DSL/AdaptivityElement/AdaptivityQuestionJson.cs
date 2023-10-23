@@ -5,7 +5,8 @@ namespace Generator.DSL.AdaptivityElement;
 public class AdaptivityQuestionJson : IAdaptivityQuestionJson
 {
     [JsonConstructor]
-    public AdaptivityQuestionJson(string questionType, int questionId, string questionUuid, int questionDifficulty,
+    public AdaptivityQuestionJson(ResponseType questionType, int questionId, string questionUuid,
+        int questionDifficulty,
         string questionText, List<IAdaptivityRuleJson> adaptivityRules, List<IChoiceJson> choices)
     {
         QuestionType = questionType;
@@ -17,7 +18,9 @@ public class AdaptivityQuestionJson : IAdaptivityQuestionJson
         Choices = choices;
     }
 
-    public string QuestionType { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ResponseType QuestionType { get; set; }
+
     public int QuestionId { get; set; }
     public string QuestionUUID { get; set; }
     public int QuestionDifficulty { get; set; }
