@@ -150,7 +150,7 @@ public class ReadAtf : IReadAtf
         {
             if (element.ElementFileType == "h5p")
             {
-                _listH5PElements.Add((LearningElementJson)element);
+                _listH5PElements.Add((ILearningElementJson)element);
             }
         }
 
@@ -168,7 +168,7 @@ public class ReadAtf : IReadAtf
                 or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
-                _listResourceElements.Add((LearningElementJson)resource);
+                _listResourceElements.Add((ILearningElementJson)resource);
             }
         }
 

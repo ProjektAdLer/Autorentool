@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.ATF;
+using Generator.ATF.AdaptivityElement;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -20,10 +21,10 @@ public class ReadAtfUt
         var topicsList = new List<ITopicJson> { topicsJson };
 
         var learningSpacesJson1 = new LearningSpaceJson(1, "",
-            "space1", new List<int?> { 1, 2 }, 0, "spacedescription1", "", "", new[] { "spacegoals1" });
+            "space1", new List<int?> { 1, 2, null, 3, 4 }, 0, "spacedescription1", "", "", new[] { "spacegoals1" });
 
         var learningSpacesJson2 = new LearningSpaceJson(2, "", "space2",
-            new List<int?>(), 0, "", "", "", new[] { "spacegoals2" });
+            new List<int?>() { 5 }, 0, "", "", "", new[] { "spacegoals2" });
 
         var learningSpacesList = new List<ILearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
 
@@ -39,8 +40,31 @@ public class ReadAtfUt
         var learningElementJson4 = new LearningElementJson(4,
             "", "element4", "", "", "label", 1, 4, "");
 
+        var learningElementJson5 = new AdaptivityElementJson(5,
+            "", "element5", "adaptivity", "adaptivity", 2, 5, "",
+            new AdaptivityContentJson("introText", new List<IAdaptivityTaskJson>()
+            {
+                new AdaptivityTaskJson(1, "", "taskTitle", false, 100, new List<IAdaptivityQuestionJson>()
+                {
+                    new AdaptivityQuestionJson(ResponseType.singleResponse, 1, "", 100, "questionText",
+                        new List<IAdaptivityRuleJson>()
+                        {
+                            new AdaptivityRuleJson(1, "incorrect", new CommentActionJson("Falsche Antwort")),
+                            new AdaptivityRuleJson(2, "incorrect", new ElementReferenceActionJson(2, "hinText")),
+                            new AdaptivityRuleJson(2, "incorrect", new ContentReferenceActionJson(6, "hinText"))
+                        },
+                        new List<IChoiceJson>(new IChoiceJson[]
+                            { new ChoiceJson("choiceText", true), new ChoiceJson("choiceText2", false) }))
+                })
+            }));
+
+        var baseElementJson = new BaseLearningElementJson(6, "", "element6", "", "h5p", "h5p");
+
         var learningElementList = new List<IElementJson>
-            { learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4 };
+        {
+            learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4,
+            learningElementJson5, baseElementJson
+        };
 
         var learningWorldJson = new LearningWorldJson("world", "",
             topicsList, learningSpacesList, learningElementList, "World Description", new[] { "World Goals" });
@@ -61,6 +85,8 @@ public class ReadAtfUt
         var elementsOrderedList = systemUnderTest.GetElementsOrderedList();
         var getWorldAttributes = systemUnderTest.GetWorldAttributes();
         var getUrlList = systemUnderTest.GetUrlElementList();
+        var adaptivityElementList = systemUnderTest.GetAdaptivityElementsList();
+        var baseLearningElementList = systemUnderTest.GetBaseLearningElementsList();
 
         Assert.Multiple(() =>
         {
@@ -71,10 +97,10 @@ public class ReadAtfUt
             Assert.That(getLearningWorldJson.Elements, Has.Count.EqualTo(learningElementList.Count));
             Assert.That(getLearningWorldJson.Spaces, Has.Count.EqualTo(learningSpacesList.Count));
             Assert.That(resourceList, Has.Count.EqualTo(1));
-            Assert.That(getH5PElementsList, Has.Count.EqualTo(1));
+            Assert.That(getH5PElementsList, Has.Count.EqualTo(2));
 
             //Elements + World Description & Goals (As they are created as Labels in Moodle)
-            Assert.That(elementsOrderedList, Has.Count.EqualTo(3));
+            Assert.That(elementsOrderedList, Has.Count.EqualTo(7));
             Assert.That(getWorldAttributes.ElementName, Is.EqualTo("World Description"));
             Assert.That(getWorldAttributes.ElementDescription, Is.EqualTo("World Description"));
             Assert.That(getWorldAttributes.ElementMaxScore, Is.EqualTo(0));
@@ -82,14 +108,18 @@ public class ReadAtfUt
             Assert.That(getWorldAttributes.ElementFileType, Is.EqualTo("label"));
             Assert.That(getWorldAttributes.Url, Is.EqualTo(""));
             Assert.That(getWorldAttributes.ElementCategory, Is.EqualTo("World Attributes"));
-            Assert.That(getWorldAttributes.ElementId, Is.EqualTo(5));
+            Assert.That(getWorldAttributes.ElementId, Is.EqualTo(7));
             Assert.That(getWorldAttributes.ElementUUID, Is.EqualTo(""));
             Assert.That(getWorldAttributes.ElementModel, Is.EqualTo(""));
 
             Assert.That(listSpace.Count, Is.EqualTo(2));
 
-            //Currently all elements with Element-Type "mp4" are added to the list of Urls
             Assert.That(getUrlList, Has.Count.EqualTo(1));
+
+            Assert.That(adaptivityElementList, Has.Count.EqualTo(1));
+            Assert.That(adaptivityElementList[0], Is.EqualTo(learningElementJson5));
+            Assert.That(baseLearningElementList, Has.Count.EqualTo(1));
+            Assert.That(baseLearningElementList[0], Is.EqualTo(baseElementJson));
         });
     }
 

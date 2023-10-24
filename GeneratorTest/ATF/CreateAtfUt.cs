@@ -266,7 +266,7 @@ public class CreateAtfUt
         };
         var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
+            outBoundObjects: new List<IObjectInPathWayPe>(), null)
         {
             LearningSpaceLayout =
             {
@@ -362,6 +362,15 @@ public class CreateAtfUt
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(listFileContent));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics.Count, Is.EqualTo(2));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[0].TopicName, Is.EqualTo(topic1.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[0].TopicId, Is.EqualTo(1));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[0].TopicContents, Is.EqualTo(new List<int>() { 1 }));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[1].TopicName, Is.EqualTo(topic2.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[1].TopicId, Is.EqualTo(2));
+            Assert.That(systemUnderTest.LearningWorldJson.Topics[1].TopicContents,
+                Is.EqualTo(new List<int>() { 2, 4 }));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces.Count, Is.EqualTo(4));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceName, Is.EqualTo(space1.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].SpaceName, Is.EqualTo(space3.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[2].SpaceName, Is.EqualTo(space2.Name));

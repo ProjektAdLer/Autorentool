@@ -610,7 +610,6 @@ public class CreateAtf : ICreateAtf
     {
         BaseLearningElementJson baseLearningElement;
         var elementId = _dictionaryIdToContentReferenceAction.First(x => x.Value.Id == contentReferenceAction.Id).Key;
-        var parentId = ListLearningSpaces.Count + 1;
         switch (contentReferenceAction.Content)
         {
             case FileContentPe fileContentPe:
