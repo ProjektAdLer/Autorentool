@@ -30,9 +30,6 @@
     <data name="MultipleChoiceQuestionForm.Field.QuestionText.Text" xml:space="preserve">
         <value>Question Text</value>
     </data>
-    <data name="MultipleChoiceQuestionForm.Field.Title.Text" xml:space="preserve">
-        <value>Title</value>
-    </data>
     <data name="MultipleChoiceQuestionForm.Text.AddChoice" xml:space="preserve">
         <value>Add Choices</value>
     </data>

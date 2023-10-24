@@ -21,12 +21,6 @@
     <Fields>
 
         <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Title"
-                          For="@(() => FormModel.Title)"
-                          DebounceInterval="DebounceInterval"
-                          Label=@Localizer["MultipleChoiceQuestionForm.Field.Title.Text"]
-                          Class="pb-4"/>
-
             <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                           For="@(() => FormModel.Text)"
                           Lines="3"

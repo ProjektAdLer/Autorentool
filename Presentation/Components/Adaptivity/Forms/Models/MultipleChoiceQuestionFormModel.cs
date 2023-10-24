@@ -6,7 +6,6 @@ public class MultipleChoiceQuestionFormModel
 {
     public MultipleChoiceQuestionFormModel()
     {
-        Title = "";
         Text = "";
         Choices = new List<ChoiceViewModel>();
         CorrectChoices = new List<ChoiceViewModel>();
@@ -14,8 +13,6 @@ public class MultipleChoiceQuestionFormModel
     }
 
     public Guid Id { get; set; }
-
-    public string Title { get; set; }
     public string Text { get; set; }
     public bool IsSingleResponse { get; set; }
     public ICollection<ChoiceViewModel> Choices { get; set; }
