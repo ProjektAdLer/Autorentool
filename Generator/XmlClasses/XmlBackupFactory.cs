@@ -1,5 +1,5 @@
-﻿using Generator.DSL;
-using Generator.DSL.AdaptivityElement;
+﻿using Generator.ATF;
+using Generator.ATF.AdaptivityElement;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
@@ -28,10 +28,10 @@ public class XmlBackupFactory : IXmlBackupFactory
     internal List<MoodleBackupXmlActivity> MoodleBackupXmlActivityList;
     internal List<MoodleBackupXmlSection> MoodleBackupXmlSectionList;
     internal List<MoodleBackupXmlSetting> MoodleBackupXmlSettingList;
-    public IReadDsl ReadDsl;
+    public IReadAtf ReadAtf;
 
 
-    public XmlBackupFactory(IReadDsl readDsl, int contextId, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
+    public XmlBackupFactory(IReadAtf readAtf, int contextId, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems = null,
         IGradebookXmlGradeCategory? gradebookXmlGradeCategory = null,
         IGradebookXmlGradeCategories? gradebookXmlGradeCategories = null,
@@ -52,7 +52,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         IRolesXmlRole? rolesXmlRole = null, IRolesXmlRolesDefinition? rolesXmlRolesDefinition = null,
         IScalesXmlScalesDefinition? scalesXmlScalesDefinition = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         _contextId = contextId;
 
         GradebookXmlGradeItem = gradebookXmlGradeItem ?? new GradebookXmlGradeItem();
@@ -114,8 +114,8 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
 
-        _learningWorld = readDsl.GetLearningWorld();
-        _learningElements = readDsl.GetElementsOrderedList();
+        _learningWorld = readAtf.GetLearningWorld();
+        _learningElements = readAtf.GetElementsOrderedList();
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -299,7 +299,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             var learningElementSectionId = element switch
             {
                 IInternalElementJson internalElementJson => internalElementJson.LearningSpaceParentId.ToString(),
-                IBaseLearningElementJson => (ReadDsl.GetSpaceList().Count + 1).ToString(),
+                IBaseLearningElementJson => (ReadAtf.GetSpaceList().Count + 1).ToString(),
                 _ => throw new ArgumentOutOfRangeException(nameof(element))
             };
 
@@ -366,7 +366,7 @@ public class XmlBackupFactory : IXmlBackupFactory
                 "section_0", true));
         }
 
-        foreach (var space in ReadDsl.GetSpaceList())
+        foreach (var space in ReadAtf.GetSpaceList())
         {
             var sectionId = space.SpaceId.ToString();
             var sectionName = space.SpaceName;
@@ -395,9 +395,9 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
 
-        if (ReadDsl.GetBaseLearningElementsList().Count > 0)
+        if (ReadAtf.GetBaseLearningElementsList().Count > 0)
         {
-            var sectionId = (ReadDsl.GetSpaceList().Count + 1).ToString();
+            var sectionId = (ReadAtf.GetSpaceList().Count + 1).ToString();
             if (MoodleBackupXmlSectionList != null)
             {
                 MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
@@ -509,7 +509,7 @@ public class XmlBackupFactory : IXmlBackupFactory
     /// <inheritdoc cref="IXmlBackupFactory.CreateQuestionsXml"/>
     public void CreateQuestionsXml()
     {
-        var listAdaptivityElements = ReadDsl.GetAdaptivityElementsList();
+        var listAdaptivityElements = ReadAtf.GetAdaptivityElementsList();
 
         if (listAdaptivityElements.Count == 0)
         {

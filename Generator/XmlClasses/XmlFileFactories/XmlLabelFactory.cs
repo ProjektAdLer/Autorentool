@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -19,7 +19,7 @@ public class XmlLabelFactory : IXmlLabelFactory
     public string LabelName;
     public string LabelParentSpaceId;
 
-    public XmlLabelFactory(IReadDsl readDsl, IFileSystem? fileSystem = null,
+    public XmlLabelFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -31,7 +31,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         LabelId = "";
         LabelName = "";
         LabelGoal = "";
@@ -73,12 +73,12 @@ public class XmlLabelFactory : IXmlLabelFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public IReadAtf ReadAtf { get; }
 
     /// <inheritdoc cref="IXmlLabelFactory.CreateLabelFactory"/>
     public void CreateLabelFactory()
     {
-        var worldAttributes = ReadDsl.GetWorldAttributes();
+        var worldAttributes = ReadAtf.GetWorldAttributes();
 
         LabelSetParametersWorldAttributes(worldAttributes);
     }

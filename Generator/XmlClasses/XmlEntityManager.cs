@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.XmlFileFactories;
 
 namespace Generator.XmlClasses;
@@ -25,7 +25,7 @@ public class XmlEntityManager : IXmlEntityManager
     }
 
     //run all factories that are available, to set the parameters and create the xml files
-    public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory = null,
+    public void GetFactories(IReadAtf readAtf, IXmlResourceFactory? xmlFileFactory = null,
         IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
         IXmlBackupFactory? xmlBackupFactory = null,
         IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,
@@ -34,28 +34,28 @@ public class XmlEntityManager : IXmlEntityManager
         var filemanager = new XmlFileManager();
         var contextId = new Random().Next(1000, 9999);
 
-        _xmlSectionFactory = xmlSectionFactory ?? new XmlSectionFactory(readDsl);
+        _xmlSectionFactory = xmlSectionFactory ?? new XmlSectionFactory(readAtf);
         _xmlSectionFactory.CreateSectionFactory();
 
-        _xmlLabelFactory = xmlLabelFactory ?? new XmlLabelFactory(readDsl);
+        _xmlLabelFactory = xmlLabelFactory ?? new XmlLabelFactory(readAtf);
         _xmlLabelFactory.CreateLabelFactory();
 
-        _xmlUrlFactory = xmlUrlFactory ?? new XmlUrlFactory(readDsl);
+        _xmlUrlFactory = xmlUrlFactory ?? new XmlUrlFactory(readAtf);
         _xmlUrlFactory.CreateUrlFactory();
 
-        _xmlAdaptivityFactory = xmlAdaptivityFactory ?? new XmlAdaptivityFactory(readDsl);
+        _xmlAdaptivityFactory = xmlAdaptivityFactory ?? new XmlAdaptivityFactory(readAtf);
         _xmlAdaptivityFactory.CreateXmlAdaptivityFactory();
 
-        _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
+        _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readAtf, filemanager, _fileSystem);
         _xmlResourceFactory.CreateResourceFactory();
 
-        _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
+        _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readAtf, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();
 
-        _xmlCourseFactory = xmlCourseFactory ?? new XmlCourseFactory(readDsl, contextId);
+        _xmlCourseFactory = xmlCourseFactory ?? new XmlCourseFactory(readAtf, contextId);
         _xmlCourseFactory.CreateXmlCourseFactory();
 
-        _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readDsl, contextId);
+        _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readAtf, contextId);
         _xmlBackupFactory.CreateXmlBackupFactory();
     }
 

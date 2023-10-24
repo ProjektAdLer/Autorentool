@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
-using Generator.DSL.AdaptivityElement;
+using Generator.ATF;
+using Generator.ATF.AdaptivityElement;
 using Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -22,7 +22,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
     private string _adaptivityElementUuid;
     private List<IAdaptivityElementJson> _listAdaptivityElements;
 
-    public XmlAdaptivityFactory(IReadDsl readDsl, IFileSystem? fileSystem = null,
+    public XmlAdaptivityFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradeBook = null,
@@ -34,7 +34,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
 
         ActivitiesGradesXmlGradeItem = gradesGradeItem ?? new ActivitiesGradesXmlGradeItem();
         ActivitiesGradesXmlGradeItems = gradesGradeItems ?? new ActivitiesGradesXmlGradeItems();
@@ -87,11 +87,11 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
     private IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
 
     private IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    private IReadDsl ReadDsl { get; }
+    private IReadAtf ReadAtf { get; }
 
     public void CreateXmlAdaptivityFactory()
     {
-        _listAdaptivityElements = ReadDsl.GetAdaptivityElementsList();
+        _listAdaptivityElements = ReadAtf.GetAdaptivityElementsList();
 
         AdaptivitySetParameters();
     }

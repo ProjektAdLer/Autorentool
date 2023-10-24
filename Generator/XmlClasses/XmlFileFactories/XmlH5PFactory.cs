@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
@@ -34,7 +34,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementUuid;
 
 
-    public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
+    public XmlH5PFactory(IReadAtf readAtf, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
         IFilesXmlFiles? filesXmlFiles = null,
         IFilesXmlFile? filesXmlFile = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
@@ -86,7 +86,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
 
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
     }
@@ -108,13 +108,13 @@ public class XmlH5PFactory : IXmlH5PFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public IReadAtf ReadAtf { get; }
 
     /// <inheritdoc cref="IXmlH5PFactory.CreateH5PFileFactory"/>
     public void CreateH5PFileFactory()
     {
-        // Get all the H5P elements that are in the DSL Document
-        List<ILearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+        // Get all the H5P elements that are in the ATF Document
+        List<ILearningElementJson> h5PElementsList = ReadAtf.GetH5PElementsList();
 
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
@@ -142,7 +142,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             switch (h5PElement)
             {
                 case BaseLearningElementJson:
-                    H5PElementParentSpaceString = (ReadDsl.GetSpaceList().Count + 1).ToString();
+                    H5PElementParentSpaceString = (ReadAtf.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     H5PElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();

@@ -1,11 +1,11 @@
-﻿using Generator.DSL;
+﻿using Generator.ATF;
 using Generator.XmlClasses.XmlFileFactories;
 
 namespace Generator.XmlClasses;
 
 public interface IXmlEntityManager
 {
-    void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory = null,
+    void GetFactories(IReadAtf readAtf, IXmlResourceFactory? xmlFileFactory = null,
         IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
         IXmlBackupFactory? xmlBackupFactory = null,
         IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,

@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
@@ -22,12 +22,12 @@ public class XmlH5PFactoryUt
     public void XmlH5PFactory_Constructor_AllPropertiesSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileManager = new XmlFileManager();
         var mockFileSystem = new MockFileSystem();
 
         //Act
-        var systemUnderTest = new XmlH5PFactory(mockReadDsl, mockFileManager, mockFileSystem);
+        var systemUnderTest = new XmlH5PFactory(mockReadAtf, mockFileManager, mockFileSystem);
 
         //Assert
         Assert.Multiple(() =>
@@ -56,7 +56,7 @@ public class XmlH5PFactoryUt
     public void XmlH5PFactory_CreateH5PFileFactory_AddFilesToFileList()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
 
         var mockFileSystem = new MockFileSystem();
         var mockFile = new FilesXmlFile();
@@ -73,18 +73,18 @@ public class XmlH5PFactoryUt
             h5PElement1, h5PElement2
         };
 
-        mockReadDsl.GetH5PElementsList().Returns(h5PList);
+        mockReadAtf.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "element1"),
             new MockFileData("Hello World"));
 
-        var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager,
+        var systemUnderTest = new XmlH5PFactory(mockReadAtf, xmlFileManager: mockFileManager,
             fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
         var space_1 = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2 }, 10, "space", "", "");
-        mockReadDsl.GetH5PElementsList().Returns(h5PList);
+        mockReadAtf.GetH5PElementsList().Returns(h5PList);
         systemUnderTest.CreateH5PFileFactory();
 
         //Assert
@@ -104,7 +104,7 @@ public class XmlH5PFactoryUt
     [Test]
     public void H5PSetParametersFilesXml_SetsFile2Times_AndAddsToFileList()
     {
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
 
         var mockFileSystem = new MockFileSystem();
         var mockFile = new FilesXmlFile();
@@ -123,10 +123,10 @@ public class XmlH5PFactoryUt
 
         var space_1 =
             new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "space", "", "");
-        mockReadDsl.GetH5PElementsList().Returns(h5PList);
+        mockReadAtf.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "space"), new MockFileData("Hello World"));
 
-        var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager,
+        var systemUnderTest = new XmlH5PFactory(mockReadAtf, xmlFileManager: mockFileManager,
             fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
 
@@ -157,7 +157,7 @@ public class XmlH5PFactoryUt
     public void H5PSetParametersActivity_SetsGradesH5pActivityRolesModuleGradehistoryInforef_AndSerializes()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
 
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
@@ -179,7 +179,7 @@ public class XmlH5PFactoryUt
 
 
         //Act
-        var systemUnderTest = new XmlH5PFactory(mockReadDsl, fileSystem: mockFileSystem, gradesGradeItem: mockGradeItem,
+        var systemUnderTest = new XmlH5PFactory(mockReadAtf, fileSystem: mockFileSystem, gradesGradeItem: mockGradeItem,
             gradesGradeItems: mockGradeItems, gradebook: mockActivityGradebook, h5PActivityXmlActivity: mockH5PActivity,
             h5PActivityXmlH5PActivity: mockActivityH5PActivity, roles: mockRoles, module: mockModule,
             gradeHistory: mockGradeHistory,
@@ -292,11 +292,11 @@ public class XmlH5PFactoryUt
     public void CreateActivityFolder_ActivityFolderCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
 
         var mockFileSystem = new MockFileSystem();
 
-        var systemUnderTest = new XmlH5PFactory(mockReadDsl, fileSystem: mockFileSystem);
+        var systemUnderTest = new XmlH5PFactory(mockReadAtf, fileSystem: mockFileSystem);
 
         //Act
         systemUnderTest.CreateActivityFolder("1");

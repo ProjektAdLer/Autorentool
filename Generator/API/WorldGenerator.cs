@@ -2,7 +2,7 @@ using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using PersistEntities;
 
@@ -11,17 +11,17 @@ namespace Generator.API;
 public class WorldGenerator : IWorldGenerator
 {
     private readonly IFileSystem _fileSystem;
-    public readonly ICreateDsl CreateDsl;
-    public readonly IReadDsl ReadDsl;
+    public readonly ICreateAtf CreateAtf;
+    public readonly IReadAtf ReadAtf;
 
     internal IMapper Mapper;
 
-    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl,
+    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateAtf createAtf, IReadAtf readAtf,
         IMapper mapper, IFileSystem fileSystem)
     {
         BackupFile = backupFileGenerator;
-        CreateDsl = createDsl;
-        ReadDsl = readDsl;
+        CreateAtf = createAtf;
+        ReadAtf = readAtf;
         Mapper = mapper;
         _fileSystem = fileSystem;
     }
@@ -34,9 +34,9 @@ public class WorldGenerator : IWorldGenerator
     {
         try
         {
-            var dslPath = CreateDsl.GenerateAndExportLearningWorldJson(Mapper.Map<LearningWorldPe>(learningWorld));
-            ReadDsl.ReadLearningWorld(dslPath);
-            BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
+            var atfPath = CreateAtf.GenerateAndExportLearningWorldJson(Mapper.Map<LearningWorldPe>(learningWorld));
+            ReadAtf.ReadLearningWorld(atfPath);
+            BackupFile.WriteXmlFiles((ReadAtf as ReadAtf)!);
             BackupFile.WriteBackupFile(filepath);
         }
         finally

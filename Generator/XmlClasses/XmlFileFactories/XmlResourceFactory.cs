@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -29,7 +29,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     public string FileElementUuid;
     public List<FilesXmlFile> FilesXmlFilesList;
 
-    public XmlResourceFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null,
+    public XmlResourceFactory(IReadAtf readAtf, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -42,7 +42,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         FileElementId = "";
         FileElementUuid = "";
         FileElementName = "";
@@ -94,12 +94,12 @@ public class XmlResourceFactory : IXmlResourceFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public IReadAtf ReadAtf { get; }
 
     /// <inheritdoc cref="IXmlResourceFactory.CreateResourceFactory"/>
     public void CreateResourceFactory()
     {
-        var resourceList = ReadDsl.GetResourceElementList();
+        var resourceList = ReadAtf.GetResourceElementList();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
         ReadFileListAndSetParametersResource(resourceList);
 
@@ -121,7 +121,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             switch (resource)
             {
                 case BaseLearningElementJson:
-                    FileElementParentSpaceString = (ReadDsl.GetSpaceList().Count + 1).ToString();
+                    FileElementParentSpaceString = (ReadAtf.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     FileElementDesc = learningElementJson.ElementDescription ?? "";

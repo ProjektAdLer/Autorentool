@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using System.Text;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Generator.XmlClasses;
 using NSubstitute;
@@ -89,7 +89,7 @@ public class BackupFileGeneratorUt
     public void BackupFileGenerator_WriteXmlFiles_GetFactoriesReceived()
     {
         //Arrange 
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockEntityManager = Substitute.For<IXmlEntityManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -99,13 +99,13 @@ public class BackupFileGeneratorUt
         systemUnderTest.CreateBackupFolders();
 
         //Act
-        systemUnderTest.WriteXmlFiles(mockReadDsl);
+        systemUnderTest.WriteXmlFiles(mockReadAtf);
 
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.XmlEntityManager, Is.Not.Null);
-            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl);
+            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadAtf);
         });
     }
 

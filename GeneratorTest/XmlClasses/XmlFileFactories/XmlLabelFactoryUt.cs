@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -19,7 +19,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_StandardConstructor_AllPropertiesSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -35,7 +35,7 @@ public class XmlLabelFactoryUt
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         // Act
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
@@ -44,7 +44,7 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ReadDsl, Is.EqualTo(mockReadDsl));
+            Assert.That(systemUnderTest.ReadAtf, Is.EqualTo(mockReadAtf));
             Assert.That(systemUnderTest.LabelId, Is.EqualTo(""));
             Assert.That(systemUnderTest.LabelName, Is.EqualTo(""));
             Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo(""));
@@ -69,7 +69,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_CreateLabelFactory_ListSetMethodCalled()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -86,14 +86,14 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
         var mockElementJson = new LearningElementJson(1, "", "element1", "", "", "h5p", 1, 2, "");
 
-        mockReadDsl.GetWorldAttributes().Returns(mockElementJson);
+        mockReadAtf.GetWorldAttributes().Returns(mockElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();
@@ -101,7 +101,7 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            mockReadDsl.Received().GetWorldAttributes();
+            mockReadAtf.Received().GetWorldAttributes();
             Assert.That(systemUnderTest.LabelId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.LabelName, Is.EqualTo("element1"));
             Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo("1"));
@@ -112,7 +112,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_CreateLabelFactory_AllPropertiesSetAndSerialized()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -128,7 +128,7 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
@@ -136,7 +136,7 @@ public class XmlLabelFactoryUt
         var mockLabelsElementJson = new LearningElementJson(2, "", "",
             "", "World Attributes", "World Attributes", 1, 0, "", "World Description", new[] { "World Goals" });
 
-        mockReadDsl.GetWorldAttributes().Returns(mockLabelsElementJson);
+        mockReadAtf.GetWorldAttributes().Returns(mockLabelsElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();

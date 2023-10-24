@@ -23,7 +23,7 @@ using DataAccess.Persistence;
 using ElectronWrapper;
 using FluentValidation;
 using Generator.API;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
@@ -180,7 +180,7 @@ public class Startup
         services.AddScoped<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>
-            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddScoped<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddScoped<IErrorService, ErrorService>();
@@ -207,8 +207,8 @@ public class Startup
     {
         services.AddSingleton<IWorldGenerator, WorldGenerator>();
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
-        services.AddSingleton<ICreateDsl, CreateDsl>();
-        services.AddSingleton<IReadDsl, ReadDsl>();
+        services.AddSingleton<ICreateAtf, CreateAtf>();
+        services.AddSingleton<IReadAtf, ReadAtf>();
     }
 
     private void ConfigureApiAccess(IServiceCollection services)
@@ -262,7 +262,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager)p.GetService<ICommandStateManager>()!);
     }
 
     private void ConfigureCommandFactories(IServiceCollection services)
@@ -297,7 +297,7 @@ public class Startup
         app.UseStaticFiles();
 
         // Add localization cultures
-        var supportedCultures = new[] {"de-DE", "en-DE"};
+        var supportedCultures = new[] { "de-DE", "en-DE" };
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)

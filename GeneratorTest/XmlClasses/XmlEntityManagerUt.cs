@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Generator.XmlClasses;
 using Generator.XmlClasses.XmlFileFactories;
@@ -15,7 +15,7 @@ public class XmlEntityManagerUt
     public void XmlEntityManager_GetFactories_AllFactoriesInitialisedAndCreateMethodCalled()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileFactory = Substitute.For<IXmlResourceFactory>();
         var mockH5PFactory = Substitute.For<IXmlH5PFactory>();
         var mockCourseFactory = Substitute.For<IXmlCourseFactory>();
@@ -33,7 +33,7 @@ public class XmlEntityManagerUt
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_1"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_2"));
 
-        mockReadDsl.GetH5PElementsList().Returns(new List<ILearningElementJson>());
+        mockReadAtf.GetH5PElementsList().Returns(new List<ILearningElementJson>());
 
         var topicsJson = new TopicJson(1, "Topic", new List<int> { 1 });
         var topicsList = new List<ITopicJson> { topicsJson };
@@ -49,14 +49,14 @@ public class XmlEntityManagerUt
         var learningElementList = new List<IElementJson> { learningElementJson1, learningElementJson2 };
         var learningWorldJson = new LearningWorldJson("world", "", topicsList, learningSpacesList, learningElementList);
 
-        mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetSpaceList().Returns(learningSpacesList);
-        mockReadDsl.GetElementsOrderedList().Returns(learningElementList);
+        mockReadAtf.GetLearningWorld().Returns(learningWorldJson);
+        mockReadAtf.GetSpaceList().Returns(learningSpacesList);
+        mockReadAtf.GetElementsOrderedList().Returns(learningElementList);
 
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlEntityManager();
-        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory,
+        systemUnderTest.GetFactories(mockReadAtf, mockFileFactory, mockH5PFactory, mockCourseFactory,
             mockBackupFactory, mockSectionFactory, mockLabelFactory, mockUrlFactory, mockAdaptivityFactory);
 
         // Assert

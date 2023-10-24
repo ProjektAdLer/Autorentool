@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using Generator.XmlClasses.Entities._sections.Section.xml;
@@ -15,12 +15,12 @@ public class XmlSectionFactoryUt
     public void XmlSectionFactory_StandardConstructor_AllPropertiesAreSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockSection = Substitute.For<ISectionsSectionXmlSection>();
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
 
         // Act
-        var systemUnderTest = new XmlSectionFactory(mockReadDsl, null, mockSection, mockInforef);
+        var systemUnderTest = new XmlSectionFactory(mockReadAtf, null, mockSection, mockInforef);
 
         // Assert
         Assert.That(systemUnderTest, Is.Not.Null);
@@ -33,7 +33,7 @@ public class XmlSectionFactoryUt
     public void XmlSectionFactory_CreateSectionFactory_SectionFoldersCreatedAndInforefSectionSerialized()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockSection = Substitute.For<ISectionsSectionXmlSection>();
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
@@ -54,11 +54,11 @@ public class XmlSectionFactoryUt
         learningSpaceList.Add(learningSpaceJson1);
         learningSpaceList.Add(learningSpaceJson2);
 
-        mockReadDsl.GetSpaceList().Returns(learningSpaceList);
-        mockReadDsl.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
+        mockReadAtf.GetSpaceList().Returns(learningSpaceList);
+        mockReadAtf.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>());
 
         // Act
-        var systemUnderTest = new XmlSectionFactory(mockReadDsl, mockFileSystem, mockSection, mockInforef);
+        var systemUnderTest = new XmlSectionFactory(mockReadAtf, mockFileSystem, mockSection, mockInforef);
         systemUnderTest.CreateSectionFactory();
 
         // Assert

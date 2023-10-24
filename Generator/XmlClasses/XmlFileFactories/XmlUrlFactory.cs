@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -23,7 +23,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     public float UrlPoints;
     public string UrlUuid;
 
-    public XmlUrlFactory(IReadDsl readDsl, IFileSystem? fileSystem = null,
+    public XmlUrlFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -35,7 +35,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         UrlId = "";
         UrlUuid = "";
         UrlName = "";
@@ -80,12 +80,12 @@ public class XmlUrlFactory : IXmlUrlFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public IReadAtf ReadAtf { get; }
 
     /// <inheritdoc cref="IXmlUrlFactory.CreateUrlFactory"/>
     public void CreateUrlFactory()
     {
-        UrlList = ReadDsl.GetUrlElementList();
+        UrlList = ReadAtf.GetUrlElementList();
 
         UrlSetParameters(UrlList);
     }
@@ -105,7 +105,7 @@ public class XmlUrlFactory : IXmlUrlFactory
             switch (url)
             {
                 case BaseLearningElementJson:
-                    UrlParentSpaceId = (ReadDsl.GetSpaceList().Count + 1).ToString();
+                    UrlParentSpaceId = (ReadAtf.GetSpaceList().Count + 1).ToString();
                     break;
                 case LearningElementJson learningElementJson:
                     UrlParentSpaceId = learningElementJson.LearningSpaceParentId.ToString();
