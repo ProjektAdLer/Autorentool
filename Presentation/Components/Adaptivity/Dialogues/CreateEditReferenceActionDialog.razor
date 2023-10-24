@@ -19,7 +19,7 @@
             <!-- Content reference -->
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
-                <GridSelect Elements="LearningContents" @bind-Value="_learningContent" Required="true"
+                <GridSelect T="ILearningContentViewModel" Elements="LearningContents" @bind-Value="_learningContent" Required="true"
                             RequiredError="@Localizer["Content.RequiredError.Text"]"
                             FilterFuncSearchableStrings="content => new[] { content.Name }">
                     <ElementTemplate>
@@ -33,7 +33,7 @@
             <!-- Element reference -->
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
-                <GridSelect Elements="LearningElements" @bind-Value="_learningElement" Required="true"
+                <GridSelect T="ILearningElementViewModel" Elements="LearningElements" @bind-Value="_learningElement" Required="true"
                             RequiredError="@Localizer["Element.RequiredError.Text"]"
                             FilterFuncSearchableStrings="element => new[] { element.Name }">
                     <ElementTemplate>
@@ -80,8 +80,8 @@
     private MudTabs _tabs = null!;
     private MudTabPanel _contentPanel = null!;
     private MudTabPanel _elementPanel = null!;
-    private ILearningContentViewModel _learningContent = null!;
-    private ILearningElementViewModel _learningElement = null!;
+    private ILearningContentViewModel? _learningContent;
+    private ILearningElementViewModel? _learningElement;
     private string _comment = "";
 
     protected override void OnAfterRender(bool firstRender)
@@ -99,7 +99,7 @@
                 break;
             case ElementReferenceActionViewModel eravm:
                 _tabs.ActivatePanel(_elementPanel);
-                _learningElement = LearningElements.Single(lc => eravm.ElementId == lc.Id);
+                _learningElement = LearningElements.SingleOrDefault(lc => eravm.ElementId == lc.Id);
                 _comment = eravm.Comment;
                 break;
         }
@@ -118,9 +118,9 @@
                     DialogInstance.Close();
                     return;
                 case ContentReferenceActionViewModel cravm:
-                    PresentationLogic.EditContentReferenceAction(cravm, _learningContent, _comment);
+                    PresentationLogic.EditContentReferenceAction(cravm, _learningContent!, _comment);
                     break;
-                case ElementReferenceActionViewModel eravm when eravm.ElementId == _learningElement.Id && eravm.Comment.Equals(_comment):
+                case ElementReferenceActionViewModel eravm when eravm.ElementId == _learningElement!.Id && eravm.Comment.Equals(_comment):
                     DialogInstance.Close();
                     return;
                 case ElementReferenceActionViewModel eravm:
@@ -129,8 +129,8 @@
                 default:
                 {
                     IAdaptivityActionViewModel action = _tabs.ActivePanel == _contentPanel
-                        ? new ContentReferenceActionViewModel(_learningContent, _comment)
-                        : new ElementReferenceActionViewModel(_learningElement.Id, _comment);
+                        ? new ContentReferenceActionViewModel(_learningContent!, _comment)
+                        : new ElementReferenceActionViewModel(_learningElement!.Id, _comment);
                     PresentationLogic.CreateAdaptivityRule(
                         Question,
                         new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
@@ -145,10 +145,10 @@
         }
     }
 
-    private ILearningContentViewModel GetLearningContentViewModel(ILearningContentViewModel actionContent) => actionContent switch
+    private ILearningContentViewModel? GetLearningContentViewModel(ILearningContentViewModel actionContent) => actionContent switch
     {
-        FileContentViewModel fileContent => LearningContents.OfType<FileContentViewModel>().Single(fc => fc.Equals(fileContent)),
-        LinkContentViewModel question => LearningContents.OfType<LinkContentViewModel>().Single(q => q.Equals(question)),
+        FileContentViewModel fileContent => LearningContents.OfType<FileContentViewModel>().SingleOrDefault(fc => fc.Equals(fileContent)),
+        LinkContentViewModel question => LearningContents.OfType<LinkContentViewModel>().SingleOrDefault(q => q.Equals(question)),
         _ => throw new ArgumentOutOfRangeException(nameof(actionContent), "Content must be File or Link")
         };
 
