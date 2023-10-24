@@ -1,0 +1,28 @@
+@using System.Linq.Expressions
+@typeparam T
+
+<MudTextField T="T" Value="Value" For="For" DisableUnderLine="!ShowVisibleLine" Disabled="true" Style="height: 0"
+              Mask="_emptyMask">
+</MudTextField>
+
+@code {
+
+    /// <summary>
+    /// The value of this input element.
+    /// </summary>
+    [Parameter, EditorRequired]
+    [Category(CategoryTypes.FormComponent.Data)]
+    public T Value { get; set; } = default!;
+
+    /// <summary>
+    /// Specify an expression which returns the model's field for which validation messages should be displayed.
+    /// </summary>
+    [Parameter]
+    [Category(CategoryTypes.FormComponent.Validation)]
+    public Expression<Func<T>>? For { get; set; }
+
+    [Parameter]
+    public bool ShowVisibleLine { get; set; } = false;
+
+    private IMask _emptyMask = new RegexMask(@"^$");
+}

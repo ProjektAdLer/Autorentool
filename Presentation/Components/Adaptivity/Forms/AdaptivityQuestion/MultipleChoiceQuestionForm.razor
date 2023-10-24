@@ -35,6 +35,7 @@
         </div>
 
         <MudText>@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
+        <MudCollectionValidation T="ICollection<ChoiceViewModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
         <div class="rounded-lg w-4/4 px-4">
             <br/>
             @if (FormModel.IsSingleResponse)
