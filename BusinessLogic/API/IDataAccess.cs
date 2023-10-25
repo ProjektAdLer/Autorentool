@@ -80,4 +80,17 @@ public interface IDataAccess
     void SaveLink(LinkContent linkContent);
 
     string GetContentFilesFolderPath();
+
+    /// <summary>
+    /// Exports the given <see cref="LearningWorld"/> and all content it references to a zip archive at the given path.
+    /// </summary>
+    /// <param name="world">The world to export.</param>
+    /// <param name="pathToFolder">Filepath to export it to</param>
+    void ExportLearningWorldToArchive(LearningWorld world, string pathToFolder);
+    
+    /// <summary>
+    /// Imports a <see cref="LearningWorld"/> and all content it references from a zip archive at the given path.
+    /// </summary>
+    /// <param name="pathToArchive">Filepath to the archive.</param>
+    void ImportLearningWorldFromArchive(string pathToArchive);
 }

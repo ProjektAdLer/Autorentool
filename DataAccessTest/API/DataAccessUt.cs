@@ -6,6 +6,7 @@ using DataAccess.Persistence;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared;
 using Shared.Configuration;
 using TestHelpers;
@@ -23,13 +24,14 @@ public class DataAccessUt
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
+        var mockFileSaveHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
         var mockContentHandler = Substitute.For<IContentFileHandler>();
         var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
         var mockFileSystem = new MockFileSystem();
 
         //Act 
         var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockFileSaveHandlerWorld,
-            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockContentHandler, mockWorldSavePathsHandler,
+            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockFileSaveHandlerLink, mockContentHandler, mockWorldSavePathsHandler,
             mockFileSystem);
 
         //Assert
@@ -39,6 +41,7 @@ public class DataAccessUt
             Assert.That(systemUnderTest.XmlHandlerWorld, Is.EqualTo(mockFileSaveHandlerWorld));
             Assert.That(systemUnderTest.XmlHandlerSpace, Is.EqualTo(mockFileSaveHandlerSpace));
             Assert.That(systemUnderTest.XmlHandlerElement, Is.EqualTo(mockFileSaveHandlerElement));
+            Assert.That(systemUnderTest.XmlHandlerLink, Is.EqualTo(mockFileSaveHandlerLink));
             Assert.That(systemUnderTest.ContentFileHandler, Is.EqualTo(mockContentHandler));
             Assert.That(systemUnderTest.WorldSavePathsHandler, Is.EqualTo(mockWorldSavePathsHandler));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(mockFileSystem));
@@ -354,6 +357,7 @@ public class DataAccessUt
         IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
+        IXmlFileHandler<List<LinkContentPe>>? fileSaveHandlerLink = null,
         IContentFileHandler? contentHandler = null,
         ILearningWorldSavePathsHandler? worldSavePathsHandler = null,
         IFileSystem? fileSystem = null,
@@ -363,11 +367,13 @@ public class DataAccessUt
         fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();
+        fileSaveHandlerLink ??= Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         worldSavePathsHandler ??= Substitute.For<ILearningWorldSavePathsHandler>();
         fileSystem ??= new MockFileSystem();
         mapper ??= Substitute.For<IMapper>();
         return new DataAccess.API.DataAccess(configuration, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, worldSavePathsHandler, fileSystem, mapper);
+            fileSaveHandlerSpace, fileSaveHandlerElement, fileSaveHandlerLink, contentHandler, worldSavePathsHandler,
+            fileSystem, mapper);
     }
 }

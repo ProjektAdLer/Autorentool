@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Persistence;
 using PersistEntities;
@@ -14,16 +15,18 @@ namespace DataAccess.API;
 
 public class DataAccess : IDataAccess
 {
-    public readonly IContentFileHandler ContentFileHandler;
-    public readonly IFileSystem FileSystem;
-    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
-    public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
-    public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+    internal readonly IContentFileHandler ContentFileHandler;
+    internal readonly IFileSystem FileSystem;
+    internal readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
+    internal readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
+    internal readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+    internal readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
+    internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
 
-    public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
 
     public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement,
+        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink,
         IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler,
         IFileSystem fileSystem, IMapper mapper)
     {
@@ -35,6 +38,7 @@ public class DataAccess : IDataAccess
         FileSystem = fileSystem;
         Configuration = configuration;
         Mapper = mapper;
+        XmlHandlerLink = xmlHandlerLink;
     }
 
     public IMapper Mapper { get; }
@@ -168,4 +172,63 @@ public class DataAccess : IDataAccess
     }
 
     public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
+
+    /// <inheritdoc cref="IDataAccess.ExportLearningWorldToArchive"/>
+    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFolder)
+    {
+        //ensure folders are created
+        if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
+            FileSystem.Directory.CreateDirectory(ApplicationPaths.TempFolder);
+        var tempFolder = FileSystem.Path.Join(ApplicationPaths.TempFolder, Guid.NewGuid().ToString());
+        try
+        {
+            //create temp folder structure
+            FileSystem.Directory.CreateDirectory(tempFolder);
+            var tempContentFolder = FileSystem.Path.Join(tempFolder, "Content");
+            FileSystem.Directory.CreateDirectory(tempContentFolder);
+            //save world file
+            var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
+            SaveLearningWorldToFile(world, worldFilePath);
+            CopyContentFiles(world, tempContentFolder);
+        }
+        finally
+        {
+            FileSystem.Directory.Delete(tempFolder, true);
+        }
+    }
+
+    private void CopyContentFiles(LearningWorld world, string contentFolder)
+    {
+        var contentInWorld = world.LearningSpaces
+            .SelectMany(space =>
+                space.ContainedLearningElements.Select(element => element.LearningContent)
+            )
+            .ToList();
+        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>();
+        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().ToList();
+        
+        //copy files
+        foreach (var file in fileContent)
+        {
+            //copy file
+            var sourceFileName = FileSystem.Path.GetFileName(file.Filepath);
+            var targetFilePath = FileSystem.Path.Join(contentFolder, sourceFileName);
+            FileSystem.File.Copy(file.Filepath, targetFilePath);
+            //copy it's hash
+            var sourceHashFileName = sourceFileName + ".hash";
+            var targetHashFilePath = FileSystem.Path.Join(contentFolder, sourceHashFileName);
+            FileSystem.File.Copy(file.Filepath + ".hash", targetHashFilePath);
+        }
+
+        //save links
+        var linkContentFilepath = FileSystem.Path.Join(contentFolder, ".linkstore");
+        var linkContentPe = Mapper.Map<List<LinkContentPe>>(linkContent);
+        XmlHandlerLink.SaveToDisk(linkContentPe, linkContentFilepath);
+    }
+
+    /// <inheritdoc cref="IDataAccess.ImportLearningWorldFromArchive"/>
+    public void ImportLearningWorldFromArchive(string pathToArchive)
+    {
+        throw new NotImplementedException();
+    }
 }
