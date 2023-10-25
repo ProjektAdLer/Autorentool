@@ -125,11 +125,11 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 
         foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTasks)
         {
-            var optional = task.Optional ? 1 : 0;
+            var requiredDifficultyXml = task.Optional ? "$@NULL@$" : task.RequiredDifficulty.ToString();
 
             var activitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask =
                 new ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(task.TaskId, task.TaskTitle, task.TaskUUID,
-                    optional, task.RequiredDifficulty.ToString());
+                    requiredDifficultyXml);
 
             foreach (var question in task.AdaptivityQuestions)
             {

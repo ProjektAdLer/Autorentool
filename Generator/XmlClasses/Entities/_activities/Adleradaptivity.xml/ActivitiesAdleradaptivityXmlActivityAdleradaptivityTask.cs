@@ -9,17 +9,15 @@ public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask
         Id = "0";
         Title = "";
         Uuid = "";
-        Optional = "0";
         RequiredDifficulty = "0";
     }
 
-    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(int id, string title, string uuid, int optional,
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(int id, string title, string uuid,
         string requiredDifficulty)
     {
         Id = id.ToString();
         Title = title;
         Uuid = uuid;
-        Optional = optional.ToString();
         RequiredDifficulty = requiredDifficulty;
     }
 
@@ -28,8 +26,6 @@ public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask
     [XmlElement("title")] public string Title { get; set; }
 
     [XmlElement("uuid")] public string Uuid { get; set; }
-
-    [XmlElement("optional")] public string Optional { get; set; }
 
     [XmlElement("required_difficulty")] public string RequiredDifficulty { get; set; }
 
