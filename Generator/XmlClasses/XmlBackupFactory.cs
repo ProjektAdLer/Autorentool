@@ -303,21 +303,14 @@ public class XmlBackupFactory : IXmlBackupFactory
                 _ => throw new ArgumentOutOfRangeException(nameof(element))
             };
 
-            if (learningElementType == "h5p")
+            learningElementType = learningElementType switch
             {
-                learningElementType = "h5pactivity";
-            }
-            else if (learningElementType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "bmp" or "webp" or "txt"
-                     or "c"
-                     or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
-            {
-                learningElementType = "resource";
-            }
-
-            if (learningElementType == "adaptivity")
-            {
-                learningElementType = "adleradaptivity";
-            }
+                "h5p" => "h5pactivity",
+                "pdf" or "json" or "jpg" or "jpeg" or "png" or "bmp" or "webp" or "txt" or "c" or "h" or "cpp" or "cc"
+                    or "c++" or "py" or "cs" or "js" or "php" or "html" or "css" => "resource",
+                "adaptivity" => "adleradaptivity",
+                _ => learningElementType
+            };
 
             if (MoodleBackupXmlActivityList != null)
             {

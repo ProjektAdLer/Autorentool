@@ -73,9 +73,9 @@ public class XmlSectionFactory : IXmlSectionFactory
             "", baseLearningElementIds, "", null, -1);
     }
 
-    private void CreateSectionInforefXml(string sectionid)
+    private void CreateSectionInforefXml(string sectionId)
     {
-        SectionsInforefXmlInforef.Serialize("", sectionid);
+        SectionsInforefXmlInforef.Serialize("", sectionId);
     }
 
     private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary,
