@@ -114,4 +114,10 @@
     <data name="ErrorString.NoTasks.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; enthält keine Aufgaben.</value>
     </data>
+    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; enthält referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element &lt;b&gt;{2}&lt;/b&gt; in Lernraum &lt;b&gt;{1}&lt;/b&gt;. Da dieser Lernraum aber erst nach dem Raum, in dem Element &lt;b&gt;{0}&lt;/b&gt; platziert ist, freigeschaltet wird, ist diese Referenz nicht zulässig.</value>
+    </data>
 </root>
