@@ -6,10 +6,21 @@
         @(Localizer["AdaptivityQuestionPreview.Header.Question." + AdaptivityQuestion.Difficulty])
     </MudText>
 
-
     @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
     {
         <MudText Typo="Typo.body1">@multipleChoiceQuestion.Text</MudText>
+        if (!HideChoices)
+        {
+            foreach (var choice in multipleChoiceQuestion.Choices)
+            {
+                <div class="inline-flex">
+                    <MudIcon Icon="@(multipleChoiceQuestion.CorrectChoices.Contains(choice) ? @Icons.Material.Filled.Check : @Icons.Material.Filled.Clear)"
+                             Color="@(multipleChoiceQuestion.CorrectChoices.Contains(choice) ? Color.Success : Color.Error)"/>
+                    <MudText Typo="Typo.body2">@choice.Text</MudText>
+                </div>
+                <br/>
+            }
+        }
     }
     @foreach (var rule in AdaptivityQuestion.Rules)
     {
@@ -29,7 +40,6 @@
                 break;
         }
     }
-
 </MudCard>
 
 @code {
@@ -39,5 +49,8 @@
 
     [Parameter, EditorRequired]
     public IAdaptivityQuestionViewModel AdaptivityQuestion { get; set; } = null!;
+
+    [Parameter]
+    public bool HideChoices { get; set; } = false;
 
 }
