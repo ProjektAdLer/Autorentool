@@ -192,6 +192,7 @@ public class CreateAtf : ICreateAtf
         _listAllLearningElements = new List<ILearningElementPe>();
         LearningWorldJson = new LearningWorldJson("", "", new List<ITopicJson>(), new List<ILearningSpaceJson>(),
             new List<IElementJson>(), "", Array.Empty<string>());
+        _questionId = 1;
     }
 
     private void InitializeLearningWorldProperties(LearningWorldPe learningWorld)
@@ -541,10 +542,10 @@ public class CreateAtf : ICreateAtf
             };
             var adaptivityRules = MapAdaptivityRulesPeToJson(question.Rules);
             var choices = MapChoicesPeToJson((IMultipleChoiceQuestionPe)question);
-            adaptivityQuestions.Add(new AdaptivityQuestionJson(questionType, questionId, question.Id.ToString(),
+            adaptivityQuestions.Add(new AdaptivityQuestionJson(questionType, _questionId, question.Id.ToString(),
                 MapRequiredQuestionDifficultyToInt(question.Difficulty), ((IMultipleChoiceQuestionPe)question).Text,
                 adaptivityRules, choices));
-            questionId++;
+            _questionId++;
         }
 
         return adaptivityQuestions;

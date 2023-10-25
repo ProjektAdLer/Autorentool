@@ -581,7 +581,7 @@ public class CreateAtfUt
                 .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo(ResponseType.singleResponse));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionId, Is.EqualTo(1));
+                .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionId, Is.EqualTo(3));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionUUID, Is.EqualTo(question3.Id.ToString()));
