@@ -317,15 +317,15 @@
             .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
             .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
         {
-            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li>{Localizer["ErrorString.NoTasks.Message", learningElement.Name]}</li>");
+            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
             if (TaskReferencesNonexistantElement(adaptivityContent, world))
-                errorString.AppendLine($"<li>{Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]}</li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
             if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
-                errorString.AppendLine($"<li>{Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]}</li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
             var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
             foreach (var referenceTuple in invalidSpaceReferences)
             {
-                errorString.AppendLine($"<li>{Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space, referenceTuple.Element]}</li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space.Name, referenceTuple.Element.Name]} </li>");
             }
         }
 
