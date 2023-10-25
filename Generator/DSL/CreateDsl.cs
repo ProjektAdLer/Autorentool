@@ -4,8 +4,10 @@ using System.Text;
 using System.Text.Json;
 using Generator.DSL.AdaptivityElement;
 using Generator.WorldExport;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
+using PersistEntities.AdvancedLearningSpaceGenerator;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
@@ -31,7 +33,7 @@ public class CreateDsl : ICreateDsl
     internal Dictionary<int, Guid> DictionarySpaceIdToGuid;
     internal LearningWorldJson LearningWorldJson;
     internal List<(IFileContentPe, string)> ListFileContent;
-    internal List<LearningSpacePe> ListLearningSpaces;
+    internal List<ILearningSpacePe> ListLearningSpaces;
     internal List<TopicPe> ListTopics;
     internal string Uuid;
 
@@ -80,8 +82,8 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="listLearningSpace">The list of LearningSpacePe objects to search.</param>
     /// <returns>A list of LearningSpacePe objects with incremented names for duplicates.</returns>
-    internal static List<LearningSpacePe> IncrementDuplicateLearningElementNames(
-        List<LearningSpacePe> listLearningSpace)
+    internal static List<ILearningSpacePe> IncrementDuplicateLearningElementNames(
+        List<ILearningSpacePe> listLearningSpace)
     {
         // Extract all learning elements from the list of learning spaces
         var allLearningElements = listLearningSpace
@@ -181,7 +183,7 @@ public class CreateDsl : ICreateDsl
     private void Initialize()
     {
         ListFileContent = new List<(IFileContentPe, string)>();
-        ListLearningSpaces = new List<LearningSpacePe>();
+        ListLearningSpaces = new List<ILearningSpacePe>();
         ListTopics = new List<TopicPe>();
         _listLearningSpaceElements = new List<int?>();
         _booleanAlgebraRequirements = "";
@@ -241,20 +243,41 @@ public class CreateDsl : ICreateDsl
 
         WriteDictionaries();
 
-        foreach (var space in ListLearningSpaces)
+        foreach (var anySpace in ListLearningSpaces)
         {
-            _listLearningSpaceElements =
-                MapLearningSpaceElementsToIds(space, learningSpaceId);
-            _booleanAlgebraRequirements = GetRequiredSpacesToEnter(space);
+            _booleanAlgebraRequirements = GetRequiredSpacesToEnter(anySpace);
+            if (anySpace is LearningSpacePe space)
+            {
+                _listLearningSpaceElements =
+                    MapLearningSpaceElementsToIds(space, learningSpaceId);
 
-            AssignTopicToSpace(space, learningSpaceId);
+                AssignTopicToSpace(space, learningSpaceId);
 
-            LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
-                space.Name, _listLearningSpaceElements,
-                space.RequiredPoints, space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
-                space.Description, space.Goals.Split("\n"), _booleanAlgebraRequirements));
+                LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
+                    space.Name, _listLearningSpaceElements,
+                    space.RequiredPoints, space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
+                    space.Description, space.Goals.Split("\n"), _booleanAlgebraRequirements));
 
-            learningSpaceId++;
+                learningSpaceId++;
+            }
+            if (anySpace is AdvancedLearningSpacePe advancedSpace)
+            {
+                _listLearningSpaceElements =
+                    MapAdvancedLearningSpaceElementsToIds(advancedSpace, learningSpaceId);
+                LearningWorldJson.Spaces.Add(new AdvancedLearningSpaceJson(
+                    learningSpaceId, 
+                    advancedSpace.Id.ToString(),
+                    advancedSpace.Name, _listLearningSpaceElements,
+                    advancedSpace.RequiredPoints,
+                    advancedSpace.AdvancedLearningSpaceLayout,
+                    advancedSpace.Theme.ToString(),
+                    advancedSpace.Description, 
+                    advancedSpace.Goals.Split("\n"), _booleanAlgebraRequirements));
+                
+                
+                learningSpaceId++;
+            }
+            
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
@@ -266,15 +289,30 @@ public class CreateDsl : ICreateDsl
     private void WriteDictionaries()
     {
         var idToElementId = 1;
-        foreach (var space in ListLearningSpaces)
+        foreach (var anySpace in ListLearningSpaces)
         {
-            for (var i = 0; i <= GetMaxSlotNumber(space); i++)
+            if (anySpace is LearningSpacePe space)
             {
-                if (!space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
-                _dictionaryIdToLearningElement.Add(idToElementId, element);
-                idToElementId++;
-                idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
+                for (var i = 0; i <= GetMaxSlotNumber(space); i++)
+                {
+                    if (!space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
+                    _dictionaryIdToLearningElement.Add(idToElementId, element);
+                    idToElementId++;
+                    idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
+                }
             }
+            if (anySpace is AdvancedLearningSpacePe advancedSpace)
+            {
+                var maxSlotNumber = advancedSpace.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.Count;
+                for (var i = 0; i <= maxSlotNumber; i++)
+                {
+                    if (!advancedSpace.AdvancedLearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
+                    _dictionaryIdToLearningElement.Add(idToElementId, element);
+                    idToElementId++;
+                    idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
+                }
+            }
+            
         }
     }
 
@@ -317,15 +355,16 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="objectInPathWayViewModels">The collection of path objects used to determine the order.</param>
     /// <returns>A sorted list of learning spaces based on the provided paths.</returns>
-    private static List<LearningSpacePe> GetLearningSpacesInOrder(
+    private static List<ILearningSpacePe> GetLearningSpacesInOrder(
         IEnumerable<IObjectInPathWayPe> objectInPathWayViewModels)
     {
         var objectInPathWayList = objectInPathWayViewModels.ToList();
         var startObjects = objectInPathWayList
-            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count > 0).ToList();
+            .Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpacePe && x.OutBoundObjects.Count > 0)
+            .ToList();
 
         var visited = new HashSet<IObjectInPathWayPe>();
-        var pathOrder = new List<LearningSpacePe>();
+        var pathOrder = new List<ILearningSpacePe>();
         var queue = new Queue<IObjectInPathWayPe>();
 
         foreach (var startObject in startObjects)
@@ -342,21 +381,21 @@ public class CreateDsl : ICreateDsl
 
             visited.Add(current);
 
-            if (current is LearningSpacePe learningSpace)
+            if (current is ILearningSpacePe learningSpace)
             {
                 pathOrder.Add(learningSpace);
             }
 
             foreach (var nextObject in current.OutBoundObjects.OrderBy(o =>
-                         o is LearningSpacePe lsvm ? lsvm.Name : string.Empty))
+                         o is ILearningSpacePe lsvm ? lsvm.Name : string.Empty))
             {
                 queue.Enqueue(nextObject);
             }
         }
 
         var spacesWithOutPaths = objectInPathWayList
-            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count == 0)
-            .Cast<LearningSpacePe>().ToList();
+            .Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpacePe && x.OutBoundObjects.Count == 0)
+            .Cast<ILearningSpacePe>().ToList();
 
         pathOrder.AddRange(spacesWithOutPaths);
         return pathOrder;
@@ -377,6 +416,34 @@ public class CreateDsl : ICreateDsl
         for (var i = 0; i <= maxSlotNumber; i++)
         {
             if (space.LearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
+            {
+                var elementId = _dictionaryIdToLearningElement.First(x => x.Value == element).Key;
+                MapInternalLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
+                listLearningSpaceElements.Add(elementId);
+            }
+            else
+            {
+                listLearningSpaceElements.Add(null);
+            }
+        }
+
+        return listLearningSpaceElements;
+    }
+    /// <summary>
+    /// Maps the elements of the given advanced learning space to their respective IDs, generating a sequential list. 
+    /// If an element doesn't exist for a particular slot, a null is added to the list.
+    /// </summary>
+    /// <param name="advSpace">The advanced learning space whose elements are to be mapped to their IDs.</param>
+    /// <param name="learningSpaceId">The ID of the learning space being processed.</param>
+    /// <returns>A sequential list of element IDs for the learning space, with nulls for missing elements.</returns>
+    private List<int?> MapAdvancedLearningSpaceElementsToIds(AdvancedLearningSpacePe advSpace, int learningSpaceId)
+    {
+        var maxSlotNumber = advSpace.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.Count;
+        var listLearningSpaceElements = new List<int?>();
+
+        for (var i = 0; i <= maxSlotNumber; i++)
+        {
+            if (advSpace.AdvancedLearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
             {
                 var elementId = _dictionaryIdToLearningElement.First(x => x.Value == element).Key;
                 MapInternalLearningElementToLearningWorldJson(learningSpaceId, elementId, element);
@@ -682,7 +749,7 @@ public class CreateDsl : ICreateDsl
     /// </summary>
     /// <param name="space">The learning space to get the requirements for.</param>
     /// <returns>A string that contains the booleanAlgebraRequirements for the learning space.</returns>
-    private string GetRequiredSpacesToEnter(LearningSpacePe space)
+    private string GetRequiredSpacesToEnter(ILearningSpacePe space)
     {
         var booleanAlgebraRequirements = "";
         if (space.InBoundObjects.Count <= 0) return booleanAlgebraRequirements;

@@ -10,6 +10,7 @@ public static class JsonTypes
     public const string LearningWorldType = "LearningWorld";
     public const string TopicType = "Topic";
     public const string LearningSpaceType = "LearningSpace";
+    public const string AdvancedLearningSpaceType = "AdvancedLearningSpace";
 
     public const string LearningElementType = "LearningElement";
     public const string BaseLearningElementType = "BaseLearningElement";

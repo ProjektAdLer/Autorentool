@@ -29,9 +29,14 @@ public class AdvancedLearningSpaceLayout : IAdvancedLearningSpaceLayout
         LearningElements = learningElements ?? new Dictionary<int, ILearningElement>();
         AdvancedLearningElementSlots = advancedLearningElementSlots ?? new Dictionary<int, Coordinate>();
         AdvancedDecorations = advancedDecorations ?? new Dictionary<int, Coordinate>();
-        AdvancedCornerPoints = advancedCornerPoints ?? new Dictionary<int, DoublePoint>();
-        EntryDoorPosition = entryDoorPosition ?? new DoublePoint();
-        ExitDoorPosition = exitDoorPosition ?? new DoublePoint();
+        AdvancedCornerPoints = advancedCornerPoints ?? new Dictionary<int, DoublePoint>{
+            { 0, new DoublePoint { X = 50, Y = 50 } },
+            { 1, new DoublePoint { X = 500, Y = 50 } },
+            { 2, new DoublePoint { X = 500, Y = 200 } },
+            { 3, new DoublePoint { X = 50, Y = 200 } }
+        };
+        EntryDoorPosition = entryDoorPosition ?? new DoublePoint{ X = 50, Y = 125 };
+        ExitDoorPosition = exitDoorPosition ?? new DoublePoint{ X = 500, Y = 125 };
     }
 
     public IDictionary<int, ILearningElement> LearningElements { get; set; }

@@ -16,7 +16,7 @@ public class AdvancedLearningSpaceLayoutViewModel : IAdvancedLearningSpaceLayout
         _learningElements = new Dictionary<int, ILearningElementViewModel>();
         _advancedLearningElementSlots = new Dictionary<int, IAdvancedLearningElementSlotViewModel>();
         _advancedDecorations = new Dictionary<int, IAdvancedDecorationViewModel>();
-        _advancedCornerPoints = new Dictionary<int, DoublePoint>()
+        _advancedCornerPoints = new Dictionary<int, DoublePoint>
         {
             { 0, new DoublePoint { X = 50, Y = 50 } },
             { 1, new DoublePoint { X = 500, Y = 50 } },
