@@ -1,4 +1,4 @@
-namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor;
+namespace Shared;
 
 public class DoublePoint
 {

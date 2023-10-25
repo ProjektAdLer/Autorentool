@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.LearningElement;
+using Shared;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLayout;
 

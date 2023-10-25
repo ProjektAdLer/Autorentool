@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Components.Web;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedComponent;
 using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpace;
+using Shared;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 

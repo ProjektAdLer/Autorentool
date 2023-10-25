@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearnin
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Shared;
 
 namespace Presentation.PresentationLogic.AdvancedLearningSpaceEditor.AdvancedLearningSpaceEditor;
 

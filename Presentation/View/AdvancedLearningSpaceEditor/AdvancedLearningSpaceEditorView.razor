@@ -229,7 +229,7 @@
     private string GetSpaceCornerPointsString()
     {
         var cornerPointString = "";
-        if (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null)
+        if ((AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel != null) && (AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints.Count != 0))
         {
             foreach (var (cornerPointKey, cornerPoint) in AdvancedLearningSpaceEditorPresenter.AdvancedLearningSpaceViewModel.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
             {
