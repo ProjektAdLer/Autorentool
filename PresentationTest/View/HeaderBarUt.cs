@@ -2,9 +2,11 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Bunit;
 using Bunit.Rendering;
 using Bunit.TestDoubles;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -18,6 +20,7 @@ using Presentation.Components.Culture;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -73,6 +76,7 @@ public class HeaderBarUt
         _snackbar.Dispose();
     }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private TestContext _testContext;
     private IPresentationLogic _presentationLogic;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
@@ -82,6 +86,7 @@ public class HeaderBarUt
     private IDialogService _dialogService;
     private IErrorService _errorService;
     private ILogger _logger;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private static string FormatStringLocalizerValue(CallInfo ci)
     {
@@ -207,6 +212,122 @@ public class HeaderBarUt
         mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
         mockStringBuilder.Append("</ul>");
 
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+    }
+
+    [Test]
+    public async Task ExportButton_Clicked_AdaptivityContentWithNoTasks_ErrorServiceCalled()
+    {
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var space = world.LearningSpaces.First();
+        var element = space.LearningSpaceLayout.LearningElements.First().Value;
+        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        element.LearningContent = adaptivityContent;
+        adaptivityContent.Tasks.Clear();
+        
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        await button.ClickAsync(new MouseEventArgs());
+        
+        var mockStringBuilder = new StringBuilder();
+        
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.NoTasks.Message {element.Name} </li>");
+        mockStringBuilder.Append("</ul>");
+        
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+    }
+
+    [Test]
+    public async Task ExportButton_Clicked_AdaptivityContentReferencesNonExistantElement_ErrorServiceCalled()
+    {
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var space = world.LearningSpaces.First();
+        var element = space.LearningSpaceLayout.LearningElements.First().Value;
+        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
+            new ElementReferenceActionViewModel(Guid.NewGuid(), "foobar");
+        element.LearningContent = adaptivityContent;
+        
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        await button.ClickAsync(new MouseEventArgs());
+        
+        var mockStringBuilder = new StringBuilder();
+        
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>");
+        mockStringBuilder.Append("</ul>");
+        
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+    }
+    
+    [Test]
+    public async Task ExportButton_Clicked_AdaptivityContentReferencesUnplacedElement_ErrorServiceCalled()
+    {
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var space = world.LearningSpaces.First();
+        var element = space.LearningSpaceLayout.LearningElements.First().Value;
+        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        var unplacedElement = ViewModelProvider.GetLearningElement();
+        world.UnplacedLearningElements.Add(unplacedElement);
+        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
+            new ElementReferenceActionViewModel(unplacedElement.Id, "foobar");
+        element.LearningContent = adaptivityContent;
+        
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        await button.ClickAsync(new MouseEventArgs());
+        
+        var mockStringBuilder = new StringBuilder();
+        
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>");
+        mockStringBuilder.Append("</ul>");
+        
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+    }
+    
+    [Test]
+    public async Task ExportButton_Clicked_AdaptivityContentReferencesElementInSpaceAfterOwnSpace_ErrorServiceCalled()
+    {
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var space = world.LearningSpaces.First();
+        var element = space.LearningSpaceLayout.LearningElements.First().Value;
+        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
+        var laterElement = ViewModelProvider.GetLearningElement();
+        laterElement.Points = 777;
+        var laterSpace = ViewModelProvider.GetLearningSpace();
+        laterSpace.LearningSpaceLayout.LearningElements.Add(0, laterElement);
+        space.OutBoundObjects.Add(laterSpace);
+        laterSpace.InBoundObjects.Add(space);
+        world.LearningSpaces.Add(laterSpace);
+        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
+            new ElementReferenceActionViewModel(laterElement.Id, "foobar");
+        element.LearningContent = adaptivityContent;
+        
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        await button.ClickAsync(new MouseEventArgs());
+        
+        var mockStringBuilder = new StringBuilder();
+        
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>");
+        mockStringBuilder.Append("</ul>");
+        
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
 

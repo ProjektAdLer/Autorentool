@@ -149,10 +149,9 @@ public static class ViewModelProvider
         return new ContentReferenceActionViewModel(content, comment);
     }
 
-    public static AdaptivityRuleViewModel GetRule(IAdaptivityQuestionViewModel? question = null)
+    public static AdaptivityRuleViewModel GetRule()
     {
-        return new AdaptivityRuleViewModel(question ?? GetMultipleChoiceSingleResponseQuestion(),
-            GetCorrectnessTrigger(),
+        return new AdaptivityRuleViewModel(GetCorrectnessTrigger(),
             GetCommentAction());
     }
 
@@ -187,7 +186,8 @@ public static class ViewModelProvider
     public static IAdaptivityContentViewModel GetAdaptivityContent()
     {
         var task = GetAdaptivityTask();
-        var rule = GetRule(task.Questions.First());
+        var rule = GetRule();
+        task.Questions.First().Rules.Add(rule);
         return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> {task, GetAdaptivityTask()});
     }
 }

@@ -5,6 +5,8 @@ namespace BusinessLogic.Entities.LearningContent.Adaptivity;
 
 public interface IAdaptivityRule : IEquatable<IAdaptivityRule>
 {
+    public Guid Id { get; }
+    
     /// <summary>
     /// The trigger that activates the rule.
     /// </summary>

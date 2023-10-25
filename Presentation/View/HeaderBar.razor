@@ -12,6 +12,13 @@
 @using System.Runtime.Serialization
 @using Presentation.Components.Culture
 @using Presentation.Components
+@using Presentation.PresentationLogic
+@using Presentation.PresentationLogic.Extensions
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningSpace
+@using Shared.Extensions
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -306,6 +313,22 @@
             }
         }
 
+        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
+            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+        {
+            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
+            if (TaskReferencesNonexistantElement(adaptivityContent, world))
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
+            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
+            var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
+            foreach (var referenceTuple in invalidSpaceReferences)
+            {
+                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space.Name, referenceTuple.Element.Name]} </li>");
+            }
+        }
+
         if (errorString.Length == "<ul>".Length) return true;
 
         errorString.Append("</ul>");
@@ -313,6 +336,60 @@
         Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
+    }
+
+    private bool TaskReferencesNonexistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
+    {
+        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
+        return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
+    }
+
+    private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
+        task => task.Questions
+            .Any(question => question.Rules
+                .Any(rule => rule.Action is ElementReferenceActionViewModel eravm &&
+                             world.UnplacedLearningElements.Any(unplacedEle =>
+                                 unplacedEle.Id == eravm.ElementId)));
+
+
+    /// <summary>
+    /// Checks if the given element references any elements that are placed in spaces which come AFTER the space it
+    /// itself is in, in the partial ordering of spaces.
+    /// </summary>
+    private IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> ReferencesElementInSpaceAfterOwnSpace(ILearningElementViewModel element, ILearningWorldViewModel world)
+    {
+        var ownSpace = world.LearningSpaces.SingleOrDefault(space => space.ContainedLearningElements.Contains(element));
+    //element isn't placed yet, can't say anything about it
+        if (ownSpace is null) return Enumerable.Empty<(ILearningSpaceViewModel, ILearningElementViewModel)>();
+
+    //find all the id's of elements that the adaptivity content of this element we are looking at references
+        var adaptivityContent = (AdaptivityContentViewModel)element.LearningContent;
+        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
+
+    //create a tuple of (space,ele) for every element in every space
+        IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> spaceElementTuples = world.LearningSpaces
+            .SelectMany(space => space.ContainedLearningElements
+                .Select(ele => (space, ele)));
+
+    //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
+        var spaceElementTuplesReferenced = spaceElementTuples.Where(tup => adaptivityContentReferencedIds.Contains(tup.Element.Id));
+
+    //find all spaces that are after the space the element we are looking at is in
+        var spacesAfterOwn = ownSpace.GetFollowingSpaces();
+
+    //find all tuples that contain a space that is after our own space
+        return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
+    }
+
+    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
+    {
+        return adaptivityContent.Tasks
+            .SelectMany(task => task.Questions
+                .SelectMany(question => question.Rules
+                    .Select(rule => rule.Action)
+                    .Where(action => action is ElementReferenceActionViewModel)
+                    .Cast<ElementReferenceActionViewModel>()
+                    .Select(action => action.ElementId)));
     }
 
     private async Task ShowNotLoggedInDialog()

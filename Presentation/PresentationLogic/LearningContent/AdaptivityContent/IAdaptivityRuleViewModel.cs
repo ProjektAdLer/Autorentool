@@ -5,6 +5,7 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 public interface IAdaptivityRuleViewModel
 {
+    public Guid Id { get; }
     /// <summary>
     /// The trigger that activates the rule.
     /// </summary>
