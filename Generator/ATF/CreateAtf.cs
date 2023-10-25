@@ -26,6 +26,7 @@ public class CreateAtf : ICreateAtf
     private string _language;
     private List<ILearningElementPe> _listAllLearningElements;
     private List<int?> _listLearningSpaceElements;
+    private int _questionId;
     private string _xmlFilesForExportPath;
     internal Dictionary<int, Guid> DictionarySpaceIdToGuid;
     internal LearningWorldJson LearningWorldJson;
@@ -531,7 +532,6 @@ public class CreateAtf : ICreateAtf
         ICollection<IAdaptivityQuestionPe> taskQuestions)
     {
         var adaptivityQuestions = new List<IAdaptivityQuestionJson>();
-        var questionId = 1;
         foreach (var question in taskQuestions)
         {
             var questionType = question switch
