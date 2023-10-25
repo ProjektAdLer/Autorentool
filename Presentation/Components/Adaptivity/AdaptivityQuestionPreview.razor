@@ -14,8 +14,12 @@
             foreach (var choice in multipleChoiceQuestion.Choices)
             {
                 <div class="inline-flex">
-                    <MudIcon Icon="@(multipleChoiceQuestion.CorrectChoices.Contains(choice) ? @Icons.Material.Filled.Check : @Icons.Material.Filled.Clear)"
-                             Color="@(multipleChoiceQuestion.CorrectChoices.Contains(choice) ? Color.Success : Color.Error)"/>
+
+                    @{
+                        var isCorrectChoice = multipleChoiceQuestion.CorrectChoices.Contains(choice);
+                    }
+                    <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
+                             Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
                     <MudText Typo="Typo.body2">@choice.Text</MudText>
                 </div>
                 <br/>

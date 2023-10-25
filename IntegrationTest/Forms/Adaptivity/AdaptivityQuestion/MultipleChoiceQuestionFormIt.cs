@@ -71,6 +71,18 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         });
     }
 
+    [Test]
+    public void OnParametersSet_CallsMapper()
+    {
+        IMultipleChoiceQuestionViewModel?
+            questionToEdit = ViewModelProvider.GetMultipleChoiceMultipleResponseQuestion();
+
+        var systemUnderTest = GetRenderedComponent(questionToEdit: questionToEdit);
+
+        Mapper.Received(1).Map(questionToEdit, FormDataContainer.FormModel);
+    }
+
+
     private IRenderedComponent<MultipleChoiceQuestionForm> GetRenderedComponent(EventCallback? onSubmitted = null,
         IAdaptivityTaskViewModel? task = null, QuestionDifficulty difficulty = QuestionDifficulty.Easy,
         IMultipleChoiceQuestionViewModel? questionToEdit = null, MudDialogInstance? mudDialogInstance = null)

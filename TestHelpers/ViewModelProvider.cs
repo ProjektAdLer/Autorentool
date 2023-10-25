@@ -156,9 +156,9 @@ public static class ViewModelProvider
             GetCommentAction());
     }
 
-    public static ChoiceViewModel GetChoice()
+    public static ChoiceViewModel GetChoice(string? text = null)
     {
-        return new ChoiceViewModel("a choice");
+        return new ChoiceViewModel(text ?? "a choice");
     }
 
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()

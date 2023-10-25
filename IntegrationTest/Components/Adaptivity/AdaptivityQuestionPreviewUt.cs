@@ -27,7 +27,7 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
     }
 
     [Test]
-    public void Render_Difficulty_RenderTitle([Values] QuestionDifficulty expectedDifficulty)
+    public void Render_Difficulty_RenderPreviewHeader([Values] QuestionDifficulty expectedDifficulty)
     {
         var adaptivityQuestion = Substitute.For<IAdaptivityQuestionViewModel>();
         adaptivityQuestion.Difficulty.Returns(expectedDifficulty);
@@ -49,6 +49,34 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
 
         var questionText = sut.Find("p.mud-typography-body1");
         Assert.That(questionText.InnerHtml, Is.EqualTo(expectedQuestionText));
+    }
+
+    [Test]
+    public void Render_Choices_RenderChoicesText([Values] bool hideChoices)
+    {
+        var adaptivityQuestion = Substitute.For<IMultipleChoiceQuestionViewModel>();
+        var expectedChoice1Text = "choice1";
+        var expectedChoice2Text = "choice2";
+        var choice1 = ViewModelProvider.GetChoice(expectedChoice1Text);
+        var choice2 = ViewModelProvider.GetChoice(expectedChoice2Text);
+        adaptivityQuestion.Choices.Returns(new List<ChoiceViewModel> {choice1, choice2});
+        adaptivityQuestion.CorrectChoices.Returns(new List<ChoiceViewModel> {choice1});
+
+        var sut = GetRenderedComponent(adaptivityQuestion, hideChoices);
+
+        var choices = sut.FindAll("p.mud-typography-body2");
+        if (hideChoices)
+        {
+            Assert.That(choices, Is.Empty);
+        }
+        else
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(choices[0].InnerHtml, Is.EqualTo(expectedChoice1Text));
+                Assert.That(choices[1].InnerHtml, Is.EqualTo(expectedChoice2Text));
+            });
+        }
     }
 
     [Test]
@@ -113,13 +141,14 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
     }
 
     private IRenderedComponent<AdaptivityQuestionPreview> GetRenderedComponent(
-        IAdaptivityQuestionViewModel? adaptivityQuestion)
+        IAdaptivityQuestionViewModel? adaptivityQuestion, bool hideChoices = false)
     {
         adaptivityQuestion ??= Substitute.For<IAdaptivityQuestionViewModel>();
 
         return Context.RenderComponent<AdaptivityQuestionPreview>(p =>
         {
             p.Add(c => c.AdaptivityQuestion, adaptivityQuestion);
+            p.Add(c => c.HideChoices, hideChoices);
         });
     }
 }
