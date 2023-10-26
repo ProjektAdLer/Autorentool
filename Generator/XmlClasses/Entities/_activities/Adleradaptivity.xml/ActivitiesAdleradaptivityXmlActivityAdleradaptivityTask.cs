@@ -13,12 +13,12 @@ public class ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask
     }
 
     public ActivitiesAdleradaptivityXmlActivityAdleradaptivityTask(int id, string title, string uuid,
-        string requiredDifficulty)
+        string? requiredDifficulty)
     {
         Id = id.ToString();
         Title = title;
         Uuid = uuid;
-        RequiredDifficulty = requiredDifficulty;
+        RequiredDifficulty = requiredDifficulty ?? "";
     }
 
     [XmlAttribute("id")] public string Id { get; set; }

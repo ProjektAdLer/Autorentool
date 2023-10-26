@@ -542,8 +542,14 @@ public class CreateAtf : ICreateAtf
             };
             var adaptivityRules = MapAdaptivityRulesPeToJson(question.Rules);
             var choices = MapChoicesPeToJson((IMultipleChoiceQuestionPe)question);
+            var questionDifficulty = MapRequiredQuestionDifficultyToInt(question.Difficulty);
+            if (questionDifficulty == null)
+            {
+                throw new ArgumentOutOfRangeException($"Question {question.Id} has no difficulty");
+            }
+
             adaptivityQuestions.Add(new AdaptivityQuestionJson(questionType, _questionId, question.Id.ToString(),
-                MapRequiredQuestionDifficultyToInt(question.Difficulty), ((IMultipleChoiceQuestionPe)question).Text,
+                (int)questionDifficulty, ((IMultipleChoiceQuestionPe)question).Text,
                 adaptivityRules, choices));
             _questionId++;
         }
@@ -649,14 +655,14 @@ public class CreateAtf : ICreateAtf
     /// <summary>
     /// Converts a question difficulty to its corresponding integer representation in the ATF.
     /// </summary>
-    private static int MapRequiredQuestionDifficultyToInt(QuestionDifficulty? questionDifficulty)
+    private static int? MapRequiredQuestionDifficultyToInt(QuestionDifficulty? questionDifficulty)
     {
         return questionDifficulty switch
         {
             QuestionDifficulty.Easy => 000,
             QuestionDifficulty.Medium => 100,
             QuestionDifficulty.Hard => 200,
-            null => 000,
+            null => null,
             _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
                 questionDifficulty, null)
         };

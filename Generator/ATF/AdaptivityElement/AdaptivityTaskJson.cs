@@ -6,7 +6,7 @@ public class AdaptivityTaskJson : IAdaptivityTaskJson
 {
     [JsonConstructor]
     public AdaptivityTaskJson(int taskId, string taskUuid, string taskTitle, bool optional,
-        int requiredDifficulty, List<IAdaptivityQuestionJson> adaptivityQuestions)
+        int? requiredDifficulty, List<IAdaptivityQuestionJson> adaptivityQuestions)
     {
         TaskId = taskId;
         TaskUUID = taskUuid;
@@ -20,6 +20,6 @@ public class AdaptivityTaskJson : IAdaptivityTaskJson
     public string TaskUUID { get; set; }
     public string TaskTitle { get; set; }
     public bool Optional { get; set; }
-    public int RequiredDifficulty { get; set; }
+    public int? RequiredDifficulty { get; set; }
     public List<IAdaptivityQuestionJson> AdaptivityQuestions { get; set; }
 }

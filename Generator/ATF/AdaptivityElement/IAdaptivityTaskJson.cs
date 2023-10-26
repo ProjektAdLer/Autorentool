@@ -9,6 +9,6 @@ public interface IAdaptivityTaskJson
     string TaskUUID { get; set; }
     string TaskTitle { get; set; }
     bool Optional { get; set; }
-    int RequiredDifficulty { get; set; }
+    int? RequiredDifficulty { get; set; }
     List<IAdaptivityQuestionJson> AdaptivityQuestions { get; set; }
 }
