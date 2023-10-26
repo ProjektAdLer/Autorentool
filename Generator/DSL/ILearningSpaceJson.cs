@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using Generator.DSL.AdvancedLearningSpaceGenerator;
 
 namespace Generator.DSL;
 
 [JsonDerivedType(typeof(LearningSpaceJson), typeDiscriminator: JsonTypes.LearningSpaceType)]
+[JsonDerivedType(typeof(AdvancedLearningSpaceJson), typeDiscriminator: JsonTypes.AdvancedLearningSpaceType)]
 public interface ILearningSpaceJson
 {
     int SpaceId { get; set; }

@@ -2,7 +2,9 @@
 using System.IO.Abstractions;
 using System.Text;
 using System.Text.Json;
+using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Generator.DSL.AdaptivityElement;
+using Generator.DSL.AdvancedLearningSpaceGenerator;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
@@ -87,8 +89,17 @@ public class CreateDsl : ICreateDsl
     {
         // Extract all learning elements from the list of learning spaces
         var allLearningElements = listLearningSpace
+            .Where(space => space is LearningSpacePe)
             .SelectMany(space => space.LearningSpaceLayout.ContainedLearningElements)
             .ToList();
+
+
+        allLearningElements.AddRange(listLearningSpace
+            .Where(space => space is IAdvancedLearningSpacePe)
+            .Cast<IAdvancedLearningSpacePe>()
+            .SelectMany(space => space.AdvancedLearningSpaceLayout.ContainedLearningElements)
+            .ToList()
+        );
 
         // Identify names of learning elements that appear more than once
         var duplicateLearningElements = allLearningElements.GroupBy(element => element.Name)
@@ -260,27 +271,46 @@ public class CreateDsl : ICreateDsl
 
                 learningSpaceId++;
             }
+
             if (anySpace is AdvancedLearningSpacePe advancedSpace)
             {
                 _listLearningSpaceElements =
                     MapAdvancedLearningSpaceElementsToIds(advancedSpace, learningSpaceId);
+                var spaceLayout = ConstructLearningSpaceLayout(advancedSpace);
                 LearningWorldJson.Spaces.Add(new AdvancedLearningSpaceJson(
-                    learningSpaceId, 
+                    learningSpaceId,
                     advancedSpace.Id.ToString(),
                     advancedSpace.Name, _listLearningSpaceElements,
                     advancedSpace.RequiredPoints,
-                    advancedSpace.AdvancedLearningSpaceLayout,
+                    spaceLayout,
                     advancedSpace.Theme.ToString(),
-                    advancedSpace.Description, 
+                    advancedSpace.Description,
                     advancedSpace.Goals.Split("\n"), _booleanAlgebraRequirements));
-                
-                
+
+
                 learningSpaceId++;
             }
-            
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
+    }
+    /// <summary>
+    /// Constructs Advanced Layout
+    /// </summary>
+    /// <param name="advancedSpace"></param>
+    private AdvancedLearningSpaceLayoutJson ConstructLearningSpaceLayout(AdvancedLearningSpacePe advancedSpace)
+    {
+        AdvancedLearningSpaceLayoutJson advancedLearningSpaceLayout = new AdvancedLearningSpaceLayoutJson();
+        foreach (var elementSlot in advancedSpace.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots)
+        {
+            advancedLearningSpaceLayout.AdvancedLearningElementSlots.Add( new AdvancedLearningElementSlotJson(
+                elementSlot.Key,
+                elementSlot.Value.PositionX,
+                elementSlot.Value.PositionY,
+                elementSlot.Value.Rotation));
+        }
+        
+        return advancedLearningSpaceLayout;
     }
 
     /// <summary>
@@ -301,18 +331,19 @@ public class CreateDsl : ICreateDsl
                     idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
                 }
             }
+
             if (anySpace is AdvancedLearningSpacePe advancedSpace)
             {
                 var maxSlotNumber = advancedSpace.AdvancedLearningSpaceLayout.AdvancedLearningElementSlots.Count;
                 for (var i = 0; i <= maxSlotNumber; i++)
                 {
-                    if (!advancedSpace.AdvancedLearningSpaceLayout.LearningElements.TryGetValue(i, out var element)) continue;
+                    if (!advancedSpace.AdvancedLearningSpaceLayout.LearningElements.TryGetValue(i, out var element))
+                        continue;
                     _dictionaryIdToLearningElement.Add(idToElementId, element);
                     idToElementId++;
                     idToElementId = AddContentReferenceActionsToDictionary(element, idToElementId);
                 }
             }
-            
         }
     }
 
@@ -429,6 +460,7 @@ public class CreateDsl : ICreateDsl
 
         return listLearningSpaceElements;
     }
+
     /// <summary>
     /// Maps the elements of the given advanced learning space to their respective IDs, generating a sequential list. 
     /// If an element doesn't exist for a particular slot, a null is added to the list.
