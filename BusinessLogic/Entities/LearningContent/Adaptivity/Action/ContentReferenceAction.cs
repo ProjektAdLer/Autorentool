@@ -62,4 +62,28 @@ public class ContentReferenceAction : IAdaptivityAction
     {
         return !Equals(left, right);
     }
+
+    public IMemento GetMemento() => new ContentReferenceActionMemento(Id, Content, Comment);
+
+    public void RestoreMemento(IMemento memento)
+    {
+        if(memento is not ContentReferenceActionMemento cram)
+            throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
+        Id = cram.Id;
+        Content = cram.Content;
+        Comment = cram.Comment;
+    }
+
+    private record ContentReferenceActionMemento : IMemento
+    {
+        public ContentReferenceActionMemento(Guid id, ILearningContent content, string comment)
+        {
+            Id = id;
+            Content = content;
+            Comment = comment;
+        }
+        internal Guid Id { get; }
+        internal ILearningContent Content { get; }
+        internal string Comment { get; }
+    }
 }

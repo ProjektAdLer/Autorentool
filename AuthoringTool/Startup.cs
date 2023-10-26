@@ -6,7 +6,9 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Action;
 using BusinessLogic.Commands.Adaptivity.Question;
+using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -277,6 +279,8 @@ public class Startup
         services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
         services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
         services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
+        services.AddSingleton<IAdaptivityRuleCommandFactory, AdaptivityRuleCommandFactory>();
+        services.AddSingleton<IAdaptivityActionCommandFactory, AdaptivityActionCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

@@ -40,7 +40,7 @@
                     @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
                 </MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                                 Min="1"
+                                 Min="0"
                                  For="@(() => FormModel.RequiredPoints)"
                                  DebounceInterval="DebounceInterval"
                                  Variant="Variant.Outlined"
@@ -141,7 +141,7 @@
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints!, model.Theme);
+            model.Goals, model.RequiredPoints, model.Theme);
     }
 
     private void OnValidFieldChange(LearningSpaceFormModel model) => OnValidSubmit(model);

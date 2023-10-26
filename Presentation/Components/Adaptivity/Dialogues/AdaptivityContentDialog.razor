@@ -34,18 +34,26 @@
                                          ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                          ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
 
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, difficulty)"/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"/>
-                    <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">
-                        <ChildContent>
-                            <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.RemoveRedEye"></MudIconButton>
-                        </ChildContent>
-                        <TooltipContent>
-                            <AdaptivityQuestionPreview
-                                AdaptivityQuestion="question">
-                            </AdaptivityQuestionPreview>
-                        </TooltipContent>
-                    </MudTooltip>
+                    <div class="flex flex-col">
+                        <div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, difficulty)"/>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"/>
+                            <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">
+                                <ChildContent>
+                                    <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.RemoveRedEye"></MudIconButton>
+                                </ChildContent>
+                                <TooltipContent>
+                                    <AdaptivityQuestionPreview
+                                        AdaptivityQuestion="question">
+                                    </AdaptivityQuestionPreview>
+                                </TooltipContent>
+                            </MudTooltip>
+                        </div>
+                        <div>
+                            <AdaptivityContentDialogRuleControl Question="question" />
+                        </div>
+                    </div>
+                    
                 }
                 else
                 {

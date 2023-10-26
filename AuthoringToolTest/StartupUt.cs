@@ -5,6 +5,8 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Action;
+using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -172,7 +174,8 @@ public class StartupUt
     {
         typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
         typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory),
-        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory)
+        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory), typeof(IAdaptivityRuleCommandFactory),
+        typeof(IAdaptivityActionCommandFactory)
     };
 
     [Test]

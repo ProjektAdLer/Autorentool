@@ -1,12 +1,11 @@
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
-using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 
 namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
 {
-    public AdaptivityRuleViewModel(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger, IAdaptivityActionViewModel action)
+    public AdaptivityRuleViewModel(IAdaptivityTriggerViewModel trigger, IAdaptivityActionViewModel action)
     {
         Trigger = trigger;
         Action = action;
@@ -21,6 +20,7 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
         Action = null!;
     }
 
+    public Guid Id { get; private set; }
     public IAdaptivityTriggerViewModel Trigger { get; set; }
     public IAdaptivityActionViewModel Action { get; set; }
 }

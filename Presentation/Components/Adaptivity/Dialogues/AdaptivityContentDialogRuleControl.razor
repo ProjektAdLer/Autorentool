@@ -1,0 +1,93 @@
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
+@using System.Diagnostics.CodeAnalysis
+@using ElectronNET.API
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+
+@if (!Question.Rules.Any())
+{
+    <MudButton OnClick="AddCommentAsync">@Localizer["Button.AddComment.Text"]</MudButton>
+    <MudButton OnClick="AddReferenceAsync">@Localizer["Button.AddReference.Text"]</MudButton>
+}
+else
+{
+    <MudTooltip Text="@Localizer["Tooltip.DeleteRule.Text"]">
+        <MudIconButton OnClick="DeleteRule" Icon="@Icons.Material.Filled.Remove" Color="Color.Error"/>
+    </MudTooltip>
+    @switch (Rule!.Action)
+    {
+        case CommentActionViewModel cavm:
+            <MudButton OnClick="AddCommentAsync">@Localizer["Button.EditComment.Text"]</MudButton>
+            break;
+        case ElementReferenceActionViewModel or ContentReferenceActionViewModel:
+            <MudButton OnClick="AddReferenceAsync">@Localizer["Button.EditReference.Text"]</MudButton>
+            break;
+    }
+}
+
+@code {
+
+    [Inject, AllowNull]
+    internal IDialogService DialogService { get; set; }
+
+    [Inject, AllowNull]
+    internal IPresentationLogic PresentationLogic { get; set; }
+    
+    [Inject, AllowNull]
+    internal IStringLocalizer<AdaptivityContentDialogRuleControl> Localizer { get; set; }
+
+    [Parameter, EditorRequired, AllowNull]
+    public IAdaptivityQuestionViewModel Question { get; set; }
+
+    private IAdaptivityRuleViewModel? Rule => Question.Rules.FirstOrDefault();
+
+    private static DialogOptions DialogOptions => new()
+    {
+        CloseOnEscapeKey = true,
+        DisableBackdropClick = true,
+        CloseButton = true,
+        MaxWidth = MaxWidth.ExtraLarge,
+    };
+
+    private void DeleteRule()
+    {
+        if (Rule is null) return;
+        PresentationLogic.DeleteAdaptivityRule(Question, Rule);
+    }
+
+    private async Task AddCommentAsync()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditCommentActionDialog.Question), Question },
+            { nameof(CreateEditCommentActionDialog.ExistingAction), Rule?.Action },
+        };
+
+        var dialogReference = await DialogService.ShowAsync<CreateEditCommentActionDialog>(@Localizer["CommentDialog.Title.Text"],
+            dialogParameters, DialogOptions);
+        await dialogReference.Result;
+        await StateHasChangedAsync();
+    }
+
+    private async Task AddReferenceAsync()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditReferenceActionDialog.Question), Question },
+            { nameof(CreateEditReferenceActionDialog.ExistingAction), Rule?.Action },
+        };
+        
+        var dialogReference = await DialogService.ShowAsync<CreateEditReferenceActionDialog>(@Localizer["ReferenceDialog.Title.Text"],
+            dialogParameters, DialogOptions);
+        await dialogReference.Result;
+        await StateHasChangedAsync();
+    }
+
+    private async Task StateHasChangedAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
