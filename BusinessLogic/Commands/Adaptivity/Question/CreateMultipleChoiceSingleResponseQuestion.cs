@@ -32,6 +32,10 @@ public class CreateMultipleChoiceSingleResponseQuestion : ICreateMultipleChoiceS
         _memento = AdaptivityTask.GetMemento();
 
         AdaptivityTask.Questions.Add(Question);
+        if (AdaptivityTask.Questions.Count == 1)
+        {
+            AdaptivityTask.MinimumRequiredDifficulty = Question.Difficulty;
+        }
 
         Logger.LogTrace(
             "Created MultipleChoicesSingleResponseQuestion '{QuestionText}' in AdaptivityTask {AdaptivityTaskName}",

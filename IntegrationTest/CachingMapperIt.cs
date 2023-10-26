@@ -242,10 +242,10 @@ public class CachingMapperIt
         adaptivityActionCommandFactory ??= Substitute.For<IAdaptivityActionCommandFactory>();
         fileSystem ??= new MockFileSystem();
 
-        return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
-            shellWrapper, questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory, layoutCommandFactory,
-            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory,
+        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
+            serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
+            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
+            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory,
             adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
             fileSystem);
     }

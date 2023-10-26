@@ -23,25 +23,10 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="EditAdaptivityQuestionForm.Field.QuestionText.Text" xml:space="preserve">
-        <value>Fragetext</value>
+    <data name="AdaptivityQuestionDialog.Sidebar.Header.NoQuestions" xml:space="preserve">
+        <value>Für diese Aufgabe gibt es noch keine anderen Fragen</value>
     </data>
-    <data name="EditAdaptivityQuestionForm.SnackbarMessage" xml:space="preserve">
-        <value>Frage aktualisiert</value>
-    </data>
-    <data name="EditAdaptivityQuestionForm.Text.AddChoice" xml:space="preserve">
-        <value>Antworten hinzufügen</value>
-    </data>
-    <data name="EditAdaptivityQuestionForm.Button.Edit" xml:space="preserve">
-        <value>Übernehmen</value>
-    </data>
-    <data name="EditAdaptivityQuestionForm.Text.Choices" xml:space="preserve">
-        <value>Antwortmöglichkeiten</value>
-    </data>
-    <data name="EditAdaptivityQuestionForm.Text.Choice" xml:space="preserve">
-        <value>Antwortmöglichkeit</value>
-    </data>
-    <data name="EditAdaptivityQuestionForm.Field.Title.Text" xml:space="preserve">
-        <value>Titel</value>
+    <data name="AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions" xml:space="preserve">
+        <value>Andere Fragen für diese Aufgabe</value>
     </data>
 </root>
