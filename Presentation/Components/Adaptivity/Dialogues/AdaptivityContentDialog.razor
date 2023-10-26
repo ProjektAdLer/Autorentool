@@ -64,6 +64,9 @@
                     <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(difficulty)"
                                          ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                          ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
+                    <div>
+                        <AdaptivityContentDialogRuleControl Question="question"/>
+                    </div>
                 }
                 else
                 {
@@ -87,7 +90,6 @@
         </MudTFootRow>
     </FooterContent>
 </MudTable>
-
 
 @code {
 

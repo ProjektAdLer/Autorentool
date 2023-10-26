@@ -9,6 +9,7 @@ public class AdaptivityRule : IAdaptivityRule
     {
         Trigger = trigger;
         Action = action;
+        Id = Guid.NewGuid();
     }
 
     /// <summary>
@@ -18,8 +19,10 @@ public class AdaptivityRule : IAdaptivityRule
     {
         Trigger = null!;
         Action = null!;
+        Id = Guid.Empty;
     }
 
+    public Guid Id { get; private set; }
     public IAdaptivityTrigger Trigger { get; set; }
     public IAdaptivityAction Action { get; set; }
 
