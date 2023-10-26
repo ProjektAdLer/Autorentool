@@ -13,14 +13,14 @@ namespace Generator.XmlClasses.XmlFileFactories;
 
 public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 {
-    private readonly string _currentTime;
-    private readonly IFileSystem _fileSystem;
-    private string _adaptivityElementId;
-    private string _adaptivityElementName;
-    private string _adaptivityElementParentSpaceId;
-    private float _adaptivityElementPoints;
-    private string _adaptivityElementUuid;
-    private List<IAdaptivityElementJson> _listAdaptivityElements;
+    internal readonly string CurrentTime;
+    internal readonly IFileSystem FileSystem;
+    internal string AdaptivityElementId;
+    internal string AdaptivityElementName;
+    internal string AdaptivityElementParentSpaceId;
+    internal float AdaptivityElementPoints;
+    internal string AdaptivityElementUuid;
+    internal List<IAdaptivityElementJson> ListAdaptivityElements;
 
     public XmlAdaptivityFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
@@ -54,57 +54,57 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesAdleradaptivityXmlActivity =
             activityAdLerAdaptivityXmlActivity ?? new ActivitiesAdleradaptivityXmlActivity();
 
-        _adaptivityElementId = "0";
-        _adaptivityElementName = "";
-        _adaptivityElementParentSpaceId = "";
-        _adaptivityElementPoints = 0;
-        _adaptivityElementUuid = "";
+        AdaptivityElementId = "0";
+        AdaptivityElementName = "";
+        AdaptivityElementParentSpaceId = "";
+        AdaptivityElementPoints = 0;
+        AdaptivityElementUuid = "";
 
-        _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
 
-        _listAdaptivityElements = new List<IAdaptivityElementJson>();
+        ListAdaptivityElements = new List<IAdaptivityElementJson>();
 
-        _fileSystem = fileSystem ?? new FileSystem();
+        FileSystem = fileSystem ?? new FileSystem();
     }
 
-    private IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    internal IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
 
-    private IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    internal IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
 
-    private IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    private IActivitiesAdleradaptivityXmlActivity ActivitiesAdleradaptivityXmlActivity { get; set; }
+    internal IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    internal IActivitiesAdleradaptivityXmlActivity ActivitiesAdleradaptivityXmlActivity { get; set; }
 
-    private IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    internal IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
 
-    private IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    internal IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
 
-    private IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    internal IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
 
-    private IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    internal IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
 
-    private IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    internal IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
 
-    private IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    internal IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
 
-    private IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    private IReadAtf ReadAtf { get; }
+    internal IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    internal IReadAtf ReadAtf { get; }
 
     public void CreateXmlAdaptivityFactory()
     {
-        _listAdaptivityElements = ReadAtf.GetAdaptivityElementsList();
+        ListAdaptivityElements = ReadAtf.GetAdaptivityElementsList();
 
         AdaptivitySetParameters();
     }
 
     private void AdaptivitySetParameters()
     {
-        foreach (var adaptivityElement in _listAdaptivityElements)
+        foreach (var adaptivityElement in ListAdaptivityElements)
         {
-            _adaptivityElementId = adaptivityElement.ElementId.ToString();
-            _adaptivityElementName = adaptivityElement.ElementName;
-            _adaptivityElementUuid = adaptivityElement.ElementUUID;
-            _adaptivityElementParentSpaceId = adaptivityElement.LearningSpaceParentId.ToString();
-            _adaptivityElementPoints = adaptivityElement.ElementMaxScore;
+            AdaptivityElementId = adaptivityElement.ElementId.ToString();
+            AdaptivityElementName = adaptivityElement.ElementName;
+            AdaptivityElementUuid = adaptivityElement.ElementUUID;
+            AdaptivityElementParentSpaceId = adaptivityElement.LearningSpaceParentId.ToString();
+            AdaptivityElementPoints = adaptivityElement.ElementMaxScore;
 
             SetParametersActivityAdaptivity(adaptivityElement);
         }
@@ -112,16 +112,16 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 
     private void SetParametersActivityAdaptivity(IAdaptivityElementJson adaptivityElement)
     {
-        CreateActivityFolder(_adaptivityElementId);
+        CreateActivityFolder(AdaptivityElementId);
 
         //file activities/adaptivity_.../grades.xml
-        ActivitiesGradesXmlActivityGradebook.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesGradesXmlActivityGradebook.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../adleradaptivity.xml
-        ActivitiesAdleradaptivityXmlActivity = new ActivitiesAdleradaptivityXmlActivity(_adaptivityElementId);
+        ActivitiesAdleradaptivityXmlActivity = new ActivitiesAdleradaptivityXmlActivity(AdaptivityElementId);
 
         ActivitiesAdleradaptivityXmlActivity.Adleradaptivity =
-            new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(_adaptivityElementId, _adaptivityElementName);
+            new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(AdaptivityElementId, AdaptivityElementName);
 
         foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTasks)
         {
@@ -142,29 +142,29 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
                 .Add(activitiesAdLerAdaptivityXmlActivityAdlerAdaptivityTask);
         }
 
-        ActivitiesAdleradaptivityXmlActivity.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesAdleradaptivityXmlActivity.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../roles.xml
-        ActivitiesRolesXmlRoles.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesRolesXmlRoles.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "adleradaptivity";
         ActivitiesModuleXmlModule.ShowDescription = "1";
         ActivitiesModuleXmlModule.Indent = "1";
-        ActivitiesModuleXmlModule.SectionId = _adaptivityElementParentSpaceId;
-        ActivitiesModuleXmlModule.SectionNumber = _adaptivityElementParentSpaceId;
-        ActivitiesModuleXmlModule.Added = _currentTime;
-        ActivitiesModuleXmlModule.Id = _adaptivityElementId;
+        ActivitiesModuleXmlModule.SectionId = AdaptivityElementParentSpaceId;
+        ActivitiesModuleXmlModule.SectionNumber = AdaptivityElementParentSpaceId;
+        ActivitiesModuleXmlModule.Added = CurrentTime;
+        ActivitiesModuleXmlModule.Id = AdaptivityElementId;
         ActivitiesModuleXmlModule.Completion = "2";
         //AdlerScore can not be null at this point because it is set in the constructor
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax =
-            _adaptivityElementPoints.ToString("F5", CultureInfo.InvariantCulture);
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = _adaptivityElementUuid;
+            AdaptivityElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = AdaptivityElementUuid;
 
-        ActivitiesModuleXmlModule.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesModuleXmlModule.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesGradeHistoryXmlGradeHistory.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../inforef.xml
         ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
@@ -175,13 +175,13 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
             ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
             new ActivitiesInforefXmlGradeItemref();
 
-        ActivitiesInforefXmlInforef.Serialize("adleradaptivity", _adaptivityElementId);
+        ActivitiesInforefXmlInforef.Serialize("adleradaptivity", AdaptivityElementId);
     }
 
     private void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
+        var currWorkDir = FileSystem.Directory.GetCurrentDirectory();
+        FileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "adleradaptivity_" + moduleId));
     }
 }
