@@ -575,7 +575,7 @@ public class CreateAtfUt
                 .AdaptivityTasks[1].Optional, Is.EqualTo(true));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
-                .AdaptivityTasks[1].RequiredDifficulty, Is.EqualTo(000));
+                .AdaptivityTasks[1].RequiredDifficulty, Is.EqualTo(null));
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent
                 .AdaptivityTasks[1].AdaptivityQuestions[0].QuestionType, Is.EqualTo(ResponseType.singleResponse));
