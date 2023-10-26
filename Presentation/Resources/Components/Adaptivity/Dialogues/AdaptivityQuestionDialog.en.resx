@@ -23,22 +23,10 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="AdaptivityQuestionPreview.Header.Question.Easy" xml:space="preserve">
-        <value>Leichte Frage:</value>
+    <data name="AdaptivityQuestionDialog.Sidebar.Header.NoQuestions" xml:space="preserve">
+        <value>There are no other questions for this task yet</value>
     </data>
-    <data name="AdaptivityQuestionPreview.Header.Question.Medium" xml:space="preserve">
-        <value>Mittelschwere Frage:</value>
-    </data>
-    <data name="AdaptivityQuestionPreview.Header.Question.Hard" xml:space="preserve">
-        <value>Schwere Frage:</value>
-    </data>
-    <data name="AdaptivityQuestionPreview.Header.Comment" xml:space="preserve">
-        <value>Kommentar:</value>
-    </data>
-    <data name="AdaptivityQuestionPreview.Header.ElementReference" xml:space="preserve">
-        <value>Verweis auf Lernelement:</value>
-    </data>
-    <data name="AdaptivityQuestionPreview.Header.ContentReference" xml:space="preserve">
-        <value>Verweis auf Lerninhalt:</value>
+    <data name="AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions" xml:space="preserve">
+        <value>Other questions for this task</value>
     </data>
 </root>

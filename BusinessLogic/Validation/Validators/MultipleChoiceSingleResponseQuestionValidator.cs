@@ -10,8 +10,6 @@ public class MultipleChoiceSingleResponseQuestionValidator : AbstractValidator<M
     public MultipleChoiceSingleResponseQuestionValidator()
     {
         Include(new MultipleChoiceQuestionValidator());
-        RuleFor(x => x.CorrectChoices)
-            .Must(x => x.Count == 1)
-            .WithMessage("Question must have exactly one correct choice.");
+        // Validation for single response is solved by the radio group in the UI.
     }
 }

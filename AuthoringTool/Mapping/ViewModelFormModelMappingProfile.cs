@@ -1,6 +1,8 @@
 using AutoMapper;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -16,7 +18,8 @@ public class ViewModelFormModelMappingProfile : Profile
         CreateWorldMap();
         CreateSpaceMap();
         CreateElementMap();
-        CreateLinkContentMap();
+        CreateContentMap();
+        CreateAdaptivityQuestionMap();
         CreateAdaptivityQuestionMap();
     }
 
@@ -26,10 +29,11 @@ public class ViewModelFormModelMappingProfile : Profile
         cfg.AddCollectionMappersOnce();
     };
 
-    private void CreateLinkContentMap()
+    private void CreateContentMap()
     {
         CreateMap<LinkContentViewModel, LinkContentFormModel>()
             .ReverseMap();
+        CreateMap<AdaptivityContentViewModel, AdaptivityContentFormModel>();
     }
 
     private void CreateElementMap()

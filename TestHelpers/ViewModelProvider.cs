@@ -130,9 +130,9 @@ public static class ViewModelProvider
         return new CompositeTriggerViewModel(type, leftSide, rightSide);
     }
 
-    public static CommentActionViewModel GetCommentAction()
+    public static CommentActionViewModel GetCommentAction(string? comment = null)
     {
-        return new CommentActionViewModel("a comment");
+        return new CommentActionViewModel(comment ?? "a comment");
     }
 
     public static ElementReferenceActionViewModel GetElementReferenceAction(Guid? elementGuid = null,
@@ -155,9 +155,9 @@ public static class ViewModelProvider
             GetCommentAction());
     }
 
-    public static ChoiceViewModel GetChoice()
+    public static ChoiceViewModel GetChoice(string? text = null)
     {
-        return new ChoiceViewModel("a choice");
+        return new ChoiceViewModel(text ?? "a choice");
     }
 
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
