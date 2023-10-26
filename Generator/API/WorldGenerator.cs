@@ -36,14 +36,14 @@ public class WorldGenerator : IWorldGenerator
         {
             var mappedWorldPe = Mapper.Map<LearningWorldPe>(learningWorld);
             var dslPath = CreateDsl.GenerateAndExportLearningWorldJson(mappedWorldPe);
-            ReadDsl.ReadLearningWorld(dslPath);
-            BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
-            BackupFile.WriteBackupFile(filepath);
+            // ReadDsl.ReadLearningWorld(dslPath);
+            // BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
+            // BackupFile.WriteBackupFile(filepath);
         }
         finally
         {
-            if (_fileSystem.Directory.Exists("XMLFilesForExport"))
-                _fileSystem.Directory.Delete("XMLFilesForExport", true);
+            // if (_fileSystem.Directory.Exists("XMLFilesForExport"))
+            //     _fileSystem.Directory.Delete("XMLFilesForExport", true);
         }
     }
 

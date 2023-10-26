@@ -44,6 +44,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\favicon.png" />
       <_ContentIncludedByDefault Remove="wwwroot\favicon2.ico" />
       <_ContentIncludedByDefault Remove="wwwroot\favicon_highres.ico" />
+      <_ContentIncludedByDefault Remove="XMLFilesForExport\DSL_Document.json" />
     </ItemGroup>
 
     <ItemGroup>

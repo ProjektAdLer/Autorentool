@@ -2,11 +2,9 @@
 using System.IO.Abstractions;
 using System.Text;
 using System.Text.Json;
-using BusinessLogic.Entities.AdvancedLearningSpaces;
 using Generator.DSL.AdaptivityElement;
 using Generator.DSL.AdvancedLearningSpaceGenerator;
 using Generator.WorldExport;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
 using PersistEntities.AdvancedLearningSpaceGenerator;
@@ -295,9 +293,8 @@ public class CreateDsl : ICreateDsl
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
     }
     /// <summary>
-    /// Constructs Advanced Layout
+    /// Constructs Advanced Layout out of slots, decorations, corner points, elements and doors (in that order)
     /// </summary>
-    /// <param name="advancedSpace"></param>
     private AdvancedLearningSpaceLayoutJson ConstructLearningSpaceLayout(AdvancedLearningSpacePe advancedSpace)
     {
         AdvancedLearningSpaceLayoutJson advancedLearningSpaceLayout = new AdvancedLearningSpaceLayoutJson();
@@ -309,6 +306,26 @@ public class CreateDsl : ICreateDsl
                 elementSlot.Value.PositionY,
                 elementSlot.Value.Rotation));
         }
+        foreach (var decoration in advancedSpace.AdvancedLearningSpaceLayout.AdvancedDecorations)
+        {
+            advancedLearningSpaceLayout.AdvancedDecorations.Add(new AdvancedDecorationJson(
+                decoration.Key,
+                decoration.Value.PositionX,
+                decoration.Value.PositionY,
+                decoration.Value.Rotation));
+        }
+
+        foreach (var cornerPoint in advancedSpace.AdvancedLearningSpaceLayout.AdvancedCornerPoints)
+        {
+            advancedLearningSpaceLayout.AdvancedCornerPoints.Add(new AdvancedCornerPointJson(
+                cornerPoint.Key,
+                cornerPoint.Value.X,
+                cornerPoint.Value.Y));
+        }
+        advancedLearningSpaceLayout.EntryDoorPositionX = advancedSpace.AdvancedLearningSpaceLayout.EntryDoorPosition.X;
+        advancedLearningSpaceLayout.EntryDoorPositionY = advancedSpace.AdvancedLearningSpaceLayout.EntryDoorPosition.Y;
+        advancedLearningSpaceLayout.ExitDoorPositionX = advancedSpace.AdvancedLearningSpaceLayout.ExitDoorPosition.X;
+        advancedLearningSpaceLayout.ExitDoorPositionY = advancedSpace.AdvancedLearningSpaceLayout.ExitDoorPosition.Y;
         
         return advancedLearningSpaceLayout;
     }
@@ -844,6 +861,8 @@ public class CreateDsl : ICreateDsl
         var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
         _xmlFilesForExportPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport");
         _dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "DSL_Document.json");
+        Console.WriteLine(currentDirectory);
+        Console.WriteLine(_dslPath);
 
         if (_fileSystem.Directory.Exists(_xmlFilesForExportPath))
         {
