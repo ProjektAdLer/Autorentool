@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.IO.Compression;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -6,6 +7,7 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Persistence;
+using ICSharpCode.SharpZipLib.Zip;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using Shared;
@@ -174,7 +176,7 @@ public class DataAccess : IDataAccess
     public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
 
     /// <inheritdoc cref="IDataAccess.ExportLearningWorldToArchive"/>
-    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFolder)
+    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFile)
     {
         //ensure folders are created
         if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
@@ -190,6 +192,11 @@ public class DataAccess : IDataAccess
             var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
             SaveLearningWorldToFile(world, worldFilePath);
             CopyContentFiles(world, tempContentFolder);
+            //zip up temp folder
+            var zipFilePath = FileSystem.Path.Join(pathToFile);
+            using var zipStream = FileSystem.File.Create(zipFilePath);
+            var fastZip = new FastZip();
+            fastZip.CreateZip(zipStream, tempFolder, true, ".*", ".*");
         }
         finally
         {
@@ -197,7 +204,7 @@ public class DataAccess : IDataAccess
         }
     }
 
-    private void CopyContentFiles(LearningWorld world, string contentFolder)
+    private void CopyContentFiles(ILearningWorld world, string contentFolder)
     {
         var contentInWorld = world.LearningSpaces
             .SelectMany(space =>

@@ -85,8 +85,8 @@ public interface IDataAccess
     /// Exports the given <see cref="LearningWorld"/> and all content it references to a zip archive at the given path.
     /// </summary>
     /// <param name="world">The world to export.</param>
-    /// <param name="pathToFolder">Filepath to export it to</param>
-    void ExportLearningWorldToArchive(LearningWorld world, string pathToFolder);
+    /// <param name="pathToFile">Filepath to export it to</param>
+    void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
     
     /// <summary>
     /// Imports a <see cref="LearningWorld"/> and all content it references from a zip archive at the given path.

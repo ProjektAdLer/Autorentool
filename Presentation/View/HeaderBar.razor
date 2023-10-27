@@ -36,7 +36,7 @@
                            Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
-        <button @onclick="@ExportLearningWorld" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+        <button @onclick="@GenerateLearningWorld" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <div class="flex h-full items-center absolute left-0.5 hover:-translate-x-[60%] transition-all duration-1000">
                 <MudIcon Icon="@Icons.Material.Filled.Upload"></MudIcon>
                 <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
@@ -49,6 +49,12 @@
                 <p class="absolute left-1 hover:-translate-x-[30%] transition-all duration-1000">DEBUG BACKUP</p>
             </button>
         }
+        <button @onclick="@ExportLearningWorldToArchiveAsync" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <div class="flex h-full items-center absolute left-0.5 hover:-translate-x-[60%] transition-all duration-1000">
+                <MudIcon Icon="@Icons.Material.Filled.Archive"></MudIcon>
+                <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.ExportArchive.Text"]</p>
+            </div>
+        </button>
 
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
@@ -210,7 +216,7 @@
     private bool CanUndo => PresentationLogic.CanUndo;
     private bool CanRedo => PresentationLogic.CanRedo;
 
-    private async void ExportLearningWorld()
+    private async void GenerateLearningWorld()
     {
         var world = SelectedViewModelsProvider.LearningWorld;
         if (world == null) return;
@@ -289,6 +295,12 @@
         Snackbar.Add(Localizer["Export.SnackBar.Message"], Severity.Success);
         _popoverOpen = true;
         StateHasChanged();
+    }
+
+    private async Task ExportLearningWorldToArchiveAsync()
+    {
+        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld);
     }
 
     private bool IsLearningWorldValid(ILearningWorldViewModel world)

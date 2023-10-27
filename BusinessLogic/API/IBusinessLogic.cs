@@ -103,4 +103,6 @@ public interface IBusinessLogic
         CancellationToken? cancellationToken = null);
 
     #endregion
+
+    void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
 }

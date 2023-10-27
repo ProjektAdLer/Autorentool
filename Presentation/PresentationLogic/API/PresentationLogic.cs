@@ -229,7 +229,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
+            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
         return;
 
         string GetWorldFilepath()
@@ -443,7 +443,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
+                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -963,7 +963,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -995,7 +995,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -1077,6 +1077,23 @@ public class PresentationLogic : IPresentationLogic
     }
 
     #endregion
+
+    public async Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world)
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowSaveAsDialogAsync("Archive export path",
+                fileFilters: new[] { new FileFilterProxy("Zip archive", new[] { "zip" }) }
+            );
+            BusinessLogic.ExportLearningWorldToArchive(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world),
+                pathToArchive);
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Export to archive canceled by user");
+        }
+    }
 
     #region BackendAccess
 

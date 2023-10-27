@@ -330,6 +330,11 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.GetContentFilesFolderPath();
     }
 
+    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFile)
+    {
+        DataAccess.ExportLearningWorldToArchive(world, pathToFile);
+    }
+
     #region BackendAccess
 
     //TODO: Move this away from here

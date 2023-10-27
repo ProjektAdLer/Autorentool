@@ -15,6 +15,7 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+      <PackageReference Include="SharpZipLib" Version="1.4.2" />
       <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
     </ItemGroup>
 
