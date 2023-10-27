@@ -150,13 +150,13 @@ public class Startup
         }
     }
 
-    private static void ConfigureNetworking(IServiceCollection services)
+    internal static void ConfigureNetworking(IServiceCollection services)
     {
         services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
     }
 
-    private void ConfigureValidation(IServiceCollection services)
+    internal static void ConfigureValidation(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
@@ -171,12 +171,12 @@ public class Startup
         services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
     }
 
-    private void ConfigureAuthoringTool(IServiceCollection services)
+    internal static void ConfigureAuthoringTool(IServiceCollection services)
     {
         services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>();
     }
 
-    private void ConfigurePresentationLogic(IServiceCollection services)
+    internal static void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddScoped<IPresentationLogic, PresentationLogic>();
@@ -192,20 +192,20 @@ public class Startup
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
     }
 
-    private void ConfigureBusinessLogic(IServiceCollection services)
+    internal static void ConfigureBusinessLogic(IServiceCollection services)
     {
         services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
         services.AddSingleton<IErrorManager, ErrorManager>();
     }
 
-    private void ConfigureDataAccess(IServiceCollection services)
+    internal static void ConfigureDataAccess(IServiceCollection services)
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
         services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
     }
 
-    private void ConfigureGenerator(IServiceCollection services)
+    internal static void ConfigureGenerator(IServiceCollection services)
     {
         services.AddSingleton<IWorldGenerator, WorldGenerator>();
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
@@ -213,7 +213,7 @@ public class Startup
         services.AddSingleton<IReadDsl, ReadDsl>();
     }
 
-    private void ConfigureApiAccess(IServiceCollection services)
+    internal static void ConfigureApiAccess(IServiceCollection services)
     {
         services.AddSingleton<IBackendAccess, BackendAccess.API.BackendAccess>();
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
@@ -221,23 +221,23 @@ public class Startup
         services.AddHttpClient();
     }
 
-    private void ConfigureMediator(IServiceCollection services)
+    internal static void ConfigureMediator(IServiceCollection services)
     {
         services.AddSingleton<IMediator, Mediator>();
     }
 
-    private void ConfigureSelectedViewModelsProvider(IServiceCollection services)
+    internal static void ConfigureSelectedViewModelsProvider(IServiceCollection services)
     {
         services.AddSingleton<ISelectedViewModelsProvider, SelectedViewModelsProvider>();
     }
 
-    private static void ConfigureMyLearningWorlds(IServiceCollection services)
+    internal static void ConfigureMyLearningWorlds(IServiceCollection services)
     {
         services.AddScoped<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
         services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
     }
 
-    private static void ConfigureAutoMapper(IServiceCollection services)
+    internal static void ConfigureAutoMapper(IServiceCollection services)
     {
         var config = new MapperConfiguration(cfg =>
         {
@@ -254,20 +254,20 @@ public class Startup
         services.AddSingleton<ICachingMapper, CachingMapper>();
     }
 
-    private static void ConfigureUtilities(IServiceCollection services)
+    internal static void ConfigureUtilities(IServiceCollection services)
     {
         services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
         services.AddSingleton<IMouseService, MouseService>();
         services.AddTransient<IFileSystem, FileSystem>();
     }
 
-    private void ConfigureCommands(IServiceCollection services)
+    internal static void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
         services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
     }
 
-    private void ConfigureCommandFactories(IServiceCollection services)
+    internal static void ConfigureCommandFactories(IServiceCollection services)
     {
         services.AddSingleton<IQuestionCommandFactory, QuestionCommandFactory>();
         services.AddSingleton<ITaskCommandFactory, TaskCommandFactory>();
