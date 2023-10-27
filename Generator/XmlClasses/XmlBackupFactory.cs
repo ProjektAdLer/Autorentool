@@ -1,4 +1,5 @@
-﻿using Generator.DSL;
+﻿using Generator.ATF;
+using Generator.ATF.AdaptivityElement;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
@@ -15,8 +16,9 @@ namespace Generator.XmlClasses;
 /// </summary>
 public class XmlBackupFactory : IXmlBackupFactory
 {
+    private readonly int _contextId;
     private readonly string _currentTime;
-    private readonly List<LearningElementJson> _learningElement;
+    private readonly List<IElementJson> _learningElements;
     private readonly ILearningWorldJson _learningWorld;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
@@ -26,10 +28,10 @@ public class XmlBackupFactory : IXmlBackupFactory
     internal List<MoodleBackupXmlActivity> MoodleBackupXmlActivityList;
     internal List<MoodleBackupXmlSection> MoodleBackupXmlSectionList;
     internal List<MoodleBackupXmlSetting> MoodleBackupXmlSettingList;
-    public IReadDsl ReadDsl;
+    public IReadAtf ReadAtf;
 
 
-    public XmlBackupFactory(IReadDsl readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
+    public XmlBackupFactory(IReadAtf readAtf, int contextId, IGradebookXmlGradeItem? gradebookXmlGradeItem = null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems = null,
         IGradebookXmlGradeCategory? gradebookXmlGradeCategory = null,
         IGradebookXmlGradeCategories? gradebookXmlGradeCategories = null,
@@ -50,7 +52,8 @@ public class XmlBackupFactory : IXmlBackupFactory
         IRolesXmlRole? rolesXmlRole = null, IRolesXmlRolesDefinition? rolesXmlRolesDefinition = null,
         IScalesXmlScalesDefinition? scalesXmlScalesDefinition = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
+        _contextId = contextId;
 
         GradebookXmlGradeItem = gradebookXmlGradeItem ?? new GradebookXmlGradeItem();
         GradebookXmlGradeItems = gradebookXmlGradeItems ?? new GradebookXmlGradeItems();
@@ -111,10 +114,8 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
 
-        _learningWorld = readDsl.GetLearningWorld();
-        _learningElement = readDsl.GetElementsOrderedList();
-        //_learningElement = readDsl.GetResourceList();
-        //_learningElement.AddRange(readDsl.GetH5PElementsList());
+        _learningWorld = readAtf.GetLearningWorld();
+        _learningElements = readAtf.GetElementsOrderedList();
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -275,6 +276,8 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         MoodleBackupXmlSettingQuestionbank.Name = "questionbank";
 
+        MoodleBackupXmlSettingQuestionbank.Value = "1";
+
         MoodleBackupXmlSettingGroups.Name = "groups";
 
         MoodleBackupXmlSettingCompetencies.Name = "competencies";
@@ -288,22 +291,26 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         //Every activity needs the following tags in the moodle_backup.xml file
         //The ElementType is different for some element types
-        foreach (var element in _learningElement)
+        foreach (var element in _learningElements)
         {
             var learningElementId = element.ElementId.ToString();
             var learningElementType = element.ElementFileType;
             var learningElementName = element.ElementName;
-            var learningElementSectionId = element.LearningSpaceParentId.ToString();
-            if (learningElementType == "h5p")
+            var learningElementSectionId = element switch
             {
-                learningElementType = "h5pactivity";
-            }
-            else if (learningElementType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "bmp" or "webp" or "txt"
-                     or "c"
-                     or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
+                IInternalElementJson internalElementJson => internalElementJson.LearningSpaceParentId.ToString(),
+                IBaseLearningElementJson => (ReadAtf.GetSpaceList().Count + 1).ToString(),
+                _ => throw new ArgumentOutOfRangeException(nameof(element))
+            };
+
+            learningElementType = learningElementType switch
             {
-                learningElementType = "resource";
-            }
+                "h5p" => "h5pactivity",
+                "pdf" or "json" or "jpg" or "jpeg" or "png" or "bmp" or "webp" or "txt" or "c" or "h" or "cpp" or "cc"
+                    or "c++" or "py" or "cs" or "js" or "php" or "html" or "css" => "resource",
+                "adaptivity" => "adleradaptivity",
+                _ => learningElementType
+            };
 
             if (MoodleBackupXmlActivityList != null)
             {
@@ -331,10 +338,31 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
 
-        foreach (var section in ReadDsl.GetSectionList())
+
+        MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
         {
-            var sectionId = section.SpaceId.ToString();
-            var sectionName = section.SpaceName;
+            SectionId = "0",
+            Title = "",
+            Directory = "sections/section_0",
+        });
+
+        MoodleBackupXmlSections.Section = MoodleBackupXmlSectionList;
+
+        if (MoodleBackupXmlSettingList != null)
+        {
+            MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                "section_0_included", "1",
+                "section_0", true));
+
+            MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                "section_0_userinfo", "0",
+                "section_0", true));
+        }
+
+        foreach (var space in ReadAtf.GetSpaceList())
+        {
+            var sectionId = space.SpaceId.ToString();
+            var sectionName = space.SpaceName;
 
             if (MoodleBackupXmlSectionList != null)
             {
@@ -342,6 +370,33 @@ public class XmlBackupFactory : IXmlBackupFactory
                 {
                     SectionId = sectionId,
                     Title = sectionName,
+                    Directory = "sections/section_" + sectionId,
+                });
+
+                MoodleBackupXmlSections.Section = MoodleBackupXmlSectionList;
+            }
+
+            if (MoodleBackupXmlSettingList != null)
+            {
+                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                    "section_" + sectionId + "_included", "1",
+                    "section_" + sectionId, true));
+
+                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
+                    "section_" + sectionId + "_userinfo", "0",
+                    "section_" + sectionId, true));
+            }
+        }
+
+        if (ReadAtf.GetBaseLearningElementsList().Count > 0)
+        {
+            var sectionId = (ReadAtf.GetSpaceList().Count + 1).ToString();
+            if (MoodleBackupXmlSectionList != null)
+            {
+                MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
+                {
+                    SectionId = sectionId,
+                    Title = "Hinweise auf externes Lernmaterial",
                     Directory = "sections/section_" + sectionId,
                 });
 
@@ -422,6 +477,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.WorldName;
         MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.WorldName;
         MoodleBackupXmlInformation.OriginalCourseStartDate = _currentTime;
+        MoodleBackupXmlInformation.OriginalCourseContextId = _contextId.ToString();
         MoodleBackupXmlInformation.Details =
             MoodleBackupXmlDetails as MoodleBackupXmlDetails ?? new MoodleBackupXmlDetails();
         MoodleBackupXmlInformation.Contents =
@@ -443,9 +499,35 @@ public class XmlBackupFactory : IXmlBackupFactory
         OutcomesXmlOutcomesDefinition.Serialize();
     }
 
+    /// <inheritdoc cref="IXmlBackupFactory.CreateQuestionsXml"/>
     public void CreateQuestionsXml()
     {
-        //create questions.xml file
+        var listAdaptivityElements = ReadAtf.GetAdaptivityElementsList();
+
+        if (listAdaptivityElements.Count == 0)
+        {
+            QuestionsXmlQuestionsCategories.Serialize();
+            return;
+        }
+
+        var questionCategory3 = new QuestionsXmlQuestionsCategory(3, "top", _contextId, 0);
+        var questionCategory4 = new QuestionsXmlQuestionsCategory(4, "Default for name", _contextId, 3);
+
+        var answerId = 1;
+
+        var questions = listAdaptivityElements.SelectMany(ae => ae.AdaptivityContent.AdaptivityTasks)
+            .SelectMany(t => t.AdaptivityQuestions).ToList();
+
+
+        foreach (var questionBankEntryXml in questions.Select(question =>
+                     CreateQuestionBankEntryXml(question, question.QuestionId, ref answerId)))
+        {
+            questionCategory4.QuestionBankEntries.QuestionBankEntries.Add(questionBankEntryXml);
+        }
+
+        QuestionsXmlQuestionsCategories.QuestionCategory.Add(questionCategory3);
+        QuestionsXmlQuestionsCategories.QuestionCategory.Add(questionCategory4);
+
         QuestionsXmlQuestionsCategories.Serialize();
     }
 
@@ -462,5 +544,70 @@ public class XmlBackupFactory : IXmlBackupFactory
     {
         //create scales.xml file
         ScalesXmlScalesDefinition.Serialize();
+    }
+
+    /// <summary>
+    /// Creates an XML representation for a given adaptivity question.
+    /// </summary>
+    /// <param name="question">The adaptivity question to be processed.</param>
+    /// <param name="questionId">Reference to the current question ID, used for generating unique IDs.</param>
+    /// <param name="answerId">Reference to the current answer ID, used for generating unique IDs for answers.</param>
+    /// <returns>Returns the XML representation of the processed adaptivity question.</returns>
+    private QuestionsXmlQuestionsCategoryQuestionBankEntry CreateQuestionBankEntryXml(IAdaptivityQuestionJson question,
+        int questionId, ref int answerId)
+    {
+        var questionBankEntryXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntry(questionId, question.QuestionUUID);
+        var questionVersionXml = new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersions(questionId);
+        var questionXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion(questionId,
+                question.QuestionText);
+
+        var pluginQTypeMultiChoiceQuestionXml =
+            new QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion();
+        var answersXml = CreateAnswersXml(question.Choices, ref answerId);
+
+        var singleResponseInt = question.QuestionType is ResponseType.singleResponse ? 1 : 0;
+        var multiChoiceXml =
+            new
+                QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice(
+                    questionId, singleResponseInt);
+
+        pluginQTypeMultiChoiceQuestionXml.Answers = answersXml;
+        pluginQTypeMultiChoiceQuestionXml.Multichoice = multiChoiceXml;
+        questionXml.PluginQTypeMultichoiceQuestion = pluginQTypeMultiChoiceQuestionXml;
+        questionVersionXml.Questions.Question.Add(questionXml);
+        questionBankEntryXml.QuestionVersion.QuestionVersions.Add(questionVersionXml);
+
+        return questionBankEntryXml;
+    }
+
+    /// <summary>
+    /// Creates an XML representation for the answers of a given adaptivity question.
+    /// </summary>
+    /// <param name="choices">A list of choices representing possible answers for the adaptivity question.</param>
+    /// <param name="answerId">Reference to the current answer ID, used for generating unique IDs for answers.</param>
+    /// <returns>Returns the XML representation of the answers for the adaptivity question.</returns>
+    private static
+        QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers
+        CreateAnswersXml(List<IChoiceJson> choices, ref int answerId)
+    {
+        var answersXml =
+            new
+                QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers();
+        var numCorrectChoices = choices.Count(x => x.IsCorrect);
+        var numIncorrectChoices = choices.Count(x => !x.IsCorrect);
+
+        foreach (var choice in choices)
+        {
+            var fraction = choice.IsCorrect ? 1.0 / numCorrectChoices : -1.0 / numIncorrectChoices;
+            answersXml.Answer.Add(
+                new
+                    QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswer(
+                        answerId, choice.AnswerText, fraction));
+            answerId++;
+        }
+
+        return answersXml;
     }
 }

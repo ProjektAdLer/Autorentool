@@ -2,13 +2,12 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.PresentationLogic
-@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -98,7 +97,7 @@
     ///
     /// Spaces from the same path are ordered alphabetically.
     ///
-    /// Note: This algorithm is also utilized in the "CreateDSL" class. Changes made here should be reflected there as well.
+    /// Note: This algorithm is also utilized in the "CreateATF" class. Changes made here should be reflected there as well.
     /// </summary>
     /// <param name="objectInPathWayViewModels">The collection of path object view models used to determine the order.</param>
     /// <returns>A sorted list of learning space view models based on the provided paths.</returns>

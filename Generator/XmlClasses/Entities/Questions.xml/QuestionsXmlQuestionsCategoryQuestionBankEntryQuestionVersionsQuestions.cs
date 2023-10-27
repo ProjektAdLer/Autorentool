@@ -1,0 +1,13 @@
+using System.Xml.Serialization;
+
+namespace Generator.XmlClasses.Entities.Questions.xml;
+
+public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions
+{
+    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions()
+    {
+    }
+
+    [XmlElement(ElementName = "question")]
+    public List<QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion> Question { get; set; } = new();
+}
