@@ -6,7 +6,9 @@ using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Action;
 using BusinessLogic.Commands.Adaptivity.Question;
+using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
@@ -213,6 +215,8 @@ public class CachingMapperIt
         ITopicCommandFactory? topicCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null,
+        IAdaptivityRuleCommandFactory? adaptivityRuleCommandFactory = null,
+        IAdaptivityActionCommandFactory? adaptivityActionCommandFactory = null,
         IFileSystem? fileSystem = null)
     {
         configuration ??= Substitute.For<IApplicationConfiguration>();
@@ -234,11 +238,15 @@ public class CachingMapperIt
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
+        adaptivityRuleCommandFactory ??= Substitute.For<IAdaptivityRuleCommandFactory>();
+        adaptivityActionCommandFactory ??= Substitute.For<IAdaptivityActionCommandFactory>();
         fileSystem ??= new MockFileSystem();
 
-        return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper,
-            shellWrapper, questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory, layoutCommandFactory,
-            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory, fileSystem);
+        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
+            serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
+            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
+            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory,
+            adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
+            fileSystem);
     }
 }

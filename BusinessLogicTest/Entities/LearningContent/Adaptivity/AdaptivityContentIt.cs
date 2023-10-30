@@ -30,4 +30,25 @@ public class AdaptivityContentIt
             Assert.That(ReferenceEquals(content, content2), Is.False);
         });
     }
+
+    [Test]
+    public void AdaptivityContentFullStructure_EqualStructure_DifferentObjects_EqualsTrue()
+    {
+        var mapper = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        }).CreateMapper();
+
+        var content = EntityProvider.GetAdaptivityContentFullStructure();
+        var contentvm = mapper.Map<IAdaptivityContentViewModel>(content);
+        var content2 = mapper.Map<IAdaptivityContent>(contentvm);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(content, Is.EqualTo(content2));
+            Assert.That(ReferenceEquals(content, content2), Is.False);
+        });
+        
+    }
 }

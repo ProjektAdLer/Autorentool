@@ -130,9 +130,9 @@ public static class ViewModelProvider
         return new CompositeTriggerViewModel(type, leftSide, rightSide);
     }
 
-    public static CommentActionViewModel GetCommentAction()
+    public static CommentActionViewModel GetCommentAction(string? comment = null)
     {
-        return new CommentActionViewModel("a comment");
+        return new CommentActionViewModel(comment ?? "a comment");
     }
 
     public static ElementReferenceActionViewModel GetElementReferenceAction(Guid? elementGuid = null,
@@ -149,16 +149,15 @@ public static class ViewModelProvider
         return new ContentReferenceActionViewModel(content, comment);
     }
 
-    public static AdaptivityRuleViewModel GetRule(IAdaptivityQuestionViewModel? question = null)
+    public static AdaptivityRuleViewModel GetRule()
     {
-        return new AdaptivityRuleViewModel(question ?? GetMultipleChoiceSingleResponseQuestion(),
-            GetCorrectnessTrigger(),
+        return new AdaptivityRuleViewModel(GetCorrectnessTrigger(),
             GetCommentAction());
     }
 
-    public static ChoiceViewModel GetChoice()
+    public static ChoiceViewModel GetChoice(string? text = null)
     {
-        return new ChoiceViewModel("a choice");
+        return new ChoiceViewModel(text ?? "a choice");
     }
 
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
@@ -187,7 +186,8 @@ public static class ViewModelProvider
     public static IAdaptivityContentViewModel GetAdaptivityContent()
     {
         var task = GetAdaptivityTask();
-        var rule = GetRule(task.Questions.First());
+        var rule = GetRule();
+        task.Questions.First().Rules.Add(rule);
         return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> {task, GetAdaptivityTask()});
     }
 }

@@ -5,6 +5,7 @@ namespace PersistEntities.LearningContent;
 
 public interface IAdaptivityRulePe
 {
+    public Guid Id { get; }
     /// <summary>
     /// The trigger that activates the rule.
     /// </summary>

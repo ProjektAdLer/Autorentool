@@ -119,13 +119,13 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
         Assert.That(FormModel.Goals, Is.EqualTo(""));
-        Assert.That(FormModel.RequiredPoints, Is.Null);
+        Assert.That(FormModel.RequiredPoints, Is.EqualTo(0));
         Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int?>>();
+        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<Theme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);
@@ -162,7 +162,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[4].Find("div.toggler").Click();
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int?>>();
+        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<Theme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);

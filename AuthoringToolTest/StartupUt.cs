@@ -5,6 +5,8 @@ using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Adaptivity.Action;
+using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -15,7 +17,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Validation;
 using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
@@ -133,7 +135,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureGeneratorRequiredTypes =
     {
-        typeof(IWorldGenerator), typeof(IBackupFileGenerator), typeof(ICreateDsl), typeof(IReadDsl)
+        typeof(IWorldGenerator), typeof(IBackupFileGenerator), typeof(ICreateAtf), typeof(IReadAtf)
     };
 
     [Test]
@@ -172,7 +174,8 @@ public class StartupUt
     {
         typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
         typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory),
-        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory)
+        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory), typeof(IAdaptivityRuleCommandFactory),
+        typeof(IAdaptivityActionCommandFactory)
     };
 
     [Test]
@@ -185,7 +188,10 @@ public class StartupUt
     private static readonly Type[] ConfigureValidationRequiredTypes =
     {
         typeof(LearningWorldValidator), typeof(LearningSpaceValidator), typeof(LearningElementValidator),
-        typeof(LearningContentValidator),
+        typeof(LearningContentValidator), typeof(FileContentValidator), typeof(LinkContentValidator),
+        typeof(MultipleChoiceQuestionValidator), typeof(MultipleChoiceMultipleResponseQuestionValidator),
+        typeof(MultipleChoiceSingleResponseQuestionValidator), typeof(ChoiceValidator),
+        typeof(AdaptivityContentValidator),
         typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider), typeof(ILearningElementNamesProvider)
     };
 

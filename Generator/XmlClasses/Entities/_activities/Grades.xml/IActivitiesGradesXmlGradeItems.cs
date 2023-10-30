@@ -2,5 +2,5 @@
 
 public interface IActivitiesGradesXmlGradeItems
 {
-    ActivitiesGradesXmlGradeItem GradeItem { get; set; }
+    ActivitiesGradesXmlGradeItem? GradeItem { get; set; }
 }

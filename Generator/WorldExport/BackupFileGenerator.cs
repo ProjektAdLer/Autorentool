@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
@@ -35,9 +35,9 @@ public class BackupFileGenerator : IBackupFileGenerator
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
-    public void WriteXmlFiles(IReadDsl readDsl)
+    public void WriteXmlFiles(IReadAtf readAtf)
     {
-        XmlEntityManager.GetFactories(readDsl);
+        XmlEntityManager.GetFactories(readAtf);
     }
 
     // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 

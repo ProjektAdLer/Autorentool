@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
@@ -34,7 +34,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementUuid;
 
 
-    public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
+    public XmlH5PFactory(IReadAtf readAtf, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
         IFilesXmlFiles? filesXmlFiles = null,
         IFilesXmlFile? filesXmlFile = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
@@ -86,7 +86,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
 
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
     }
@@ -108,13 +108,13 @@ public class XmlH5PFactory : IXmlH5PFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public IReadAtf ReadAtf { get; }
 
     /// <inheritdoc cref="IXmlH5PFactory.CreateH5PFileFactory"/>
     public void CreateH5PFileFactory()
     {
-        // Get all the H5P elements that are in the DSL Document
-        List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+        // Get all the H5P elements that are in the ATF Document
+        List<ILearningElementJson> h5PElementsList = ReadAtf.GetH5PElementsList();
 
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
@@ -126,7 +126,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         FileManager.SetXmlFilesList(_filesXmlFilesList);
     }
 
-    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList)
+    public void ReadH5PListAndSetParameters(List<ILearningElementJson> h5PElementsList)
     {
         // For Each H5P element in the list 
         // (for files.xml) set the H5P element id, name, hash value, copy the File to the needed location in the backup structure
@@ -137,10 +137,19 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementId = h5PElement.ElementId.ToString();
             H5PElementUuid = h5PElement.ElementUUID;
             H5PElementName = h5PElement.ElementName;
-            H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementFileType;
-            H5PElementDesc = h5PElement.ElementDescription ?? "";
-            H5PElementPoints = h5PElement.ElementMaxScore;
+
+            switch (h5PElement)
+            {
+                case BaseLearningElementJson:
+                    H5PElementParentSpaceString = (ReadAtf.GetSpaceList().Count + 1).ToString();
+                    break;
+                case LearningElementJson learningElementJson:
+                    H5PElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();
+                    H5PElementDesc = learningElementJson.ElementDescription ?? "";
+                    H5PElementPoints = learningElementJson.ElementMaxScore;
+                    break;
+            }
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.ElementName + "." + h5PElement.ElementFileType));

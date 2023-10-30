@@ -1,4 +1,4 @@
-﻿using Generator.DSL;
+﻿using Generator.ATF;
 using ICSharpCode.SharpZipLib.Tar;
 
 namespace Generator.WorldExport;
@@ -13,8 +13,8 @@ public interface IBackupFileGenerator
     /// <summary>
     /// Creates all Xml Files at the right location.
     /// </summary>
-    void WriteXmlFiles(IReadDsl readDsl);
-    
+    void WriteXmlFiles(IReadAtf readAtf);
+
     /// <summary>
     /// Locates all Folders and Xml Files, packs it into a tar.gzip file and renames it to .mbz (moodle backup zip) 
     /// </summary>
@@ -40,7 +40,7 @@ public interface IBackupFileGenerator
     /// <param name="source"></param>
     /// <param name="recursive"></param>
     void SaveDirectoryToTar(TarArchive tar, string source, bool recursive);
-    
+
     /// <summary>
     /// Extracts the .atf file from the .mbz file and returns the path to the .atf file
     /// </summary>

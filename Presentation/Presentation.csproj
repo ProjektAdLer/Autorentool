@@ -15,7 +15,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.10.0" />
+    <PackageReference Include="MudBlazor" Version="6.11.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
@@ -159,6 +159,30 @@
     <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NoContentWarning.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\CreateEditReferenceActionDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditReferenceActionDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\CreateEditReferenceActionDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditReferenceActionDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\CreateEditCommentActionDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditCommentActionDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\CreateEditCommentActionDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditCommentReferenceActionDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\AdaptivityContentDialogRuleControl.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AdaptivityContentDialogRuleControl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\AdaptivityContentDialogRuleControl.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AdaptivityContentDialogRuleControl.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

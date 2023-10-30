@@ -30,4 +30,10 @@
       <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="VersionCompatibility\testworld110.awf">
+        <WithCulture>false</WithCulture>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

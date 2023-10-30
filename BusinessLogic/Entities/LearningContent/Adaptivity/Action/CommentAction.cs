@@ -32,7 +32,7 @@ public class CommentAction : IAdaptivityAction
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((CommentAction) obj);
+        return Equals((CommentAction)obj);
     }
 
     public override int GetHashCode()
@@ -48,5 +48,27 @@ public class CommentAction : IAdaptivityAction
     public static bool operator !=(CommentAction? left, CommentAction? right)
     {
         return !Equals(left, right);
+    }
+
+    public IMemento GetMemento() => new CommentActionMemento(Id, Comment);
+
+    public void RestoreMemento(IMemento memento)
+    {
+        if (memento is not CommentActionMemento cam)
+            throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
+        Id = cam.Id;
+        Comment = cam.Comment;
+    }
+
+    private record CommentActionMemento : IMemento
+    {
+        public CommentActionMemento(Guid id, string comment)
+        {
+            Id = id;
+            Comment = comment;
+        }
+
+        public Guid Id { get; }
+        public string Comment { get; }
     }
 }
