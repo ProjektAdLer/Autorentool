@@ -73,7 +73,7 @@
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
       <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.11" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.13" />
     </ItemGroup>
 
     <ItemGroup>
