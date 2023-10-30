@@ -42,7 +42,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="positionY">The Y position of the learning space (default is 0).</param>
     /// <param name="topic">The topic of the learning space (optional).</param>
     void CreateLearningSpace(string name, string description, string goals,
-        int requiredPoints, Theme theme, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
+        int requiredPoints, Theme theme, TopicViewModel? topic = null);
 
     /// <summary>
     /// Asynchronously loads the learning space associated with the currently selected learning world.
