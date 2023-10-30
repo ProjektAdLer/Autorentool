@@ -87,10 +87,10 @@ public interface IDataAccess
     /// <param name="world">The world to export.</param>
     /// <param name="pathToFile">Filepath to export it to</param>
     void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
-    
+
     /// <summary>
     /// Imports a <see cref="LearningWorld"/> and all content it references from a zip archive at the given path.
     /// </summary>
     /// <param name="pathToArchive">Filepath to the archive.</param>
-    void ImportLearningWorldFromArchive(string pathToArchive);
+    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive);
 }

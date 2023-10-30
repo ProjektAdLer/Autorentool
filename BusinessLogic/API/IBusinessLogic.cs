@@ -105,4 +105,5 @@ public interface IBusinessLogic
     #endregion
 
     void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
+    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
 }

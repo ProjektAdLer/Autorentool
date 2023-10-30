@@ -52,4 +52,12 @@ public interface IContentFileHandler
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContentPe linkContent);
+    
+    /// <summary>
+    /// Adds the given <see cref="LinkContentPe"/> to the link file.
+    /// </summary>
+    /// <param name="links">The links to add.</param>
+    void SaveLinks(IEnumerable<LinkContentPe> links);
+
+    Task<ILearningContentPe> LoadContentAsync(string filepath, byte[] hash);
 }

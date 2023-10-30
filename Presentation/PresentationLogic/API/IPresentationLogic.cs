@@ -586,4 +586,5 @@ public interface IPresentationLogic
         string comment);
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
     Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
 }

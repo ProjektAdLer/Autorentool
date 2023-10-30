@@ -1095,6 +1095,26 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
+    public async Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync()
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowOpenFileDialogAsync("Archive import path",
+                fileFilters: new[] { new FileFilterProxy("Zip archive", new[] { "zip" }) }
+            );
+            var worldEntity = await BusinessLogic.ImportLearningWorldFromArchiveAsync(pathToArchive);
+            var viewModel = Mapper.Map<LearningWorldViewModel>(worldEntity);
+            SelectedViewModelsProvider.SetLearningWorld(viewModel, null);
+            return viewModel;
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Import from archive canceled by user");
+            return null;
+        }
+    }
+
     #region BackendAccess
 
     public Task<bool> IsLmsConnected()

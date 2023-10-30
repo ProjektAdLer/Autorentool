@@ -334,6 +334,11 @@ public class BusinessLogic : IBusinessLogic
     {
         DataAccess.ExportLearningWorldToArchive(world, pathToFile);
     }
+    
+    public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile)
+    {
+        return await DataAccess.ImportLearningWorldFromArchiveAsync(pathToFile);
+    }
 
     #region BackendAccess
 
