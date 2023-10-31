@@ -17,7 +17,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
-                                           @bind-Collapsed="_collapsedGeneral">
+                                                                                       @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -27,7 +27,7 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
-                                           @bind-Collapsed="_collapsedConditions">
+                                                                                       @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -42,7 +42,7 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]
-                                           @bind-Collapsed="_collapsedTheme">
+                                                                                       @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                            AnchorOrigin="Origin.BottomCenter"
@@ -58,7 +58,7 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]
-                                           @bind-Collapsed="_collapsedGoals">
+                                                                                       @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -111,13 +111,13 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
-    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
+            model.Goals, (int)model.RequiredPoints, model.Theme);
     }
 
 }

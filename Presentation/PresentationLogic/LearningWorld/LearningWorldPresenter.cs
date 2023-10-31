@@ -261,17 +261,16 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
     public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
-        Theme theme,
-        double positionX = 0D,
-        double positionY = 0D,
-        TopicViewModel? topic = null)
+        Theme theme, TopicViewModel? topic = null)
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
 
+        var positionY = GetNextAvailableYPosition(25);
+
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
         _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
-            requiredPoints, theme, positionX, positionY, topic);
+            requiredPoints, theme, 0, positionY, topic);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>
@@ -365,7 +364,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             return;
         try
         {
-            _presentationLogic.CreatePathWayCondition(LearningWorldVm!, condition, 0, 0);
+            var positionY = GetNextAvailableYPosition(25);
+            _presentationLogic.CreatePathWayCondition(LearningWorldVm!, condition, 0, positionY);
         }
         catch (ApplicationException e)
         {
@@ -420,12 +420,45 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
-                                   ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y &&
-                                   ls.PositionY + 84 >= y) ??
+                                   ls.PositionX <= x && ls.PositionX + 66 >= x && ls.PositionY <= y &&
+                                   ls.PositionY + 64 >= y) ??
                                (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
+    }
+
+    /// <summary>
+    /// Determines the next available Y position, taking into account objects already existing at the current position and the position shifted by an offset.
+    /// </summary>
+    /// <param name="xOffset">The horizontal offset to consider when identifying colliding objects.</param>
+    /// <param name="startY">The Y starting point from which to begin the search. Defaults to 0.</param>
+    /// <returns>Returns the next available Y position. If the determined Y position exceeds the maximum value, the maximum Y value is returned.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when an unknown object is found at the current position.</exception>
+    private int GetNextAvailableYPosition(int xOffset, int startY = 0)
+    {
+        var positionY = startY;
+        const int maxPositionY = 405;
+
+        while (true)
+        {
+            var objAtPosition = GetObjectAtPosition(0, positionY);
+            var objAtPositionWithOffset = GetObjectAtPosition(0 + xOffset, positionY + xOffset);
+
+            if (objAtPosition == null && objAtPositionWithOffset == null)
+            {
+                return positionY <= maxPositionY ? positionY : maxPositionY;
+            }
+
+            var currentOffset = objAtPosition switch
+            {
+                ILearningSpaceViewModel => 70,
+                PathWayConditionViewModel => 55,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            positionY += currentOffset;
+        }
     }
 
     /// <inheritdoc cref="IPositioningService.CreateLearningPathWay"/>

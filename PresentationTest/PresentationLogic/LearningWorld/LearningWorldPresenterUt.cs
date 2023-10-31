@@ -10,6 +10,7 @@ using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
@@ -353,6 +354,84 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
 
         errorService.Received().SetError("Operation failed", "No learning world selected");
+    }
+
+    [Test]
+    public void CreateMultipleLearningObjects_PositionIsCorrect()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus));
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+            null, 0, 70));
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+            null, 0, 140));
+
+        systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
+        systemUnderTest.LearningWorldVm.PathWayConditions.Add(
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 210));
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+            null, 0, 265));
+
+        systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
+        systemUnderTest.LearningWorldVm.PathWayConditions.Add(
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 335));
+
+        systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
+        systemUnderTest.LearningWorldVm.PathWayConditions.Add(
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 390));
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+            null, 0, 405));
+
+        systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
+        systemUnderTest.LearningWorldVm.PathWayConditions.Add(
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 405));
+
+        Received.InOrder(() =>
+        {
+            presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 0, Arg.Any<TopicViewModel>());
+
+            presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 70, Arg.Any<TopicViewModel>());
+
+            presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 140, Arg.Any<TopicViewModel>());
+
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 210);
+
+            presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 265, Arg.Any<TopicViewModel>());
+
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 335);
+
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 390);
+
+            //max value for positionY is 405
+            presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 405, Arg.Any<TopicViewModel>());
+
+            //max value for positionY is 405
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 405);
+        });
     }
 
     [Test]
