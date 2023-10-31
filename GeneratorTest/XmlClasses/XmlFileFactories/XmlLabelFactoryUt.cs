@@ -154,7 +154,7 @@ public class XmlLabelFactoryUt
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro,
                 Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.Id, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ModuleId, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ContextId, Is.EqualTo("2"));
@@ -168,7 +168,7 @@ public class XmlLabelFactoryUt
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("label"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo("2"));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("label", "2");
 

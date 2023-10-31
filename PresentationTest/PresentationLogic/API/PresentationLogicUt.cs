@@ -168,7 +168,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> {worldEntity});
+            new List<ILearningWorld> { worldEntity });
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -268,7 +268,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> {worldEntity});
+            new List<ILearningWorld> { worldEntity });
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -326,7 +326,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = EntityProvider.GetLearningWorld();
         var workspaceEntity = EntityProvider.GetAuthoringToolWorkspace(
-            new List<ILearningWorld> {worldEntity});
+            new List<ILearningWorld> { worldEntity });
         Substitute.For<ILogger<WorldCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -884,6 +884,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockPathwayCommandFactory = Substitute.For<IPathwayCommandFactory>();
         var mockCommand = Substitute.For<IDeleteLearningPathWay>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var learningWorldVm = ViewModelProvider.GetLearningWorld();
         var sourceSpaceVm = ViewModelProvider.GetLearningSpace();
         var targetSpaceVm = ViewModelProvider.GetLearningSpace();
@@ -905,11 +906,13 @@ public class PresentationLogicUt
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            pathwayCommandFactory: mockPathwayCommandFactory);
+            pathwayCommandFactory: mockPathwayCommandFactory,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.DeleteLearningPathWay(learningWorldVm, pathWayVm);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+        mockSelectedViewModelsProvider.Received().SetLearningObjectInPathWay(null, mockCommand);
     }
 
     [Test]
@@ -1140,7 +1143,7 @@ public class PresentationLogicUt
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
+                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
             ))
             .Returns(mockBatchCommand);
 
@@ -1170,7 +1173,7 @@ public class PresentationLogicUt
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    {mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand})
+                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
             ));
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -1650,7 +1653,7 @@ public class PresentationLogicUt
         var learningWorldViewModel = Substitute.For<ILearningWorldViewModel>();
         learningWorldViewModel.Id.Returns(guid);
         authoringToolWorkspaceVm.LearningWorlds
-            .Returns(new List<ILearningWorldViewModel> {learningWorldViewModel});
+            .Returns(new List<ILearningWorldViewModel> { learningWorldViewModel });
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport,
@@ -1684,7 +1687,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
         mockBusinessLogic.GetSavedLearningWorldPaths()
-            .Returns(new List<SavedLearningWorldPath> {savedLearningWorldPath});
+            .Returns(new List<SavedLearningWorldPath> { savedLearningWorldPath });
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -2453,7 +2456,7 @@ public class PresentationLogicUt
         mockMapper.Received().Map<IAdaptivityQuestion>(mockQuestionViewModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
-    
+
     [Test]
     public void CreateAdaptivityRule_WhenCalled_ShouldExecuteCreateCommand()
     {
@@ -2472,13 +2475,17 @@ public class PresentationLogicUt
         mapper.Map<IAdaptivityAction>(actionViewModel).Returns(actionEntity);
 
         var createCommand = Substitute.For<ICreateAdaptivityRule>();
-        adaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity, actionEntity, Arg.Any<Action<IAdaptivityQuestion>>()).Returns(createCommand);
-        
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityRuleCommandFactory: adaptivityRuleCommandFactory, businessLogic: businessLogic);
+        adaptivityRuleCommandFactory
+            .GetCreateCommand(questionEntity, triggerEntity, actionEntity, Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(createCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper,
+            adaptivityRuleCommandFactory: adaptivityRuleCommandFactory, businessLogic: businessLogic);
 
         systemUnderTest.CreateAdaptivityRule(questionViewModel, triggerViewModel, actionViewModel);
 
-        adaptivityRuleCommandFactory.Received().GetCreateCommand(questionEntity, triggerEntity, actionEntity, Arg.Any<Action<IAdaptivityQuestion>>());
+        adaptivityRuleCommandFactory.Received().GetCreateCommand(questionEntity, triggerEntity, actionEntity,
+            Arg.Any<Action<IAdaptivityQuestion>>());
         businessLogic.Received().ExecuteCommand(createCommand);
     }
 
@@ -2492,18 +2499,22 @@ public class PresentationLogicUt
         var ruleViewMOdel = Substitute.For<IAdaptivityRuleViewModel>();
         var questionEntity = Substitute.For<IAdaptivityQuestion>();
         var ruleEntity = Substitute.For<IAdaptivityRule>();
-        
+
         mapper.Map<IAdaptivityQuestion>(questionViewModel).Returns(questionEntity);
         mapper.Map<IAdaptivityRule>(ruleViewMOdel).Returns(ruleEntity);
-        
+
         var deleteCommand = Substitute.For<IDeleteAdaptivityRule>();
-        adaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, Arg.Any<Action<IAdaptivityQuestion>>()).Returns(deleteCommand);
-        
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityRuleCommandFactory: adaptivityRuleCommandFactory, businessLogic: businessLogic);
-        
+        adaptivityRuleCommandFactory
+            .GetDeleteCommand(questionEntity, ruleEntity, Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(deleteCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper,
+            adaptivityRuleCommandFactory: adaptivityRuleCommandFactory, businessLogic: businessLogic);
+
         systemUnderTest.DeleteAdaptivityRule(questionViewModel, ruleViewMOdel);
-        
-        adaptivityRuleCommandFactory.Received().GetDeleteCommand(questionEntity, ruleEntity, Arg.Any<Action<IAdaptivityQuestion>>());
+
+        adaptivityRuleCommandFactory.Received()
+            .GetDeleteCommand(questionEntity, ruleEntity, Arg.Any<Action<IAdaptivityQuestion>>());
         businessLogic.Received().ExecuteCommand(deleteCommand);
     }
 
@@ -2516,17 +2527,20 @@ public class PresentationLogicUt
         var commentActionViewModel = ViewModelProvider.GetCommentAction();
         var commentActionEntity = EntityProvider.GetCommentAction();
         const string comment = "foobar";
-        
+
         mapper.Map<CommentAction>(commentActionViewModel).Returns(commentActionEntity);
-        
+
         var editCommand = Substitute.For<IEditCommentAction>();
-        adaptivityActionCommandFactory.GetEditCommentAction(commentActionEntity, comment, Arg.Any<Action<CommentAction>>()).Returns(editCommand);
-        
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
-        
+        adaptivityActionCommandFactory
+            .GetEditCommentAction(commentActionEntity, comment, Arg.Any<Action<CommentAction>>()).Returns(editCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper,
+            adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
+
         systemUnderTest.EditCommentAction(commentActionViewModel, comment);
-        
-        adaptivityActionCommandFactory.Received().GetEditCommentAction(commentActionEntity, comment, Arg.Any<Action<CommentAction>>());
+
+        adaptivityActionCommandFactory.Received()
+            .GetEditCommentAction(commentActionEntity, comment, Arg.Any<Action<CommentAction>>());
         businessLogic.Received().ExecuteCommand(editCommand);
     }
 
@@ -2540,17 +2554,21 @@ public class PresentationLogicUt
         var elementReferenceActionEntity = EntityProvider.GetElementReferenceAction();
         var guid = Guid.NewGuid();
         var comment = "somecomment";
-        
+
         mapper.Map<ElementReferenceAction>(elementReferenceActionViewModel).Returns(elementReferenceActionEntity);
-        
+
         var editCommand = Substitute.For<IEditElementReferenceAction>();
-        adaptivityActionCommandFactory.GetEditElementReferenceAction(elementReferenceActionEntity, guid, comment, Arg.Any<Action<ElementReferenceAction>>()).Returns(editCommand);
-        
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
-        
+        adaptivityActionCommandFactory
+            .GetEditElementReferenceAction(elementReferenceActionEntity, guid, comment,
+                Arg.Any<Action<ElementReferenceAction>>()).Returns(editCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper,
+            adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
+
         systemUnderTest.EditElementReferenceAction(elementReferenceActionViewModel, guid, comment);
-        
-        adaptivityActionCommandFactory.Received().GetEditElementReferenceAction(elementReferenceActionEntity, guid, comment, Arg.Any<Action<ElementReferenceAction>>());
+
+        adaptivityActionCommandFactory.Received().GetEditElementReferenceAction(elementReferenceActionEntity, guid,
+            comment, Arg.Any<Action<ElementReferenceAction>>());
         businessLogic.Received().ExecuteCommand(editCommand);
     }
 
@@ -2565,21 +2583,25 @@ public class PresentationLogicUt
         var contentViewModel = Substitute.For<ILearningContentViewModel>();
         var contentEntity = Substitute.For<ILearningContent>();
         var comment = "somestring";
-        
+
         mapper.Map<ContentReferenceAction>(commentActionViewModel).Returns(commentActionEntity);
         mapper.Map<ILearningContent>(contentViewModel).Returns(contentEntity);
-        
+
         var editCommand = Substitute.For<IEditContentReferenceAction>();
-        adaptivityActionCommandFactory.GetEditContentReferenceAction(commentActionEntity, contentEntity, comment, Arg.Any<Action<ContentReferenceAction>>()).Returns(editCommand);
-        
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper, adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
-        
+        adaptivityActionCommandFactory
+            .GetEditContentReferenceAction(commentActionEntity, contentEntity, comment,
+                Arg.Any<Action<ContentReferenceAction>>()).Returns(editCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mapper,
+            adaptivityActionCommandFactory: adaptivityActionCommandFactory, businessLogic: businessLogic);
+
         systemUnderTest.EditContentReferenceAction(commentActionViewModel, contentViewModel, comment);
-        
-        adaptivityActionCommandFactory.Received().GetEditContentReferenceAction(commentActionEntity, contentEntity, comment, Arg.Any<Action<ContentReferenceAction>>());
+
+        adaptivityActionCommandFactory.Received().GetEditContentReferenceAction(commentActionEntity, contentEntity,
+            comment, Arg.Any<Action<ContentReferenceAction>>());
         businessLogic.Received().ExecuteCommand(editCommand);
     }
-    
+
 
     [Test]
     public async Task ShowLearningElementContentAsync_CallsShellWrapper()

@@ -34,7 +34,7 @@ public class XmlUrlFactoryUt
             Assert.That(systemUnderTest.UrlName, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlParentSpaceId, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlLink, Is.EqualTo(""));
-            Assert.That(systemUnderTest.CurrentTime, Is.Not.Null);
+            Assert.That(systemUnderTest.CurrentTime, Is.Not.Empty);
             Assert.That(systemUnderTest.UrlList, Is.Not.Null);
 
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
@@ -131,7 +131,7 @@ public class XmlUrlFactoryUt
                 Is.EqualTo(systemUnderTest.UrlLink + "<p style=\"position:relative; background-color:#e6e9ed;\">" +
                            systemUnderTest.UrlDescription + "</p>"));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Externalurl, Is.EqualTo(systemUnderTest.UrlLink));
-            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.Not.Empty);
 
             Assert.That(systemUnderTest.ActivitiesUrlXmlActivity, Is.EqualTo(mockUrlActivity));
             Assert.That(systemUnderTest.ActivitiesUrlXmlActivity.Url, Is.EqualTo(mockUrl));

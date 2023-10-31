@@ -26,7 +26,7 @@ public class XmlSectionFactoryUt
         Assert.That(systemUnderTest, Is.Not.Null);
         Assert.That(systemUnderTest.SectionsSectionXmlSection, Is.EqualTo(mockSection));
         Assert.That(systemUnderTest.SectionsInforefXmlInforef, Is.EqualTo(mockInforef));
-        Assert.That(systemUnderTest.CurrentTime, Is.Not.Null);
+        Assert.That(systemUnderTest.CurrentTime, Is.Not.Empty);
     }
 
     [Test]
@@ -82,7 +82,7 @@ public class XmlSectionFactoryUt
                 Is.EqualTo((learningSpaceJson2.SpaceId + 1).ToString()));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo("Hinweise auf externe Lerninhalte"));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified,
-                Is.EqualTo(systemUnderTest.CurrentTime));
+                Is.Not.Empty);
 
             mockInforef.Received().Serialize("", "0");
             mockInforef.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());

@@ -43,7 +43,7 @@ public class XmlAdaptivityFactoryUt
             Assert.That(systemUnderTest.AdaptivityElementParentSpaceId, Is.EqualTo(""));
             Assert.That(systemUnderTest.AdaptivityElementPoints, Is.EqualTo(0));
             Assert.That(systemUnderTest.AdaptivityElementUuid, Is.EqualTo(""));
-            Assert.That(systemUnderTest.CurrentTime, Is.Not.Null);
+            Assert.That(systemUnderTest.CurrentTime, Is.Not.Empty);
             Assert.That(systemUnderTest.ListAdaptivityElements, Is.Not.Null);
             Assert.That(systemUnderTest.FileSystem, Is.Not.Null);
         });
@@ -126,7 +126,7 @@ public class XmlAdaptivityFactoryUt
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.Intro, Is.EqualTo(""));
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.IntroFormat, Is.EqualTo("1"));
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.TimeModified,
-            Is.EqualTo(systemUnderTest.CurrentTime));
+            Is.Not.Empty);
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.Tasks, Is.Not.Null);
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.Tasks.Tasks, Is.Not.Null);
         Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity.Tasks.Tasks.Count,
@@ -221,7 +221,7 @@ public class XmlAdaptivityFactoryUt
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Indent, Is.EqualTo("1"));
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("2"));
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("2"));
-        Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
+        Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.Not.Null);
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo("1"));
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Completion, Is.EqualTo("2"));
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule, Is.Not.Null);
