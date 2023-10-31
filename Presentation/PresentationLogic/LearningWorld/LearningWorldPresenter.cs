@@ -487,15 +487,23 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         if (!CheckLearningWorldNotNull("DeleteLearningPathWay"))
             return;
+
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        var learningPathWay = LearningWorldVm!.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
+        var learningPathWay =
+            _selectedViewModelsProvider.LearningObjectInPathWay is LearningPathwayViewModel learningPathwayViewModel
+            && learningPathwayViewModel.TargetObject == targetObject
+                ? learningPathwayViewModel
+                : LearningWorldVm!.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
+        ;
+
+
         if (learningPathWay == null)
         {
             LogAndSetError("DeleteLearningPathWay", "LearningPathWay is null", "No LearningPathWay found");
             return;
         }
 
-        _presentationLogic.DeleteLearningPathWay(LearningWorldVm, learningPathWay);
+        _presentationLogic.DeleteLearningPathWay(LearningWorldVm!, learningPathWay);
     }
 
     #endregion

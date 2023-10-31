@@ -12,7 +12,7 @@ public interface IPositioningService
     void CreateLearningPathWay(IObjectInPathWayViewModel sourceObject, double x, double y);
 
     /// <summary>
-    /// Deletes the last created learning pathway leading to the target space.
+    /// Deletes a learning pathway to the target object. If none is selected, the last created pathway is deleted.
     /// </summary>
     /// <param name="targetObject">The learning space where the path ends.</param>
     void DeleteLearningPathWay(IObjectInPathWayViewModel targetObject);
