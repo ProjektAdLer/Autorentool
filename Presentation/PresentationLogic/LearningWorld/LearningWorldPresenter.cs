@@ -435,10 +435,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     /// <param name="startY">The Y starting point from which to begin the search. Defaults to 0.</param>
     /// <returns>Returns the next available Y position. If the determined Y position exceeds the maximum value, the maximum Y value is returned.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when an unknown object is found at the current position.</exception>
-    private int GetNextAvailableYPosition(int xOffset, int startY = 0)
+    private double GetNextAvailableYPosition(double xOffset, double startY = 0)
     {
         var positionY = startY;
-        const int maxPositionY = 405;
+        const double maxPositionY = 405;
 
         while (true)
         {
@@ -454,7 +454,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             {
                 ILearningSpaceViewModel => 70,
                 PathWayConditionViewModel => 55,
-                _ => throw new ArgumentOutOfRangeException()
+                null when objAtPositionWithOffset is PathWayConditionViewModel condition => 55 +
+                    (condition.PositionY - positionY),
+                null when objAtPositionWithOffset is ILearningSpaceViewModel space =>
+                    70 + (space.PositionY - positionY),
+                _ => 70 + xOffset
             };
 
             positionY += currentOffset;
