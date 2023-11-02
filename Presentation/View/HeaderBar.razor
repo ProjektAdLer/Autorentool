@@ -49,10 +49,10 @@
                 <p class="absolute left-1 hover:-translate-x-[30%] transition-all duration-1000">DEBUG BACKUP</p>
             </button>
         }
-        <button @onclick="@ExportLearningWorldToArchiveAsync" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-            <div class="flex h-full items-center absolute left-0.5 hover:-translate-x-[60%] transition-all duration-1000">
+        <button @onclick="@ExportLearningWorldToArchiveAsync" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["ExportArchive.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <div class="flex h-full items-center absolute left-0.5 hover:-translate-x-[70%] transition-all duration-1000">
                 <MudIcon Icon="@Icons.Material.Filled.Archive"></MudIcon>
-                <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.ExportArchive.Text"]</p>
+                <p class="pl-1 font-bold uppercase">@Localizer["ExportArchive.Text"]</p>
             </div>
         </button>
 

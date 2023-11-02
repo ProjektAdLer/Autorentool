@@ -31,15 +31,21 @@
         <value>Erstelle Debug-Welt</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Lernwelt importieren</value>
+        <value>Verwenden Sie diese Option, um ein Lernweltarchiv zu importieren (z.B. von anderem Rechner oder aus Sicherheitskopie)</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>IMPORT</value>
+        <value>Importieren (.zip)</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEU</value>
     </data>
     <data name="Page.LearningWorld.Subheading" xml:space="preserve">
         <value>Fahren Sie mit der Maus über Ihre Lernwelten, und öffnen Sie diese anschließend.</value>
+    </data>
+    <data name="Page.LearningWorld.Button.Load.Hover" xml:space="preserve">
+        <value>Verwenden Sie diese Option, um lokal gespeicherte Welten zu öffnen</value>
+    </data>
+    <data name="Page.LearningWorld.Button.Load.Text" xml:space="preserve">
+        <value>Laden (.awf)</value>
     </data>
 </root>
