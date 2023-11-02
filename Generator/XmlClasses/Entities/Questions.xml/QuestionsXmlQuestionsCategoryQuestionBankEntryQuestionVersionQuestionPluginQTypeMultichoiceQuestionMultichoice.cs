@@ -10,14 +10,18 @@ public class
     {
         Id = "0";
         Single = "1";
+        Incorrectfeedback = "";
+        Partiallycorrectfeedback = "";
     }
 
     public
         QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice(
-            int id, int single)
+            int id, int single, string incorrectfeedback)
     {
         Id = id.ToString();
         Single = single.ToString();
+        Incorrectfeedback = incorrectfeedback;
+        Partiallycorrectfeedback = incorrectfeedback;
     }
 
     [XmlAttribute(AttributeName = "id")] public string Id { get; set; }
@@ -30,19 +34,19 @@ public class
     public string Shuffleanswers { get; set; } = "0";
 
     [XmlElement(ElementName = "correctfeedback")]
-    public string Correctfeedback { get; set; } = "";
+    public string Correctfeedback { get; set; } = "Diese Antwort ist korrekt.";
 
     [XmlElement(ElementName = "correctfeedbackformat")]
     public string Correctfeedbackformat { get; set; } = "1";
 
     [XmlElement(ElementName = "partiallycorrectfeedback")]
-    public string Partiallycorrectfeedback { get; set; } = "";
+    public string Partiallycorrectfeedback { get; set; }
 
     [XmlElement(ElementName = "partiallycorrectfeedbackformat")]
     public string Partiallycorrectfeedbackformat { get; set; } = "1";
 
     [XmlElement(ElementName = "incorrectfeedback")]
-    public string Incorrectfeedback { get; set; } = "";
+    public string Incorrectfeedback { get; set; }
 
     [XmlElement(ElementName = "incorrectfeedbackformat")]
     public string Incorrectfeedbackformat { get; set; } = "1";
