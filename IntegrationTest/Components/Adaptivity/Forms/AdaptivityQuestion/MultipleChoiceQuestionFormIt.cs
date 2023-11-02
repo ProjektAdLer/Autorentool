@@ -322,8 +322,8 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
 
         mudCheckBox.Change(true);
 
-        // Single response - choice 2 is now correct because it is the first choice in the correct choices list
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> {choice2});
+        // Single response - choice 1 is now correct because it is the first choice in the choices list that is correct
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> {choice1});
     }
 
     [Test]

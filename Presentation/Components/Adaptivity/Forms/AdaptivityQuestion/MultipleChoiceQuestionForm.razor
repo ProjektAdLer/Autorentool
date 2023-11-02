@@ -271,7 +271,7 @@
         {
             case > 1:
             {
-                var correctChoice = FormModel.CorrectChoices.First();
+                var correctChoice = FormModel.Choices.First(x => FormModel.CorrectChoices.Contains(x));
                 FormModel.CorrectChoices.Clear();
                 FormModel.CorrectChoices.Add(correctChoice);
                 break;
