@@ -8,19 +8,21 @@ public class ActivitiesAdleradaptivityXmlActivityAdleradaptivity
     {
         Id = "0";
         Name = "";
+        Intro = "";
     }
 
-    public ActivitiesAdleradaptivityXmlActivityAdleradaptivity(string id, string name)
+    public ActivitiesAdleradaptivityXmlActivityAdleradaptivity(string id, string name, string intro)
     {
         Id = id;
         Name = name;
+        Intro = intro;
     }
 
     [XmlAttribute("id")] public string Id { get; set; }
 
     [XmlElement("name")] public string Name { get; set; }
 
-    [XmlElement("intro")] public string Intro { get; set; } = "";
+    [XmlElement("intro")] public string Intro { get; set; }
 
     [XmlElement("introformat")] public string IntroFormat { get; set; } = "1";
 

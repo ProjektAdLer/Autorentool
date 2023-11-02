@@ -15,6 +15,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 {
     internal readonly string CurrentTime;
     internal readonly IFileSystem FileSystem;
+    internal string AdaptivityElementDescriptionGoals;
     internal string AdaptivityElementId;
     internal string AdaptivityElementName;
     internal string AdaptivityElementParentSpaceId;
@@ -55,6 +56,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
             activityAdLerAdaptivityXmlActivity ?? new ActivitiesAdleradaptivityXmlActivity();
 
         AdaptivityElementId = "0";
+        AdaptivityElementDescriptionGoals = "";
         AdaptivityElementName = "";
         AdaptivityElementParentSpaceId = "";
         AdaptivityElementPoints = 0;
@@ -105,6 +107,10 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
             AdaptivityElementUuid = adaptivityElement.ElementUUID;
             AdaptivityElementParentSpaceId = adaptivityElement.LearningSpaceParentId.ToString();
             AdaptivityElementPoints = adaptivityElement.ElementMaxScore;
+            AdaptivityElementDescriptionGoals = "<h5>Description:</h5> " + "<p>" +
+                                                adaptivityElement.ElementDescription + "</p>" +
+                                                "<h5>Goals:</h5> " + "<p>" +
+                                                string.Join("<br>", adaptivityElement.ElementGoals) + "</p>";
 
             SetParametersActivityAdaptivity(adaptivityElement);
         }
@@ -121,7 +127,8 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesAdleradaptivityXmlActivity = new ActivitiesAdleradaptivityXmlActivity(AdaptivityElementId);
 
         ActivitiesAdleradaptivityXmlActivity.Adleradaptivity =
-            new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(AdaptivityElementId, AdaptivityElementName);
+            new ActivitiesAdleradaptivityXmlActivityAdleradaptivity(AdaptivityElementId, AdaptivityElementName,
+                AdaptivityElementDescriptionGoals);
 
         foreach (var task in adaptivityElement.AdaptivityContent.AdaptivityTasks)
         {
