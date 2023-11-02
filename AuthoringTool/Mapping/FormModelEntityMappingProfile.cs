@@ -51,12 +51,18 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateAdaptivityQuestionMap()
     {
         CreateMap<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>()
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore())
             .ConstructUsing((formModel, context) => formModel.IsSingleResponse
                 ? context.Mapper.Map<MultipleChoiceSingleResponseQuestion>(formModel)
                 : context.Mapper.Map<MultipleChoiceMultipleResponseQuestion>(formModel));
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>()
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore());
         CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
-            .ForMember(x => x.CorrectChoice, opt => opt.MapFrom(x => x.CorrectChoices.First()));
+            .ForMember(x => x.CorrectChoice, opt => opt.MapFrom(x => x.CorrectChoices.First()))
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore());
     }
 }
