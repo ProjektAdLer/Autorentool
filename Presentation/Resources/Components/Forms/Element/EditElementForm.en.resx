@@ -102,6 +102,6 @@
         <value>3D representation icon</value>
     </data>
     <data name="EditElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
-        <value>Edit adaptivity content</value>
+        <value>Edit tasks of the adaptivity element</value>
     </data>
 </root>

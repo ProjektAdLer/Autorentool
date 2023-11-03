@@ -108,7 +108,7 @@
         <value>3D-Darstellung-Icon</value>
     </data>
     <data name="CreateElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
-        <value>Adaptivitätscontent editieren</value>
+        <value>Aufgaben zum Adaptivitätselement bearbeiten</value>
     </data>
     <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
         <value>Darstellung in der 3D-Lernumgebung</value>
