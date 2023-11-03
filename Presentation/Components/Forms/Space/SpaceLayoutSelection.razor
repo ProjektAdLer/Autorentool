@@ -3,12 +3,13 @@
 @using Shared
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+
 <div class="grid grid-cols-3 gap-4">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
         <MudListItem OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
                      Class="px-0">
-            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Duration="Double.Epsilon" Arrow="true">
+            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Delay="150" Duration="250"  Arrow="true">
                 <ChildContent>
                     <div class="flex flex-col justify-center items-center gap-1 cursor-pointer py-2 hover:bg-adlergrey-100">
                         <MudIcon Class="inset-0 p-0 w-12 2xl:w-16 h-full"
@@ -19,7 +20,7 @@
                 </ChildContent>
         
                 <TooltipContent>
-                    <MudCarousel TData="object" Class="mud-with-full" Style="height:300px; width:300px" ShowArrows="false" ShowBullets="true" AutoCycle="true">
+                    <MudCarousel TData="object" Class="mud-with-full" Style="height:300px; width:300px" ShowArrows="false" ShowBullets="true" AutoCycle="true" AutoCycleTime="new TimeSpan(0,0,2)">
                             <MudCarouselItem>
                                 <div class="d-flex" style="height:100%">
                                     <MudIcon Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon" Class="mx-auto my-auto w-64 h-48" />
