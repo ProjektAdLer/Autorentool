@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Bunit;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
@@ -14,7 +15,7 @@ public class GenericInfoDialogIt : MudDialogTestFixture<GenericInfoDialog>
     {
         var parameters = new DialogParameters
         {
-            { nameof(GenericInfoDialog.DialogText), "This is the dialog text" },
+            { nameof(GenericInfoDialog.DialogText), (MarkupString)"This is the dialog text" },
             { nameof(GenericInfoDialog.OkButtonText), "Okay Dokey" },
             { nameof(GenericInfoDialog.OkButtonColor), Color.Info }
         };
@@ -36,13 +37,12 @@ public class GenericInfoDialogIt : MudDialogTestFixture<GenericInfoDialog>
     public async Task OkButtonPressed_ClosesDialogWithPositiveResult()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
-        
+
         var buttons = DialogProvider.FindComponent<MudButton>();
         buttons.Find("button").Click();
-        
+
         var result = await dialog.Result;
         Assert.That(result.Canceled, Is.False);
         Assert.That(result.Data, Is.EqualTo(null));
     }
-
 }

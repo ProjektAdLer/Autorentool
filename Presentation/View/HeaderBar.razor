@@ -261,11 +261,12 @@
             { nameof(UploadProgressDialog.CancellationTokenSource), cancellationTokenSource }
         };
 
-        var dialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+        var uploadProgressDialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
 
         try
         {
-            await PresentationLogic.ConstructAndUploadBackupAsync(world, progress, cancellationTokenSource.Token);
+            var response = await PresentationLogic.ConstructAndUploadBackupAsync(world, progress, cancellationTokenSource.Token);
+            ShowUploadSuccessfulDialog(response);
         }
         catch (OperationCanceledException)
         {
@@ -283,12 +284,30 @@
         }
         finally
         {
-            dialogReference.Close();
+            uploadProgressDialogReference.Close();
         }
 
         Snackbar.Add(Localizer["Export.SnackBar.Message"], Severity.Success);
         _popoverOpen = true;
         StateHasChanged();
+    }
+
+    private void ShowUploadSuccessfulDialog(UploadResponseViewModel response)
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false,
+        };
+        
+        var parameters = new DialogParameters
+        {
+            { nameof(GenericInfoDialog.DialogText), 
+               (MarkupString)Localizer["UploadLearningWorld.Success.DialogText", response.WorldNameInLms,
+                   response.WorldLmsUrl, response.World3DUrl].ToString() },
+        };
+        DialogService.Show<GenericInfoDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
     }
 
     private bool IsLearningWorldValid(ILearningWorldViewModel world)
@@ -401,7 +420,7 @@
             { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
-                Localizer["Dialog.NotLoggedIn.Message"].ToString()
+                (MarkupString)Localizer["Dialog.NotLoggedIn.Message"].ToString()
             },
         };
         var options = new DialogOptions

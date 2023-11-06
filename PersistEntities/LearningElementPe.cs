@@ -50,7 +50,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
-    [IgnoreDataMember] public Guid Id { get; set; }
+    [DataMember(IsRequired = false)] public Guid Id { get; set; }
 
     [DataMember] public string Name { get; set; }
 
@@ -72,9 +72,11 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 
     [DataMember] public double PositionY { get; set; }
 
-    [OnDeserializing]
-    private void OnDeserializing(StreamingContext context)
+    [OnDeserialized]
+    private void OnDeserialized(StreamingContext context)
     {
-        Id = Guid.NewGuid();
+        if (Id == Guid.Empty)
+            Id = Guid.NewGuid();
     }
+    
 }

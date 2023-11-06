@@ -120,4 +120,10 @@
     <data name="ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element &lt;b&gt;{2}&lt;/b&gt; in Lernraum &lt;b&gt;{1}&lt;/b&gt;. Da dieser Lernraum aber erst nach dem Raum, in dem Element &lt;b&gt;{0}&lt;/b&gt; platziert ist, freigeschaltet wird, ist diese Referenz nicht zulässig.</value>
     </data>
+    <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
+        <value>Hochladen erfolgreich</value>
+    </data>
+    <data name="UploadLearningWorld.Success.DialogText" xml:space="preserve">
+        <value>Ihre Welt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
+    </data>
 </root>

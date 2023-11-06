@@ -41,10 +41,11 @@ public class BackendAccess : IBackendAccess
         return Mapper.Map<UserInformation>(receivedUserInformation);
     }
 
-    public async Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
+    public async Task<UploadResponse> UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
         IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
-        await UserWebApiServices.UploadLearningWorldAsync(token.Token, backupPath, awtPath, progress,
+        var responseBe = await UserWebApiServices.UploadLearningWorldAsync(token.Token, backupPath, awtPath, progress,
             cancellationToken);
+        return Mapper.Map<UploadResponse>(responseBe);
     }
 }

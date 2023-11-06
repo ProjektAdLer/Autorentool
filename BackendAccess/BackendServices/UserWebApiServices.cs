@@ -112,7 +112,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     }
 
 
-    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
+    public async Task<UploadResponseBE> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
         IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
         // Validate that the paths are valid.
@@ -130,7 +130,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
             "atfFile", awtPath);
 
-        return await SendHttpPostRequestAsync<bool>("Worlds", headers, content, progress);
+        return await SendHttpPostRequestAsync<UploadResponseBE>("Worlds", headers, content, progress);
     }
 
     /// <inheritdoc cref="GetApiHealthcheck"/>

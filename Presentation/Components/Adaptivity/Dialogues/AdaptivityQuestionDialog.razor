@@ -30,11 +30,11 @@
             <DialogContent>
                 @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
                 {
-                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit"></MultipleChoiceQuestionForm>
+                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
                 }
                 else
                 {
-                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null"></MultipleChoiceQuestionForm>
+                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
                 }
             </DialogContent>
         </MudDialog>
@@ -56,5 +56,10 @@
     public MudDialogInstance MudDialog { get; set; } = default!;
 
     private bool _isSidePanelOpen = false;
+
+    private void CloseDialog()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
 
 }

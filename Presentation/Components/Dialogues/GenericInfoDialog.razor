@@ -14,7 +14,7 @@
     public MudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
-    public string DialogText { get; set; }
+    public MarkupString DialogText { get; set; }
 
     [Parameter]
     public string OkButtonText { get; set; } = "Ok";
