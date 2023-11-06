@@ -58,28 +58,32 @@
                                  Margin="Margin.Dense"
                                  Class="pb-6"/>
                 
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                           Immediate="false"
-                           Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
-                           For="@(() => FormModel.Difficulty)"
-                           Variant="Variant.Outlined">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                        <div class="flex flex-row items-center gap-2">
-                            <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["EditElementForm.Difficulty.Easy"]
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                        <div class="flex flex-row items-center gap-2">
-                            <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["EditElementForm.Difficulty.Medium"]
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                        <div class="flex flex-row items-center gap-2">
-                            <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["EditElementForm.Difficulty.Hard"]
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
-                </MudSelect>
+                @if (!AdaptivityElementMode)
+                {
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                               Immediate="false"
+                               Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
+                               For="@(() => FormModel.Difficulty)"
+                               Variant="Variant.Outlined">
+                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                            <div class="flex flex-row items-center gap-2">
+                                <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>@Localizer["EditElementForm.Difficulty.Easy"]
+                            </div>
+                        </MudSelectItem>
+                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                            <div class="flex flex-row items-center gap-2">
+                                <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>@Localizer["EditElementForm.Difficulty.Medium"]
+                            </div>
+                        </MudSelectItem>
+                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                            <div class="flex flex-row items-center gap-2">
+                                <MudIcon Class="flex w-7 h-5 drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>@Localizer["EditElementForm.Difficulty.Hard"]
+                            </div>
+                        </MudSelectItem>
+                        <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
+                    </MudSelect>
+                }
+                else{}
             </div>
         </Collapsable>
 
