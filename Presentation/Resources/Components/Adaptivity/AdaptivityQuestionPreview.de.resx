@@ -41,4 +41,7 @@
     <data name="AdaptivityQuestionPreview.Header.ContentReference" xml:space="preserve">
         <value>Verweis auf Lerninhalt:</value>
     </data>
+    <data name="AdaptivityQuestionPreview.ElementReference.NotFound" xml:space="preserve">
+        <value>Das Lernelement mit Id {0} wurde nicht gefunden!</value>
+    </data>
 </root>

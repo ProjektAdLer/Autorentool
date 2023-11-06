@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Bunit;
+using BusinessLogic.Validation;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Adaptivity;
@@ -13,6 +16,15 @@ namespace IntegrationTest.Components.Adaptivity;
 [TestFixture]
 public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuestionPreview>
 {
+    [SetUp]
+    public void Setup()
+    {
+        _learningElementNamesProvider = Substitute.For<ILearningElementNamesProvider>();
+        Context.Services.AddSingleton(_learningElementNamesProvider);
+    }
+
+    private ILearningElementNamesProvider _learningElementNamesProvider = null!;
+
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
@@ -23,6 +35,7 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         {
             Assert.That(sut.Instance.Localizer, Is.Not.Null);
             Assert.That(sut.Instance.AdaptivityQuestion, Is.EqualTo(adaptivityQuestion));
+            Assert.That(sut.Instance.LearningElementNamesProvider, Is.EqualTo(_learningElementNamesProvider));
         });
     }
 
@@ -121,9 +134,14 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
     }
 
     [Test]
-    public void Render_HasElementReferenceAction_RenderElementReferenceActionWithHeader()
+    public void Render_HasElementReferenceAction_RenderElementReferenceActionWithHeader([Values] bool doesElementExist)
     {
         var elementReferenceAction = ViewModelProvider.GetElementReferenceAction();
+        var elementId = elementReferenceAction.ElementId;
+        const string elementName = "expected";
+        _learningElementNamesProvider.ElementNames.Returns(doesElementExist
+            ? new List<(Guid, string)> {(elementId, elementName)}
+            : new List<(Guid, string)>());
         var rule = Substitute.For<IAdaptivityRuleViewModel>();
         rule.Action.Returns(elementReferenceAction);
         var adaptivityQuestion = Substitute.For<IAdaptivityQuestionViewModel>();
@@ -137,6 +155,10 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         {
             Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.ElementReference"));
             Assert.That(elementReference.InnerHtml, Is.Not.Empty);
+            Assert.That(elementReference.InnerHtml,
+                doesElementExist
+                    ? Is.EqualTo(elementName)
+                    : Is.EqualTo("AdaptivityQuestionPreview.ElementReference.NotFound" + elementId));
         });
     }
 
