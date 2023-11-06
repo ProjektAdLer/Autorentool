@@ -13,7 +13,7 @@
         <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start">
                 <MudCardContent Class="relative flex justify-center w-[68px] 2xl:w-[100px] h-[40px] 2xl:h-[48px] 2500p:w-[132px] 2500p:h-[56px] p-0">
-                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
+                    <MudIcon Icon="@GetElementIcon()" Class="w-10 h-10 2xl:w-12 2xl:h-12 absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
                         <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
                     </div>
@@ -96,7 +96,7 @@
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             //TODO: change this icon
-            IAdaptivityContentViewModel => CustomIcons.H5PElementIcon,
+            IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }
