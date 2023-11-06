@@ -1059,21 +1059,75 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteLearningPathWay_CallsPresentationLogic()
+    public void DeleteLearningPathWay_CallsPresentationLogic_NoPathWaySelected()
     {
         var world = ViewModelProvider.GetLearningWorld();
         var condition = ViewModelProvider.GetPathWayCondition();
-        var space = ViewModelProvider.GetLearningSpace();
-        var learningPathWay = ViewModelProvider.GetLearningPathway(source: condition, target: space);
-        world.LearningPathWays.Add(learningPathWay);
+        var space1 = ViewModelProvider.GetLearningSpace();
+        var space2 = ViewModelProvider.GetLearningSpace();
+        var learningPathWay1 = ViewModelProvider.GetLearningPathway(source: space1, target: condition);
+        var learningPathWay2 = ViewModelProvider.GetLearningPathway(source: space2, target: condition);
+        world.LearningPathWays.Add(learningPathWay1);
+        world.LearningPathWays.Add(learningPathWay2);
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.DeleteLearningPathWay(space);
+        systemUnderTest.DeleteLearningPathWay(condition);
 
-        presentationLogic.Received().DeleteLearningPathWay(world, learningPathWay);
+        presentationLogic.Received().DeleteLearningPathWay(world, learningPathWay2);
+    }
+
+    [Test]
+    public void DeleteLearningPathWay_CallsPresentationLogic_TargetObjectPathWaySelected()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var condition = ViewModelProvider.GetPathWayCondition();
+        var space1 = ViewModelProvider.GetLearningSpace();
+        var space2 = ViewModelProvider.GetLearningSpace();
+        var learningPathWay1 = ViewModelProvider.GetLearningPathway(source: space1, target: condition);
+        var learningPathWay2 = ViewModelProvider.GetLearningPathway(source: space2, target: condition);
+        world.LearningPathWays.Add(learningPathWay1);
+        world.LearningPathWays.Add(learningPathWay2);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        systemUnderTest.LearningWorldVm = world;
+        mockSelectedViewModelsProvider.LearningObjectInPathWay.Returns(learningPathWay1);
+
+        systemUnderTest.DeleteLearningPathWay(condition);
+
+        presentationLogic.Received().DeleteLearningPathWay(world, learningPathWay1);
+    }
+
+    [Test]
+    public void DeleteLearningPathWay_CallsPresentationLogic_ExternalPathWaySelected()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var world = ViewModelProvider.GetLearningWorld();
+        var condition = ViewModelProvider.GetPathWayCondition();
+        var space1 = ViewModelProvider.GetLearningSpace();
+        var space2 = ViewModelProvider.GetLearningSpace();
+        var space3 = ViewModelProvider.GetLearningSpace();
+        var learningPathWay1 = ViewModelProvider.GetLearningPathway(source: space1, target: condition);
+        var learningPathWay2 = ViewModelProvider.GetLearningPathway(source: space2, target: condition);
+        var learningPathWay3 = ViewModelProvider.GetLearningPathway(source: space3, target: space1);
+        world.LearningPathWays.Add(learningPathWay1);
+        world.LearningPathWays.Add(learningPathWay2);
+        world.LearningPathWays.Add(learningPathWay3);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        systemUnderTest.LearningWorldVm = world;
+        mockSelectedViewModelsProvider.LearningObjectInPathWay.Returns(learningPathWay3);
+
+        systemUnderTest.DeleteLearningPathWay(condition);
+
+        presentationLogic.Received().DeleteLearningPathWay(world, learningPathWay2);
     }
 
     [Test]

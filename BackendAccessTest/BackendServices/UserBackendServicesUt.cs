@@ -284,7 +284,11 @@ public class UserBackendServicesUt
 
         mockedHttp
             .When("*")
-            .Respond("application/json", "true");
+            .Respond("application/json", @"{
+                                               ""worldNameInLms"": ""AdLer Demo copy 5"",
+                                               ""worldLmsUrl"": ""http://localhost:8085/course/view.php?id=7"",
+                                               ""world3DUrl"": ""Coming soon(ish)""
+                                           }");
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<HttpMessageHandler>())
@@ -301,7 +305,9 @@ public class UserBackendServicesUt
         var output = await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json");
 
         // Assert
-        Assert.That(output, Is.EqualTo(true));
+        Assert.That(output.World3DUrl, Is.EqualTo("Coming soon(ish)"));
+        Assert.That(output.WorldLmsUrl, Is.EqualTo("http://localhost:8085/course/view.php?id=7"));
+        Assert.That(output.WorldNameInLms, Is.EqualTo("AdLer Demo copy 5"));
     }
 
     [Test]

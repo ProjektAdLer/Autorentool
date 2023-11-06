@@ -8,19 +8,22 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
     {
         Id = "0";
         QuestionText = "";
+        Name = "";
     }
 
     public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion(int id, string questionText)
     {
         Id = id.ToString();
         QuestionText = questionText;
+        // The name of the question is limited to 254 characters because of moodle database restrictions
+        Name = questionText.Length >= 255 ? questionText[..255] : questionText;
     }
 
     [XmlAttribute(AttributeName = "id")] public string Id { get; set; }
 
     [XmlElement(ElementName = "parent")] public string Parent { get; set; } = "0";
 
-    [XmlElement(ElementName = "name")] public string Name { get; set; } = "";
+    [XmlElement(ElementName = "name")] public string Name { get; set; }
 
     [XmlElement(ElementName = "questiontext")]
     public string QuestionText { get; set; }

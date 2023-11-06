@@ -1,4 +1,5 @@
-﻿using Generator.ATF;
+﻿using System.Text;
+using Generator.ATF;
 using Generator.ATF.AdaptivityElement;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
@@ -568,10 +569,13 @@ public class XmlBackupFactory : IXmlBackupFactory
         var answersXml = CreateAnswersXml(question.Choices, ref answerId);
 
         var singleResponseInt = question.QuestionType is ResponseType.singleResponse ? 1 : 0;
+
+        var incorrectFeedback = CreateIncorrectFeedbackString(question.AdaptivityRules);
+
         var multiChoiceXml =
             new
                 QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionMultichoice(
-                    questionId, singleResponseInt);
+                    questionId, singleResponseInt, incorrectFeedback);
 
         pluginQTypeMultiChoiceQuestionXml.Answers = answersXml;
         pluginQTypeMultiChoiceQuestionXml.Multichoice = multiChoiceXml;
@@ -581,6 +585,48 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         return questionBankEntryXml;
     }
+
+    private string CreateIncorrectFeedbackString(List<IAdaptivityRuleJson> questionAdaptivityRules)
+    {
+        var incorrectFeedback = new StringBuilder("Diese Antwort ist falsch. <br>");
+
+        if (questionAdaptivityRules.Count == 0)
+            return incorrectFeedback.ToString();
+
+        incorrectFeedback.Append("Hinweis: ");
+        foreach (var rule in questionAdaptivityRules)
+        {
+            switch (rule.AdaptivityAction)
+            {
+                case CommentActionJson commentActionJson:
+                    incorrectFeedback.Append(commentActionJson.CommentText).Append("<br>");
+                    break;
+                case ContentReferenceActionJson contentReferenceActionJson:
+                    var baseElementName = ReadAtf.GetBaseLearningElementsList()
+                        .First(x => x.ElementId == contentReferenceActionJson.ElementId).ElementName;
+                    incorrectFeedback.Append("Schaue dir noch mal das Lernelement ").Append(baseElementName)
+                        .Append(" an. <br>");
+                    incorrectFeedback.Append(string.IsNullOrEmpty(contentReferenceActionJson.HintText)
+                        ? ""
+                        : contentReferenceActionJson.HintText + "<br>");
+                    break;
+                case ElementReferenceActionJson elementReferenceActionJson:
+                    var learningElementName = ReadAtf.GetElementsOrderedList()
+                        .First(x => x.ElementId == elementReferenceActionJson.ElementId).ElementName;
+                    var spaceName = ReadAtf.GetSpaceList()
+                        .First(x => x.SpaceSlotContents.Any(y => y == elementReferenceActionJson.ElementId)).SpaceName;
+                    incorrectFeedback.Append("Schaue dir noch mal das Lernelement ").Append(learningElementName)
+                        .Append(" in Raum \"").Append(spaceName).Append("\" an. <br>");
+                    incorrectFeedback.Append(string.IsNullOrEmpty(elementReferenceActionJson.HintText)
+                        ? ""
+                        : elementReferenceActionJson.HintText + "<br>");
+                    break;
+            }
+        }
+
+        return incorrectFeedback.ToString();
+    }
+
 
     /// <summary>
     /// Creates an XML representation for the answers of a given adaptivity question.

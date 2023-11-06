@@ -113,7 +113,7 @@
     internal IMapper Mapper { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    private IValidationWrapper<Choice> ChoiceValidator { get; set; }
+    internal IValidationWrapper<Choice> ChoiceValidator { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
@@ -123,9 +123,6 @@
 
     [Inject, AllowNull]
     internal IValidationWrapper<MultipleChoiceSingleResponseQuestion> SingleResponseQuestionValidator { get; set; }
-
-    [CascadingParameter]
-    public MudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public IAdaptivityTaskViewModel Task { get; set; } = null!;
@@ -178,7 +175,6 @@
             EditQuestionOnValidSubmit(model);
         }
         OnSubmitted.InvokeAsync();
-        MudDialog.Close(DialogResult.Ok(true));
     }
 
     private void CreatQuestionOnValidSubmit(MultipleChoiceQuestionFormModel model)
@@ -275,7 +271,7 @@
         {
             case > 1:
             {
-                var correctChoice = FormModel.CorrectChoices.First();
+                var correctChoice = FormModel.Choices.First(x => FormModel.CorrectChoices.Contains(x));
                 FormModel.CorrectChoices.Clear();
                 FormModel.CorrectChoices.Add(correctChoice);
                 break;

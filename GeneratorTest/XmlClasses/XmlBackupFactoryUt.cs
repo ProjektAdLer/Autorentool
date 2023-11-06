@@ -474,13 +474,15 @@ public class XmlBackupFactoryUt
                         new List<IAdaptivityRuleJson>()
                         {
                             new AdaptivityRuleJson(1, "incorrect", new CommentActionJson("Falsche Antwort1")),
+                            new AdaptivityRuleJson(2, "incorrect", new ContentReferenceActionJson(3, "hinText1"))
                         },
                         new List<IChoiceJson>(new IChoiceJson[]
                             { new ChoiceJson("choice11", true), new ChoiceJson("choice12", false) })),
                     new AdaptivityQuestionJson(ResponseType.multipleResponse, 2, "", 200, "question2",
                         new List<IAdaptivityRuleJson>()
                         {
-                            new AdaptivityRuleJson(2, "incorrect", new CommentActionJson("Falsche Antwort")),
+                            new AdaptivityRuleJson(3, "incorrect", new ElementReferenceActionJson(4, "hinText2")),
+                            new AdaptivityRuleJson(4, "incorrect", new ContentReferenceActionJson(3, "hinText3"))
                         },
                         new List<IChoiceJson>(new IChoiceJson[]
                         {
@@ -499,20 +501,32 @@ public class XmlBackupFactoryUt
                     new AdaptivityQuestionJson(ResponseType.singleResponse, 3, "", 100, "questionText2",
                         new List<IAdaptivityRuleJson>()
                         {
-                            new AdaptivityRuleJson(1, "incorrect", new CommentActionJson("Falsche Antwort2")),
+                            new AdaptivityRuleJson(2, "incorrect", new ElementReferenceActionJson(3, null))
                         },
                         new List<IChoiceJson>(new IChoiceJson[]
                             { new ChoiceJson("choiceText1", true), new ChoiceJson("choiceText2", false) }))
                 })
             }));
 
+        var baseElementJson = new BaseLearningElementJson(3, "", "element6", "", "h5p", "h5p");
+
+        var learningElementJson4 = new LearningElementJson(4,
+            "", "element4", "", "", "label", 1, 4, "");
+
         var mockAdaptivityElements = new List<IAdaptivityElementJson>()
             { adaptivityElementJson1, adaptivityElementJson2 };
         ;
+
+        var mockSpace = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2, 3, 4 }, 0, "", "");
+
         mockReadAtf.GetResourceElementList().Returns(new List<ILearningElementJson>());
         mockReadAtf.GetLearningWorld().Returns(learningWorldJson);
         mockReadAtf.GetH5PElementsList().Returns(new List<ILearningElementJson>());
         mockReadAtf.GetAdaptivityElementsList().Returns(mockAdaptivityElements);
+        mockReadAtf.GetBaseLearningElementsList().Returns(new List<IBaseLearningElementJson>() { baseElementJson });
+        mockReadAtf.GetElementsOrderedList().Returns(new List<IElementJson>()
+            { mockAdaptivityElements[0], mockAdaptivityElements[1], baseElementJson, learningElementJson4 });
+        mockReadAtf.GetSpaceList().Returns(new List<ILearningSpaceJson>() { mockSpace });
 
         var mockQuestion = Substitute.For<IQuestionsXmlQuestionsCategories>();
         var mockQuestionCategories = new List<QuestionsXmlQuestionsCategory>();
@@ -596,7 +610,8 @@ public class XmlBackupFactoryUt
             Is.EqualTo("0"));
         Assert.That(
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
-                .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0].Name, Is.EqualTo(""));
+                .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0].Name,
+            Is.EqualTo("question1"));
         Assert.That(
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
                 .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0].QuestionText,
@@ -691,6 +706,22 @@ public class XmlBackupFactoryUt
         Assert.That(
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
                 .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Correctfeedback, Is.EqualTo("Diese Antwort ist korrekt."));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Partiallycorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Falsche Antwort1<br>Schaue dir noch mal das Lernelement element6 an. <br>hinText1<br>"));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Incorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Falsche Antwort1<br>Schaue dir noch mal das Lernelement element6 an. <br>hinText1<br>"));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[0].QuestionVersion.QuestionVersions[0].Questions.Question[0]
                 .PluginQTypeMultichoiceQuestion.Multichoice.Shuffleanswers, Is.EqualTo("0"));
         Assert.That(
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
@@ -780,7 +811,18 @@ public class XmlBackupFactoryUt
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
                 .QuestionBankEntries[1].QuestionVersion.QuestionVersions[0].Questions.Question[0]
                 .PluginQTypeMultichoiceQuestion.Answers.Answer[2].Fraction, Is.EqualTo("0.5000000"));
-
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[1].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Partiallycorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Schaue dir noch mal das Lernelement element4 in Raum \"space1\" an. <br>hinText2<br>Schaue dir noch mal das Lernelement element6 an. <br>hinText3<br>"));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[1].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Incorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Schaue dir noch mal das Lernelement element4 in Raum \"space1\" an. <br>hinText2<br>Schaue dir noch mal das Lernelement element6 an. <br>hinText3<br>"));
 
         Assert.That(
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
@@ -841,6 +883,18 @@ public class XmlBackupFactoryUt
             systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
                 .QuestionBankEntries[2].QuestionVersion.QuestionVersions[0].Questions.Question[0]
                 .PluginQTypeMultichoiceQuestion.Answers.Answer[1].Fraction, Is.EqualTo("-1.0000000"));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[2].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Partiallycorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Schaue dir noch mal das Lernelement element6 in Raum \"space1\" an. <br>"));
+        Assert.That(
+            systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory[1].QuestionBankEntries
+                .QuestionBankEntries[2].QuestionVersion.QuestionVersions[0].Questions.Question[0]
+                .PluginQTypeMultichoiceQuestion.Multichoice.Incorrectfeedback,
+            Is.EqualTo(
+                "Diese Antwort ist falsch. <br>Hinweis: Schaue dir noch mal das Lernelement element6 in Raum \"space1\" an. <br>"));
     }
 
     [Test]

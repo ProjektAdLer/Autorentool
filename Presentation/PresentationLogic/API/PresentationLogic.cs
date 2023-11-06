@@ -229,7 +229,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.SavePath = filepath;
         AddSavedLearningWorldPath(new SavedLearningWorldPath
-            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
+            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
         return;
 
         string GetWorldFilepath()
@@ -443,7 +443,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
+                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -486,6 +486,8 @@ public class PresentationLogic : IPresentationLogic
         var command = PathwayCommandFactory.GetDeleteCommand(learningWorldEntity, learningPathWayEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
@@ -963,7 +965,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -995,7 +997,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -1097,7 +1099,8 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public async Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+    public async Task<UploadResponseViewModel> ConstructAndUploadBackupAsync(ILearningWorldViewModel world,
+        IProgress<int> progress,
         CancellationToken cancellationToken)
     {
         var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
@@ -1107,7 +1110,8 @@ public class PresentationLogic : IPresentationLogic
         try
         {
             BusinessLogic.ConstructBackup(entity, filepath);
-            await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+            var response = await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+            return Mapper.Map<UploadResponseViewModel>(response);
         }
         finally
         {

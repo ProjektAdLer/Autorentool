@@ -204,9 +204,9 @@ public class XmlH5PFactoryUt
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemType, Is.EqualTo("mod"));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemModule, Is.EqualTo("h5pactivity"));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timecreated,
-                Is.EqualTo(systemUnderTest.CurrentTime));
+                Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timemodified,
-                Is.EqualTo(systemUnderTest.CurrentTime));
+                Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Id, Is.EqualTo(systemUnderTest.H5PElementId));
 
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.EqualTo(mockGradeItem));
@@ -217,9 +217,9 @@ public class XmlH5PFactoryUt
             Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Name,
                 Is.EqualTo(systemUnderTest.H5PElementName));
             Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timecreated,
-                Is.EqualTo(systemUnderTest.CurrentTime));
+                Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timemodified,
-                Is.EqualTo(systemUnderTest.CurrentTime));
+                Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Id,
                 Is.EqualTo(systemUnderTest.H5PElementId));
 

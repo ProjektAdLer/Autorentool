@@ -70,6 +70,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-01-01")]
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
@@ -100,6 +101,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-01-01")]
     public async Task ExistingAction_ContentSelected_CallsUpdateContentReferenceAction()
     {
         var cravm = ViewModelProvider.GetContentReferenceAction();

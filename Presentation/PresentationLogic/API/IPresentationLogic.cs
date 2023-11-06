@@ -572,7 +572,7 @@ public interface IPresentationLogic
     Task Login(string username, string password);
     void Logout();
 
-    Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+    Task<UploadResponseViewModel> ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
         CancellationToken cancellationToken);
 
     #endregion

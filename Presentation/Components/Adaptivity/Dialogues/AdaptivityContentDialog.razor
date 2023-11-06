@@ -172,7 +172,11 @@
             MaxWidth = MaxWidth.Medium,
             FullWidth = false,
         };
-        var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("", new DialogParameters() {{"Task", task}, {"Difficulty", difficulty}}, options);
+        var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("", new DialogParameters()
+        {
+            {nameof(AdaptivityQuestionDialog.Task), task},
+            {nameof(AdaptivityQuestionDialog.Difficulty), difficulty}
+        }, options);
         var result = await dialog.Result;
         await InvokeAsync(StateHasChanged);
     }
