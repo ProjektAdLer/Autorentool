@@ -14,20 +14,6 @@
 @using Shared.Adaptivity
 <div class="w-[800px] h-80 flex flex-col">
     <MudTabs @ref="_tabs" Class="h-full">
-        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
-                     Class="tab-panel-content">
-            <!-- Content reference -->
-            <MudForm @ref="_form">
-                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
-                <GridSelect T="ILearningContentViewModel" Elements="LearningContents" @bind-Value="_learningContent" Required="true"
-                            RequiredError="@Localizer["Content.RequiredError.Text"]"
-                            FilterFuncSearchableStrings="content => new[] { content.Name }">
-                    <ElementTemplate>
-                        <MudText Typo="Typo.body1" Align="Align.Center">@Localizer["Content.Text"] @context.Name</MudText>
-                    </ElementTemplate>
-                </GridSelect>
-            </MudForm>
-        </MudTabPanel>
         <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
                      Class="tab-panel-element">
             <!-- Element reference -->
@@ -38,6 +24,20 @@
                             FilterFuncSearchableStrings="element => new[] { element.Name }">
                     <ElementTemplate>
                         <div>@Localizer["Element.Text"] @context.Name</div>
+                    </ElementTemplate>
+                </GridSelect>
+            </MudForm>
+        </MudTabPanel>
+        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel || true)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
+                     Class="tab-panel-content">
+            <!-- Content reference -->
+            <MudForm @ref="_form">
+                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
+                <GridSelect T="ILearningContentViewModel" Elements="LearningContents" @bind-Value="_learningContent" Required="true"
+                            RequiredError="@Localizer["Content.RequiredError.Text"]"
+                            FilterFuncSearchableStrings="content => new[] { content.Name }">
+                    <ElementTemplate>
+                        <MudText Typo="Typo.body1" Align="Align.Center">@Localizer["Content.Text"] @context.Name</MudText>
                     </ElementTemplate>
                 </GridSelect>
             </MudForm>
@@ -91,6 +91,7 @@
         switch (ExistingAction)
         {
             case null:
+                _tabs.ActivatePanel(_elementPanel);
                 return;
             case ContentReferenceActionViewModel cravm:
                 _tabs.ActivatePanel(_contentPanel);
