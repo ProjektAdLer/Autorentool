@@ -28,17 +28,17 @@
             </section>
         </article>
         <section class="bg-white rounded w-full overflow-scroll grow pt-2">
-            <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @ref="_treeView" @bind-SelectedValue="_selectedValue">
+            <MudTreeView Hover="true" Class="mud-width-full" T="string">
 
                 @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
                 {
                     @foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.ObjectsInPathWays))
                     {
                         <div class="text-adlergrey-700">
-                            <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" @ref="_spaceToTreeViewItem[learningSpace]" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
+                            <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
                                 @foreach (var element in learningSpace.ContainedLearningElements)
                                 {
-                                    <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" @ref="_elementToTreeViewItem[element]" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                    <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
                                 }
                             </MudTreeViewItem>
                         </div>
@@ -66,11 +66,7 @@
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
-    private string _selectedValue = null!;
     private Color Color { get; set; } = Color.Info;
-
-    private Dictionary<ILearningSpaceViewModel, MudTreeViewItem<string>> _spaceToTreeViewItem = new();
-    private Dictionary<ILearningElementViewModel, MudTreeViewItem<string>> _elementToTreeViewItem = new();
 
     protected override void OnParametersSet()
     {
@@ -78,7 +74,6 @@
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
-        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelChanged;
     }
 
     private string GetElementIcon(ILearningElementViewModel element)
@@ -189,26 +184,4 @@
         }
     }
 
-    private async void OnSelectedViewModelChanged(object? sender, EventArgs e)
-    {
-        TriggerStateHasChanged();
-        await Task.Yield();
-        if (SelectedViewModelsProvider.LearningElement != null)
-        {
-            await _treeView.Select(_elementToTreeViewItem[SelectedViewModelsProvider.LearningElement]);
-            if (SelectedViewModelsProvider.LearningElement.Parent != null)
-            {
-#pragma warning disable BL0005
-                _spaceToTreeViewItem[SelectedViewModelsProvider.LearningElement.Parent].Expanded = true;
-#pragma warning restore BL0005
-            }
-        }
-        else if (SelectedViewModelsProvider.LearningObjectInPathWay != null && SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel spaceViewModel)
-        {
-            await _treeView.Select(_spaceToTreeViewItem[spaceViewModel]);
-        }
-        TriggerStateHasChanged();
-    }
-
-    private MudTreeView<string> _treeView = null!;
 }

@@ -1,4 +1,5 @@
 ﻿using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Shared;
@@ -12,21 +13,31 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null,
-        Theme? theme = null)
+        Theme? theme = null, bool adaptivityElementMode = false)
     {
         var type = learningContentViewModel switch
         {
             IFileContentViewModel fileContentViewModel => ContentTypeHelper.GetContentType(fileContentViewModel.Type),
             ILinkContentViewModel => ContentTypeEnum.Video,
+            IAdaptivityContentViewModel => ContentTypeEnum.Adaptivity,
             _ => ContentTypeEnum.H5P
         };
 
         IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
 
-        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
-
-        return elementModels.OrderBy(m => m, comparer);
+        if (adaptivityElementMode)
+        {
+            return AdaptivityModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
+        }
+        else
+        {
+            var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+            return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
+        }
     }
+
+    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
+        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -76,7 +87,10 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
-            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, null)
+            ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
+            ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
+            ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
+            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, "Icon not found for ElementModel")
         };
     }
 
@@ -139,6 +153,14 @@ public class ElementModelHandler : IElementModelHandler
                 //SuburbTheme
                 yield return ElementModel.l_video_television_1;
                 break;
+            case ContentTypeEnum.Adaptivity:
+                //campus
+                yield return ElementModel.a_npc_dozentlukas;
+                //arcade
+                yield return ElementModel.a_npc_sheriffjustice;
+                //suburb
+                yield return ElementModel.a_npc_defaultnpc;
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
         }
@@ -160,6 +182,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_comicshelfbig_1;
                 yield return ElementModel.l_text_comicshelfsmall_1;
                 yield return ElementModel.l_video_vrdesk_1;
+                yield return ElementModel.a_npc_sheriffjustice;
                 break;
             case Theme.Campus:
                 yield return ElementModel.l_h5p_blackboard_2;
@@ -171,6 +194,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_image_sciencewhiteboard_1;
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
+                yield return ElementModel.a_npc_dozentlukas;
                 break;
             case Theme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
@@ -183,6 +207,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_bookshelf_1;
                 yield return ElementModel.l_text_bookshelf_2;
                 yield return ElementModel.l_video_television_1;
+                yield return ElementModel.a_npc_defaultnpc;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);

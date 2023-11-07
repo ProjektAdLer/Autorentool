@@ -11,10 +11,10 @@
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
         <MudTabs TabHeaderClass="sticky top-0 z-10 backdrop-blur-sm bg-adlerdeactivated/[.50]">
-            <MudTabPanel Text="Ele">
+            <MudTabPanel Text="@Localizer["Tab.Element.Header"]">
                 <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="false"/>
             </MudTabPanel>
-            <MudTabPanel Text="Ada">
+            <MudTabPanel Text="@Localizer["Tab.Adaptivity.Header"]">
                 <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="true"/>
             </MudTabPanel>
         </MudTabs>
