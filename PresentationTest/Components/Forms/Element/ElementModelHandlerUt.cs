@@ -15,16 +15,32 @@ namespace PresentationTest.Components.Forms.Element;
 public class ElementModelHandlerUt
 {
     [Test]
-    public void GetElementModels_TypeTextThemeCampus_ReturnsTextElementModels()
+    public void GetElementModels_TypeTextThemeCampus_AdaptivityModeFalse_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        IFileContentViewModel learningContent = Substitute.For<IFileContentViewModel>();
+        var learningContent = Substitute.For<IFileContentViewModel>();
         learningContent.Type.Returns("txt");
-        var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus);
+        var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus, false);
         var enumerable = elementModels.ToList();
         Assert.That(enumerable, Is.Not.Null);
         Assert.That(enumerable, Is.Not.Empty);
         Assert.That(enumerable.First(), Is.EqualTo(ElementModel.l_random));
+    }
+    
+    [Test]
+    public void GetElementModels_TypeTextThemeCampus_AdaptivityModeTrue_ReturnsTextElementModels()
+    {
+        var systemUnderTest = new ElementModelHandler();
+        var learningContent = Substitute.For<IFileContentViewModel>();
+        learningContent.Type.Returns("txt");
+        var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus, true);
+        var expectedModels = new[]
+        {
+            ElementModel.l_random, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice,
+            ElementModel.a_npc_defaultnpc
+        };
+        
+        Assert.That(elementModels, Is.EquivalentTo(expectedModels));
     }
 
     [Test]
@@ -72,6 +88,7 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Text))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Image))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Video))
+            .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
             .ToList();
         var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();

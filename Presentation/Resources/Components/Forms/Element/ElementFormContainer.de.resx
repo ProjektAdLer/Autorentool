@@ -29,4 +29,10 @@
     <data name="ElementFormContainer.UnplacedElements.Title" xml:space="preserve">
         <value>Liste aller Elemente</value>
     </data>
+    <data name="Tab.Adaptivity.Header" xml:space="preserve">
+        <value>Adaptivitätselement</value>
+    </data>
+    <data name="Tab.Element.Header" xml:space="preserve">
+        <value>Normales Element</value>
+    </data>
 </root>
