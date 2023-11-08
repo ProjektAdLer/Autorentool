@@ -22,7 +22,7 @@
         <value>Authoring tool</value>
     </data>
     <data name="AuthoringTool.Version" xml:space="preserve">
-        <value>v2.0.0-rc.2</value>
+        <value>v2.0.0-rc.3</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
         <value>Export learning world</value>
