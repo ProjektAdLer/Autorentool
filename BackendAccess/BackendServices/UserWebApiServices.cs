@@ -25,7 +25,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     {
         Configuration = configuration;
         _client = httpClientFactory.CreateClient(progressMessageHandler);
-        _client.Timeout = TimeSpan.FromSeconds(10);
+        _client.Timeout = TimeSpan.FromSeconds(1800);
         _progressMessageHandler = progressMessageHandler;
         _logger = logger;
         _fileSystem = fileSystem;
