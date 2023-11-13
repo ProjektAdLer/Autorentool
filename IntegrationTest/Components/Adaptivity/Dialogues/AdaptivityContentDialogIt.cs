@@ -13,6 +13,8 @@ using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Shared.Adaptivity;
 
 namespace IntegrationTest.Components.Adaptivity.Dialogues;
 
@@ -24,21 +26,27 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(PresentationLogic);
-        Mapper = Substitute.For<IMapper>();
-        Context.Services.AddSingleton(Mapper);
         FormDataContainer = Substitute.For<IFormDataContainer<AdaptivityContentFormModel, AdaptivityContent>>();
+        FormDataContainer.FormModel.Returns(new AdaptivityContentFormModel());
         Context.Services.AddSingleton(FormDataContainer);
         AdaptivityContent = Substitute.For<IAdaptivityContentViewModel>();
-        var tasks = new List<IAdaptivityTaskViewModel>();
-        AdaptivityContent.Tasks.Returns(tasks);
+        Tasks = new List<IAdaptivityTaskViewModel>();
+        AdaptivityContent.Tasks.Returns(Tasks);
+        Mapper = Substitute.For<IMapper>();
+        Mapper.When(x => x.Map(Arg.Any<IAdaptivityContentViewModel>(), Arg.Any<AdaptivityContentFormModel>())).Do(y =>
+        {
+            y.Arg<AdaptivityContentFormModel>().Tasks = Tasks;
+        });
+        Context.Services.AddSingleton(Mapper);
         PresentationLogic.When(x => x.CreateAdaptivityTask(AdaptivityContent, Arg.Any<string>())).Do(y =>
         {
             var task = Substitute.For<IAdaptivityTaskViewModel>();
             task.Name.Returns(y.ArgAt<string>(1));
-            tasks.Add(task);
+            Tasks.Add(task);
         });
         PresentationLogic.When(x => x.DeleteAdaptivityTask(AdaptivityContent, Arg.Any<IAdaptivityTaskViewModel>())).Do(
-            y => { tasks.Remove(y.ArgAt<IAdaptivityTaskViewModel>(1)); });
+            y => { Tasks.Remove(y.ArgAt<IAdaptivityTaskViewModel>(1)); });
+        Context.ComponentFactories.AddStub<AdaptivityContentDialogRuleControl>();
     }
 
     [TearDown]
@@ -49,6 +57,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
 
     private IDialogReference Dialog { get; set; } = null!;
     private IAdaptivityContentViewModel AdaptivityContent { get; set; } = null!;
+    private List<IAdaptivityTaskViewModel> Tasks { get; set; } = null!;
     private IPresentationLogic PresentationLogic { get; set; } = null!;
     private IMapper Mapper { get; set; } = null!;
     private IFormDataContainer<AdaptivityContentFormModel, AdaptivityContent> FormDataContainer { get; set; } = null!;
@@ -86,5 +95,61 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         var task = AdaptivityContent.Tasks.Last();
         await deleteButton.ClickAsync(new MouseEventArgs());
         PresentationLogic.Received(1).DeleteAdaptivityTask(AdaptivityContent, task);
+    }
+
+    [Test]
+    public async Task RenameTask_CallsPresentationLogic()
+    {
+        await GetDialogAsync();
+        var button = DialogProvider.FindComponent<MudIconButton>().Find("button");
+        await button.ClickAsync(new MouseEventArgs());
+        var textFields = DialogProvider.FindComponents<MudTextField<string>>();
+        var textField = textFields[0].Find("input");
+        textField.Input("NewName");
+        // Wait for debounce
+        await Task.Delay(350);
+        PresentationLogic.Received(1)
+            .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty);
+        PresentationLogic.ClearReceivedCalls();
+
+        textField.Input("");
+        // Wait for debounce
+        await Task.Delay(350);
+        PresentationLogic.DidNotReceiveWithAnyArgs()
+            .EditAdaptivityTask(Arg.Any<IAdaptivityTaskViewModel>(), Arg.Any<string>(), Arg.Any<QuestionDifficulty?>());
+    }
+
+    [Test]
+    public async Task ChangeRequiredDifficulty_CallsPresentationLogic([Values] bool wasSelectedAsRequired)
+    {
+        var task = Substitute.For<IAdaptivityTaskViewModel>();
+        var question = Substitute.For<IAdaptivityQuestionViewModel>();
+        question.Difficulty.Returns(QuestionDifficulty.Medium);
+        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {question});
+        task.MinimumRequiredDifficulty.Returns(wasSelectedAsRequired
+            ? QuestionDifficulty.Medium
+            : null);
+        AdaptivityContent.Tasks.Add(task);
+        await GetDialogAsync();
+        var iconButtons = DialogProvider.FindComponents<MudIconButton>();
+        var keyButton = iconButtons[3].Find("button");
+        await keyButton.ClickAsync(new MouseEventArgs());
+        PresentationLogic.Received(1)
+            .EditAdaptivityTask(task, task.Name, wasSelectedAsRequired ? null : QuestionDifficulty.Medium);
+    }
+
+    [Test]
+    public async Task DeleteQuestionButtonClicked_CallsPresentationLogic()
+    {
+        var task = Substitute.For<IAdaptivityTaskViewModel>();
+        var question = Substitute.For<IAdaptivityQuestionViewModel>();
+        question.Difficulty.Returns(QuestionDifficulty.Medium);
+        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {question});
+        AdaptivityContent.Tasks.Add(task);
+        await GetDialogAsync();
+        var iconButtons = DialogProvider.FindComponents<MudIconButton>();
+        var deleteButton = iconButtons[2].Find("button");
+        await deleteButton.ClickAsync(new MouseEventArgs());
+        PresentationLogic.Received(1).DeleteAdaptivityQuestion(task, question);
     }
 }
