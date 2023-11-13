@@ -49,6 +49,18 @@ public enum ElementModel
     l_text_bookshelf_2,
 
     l_video_television_1,
+    
+    
+    //Adaptivity
+    
+    //ArcadeTheme
+    a_npc_sheriffjustice,
+    
+    //CampusTheme
+    a_npc_dozentlukas,
+    
+    //SuburbTheme
+    a_npc_defaultnpc
 
     // ReSharper restore InconsistentNaming
 }

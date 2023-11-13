@@ -17,4 +17,10 @@
     <data name="ElementFormContainer.UnplacedElements.Title" xml:space="preserve">
         <value>All unplaced elements</value>
     </data>
+    <data name="Tab.Element.Header" xml:space="preserve">
+        <value>Default element</value>
+    </data>
+    <data name="Tab.Adaptivity.Header" xml:space="preserve">
+        <value>Adaptivity element</value>
+    </data>
 </root>
