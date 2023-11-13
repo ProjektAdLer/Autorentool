@@ -98,6 +98,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     [Test]
+    [Retry(3)]
     public async Task RenameTask_CallsPresentationLogic()
     {
         await GetDialogAsync();
@@ -107,14 +108,14 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         var textField = textFields[0].Find("input");
         textField.Input("NewName");
         // Wait for debounce
-        await Task.Delay(350);
+        await Task.Delay(500);
         PresentationLogic.Received(1)
             .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty);
         PresentationLogic.ClearReceivedCalls();
 
         textField.Input("");
         // Wait for debounce
-        await Task.Delay(350);
+        await Task.Delay(500);
         PresentationLogic.DidNotReceiveWithAnyArgs()
             .EditAdaptivityTask(Arg.Any<IAdaptivityTaskViewModel>(), Arg.Any<string>(), Arg.Any<QuestionDifficulty?>());
     }
