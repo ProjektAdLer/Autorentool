@@ -4,10 +4,10 @@
 @using Shared.Adaptivity
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
-<div style="display: flex;">
+<div class="flex items-center m-2 border-adlerdarkblue bg-adlergrey-100 drop-shadow">
     @if (_isSidePanelOpen)
     {
-        <div style="position: relative; width: 300px; height: 100%; transition: left 0.3s;">
+        <div class="relative w-[300px] h-full transition">
             <MudText Typo="Typo.h6">
                 @(Task.Questions.FirstOrDefault(x => x.Difficulty != Difficulty) == null
                     ? Localizer["AdaptivityQuestionDialog.Sidebar.Header.NoQuestions"]
@@ -23,19 +23,21 @@
             }
         </div>
     }
-    <MudToggleIconButton Style="height: 80vh" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
+    <MudToggleIconButton Class="h-10 w-10" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
 
-    <div style="flex-grow: 1; overflow: auto;">
+    <div class="overflow-auto">
         <MudDialog>
             <DialogContent>
-                @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
-                {
-                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
-                }
-                else
-                {
-                    <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
-                }
+                <div class="flex flex-col gap-1 items-center">
+                    @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
+                    {
+                        <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
+                    }
+                    else
+                    {
+                        <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="null" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
+                    }
+                </div>
             </DialogContent>
         </MudDialog>
     </div>

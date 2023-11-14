@@ -5,14 +5,14 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
 @using Shared.Adaptivity
-<MudForm @ref="_form">
+<MudForm @ref="_form" Class="m-2 w-96">
     <MudCard>
         <MudCardContent>
-            <MudTextField @bind-Value="_comment" T="string" Label="@Localizer["Comment.Label.Text"]" Required="true"
+            <MudTextField @bind-Value="_comment" T="string" Label="@Localizer["Comment.Label.Text"]" Lines="2" Required="true"
                           RequiredError="@Localizer["Comment.RequiredError.Text"]"/>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Color="Color.Success" OnClick="SubmitAsync">@Localizer["Button.Submit.Text"]</MudButton>
+            <MudButton Class="btn-standard" OnClick="SubmitAsync">@Localizer["Button.Submit.Text"]</MudButton>
         </MudCardActions>
     </MudCard>
 </MudForm>
