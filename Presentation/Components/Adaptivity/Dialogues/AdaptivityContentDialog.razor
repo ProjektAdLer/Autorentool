@@ -204,7 +204,7 @@
         _nameMudFormRefs.Remove(task);
     }
 
-    private async void AddOrEditQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
+    private async Task AddOrEditQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty)
     {
         var options = new DialogOptions
         {
@@ -227,11 +227,6 @@
         {
             PresentationLogic.DeleteAdaptivityQuestion(task, question);
         }
-    }
-
-    private static bool HasTaskQuestionWithQuestionDifficulty(IAdaptivityTaskViewModel context, QuestionDifficulty questionDifficulty)
-    {
-        return context.Questions.FirstOrDefault(x => x.Difficulty == questionDifficulty) != null;
     }
 
     private static IAdaptivityQuestionViewModel? GetTaskQuestionWithQuestionDifficulty(IAdaptivityTaskViewModel context, QuestionDifficulty questionDifficulty)
