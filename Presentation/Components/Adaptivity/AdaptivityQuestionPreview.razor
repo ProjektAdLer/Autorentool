@@ -2,14 +2,14 @@
 @using BusinessLogic.Validation
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-<MudCard Outlined="true" Style="padding: 4px; outline: thin solid black;">
-    <MudText Typo="Typo.h5">
+<MudCard Outlined="true" Class="border-adlerdarkblue bg-adlergrey-100 drop-shadow" Style="margin: 8px; padding: 8px; outline: thin solid black;">
+    <MudText Class="text-md font-bold text-adlerdarkblue">
         @(Localizer["AdaptivityQuestionPreview.Header.Question." + AdaptivityQuestion.Difficulty])
     </MudText>
 
     @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
     {
-        <MudText Typo="Typo.body1">@multipleChoiceQuestion.Text</MudText>
+        <MudText Class="text-sm text-adlerdarkblue">@multipleChoiceQuestion.Text</MudText>
         if (!HideChoices)
         {
             foreach (var choice in multipleChoiceQuestion.Choices)
@@ -20,10 +20,10 @@
                         var isCorrectChoice = multipleChoiceQuestion.CorrectChoices.Contains(choice);
                     }
                     <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
+                             Size="Size.Small"
                              Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
-                    <MudText Typo="Typo.body2">@choice.Text</MudText>
+                    <MudText Class="text-sm text-adlerdarkblue">@choice.Text</MudText>
                 </div>
-                <br/>
             }
         }
     }

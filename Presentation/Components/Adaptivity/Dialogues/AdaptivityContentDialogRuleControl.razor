@@ -8,18 +8,22 @@
 
 @if (!Question.Rules.Any())
 {
-    <MudButton OnClick="AddCommentAsync">@Localizer["Button.AddComment.Text"]</MudButton>
-    <MudButton OnClick="AddReferenceAsync">@Localizer["Button.AddReference.Text"]</MudButton>
+    <div class="flex flex-col justify-center py-1">
+        <MudButton Class="w-40 2xl:w-48 py-0 my-1 btn-standard font-medium text-xs 2xl:text-sm text-adlergrey drop-shadow rounded-lg bg-adlerblue-100 hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="AddCommentAsync">@Localizer["Button.AddComment.Text"]</MudButton>
+        <MudButton Class="w-40 2xl:w-48 py-0 my-1 btn-standard font-medium text-xs 2xl:text-sm text-adlergrey drop-shadow rounded-lg bg-adlerblue-100 hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="AddReferenceAsync">@Localizer["Button.AddReference.Text"]</MudButton>
+    </div>
 }
 else
 {
-    <MudTooltip Text="@Localizer["Tooltip.DeleteRule.Text"]">
-        <MudIconButton OnClick="DeleteRule" Icon="@Icons.Material.Filled.Remove" Color="Color.Error"/>
-    </MudTooltip>
     @switch (Rule!.Action)
     {
         case CommentActionViewModel cavm:
-            <MudButton OnClick="AddCommentAsync">@Localizer["Button.EditComment.Text"]</MudButton>
+            <MudButton Class="w-40 2xl:w-48 relative py-0 my-1 btn-standard font-medium text-xs 2xl:text-sm text-adlergrey drop-shadow rounded-lg bg-adlerblue-100 hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="AddCommentAsync">
+                <MudText Class="flex justify-center items-center uppercase text-xs 2xl:text-sm">@Localizer["Button.EditComment.Text"]</MudText>
+                <MudTooltip Text="@Localizer["Tooltip.DeleteRule.Text"]">
+                    <MudIconButton Class="w-2 h-2 shadow-none close-button rounded-full btn-standard" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRule"></MudIconButton>
+                </MudTooltip>
+            </MudButton>
             break;
         case ElementReferenceActionViewModel or ContentReferenceActionViewModel:
             <MudButton OnClick="AddReferenceAsync">@Localizer["Button.EditReference.Text"]</MudButton>
