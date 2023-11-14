@@ -27,30 +27,33 @@
         <value>Aufgaben</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.RequiredTask" xml:space="preserve">
-        <value>Erforderliche Aufgabe</value>
+        <value>Pflichtaufgabe</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Easy" xml:space="preserve">
-        <value>Einfach</value>
+        <value>Einfache Frage</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Medium" xml:space="preserve">
-        <value>Mittelschwer</value>
+        <value>Mittelschwere Frage</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Hard" xml:space="preserve">
-        <value>Schwer</value>
+        <value>Schwere Frage</value>
     </data>
     <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
         <value>Neue Aufgabe {0}</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Easy" xml:space="preserve">
-        <value>Einfache Frage</value>
+        <value>Einfach</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Hard" xml:space="preserve">
-        <value>Schwere Frage</value>
+        <value>Schwer</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Medium" xml:space="preserve">
-        <value>Mittelschwere Frage</value>
+        <value>Mittelschwer</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Field.Name.RequiredError.Text" xml:space="preserve">
         <value>Name für Aufgabe erforderlich!</value>
+    </data>
+    <data name="AdaptivityContentDialog.Subtitle" xml:space="preserve">
+        <value>Erstellen Sie eine neue Aufgabe und mindestens eine dazugehörige Frage mit gewünschtem Schwierigkeitsgrad.</value>
     </data>
 </root>

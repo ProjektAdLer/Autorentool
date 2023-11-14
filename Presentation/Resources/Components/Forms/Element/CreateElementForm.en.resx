@@ -21,7 +21,7 @@
         <value>Tasks</value>
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
-        <value>Tasks in this element</value>
+        <value>Tasks of this adaptivity element</value>
     </data>
     <data name="CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
         <value>Add tasks</value>
@@ -96,7 +96,7 @@
         <value>3D representation icon</value>
     </data>
     <data name="CreateElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
-        <value>Edit tasks of the adaptivity element</value>
+        <value>Edit tasks of this adaptivity element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
         <value>Representation in the 3D learning environment</value>

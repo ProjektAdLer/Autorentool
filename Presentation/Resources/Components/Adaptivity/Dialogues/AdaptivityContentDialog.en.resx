@@ -22,27 +22,30 @@
         <value>Required Task</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Easy" xml:space="preserve">
-        <value>Easy</value>
+        <value>Easy question</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Medium" xml:space="preserve">
-        <value>Medium</value>
+        <value>Medium question</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.Hard" xml:space="preserve">
-        <value>Hard</value>
+        <value>Hard question</value>
     </data>
     <data name="AdaptivityContentDialog.NewTask.Name" xml:space="preserve">
         <value>New task {0}</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Easy" xml:space="preserve">
-        <value>Easy Question</value>
+        <value>Easy</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Medium" xml:space="preserve">
-        <value>Medium Question</value>
+        <value>Medium</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Hard" xml:space="preserve">
-        <value>Hard Question</value>
+        <value>Hard</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Field.Name.RequiredError.Text" xml:space="preserve">
         <value>Name for task required!</value>
+    </data>
+    <data name="AdaptivityContentDialog.Subtitle" xml:space="preserve">
+        <value>Create a new task and at least one associated question with the desired level of difficulty.</value>
     </data>
 </root>

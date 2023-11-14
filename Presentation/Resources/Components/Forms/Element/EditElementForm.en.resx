@@ -21,10 +21,10 @@
         <value>Tasks</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
-        <value>Tasks in this element</value>
+        <value>Tasks of this adaptivity element</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
-        <value>Add tasks</value>
+        <value>Edit tasks</value>
     </data>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
         <value>Edit learning element</value>

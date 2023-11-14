@@ -33,10 +33,10 @@
         <value>Aufgaben</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
-        <value>Aufgaben in diesem Element</value>
+        <value>Aufgaben zu diesem Adaptivitätselement</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
-        <value>Aufgaben hinzufügen</value>
+        <value>Aufgaben bearbeiten</value>
     </data>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
         <value>Lernelement bearbeiten</value>

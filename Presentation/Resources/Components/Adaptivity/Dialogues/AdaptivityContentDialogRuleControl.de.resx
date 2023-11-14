@@ -34,9 +34,9 @@
         <value>Kommentar ändern</value>
     </data>
     <data name="Button.AddReference.Text" xml:space="preserve">
-        <value>Referenz hinzufügen</value>
+        <value>Verweis</value>
     </data>
     <data name="Button.AddComment.Text" xml:space="preserve">
-        <value>Kommentar hinzufügen</value>
+        <value>Kommentar</value>
     </data>
 </root>
