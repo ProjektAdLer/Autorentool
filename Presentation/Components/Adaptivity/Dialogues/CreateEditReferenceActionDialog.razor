@@ -12,12 +12,12 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Adaptivity
-<div class="w-[800px] h-80 flex flex-col">
+<div class="relative w-[800px] h-96 flex flex-col m-2 p-2">
     <MudTabs @ref="_tabs" Class="h-full">
         <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
-                     Class="tab-panel-element">
+                     Class="tab-panel-element relative">
             <!-- Element reference -->
-            <MudForm @ref="_form">
+            <MudForm Class="flex flex-col border-adlerdarkblue border-4 rounded-lg p-4 my-4 mx-2" @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
                 <GridSelect T="ILearningElementViewModel" Elements="LearningElements" @bind-Value="_learningElement" Required="true"
                             RequiredError="@Localizer["Element.RequiredError.Text"]"
@@ -27,9 +27,12 @@
                     </ElementTemplate>
                 </GridSelect>
             </MudForm>
+            <MudButton Class="btn-standard sticky bottom-2 m-2" @onclick="SubmitAsync">
+                    @Localizer["Button.Submit.Text"]
+                    </MudButton>
         </MudTabPanel>
         <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel || true)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
-                     Class="tab-panel-content">
+                     Class="tab-panel-content relative">
             <!-- Content reference -->
             <MudForm @ref="_form">
                 <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
@@ -41,13 +44,10 @@
                     </ElementTemplate>
                 </GridSelect>
             </MudForm>
+            <MudButton Class="btn-standard sticky bottom-2 m-2" @onclick="SubmitAsync">
+                    @Localizer["Button.Submit.Text"]</MudButton>
         </MudTabPanel>
     </MudTabs>
-    <div class="fixed bottom-0 right-0 border-adlergrey-200">
-        <MudButton Color="Color.Success" @onclick="SubmitAsync">
-            @Localizer["Button.Submit.Text"]
-        </MudButton>
-    </div>
 </div>
 
 @code {
