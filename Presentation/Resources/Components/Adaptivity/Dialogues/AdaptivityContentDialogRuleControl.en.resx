@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Tooltip.DeleteRule.Text" xml:space="preserve">
-        <value>Delete rule</value>
+        <value>Delete additional hint</value>
     </data>
     <data name="ReferenceDialog.Title.Text" xml:space="preserve">
         <value>Set reference</value>
@@ -28,15 +28,15 @@
         <value>Set comment</value>
     </data>
     <data name="Button.EditReference.Text" xml:space="preserve">
-        <value>Edit reference</value>
+        <value>Reference</value>
     </data>
     <data name="Button.EditComment.Text" xml:space="preserve">
-        <value>Edit comment</value>
+        <value>Comment</value>
     </data>
     <data name="Button.AddReference.Text" xml:space="preserve">
-        <value>Add reference</value>
+        <value>Reference</value>
     </data>
     <data name="Button.AddComment.Text" xml:space="preserve">
-        <value>Add comment</value>
+        <value>Comment</value>
     </data>
 </root>

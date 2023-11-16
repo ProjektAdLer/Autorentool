@@ -22,16 +22,16 @@
         <value>Kommentar setzen</value>
     </data>
     <data name="Tooltip.DeleteRule.Text" xml:space="preserve">
-        <value>Regel löschen</value>
+        <value>Zusätzlichen Hinweis löschen</value>
     </data>
     <data name="ReferenceDialog.Title.Text" xml:space="preserve">
         <value>Referenz setzen</value>
     </data>
     <data name="Button.EditReference.Text" xml:space="preserve">
-        <value>Referenz ändern</value>
+        <value>Verweis</value>
     </data>
     <data name="Button.EditComment.Text" xml:space="preserve">
-        <value>Kommentar ändern</value>
+        <value>Kommentar</value>
     </data>
     <data name="Button.AddReference.Text" xml:space="preserve">
         <value>Verweis</value>
