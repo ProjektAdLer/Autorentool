@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Shared
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -36,7 +37,7 @@
                     {
                         <div class="text-adlergrey-700">
                             <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
-                                @foreach (var element in learningSpace.ContainedLearningElements)
+                                @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
                                 {
                                     <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
                                 }
@@ -89,7 +90,7 @@
                 } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
-            IAdaptivityContentViewModel => "",
+            IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
             _ => ""
             };
     }

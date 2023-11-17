@@ -43,7 +43,7 @@ public class ReadAtf : IReadAtf
         else
         {
             var jsonString = _fileSystem.File.ReadAllText(atfPath);
-            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+            var options = new JsonSerializerOptions {WriteIndented = true, PropertyNameCaseInsensitive = true};
             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ??
                         throw new InvalidOperationException("Could not deserialize ATF_Document");
         }
@@ -150,7 +150,7 @@ public class ReadAtf : IReadAtf
         {
             if (element.ElementFileType == "h5p")
             {
-                _listH5PElements.Add((ILearningElementJson)element);
+                _listH5PElements.Add((ILearningElementJson) element);
             }
         }
 
@@ -168,7 +168,7 @@ public class ReadAtf : IReadAtf
                 or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
-                _listResourceElements.Add((ILearningElementJson)resource);
+                _listResourceElements.Add((ILearningElementJson) resource);
             }
         }
 
@@ -204,6 +204,11 @@ public class ReadAtf : IReadAtf
     private void GetSpaces(IDocumentRootJson rootJson)
     {
         _listSpaces = rootJson.World.Spaces;
+        foreach (var space in _listSpaces)
+        {
+            space.SpaceSlotContents = FloorPlanElementSorter.GetListInOrder(space.SpaceSlotContents,
+                Enum.Parse<FloorPlanEnum>(space.SpaceTemplate));
+        }
     }
 
     /// <summary>
@@ -215,7 +220,7 @@ public class ReadAtf : IReadAtf
         {
             if (url.ElementFileType is "url")
             {
-                _listUrlElements.Add((ILearningElementJson)url);
+                _listUrlElements.Add((ILearningElementJson) url);
             }
         }
 
@@ -230,7 +235,7 @@ public class ReadAtf : IReadAtf
         foreach (var element in documentRootJson.World.Elements.Where(
                      element => element.ElementFileType is "adaptivity"))
         {
-            _listAdaptivityElements.Add((IAdaptivityElementJson)element);
+            _listAdaptivityElements.Add((IAdaptivityElementJson) element);
         }
     }
 
@@ -246,7 +251,7 @@ public class ReadAtf : IReadAtf
                 foreach (var elementInSpace in space.SpaceSlotContents)
                 {
                     if (elementInSpace != null)
-                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace - 1]);
+                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int) elementInSpace - 1]);
                 }
             }
 
