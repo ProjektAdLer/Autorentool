@@ -2,12 +2,14 @@ using System.IO.Abstractions.TestingHelpers;
 using Generator.ATF;
 using Generator.ATF.AdaptivityElement;
 using Generator.WorldExport;
+using Generator.XmlClasses.Entities._activities.Adleradaptivity.xml;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using Generator.XmlClasses.XmlFileFactories;
+using GeneratorTest.Xsd;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -216,6 +218,19 @@ public class XmlAdaptivityFactoryUt
                 .QuestionReference.QuestionBankEntryId, Is.EqualTo("3"));
 
         mockRoles.Received().Serialize("adleradaptivity", "1");
+
+        var activitiesAdleradaptivityXmlActivity = new ActivitiesAdleradaptivityXmlActivity();
+
+        activitiesAdleradaptivityXmlActivity.Adleradaptivity =
+            systemUnderTest.ActivitiesAdleradaptivityXmlActivity.Adleradaptivity;
+
+        var serializedXml = XmlSerializerHelper.SerializeObjectToXmlString(activitiesAdleradaptivityXmlActivity);
+
+        var adleractivityXmlXsd = XsdFileProvider.AdleradaptivityXmlXsd;
+
+        var isValid = XmlSerializerHelper.ValidateXmlAgainstXsd(serializedXml, adleractivityXmlXsd);
+
+        Assert.That(isValid, Is.True);
 
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("adleradaptivity"));
         Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ShowDescription, Is.EqualTo("1"));

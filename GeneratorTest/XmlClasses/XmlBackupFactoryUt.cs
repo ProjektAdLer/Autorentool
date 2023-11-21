@@ -8,6 +8,7 @@ using Generator.XmlClasses.Entities.Outcomes.xml;
 using Generator.XmlClasses.Entities.Questions.xml;
 using Generator.XmlClasses.Entities.Roles.xml;
 using Generator.XmlClasses.Entities.Scales.xml;
+using GeneratorTest.Xsd;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -418,6 +419,7 @@ public class XmlBackupFactoryUt
     public void CreateOutcomesXml_Serializes()
     {
         //Arrange
+        var xsdFileProvider = new XsdFileProvider();
         var mockReadAtf = Substitute.For<IReadAtf>();
         var mockContextId = 12345;
         var learningWorldJson = new LearningWorldJson("", "world",
@@ -895,6 +897,18 @@ public class XmlBackupFactoryUt
                 .PluginQTypeMultichoiceQuestion.Multichoice.Incorrectfeedback,
             Is.EqualTo(
                 "Diese Antwort ist falsch. <br>Hinweis: Schaue dir noch mal das Lernelement element6 in Raum \"space1\" an. <br>"));
+
+        var questionsCategories = new QuestionsXmlQuestionsCategories
+        {
+            QuestionCategory = systemUnderTest.QuestionsXmlQuestionsCategories.QuestionCategory
+        };
+
+        var serializedXml = XmlSerializerHelper.SerializeObjectToXmlString(questionsCategories);
+
+        var questionXmlXsd = XsdFileProvider.QuestionXmlXsd;
+
+        var isValid = XmlSerializerHelper.ValidateXmlAgainstXsd(serializedXml, questionXmlXsd);
+        Assert.That(isValid, Is.True);
     }
 
     [Test]

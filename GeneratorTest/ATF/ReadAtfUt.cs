@@ -17,16 +17,17 @@ public class ReadAtfUt
         var mockFileSystem = new MockFileSystem();
         var mockLogger = Substitute.For<ILogger<ReadAtf>>();
 
-        var topicsJson = new TopicJson(1, "A", new List<int> { 1, 2 });
-        var topicsList = new List<ITopicJson> { topicsJson };
+        var topicsJson = new TopicJson(1, "A", new List<int> {1, 2});
+        var topicsList = new List<ITopicJson> {topicsJson};
 
         var learningSpacesJson1 = new LearningSpaceJson(1, "",
-            "space1", new List<int?> { 1, 2, null, 3, 4 }, 0, "spacedescription1", "", "", new[] { "spacegoals1" });
+            "space1", new List<int?> {1, 2, null, 3, 4, null}, 0, "R_20X20_6L", "", "spacedescription1",
+            new[] {"spacegoals1"});
 
         var learningSpacesJson2 = new LearningSpaceJson(2, "", "space2",
-            new List<int?>() { 5 }, 0, "", "", "", new[] { "spacegoals2" });
+            new List<int?>() {5, null, null, null, null, null}, 0, "R_20X20_6L", "", "", new[] {"spacegoals2"});
 
-        var learningSpacesList = new List<ILearningSpaceJson> { learningSpacesJson1, learningSpacesJson2 };
+        var learningSpacesList = new List<ILearningSpaceJson> {learningSpacesJson1, learningSpacesJson2};
 
         var learningElementJson1 = new LearningElementJson(1,
             "", "element1", "", "", "h5p", 1, 1, "");
@@ -54,7 +55,7 @@ public class ReadAtfUt
                             new AdaptivityRuleJson(2, "incorrect", new ContentReferenceActionJson(6, "hinText"))
                         },
                         new List<IChoiceJson>(new IChoiceJson[]
-                            { new ChoiceJson("choiceText", true), new ChoiceJson("choiceText2", false) }))
+                            {new ChoiceJson("choiceText", true), new ChoiceJson("choiceText2", false)}))
                 })
             }));
 
@@ -67,7 +68,7 @@ public class ReadAtfUt
         };
 
         var learningWorldJson = new LearningWorldJson("world", "",
-            topicsList, learningSpacesList, learningElementList, "World Description", new[] { "World Goals" });
+            topicsList, learningSpacesList, learningElementList, "World Description", new[] {"World Goals"});
 
         var rootJson = new DocumentRootJson("0.3", "0.3.2", "marvin", "de", learningWorldJson);
 
@@ -113,6 +114,9 @@ public class ReadAtfUt
             Assert.That(getWorldAttributes.ElementModel, Is.EqualTo(""));
 
             Assert.That(listSpace.Count, Is.EqualTo(2));
+            Assert.That(listSpace[0].SpaceSlotContents,
+                Is.EqualTo(new List<int?> {1, null, 2, null, 3, 4})); // R_20X20_6L sort order is 0, 5, 1, 2, 3, 4
+            Assert.That(listSpace[1].SpaceSlotContents, Is.EqualTo(new List<int?> {5, null, null, null, null, null}));
 
             Assert.That(getUrlList, Has.Count.EqualTo(1));
 
@@ -131,13 +135,13 @@ public class ReadAtfUt
         var mockLogger = Substitute.For<ILogger<ReadAtf>>();
 
         var topicsJson = new TopicJson(1, "A",
-            new List<int> { 1, 2 });
-        var topicsList = new List<ITopicJson> { topicsJson };
+            new List<int> {1, 2});
+        var topicsList = new List<ITopicJson> {topicsJson};
 
 
         var learningWorldJson = new LearningWorldJson("world", "",
             topicsList, new List<ILearningSpaceJson>(),
-            new List<IElementJson>(), "", new[] { "" });
+            new List<IElementJson>(), "", new[] {""});
 
         var rootJson = new DocumentRootJson("0.3", "0.3.2", "marvin", "de", learningWorldJson);
 

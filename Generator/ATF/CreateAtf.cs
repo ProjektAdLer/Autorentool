@@ -779,6 +779,7 @@ public class CreateAtf : ICreateAtf
     private void WriteAtfToFile(string jsonFile)
     {
         _fileSystem.File.WriteAllText(_atfPath, jsonFile);
-        Logger.LogTrace("Generated ATF Document: {JsonFile} at {Path}", jsonFile, _atfPath);
+        Logger.LogTrace("Generated ATF Document at {Path} with LearningWorld {World} ({WorldId)}", _atfPath,
+            LearningWorldJson.WorldName, LearningWorldJson.WorldUUID);
     }
 }
