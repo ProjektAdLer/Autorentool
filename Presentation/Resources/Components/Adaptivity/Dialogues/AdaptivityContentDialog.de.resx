@@ -59,4 +59,13 @@
     <data name="AdaptivityContentDialog.Table.Button.Question.Delete" xml:space="preserve">
         <value>Frage löschen</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Header.NewTask" xml:space="preserve">
+        <value>Aufgabe hinzufügen</value>
+    </data>
+    <data name="AdaptivityContent.Dialog.Table.Header.DeleteTask" xml:space="preserve">
+        <value>Aufgabe entfernen</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.RequiredQuestion" xml:space="preserve">
+        <value>Als "zu lösende Frage" festlegen</value>
+    </data>
 </root>

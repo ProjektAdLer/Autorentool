@@ -51,4 +51,13 @@
     <data name="AdaptivityContentDialog.Table.Button.Question.Delete" xml:space="preserve">
         <value>Delete question</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Header.NewTask" xml:space="preserve">
+        <value>Add task</value>
+    </data>
+    <data name="AdaptivityContent.Dialog.Table.Header.DeleteTask" xml:space="preserve">
+        <value>Delete task</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.RequiredQuestion" xml:space="preserve">
+        <value>Set as "question to be solved"</value>
+    </data>
 </root>

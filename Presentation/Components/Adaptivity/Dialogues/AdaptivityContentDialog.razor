@@ -46,7 +46,7 @@
                     <MudTextField Class="break-words" T="string" @bind-Value="@_nameValues[context]" Required="true"
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
                                   DebounceInterval="300" OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>
         </MudTd>
@@ -89,19 +89,13 @@
                                 <AdaptivityContentDialogRuleControl Question="question"/>
                         </div>
                         
-                            <div class="flex justify-center items-start">
-                                <MudTooltip Placement="Placement.Top" Duration="Double.Epsilon">
-                                    <ChildContent>
-                                        <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(difficulty)"
-                                                             ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
-                                                             ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
-                                    </ChildContent>
-
-                                    <TooltipContent>
-                                        Als "zu lösende Frage" festlegen
-                                    </TooltipContent>
-                                </MudTooltip>
-                            </div>
+                        <div class="flex justify-center items-start">
+                            <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(difficulty)"
+                                                 ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
+                                                 ToggledIcon="@Icons.Material.Filled.Key" 
+                                                 Icon="@Icons.Material.Outlined.KeyOff"
+                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"/>
+                        </div>
 
                     </div>
                
@@ -114,7 +108,6 @@
                         </MudButton>
                     </div>
                 }
-                
             </MudTd>
         }
 
@@ -123,7 +116,7 @@
         <MudTFootRow>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
                 <span class="inline-flex">
-                    <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContentDialog.Table.Header.NewTask"]" Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
                 </span>
             </MudTd>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]"/>
@@ -156,8 +149,7 @@
 
 
     private MudTable<IAdaptivityTaskViewModel>? _table;
-
-
+    
     private readonly Dictionary<IAdaptivityTaskViewModel, MudForm> _nameMudFormRefs = new();
 
     private readonly Dictionary<IAdaptivityTaskViewModel, string> _nameValues = new();
