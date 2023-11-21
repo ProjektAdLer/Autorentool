@@ -2,27 +2,29 @@
 @using BusinessLogic.Validation
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-<MudCard Outlined="true" Class="border-adlerdarkblue bg-adlergrey-100 drop-shadow" Style="margin: 8px; padding: 8px; outline: thin solid black;">
+<MudCard Outlined="true" Class="bg-adlergrey-200 shadow-xl p-2 m-1 w-72 h-full">
     <MudText Class="text-md font-bold text-adlerdarkblue">
         @(Localizer["AdaptivityQuestionPreview.Header.Question." + AdaptivityQuestion.Difficulty])
     </MudText>
 
     @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
     {
-        <MudText Class="text-sm text-adlerdarkblue">@multipleChoiceQuestion.Text</MudText>
+        <MudText Class="text-sm text-adlerdarkblue pb-1">@multipleChoiceQuestion.Text</MudText>
         if (!HideChoices)
         {
             foreach (var choice in multipleChoiceQuestion.Choices)
             {
-                <div class="inline-flex">
+                <div class="flex flex-col pl-2">
 
                     @{
                         var isCorrectChoice = multipleChoiceQuestion.CorrectChoices.Contains(choice);
                     }
-                    <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
-                             Size="Size.Small"
-                             Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
-                    <MudText Class="text-sm text-adlerdarkblue">@choice.Text</MudText>
+                    <div class="flex flex-row">
+                        <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
+                                 Size="Size.Small"
+                                 Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
+                        <MudText Class="indent-2 text-sm text-adlerdarkblue">@choice.Text</MudText>
+                    </div>
                 </div>
             }
         }
@@ -32,16 +34,19 @@
         @switch (rule.Action)
         {
             case CommentActionViewModel commentAction:
-                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
-                <MudText Typo="Typo.body1">@commentAction.Comment</MudText>
+                <MudDivider Class="my-2"></MudDivider>
+                <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
+                <MudText Class="text-sm text-adlerdarkblue text-justify px-1">@commentAction.Comment</MudText>
                 break;
             case ContentReferenceActionViewModel contentReferenceAction:
-                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
-                <MudText Typo="Typo.body1">@contentReferenceAction.Content</MudText>
+                <MudDivider Class="my-2"></MudDivider>
+                <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
+                <MudText Class="text-sm text-adlerdarkblue text-center px-1">@contentReferenceAction.Content</MudText>
                 break;
             case ElementReferenceActionViewModel elementReferenceAction:
-                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
-                <MudText Typo="Typo.body1">
+                <MudDivider Class="my-2"></MudDivider>
+                <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
+                <MudText Class="text-sm text-adlerdarkblue text-center px-1">
                     @if (LearningElementNamesProvider.ElementNames != null && LearningElementNamesProvider.ElementNames.FirstOrDefault(x => x.Item1 == elementReferenceAction.ElementId) != default)
                     {
                         @LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2
