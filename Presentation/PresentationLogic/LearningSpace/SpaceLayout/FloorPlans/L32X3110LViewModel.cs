@@ -56,12 +56,12 @@ public class L32X3110LViewModel : IFloorPlanViewModel
         new() {X = 8, Y = 5},
         new() {X = 18, Y = 5},
         new() {X = 28, Y = 5},
-        new() {X = 30, Y = 14},
-        new() {X = 30, Y = 22},
-        new() {X = 30, Y = 30},
+        new() {X = 30.50, Y = 14},
+        new() {X = 30.50, Y = 22},
+        new() {X = 30.50, Y = 30},
         new() {X = 22, Y = 30},
         new() {X = 22, Y = 22},
-        new() {X = 14, Y = 17},
+        new() {X = 15, Y = 17},
         new() {X = 6, Y = 17}
     };
 
