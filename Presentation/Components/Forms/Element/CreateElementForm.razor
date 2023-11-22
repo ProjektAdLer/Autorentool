@@ -15,22 +15,22 @@
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
-    </div>      
+    </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateElementForm.Text"]</MudText>
-<BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
+<BaseForm TForm="LearningElementFormModel" TEntity="LearningElement" @ref="_form"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@(!AdaptivityElementMode ? Localizer["CreateElementForm.SnackbarMessage"] : Localizer["CreateAdaptivityElementForm.SnackbarMessage"])
           FormDataContainer="FormDataContainer">
     <Fields>
 
-        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
-                     @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
                               Class="pb-4"/>
 
@@ -40,6 +40,7 @@
                                  Max="1000"
                                  For="@(() => FormModel.Points)"
                                  DebounceInterval="DebounceInterval"
+                                 OnKeyUp="HandleKeyEvent"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
@@ -50,6 +51,7 @@
                                  Max="1000"
                                  For="@(() => FormModel.Workload)"
                                  DebounceInterval="DebounceInterval"
+                                 OnKeyUp="HandleKeyEvent"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-6"/>
@@ -58,6 +60,7 @@
                            Immediate="false"
                            Label="@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
                            For="@(() => FormModel.Difficulty)"
+                           OnKeyUp="HandleKeyEvent"
                            Variant="Variant.Outlined">
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
                         <div class="flex flex-row items-center gap-2">
@@ -93,6 +96,7 @@
                         @bind-Value="FormDataContainer.FormModel.LearningContent"
                         For="@(() => FormModel.LearningContent)"
                         Elements="WorldPresenter.GetAllContent()"
+                        OnKeyUp="HandleKeyEvent"
                         FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
                         <HeaderContent>
                             <MudTh></MudTh>
@@ -107,10 +111,10 @@
                             </MudTd>
                             <MudTd Class="p-0" DataLabel="Name">
                                 <MudTooltip Text="@context.Name"
-                                    Arrow="true"
-                                    Placement="Placement.Right"
-                                    Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                    Duration="Double.Epsilon">
+                                            Arrow="true"
+                                            Placement="Placement.Right"
+                                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                                            Duration="Double.Epsilon">
                                     <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
                                 </MudTooltip>
                             </MudTd>
@@ -146,9 +150,7 @@
                 <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                         For="@(() => FormModel.ElementModel)"
                                         Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent,
-    SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null,
-    AdaptivityElementMode)">
+                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null, AdaptivityElementMode)">
                 </ElementModelGridSelect>
             </div>
         </Collapsable>
@@ -222,6 +224,8 @@
     private bool _collapsedElementModel = true;
     private bool _collapsedGoals = true;
 
+    private BaseForm<LearningElementFormModel, LearningElement> _form = null!;
+
     private void OnValidSubmit(LearningElementFormModel model)
     {
     //check content for not null again even though validation ensures that LearningContent is not null
@@ -266,11 +270,19 @@
         };
         var parameters = new DialogParameters
         {
-            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent }
+            {nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent}
         };
         var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>(Localizer["CreateElementForm.AdaptivityContent.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
+    }
+
+    private async Task HandleKeyEvent(KeyboardEventArgs arg)
+    {
+        if (arg.Key == "Enter")
+        {
+            await _form.SubmitAsync();
+        }
     }
 
 }

@@ -1,26 +1,26 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using BusinessLogic.Entities.LearningContent.LinkContent
 @using AutoMapper
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
 @using Presentation.Components.Forms.Buttons
-@using Presentation.PresentationLogic.LearningContent.LinkContent
-
-<BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
+<BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
                       DebounceInterval="DebounceInterval"
+                      OnKeyUp="HandleKeyEvent"
                       Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
                       For="@(() => FormModel.Link)"
                       DebounceInterval="DebounceInterval"
+                      OnKeyUp="HandleKeyEvent"
                       Label="@Localizer["AddLinkForm.Field.Link.Text"]"
                       Adornment="Adornment.End"
                       AdornmentIcon="@Icons.Material.Filled.Link"/>
@@ -58,6 +58,8 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LinkContentFormModel FormModel => FormDataContainer.FormModel;
 
+    private BaseForm<LinkContentFormModel, LinkContent> _form = null!;
+
     private async Task OnValidSubmit(LinkContentFormModel model)
     {
         try
@@ -70,6 +72,14 @@
         }
         if (RerenderContentContainer is not null)
             await RerenderContentContainer();
+    }
+
+    private async Task HandleKeyEvent(KeyboardEventArgs arg)
+    {
+        if (arg.Key == "Enter")
+        {
+            await _form.SubmitAsync();
+        }
     }
 
 }

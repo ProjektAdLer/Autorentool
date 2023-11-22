@@ -135,14 +135,39 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 
+    [Test]
+    public async Task EnterKeyPressed_SubmitsIfFormValid()
+    {
+        var systemUnderTest = GetRenderedComponent();
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+
+        ConfigureValidatorNameIsTest();
+
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
+
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.KeyUp(Key.Enter);
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<Theme>());
+
+        input.Change(Expected);
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
+        input.KeyUp(Key.Enter);
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<Theme>());
+    }
+
     private void ConfigureValidatorNameIsTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+                return (string) FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                     ? Enumerable.Empty<string>()
-                    : new[] { "Must be test" };
+                    : new[] {"Must be test"};
             }
         );
     }
@@ -160,7 +185,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
                     Theme t => t == Theme.Campus,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
+                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
             }
         );
     }
