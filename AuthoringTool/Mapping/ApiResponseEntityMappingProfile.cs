@@ -22,6 +22,8 @@ public class ApiResponseEntityMappingProfile : Profile
             .ForMember(m => m.IsLmsAdmin, opt => opt
                 .MapFrom(src => src.IsAdmin));
         CreateMap<UploadResponseBE, UploadResponse>();
+
+        CreateMap<LmsWorldBE, LmsWorld>();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>

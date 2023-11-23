@@ -565,6 +565,18 @@ public interface IPresentationLogic
     void ConstructDebugBackup(ILearningWorldViewModel world);
 #endif
 
+    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
+        IAdaptivityActionViewModel action);
+
+    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
+    void EditCommentAction(CommentActionViewModel action, string comment);
+
+    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
+        string comment);
+
+    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
+    Task<List<LmsWorldViewModel>> GetLmsWorldList();
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -576,13 +588,4 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
-
-    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
-        IAdaptivityActionViewModel action);
-
-    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
-    void EditCommentAction(CommentActionViewModel action, string comment);
-    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
-        string comment);
-    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
 }

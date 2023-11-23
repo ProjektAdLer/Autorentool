@@ -48,4 +48,10 @@ public class BackendAccess : IBackendAccess
             cancellationToken);
         return Mapper.Map<UploadResponse>(responseBe);
     }
+
+    public async Task<List<LmsWorld>> GetLmsWorldList(UserToken token, int authorId)
+    {
+        var worldsBe = await UserWebApiServices.GetLmsWorldList(token.Token, authorId);
+        return Mapper.Map<List<LmsWorld>>(worldsBe);
+    }
 }

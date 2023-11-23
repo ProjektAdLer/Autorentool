@@ -41,4 +41,6 @@ public interface IBackendAccess
     public Task<UploadResponse> UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
         IProgress<int>? progress = null,
         CancellationToken? cancellationToken = null);
+
+    Task<List<LmsWorld>> GetLmsWorldList(UserToken token, int authorId);
 }

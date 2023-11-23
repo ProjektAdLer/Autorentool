@@ -415,5 +415,11 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
+    public async Task<List<LmsWorld>> GetLmsWorldList()
+    {
+        return await BackendAccess.GetLmsWorldList(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+            _userInformation.LmsId);
+    }
+
     #endregion
 }

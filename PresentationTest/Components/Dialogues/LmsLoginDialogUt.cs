@@ -17,12 +17,6 @@ namespace PresentationTest.Components.Dialogues;
 [TestFixture]
 public class LmsLoginDialogUt
 {
-    private TestContext _context;
-    private IPresentationLogic _presentationLogic;
-    private IDialogService _dialogService;
-    private IApplicationConfiguration _applicationConfiguration;
-    private IStringLocalizer<LmsLoginDialog> _localizer;
-
     [SetUp]
     public void Setup()
     {
@@ -41,6 +35,8 @@ public class LmsLoginDialogUt
         _context.ComponentFactories.AddStub<MudForm>();
         _context.ComponentFactories.AddStub<MudText>();
         _context.ComponentFactories.AddStub<MudButton>();
+        _context.ComponentFactories.AddStub<MudList>();
+        _context.ComponentFactories.AddStub<MudListItem>();
         _context.ComponentFactories.AddStub<MudTextField<string>>();
         _context.ComponentFactories.AddStub<MudDialog>();
         // DialogContent belongs to MudDialog
@@ -53,6 +49,12 @@ public class LmsLoginDialogUt
     {
         _context.Dispose();
     }
+
+    private TestContext _context;
+    private IPresentationLogic _presentationLogic;
+    private IDialogService _dialogService;
+    private IApplicationConfiguration _applicationConfiguration;
+    private IStringLocalizer<LmsLoginDialog> _localizer;
 
     [Test]
     public void OnParametersSet_CallsPresentationLogic()
@@ -72,17 +74,19 @@ public class LmsLoginDialogUt
         {
             _presentationLogic.IsLmsConnected().Returns(true);
             _presentationLogic.LoginName.Returns("Test");
-            _localizer["DialogContent.LoggedIn.Message"].Returns(new LocalizedString("DialogContent.LoggedIn.Message", "Logged in as"));
-            _localizer["DialogContent.Button.Logout"].Returns(new LocalizedString("DialogContent.Button.Logout", "Logout"));
+            _localizer["DialogContent.LoggedIn.Message"]
+                .Returns(new LocalizedString("DialogContent.LoggedIn.Message", "Logged in as"));
+            _localizer["DialogContent.Button.Logout"]
+                .Returns(new LocalizedString("DialogContent.Button.Logout", "Logout"));
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
 
-            var dialogContent = _context.Render((RenderFragment) systemUnderTest.FindComponent<Stub<MudDialog>>()
+            var dialogContent = _context.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudDialog>>()
                 .Instance.Parameters["DialogContent"]);
             var dialogText = dialogContent.Find("div div");
-            var mudButtonStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudButton>>().Instance
+            var mudButtonStub = _context.Render((RenderFragment)dialogContent.FindComponent<Stub<MudButton>>().Instance
                 .Parameters["ChildContent"]);
-            
+
             Assert.That(dialogText.ToMarkup(), Contains.Substring("Logged in as"));
             Assert.That(dialogText.ToMarkup(), Contains.Substring("Test"));
 
@@ -96,15 +100,16 @@ public class LmsLoginDialogUt
         using (_context)
         {
             _presentationLogic.IsLmsConnected().Returns(false);
-            _localizer["DialogContent.Button.Login"].Returns(new LocalizedString("DialogContent.Button.Login", "Login"));
+            _localizer["DialogContent.Button.Login"]
+                .Returns(new LocalizedString("DialogContent.Button.Login", "Login"));
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
 
-            var dialogContent = _context.Render((RenderFragment) systemUnderTest.FindComponent<Stub<MudDialog>>()
+            var dialogContent = _context.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudDialog>>()
                 .Instance.Parameters["DialogContent"]);
-            var mudFormStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudForm>>().Instance
+            var mudFormStub = _context.Render((RenderFragment)dialogContent.FindComponent<Stub<MudForm>>().Instance
                 .Parameters["ChildContent"]);
-            var mudButtonStub = _context.Render((RenderFragment) mudFormStub.FindComponent<Stub<MudButton>>().Instance
+            var mudButtonStub = _context.Render((RenderFragment)mudFormStub.FindComponent<Stub<MudButton>>().Instance
                 .Parameters["ChildContent"]);
 
             Assert.That(mudButtonStub.Markup, Is.EqualTo("Login"));

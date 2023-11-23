@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.API
 @using Shared.Configuration
 @using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic
 @using BusinessLogic.ErrorManagement.BackendAccess
 @using System.Diagnostics.CodeAnalysis
 <MudDialog Class="relative flex rounded-lg bg-gradient-to-br from-adlerbggradientfrom to-adlerbggradientto w-[420px] h-[400px]">
@@ -22,6 +23,14 @@
                     <p class="text-lg text-adlerblue-700">@PresentationLogic.LoginName</p>
                 </div>
                 <MudButton Variant="Variant.Filled" Class="mt-12 btn-standard mx-28 place-items-center" title=@Localizer["DialogContent.Button.Logout.Title"] OnClick="Logout">@Localizer["DialogContent.Button.Logout"]</MudButton>
+
+                <h3> My Moodle Worlds</h3>
+                <MudList>
+                    @foreach (var course in _courseList)
+                    {
+                        <MudListItem> @course.WorldName </MudListItem>
+                    }
+                </MudList>
             </div>
         }
         else
@@ -113,6 +122,8 @@
 
     private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
 
+    private List<LmsWorldViewModel> _courseList = new();
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -147,6 +158,7 @@
             StopSpinner();
             StateHasChanged();
         }
+        if (_isLmsConnected) RefreshLmsWorldList();
     }
 
     private void StartSpinner() => _spinnerActive = true;
@@ -205,6 +217,13 @@
     {
         PresentationLogic.Logout();
         UpdateLmsIsConnected();
+    }
+
+    private async void RefreshLmsWorldList()
+    {
+        var courseList = await PresentationLogic.GetLmsWorldList();
+        _courseList = courseList;
+        StateHasChanged();
     }
 
     private void HandleInvalidLoginException()

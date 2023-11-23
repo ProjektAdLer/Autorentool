@@ -161,6 +161,20 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         }
     }
 
+    public async Task<List<LmsWorldBE>> GetLmsWorldList(string token, int authorId)
+    {
+        var parameter = new Dictionary<string, string>()
+        {
+            { "authorId", authorId.ToString() }
+        };
+
+        var header = new Dictionary<string, string>() { { "token", token } };
+
+        var apiResp =
+            await SendHttpGetRequestAsync<LmsWorldsBE>($"Worlds/author/{authorId}", parameter, headers: header);
+        return apiResp.Worlds.ToList();
+    }
+
     /// <summary>
     /// Calculates the base URL for the API from the configuration.
     /// </summary>
@@ -232,7 +246,8 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
-    private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters)
+    private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters,
+        IDictionary<string, string>? headers = null)
     {
         // Build the query string from url and parameters.
         var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -242,7 +257,13 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
 
         var uri = new Uri(GetApiBaseUrl(), url);
 
-        var apiResp = await _client.GetAsync(uri);
+        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        if (headers != null)
+            foreach (var (key, value) in headers)
+                request.Headers.Add(key, value);
+
+        var apiResp = await _client.SendAsync(request);
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);

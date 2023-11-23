@@ -662,5 +662,6 @@ public class ViewModelEntityMappingProfile : Profile
     private void CreateApiResponseMap()
     {
         CreateMap<UploadResponse, UploadResponseViewModel>();
+        CreateMap<LmsWorld, LmsWorldViewModel>();
     }
 }

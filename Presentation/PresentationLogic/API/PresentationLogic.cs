@@ -953,6 +953,12 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
+    {
+        var worldsEntity = await BusinessLogic.GetLmsWorldList();
+        return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
+    }
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>
