@@ -93,6 +93,8 @@ public interface IBusinessLogic
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
 
+    Task<List<LmsWorld>> GetLmsWorldList();
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
