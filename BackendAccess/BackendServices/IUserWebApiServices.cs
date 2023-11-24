@@ -33,4 +33,5 @@ public interface IUserWebApiServices
     Task<bool> GetApiHealthcheck();
 
     public Task<List<LmsWorldBE>> GetLmsWorldList(string token, int authorId);
+    void DeleteLmsWorld(string token, int worldId);
 }

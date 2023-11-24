@@ -175,6 +175,21 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         return apiResp.Worlds.ToList();
     }
 
+    public void DeleteLmsWorld(string token, int worldId)
+    {
+        var header = new Dictionary<string, string>()
+        {
+            { "token", token }
+        };
+
+        var result = SendHttpDeleteRequestAsync<bool>($"Worlds/{worldId}", headers: header);
+
+        if (!result.Result)
+        {
+            throw new BackendWorldDeletionException("World could not be deleted.");
+        }
+    }
+
     /// <summary>
     /// Calculates the base URL for the API from the configuration.
     /// </summary>
@@ -270,6 +285,29 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
 
         return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
+
+    private async Task<TResponse> SendHttpDeleteRequestAsync<TResponse>(
+        string url, IDictionary<string, string>? headers = null)
+    {
+        var uri = new Uri(GetApiBaseUrl(), url);
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+        if (headers != null)
+        {
+            foreach (var (key, value) in headers)
+            {
+                request.Headers.Add(key, value);
+            }
+        }
+
+        HttpResponseMessage apiResp = await _client.SendAsync(request);
+
+        await HandleErrorMessage(apiResp);
+
+        return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
+    }
+
 
     /// <summary>
     /// This method is used to handle errors that are returned by the API.
