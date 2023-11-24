@@ -14,6 +14,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -1124,6 +1125,12 @@ public class PresentationLogic : IPresentationLogic
             //delete file after upload or exception
             FileSystem.File.Delete(filepath);
         }
+    }
+
+    public void DeleteLmsWorld(LmsWorldViewModel worldVm)
+    {
+        var world = Mapper.Map<LmsWorld>(worldVm);
+        BusinessLogic.DeleteLmsWorld(world);
     }
 
 #if DEBUG

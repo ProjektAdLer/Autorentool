@@ -95,6 +95,8 @@ public interface IBusinessLogic
 
     Task<List<LmsWorld>> GetLmsWorldList();
 
+    void DeleteLmsWorld(LmsWorld world);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();

@@ -26,9 +26,11 @@
 
                 <h3> My Moodle Worlds</h3>
                 <MudList>
-                    @foreach (var course in _courseList)
+                    @foreach (var lmsWorld in _lmsWorldList)
                     {
-                        <MudListItem> @course.WorldName </MudListItem>
+                        <MudListItem>
+                            @lmsWorld.WorldName <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                        </MudListItem>
                     }
                 </MudList>
             </div>
@@ -122,7 +124,7 @@
 
     private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
 
-    private List<LmsWorldViewModel> _courseList = new();
+    private List<LmsWorldViewModel> _lmsWorldList = new();
 
     protected override void OnParametersSet()
     {
@@ -222,8 +224,14 @@
     private async void RefreshLmsWorldList()
     {
         var courseList = await PresentationLogic.GetLmsWorldList();
-        _courseList = courseList;
+        _lmsWorldList = courseList;
         StateHasChanged();
+    }
+
+    private void DeleteLmsWorld(LmsWorldViewModel world)
+    {
+        PresentationLogic.DeleteLmsWorld(world);
+        RefreshLmsWorldList();
     }
 
     private void HandleInvalidLoginException()

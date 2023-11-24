@@ -54,4 +54,9 @@ public class BackendAccess : IBackendAccess
         var worldsBe = await UserWebApiServices.GetLmsWorldList(token.Token, authorId);
         return Mapper.Map<List<LmsWorld>>(worldsBe);
     }
+
+    public void DeleteLmsWorld(UserToken token, LmsWorld world)
+    {
+        UserWebApiServices.DeleteLmsWorld(token.Token, world.WorldId);
+    }
 }

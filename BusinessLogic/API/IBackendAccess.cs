@@ -43,4 +43,5 @@ public interface IBackendAccess
         CancellationToken? cancellationToken = null);
 
     Task<List<LmsWorld>> GetLmsWorldList(UserToken token, int authorId);
+    void DeleteLmsWorld(UserToken token, LmsWorld world);
 }
