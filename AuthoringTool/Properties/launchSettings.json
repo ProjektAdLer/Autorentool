@@ -15,7 +15,8 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:7191;http://localhost:5058",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_WATCH_RESTART_ON_RUDE_EDIT": "true"
       },
       "hotReloadEnabled": true
     },
@@ -24,7 +25,10 @@
       "commandName": "Executable",
       "executablePath": "dotnet",
       "commandLineArgs": "electronize start watch",
-      "workingDirectory": "$(ProjectDir)"
+      "workingDirectory": "$(ProjectDir)",
+      "environmentVariables": {
+        "DOTNET_WATCH_RESTART_ON_RUDE_EDIT": "true"
+      }
     },
     
     "Electron Mac M1" : {
@@ -41,6 +45,7 @@
       "hotReloadEnabled": true,
       "hotReloadProfile": "aspnetcore",
       "environmentVariables": {
+        "DOTNET_WATCH_RESTART_ON_RUDE_EDIT": "true",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
