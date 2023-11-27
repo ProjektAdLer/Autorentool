@@ -35,10 +35,10 @@ public interface IBackendAccess
     /// <param name="token"></param>
     /// <param name="backupPath"></param>
     /// <param name="awtPath"></param>
-    /// <param name="cancellationToken"></param>
     /// <param name="progress"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
+    public Task<UploadResponse> UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
         IProgress<int>? progress = null,
         CancellationToken? cancellationToken = null);
 }

@@ -10,6 +10,7 @@
 @using System.Text
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
+@using MudBlazor.Utilities
 @using Presentation.Components.Culture
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -25,9 +26,15 @@
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave"
-                       Disabled="SaveButtonDisabled">
-        </MudIconButton>
+        <div class="relative">
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
+            </MudIconButton>
+            @if (SaveButtonHighlighted)
+            {
+                <span class="absolute inline-flex items-center justify-center w-3 h-3 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0">
+                </span>
+            }
+        </div>
         <div class="flex">
             <MudIconButton Class="p-1 undo-button" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
                            Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
@@ -166,7 +173,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<HeaderBar> Logger { get; set; }
 
-    private bool SaveButtonDisabled => SelectedViewModelsProvider.LearningWorld is not { UnsavedChanges: true };
+    private bool SaveButtonHighlighted => SelectedViewModelsProvider.LearningWorld is { UnsavedChanges: true };
 
 
     private bool _popoverOpen;
@@ -267,11 +274,12 @@
             { nameof(UploadProgressDialog.CancellationTokenSource), cancellationTokenSource }
         };
 
-        var dialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+        var uploadProgressDialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
 
         try
         {
-            await PresentationLogic.ConstructAndUploadBackupAsync(world, progress, cancellationTokenSource.Token);
+            var response = await PresentationLogic.ConstructAndUploadBackupAsync(world, progress, cancellationTokenSource.Token);
+            ShowUploadSuccessfulDialog(response);
         }
         catch (OperationCanceledException)
         {
@@ -289,12 +297,32 @@
         }
         finally
         {
-            dialogReference.Close();
+            uploadProgressDialogReference.Close();
         }
 
         Snackbar.Add(Localizer["Export.SnackBar.Message"], Severity.Success);
         _popoverOpen = true;
         StateHasChanged();
+    }
+
+    private void ShowUploadSuccessfulDialog(UploadResponseViewModel response)
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false,
+        };
+
+        var parameters = new DialogParameters
+        {
+            {
+                nameof(GenericInfoDialog.DialogText),
+                (MarkupString)Localizer["UploadLearningWorld.Success.DialogText", response.WorldNameInLms,
+                    response.WorldLmsUrl, response.World3DUrl].ToString()
+            },
+        };
+        DialogService.Show<GenericInfoDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
     }
 
     private async Task ExportLearningWorldToArchiveAsync()
@@ -413,7 +441,7 @@
             { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
-                Localizer["Dialog.NotLoggedIn.Message"].ToString()
+                (MarkupString)Localizer["Dialog.NotLoggedIn.Message"].ToString()
             },
         };
         var options = new DialogOptions
@@ -453,7 +481,6 @@
     {
         var learningWorldViewModel = SelectedViewModelsProvider.LearningWorld;
         if (learningWorldViewModel is null) return;
-        if (!learningWorldViewModel.UnsavedChanges) return;
         try
         {
             PresentationLogic.SaveLearningWorld(learningWorldViewModel);

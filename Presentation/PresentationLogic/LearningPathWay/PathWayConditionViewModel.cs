@@ -6,6 +6,14 @@ namespace Presentation.PresentationLogic.LearningPathway;
 
 public class PathWayConditionViewModel : IObjectInPathWayViewModel
 {
+    public const int InputConnectionXOffset = 38;
+    public const int InputConnectionYOffset = -10;
+    public const int OutputConnectionXOffset = 38;
+    public const int OutputConnectionYOffset = 45;
+
+    private double _positionX;
+    private double _positionY;
+
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
@@ -20,10 +28,10 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
         Condition = ConditionEnum.Or;
         UnsavedChanges = false;
     }
-    
+
     public PathWayConditionViewModel(ConditionEnum condition, bool unsavedChanges,
         double positionX = 0, double positionY = 0,
-        ICollection<IObjectInPathWayViewModel>? inBoundObjects = null, 
+        ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
         ICollection<IObjectInPathWayViewModel>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
@@ -34,37 +42,37 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
         PositionX = positionX;
         PositionY = positionY;
     }
-    
+
+    public ConditionEnum Condition { get; set; }
+
     public Guid Id { get; private set; }
-    public double PositionX { 
+
+    public double PositionX
+    {
         get => _positionX;
         set
         {
             _positionX = value switch
             {
                 < 0 => 0,
-                > 268 => 268,
                 _ => value
             };
-        } 
+        }
     }
-    
-    public double PositionY { 
+
+    public double PositionY
+    {
         get => _positionY;
         set
         {
             _positionY = value switch
             {
                 < 0 => 0,
-                > 711 => 711,
                 _ => value
             };
-        } 
+        }
     }
-    public const int InputConnectionXOffset = 38;
-    public const int InputConnectionYOffset = -10;
-    public const int OutputConnectionXOffset = 38;
-    public const int OutputConnectionYOffset = 45;
+
     public double InputConnectionX => PositionX + InputConnectionXOffset;
     public double InputConnectionY => PositionY + InputConnectionYOffset;
     public double OutputConnectionX => PositionX + OutputConnectionXOffset;
@@ -72,8 +80,4 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     public bool UnsavedChanges { get; }
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
-    public ConditionEnum Condition { get; set; }
-    
-    private double _positionX;
-    private double _positionY;
 }

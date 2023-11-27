@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -14,37 +14,22 @@ namespace Generator.XmlClasses.XmlFileFactories;
 public class XmlResourceFactory : IXmlResourceFactory
 {
     private readonly string _currWorkDir;
-    private readonly string _hardcodedPath = "XMLFilesForExport";
-    public List<FilesXmlFile> FilesXmlFilesList;
-    private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
-    public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
-    public string FileElementId;
-    public string FileElementUuid;
-    public string FileElementName;
-    public string FileElementParentSpaceString;
-    public string FileElementType;
-    public string FileElementDesc;
-    public float FileElementPoints;
+    private readonly string _hardcodedPath = "XMLFilesForExport";
+    public readonly string CurrentTime;
 
     public readonly IXmlFileManager FileManager;
-    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
-    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
-    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    public IActivitiesResourceXmlResource ActivitiesFileResourceXmlResource { get; }
-    public IActivitiesResourceXmlActivity ActivitiesFileResourceXmlActivity { get; }
-    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
-    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
-    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
-    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
-    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
-    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
-    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
-    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
+    public string FileElementDesc;
+    public string FileElementId;
+    public string FileElementName;
+    public string FileElementParentSpaceString;
+    public float FileElementPoints;
+    public string FileElementType;
+    public string FileElementUuid;
+    public List<FilesXmlFile> FilesXmlFilesList;
 
-    public XmlResourceFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null,
+    public XmlResourceFactory(IReadAtf readAtf, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -57,7 +42,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         FileElementId = "";
         FileElementUuid = "";
         FileElementName = "";
@@ -95,10 +80,26 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
     }
 
+    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    public IActivitiesResourceXmlResource ActivitiesFileResourceXmlResource { get; }
+    public IActivitiesResourceXmlActivity ActivitiesFileResourceXmlActivity { get; }
+    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
+    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    public IReadAtf ReadAtf { get; }
+
     /// <inheritdoc cref="IXmlResourceFactory.CreateResourceFactory"/>
     public void CreateResourceFactory()
     {
-        var resourceList = ReadDsl.GetResourceElementList();
+        var resourceList = ReadAtf.GetResourceElementList();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
         ReadFileListAndSetParametersResource(resourceList);
 
@@ -108,7 +109,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     /// <summary>
     /// Reads the file list and sets parameters for each resource in the list.
     /// </summary>
-    private void ReadFileListAndSetParametersResource(List<LearningElementJson> resourceList)
+    private void ReadFileListAndSetParametersResource(List<ILearningElementJson> resourceList)
     {
         foreach (var resource in resourceList)
         {
@@ -116,9 +117,18 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementUuid = resource.ElementUUID;
             FileElementType = resource.ElementFileType;
             FileElementName = resource.ElementName;
-            FileElementDesc = resource.ElementDescription ?? "";
-            FileElementPoints = resource.ElementMaxScore;
-            FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
+
+            switch (resource)
+            {
+                case BaseLearningElementJson:
+                    FileElementParentSpaceString = (ReadAtf.GetSpaceList().Count + 1).ToString();
+                    break;
+                case LearningElementJson learningElementJson:
+                    FileElementDesc = learningElementJson.ElementDescription ?? "";
+                    FileElementPoints = learningElementJson.ElementMaxScore;
+                    FileElementParentSpaceString = learningElementJson.LearningSpaceParentId.ToString();
+                    break;
+            }
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 resource.ElementName + "." + resource.ElementFileType));

@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
@@ -99,7 +100,7 @@ public interface IBusinessLogic
     Task Login(string username, string password);
     void Logout();
 
-    Task UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
+    Task<UploadResponse> UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
         CancellationToken? cancellationToken = null);
 
     #endregion

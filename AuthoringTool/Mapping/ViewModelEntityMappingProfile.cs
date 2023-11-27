@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -44,6 +45,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
         CreateAdaptivityMap();
+        CreateApiResponseMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -655,5 +657,10 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<IAdaptivityContent, IAdaptivityContentViewModel>()
             .ReverseMap()
             .IncludeBase<IAdaptivityContentViewModel, IAdaptivityContent>();
+    }
+
+    private void CreateApiResponseMap()
+    {
+        CreateMap<UploadResponse, UploadResponseViewModel>();
     }
 }

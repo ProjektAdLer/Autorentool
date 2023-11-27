@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -12,31 +12,18 @@ namespace Generator.XmlClasses.XmlFileFactories;
 
 public class XmlUrlFactory : IXmlUrlFactory
 {
-    public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
+    public readonly string CurrentTime;
+    public string UrlDescription;
     public string UrlId;
-    public string UrlUuid;
+    public string UrlLink;
+    public List<ILearningElementJson> UrlList;
     public string UrlName;
     public string UrlParentSpaceId;
-    public string UrlLink;
-    public string UrlDescription;
     public float UrlPoints;
-    public List<LearningElementJson> UrlList;
-    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
-    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
-    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    public IActivitiesUrlXmlActivity ActivitiesUrlXmlActivity { get; }
-    public IActivitiesUrlXmlUrl ActivitiesUrlXmlUrl { get; }
-    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
-    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
-    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
-    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
-    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
-    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public IReadDsl ReadDsl { get; }
+    public string UrlUuid;
 
-    public XmlUrlFactory(IReadDsl readDsl, IFileSystem? fileSystem = null,
+    public XmlUrlFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null,
         IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -48,7 +35,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         UrlId = "";
         UrlUuid = "";
         UrlName = "";
@@ -56,7 +43,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         UrlLink = "";
         UrlDescription = "";
         UrlPoints = 0;
-        UrlList = new List<LearningElementJson>();
+        UrlList = new List<ILearningElementJson>();
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem ?? new FileSystem();
@@ -81,10 +68,24 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
     }
 
+    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    public IActivitiesUrlXmlActivity ActivitiesUrlXmlActivity { get; }
+    public IActivitiesUrlXmlUrl ActivitiesUrlXmlUrl { get; }
+    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    public IReadAtf ReadAtf { get; }
+
     /// <inheritdoc cref="IXmlUrlFactory.CreateUrlFactory"/>
     public void CreateUrlFactory()
     {
-        UrlList = ReadDsl.GetUrlElementList();
+        UrlList = ReadAtf.GetUrlElementList();
 
         UrlSetParameters(UrlList);
     }
@@ -92,17 +93,26 @@ public class XmlUrlFactory : IXmlUrlFactory
     /// <summary>
     /// Reads the URL list and sets parameters for each URL in the list.
     /// </summary>
-    public void UrlSetParameters(List<LearningElementJson> urlList)
+    public void UrlSetParameters(List<ILearningElementJson> urlList)
     {
         foreach (var url in urlList)
         {
             UrlId = url.ElementId.ToString();
             UrlUuid = url.ElementUUID;
             UrlName = url.ElementName;
-            UrlParentSpaceId = url.LearningSpaceParentId.ToString();
             UrlLink = url.Url;
-            UrlDescription = url.ElementDescription ?? "";
-            UrlPoints = url.ElementMaxScore;
+
+            switch (url)
+            {
+                case BaseLearningElementJson:
+                    UrlParentSpaceId = (ReadAtf.GetSpaceList().Count + 1).ToString();
+                    break;
+                case LearningElementJson learningElementJson:
+                    UrlParentSpaceId = learningElementJson.LearningSpaceParentId.ToString();
+                    UrlDescription = learningElementJson.ElementDescription ?? "";
+                    UrlPoints = learningElementJson.ElementMaxScore;
+                    break;
+            }
 
             SetParametersActivityUrl();
         }

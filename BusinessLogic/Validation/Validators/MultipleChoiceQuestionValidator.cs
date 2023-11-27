@@ -21,13 +21,8 @@ public class MultipleChoiceQuestionValidator : AbstractValidator<IMultipleChoice
             .WithMessage("Question must have at least two choices.")
             .Must(x => x.Count <= 10)
             .WithMessage("Question cannot have more than ten choices.");
-        RuleForEach(x => x.Choices)
-            .Must(y => !string.IsNullOrWhiteSpace(y.Text))
-            .WithMessage("Choice text is required.")
-            .Must(y => y.Text.Length <= 1000)
-            .WithMessage("Choice text cannot be longer than 1000 characters.");
         RuleFor(x => x.CorrectChoices)
-            .Must(x => x.Count >= 1)
+            .NotEmpty()
             .WithMessage("Question must have at least one correct choice.");
     }
 }

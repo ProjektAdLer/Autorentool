@@ -144,7 +144,8 @@
                 <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                         For="@(() => FormModel.ElementModel)"
                                         Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme)">
+                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent,
+                                         ElementToEdit.Parent?.Theme, AdaptivityElementMode)">
                 </ElementModelGridSelect>
             </div>
         </Collapsable>
@@ -269,6 +270,7 @@
             DisableBackdropClick = false,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
+            CloseButton = true,
         };
         var parameters = new DialogParameters
         {

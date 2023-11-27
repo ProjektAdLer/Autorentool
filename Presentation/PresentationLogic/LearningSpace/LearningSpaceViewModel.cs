@@ -133,7 +133,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
             _positionX = value switch
             {
                 < 0 => 0,
-                > 437 => 437,
                 _ => value
             };
         }
@@ -147,7 +146,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
             _positionY = value switch
             {
                 < 0 => 0,
-                > 681 => 681,
                 _ => value
             };
         }

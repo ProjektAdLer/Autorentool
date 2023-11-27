@@ -1,14 +1,16 @@
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.PresentationLogic
-@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -27,7 +29,7 @@
             </section>
         </article>
         <section class="bg-white rounded w-full overflow-scroll grow pt-2">
-            <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @bind-SelectedValue="SelectedValue">
+            <MudTreeView Hover="true" Class="mud-width-full" T="string">
 
                 @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
                 {
@@ -35,7 +37,7 @@
                     {
                         <div class="text-adlergrey-700">
                             <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
-                                @foreach (var element in learningSpace.ContainedLearningElements)
+                                @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
                                 {
                                     <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
                                 }
@@ -61,8 +63,10 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LearningWorldTreeView> Localizer { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
-    private string? SelectedValue { get; set; }
     private Color Color { get; set; } = Color.Info;
 
     protected override void OnParametersSet()
@@ -86,7 +90,8 @@
                 } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
-            _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
+            IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
+            _ => ""
             };
     }
 
@@ -98,7 +103,7 @@
     ///
     /// Spaces from the same path are ordered alphabetically.
     ///
-    /// Note: This algorithm is also utilized in the "CreateDSL" class. Changes made here should be reflected there as well.
+    /// Note: This algorithm is also utilized in the "CreateATF" class. Changes made here should be reflected there as well.
     /// </summary>
     /// <param name="objectInPathWayViewModels">The collection of path object view models used to determine the order.</param>
     /// <returns>A sorted list of learning space view models based on the provided paths.</returns>

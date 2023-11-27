@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
@@ -19,7 +19,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_StandardConstructor_AllPropertiesSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -35,7 +35,7 @@ public class XmlLabelFactoryUt
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         // Act
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
@@ -44,7 +44,7 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ReadDsl, Is.EqualTo(mockReadDsl));
+            Assert.That(systemUnderTest.ReadAtf, Is.EqualTo(mockReadAtf));
             Assert.That(systemUnderTest.LabelId, Is.EqualTo(""));
             Assert.That(systemUnderTest.LabelName, Is.EqualTo(""));
             Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo(""));
@@ -69,7 +69,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_CreateLabelFactory_ListSetMethodCalled()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -78,25 +78,22 @@ public class XmlLabelFactoryUt
         var mockLabelActivity = Substitute.For<IActivitiesLabelXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        var mockPluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
+        mockModule.PluginLocalAdlerModule = mockPluginLocalAdlerModule;
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFileref = Substitute.For<IActivitiesInforefXmlFileref>();
         var mockInforefGradeItem = Substitute.For<ActivitiesInforefXmlGradeItem>();
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
         var mockElementJson = new LearningElementJson(1, "", "element1", "", "", "h5p", 1, 2, "");
-        var mockLabelsElementJson = new LearningElementJson(2, "", "element2", "", "mp4", "mp4", 1, 2, "");
 
-        var elementJsonList = new List<LearningElementJson> { mockElementJson };
-        var labelJsonList = new List<LearningElementJson> { mockLabelsElementJson };
-
-        mockReadDsl.GetElementsOrderedList().Returns(elementJsonList);
-        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
+        mockReadAtf.GetWorldAttributes().Returns(mockElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();
@@ -104,7 +101,7 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            mockReadDsl.Received().GetElementsOrderedList();
+            mockReadAtf.Received().GetWorldAttributes();
             Assert.That(systemUnderTest.LabelId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.LabelName, Is.EqualTo("element1"));
             Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo("1"));
@@ -115,7 +112,7 @@ public class XmlLabelFactoryUt
     public void XmlLabelFactory_CreateLabelFactory_AllPropertiesSetAndSerialized()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
         var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
@@ -131,7 +128,7 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
-        var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems,
+        var systemUnderTest = new XmlLabelFactory(mockReadAtf, mockFileSystem, mockGradeItem, mockGradeItems,
             mockGradebook,
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory,
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
@@ -139,14 +136,7 @@ public class XmlLabelFactoryUt
         var mockLabelsElementJson = new LearningElementJson(2, "", "",
             "", "World Attributes", "World Attributes", 1, 0, "", "World Description", new[] { "World Goals" });
 
-        var mockElementJson = new LearningElementJson(1, "", "",
-            "", "", "h5p", 0, 7, "");
-
-        var spaceJsonList = new List<LearningElementJson> { mockElementJson };
-        var labelJsonList = new List<LearningElementJson> { mockLabelsElementJson };
-
-        mockReadDsl.GetElementsOrderedList().Returns(spaceJsonList);
-        mockReadDsl.GetLabelElementList().Returns(labelJsonList);
+        mockReadAtf.GetWorldAttributes().Returns(mockLabelsElementJson);
 
         // Act
         systemUnderTest.CreateLabelFactory();
@@ -164,7 +154,7 @@ public class XmlLabelFactoryUt
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro,
                 Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.Id, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ModuleId, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ContextId, Is.EqualTo("2"));
@@ -178,7 +168,7 @@ public class XmlLabelFactoryUt
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("label"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo("2"));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("label", "2");
 

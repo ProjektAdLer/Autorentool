@@ -15,13 +15,13 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="AdaptivityQuestionPreview.Header.EasyQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Easy" xml:space="preserve">
         <value>Easy Question:</value>
     </data>
-    <data name="AdaptivityQuestionPreview.Header.HardQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Hard" xml:space="preserve">
         <value>Hard Question:</value>
     </data>
-    <data name="AdaptivityQuestionPreview.Header.MediumQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Medium" xml:space="preserve">
         <value>Medium Question:</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.ElementReference" xml:space="preserve">
@@ -32,5 +32,8 @@
     </data>
     <data name="AdaptivityQuestionPreview.Header.ContentReference" xml:space="preserve">
         <value>Reference to learning content:</value>
+    </data>
+    <data name="AdaptivityQuestionPreview.ElementReference.NotFound" xml:space="preserve">
+        <value>The learning element with Id {0} was not found!</value>
     </data>
 </root>

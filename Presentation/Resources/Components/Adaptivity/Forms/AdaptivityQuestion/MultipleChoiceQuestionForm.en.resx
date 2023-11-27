@@ -1,0 +1,60 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="MultipleChoiceQuestionForm.Button.Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Button.Edit" xml:space="preserve">
+        <value>Apply</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Create.SnackbarMessage" xml:space="preserve">
+        <value>Question created</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Edit.SnackbarMessage" xml:space="preserve">
+        <value>Question updated</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Field.QuestionText.Text" xml:space="preserve">
+        <value>Question Text</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Text.AddChoice" xml:space="preserve">
+        <value>Add Choices</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Text.Choice" xml:space="preserve">
+        <value>Choice</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Text.Choices" xml:space="preserve">
+        <value>Choices</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Easy" xml:space="preserve">
+        <value>Creating an easy question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Hard" xml:space="preserve">
+        <value>Creating a medium question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Create.Medium" xml:space="preserve">
+        <value>Creating a hard question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Easy" xml:space="preserve">
+        <value>Edit the easy question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Hard" xml:space="preserve">
+        <value>Edit the medium question</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Medium" xml:space="preserve">
+        <value>Edit the hard question</value>
+    </data>
+</root>

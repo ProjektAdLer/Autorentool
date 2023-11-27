@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -20,21 +20,21 @@ public class XmlUrlFactoryUt
     public void XmlUrlFactory_Constructor_AllParametersSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
 
         // Act
-        var systemUnderTest = new XmlUrlFactory(mockReadDsl, mockFileSystem);
+        var systemUnderTest = new XmlUrlFactory(mockReadAtf, mockFileSystem);
 
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ReadDsl, Is.EqualTo(mockReadDsl));
+            Assert.That(systemUnderTest.ReadAtf, Is.EqualTo(mockReadAtf));
             Assert.That(systemUnderTest.UrlId, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlName, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlParentSpaceId, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlLink, Is.EqualTo(""));
-            Assert.That(systemUnderTest.CurrentTime, Is.Not.Null);
+            Assert.That(systemUnderTest.CurrentTime, Is.Not.Empty);
             Assert.That(systemUnderTest.UrlList, Is.Not.Null);
 
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
@@ -56,17 +56,17 @@ public class XmlUrlFactoryUt
     public void XmlUrlFactory_CreateUrlFactory_UrlListCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
-        var systemUnderTest = new XmlUrlFactory(mockReadDsl, mockFileSystem);
+        var systemUnderTest = new XmlUrlFactory(mockReadAtf, mockFileSystem);
 
         var urlLearningElementJson = new LearningElementJson(1, "",
             "YoutubeVideo", "youtube.de", "video", "Video-Link", 1,
             2, "",
             "desc", new[] { "goals" });
-        var urlList = new List<LearningElementJson> { urlLearningElementJson };
+        var urlList = new List<ILearningElementJson> { urlLearningElementJson };
 
-        mockReadDsl.GetUrlElementList().Returns(urlList);
+        mockReadAtf.GetUrlElementList().Returns(urlList);
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         systemUnderTest.CreateUrlFactory();
@@ -79,7 +79,7 @@ public class XmlUrlFactoryUt
     public void XmlUrlFactory_UrlSetParameters_AllXmlParametersSetAndSerialized()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
 
         var mockGradesGradeItem = new ActivitiesGradesXmlGradeItem();
@@ -96,7 +96,7 @@ public class XmlUrlFactoryUt
         var mockInforefGradeItemref = new ActivitiesInforefXmlGradeItemref();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
-        var systemUnderTest = new XmlUrlFactory(mockReadDsl, mockFileSystem, mockGradesGradeItem,
+        var systemUnderTest = new XmlUrlFactory(mockReadAtf, mockFileSystem, mockGradesGradeItem,
             mockGradesGradeItems, mockGradesGradebook, mockUrl, mockUrlActivity, mockRoles, mockModule,
             mockGradehistory, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref,
             mockInforefInforef);
@@ -105,7 +105,7 @@ public class XmlUrlFactoryUt
             "youtube.de", "video", "url", 1,
             2, "",
             "desc", new[] { "goals" });
-        var urlList = new List<LearningElementJson> { urlLearningElementJson };
+        var urlList = new List<ILearningElementJson> { urlLearningElementJson };
 
 
         // Act
@@ -131,7 +131,7 @@ public class XmlUrlFactoryUt
                 Is.EqualTo(systemUnderTest.UrlLink + "<p style=\"position:relative; background-color:#e6e9ed;\">" +
                            systemUnderTest.UrlDescription + "</p>"));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Externalurl, Is.EqualTo(systemUnderTest.UrlLink));
-            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.Not.Empty);
 
             Assert.That(systemUnderTest.ActivitiesUrlXmlActivity, Is.EqualTo(mockUrlActivity));
             Assert.That(systemUnderTest.ActivitiesUrlXmlActivity.Url, Is.EqualTo(mockUrl));

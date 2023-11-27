@@ -1,4 +1,4 @@
-﻿using Generator.DSL;
+﻿using Generator.ATF;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;
 using Generator.XmlClasses.Entities._course.Enrolments.xml;
@@ -14,10 +14,10 @@ namespace Generator.XmlClasses;
 public class XmlCourseFactory : IXmlCourseFactory
 {
     private ILearningWorldJson _learningWorld;
-    public IReadDsl ReadDsl;
+    public IReadAtf ReadAtf;
 
 
-    public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory = null,
+    public XmlCourseFactory(IReadAtf readAtf, int contextId, ICourseCourseXmlCategory? courseCourseXmlCategory = null,
         ICourseCourseXmlCourse? courseCourseXmlCourse = null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual = null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest = null,
@@ -31,7 +31,6 @@ public class XmlCourseFactory : IXmlCourseFactory
         ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null)
     {
         CourseCourseXmlCategory = courseCourseXmlCategory ?? new CourseCourseXmlCategory();
-        CourseCourseXmlCourse = courseCourseXmlCourse ?? new CourseCourseXmlCourse();
 
         CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrolManual ?? new CourseEnrolmentsXmlEnrol();
         CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrolGuest ?? new CourseEnrolmentsXmlEnrol();
@@ -48,8 +47,9 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault ??
                                                              new CourseCompletiondefaultXmlCourseCompletionDefaults();
 
-        ReadDsl = readDsl;
-        _learningWorld = ReadDsl.GetLearningWorld();
+        ReadAtf = readAtf;
+        CourseCourseXmlCourse = courseCourseXmlCourse ?? new CourseCourseXmlCourse(contextId);
+        _learningWorld = ReadAtf.GetLearningWorld();
     }
 
     internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
@@ -97,7 +97,7 @@ public class XmlCourseFactory : IXmlCourseFactory
 
         CourseCourseXmlCourse.Shortname = _learningWorld.WorldName;
         CourseCourseXmlCourse.Fullname = _learningWorld.WorldName;
-        CourseCourseXmlCourse.Format = "";
+        CourseCourseXmlCourse.Format = "topics";
         CourseCourseXmlCourse.BaseColour = "#009681";
         CourseCourseXmlCourse.CourseUseSubtiles = "0";
         CourseCourseXmlCourse.CourseShowTileProgress = "2";

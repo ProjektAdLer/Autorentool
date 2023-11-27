@@ -11,7 +11,7 @@
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateWorldForm.Text"]</MudText>
-<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["CreateWorldForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
@@ -20,22 +20,27 @@
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.Name.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                               For="@(() => FormModel.Shortname)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.Shortname.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                               For="@(() => FormModel.Authors)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.Authors.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                               For="@(() => FormModel.Language)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.Language.Text"]"/>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                               For="@(() => FormModel.EvaluationLink)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"/>
             </div>
         </Collapsable>
@@ -93,6 +98,8 @@
     private bool _collapsedGeneral = false;
     private bool _collapsedGoals = true;
 
+    private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
+
     private void OnValidSubmit(LearningWorldFormModel model)
     {
         AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
@@ -102,6 +109,14 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
+    }
+
+    internal async Task HandleKeyEvent(KeyboardEventArgs arg)
+    {
+        if (arg.Key == "Enter")
+        {
+            await _form.SubmitAsync();
+        }
     }
 
 }

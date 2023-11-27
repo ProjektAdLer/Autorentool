@@ -1,7 +1,7 @@
 ﻿//First Attempts to add a Section into the Moodle Backup Structure
 
 using System.IO.Abstractions;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using Generator.XmlClasses.Entities._sections.Section.xml;
 
@@ -12,15 +12,15 @@ public class XmlSectionFactory : IXmlSectionFactory
     private IFileSystem _fileSystem;
     public string CurrentTime;
     public List<ILearningSpaceJson> LearningSpaceJsons;
-    public IReadDsl ReadDsl;
+    public IReadAtf ReadAtf;
     public ISectionsInforefXmlInforef SectionsInforefXmlInforef;
 
     public ISectionsSectionXmlSection SectionsSectionXmlSection;
 
-    public XmlSectionFactory(IReadDsl readDsl, IFileSystem? fileSystem = null,
+    public XmlSectionFactory(IReadAtf readAtf, IFileSystem? fileSystem = null,
         ISectionsSectionXmlSection? section = null, ISectionsInforefXmlInforef? inforef = null)
     {
-        ReadDsl = readDsl;
+        ReadAtf = readAtf;
         _fileSystem = fileSystem ?? new FileSystem();
         SectionsSectionXmlSection = section ?? new SectionsSectionXmlSection();
         SectionsInforefXmlInforef = inforef ?? new SectionsInforefXmlInforef();
@@ -30,10 +30,26 @@ public class XmlSectionFactory : IXmlSectionFactory
 
     public void CreateSectionFactory()
     {
-        LearningSpaceJsons = ReadDsl.GetSectionList();
+        LearningSpaceJsons = ReadAtf.GetSpaceList();
 
-        //Add A Section for every LearningSpace
-        foreach (var space in LearningSpaceJsons)
+        AddSectionForWorldAttributes();
+
+        AddSectionsForLearningSpaces(LearningSpaceJsons);
+
+        if (ReadAtf.GetBaseLearningElementsList().Count > 0) AddSectionForBaseLearningElements();
+    }
+
+    private void AddSectionForWorldAttributes()
+    {
+        CreateSectionsFolder("0");
+        CreateSectionInforefXml("0");
+        CreateSectionSectionXml("0", "", "", new List<int?>(),
+            "", null, -1);
+    }
+
+    private void AddSectionsForLearningSpaces(List<ILearningSpaceJson> spaces)
+    {
+        foreach (var space in spaces)
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml(space.SpaceId.ToString());
@@ -42,9 +58,24 @@ public class XmlSectionFactory : IXmlSectionFactory
         }
     }
 
-    private void CreateSectionInforefXml(string sectionid)
+    private void AddSectionForBaseLearningElements()
     {
-        SectionsInforefXmlInforef.Serialize("", sectionid);
+        var baseLearningElements = ReadAtf.GetBaseLearningElementsList();
+        var baseLearningElementIds = baseLearningElements.Select(baseLearningElement => baseLearningElement.ElementId)
+            .Select(dummy => (int?)dummy).ToList();
+
+        var sectionId = (LearningSpaceJsons.Count + 1).ToString();
+
+        //Add a section for BaseLearningElements
+        CreateSectionsFolder(sectionId);
+        CreateSectionInforefXml(sectionId);
+        CreateSectionSectionXml(sectionId, "Hinweise auf externe Lerninhalte",
+            "", baseLearningElementIds, "", null, -1);
+    }
+
+    private void CreateSectionInforefXml(string sectionId)
+    {
+        SectionsInforefXmlInforef.Serialize("", sectionId);
     }
 
     private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary,
@@ -61,6 +92,10 @@ public class XmlSectionFactory : IXmlSectionFactory
             SectionsSectionXmlSection.AvailabilityJson =
                 "{\"op\":\"&\",\"c\":[{\"type\":\"adler\",\"condition\":\"" + requiredSpacesToEnter +
                 "\"}],\"showc\":[true]}";
+        }
+        else
+        {
+            SectionsSectionXmlSection.AvailabilityJson = "$@NULL@$";
         }
 
         if (requiredPointsToComplete >= 0)

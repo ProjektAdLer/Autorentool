@@ -12,22 +12,21 @@
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
-<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
+<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace" @ref="_form"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
-                                           @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
-                                           @bind-Collapsed="_collapsedConditions">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -36,16 +35,17 @@
                                  Min="0"
                                  For="@(() => FormModel.RequiredPoints)"
                                  DebounceInterval="DebounceInterval"
+                                 OnKeyUp="HandleKeyEvent"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"/>
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]
-                                           @bind-Collapsed="_collapsedTheme">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                            AnchorOrigin="Origin.BottomCenter"
+                           OnKeyUp="HandleKeyEvent"
                            Label=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
                            For="@(() => FormModel.Theme)">
@@ -57,8 +57,7 @@
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]
-                                           @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -113,11 +112,20 @@
     private bool _collapsedTheme = true;
     private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
 
+    private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
+            model.Goals, model.RequiredPoints, model.Theme);
+    }
+
+    private async Task HandleKeyEvent(KeyboardEventArgs arg)
+    {
+        if (arg.Key == "Enter")
+        {
+            await _form.SubmitAsync();
+        }
     }
 
 }

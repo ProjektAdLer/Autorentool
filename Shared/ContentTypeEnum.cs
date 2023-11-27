@@ -5,5 +5,6 @@ public enum ContentTypeEnum
     Text,
     Image,
     Video,
-    H5P
+    H5P,
+    Adaptivity
 }

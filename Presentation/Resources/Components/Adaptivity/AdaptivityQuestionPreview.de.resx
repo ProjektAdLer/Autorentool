@@ -23,13 +23,13 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="AdaptivityQuestionPreview.Header.EasyQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Easy" xml:space="preserve">
         <value>Leichte Frage:</value>
     </data>
-    <data name="AdaptivityQuestionPreview.Header.MediumQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Medium" xml:space="preserve">
         <value>Mittelschwere Frage:</value>
     </data>
-    <data name="AdaptivityQuestionPreview.Header.HardQuestion" xml:space="preserve">
+    <data name="AdaptivityQuestionPreview.Header.Question.Hard" xml:space="preserve">
         <value>Schwere Frage:</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.Comment" xml:space="preserve">
@@ -40,5 +40,8 @@
     </data>
     <data name="AdaptivityQuestionPreview.Header.ContentReference" xml:space="preserve">
         <value>Verweis auf Lerninhalt:</value>
+    </data>
+    <data name="AdaptivityQuestionPreview.ElementReference.NotFound" xml:space="preserve">
+        <value>Das Lernelement mit Id {0} wurde nicht gefunden!</value>
     </data>
 </root>

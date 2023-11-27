@@ -120,7 +120,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
         WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(), Arg.Any<double>());
+            Arg.Any<int>(), Arg.Any<Theme>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
@@ -132,7 +132,32 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         submitButton.Find("button").Click();
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(), Arg.Any<double>());
+            Arg.Any<int>(), Arg.Any<Theme>());
+    }
+
+    [Test]
+    public async Task EnterKeyPressed_SubmitsIfFormValid()
+    {
+        var systemUnderTest = GetRenderedComponent();
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+
+        ConfigureValidatorNameIsTest();
+
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
+
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.KeyUp(Key.Enter);
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<Theme>());
+
+        input.Change(Expected);
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
+        input.KeyUp(Key.Enter);
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<Theme>());
     }
 
     private void ConfigureValidatorNameIsTest()

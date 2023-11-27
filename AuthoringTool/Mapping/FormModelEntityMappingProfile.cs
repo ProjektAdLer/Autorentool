@@ -1,7 +1,9 @@
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 
@@ -28,6 +30,7 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateContentMap()
     {
         CreateMap<LinkContentFormModel, LinkContent>();
+        CreateMap<AdaptivityContentFormModel, AdaptivityContent>();
     }
 
     private void CreateElementMap()
@@ -48,10 +51,18 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateAdaptivityQuestionMap()
     {
         CreateMap<MultipleChoiceQuestionFormModel, IMultipleChoiceQuestion>()
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore())
             .ConstructUsing((formModel, context) => formModel.IsSingleResponse
                 ? context.Mapper.Map<MultipleChoiceSingleResponseQuestion>(formModel)
                 : context.Mapper.Map<MultipleChoiceMultipleResponseQuestion>(formModel));
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>();
-        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>();
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceMultipleResponseQuestion>()
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore());
+        CreateMap<MultipleChoiceQuestionFormModel, MultipleChoiceSingleResponseQuestion>()
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.CorrectChoice, opt => opt.MapFrom(x => x.CorrectChoices.First()))
+            .ForMember(x => x.Difficulty, opt => opt.Ignore())
+            .ForMember(x => x.Rules, opt => opt.Ignore());
     }
 }

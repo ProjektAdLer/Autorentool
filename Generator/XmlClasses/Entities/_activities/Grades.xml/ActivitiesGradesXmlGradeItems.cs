@@ -2,17 +2,15 @@
 
 namespace Generator.XmlClasses.Entities._activities.Grades.xml;
 
-
-[XmlRoot(ElementName="grade_items")]
-public class ActivitiesGradesXmlGradeItems : IActivitiesGradesXmlGradeItems {
-    
+[XmlRoot(ElementName = "grade_items")]
+public class ActivitiesGradesXmlGradeItems : IActivitiesGradesXmlGradeItems
+{
     public ActivitiesGradesXmlGradeItems()
     {
-        GradeItem = new ActivitiesGradesXmlGradeItem();
+        GradeItem = null;
     }
 
-    
-    [XmlElement(ElementName="grade_item")]
-    public ActivitiesGradesXmlGradeItem GradeItem { get; set; }
-    
+
+    [XmlElement(ElementName = "grade_item")]
+    public ActivitiesGradesXmlGradeItem? GradeItem { get; set; }
 }

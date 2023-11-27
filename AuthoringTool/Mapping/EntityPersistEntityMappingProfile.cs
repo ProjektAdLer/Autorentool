@@ -180,8 +180,7 @@ public class EntityPersistEntityMappingProfile : Profile
     {
         CreateMap<LearningElement, LearningElementPe>()
             .ReverseMap()
-            .ForMember(x => x.Parent, opt => opt.Ignore())
-            .ForMember(x => x.Id, opt => opt.Ignore());
+            .ForMember(x => x.Parent, opt => opt.Ignore());
     }
 
     private void CreateLearningSpaceMap()

@@ -486,6 +486,8 @@ public class PresentationLogic : IPresentationLogic
         var command = PathwayCommandFactory.GetDeleteCommand(learningWorldEntity, learningPathWayEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
@@ -1134,7 +1136,8 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public async Task ConstructAndUploadBackupAsync(ILearningWorldViewModel world, IProgress<int> progress,
+    public async Task<UploadResponseViewModel> ConstructAndUploadBackupAsync(ILearningWorldViewModel world,
+        IProgress<int> progress,
         CancellationToken cancellationToken)
     {
         var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);
@@ -1144,7 +1147,8 @@ public class PresentationLogic : IPresentationLogic
         try
         {
             BusinessLogic.ConstructBackup(entity, filepath);
-            await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+            var response = await BusinessLogic.UploadLearningWorldToBackendAsync(filepath, progress, cancellationToken);
+            return Mapper.Map<UploadResponseViewModel>(response);
         }
         finally
         {

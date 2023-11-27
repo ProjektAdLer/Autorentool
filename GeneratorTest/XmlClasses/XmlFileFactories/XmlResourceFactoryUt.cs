@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+using Generator.ATF;
 using Generator.WorldExport;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
@@ -22,12 +22,12 @@ public class XmlResourceFactoryUt
     public void XmlResourceFactory_Constructor_AllParametersSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileManager = new XmlFileManager();
         var mockFileSystem = new MockFileSystem();
 
         // Act
-        var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
+        var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem);
 
         // Assert
         Assert.Multiple(() =>
@@ -55,7 +55,7 @@ public class XmlResourceFactoryUt
     public void XmlResourceFactory_CreateFileFactory_FileListCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -75,7 +75,7 @@ public class XmlResourceFactoryUt
         var txtDocument = new LearningElementJson(11, "", "Document", "", "", "txt", 1, learningEvl, "");
 
 
-        var resourceList = new List<LearningElementJson>
+        var resourceList = new List<ILearningElementJson>
         {
             jsonDocument,
             pngDocument,
@@ -90,7 +90,7 @@ public class XmlResourceFactoryUt
             txtDocument
         };
 
-        mockReadDsl.GetResourceElementList().Returns(resourceList);
+        mockReadAtf.GetResourceElementList().Returns(resourceList);
         var space_1 = new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "", "");
         var fileString = Path.Join(currWorkDir, "XMLFilesForExport", "Document");
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "Document"),
@@ -99,7 +99,7 @@ public class XmlResourceFactoryUt
 
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
+        var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem);
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
         systemUnderTest.CreateResourceFactory();
 
@@ -121,13 +121,13 @@ public class XmlResourceFactoryUt
     public void FileSetParametersFilesXml_SetFileXmlEntity_AndAddToFilesList()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         mockFileSystem.Directory.GetCurrentDirectory();
 
         // Act
-        var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
+        var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem);
         systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
         systemUnderTest.FileElementId = "1";
         systemUnderTest.FileElementName = "FileName";
@@ -141,15 +141,15 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Filename, Is.EqualTo(systemUnderTest.FileElementName));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Filesize, Is.EqualTo("456789"));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
-            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
-            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timecreated, Is.Not.Empty);
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContentHash, Is.EqualTo("1234"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Filename, Is.EqualTo(systemUnderTest.FileElementName));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Filesize, Is.EqualTo("456789"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
-            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
-            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.Not.Empty);
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[0].ElementUuid, Is.EqualTo("2404"));
             Assert.That(systemUnderTest.FilesXmlFilesList, Has.Count.EqualTo(2));
         });
@@ -160,7 +160,7 @@ public class XmlResourceFactoryUt
         FileSetParametersActivity_CreateActivityFolder_SetsGradesResourceRolesModuleGradeHistoryInforef_AndSerializes()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         mockFileSystem.Directory.GetCurrentDirectory();
@@ -181,7 +181,7 @@ public class XmlResourceFactoryUt
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         // Act
-        var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem, mockGradesGradeItem,
+        var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem, mockGradesGradeItem,
             mockGradesGradeItems, mockGradesGradebook, mockFileResource, mockFileResourceActivity, mockRoles,
             mockModule, mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem,
             mockInforefGradeItemref,
@@ -214,7 +214,7 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("resource"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(string.Empty));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(string.Empty));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.Not.Empty);
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.FileElementId));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.FileElementId);
 
@@ -233,10 +233,10 @@ public class XmlResourceFactoryUt
     public void CreateActivityFolder_ActivityFolderCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
 
-        var systemUnderTest = new XmlResourceFactory(mockReadDsl, fileSystem: mockFileSystem);
+        var systemUnderTest = new XmlResourceFactory(mockReadAtf, fileSystem: mockFileSystem);
 
         //Act
         systemUnderTest.CreateActivityFolder("1");

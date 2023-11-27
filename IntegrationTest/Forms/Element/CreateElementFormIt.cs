@@ -54,15 +54,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.ComponentFactories.AddStub<NoContentWarning>();
     }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    private ILearningWorldPresenter WorldPresenter { get; set; }
-    private ILearningSpacePresenter SpacePresenter { get; set; }
-    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    private IElementModelHandler ElementModelHandler { get; set; }
-    private IPresentationLogic PresentationLogic { get; set; }
-    private ILearningContentViewModel[] LearningContentViewModels { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
     private const string Expected = "test";
 
 
@@ -98,7 +89,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         Assert.That(FormModel.LearningContent, Is.Null);
         GetFormWithPopoverProvider(adaptivityElementMode: true);
-        
+
         Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentViewModel>());
     }
 
@@ -106,7 +97,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
         var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
-        
+
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         Assert.That(() => collapsables.Single(collapsable =>
                 collapsable.Instance.Title == "CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"),
@@ -225,6 +216,52 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    public async Task EnterKeyPressed_SubmitsIfFormValid()
+    {
+        var callbackCalled = false;
+        var callback = EventCallback.Factory.Create(this, () => callbackCalled = true);
+        var systemUnderTest = GetFormWithPopoverProvider(callback);
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
+
+        ConfigureValidatorAllMembers();
+
+        Assert.That(FormModel.Name, Is.EqualTo(""));
+        Assert.That(FormModel.Description, Is.EqualTo(""));
+        Assert.That(FormModel.Goals, Is.EqualTo(""));
+        Assert.That(FormModel.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.None));
+        Assert.That(FormModel.ElementModel, Is.EqualTo(ElementModel.l_random));
+        Assert.That(FormModel.Workload, Is.EqualTo(0));
+        Assert.That(FormModel.Points, Is.EqualTo(1));
+        Assert.That(FormModel.LearningContent, Is.EqualTo(null));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
+
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.KeyUp(Key.Enter);
+        SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Arg.Any<string>(),
+            Arg.Any<ILearningContentViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<ElementModel>(), Arg.Any<int>(), Arg.Any<int>());
+        Assert.That(callbackCalled, Is.False);
+
+        ChangeFields(systemUnderTest, popover);
+
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
+        input.KeyUp(Key.Enter);
+        systemUnderTest.WaitForAssertion(
+            () => SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0],
+                Expected, Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
+            TimeSpan.FromSeconds(2));
+        Assert.That(callbackCalled, Is.True);
+    }
+
+
+    [Test]
     public void NoContentAvailable_ShowsNoContentWarningInsteadOfTableSelect()
     {
         WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
@@ -234,15 +271,15 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }
-    
+
     [Test]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
-         var dialogServiceMock = Substitute.For<IDialogService>();
-         Context.Services.AddSingleton(dialogServiceMock);
-        
+        var dialogServiceMock = Substitute.For<IDialogService>();
+        Context.Services.AddSingleton(dialogServiceMock);
+
         var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
-        
+
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
 
@@ -304,7 +341,8 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         );
     }
 
-    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null, bool adaptivityElementMode = false)
+    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null,
+        bool adaptivityElementMode = false)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.RenderComponent<CreateElementForm>(p =>
@@ -315,7 +353,8 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         });
     }
 
-    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null, bool adaptivityElementMode = false)
+    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null,
+        bool adaptivityElementMode = false)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.Render(builder =>
@@ -329,4 +368,13 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             builder.CloseComponent();
         });
     }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+    private ILearningSpacePresenter SpacePresenter { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    private IElementModelHandler ElementModelHandler { get; set; }
+    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningContentViewModel[] LearningContentViewModels { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

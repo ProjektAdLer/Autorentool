@@ -1,45 +1,59 @@
 @using Microsoft.Extensions.Localization
+@using BusinessLogic.Validation
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
-@using Shared.Adaptivity
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
 <MudCard Outlined="true" Style="padding: 4px; outline: thin solid black;">
     <MudText Typo="Typo.h5">
-        @(
-                        AdaptivityQuestion.Difficulty switch
-                        {
-                            QuestionDifficulty.Easy=> Localizer["AdaptivityQuestionPreview.Header.EasyQuestion"],
-                            QuestionDifficulty.Medium=> Localizer["AdaptivityQuestionPreview.Header.MediumQuestion"],
-                            QuestionDifficulty.Hard=> Localizer["AdaptivityQuestionPreview.Header.HardQuestion"],
-                            _ => ""
-                            }
-            )
+        @(Localizer["AdaptivityQuestionPreview.Header.Question." + AdaptivityQuestion.Difficulty])
     </MudText>
 
-    <MudText Typo="Typo.body1">
-        @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
+    @if (AdaptivityQuestion is IMultipleChoiceQuestionViewModel multipleChoiceQuestion)
+    {
+        <MudText Typo="Typo.body1">@multipleChoiceQuestion.Text</MudText>
+        if (!HideChoices)
         {
-            <p>@multipleChoiceQuestion.Text</p>
+            foreach (var choice in multipleChoiceQuestion.Choices)
+            {
+                <div class="inline-flex">
+
+                    @{
+                        var isCorrectChoice = multipleChoiceQuestion.CorrectChoices.Contains(choice);
+                    }
+                    <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
+                             Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
+                    <MudText Typo="Typo.body2">@choice.Text</MudText>
+                </div>
+                <br/>
+            }
         }
-    </MudText>
+    }
     @foreach (var rule in AdaptivityQuestion.Rules)
     {
         @switch (rule.Action)
         {
             case CommentActionViewModel commentAction:
-                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
+                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
                 <MudText Typo="Typo.body1">@commentAction.Comment</MudText>
                 break;
             case ContentReferenceActionViewModel contentReferenceAction:
-                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
+                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
                 <MudText Typo="Typo.body1">@contentReferenceAction.Content</MudText>
                 break;
             case ElementReferenceActionViewModel elementReferenceAction:
-                <MudText Typo="Typo.h5">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
-                <MudText Typo="Typo.body1">@elementReferenceAction.ElementId</MudText>
+                <MudText Typo="Typo.h6">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
+                <MudText Typo="Typo.body1">
+                    @if (LearningElementNamesProvider.ElementNames != null && LearningElementNamesProvider.ElementNames.FirstOrDefault(x => x.Item1 == elementReferenceAction.ElementId) != default)
+                    {
+                        @LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2
+                    }
+                    else
+                    {
+                        @Localizer["AdaptivityQuestionPreview.ElementReference.NotFound", elementReferenceAction.ElementId]
+                    }
+                </MudText>
                 break;
         }
     }
-
 </MudCard>
 
 @code {
@@ -47,7 +61,13 @@
     [Inject]
     internal IStringLocalizer<AdaptivityQuestionPreview> Localizer { get; set; } = null!;
 
+    [Inject]
+    internal ILearningElementNamesProvider LearningElementNamesProvider { get; set; } = null!;
+
     [Parameter, EditorRequired]
     public IAdaptivityQuestionViewModel AdaptivityQuestion { get; set; } = null!;
+
+    [Parameter]
+    public bool HideChoices { get; set; } = false;
 
 }
