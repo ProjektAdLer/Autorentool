@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using System.IO.Abstractions;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
@@ -47,12 +48,7 @@ public interface IDataAccess
     /// <returns>An enumerable of content files.</returns>
     IEnumerable<ILearningContent> GetAllContent();
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
     /// that does not yet exist.
@@ -93,4 +89,7 @@ public interface IDataAccess
     /// </summary>
     /// <param name="pathToArchive">Filepath to the archive.</param>
     Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive);
+
+    IFileInfo GetFileInfoForPath(string savePath);
+    void DeleteFileByPath(string savePath);
 }

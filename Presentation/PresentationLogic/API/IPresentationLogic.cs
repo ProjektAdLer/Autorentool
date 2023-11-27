@@ -1,4 +1,5 @@
-﻿using BusinessLogic.API;
+﻿using System.IO.Abstractions;
+using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -530,11 +531,7 @@ public interface IPresentationLogic
     /// The task result contains the file path for the Learning World.</returns>
     Task<string> GetWorldSavePath();
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
@@ -587,4 +584,6 @@ public interface IPresentationLogic
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
     Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
+    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
+    void DeleteLearningWorldByPath(string savePath);
 }

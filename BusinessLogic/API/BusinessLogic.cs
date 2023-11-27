@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.IO.Abstractions;
+using System.Runtime.Serialization;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
@@ -254,30 +255,9 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return DataAccess.GetSavedLearningWorldPaths();
-    }
-
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        DataAccess.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        var savedLearningWorldPath = DataAccess.AddSavedLearningWorldPathByPathOnly(path);
-        return savedLearningWorldPath;
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        DataAccess.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     public LearningWorld LoadLearningWorld(Stream stream)
@@ -338,6 +318,16 @@ public class BusinessLogic : IBusinessLogic
     public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile)
     {
         return await DataAccess.ImportLearningWorldFromArchiveAsync(pathToFile);
+    }
+
+    public IFileInfo GetFileInfoForPath(string savePath)
+    {
+        return DataAccess.GetFileInfoForPath(savePath);
+    }
+
+    public void DeleteFileByPath(string savePath)
+    {
+        DataAccess.DeleteFileByPath(savePath);
     }
 
     #region BackendAccess

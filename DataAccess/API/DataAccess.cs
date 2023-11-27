@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using System.IO.Compression;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -11,7 +10,6 @@ using DataAccess.Persistence;
 using ICSharpCode.SharpZipLib.Zip;
 using PersistEntities;
 using PersistEntities.LearningContent;
-using Shared;
 using Shared.Configuration;
 
 namespace DataAccess.API;
@@ -119,29 +117,9 @@ public class DataAccess : IDataAccess
     public void SaveLink(LinkContent linkContent) =>
         ContentFileHandler.SaveLink(Mapper.Map<LinkContentPe>(linkContent));
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return WorldSavePathsHandler.GetSavedLearningWorldPaths();
-    }
-
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        WorldSavePathsHandler.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        return WorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path);
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        WorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        WorldSavePathsHandler.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
@@ -302,5 +280,15 @@ public class DataAccess : IDataAccess
         {
             FileSystem.Directory.Delete(tempFolder, true);
         }
+    }
+
+    public IFileInfo GetFileInfoForPath(string savePath)
+    {
+        return FileSystem.FileInfo.FromFileName(savePath);
+    }
+
+    public void DeleteFileByPath(string savePath)
+    {
+        FileSystem.File.Delete(savePath);
     }
 }

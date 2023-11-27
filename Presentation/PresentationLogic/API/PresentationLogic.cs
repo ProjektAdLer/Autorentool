@@ -45,9 +45,9 @@ namespace Presentation.PresentationLogic.API;
 
 public class PresentationLogic : IPresentationLogic
 {
-    private const string WorldFileEnding = "awf";
-    private const string SpaceFileEnding = "asf";
-    private const string ElementFileEnding = "aef";
+    private static string WorldFileEnding => FileEndings.WorldFileEnding;
+    private static string SpaceFileEnding => FileEndings.SpaceFileEnding;
+    private static string ElementFileEnding => FileEndings.ElementFileEnding;
     private const string WorldFileFormatDescriptor = "AdLer World File";
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
@@ -217,30 +217,11 @@ public class PresentationLogic : IPresentationLogic
     public void SaveLearningWorld(ILearningWorldViewModel learningWorldViewModel)
     {
         var filepath = learningWorldViewModel.SavePath;
-        if (string.IsNullOrWhiteSpace(filepath))
-        {
-            filepath = GetWorldFilepath();
-        }
-
         Logger.LogTrace("Saving world to {Path}", filepath);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath,
             world => CMapper.Map(world, learningWorldViewModel));
         BusinessLogic.ExecuteCommand(command);
-        learningWorldViewModel.SavePath = filepath;
-        AddSavedLearningWorldPath(new SavedLearningWorldPath
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
-        return;
-
-        string GetWorldFilepath()
-        {
-            var basePath = ApplicationPaths.SavedWorldsFolder;
-            var random = new Random();
-            //get random number between 0 and 999999 and pad with zeros in file name to prevent collisions
-            var fileName = $"{learningWorldViewModel.Name}-{random.Next(0, 1000000):000000}.{WorldFileEnding}";
-            filepath = Path.Join(basePath, fileName);
-            return filepath;
-        }
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -1044,7 +1025,6 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldFromPath"/>
     public void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path)
     {
-        ElectronCheck();
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, path, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
@@ -1053,29 +1033,9 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningWorld(viewmodel, command);
     }
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return BusinessLogic.GetSavedLearningWorldPaths();
-    }
-
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        BusinessLogic.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        return BusinessLogic.AddSavedLearningWorldPathByPathOnly(path);
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        BusinessLogic.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        BusinessLogic.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     #endregion
@@ -1115,6 +1075,17 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogInformation("Import from archive canceled by user");
             return null;
         }
+    }
+
+    public IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world)
+    {
+        if (string.IsNullOrWhiteSpace(world.SavePath)) return null;
+        return BusinessLogic.GetFileInfoForPath(world.SavePath);
+    }
+
+    public void DeleteLearningWorldByPath(string savePath)
+    {
+        BusinessLogic.DeleteFileByPath(savePath);
     }
 
     #region BackendAccess

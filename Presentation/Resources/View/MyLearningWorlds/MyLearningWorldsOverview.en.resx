@@ -48,4 +48,13 @@
     <data name="Page.LearningWorld.Button.Load.Text" xml:space="preserve">
         <value>Load (.awf)</value>
     </data>
+    <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
+        <value>Confirm deleting world</value>
+    </data>
+    <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
+        <value>Through this action the world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting world?</value>
+    </data>
+    <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
+        <value>Delete world</value>
+    </data>
 </root>

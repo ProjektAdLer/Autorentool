@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Commands;
+﻿using System.IO.Abstractions;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
@@ -81,11 +82,7 @@ public interface IBusinessLogic
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath" />
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
@@ -107,4 +104,6 @@ public interface IBusinessLogic
 
     void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
     Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
+    IFileInfo GetFileInfoForPath(string savePath);
+    void DeleteFileByPath(string savePath);
 }
