@@ -225,12 +225,12 @@
     {
         var courseList = await PresentationLogic.GetLmsWorldList();
         _lmsWorldList = courseList;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void DeleteLmsWorld(LmsWorldViewModel world)
+    private async Task DeleteLmsWorld(LmsWorldViewModel world)
     {
-        PresentationLogic.DeleteLmsWorld(world);
+        await PresentationLogic.DeleteLmsWorld(world);
         RefreshLmsWorldList();
     }
 

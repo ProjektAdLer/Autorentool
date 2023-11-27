@@ -577,7 +577,7 @@ public interface IPresentationLogic
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
     Task<List<LmsWorldViewModel>> GetLmsWorldList();
 
-    void DeleteLmsWorld(LmsWorldViewModel worldVm);
+    Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
     #region BackendAccess
 

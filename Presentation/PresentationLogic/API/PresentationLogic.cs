@@ -1127,10 +1127,10 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    public void DeleteLmsWorld(LmsWorldViewModel worldVm)
+    public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)
     {
         var world = Mapper.Map<LmsWorld>(worldVm);
-        BusinessLogic.DeleteLmsWorld(world);
+        await BusinessLogic.DeleteLmsWorld(world);
     }
 
 #if DEBUG

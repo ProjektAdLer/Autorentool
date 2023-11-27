@@ -55,8 +55,8 @@ public class BackendAccess : IBackendAccess
         return Mapper.Map<List<LmsWorld>>(worldsBe);
     }
 
-    public void DeleteLmsWorld(UserToken token, LmsWorld world)
+    public async Task<bool> DeleteLmsWorld(UserToken token, LmsWorld world)
     {
-        UserWebApiServices.DeleteLmsWorld(token.Token, world.WorldId);
+        return await UserWebApiServices.DeleteLmsWorld(token.Token, world.WorldId);
     }
 }

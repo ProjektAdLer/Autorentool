@@ -415,16 +415,14 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public void DeleteLmsWorld(LmsWorld world)
+    public async Task DeleteLmsWorld(LmsWorld world)
     {
-        try
-        {
-            BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]), world);
-        }
-        catch (BackendWorldDeletionException e)
-        {
-            ErrorManager.LogAndRethrowBackendAccessError(e);
-        }
+        
+        var result = await BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]), world);
+        
+        if(!result)
+            ErrorManager.LogAndRethrowBackendAccessError(new BackendWorldDeletionException("Lms world could not be deleted."));
+        
     }
 
     public async Task<List<LmsWorld>> GetLmsWorldList()

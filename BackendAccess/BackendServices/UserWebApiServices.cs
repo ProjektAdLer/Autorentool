@@ -175,19 +175,16 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         return apiResp.Worlds.ToList();
     }
 
-    public void DeleteLmsWorld(string token, int worldId)
+    public async Task<bool> DeleteLmsWorld(string token, int worldId)
     {
         var header = new Dictionary<string, string>()
         {
             { "token", token }
         };
 
-        var result = SendHttpDeleteRequestAsync<bool>($"Worlds/{worldId}", headers: header);
+        var result = await SendHttpDeleteRequestAsync<bool>($"Worlds/{worldId}", headers: header);
 
-        if (!result.Result)
-        {
-            throw new BackendWorldDeletionException("World could not be deleted.");
-        }
+        return result;
     }
 
     /// <summary>
