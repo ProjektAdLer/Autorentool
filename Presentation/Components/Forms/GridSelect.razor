@@ -1,7 +1,6 @@
 @typeparam T where T : notnull
-@using Microsoft.Extensions.Localization
-@using MudBlazor.Utilities
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @inherits MudBaseInput<T>
 <div class="h-full w-full">
     @if (Error)
@@ -10,7 +9,7 @@
     }
     @if (FilterFuncSearchableStrings is not null)
     {
-        <MudTextField T="string" Placeholder="" Immediate="true" Adornment="Adornment.Start"
+        <MudTextField T="string" Placeholder="Search..." Immediate="true" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Outlined.Search" @bind-Value="_searchString"/>
     }
     <div class="grid grid-cols-4 gap-4">
@@ -25,9 +24,6 @@
 </div>
 
 @code {
-
-    [Inject, AllowNull]
-    internal IStringLocalizer<GridSelect<T>> Localizer { get; set; }
 
     [Parameter, EditorRequired, AllowNull]
     public IEnumerable<T> Elements { get; set; }
