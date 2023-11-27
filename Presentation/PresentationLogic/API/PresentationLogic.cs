@@ -954,6 +954,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
     public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
     {
         var worldsEntity = await BusinessLogic.GetLmsWorldList();
@@ -1127,6 +1128,7 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
     public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)
     {
         var world = Mapper.Map<LmsWorld>(worldVm);

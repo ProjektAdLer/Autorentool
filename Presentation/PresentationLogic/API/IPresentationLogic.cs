@@ -17,6 +17,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Exceptions;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -575,8 +576,19 @@ public interface IPresentationLogic
         string comment);
 
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
+    
+    /// <summary>
+    /// Asynchronously retrieves a list of LMS World view models.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorldViewModel objects.</returns>
+    /// <exception cref="BackendException">Thrown if there is an issue with the HTTP request.</exception>
     Task<List<LmsWorldViewModel>> GetLmsWorldList();
 
+    /// <summary>
+    /// Asynchronously sends a request to delete a specific LMS World entity represented by a view model.
+    /// </summary>
+    /// <param name="worldVm">The LmsWorldViewModel object representing the world to be deleted.</param>
+    /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
     #region BackendAccess

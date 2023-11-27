@@ -49,12 +49,14 @@ public class BackendAccess : IBackendAccess
         return Mapper.Map<UploadResponse>(responseBe);
     }
 
+    /// <inheritdoc cref="IBackendAccess.GetLmsWorldList"/>
     public async Task<List<LmsWorld>> GetLmsWorldList(UserToken token, int authorId)
     {
         var worldsBe = await UserWebApiServices.GetLmsWorldList(token.Token, authorId);
         return Mapper.Map<List<LmsWorld>>(worldsBe);
     }
 
+    /// <inheritdoc cref="IBackendAccess.DeleteLmsWorld"/>
     public async Task<bool> DeleteLmsWorld(UserToken token, LmsWorld world)
     {
         return await UserWebApiServices.DeleteLmsWorld(token.Token, world.WorldId);

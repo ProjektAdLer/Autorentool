@@ -161,6 +161,13 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         }
     }
 
+    /// <summary>
+    /// Retrieves a list of LMS World entities for a given author asynchronously.
+    /// </summary>
+    /// <param name="token">The authentication token required for the API request.</param>
+    /// <param name="authorId">The unique identifier of the author whose worlds are to be retrieved.</param>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorldBE objects.</returns>
+    /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     public async Task<List<LmsWorldBE>> GetLmsWorldList(string token, int authorId)
     {
         var parameter = new Dictionary<string, string>()
@@ -175,6 +182,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         return apiResp.Worlds.ToList();
     }
 
+    /// <summary>
+    /// Sends an asynchronous request to delete a specific LMS World entity.
+    /// </summary>
+    /// <param name="token">The authentication token required for the API request.</param>
+    /// <param name="worldId">The unique identifier of the LMS World entity to be deleted.</param>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a boolean indicating the success of the deletion.</returns>
     public async Task<bool> DeleteLmsWorld(string token, int worldId)
     {
         var header = new Dictionary<string, string>()
@@ -283,6 +296,14 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
 
+    /// <summary>
+    /// Sends an asynchronous HTTP DELETE request to a specified URL and returns the response.
+    /// </summary>
+    /// <typeparam name="TResponse">The type of the response object expected from the API.</typeparam>
+    /// <param name="url">The relative URL where the request will be sent.</param>
+    /// <param name="headers">Optional headers to include in the request. Can be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the API response deserialized into the specified type.</returns>
+    /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpDeleteRequestAsync<TResponse>(
         string url, IDictionary<string, string>? headers = null)
     {

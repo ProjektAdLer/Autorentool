@@ -42,6 +42,21 @@ public interface IBackendAccess
         IProgress<int>? progress = null,
         CancellationToken? cancellationToken = null);
 
+    /// <summary>
+    /// Asynchronously retrieves a list of LMS World entities associated with a specific author.
+    /// </summary>
+    /// <param name="token">An object representing the user's authentication token.</param>
+    /// <param name="authorId">The unique identifier of the author whose worlds are to be retrieved.</param>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorld objects.</returns>
+    /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     Task<List<LmsWorld>> GetLmsWorldList(UserToken token, int authorId);
+    
+    /// <summary>
+    /// Asynchronously sends a request to delete a specific LMS World entity.
+    /// </summary>
+    /// <param name="token">An object representing the user's authentication token.</param>
+    /// <param name="world">The LmsWorld object representing the world to be deleted.</param>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a boolean indicating the success of the deletion.</returns>
+    /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     Task<bool> DeleteLmsWorld(UserToken token, LmsWorld world);
 }

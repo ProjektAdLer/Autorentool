@@ -45,11 +45,12 @@ public class ErrorManager : IErrorManager
         throw new GeneratorException(exception.Message, exception);
     }
 
+    /// <inheritdoc cref="IErrorManager.LogAndRethrowBackendAccessError" />
     public void LogAndRethrowBackendAccessError(Exception exception)
     {
         _logger.LogError(exception, "an error has occurred during backend access operation: {Message}",
             exception.Message);
 
-        throw new BackendWorldDeletionException(exception.Message, exception);
+        throw new BackendException(exception.Message, exception);
     }
 }

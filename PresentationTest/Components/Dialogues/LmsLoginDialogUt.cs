@@ -9,6 +9,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Shared.Configuration;
 using TestContext = Bunit.TestContext;
 
@@ -26,10 +27,12 @@ public class LmsLoginDialogUt
         _dialogService = Substitute.For<IDialogService>();
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         _localizer = Substitute.For<IStringLocalizer<LmsLoginDialog>>();
+        _errorService = Substitute.For<IErrorService>();
         _context.Services.AddSingleton(_presentationLogic);
         _context.Services.AddSingleton(_dialogService);
         _context.Services.AddSingleton(_applicationConfiguration);
         _context.Services.AddSingleton(_localizer);
+        _context.Services.AddSingleton(_errorService);
         _context.Services.AddMudServices();
         _context.ComponentFactories.AddStub<MudDialog>();
         _context.ComponentFactories.AddStub<MudForm>();
@@ -55,6 +58,7 @@ public class LmsLoginDialogUt
     private IDialogService _dialogService;
     private IApplicationConfiguration _applicationConfiguration;
     private IStringLocalizer<LmsLoginDialog> _localizer;
+    private IErrorService _errorService;
 
     [Test]
     public void OnParametersSet_CallsPresentationLogic()
