@@ -41,15 +41,25 @@
             case ContentReferenceActionViewModel contentReferenceAction:
                 <MudDivider Class="my-2"></MudDivider>
                 <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
+                <MudText Class="text-sm text-adlerdarkblue text-center px-1">@contentReferenceAction.Comment</MudText>
                 <MudText Class="text-sm text-adlerdarkblue text-center px-1">@contentReferenceAction.Content</MudText>
                 break;
             case ElementReferenceActionViewModel elementReferenceAction:
                 <MudDivider Class="my-2"></MudDivider>
                 <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
-                <MudText Class="text-sm text-adlerdarkblue text-center px-1">
+                <MudText Class="text-sm text-adlerdarkblue px-1">
                     @if (LearningElementNamesProvider.ElementNames != null && LearningElementNamesProvider.ElementNames.FirstOrDefault(x => x.Item1 == elementReferenceAction.ElementId) != default)
                     {
-                        @LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2
+                        <div class="flex flex-col gap-2 justify-start">
+                            <section class="flex flex-col place-items-start">
+                                <MudText Class="text-sm font-bold text-adlerdarkblue">Kommentar: </MudText>
+                                <MudText Class="text-sm text-adlerdarkblue text-justify">@elementReferenceAction.Comment</MudText>
+                            </section>
+                            <section class="flex flex-row items-center justify-start gap-2">
+                                <MudText Class="text-sm font-bold text-adlerdarkblue">Verweis auf Lernelement: </MudText>
+                                @LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2
+                            </section>
+                        </div>
                     }
                     else
                     {

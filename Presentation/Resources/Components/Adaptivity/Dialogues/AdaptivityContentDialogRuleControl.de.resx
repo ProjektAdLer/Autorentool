@@ -25,7 +25,7 @@
         <value>Zusätzlichen Hinweis löschen</value>
     </data>
     <data name="ReferenceDialog.Title.Text" xml:space="preserve">
-        <value>Referenz setzen</value>
+        <value>Verweis hinzufügen</value>
     </data>
     <data name="Button.EditReference.Text" xml:space="preserve">
         <value>Verweis</value>

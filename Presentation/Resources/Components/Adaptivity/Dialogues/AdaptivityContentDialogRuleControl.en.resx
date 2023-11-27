@@ -22,7 +22,7 @@
         <value>Delete additional hint</value>
     </data>
     <data name="ReferenceDialog.Title.Text" xml:space="preserve">
-        <value>Set reference</value>
+        <value>Add reference</value>
     </data>
     <data name="CommentDialog.Title.Text" xml:space="preserve">
         <value>Set comment</value>
