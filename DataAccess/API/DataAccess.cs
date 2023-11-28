@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -270,11 +271,24 @@ public class DataAccess : IDataAccess
             ContentFileHandler.SaveLinks(links);
 
             //save world to savedworlds folder
-            SaveLearningWorldToFile(world,
-                FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf"));
+            var newSavePath = FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf");
+            //parse save path back into name
+            var newWorldName = ParsePathIntoName(newSavePath, world.Name);
+            world.Name = newWorldName;
+
+            SaveLearningWorldToFile(world, newSavePath);
 
             //return world entity
             return world;
+            string ParsePathIntoName(string path, string oldName)
+            {
+                path = FileSystem.Path.GetFileName(path);
+                var regex = new Regex(@"_(\d*)\.");
+                var match = regex.Match(path);
+                if (!match.Success) return oldName;
+                var number = match.Groups[1].Value;
+                return $"{oldName} ({number})";
+            }
         }
         finally
         {
