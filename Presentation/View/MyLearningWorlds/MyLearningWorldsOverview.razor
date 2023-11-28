@@ -104,8 +104,8 @@
 
     private async void ImportLearningWorldAsync()
     {
-        await PresentationLogic.ImportLearningWorldFromArchiveAsync();
-        NavigateToApp();
+        if (await PresentationLogic.ImportLearningWorldFromArchiveAsync() != null)
+            NavigateToApp();
     }
 
     private void CreateLearningWorld()
