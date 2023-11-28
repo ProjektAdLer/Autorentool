@@ -12,7 +12,6 @@ using Presentation.Components.Forms.Content;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using TestHelpers;
 
@@ -64,6 +63,31 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
 
         var submitButton = systemUnderTest.FindComponent<MudButton>();
         submitButton.Find("button").Click();
+
+        PresentationLogic.Received(1).SaveLink(vm);
+    }
+
+    [Test]
+    public void EnterKeyPressed_Submits()
+    {
+        var vm = ViewModelProvider.GetLinkContent();
+        var systemUnderTest = GetRenderedComponent();
+        Mapper.Map<LinkContentViewModel>(Arg.Any<object>()).Returns(vm);
+
+        var textFields = systemUnderTest.FindComponents<MudTextField<string>>();
+        var nameField = textFields[0].Find("input");
+        var linkField = textFields[1].Find("input");
+
+        nameField.Change("name");
+        linkField.Change("url");
+
+        nameField.KeyUp(Key.Enter);
+
+        PresentationLogic.Received(1).SaveLink(vm);
+
+        PresentationLogic.ClearReceivedCalls();
+
+        linkField.KeyUp(Key.Enter);
 
         PresentationLogic.Received(1).SaveLink(vm);
     }

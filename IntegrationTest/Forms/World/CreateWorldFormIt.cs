@@ -152,14 +152,44 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
+    [Test]
+    public async Task EnterKeyPressed_SubmitsIfFormValid()
+    {
+        var callbackCalled = false;
+        var callback = EventCallback.Factory.Create(this, () => callbackCalled = true);
+        var systemUnderTest = GetRenderedComponent(callback);
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+
+        ConfigureValidatorNameIsTest();
+
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(""));
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.False);
+
+        var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
+        var input = mudInput.Find("input");
+        input.KeyUp(Key.Enter);
+        Assert.That(callbackCalled, Is.False);
+        WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+
+        input.Change(Expected);
+        Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
+        input.KeyUp(Key.Enter);
+        Assert.That(callbackCalled, Is.True);
+        WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+
     private void ConfigureValidatorNameIsTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+                return (string) FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                     ? Enumerable.Empty<string>()
-                    : new[] { "Must be test" };
+                    : new[] {"Must be test"};
             }
         );
     }
@@ -167,9 +197,9 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+            (string) FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                 ? Enumerable.Empty<string>()
-                : new[] { "Must be test" }
+                : new[] {"Must be test"}
         );
     }
 

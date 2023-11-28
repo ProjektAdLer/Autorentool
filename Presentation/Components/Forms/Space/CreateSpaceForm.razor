@@ -12,22 +12,21 @@
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
 <MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
-<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
+<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace" @ref="_form"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-            
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
             </div>
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
-            
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudText Typo="Typo.caption">
                     @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -36,6 +35,7 @@
                                  Min="0"
                                  For="@(() => FormModel.RequiredPoints)"
                                  DebounceInterval="DebounceInterval"
+                                 OnKeyUp="HandleKeyEvent"
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"/>
             </div>
@@ -45,6 +45,7 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                            AnchorOrigin="Origin.BottomCenter"
+                           OnKeyUp="HandleKeyEvent"
                            Label=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
                            For="@(() => FormModel.Theme)">
@@ -100,6 +101,7 @@
     [Parameter]
     public int DebounceInterval { get; set; } = 300;
 
+
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
@@ -108,13 +110,22 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
-    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
 
+    private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints, model.Theme);
+            model.Goals, model.RequiredPoints, model.Theme);
+    }
+
+    private async Task HandleKeyEvent(KeyboardEventArgs arg)
+    {
+        if (arg.Key == "Enter")
+        {
+            await _form.SubmitAsync();
+        }
     }
 
 }
