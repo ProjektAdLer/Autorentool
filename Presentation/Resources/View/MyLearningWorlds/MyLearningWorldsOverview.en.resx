@@ -57,4 +57,7 @@
     <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
         <value>Delete world</value>
     </data>
+    <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
+        <value>Show file names</value>
+    </data>
 </root>

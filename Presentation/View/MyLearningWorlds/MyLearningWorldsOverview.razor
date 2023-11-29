@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.MyLearningWorlds
 @using Presentation.PresentationLogic.API
 @using System.Diagnostics.CodeAnalysis
+@using System.IO.Abstractions
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -13,33 +14,39 @@
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <p class="text-md -mt-4">@Localizer["Page.LearningWorld.Subheading"]</p>
-        <section class="flex flex-row gap-2 justify-center bg-blacktrans-200 p-1 rounded-lg">
-            <div class="btn-standard w-28 flex justify-center items-center create-world-button"
-                 @onclick="CreateLearningWorld"
-                 title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
-                <button class="gap-2">
-                    <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
-                    <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
-                </button>
-                <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+        <div class="flex flex-col bg-blacktrans-200 p-1 rounded-lg">
+            <section class="flex flex-row gap-2 justify-center">
+                <div class="btn-standard w-28 flex justify-center items-center create-world-button"
+                     @onclick="CreateLearningWorld"
+                     title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
+                    <button class="gap-2">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
+                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
+                    </button>
+                    <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+                </div>
+                <div class="btn-standard w-42 flex justify-center items-center import-world-button"
+                     @onclick="ImportLearningWorldAsync"
+                     title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
+                    <button class="gap-2">
+                        <MudIcon Icon="@Icons.Material.Filled.Unarchive" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
+                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
+                    </button>
+                    <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+                </div>
+            </section>
+            <div class="flex flex-row gap-2 justify-center">
+                <MudCheckBox @bind-Checked="_showFileName">@Localizer["Checkbox.ShowFileName.Label"]</MudCheckBox>
             </div>
-            <div class="btn-standard w-42 flex justify-center items-center import-world-button"
-                 @onclick="ImportLearningWorldAsync"
-                 title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
-                <button class="gap-2">
-                    <MudIcon Icon="@Icons.Material.Filled.Unarchive" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
-                    <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
-                </button>
-                <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
-            </div>
-        </section>
+        </div> 
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded-lg">
             <MudGrid Class="flex justify-center overflow-auto mt-4 h-[95%] shrink" Spacing="2">
-                @foreach (var world in WorkspaceViewModel.LearningWorlds)
+                @foreach (var (world, fileInfo) in OrderedWorldsWithFileinfos)
                 {
                     <LearningWorldCard @key="world" OnOpenLearningWorld="OpenLearningWorld" LearningWorld="world"
                                        OnCloseLearningWorld="DeleteLearningWorld"
-                                       FileInfo="@MyLearningWorldsProvider.GetFileInfoFromPath(world.SavePath)"/>
+                                       FileInfo="fileInfo"
+                                       ShowFileName="_showFileName"/>
                 }
             </MudGrid>
         </section>
@@ -76,6 +83,12 @@
 
 
     private bool _createLearningWorldDialogOpen;
+    private bool _showFileName;
+
+    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos =>
+        WorkspaceViewModel.LearningWorlds
+            .Select(world => (world, MyLearningWorldsProvider.GetFileInfoFromPath(world.SavePath)))
+            .OrderByDescending(tuple => tuple.Item2?.LastWriteTime);
 
     protected override void OnParametersSet()
     {
@@ -88,6 +101,7 @@
                 await InvokeAsync(StateHasChanged);
             }
         };
+        _showFileName = false;
     }
 
     protected override void OnAfterRender(bool firstRender)

@@ -12,7 +12,10 @@
                     @LearningWorld.Name
                 </MudText>
                 <MudText Class="text-sm tracking-widers break-all">
-                    @GetPathDisplayMessage()<br/>
+                    @if (ShowFileName)
+                    {
+                        @GetPathDisplayMessage()<br/>
+                    }
                     @if (FileInfo != null)
                     {
                         @Localizer["LearningWorldCard.LastWriteTime", FileInfo.LastWriteTime]
@@ -54,6 +57,8 @@
 
     [Parameter, EditorRequired]
     public IFileInfo? FileInfo { get; set; }
+    [Parameter, EditorRequired]
+    public bool ShowFileName { get; set; }
 
     private string GetPathDisplayMessage()
     {
