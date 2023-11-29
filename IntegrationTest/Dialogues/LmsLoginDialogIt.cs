@@ -41,6 +41,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(_presentationLogic));
         Assert.That(systemUnderTest.Instance.Configuration, Is.EqualTo(_applicationConfiguration));
+        Assert.That(systemUnderTest.Instance.ErrorService, Is.EqualTo(_errorService));
     }
 
     [Test]
