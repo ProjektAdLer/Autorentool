@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
@@ -8,10 +9,14 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.MyLearningWorlds;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Presentation.View.MyLearningWorlds;
 using Shared;
+using TestHelpers;
 
 namespace IntegrationTest.View.MyLearningWorlds;
 
@@ -23,8 +28,12 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
     {
         MyLearningWorldsProvider = Substitute.For<IMyLearningWorldsProvider>();
         PresentationLogic = Substitute.For<IPresentationLogic>();
+        WorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         Context.Services.AddSingleton(MyLearningWorldsProvider);
         Context.Services.AddSingleton(PresentationLogic);
+        Context.Services.AddSingleton(WorkspaceVm);
+        Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.ComponentFactories.AddStub<HeaderBar>();
         Context.ComponentFactories.AddStub<CreateWorldForm>();
         Context.ComponentFactories.AddStub<LearningWorldCard>();
@@ -32,6 +41,8 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
 
     private IMyLearningWorldsProvider MyLearningWorldsProvider { get; set; }
     private IPresentationLogic PresentationLogic { get; set; }
+    private IAuthoringToolWorkspaceViewModel WorkspaceVm { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -47,51 +58,36 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
     [Test]
     public void Render_DisplaysLoadedAndSavedWorlds()
     {
-        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
-        var savedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
-        MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
-        MyLearningWorldsProvider.GetSavedLearningWorlds().Returns(savedLearningWorldPaths);
-
+        IList<ILearningWorldViewModel> worlds = new List<ILearningWorldViewModel>
+        {
+            ViewModelProvider.GetLearningWorld(),
+            ViewModelProvider.GetLearningWorld(),
+        };
+        WorkspaceVm.LearningWorlds.Returns(worlds);
         var systemUnderTest = GetRenderedComponent();
+        MyLearningWorldsProvider.Received(systemUnderTest.RenderCount).ReloadLearningWorldsInWorkspace();
 
         var learningWorldCards = systemUnderTest.FindComponents<Stub<LearningWorldCard>>();
-        Assert.That(learningWorldCards.Count,
-            Is.EqualTo(loadedLearningWorldPaths.Length + savedLearningWorldPaths.Length));
-        Assert.That(learningWorldCards[0].Instance.Parameters["LearningWorldPath"],
-            Is.EqualTo(loadedLearningWorldPaths[0]));
-        Assert.That(learningWorldCards[1].Instance.Parameters["LearningWorldPath"],
-            Is.EqualTo(savedLearningWorldPaths[0]));
+        Assert.That(learningWorldCards, Has.Count.EqualTo(worlds.Count));
     }
+    
 
     [Test]
-    public async Task CloseWorldButtonOnCard_Clicked_CallsWorldsProvider()
+    public async Task OpenWorldButtonOnCard_Clicked_CallsSelectedViewModelsProvider()
     {
-        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
-        MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
-
+        IList<ILearningWorldViewModel> worlds = new List<ILearningWorldViewModel>
+        {
+            ViewModelProvider.GetLearningWorld(),
+            ViewModelProvider.GetLearningWorld(),
+        };
+        WorkspaceVm.LearningWorlds.Returns(worlds);
         var systemUnderTest = GetRenderedComponent();
 
         var learningWorldCard = systemUnderTest.FindComponent<Stub<LearningWorldCard>>().Instance;
-        var callback = (EventCallback<SavedLearningWorldPath>) learningWorldCard.Parameters["OnCloseWorld"];
-        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(loadedLearningWorldPaths[0]));
-
-        await MyLearningWorldsProvider.Received(1).DeleteLearningWorld(loadedLearningWorldPaths[0]);
-        MyLearningWorldsProvider.Received(1).DeletePathFromSavedLearningWorlds(loadedLearningWorldPaths[0]);
-    }
-
-    [Test]
-    public async Task OpenWorldButtonOnCard_Clicked_CallsWorldsProvider()
-    {
-        var loadedLearningWorldPaths = new[] {new SavedLearningWorldPath()};
-        MyLearningWorldsProvider.GetLoadedLearningWorlds().Returns(loadedLearningWorldPaths);
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var learningWorldCard = systemUnderTest.FindComponent<Stub<LearningWorldCard>>().Instance;
-        var callback = (EventCallback<SavedLearningWorldPath>) learningWorldCard.Parameters["OnOpenLearningWorld"];
-        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(loadedLearningWorldPaths[0]));
-
-        MyLearningWorldsProvider.Received().OpenLearningWorld(loadedLearningWorldPaths[0]);
+        var callback = (EventCallback<ILearningWorldViewModel>) learningWorldCard.Parameters["OnOpenLearningWorld"];
+        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(worlds[0]));
+     
+        SelectedViewModelsProvider.Received().SetLearningWorld(worlds[0], null);
     }
 
     [Test]
@@ -114,7 +110,7 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
 
         systemUnderTest.Find("div.import-world-button").Click();
 
-        MyLearningWorldsProvider.Received().LoadSavedLearningWorld();
+        PresentationLogic.Received().ImportLearningWorldFromArchiveAsync();
     }
 
     private IRenderedComponent<MyLearningWorldsOverview> GetRenderedComponent()

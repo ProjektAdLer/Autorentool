@@ -188,90 +188,17 @@ public class DataAccessUt
     {
         var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
         var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-
-        systemUnderTest.GetSavedLearningWorldPaths();
-
-        mockWorldSavePathsHandler.Received().GetSavedLearningWorldPaths();
-    }
-
-    [Test]
-    public void GetSavedLearningWorldPaths_ReturnsSavedLearningWorldPaths()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var expectedPaths = new List<SavedLearningWorldPath>
+        var expectedFileInfos = new List<IFileInfo>
         {
-            new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "name", Path = "C:/nonsense" },
-            new() { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "name2", Path = "C:/nonsense2" }
+            Substitute.For<IFileInfo>(),
+            Substitute.For<IFileInfo>(),
+            Substitute.For<IFileInfo>(),
         };
-        mockWorldSavePathsHandler.GetSavedLearningWorldPaths().Returns(expectedPaths);
+        mockWorldSavePathsHandler.GetSavedLearningWorldPaths().Returns(expectedFileInfos);
 
         var actualPaths = systemUnderTest.GetSavedLearningWorldPaths();
 
-        Assert.That(actualPaths, Is.EqualTo(expectedPaths));
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPath_CallsWorldSavePathsHandler()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var path = new SavedLearningWorldPath();
-
-        systemUnderTest.AddSavedLearningWorldPath(path);
-
-        mockWorldSavePathsHandler.Received().AddSavedLearningWorldPath(path);
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPathByPathOnly_CallsWorldSavePathsHandler()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var path = "C:/nonsense";
-
-        systemUnderTest.AddSavedLearningWorldPathByPathOnly(path);
-
-        mockWorldSavePathsHandler.Received().AddSavedLearningWorldPathByPathOnly(path);
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPathByPathOnly_ReturnsSavedLearningWorldPath()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var path = "C:/nonsense";
-        var expectedPath = new SavedLearningWorldPath();
-        mockWorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path).Returns(expectedPath);
-
-        var actualPath = systemUnderTest.AddSavedLearningWorldPathByPathOnly(path);
-
-        Assert.That(actualPath, Is.EqualTo(expectedPath));
-    }
-
-    [Test]
-    public void UpdateIdOfSavedLearningWorldPath_CallsWorldSavePathsHandler()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var path = new SavedLearningWorldPath();
-        var id = Guid.Parse("00000000-0000-0000-0000-000000000000");
-
-        systemUnderTest.UpdateIdOfSavedLearningWorldPath(path, id);
-
-        mockWorldSavePathsHandler.Received().UpdateIdOfSavedLearningWorldPath(path, id);
-    }
-
-    [Test]
-    public void RemoveSavedLearningWorldPath_CallsWorldSavePathsHandler()
-    {
-        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
-        var systemUnderTest = CreateTestableDataAccess(worldSavePathsHandler: mockWorldSavePathsHandler);
-        var path = new SavedLearningWorldPath();
-
-        systemUnderTest.RemoveSavedLearningWorldPath(path);
-
-        mockWorldSavePathsHandler.Received().RemoveSavedLearningWorldPath(path);
+        Assert.That(actualPaths, Is.EqualTo(expectedFileInfos));
     }
 
     [Test]

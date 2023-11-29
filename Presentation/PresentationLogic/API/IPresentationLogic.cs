@@ -125,8 +125,9 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">The Workspace ViewModel.</param>
     /// <param name="path">The Path, the Learning World should loaded from.</param>
-    /// <returns></returns>
-    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path);
+    /// <param name="setAsSelected">Whether or not the loaded Learning World should be set as the selected one.</param>
+    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path,
+        bool setAsSelected = true);
 
     /// <summary>
     /// Adds a new learning space in the given learning world with the corresponding command.

@@ -1,8 +1,12 @@
 using System;
+using System.IO.Abstractions;
 using Bunit;
+using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.View.MyLearningWorlds;
 using PresentationTest;
 using Shared;
@@ -15,30 +19,29 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
-        var savedLearningWorldPath = new SavedLearningWorldPath
-        {
-            Id = new Guid("00000000-0000-0000-0000-000000000000"),
-            Name = "Test",
-            Path = "Test"
-        };
-        var onOpenLearningWorld = EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { });
-        var onCloseWorld = EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { });
+        var world = Substitute.For<ILearningWorldViewModel>();
+        var onOpenLearningWorld = EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { });
+        var onCloseWorld = EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { });
+        var fileInfo = Substitute.For<IFileInfo>();
 
-        var systemUnderTest = GetRenderedComponent(savedLearningWorldPath, onOpenLearningWorld, onCloseWorld);
+        var systemUnderTest = GetRenderedComponent(world, onOpenLearningWorld, onCloseWorld, fileInfo);
 
         Assert.That(systemUnderTest.Instance.Localizer, Is.Not.Null);
-        Assert.That(systemUnderTest.Instance.LearningWorldPath, Is.EqualTo(savedLearningWorldPath));
+        Assert.That(systemUnderTest.Instance.LearningWorld, Is.EqualTo(world));
         Assert.That(systemUnderTest.Instance.OnOpenLearningWorld, Is.EqualTo(onOpenLearningWorld));
-        Assert.That(systemUnderTest.Instance.OnCloseWorld, Is.EqualTo(onCloseWorld));
+        Assert.That(systemUnderTest.Instance.OnCloseLearningWorld, Is.EqualTo(onCloseWorld));
+        Assert.That(systemUnderTest.Instance.FileInfo, Is.EqualTo(fileInfo));
     }
 
     [Test]
     public void CloseButtonPressed_CallsOnCloseCallback()
     {
         var callbackCallCount = 0;
-        var onCloseWorld = EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { callbackCallCount++; });
+        var world = Substitute.For<ILearningWorldViewModel>();
+        world.SavePath = "/foo/bar";
+        var onCloseWorld = EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { callbackCallCount++; });
 
-        var systemUnderTest = GetRenderedComponent(onCloseWorld: onCloseWorld);
+        var systemUnderTest = GetRenderedComponent(onCloseWorld: onCloseWorld, learningWorld: world);
 
         systemUnderTest.FindComponentWithMarkup<MudFab>("close-button").Find("button").Click();
 
@@ -49,10 +52,11 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     public void OpenButtonPressed_CallsOnOpenCallback()
     {
         var callbackCallCount = 0;
-        var onOpenLearningWorld =
-            EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { callbackCallCount++; });
+        var world = Substitute.For<ILearningWorldViewModel>();
+        var onOpenLearningWorld = EventCallback.Factory.Create<ILearningWorldViewModel>(this,
+            () => { callbackCallCount++; });
 
-        var systemUnderTest = GetRenderedComponent(onOpenLearningWorld: onOpenLearningWorld);
+        var systemUnderTest = GetRenderedComponent(onOpenLearningWorld: onOpenLearningWorld, learningWorld: world);
 
         systemUnderTest.Find("button.open-button").Click();
 
@@ -60,18 +64,20 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     }
 
     private IRenderedComponent<LearningWorldCard> GetRenderedComponent(
-        SavedLearningWorldPath? savedLearningWorldPath = null,
-        EventCallback<SavedLearningWorldPath>? onOpenLearningWorld = null,
-        EventCallback<SavedLearningWorldPath>? onCloseWorld = null)
+        ILearningWorldViewModel? learningWorld = null,
+        EventCallback<ILearningWorldViewModel>? onOpenLearningWorld = null,
+        EventCallback<ILearningWorldViewModel>? onCloseWorld = null,
+        IFileInfo? fileInfo = null
+    )
     {
-        savedLearningWorldPath ??= new SavedLearningWorldPath();
-        onOpenLearningWorld ??= EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { });
-        onCloseWorld ??= EventCallback.Factory.Create<SavedLearningWorldPath>(this, () => { });
+        onOpenLearningWorld ??= EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { });
+        onCloseWorld ??= EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { });
         return Context.RenderComponent<LearningWorldCard>(p =>
         {
-            p.Add(c => c.LearningWorldPath, savedLearningWorldPath);
+            p.Add(c => c.LearningWorld, learningWorld);
             p.Add(c => c.OnOpenLearningWorld, onOpenLearningWorld.Value);
-            p.Add(c => c.OnCloseWorld, onCloseWorld.Value);
+            p.Add(c => c.OnCloseLearningWorld, onCloseWorld.Value);
+            p.Add(c => c.FileInfo, fileInfo);
         });
     }
 }

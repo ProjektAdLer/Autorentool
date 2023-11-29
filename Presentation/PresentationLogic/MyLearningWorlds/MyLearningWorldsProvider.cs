@@ -9,9 +9,11 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 {
     private readonly FileInfoFullNameComparer _fileInfoComparer;
 
-    public MyLearningWorldsProvider(IPresentationLogic presentationLogic,
-        IAuthoringToolWorkspacePresenter workspacePresenter, IFileSystem fileSystem,
-        ILogger<MyLearningWorldsProvider> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
+    public MyLearningWorldsProvider(ILogger<MyLearningWorldsProvider> logger,
+        IPresentationLogic presentationLogic,
+        IAuthoringToolWorkspacePresenter workspacePresenter,
+        ISelectedViewModelsProvider selectedViewModelsProvider
+    )
     {
         PresentationLogic = presentationLogic;
         WorkspacePresenter = workspacePresenter;

@@ -1179,79 +1179,6 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public async Task SaveLearningWorldAsync_NoPreviousPathInWorld_GeneratesNewWorldFilepath()
-    {
-        var resultId = Guid.Empty;
-        var resultName = string.Empty;
-        var resultPath = string.Empty;
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.When(sub => sub.AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>())).Do(sub =>
-        {
-            resultId = sub.Arg<SavedLearningWorldPath>().Id;
-            resultName = sub.Arg<SavedLearningWorldPath>().Name;
-            resultPath = sub.Arg<SavedLearningWorldPath>().Path;
-        });
-        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
-        mockHybridSupport.IsElectronActive.Returns(true);
-        var mockMapper = Substitute.For<IMapper>();
-        var learningWorld = ViewModelProvider.GetLearningWorld();
-        var entity = EntityProvider.GetLearningWorld();
-        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorld).Returns(entity);
-        var filepathPart1 = Path.Join(ApplicationPaths.SavedWorldsFolder, $"{learningWorld.Name}-");
-        var filepathPart2 = learningWorld.FileEnding;
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            hybridSupportWrapper: mockHybridSupport);
-
-        systemUnderTest.SaveLearningWorld(learningWorld);
-
-        mockBusinessLogic.Received().AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>());
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultId, Is.EqualTo(entity.Id));
-            Assert.That(resultName, Is.EqualTo(entity.Name));
-            Assert.That(resultPath, Contains.Substring(filepathPart1));
-            Assert.That(resultPath, Contains.Substring(filepathPart2));
-        });
-    }
-
-    [Test]
-    public async Task SaveLearningWorldAsync_PreviousPathInWorld_UsesPreviousPath()
-    {
-        var resultId = Guid.Empty;
-        var resultName = string.Empty;
-        var resultPath = string.Empty;
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.When(sub => sub.AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>())).Do(sub =>
-        {
-            resultId = sub.Arg<SavedLearningWorldPath>().Id;
-            resultName = sub.Arg<SavedLearningWorldPath>().Name;
-            resultPath = sub.Arg<SavedLearningWorldPath>().Path;
-        });
-        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
-        mockHybridSupport.IsElectronActive.Returns(true);
-        var mockMapper = Substitute.For<IMapper>();
-        var learningWorld = ViewModelProvider.GetLearningWorld();
-        var learningWorldSavePath = "foobar";
-        learningWorld.SavePath = learningWorldSavePath;
-        var entity = EntityProvider.GetLearningWorld();
-        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorld).Returns(entity);
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            hybridSupportWrapper: mockHybridSupport);
-
-        systemUnderTest.SaveLearningWorld(learningWorld);
-
-        mockBusinessLogic.Received().AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>());
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultId, Is.EqualTo(entity.Id));
-            Assert.That(resultName, Is.EqualTo(entity.Name));
-            Assert.That(resultPath, Is.EqualTo(learningWorldSavePath));
-        });
-    }
-
-    [Test]
     public void SaveLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1588,41 +1515,6 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void LoadLearningWorldFromPath_ThrowsNYIExceptionWhenNotRunningInElectron()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
-        mockHybridSupport.IsElectronActive.Returns(false);
-        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-
-        var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
-
-        var ex = Assert.Throws<NotImplementedException>(() =>
-            systemUnderTest.LoadLearningWorldFromPath(authoringToolWorkspaceVm, "foobar"));
-        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
-    }
-
-    [Test]
-    public void LoadLearningWorldFromPath_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
-        mockHybridSupport.IsElectronActive.Returns(true);
-        var mockServiceProvider = Substitute.For<IServiceProvider>();
-        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
-        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-
-        var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
-                hybridSupportWrapper: mockHybridSupport);
-
-        var ex = Assert.Throws<InvalidOperationException>(() =>
-            systemUnderTest.LoadLearningWorldFromPath(authoringToolWorkspaceVm, "foobar"));
-        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
-    }
-
-    [Test]
     public void LoadLearningWorldFromPath_CallsBusinessLogic()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -1685,82 +1577,21 @@ public class PresentationLogicUt
     public void GetSavedLearningWorldPaths_ReturnsResultFromBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
+        var fileInfos = new[]
+        {
+            Substitute.For<IFileInfo>(),
+            Substitute.For<IFileInfo>(),
+            Substitute.For<IFileInfo>(),
+        };
         mockBusinessLogic.GetSavedLearningWorldPaths()
-            .Returns(new List<SavedLearningWorldPath> { savedLearningWorldPath });
+            .Returns(fileInfos);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
         var result = systemUnderTest.GetSavedLearningWorldPaths().ToList();
 
-        Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result, Contains.Item(savedLearningWorldPath));
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPath_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-        var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
-
-        systemUnderTest.AddSavedLearningWorldPath(savedLearningWorldPath);
-
-        mockBusinessLogic.Received().AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPathByPathOnly_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-
-        systemUnderTest.AddSavedLearningWorldPathByPathOnly("foobar");
-
-        mockBusinessLogic.Received().AddSavedLearningWorldPathByPathOnly("foobar");
-    }
-
-    [Test]
-    public void AddSavedLearningWorldPathByPathOnly_ReturnsResultFromBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
-        mockBusinessLogic.AddSavedLearningWorldPathByPathOnly("foobar").Returns(savedLearningWorldPath);
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-
-        var result = systemUnderTest.AddSavedLearningWorldPathByPathOnly("foobar");
-
-        Assert.That(result, Is.EqualTo(savedLearningWorldPath));
-    }
-
-    [Test]
-    public void UpdateIdOfSavedLearningWorldPath_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-        var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
-        var changedId = Guid.ParseExact("00000000-0000-0000-0000-000000000002", "D");
-
-        systemUnderTest.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, changedId);
-
-        mockBusinessLogic.Received().UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, changedId);
-    }
-
-    [Test]
-    public void RemoveSavedLearningWorldPath_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-        var savedLearningWorldPath = EntityProvider.GetSavedLearningWorldPath();
-
-        systemUnderTest.RemoveSavedLearningWorldPath(savedLearningWorldPath);
-
-        mockBusinessLogic.Received().RemoveSavedLearningWorldPath(savedLearningWorldPath);
+        Assert.That(result, Has.Count.EqualTo(fileInfos.Length));
+        Assert.That(result, Is.EquivalentTo(fileInfos));
     }
 
     [Test]
