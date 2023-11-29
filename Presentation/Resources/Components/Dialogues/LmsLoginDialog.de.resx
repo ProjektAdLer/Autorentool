@@ -83,4 +83,13 @@
     <data name="DialogContent.Error.TokenInvalid" xml:space="preserve">
         <value>Bitte loggen Sie sich erneut ein.</value>
     </data>
+    <data name="ConfirmDeleteLmsWorld.DialogText" xml:space="preserve">
+        <value>Sind Sie sicher, dass sie die Lernwelt auf Moodle wirklich löschen möchten?</value>
+    </data>
+    <data name="ConfirmDeleteLmsWorld.SubmitButtonText" xml:space="preserve">
+        <value>Ja</value>
+    </data>
+    <data name="ConfirmDeleteLmsWorld.Title" xml:space="preserve">
+        <value>Lernwelt aus LMS löschen</value>
+    </data>
 </root>
