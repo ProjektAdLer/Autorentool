@@ -7,11 +7,14 @@
 
 ### Added
 
--
+- Import and export functionality:
+  - You can now export your learning worlds as a .zip archive which you can store elsewhere for backup purposes or
+  share with others. It contains all the data necessary to restore the entire world on another machine.
+  - You can now import learning worlds from .zip archives.
 
 ### Changed
 
--
+- Changed the way learning worlds are fetched internally and displayed on the start screen.
 
 ### Deprecated
 
