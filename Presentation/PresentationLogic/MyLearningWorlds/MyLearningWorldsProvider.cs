@@ -37,7 +37,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
         var newPaths = GetSavedLearningWorldPaths().Except(LoadedWorldsFileInfos, _fileInfoComparer).Cast<IFileInfo>();
         foreach (var newPath in newPaths)
         {
-            PresentationLogic.LoadLearningWorldFromPath(WorkspaceVm, newPath.FullName);
+            PresentationLogic.LoadLearningWorldFromPath(WorkspaceVm, newPath.FullName, false);
         }
     }
 
