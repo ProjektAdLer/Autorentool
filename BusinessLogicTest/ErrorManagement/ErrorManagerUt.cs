@@ -21,7 +21,7 @@ public class ErrorManagerUt
 
         Assert.That(ex.Message, Is.EqualTo(dummyException.Message));
     }
-    
+
     [Test]
     public void LogAndRethrowUndoError_LogsErrorAndRethrows()
     {
@@ -55,13 +55,26 @@ public class ErrorManagerUt
     {
         var mockLogger = Substitute.For<ILogger<ErrorManager>>();
         var systemUnderTest = new ErrorManager(mockLogger);
-        
+
         var dummyException = new Exception("Dummy Exception");
-        
+
         var ex = Assert.Throws<GeneratorException>(() => systemUnderTest.LogAndRethrowGeneratorError(dummyException));
-        
+
         Assert.That(ex?.Message, Is.EqualTo(dummyException.Message));
         Assert.That(ex?.InnerException, Is.EqualTo(dummyException));
     }
 
+    [Test]
+    public void LogAndRethrowBackendAccessError_LogsErrorAndRethrows()
+    {
+        var mockLogger = Substitute.For<ILogger<ErrorManager>>();
+        var systemUnderTest = new ErrorManager(mockLogger);
+
+        var dummyException = new Exception("Dummy Exception");
+
+        var ex = Assert.Throws<BackendException>(() => systemUnderTest.LogAndRethrowBackendAccessError(dummyException));
+
+        Assert.That(ex?.Message, Is.EqualTo(dummyException.Message));
+        Assert.That(ex?.InnerException, Is.EqualTo(dummyException));
+    }
 }
