@@ -14,6 +14,8 @@
 
 ### Changed
 
+- Presentation of the learning elements in the hierarchy and in Moodle according to the linear order of the floor plan.
+- The Create-World, -Space, -Element and -Link dialogs can be confirmed with the Enter key
 - Changed the way learning worlds are fetched internally and displayed on the start screen.
   - You can now see the last modify time and optionally file name of worlds.
   - You can now sort worlds by name or last modify time.

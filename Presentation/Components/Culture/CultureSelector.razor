@@ -82,7 +82,7 @@
 
     private CssBuilder ButtonBaseClass => new("text-white bg-buttonbgblue py-1 px-2");
     private CssBuilder PBaseClass => new("z-10 text-white font-bold");
-    private CssBuilder ImageBaseClass => new("z-0 pointer-events-none opacity-90 absolute rounded-full w-6 h-6");
+    private CssBuilder ImageBaseClass => new("z-0 pointer-events-none absolute rounded-full w-6 h-6");
 
     private CssBuilder GermanButtonClass =>
         ButtonBaseClass
@@ -97,7 +97,8 @@
     private CssBuilder GermanImageClass =>
         ImageBaseClass
             .AddClass("german")
-            .AddClass("opacity-20", !GermanSelected);
+            .AddClass("opacity-20", !GermanSelected)
+            .AddClass("opacity-90", GermanSelected);
 
     private CssBuilder EnglishButtonClass =>
         ButtonBaseClass
@@ -112,6 +113,7 @@
     private CssBuilder EnglishImageClass =>
         ImageBaseClass
             .AddClass("english")
-            .AddClass("opacity-20", !EnglishSelected);
+            .AddClass("opacity-20", !EnglishSelected)
+            .AddClass("opacity-90", EnglishSelected);
 
 }
