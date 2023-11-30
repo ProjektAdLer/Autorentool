@@ -4,6 +4,7 @@
 @using Presentation.PresentationLogic.API
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Abstractions
+@using MudBlazor.Utilities
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -36,9 +37,13 @@
                 </div>
             </section>
             <div class="flex flex-row gap-2 justify-center">
+                <div>
+                    <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())"/>
+                    <MudIconButton OnClick="() => _sortByDate = false" Icon="@Icons.Material.Filled.SortByAlpha" Class="@(SortByNameButtonClass.Build())"/>
+                </div>
                 <MudCheckBox @bind-Checked="_showFileName">@Localizer["Checkbox.ShowFileName.Label"]</MudCheckBox>
             </div>
-        </div> 
+        </div>
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded-lg">
             <MudGrid Class="flex justify-center overflow-auto mt-4 h-[95%] shrink" Spacing="2">
                 @foreach (var (world, fileInfo) in OrderedWorldsWithFileinfos)
@@ -84,11 +89,22 @@
 
     private bool _createLearningWorldDialogOpen;
     private bool _showFileName;
+    private bool _sortByDate = true;
+    
+    private CssBuilder SortByDateButtonClass => new CssBuilder()
+        .AddClass("opacity-20", !_sortByDate)
+        .AddClass("opacity-90", _sortByDate);
+    
+    private CssBuilder SortByNameButtonClass => new CssBuilder()
+        .AddClass("opacity-20", _sortByDate)
+        .AddClass("opacity-90", !_sortByDate);
 
-    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos =>
-        WorkspaceViewModel.LearningWorlds
-            .Select(world => (world, MyLearningWorldsProvider.GetFileInfoFromPath(world.SavePath)))
-            .OrderByDescending(tuple => tuple.Item2?.LastWriteTime);
+    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> WorldsWithFileinfos => WorkspaceViewModel.LearningWorlds
+        .Select(world => (world, MyLearningWorldsProvider.GetFileInfoFromPath(world.SavePath)));
+
+    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos => _sortByDate ?
+        WorldsWithFileinfos.OrderByDescending(tuple => tuple.Item2?.LastWriteTime) :
+        WorldsWithFileinfos.OrderBy(tuple => tuple.Item1.Name);
 
     protected override void OnParametersSet()
     {
