@@ -30,7 +30,15 @@
                     @foreach (var lmsWorld in _lmsWorldList)
                     {
                         <MudListItem>
-                            @lmsWorld.WorldName <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                            @lmsWorld.WorldName
+                            @if (lmsWorld == _deleteWorld)
+                            {
+                                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary"/>
+                            }
+                            else
+                            {
+                                <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                            }
                         </MudListItem>
                     }
                 </MudList>
@@ -132,6 +140,8 @@
     private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
 
     private List<LmsWorldViewModel> _lmsWorldList = new();
+
+    private LmsWorldViewModel? _deleteWorld = null;
 
     protected override void OnParametersSet()
     {
@@ -256,6 +266,9 @@
         var result = await dialogReference.Result;
         if (result.Canceled) return;
 
+        _deleteWorld = world;
+        await InvokeAsync(StateHasChanged);
+
         try
         {
             await PresentationLogic.DeleteLmsWorld(world);
@@ -264,8 +277,11 @@
         {
             ErrorService.SetError("Error while trying to delete the LMS world", e.Message);
         }
-
-        RefreshLmsWorldList();
+        finally
+        {
+            RefreshLmsWorldList();
+            _deleteWorld = null;
+        }
     }
 
     private void HandleInvalidLoginException()
