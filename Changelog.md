@@ -11,7 +11,8 @@
 
 ### Changed
 
--
+- Presentation of the learning elements in the hierarchy and in Moodle according to the linear order of the floor plan.
+- The Create-World, -Space, -Element and -Link dialogs can be confirmed with the Enter key
 
 ### Deprecated
 

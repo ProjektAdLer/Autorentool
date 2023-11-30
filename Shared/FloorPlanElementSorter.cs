@@ -30,9 +30,9 @@ public static class FloorPlanElementSorter
     }
 
     // ReSharper disable InconsistentNaming
-    private static readonly List<int> ConfigureOrderFor_L_32X31_10L = new() {0, 9, 1, 8, 2, 3, 4, 7, 5, 6};
-    private static readonly List<int> ConfigureOrderFor_R_20X20_6L = new() {0, 5, 1, 2, 3, 4};
-    private static readonly List<int> ConfigureOrderFor_R_20X30_8L = new() {0, 7, 1, 6, 2, 5, 3, 4};
+    private static readonly List<int> ConfigureOrderFor_L_32X31_10L = new() {0, 1, 2, 3, 9, 8, 7, 4, 6, 5};
+    private static readonly List<int> ConfigureOrderFor_R_20X20_6L = new() {0, 1, 2, 3, 5, 4};
+    private static readonly List<int> ConfigureOrderFor_R_20X30_8L = new() {0, 1, 2, 3, 7, 6, 5, 4};
 
     // ReSharper restore InconsistentNaming
 }
