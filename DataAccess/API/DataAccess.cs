@@ -192,8 +192,8 @@ public class DataAccess : IDataAccess
             )
             .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
             .ToList();
-        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>();
-        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().ToList();
+        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>().Distinct();
+        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().Distinct().ToList();
 
         //copy files
         foreach (var file in fileContent)
