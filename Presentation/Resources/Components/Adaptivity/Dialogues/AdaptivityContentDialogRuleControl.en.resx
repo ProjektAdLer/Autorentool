@@ -25,7 +25,7 @@
         <value>Add reference</value>
     </data>
     <data name="CommentDialog.Title.Text" xml:space="preserve">
-        <value>Set comment</value>
+        <value>Add comment</value>
     </data>
     <data name="Button.EditReference.Text" xml:space="preserve">
         <value>Reference</value>

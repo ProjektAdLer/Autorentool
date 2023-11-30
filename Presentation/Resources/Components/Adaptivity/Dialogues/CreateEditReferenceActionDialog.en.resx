@@ -37,7 +37,7 @@
         <value>Comment</value>
     </data>
     <data name="Reference.Text" xml:space="preserve">
-        <value>If the answer is incorrect, refer to a learning element already placed in a learning space or to further learning material. You can also add a comment to the reference.</value>
+        <value>If the answer is incorrect, you can refer to a learning element already placed in a learning space or to further learning material. You also have the option of adding a supplementary note to the reference.</value>
     </data>
     <data name="Reference.Label.Text" xml:space="preserve">
         <value>Reference</value>
