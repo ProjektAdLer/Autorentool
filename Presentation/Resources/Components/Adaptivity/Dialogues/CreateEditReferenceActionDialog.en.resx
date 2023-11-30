@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Content.Text" xml:space="preserve">
-        <value>Learning content</value>
+        <value>ext. learning material</value>
     </data>
     <data name="Element.Text" xml:space="preserve">
         <value>Learning element</value>
@@ -28,12 +28,30 @@
         <value>Learning content required</value>
     </data>
     <data name="Element.RequiredError.Text" xml:space="preserve">
-        <value>Lerning element required</value>
+        <value>Lerning element required!</value>
     </data>
     <data name="Button.Submit.Text" xml:space="preserve">
         <value>Ok</value>
     </data>
     <data name="Comment.Label.Text" xml:space="preserve">
         <value>Comment</value>
+    </data>
+    <data name="Reference.Text" xml:space="preserve">
+        <value>If the answer is incorrect, refer to a learning element already placed in a learning space or to further learning material. You can also add a comment to the reference.</value>
+    </data>
+    <data name="Reference.Label.Text" xml:space="preserve">
+        <value>Reference</value>
+    </data>
+    <data name="Comment.Label.Text.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="Note.Label.Text" xml:space="preserve">
+        <value>Note on the reference</value>
+    </data>
+    <data name="Reference.Content.Label.Text" xml:space="preserve">
+        <value>Reference to an external learning material</value>
+    </data>
+    <data name="Reference.Element.Label.Text" xml:space="preserve">
+        <value>Reference to a learning element</value>
     </data>
 </root>

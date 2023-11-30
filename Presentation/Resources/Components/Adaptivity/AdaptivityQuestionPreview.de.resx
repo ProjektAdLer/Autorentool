@@ -24,24 +24,33 @@
         </value>
     </resheader>
     <data name="AdaptivityQuestionPreview.Header.Question.Easy" xml:space="preserve">
-        <value>Leichte Frage:</value>
+        <value>Leichte Frage</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.Question.Medium" xml:space="preserve">
-        <value>Mittelschwere Frage:</value>
+        <value>Mittelschwere Frage</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.Question.Hard" xml:space="preserve">
-        <value>Schwere Frage:</value>
+        <value>Schwere Frage</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.Comment" xml:space="preserve">
-        <value>Kommentar:</value>
+        <value>Kommentar</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.ElementReference" xml:space="preserve">
-        <value>Verweis auf Lernelement:</value>
+        <value>Verweis</value>
     </data>
     <data name="AdaptivityQuestionPreview.Header.ContentReference" xml:space="preserve">
-        <value>Verweis auf Lerninhalt:</value>
+        <value>Verweis</value>
     </data>
     <data name="AdaptivityQuestionPreview.ElementReference.NotFound" xml:space="preserve">
         <value>Das Lernelement mit Id {0} wurde nicht gefunden!</value>
+    </data>
+    <data name="AdaptivityQuestionPreview.Comment.Text" xml:space="preserve">
+        <value>Hinweis zum Verweis:</value>
+    </data>
+    <data name="AdaptivityQuestionPreview.Reference.Text" xml:space="preserve">
+        <value>Verweis auf Lernelement:</value>
+    </data>
+    <data name="AdaptivityQuestionPreview.ReferenceContent.Text" xml:space="preserve">
+        <value>Verweis auf externes Lernmaterial:</value>
     </data>
 </root>
