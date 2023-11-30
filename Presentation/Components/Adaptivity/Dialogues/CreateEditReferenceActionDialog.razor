@@ -12,43 +12,90 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Adaptivity
-<div class="relative w-[800px] h-96 flex flex-col m-2 p-2">
-    <MudTabs @ref="_tabs" Class="h-full">
-        <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
-                     Class="tab-panel-element relative">
-            <!-- Element reference -->
-            <MudForm Class="flex flex-col border-adlerdarkblue border-4 rounded-lg p-4 my-4 mx-2" @ref="_form">
-                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
-                <GridSelect T="ILearningElementViewModel" Elements="LearningElements" @bind-Value="_learningElement" Required="true"
-                            RequiredError="@Localizer["Element.RequiredError.Text"]"
-                            FilterFuncSearchableStrings="element => new[] { element.Name }">
-                    <ElementTemplate>
-                        <div>@Localizer["Element.Text"] @context.Name</div>
-                    </ElementTemplate>
-                </GridSelect>
-            </MudForm>
-            <MudButton Class="btn-standard sticky bottom-2 m-2" @onclick="SubmitAsync">
-                    @Localizer["Button.Submit.Text"]
-                    </MudButton>
-        </MudTabPanel>
-        <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel || true)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
-                     Class="tab-panel-content relative">
-            <!-- Content reference -->
-            <MudForm @ref="_form">
-                <MudTextField T="string" @bind-Value="_comment" Label="@Localizer["Comment.Label.Text"]" Required="false"/>
-                <GridSelect T="ILearningContentViewModel" Elements="LearningContents" @bind-Value="_learningContent" Required="true"
-                            RequiredError="@Localizer["Content.RequiredError.Text"]"
-                            FilterFuncSearchableStrings="content => new[] { content.Name }">
-                    <ElementTemplate>
-                        <MudText Typo="Typo.body1" Align="Align.Center">@Localizer["Content.Text"] @context.Name</MudText>
-                    </ElementTemplate>
-                </GridSelect>
-            </MudForm>
-            <MudButton Class="btn-standard sticky bottom-2 m-2" @onclick="SubmitAsync">
-                    @Localizer["Button.Submit.Text"]</MudButton>
-        </MudTabPanel>
-    </MudTabs>
-</div>
+
+<div class="relative w-[800px] h-[520px] flex flex-col mx-4">
+    <MudText Class="px-2 mb-1 text-sm">@Localizer["Reference.Text"]</MudText>
+    <div class="border-adlerdarkblue border-4 rounded-lg m-2">
+        
+            <MudTabs @ref="_tabs">
+                <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
+                             Class="tab-panel-element relative text-adlertextgrey bg-adlergrey-100 text-sm font-bold normal-case">
+                    <!-- Element reference -->
+                    <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
+                        <div class="p-2 mb-4">
+                             <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
+                             <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+                                   <MudTextField Variant="Variant.Outlined"
+                                                 Class="shadow-none m-0" 
+                                                 T="string"
+                                                 Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
+                                                 @bind-Value="_comment"
+                                                 Lines="2"
+                                                 Required="false"/>
+                             </div>
+                        </div>
+                        <div class="p-2">
+                            <div class="flex flex-row gap-1">
+                                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Reference.Element.Label.Text"]</MudText>
+                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                            </div>
+                            <GridSelect T="ILearningElementViewModel"
+                                        Elements="LearningElements"
+                                        @bind-Value="_learningElement"
+                                        Required="true"
+                                        RequiredError="@Localizer["Element.RequiredError.Text"]"
+                                        FilterFuncSearchableStrings="element => new[] { element.Name }">
+                                <ElementTemplate>
+                                    <div>@Localizer["Element.Text"] @context.Name</div>
+                                </ElementTemplate>
+                            </GridSelect>
+                        </div>
+                    </MudForm>
+                </MudTabPanel>
+                <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
+                             Class="tab-panel-content relative text-adlergrey-300 bg-adlergrey-100 text-sm break-all font-bold normal-case">
+                    <!-- Content reference -->
+                    <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
+                        <div class="p-2 mb-4">
+                            <MudText Class="font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
+                            <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+                                <MudTextField T="string"
+                                              @bind-Value="_comment"
+                                              Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
+                                              Lines="2"
+                                              Required="false"
+                                              Class="shadow-none m-0"
+                                              Variant="Variant.Outlined"/>
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            <div class="flex flex-row gap-1">
+                                <MudText Class="font-bold text-sm pl-2">@Localizer["Reference.Content.Label.Text"]</MudText>
+                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                            </div>
+                            <GridSelect T="ILearningContentViewModel"
+                                        Elements="LearningContents"
+                                        @bind-Value="_learningContent"
+                                        Required="true"
+                                        RequiredError="@Localizer["Content.RequiredError.Text"]"
+                                        FilterFuncSearchableStrings="content => new[] { content.Name }">
+                                <ElementTemplate>
+                                    <MudText Class="text-adlertextgrey text-xs font-bold break-all leading-none truncate">@context.Name</MudText>
+                                </ElementTemplate>
+                            </GridSelect>
+                        </div>
+                    </MudForm>
+                </MudTabPanel>
+            </MudTabs>
+        </div>
+    </div>
+    <div class="flex justify-end items-center">
+        <MudButton Class="btn-standard sticky m-6" 
+                   @onclick="SubmitAsync">
+                   @Localizer["Button.Submit.Text"]
+        </MudButton>
+    </div>
+
 
 @code {
 
