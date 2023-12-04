@@ -165,14 +165,15 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals, evaluationLink,
+            description, goals, evaluationLink, enrolmentKey,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -181,12 +182,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals, evaluationLink,
+            goals, evaluationLink, enrolmentKey,
             world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())

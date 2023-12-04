@@ -17,7 +17,7 @@
           SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"]
-                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
+                                                                                                                                                                                                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -47,7 +47,7 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"]
-                                                                                                                                                                               @bind-Collapsed="_collapsedGoals">
+                                                                                                                                                                                                                                                                                                                                                               @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -105,7 +105,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
     }
 
     private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);

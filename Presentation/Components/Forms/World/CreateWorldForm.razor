@@ -107,7 +107,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
         OnSubmitted.InvokeAsync();
     }
 

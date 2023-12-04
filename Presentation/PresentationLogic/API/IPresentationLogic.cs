@@ -73,8 +73,9 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink);
+        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey);
 
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
@@ -87,8 +88,9 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink);
+        string language, string description, string goals, string evaluationLink, string enrolmentKey);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.
@@ -565,6 +567,17 @@ public interface IPresentationLogic
     void ConstructDebugBackup(ILearningWorldViewModel world);
 #endif
 
+    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
+        IAdaptivityActionViewModel action);
+
+    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
+    void EditCommentAction(CommentActionViewModel action, string comment);
+
+    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
+        string comment);
+
+    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -576,13 +589,4 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
-
-    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
-        IAdaptivityActionViewModel action);
-
-    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
-    void EditCommentAction(CommentActionViewModel action, string comment);
-    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
-        string comment);
-    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
 }
