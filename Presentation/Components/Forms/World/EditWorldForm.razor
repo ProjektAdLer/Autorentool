@@ -17,7 +17,7 @@
           SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"]
-                                           @bind-Collapsed="_collapsedGeneral">
+                                                                                                                                                                               @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
@@ -39,11 +39,15 @@
                               For="@(() => FormModel.EvaluationLink)"
                               DebounceInterval="DebounceInterval"
                               Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                              For="@(() => FormModel.EnrolmentKey)"
+                              DebounceInterval="DebounceInterval"
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]"/>
             </div>
         </Collapsable>
 
         <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"]
-                                           @bind-Collapsed="_collapsedGoals">
+                                                                                                                                                                               @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -65,7 +69,7 @@
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
-                       OnClick="@OnResetAsync" 
+                       OnClick="@OnResetAsync"
                        Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
         </MudIconButton>
     </FooterButtons>

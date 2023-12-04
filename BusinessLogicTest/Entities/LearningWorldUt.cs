@@ -18,6 +18,7 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string evaluationLink = "eva";
+        const string enrolmentKey = "enrolmentkey";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -33,6 +34,7 @@ public class LearningWorldUt
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            enrolmentKey,
             savePath: savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         Assert.Multiple(() =>
@@ -63,6 +65,7 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string evaluationLink = "eva";
+        const string enrolmentKey = "enrolmentkey";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -74,6 +77,7 @@ public class LearningWorldUt
         var topics = new List<Topic> { topic1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            enrolmentKey,
             savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
@@ -165,11 +169,13 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string evaluationLink = "https://";
+        const string enrolmentKey = "enrolmentkey";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var learningSpaces = new List<ILearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+            enrolmentKey,
             savePath: savePath, learningSpaces);
 
 
