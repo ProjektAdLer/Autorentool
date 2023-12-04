@@ -40,6 +40,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
     private const string NewEvaluationLink = "https://www.projekt-alder.eu/newEvaluation";
+    private const string NewEnrolmentKey = "newEnrolmentKey";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
@@ -190,7 +191,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey,
             savePath: SavePath, new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -204,6 +205,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>();
 
@@ -217,10 +219,11 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithUnplacedLearningElements_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, savePath: SavePath);
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
+            EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -238,6 +241,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.UnplacedLearningElements = new List<ILearningElementPe>
         {
@@ -264,7 +268,7 @@ public class EntityPersistEntityMappingProfileUt
         source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -282,6 +286,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
@@ -312,7 +317,7 @@ public class EntityPersistEntityMappingProfileUt
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
@@ -348,6 +353,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnum.And, 2, 1);
@@ -549,6 +555,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
+                    Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
+                    Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                     TestElementsList(world.UnplacedLearningElements, null, useNewFields);
                 });
@@ -563,6 +571,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
+                    Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
+                    Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                     TestElementsList(world.UnplacedLearningElements, null, useNewFields);
                 });

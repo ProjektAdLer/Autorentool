@@ -13,6 +13,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public const string fileEnding = "awf";
     private string _authors;
     private string _description;
+    private string _enrolmentKey;
     private string _evaluationLink;
     private string _goals;
     private string _language;
@@ -40,6 +41,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = "";
         _goals = "";
         _evaluationLink = "";
+        _enrolmentKey = "";
         _savePath = "";
         InternalUnsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
@@ -59,6 +61,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
+    /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
@@ -68,7 +71,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string savePath = "", bool unsavedChanges = true,
+        string goals, string evaluationLink, string enrolmentKey, string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
         List<ILearningPathWayViewModel>? learningPathWays = null,
@@ -83,6 +86,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = description;
         _goals = goals;
         _evaluationLink = evaluationLink;
+        _enrolmentKey = enrolmentKey;
         _savePath = savePath;
         InternalUnsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
@@ -187,6 +191,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _evaluationLink;
         set => SetField(ref _evaluationLink, value);
+    }
+
+    public string EnrolmentKey
+    {
+        get => _enrolmentKey;
+        set => SetField(ref _enrolmentKey, value);
     }
 
     public string SavePath

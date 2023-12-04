@@ -55,8 +55,6 @@ public class LearningWorld : ILearningWorld, IOriginator
     public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces)
         .Concat(PathWayConditions).Concat(LearningPathways).ToList();
 
-    public string EnrolmentKey { get; set; }
-
     public Guid Id { get; private set; }
     public List<ILearningSpace> LearningSpaces { get; set; }
     public List<PathWayCondition> PathWayConditions { get; set; }
@@ -73,6 +71,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Description { get; set; }
     public string Goals { get; set; }
     public string EvaluationLink { get; set; }
+    public string EnrolmentKey { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
     public string SavePath { get; set; }
 
