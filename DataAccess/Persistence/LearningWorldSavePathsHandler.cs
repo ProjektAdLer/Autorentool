@@ -27,7 +27,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         return FileSystem.Directory
             .EnumerateFiles(ApplicationPaths.SavedWorldsFolder)
             .Where(FilterWorldPaths)
-            .Select(FileSystem.FileInfo.FromFileName);
+            .Select(FileSystem.FileInfo.New);
     }
 
     private bool FilterWorldPaths(string path)

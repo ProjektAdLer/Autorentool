@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using BusinessLogic.API;
@@ -7,6 +8,7 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
+using DataAccess.Extensions;
 using DataAccess.Persistence;
 using ICSharpCode.SharpZipLib.Zip;
 using PersistEntities;
@@ -226,44 +228,12 @@ public class DataAccess : IDataAccess
             //create temp folder structure
             FileSystem.Directory.CreateDirectory(tempFolder);
             //unzip archive into temp folder
-            var fastZip = new FastZip();
-            fastZip.ExtractZip(pathToArchive, tempFolder, ".*");
+            using var zipArchive = ZipExtensions.GetZipArchive(FileSystem, pathToArchive);
+            zipArchive.ExtractToDirectory(tempFolder);
             //load world file
             var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
             var world = LoadLearningWorld(worldFilePath);
-            var fileContents = world.LearningSpaces
-                .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
-                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
-                .Where(content => content is FileContent)
-                .Cast<FileContent>()
-                .ToList();
-            //copy content files into content folder (avoiding duplicates) and changing filepaths in world
-            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
-            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
-                !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
-            foreach (var contentFile in contentFiles)
-            {
-                var contentFileHash = await FileSystem.File.ReadAllBytesAsync(contentFile + ".hash");
-                var affectedElements = fileContents.Where(content =>
-                    FileSystem.Path.GetFileName(content.Filepath) == FileSystem.Path.GetFileName(contentFile));
-                string newFilepath;
-                try
-                {
-                    var newContentPe =
-                        (FileContentPe)await ContentFileHandler.LoadContentAsync(contentFile, contentFileHash);
-                    newFilepath = newContentPe.Filepath;
-                }
-                catch (HashExistsException heex)
-                {
-                    newFilepath = heex.DuplicateFilePath;
-                }
-
-                //change filepaths in world
-                foreach (var affectedElement in affectedElements)
-                {
-                    affectedElement.Filepath = newFilepath;
-                }
-            }
+            var contentFolder = await CopyContentAsync(world);
 
             //add links in linkstore to local linkstore
             var linkListPath = FileSystem.Path.Join(contentFolder, ".linkstore");
@@ -280,6 +250,7 @@ public class DataAccess : IDataAccess
 
             //return world entity
             return world;
+
             string ParsePathIntoName(string path, string oldName)
             {
                 path = FileSystem.Path.GetFileName(path);
@@ -288,6 +259,45 @@ public class DataAccess : IDataAccess
                 if (!match.Success) return oldName;
                 var number = match.Groups[1].Value;
                 return $"{oldName} ({number})";
+            }
+
+            async Task<string> CopyContentAsync(ILearningWorld world)
+            {
+                var fileContents = world.LearningSpaces
+                    .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
+                    .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+                    .Where(content => content is FileContent)
+                    .Cast<FileContent>()
+                    .ToList();
+                //copy content files into content folder (avoiding duplicates) and changing filepaths in world
+                var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
+                var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
+                    !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
+                foreach (var contentFile in contentFiles)
+                {
+                    var contentFileHash = await FileSystem.File.ReadAllBytesAsync(contentFile + ".hash");
+                    var affectedElements = fileContents.Where(content =>
+                        FileSystem.Path.GetFileName(content.Filepath) == FileSystem.Path.GetFileName(contentFile));
+                    string newFilepath;
+                    try
+                    {
+                        var newContentPe =
+                            (FileContentPe)await ContentFileHandler.LoadContentAsync(contentFile, contentFileHash);
+                        newFilepath = newContentPe.Filepath;
+                    }
+                    catch (HashExistsException heex)
+                    {
+                        newFilepath = heex.DuplicateFilePath;
+                    }
+
+                    //change filepaths in world
+                    foreach (var affectedElement in affectedElements)
+                    {
+                        affectedElement.Filepath = newFilepath;
+                    }
+                }
+
+                return contentFolder;
             }
         }
         finally
@@ -298,7 +308,7 @@ public class DataAccess : IDataAccess
 
     public IFileInfo GetFileInfoForPath(string savePath)
     {
-        return FileSystem.FileInfo.FromFileName(savePath);
+        return FileSystem.FileInfo.New(savePath);
     }
 
     public void DeleteFileByPath(string savePath)
