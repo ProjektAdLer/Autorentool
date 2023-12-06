@@ -136,6 +136,10 @@ public class XmlCourseFactoryUt
     {
         //Arrange 
         var mockReadAtf = Substitute.For<IReadAtf>();
+        var mockLearningWorld = new LearningWorldJson("world", "12345",
+            new List<ITopicJson>(), new List<ILearningSpaceJson>(), new List<IElementJson>(), "", new[] { "" }, "",
+            "enrolmentKey");
+        mockReadAtf.GetLearningWorld().Returns(mockLearningWorld);
         var mockContextId = 12345;
 
         var mockEnrolManual = new CourseEnrolmentsXmlEnrol();

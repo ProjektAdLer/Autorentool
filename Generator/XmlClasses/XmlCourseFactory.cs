@@ -123,7 +123,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolManual.Id = "1";
         CourseEnrolmentsXmlEnrolManual.RoleId = "5";
         CourseEnrolmentsXmlEnrolManual.EnrolMethod = "manual";
-        CourseEnrolmentsXmlEnrolManual.Status = "1";
+        CourseEnrolmentsXmlEnrolManual.Status = "0";
 
         CourseEnrolmentsXmlEnrolGuest.Id = "2";
         CourseEnrolmentsXmlEnrolGuest.RoleId = "0";
@@ -134,6 +134,11 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolSelf.RoleId = "5";
         CourseEnrolmentsXmlEnrolSelf.EnrolMethod = "self";
         CourseEnrolmentsXmlEnrolSelf.Status = "0";
+        if (_learningWorld.EnrolmentKey != "")
+        {
+            CourseEnrolmentsXmlEnrolSelf.Password = _learningWorld.EnrolmentKey;
+        }
+
         CourseEnrolmentsXmlEnrolSelf.CustomInt1 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt2 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt3 = "0";
