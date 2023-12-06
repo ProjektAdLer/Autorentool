@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using System.IO.Compression;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -22,9 +21,9 @@ public class DataAccess : IDataAccess
     internal readonly IFileSystem FileSystem;
     internal readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
     internal readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
+    internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
     internal readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     internal readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
-    internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
 
 
     public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
@@ -185,6 +184,88 @@ public class DataAccess : IDataAccess
         }
     }
 
+    /// <inheritdoc cref="IDataAccess.ImportLearningWorldFromArchiveAsync"/>
+    public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive)
+    {
+        //we create a temp folder using IFileSystemExtensions which handles disposing of the folder for us
+        using var dispDir = FileSystem.CreateDisposableDirectory(out var dirInfo);
+        var tempFolder = dirInfo.FullName;
+        FileSystem.Directory.CreateDirectory(Path.Combine(tempFolder, "Content"));
+        //unzip archive into temp folder
+        using var zipArchive = ZipExtensions.GetZipArchive(FileSystem, pathToArchive);
+        zipArchive.ExtractToDirectory(FileSystem, tempFolder);
+        //load world file
+        var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
+        var world = LoadLearningWorld(worldFilePath);
+        var contentFolder = await CopyContentAsync(world);
+
+        //add links in linkstore to local linkstore
+        var linkListPath = FileSystem.Path.Join(contentFolder, ".linkstore");
+        var links = XmlHandlerLink.LoadFromDisk(linkListPath);
+        ContentFileHandler.SaveLinks(links);
+
+        //save world to savedworlds folder
+        var newSavePath =
+            FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
+        //parse save path back into name
+        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
+
+        SaveLearningWorldToFile(world, newSavePath);
+
+        //return world entity
+        return world;
+
+        async Task<string> CopyContentAsync(ILearningWorld world)
+        {
+            EnsureCreated(ApplicationPaths.ContentFolder);
+            var fileContents = world.LearningSpaces
+                .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
+                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+                .Where(content => content is FileContent)
+                .Cast<FileContent>()
+                .ToList();
+            //copy content files into content folder (avoiding duplicates) and changing filepaths in world
+            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
+            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
+                !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
+            foreach (var contentFile in contentFiles)
+            {
+                var contentFileHash = await FileSystem.File.ReadAllBytesAsync(contentFile + ".hash");
+                var affectedElements = fileContents.Where(content =>
+                    FileSystem.Path.GetFileName(content.Name) == FileSystem.Path.GetFileName(contentFile));
+                string newFilepath;
+                try
+                {
+                    var newContentPe =
+                        (FileContentPe)await ContentFileHandler.LoadContentAsync(contentFile, contentFileHash);
+                    newFilepath = newContentPe.Filepath;
+                }
+                catch (HashExistsException heex)
+                {
+                    newFilepath = heex.DuplicateFilePath;
+                }
+
+                //change filepaths in world
+                foreach (var affectedElement in affectedElements)
+                {
+                    affectedElement.Filepath = newFilepath;
+                }
+            }
+
+            return contentFolder;
+        }
+    }
+
+    public IFileInfo GetFileInfoForPath(string savePath)
+    {
+        return FileSystem.FileInfo.New(savePath);
+    }
+
+    public void DeleteFileByPath(string savePath)
+    {
+        FileSystem.File.Delete(savePath);
+    }
+
     private void CopyContentFiles(ILearningWorld world, string contentFolder)
     {
         var contentInWorld = world.LearningSpaces
@@ -216,92 +297,11 @@ public class DataAccess : IDataAccess
         XmlHandlerLink.SaveToDisk(linkContentPe, linkContentFilepath);
     }
 
-    /// <inheritdoc cref="IDataAccess.ImportLearningWorldFromArchiveAsync"/>
-    public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive)
-    {
-        //we create a temp folder using IFileSystemExtensions which handles disposing of the folder for us
-        using var dispDir = FileSystem.CreateDisposableDirectory(out var dirInfo);
-        var tempFolder = dirInfo.FullName;
-        FileSystem.Directory.CreateDirectory(Path.Combine(tempFolder, "Content"));
-        //unzip archive into temp folder
-        using var zipArchive = ZipExtensions.GetZipArchive(FileSystem, pathToArchive);
-        zipArchive.ExtractToDirectory(FileSystem, tempFolder);
-        //load world file
-        var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
-        var world = LoadLearningWorld(worldFilePath);
-        var contentFolder = await CopyContentAsync(world);
-
-        //add links in linkstore to local linkstore
-        var linkListPath = FileSystem.Path.Join(contentFolder, ".linkstore");
-        var links = XmlHandlerLink.LoadFromDisk(linkListPath);
-        ContentFileHandler.SaveLinks(links);
-
-        //save world to savedworlds folder
-        var newSavePath = FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
-        //parse save path back into name
-        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
-
-        SaveLearningWorldToFile(world, newSavePath);
-
-        //return world entity
-        return world;
-
-        async Task<string> CopyContentAsync(ILearningWorld world)
-        {
-            EnsureCreated(ApplicationPaths.ContentFolder);
-            var fileContents = world.LearningSpaces
-                .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
-                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
-                .Where(content => content is FileContent)
-                .Cast<FileContent>()
-                .ToList();
-            //copy content files into content folder (avoiding duplicates) and changing filepaths in world
-            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
-            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
-                !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
-            foreach (var contentFile in contentFiles)
-            {
-                var contentFileHash = await FileSystem.File.ReadAllBytesAsync(contentFile + ".hash");
-                var affectedElements = fileContents.Where(content =>
-                    FileSystem.Path.GetFileName(content.Filepath) == FileSystem.Path.GetFileName(contentFile));
-                string newFilepath;
-                try
-                {
-                    var newContentPe =
-                        (FileContentPe) await ContentFileHandler.LoadContentAsync(contentFile, contentFileHash);
-                    newFilepath = newContentPe.Filepath;
-                }
-                catch (HashExistsException heex)
-                {
-                    newFilepath = heex.DuplicateFilePath;
-                }
-
-                //change filepaths in world
-                foreach (var affectedElement in affectedElements)
-                {
-                    affectedElement.Filepath = newFilepath;
-                }
-            }
-
-            return contentFolder;
-        }
-    }
-
     private void EnsureCreated(string contentFolder)
     {
         if (!FileSystem.Directory.Exists(contentFolder))
         {
             FileSystem.Directory.CreateDirectory(contentFolder);
         }
-    }
-
-    public IFileInfo GetFileInfoForPath(string savePath)
-    {
-        return FileSystem.FileInfo.New(savePath);
-    }
-
-    public void DeleteFileByPath(string savePath)
-    {
-        FileSystem.File.Delete(savePath);
     }
 }
