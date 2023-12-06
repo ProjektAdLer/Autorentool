@@ -7,7 +7,7 @@
 
 ### Added
 
--
+- Authors can now assign an enrolment key for their learning world
 
 ### Changed
 
