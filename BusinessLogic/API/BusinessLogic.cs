@@ -299,9 +299,9 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
+    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations)
     {
-        var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding, out iterations);
         return targetPath;
     }
 

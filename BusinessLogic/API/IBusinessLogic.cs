@@ -85,7 +85,7 @@ public interface IBusinessLogic
     IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath" />
-    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations);
 
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();

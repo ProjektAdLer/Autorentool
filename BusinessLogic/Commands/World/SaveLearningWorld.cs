@@ -44,7 +44,7 @@ public class SaveLearningWorld : ISaveLearningWorld
         string GetWorldFilepath()
         {
             var basePath = ApplicationPaths.SavedWorldsFolder;
-            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding);
+            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding, out _);
         }
     }
 

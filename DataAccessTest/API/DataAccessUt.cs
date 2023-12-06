@@ -2,7 +2,12 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
+using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Persistence;
+using DataAccessTest.Resources;
+using JetBrains.Annotations;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
@@ -31,7 +36,8 @@ public class DataAccessUt
 
         //Act 
         var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockFileSaveHandlerWorld,
-            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockFileSaveHandlerLink, mockContentHandler, mockWorldSavePathsHandler,
+            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockFileSaveHandlerLink, mockContentHandler,
+            mockWorldSavePathsHandler,
             mockFileSystem);
 
         //Assert
@@ -204,13 +210,15 @@ public class DataAccessUt
     [Test]
     [TestCaseSource(typeof(FindSuitableNewSavePathTestCases))]
     public void FindSuitableNewSavePath_FindsSuitablePath(IFileSystem mockFileSystem, string targetFolder,
-        string fileName, string fileEnding, string expectedSavePath)
+        string fileName, string fileEnding, string expectedSavePath, int expectedIterations)
     {
         var systemUnderTest = CreateTestableDataAccess(fileSystem: mockFileSystem);
 
-        var actualSavePath = systemUnderTest.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        var actualSavePath =
+            systemUnderTest.FindSuitableNewSavePath(targetFolder, fileName, fileEnding, out var iterations);
 
         Assert.That(actualSavePath, Is.EqualTo(expectedSavePath));
+        Assert.That(iterations, Is.EqualTo(expectedIterations));
     }
 
     [Test]
@@ -218,26 +226,77 @@ public class DataAccessUt
     {
         var systemUnderTest = CreateTestableDataAccess();
 
-        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("", "foo", "bar"));
+        var ex = Assert.Throws<ArgumentException>(
+            () => systemUnderTest.FindSuitableNewSavePath("", "foo", "bar", out _));
         Assert.Multiple(() =>
         {
             Assert.That(ex!.Message, Is.EqualTo("targetFolder cannot be empty (Parameter 'targetFolder')"));
             Assert.That(ex.ParamName, Is.EqualTo("targetFolder"));
         });
 
-        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "", "bar"));
+        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "", "bar", out _));
         Assert.Multiple(() =>
         {
             Assert.That(ex!.Message, Is.EqualTo("fileName cannot be empty (Parameter 'fileName')"));
             Assert.That(ex.ParamName, Is.EqualTo("fileName"));
         });
 
-        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "bar", ""));
+        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "bar", "", out _));
         Assert.Multiple(() =>
         {
             Assert.That(ex!.Message, Is.EqualTo("fileEnding cannot be empty (Parameter 'fileEnding')"));
             Assert.That(ex.ParamName, Is.EqualTo("fileEnding"));
         });
+    }
+
+    [Test]
+    public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
+    {
+        var fileSystem = ResourceHelper.PrepareFileSystemWithResources();
+        var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
+        var learningWorldPe = PersistEntityProvider.GetLearningWorld();
+        xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
+        var mapper = Substitute.For<IMapper>();
+        var learningWorld = EntityProvider.GetLearningWorldWithSpaceWithElement();
+        mapper.Map<LearningWorld>(learningWorldPe).Returns(learningWorld);
+        learningWorld.Name = "import_test";
+        var ele1 = learningWorld.LearningSpaces.First().ContainedLearningElements.First();
+        ele1.LearningContent = new FileContent("adler_logo.png", "png", "C:\\bogus_path\\adler_logo.png");
+        var ele2 = EntityProvider.GetLearningElement();
+        ele2.LearningContent = new LinkContent("rick", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        learningWorld.LearningSpaces.First().LearningSpaceLayout.LearningElements.Add(3, ele2);
+        var space2 = EntityProvider.GetLearningSpaceWithElement();
+        space2.ContainedLearningElements.First().LearningContent =
+            new FileContent("regex.txt", "txt", "C:\\bogus_path\\regex.txt");
+        learningWorld.LearningSpaces.Add(space2);
+
+        var contentFileHandler = Substitute.For<IContentFileHandler>();
+        var logoFcPe = PersistEntityProvider.GetFileContent("adler_logo.png", "png",
+            Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png"));
+        var regexFcPe = PersistEntityProvider.GetFileContent("regex.txt", "txt",
+            Path.Join(ApplicationPaths.ContentFolder, "regex.txt"));
+        contentFileHandler.LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>())
+            .Returns(logoFcPe);
+        contentFileHandler.LoadContentAsync(Arg.Is<string>(s => s.EndsWith("regex.txt")), Arg.Any<byte[]>())
+            .Returns(regexFcPe);
+
+        var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
+            fileSystem: fileSystem, contentHandler: contentFileHandler);
+
+        var loadedWorld = await systemUnderTest.ImportLearningWorldFromArchiveAsync("C:\\zips\\import_test.zip");
+
+        await contentFileHandler.Received()
+            .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>());
+        await contentFileHandler.Received()
+            .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("regex.txt")), Arg.Any<byte[]>());
+
+        Assert.That(loadedWorld, Is.EqualTo(learningWorld));
+        Assert.That(
+            (loadedWorld.LearningSpaces.First().ContainedLearningElements.First().LearningContent as FileContent)!
+            .Filepath, Is.EqualTo(Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png")));
+        Assert.That(
+            (loadedWorld.LearningSpaces.ElementAt(1).ContainedLearningElements.First().LearningContent as FileContent)!
+            .Filepath, Is.EqualTo(Path.Join(ApplicationPaths.ContentFolder, "regex.txt")));
     }
 
     private class FindSuitableNewSavePathTestCases : IEnumerable
@@ -247,7 +306,7 @@ public class DataAccessUt
             yield return new object[] //no file present
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>()),
-                "directory", "foo", "bar", Path.Join("directory", "foo.bar")
+                "directory", "foo", "bar", Path.Join("directory", "foo.bar"), 0
             };
             var emptyFile = new MockFileData("");
             yield return new object[] //file is present
@@ -256,7 +315,7 @@ public class DataAccessUt
                 {
                     { Path.Combine("directory", "foo.bar"), emptyFile }
                 }),
-                "directory", "foo", "bar", Path.Join("directory", "foo_1.bar")
+                "directory", "foo", "bar", Path.Join("directory", "foo_1.bar"), 1
             };
             yield return new object[] //multiple files present
             {
@@ -266,7 +325,7 @@ public class DataAccessUt
                     { Path.Combine("directory", "foo_1.bar"), emptyFile },
                     { Path.Combine("directory", "foo_2.bar"), emptyFile }
                 }),
-                "directory", "foo", "bar", Path.Join("directory", "foo_3.bar")
+                "directory", "foo", "bar", Path.Join("directory", "foo_3.bar"), 3
             };
             yield return new object[] //irrelevant files present
             {
@@ -274,7 +333,7 @@ public class DataAccessUt
                 {
                     { Path.Combine("directory", "poo.bar"), emptyFile }
                 }),
-                "directory", "foo", "bar", Path.Join("directory", "foo.bar")
+                "directory", "foo", "bar", Path.Join("directory", "foo.bar"), 0
             };
         }
     }

@@ -789,9 +789,9 @@ public class BusinessLogicUt
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
 
-        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz");
+        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz", out var iterations);
 
-        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
+        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out iterations);
     }
 
     [Test]

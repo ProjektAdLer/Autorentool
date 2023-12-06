@@ -16,11 +16,11 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsValidName()
             .Must((world, name) => IsUniqueName(world.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.Shortname)
             .MaximumLength(30)
+            .IsValidName()
             .Must((world, name) => IsUniqueShortname(world.Id, name))
             .WithMessage("Already in use.");
     }

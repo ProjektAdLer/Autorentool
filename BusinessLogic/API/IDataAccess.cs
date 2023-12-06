@@ -60,7 +60,7 @@ public interface IDataAccess
     /// or <paramref name="fileEnding"/> is null, whitespace or empty.</exception>
     /// <returns>A save path of form <code>[targetFolder]/[fileName]_n.[fileEnding]</code> that does not yet exist,
     /// where n is an integer which is incremented until the path does not yet exist.</returns>
-    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations);
 
     /// <summary>
     /// Deletes the file referenced by the given content object.
