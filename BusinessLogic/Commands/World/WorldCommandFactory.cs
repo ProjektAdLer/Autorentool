@@ -15,10 +15,10 @@ public class WorldCommandFactory : IWorldCommandFactory
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
         string shortname, string authors, string language, string description, string goals,
-        string evaluationLink,
+        string evaluationLink, string enrolmentKey,
         Action<AuthoringToolWorkspace> mappingAction) =>
         new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description, goals,
-            evaluationLink,
+            evaluationLink, enrolmentKey,
             mappingAction, LoggerFactory.CreateLogger<CreateLearningWorld>());
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace,
@@ -33,8 +33,10 @@ public class WorldCommandFactory : IWorldCommandFactory
 
     public IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
         string language, string description, string goals, string evaluationLink,
+        string enrolmentKey,
         Action<LearningWorld> mappingAction) =>
         new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals, evaluationLink,
+            enrolmentKey,
             mappingAction, LoggerFactory.CreateLogger<EditLearningWorld>());
 
     public ILoadLearningWorld GetLoadCommand(AuthoringToolWorkspace workspace, string filepath,

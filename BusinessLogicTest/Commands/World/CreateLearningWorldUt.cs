@@ -19,11 +19,12 @@ public class CreateLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink,
+            evaluationLink, enrolmentKey,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.IsEmpty(workspace.LearningWorlds);
@@ -53,7 +54,7 @@ public class CreateLearningWorldUt
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", _ => { },
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -91,11 +92,12 @@ public class CreateLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink,
+            evaluationLink, enrolmentKey,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -117,11 +119,12 @@ public class CreateLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink,
+            evaluationLink, enrolmentKey,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));

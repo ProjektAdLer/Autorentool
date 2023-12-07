@@ -42,6 +42,11 @@
                               DebounceInterval="DebounceInterval"
                               OnKeyUp="HandleKeyEvent"
                               Label="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                              For="@(() => FormModel.EnrolmentKey)"
+                              DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
+                              Label="@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]"/>
             </div>
         </Collapsable>
 
@@ -102,7 +107,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
         OnSubmitted.InvokeAsync();
     }
 

@@ -206,6 +206,7 @@ public class CreateAtf : ICreateAtf
         LearningWorldJson.WorldDescription = learningWorld.Description;
         LearningWorldJson.WorldGoals = learningWorld.Goals.Split("\n");
         LearningWorldJson.EvaluationLink = learningWorld.EvaluationLink;
+        LearningWorldJson.EnrolmentKey = learningWorld.EnrolmentKey;
     }
 
     /// <summary>

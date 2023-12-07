@@ -13,7 +13,7 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, "LWPev" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            "LWPg" + append, "LWPev" + append, "LWPek" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,

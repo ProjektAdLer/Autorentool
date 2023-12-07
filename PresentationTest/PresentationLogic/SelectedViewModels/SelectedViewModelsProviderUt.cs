@@ -21,7 +21,7 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "h", "g");
+        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "h", "i", "g");
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveSlotInSpace(1, null);

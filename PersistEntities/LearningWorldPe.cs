@@ -9,7 +9,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string savePath, List<LearningSpacePe>? learningSpaces = null,
+        string goals, string evaluationLink, string enrolmentKey, string savePath,
+        List<LearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
     {
@@ -21,6 +22,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         EvaluationLink = evaluationLink;
+        EnrolmentKey = enrolmentKey;
         SavePath = savePath;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
@@ -42,6 +44,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = "";
         Goals = "";
         EvaluationLink = "";
+        EnrolmentKey = "";
         SavePath = "";
         LearningSpaces = new List<LearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
@@ -79,6 +82,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember] public string Goals { get; set; }
 
     [DataMember] public string EvaluationLink { get; set; }
+
+    [DataMember] public string EnrolmentKey { get; set; }
 
     [DataMember] public string SavePath { get; set; }
 

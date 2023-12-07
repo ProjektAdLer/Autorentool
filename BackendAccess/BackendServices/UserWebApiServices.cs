@@ -270,6 +270,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// Internal helper method for making requests and parsing responses generically
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
+    /// <param name="parameters">A dictionary of query parameters for the HTTP GET request, with each key-value pair representing one parameter.</param>
     /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters,
         IDictionary<string, string>? headers = null)

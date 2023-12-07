@@ -27,15 +27,15 @@ public static class ViewModelProvider
 
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", "LWVMev");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", "LWVMev", "LWVMek");
     }
 
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
         return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.Campus, 4,
-            floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan), positionX: positionX,
-            positionY: positionY) {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
+            floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
+            positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
     public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(
@@ -162,14 +162,14 @@ public static class ViewModelProvider
 
     public static MultipleChoiceSingleResponseQuestionViewModel GetMultipleChoiceSingleResponseQuestion()
     {
-        var choiceViewModels = new List<ChoiceViewModel> {GetChoice()};
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice() };
         return new MultipleChoiceSingleResponseQuestionViewModel(1, "question text",
             choiceViewModels.First(), QuestionDifficulty.Medium, choiceViewModels);
     }
 
     public static MultipleChoiceMultipleResponseQuestionViewModel GetMultipleChoiceMultipleResponseQuestion()
     {
-        var choiceViewModels = new List<ChoiceViewModel> {GetChoice(), GetChoice()};
+        var choiceViewModels = new List<ChoiceViewModel> { GetChoice(), GetChoice() };
         return new MultipleChoiceMultipleResponseQuestionViewModel(1, "question text",
             QuestionDifficulty.Hard, choiceViewModels, choiceViewModels);
     }
@@ -178,7 +178,7 @@ public static class ViewModelProvider
     {
         return new AdaptivityTaskViewModel(
             new List<IAdaptivityQuestionViewModel>
-                {GetMultipleChoiceSingleResponseQuestion(), GetMultipleChoiceMultipleResponseQuestion()},
+                { GetMultipleChoiceSingleResponseQuestion(), GetMultipleChoiceMultipleResponseQuestion() },
             QuestionDifficulty.Hard,
             "taskname");
     }
@@ -188,6 +188,6 @@ public static class ViewModelProvider
         var task = GetAdaptivityTask();
         var rule = GetRule();
         task.Questions.First().Rules.Add(rule);
-        return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> {task, GetAdaptivityTask()});
+        return new AdaptivityContentViewModel(new List<IAdaptivityTaskViewModel> { task, GetAdaptivityTask() });
     }
 }

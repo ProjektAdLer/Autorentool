@@ -8,19 +8,22 @@ public class LearningWorldJson : ILearningWorldJson
     [JsonConstructor]
     public LearningWorldJson(string worldName, string worldUuid, List<ITopicJson> topics,
         List<ILearningSpaceJson> spaces, List<IElementJson> elements, string? worldDescription = null,
-        string[]? worldGoals = null, string? evaluationLink = null)
+        string[]? worldGoals = null, string? evaluationLink = null, string? enrolmentKey = null)
     {
         WorldName = worldName;
         WorldUUID = worldUuid;
         WorldDescription = worldDescription ?? "";
         WorldGoals = worldGoals ?? new[] { "" };
         EvaluationLink = evaluationLink ?? "";
+        EnrolmentKey = enrolmentKey ?? "";
         Topics = topics;
         Spaces = spaces;
         Elements = elements;
     }
 
     public string EvaluationLink { get; set; }
+
+    public string EnrolmentKey { get; set; }
 
     public string WorldName { get; set; }
 
