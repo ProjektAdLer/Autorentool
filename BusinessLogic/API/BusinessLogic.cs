@@ -415,5 +415,38 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
+    /// <inheritdoc cref="IBusinessLogic.DeleteLmsWorld"/>
+    public async Task DeleteLmsWorld(LmsWorld world)
+    {
+        try
+        {
+            var result = await BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]), world);
+            if(!result)
+                ErrorManager.LogAndRethrowBackendAccessError(new BackendWorldDeletionException("Lms world could not be deleted."));
+        }
+        catch (HttpRequestException e)
+        {
+            ErrorManager.LogAndRethrowBackendAccessError(e);
+        }
+        
+        
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.GetLmsWorldList"/>
+    public async Task<List<LmsWorld>> GetLmsWorldList()
+    {
+        try
+        {
+            return await BackendAccess.GetLmsWorldList(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+                _userInformation.LmsId);
+        }
+        catch (HttpRequestException httpReqEx)
+        {
+            ErrorManager.LogAndRethrowBackendAccessError(httpReqEx);
+            throw;
+        }
+        
+    }
+
     #endregion
 }

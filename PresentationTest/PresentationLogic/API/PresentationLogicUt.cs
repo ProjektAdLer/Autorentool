@@ -24,6 +24,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -35,6 +36,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -2702,6 +2704,34 @@ public class PresentationLogicUt
         systemUnderTest.Logout();
 
         mockBusinessLogic.Received().Logout();
+    }
+
+    [Test]
+    public async Task GetLmsWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        await systemUnderTest.GetLmsWorldList();
+
+        await mockBusinessLogic.Received().GetLmsWorldList();
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = Substitute.For<LmsWorldViewModel>();
+        var mockWorld = Substitute.For<LmsWorld>();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LmsWorld>(Arg.Any<LmsWorldViewModel>()).Returns(mockWorld);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        await systemUnderTest.DeleteLmsWorld(mockWorldVm);
+
+        await mockBusinessLogic.Received().DeleteLmsWorld(mockWorld);
     }
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(

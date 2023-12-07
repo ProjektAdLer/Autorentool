@@ -24,11 +24,18 @@ public interface IErrorManager
     /// <param name="exception">The original exception that occurred.</param>
     /// <exception cref="RedoException">Throws a new RedoException with the original exception as the inner exception.</exception>
     public void LogAndRethrowRedoError(Exception exception);
-    
+
     /// <summary>
     /// Logs the details of the exception and then rethrows it wrapped in a new GeneratorException.
     /// </summary>
     /// <param name="exception">The original exception that occurred.</param>
     /// <exception cref="GeneratorException">Throws a new GeneratorException with the original exception as the inner exception.</exception>
     public void LogAndRethrowGeneratorError(Exception exception);
+
+    /// <summary>
+    /// Logs the details of the exception and then rethrows it wrapped in a new BackendException.
+    /// </summary>
+    /// <param name="exception">The original exception that occurred.</param>
+    /// <exception cref="GeneratorException">Throws a new BackendException with the original exception as the inner exception.</exception>
+    public void LogAndRethrowBackendAccessError(Exception exception);
 }
