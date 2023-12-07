@@ -31,4 +31,7 @@ public interface IUserWebApiServices
     /// </summary>
     /// <returns>True if we got correct response from API, false in all other cases.</returns>
     Task<bool> GetApiHealthcheck();
+
+    public Task<List<LmsWorldBE>> GetLmsWorldList(string token, int authorId);
+    public Task<bool> DeleteLmsWorld(string token, int worldId);
 }

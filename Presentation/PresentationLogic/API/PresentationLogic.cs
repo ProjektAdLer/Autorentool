@@ -14,6 +14,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -953,6 +954,13 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
+    {
+        var worldsEntity = await BusinessLogic.GetLmsWorldList();
+        return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
+    }
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>
@@ -1118,6 +1126,13 @@ public class PresentationLogic : IPresentationLogic
             //delete file after upload or exception
             FileSystem.File.Delete(filepath);
         }
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)
+    {
+        var world = Mapper.Map<LmsWorld>(worldVm);
+        await BusinessLogic.DeleteLmsWorld(world);
     }
 
 #if DEBUG

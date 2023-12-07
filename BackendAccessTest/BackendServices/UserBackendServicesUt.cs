@@ -350,6 +350,72 @@ public class UserBackendServicesUt
         Assert.That(ex!.Message, Is.EqualTo("The backup path is not valid."));
     }
 
+    [Test]
+    public async Task GetLmsWorldList_Valid_CallsHttpClient()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        mockedHttp
+            .When("*")
+            .Respond("application/json", @"{
+        ""Worlds"": [
+            {
+                ""WorldName"": ""w1"",
+                ""WorldId"": 1
+            },
+            {
+                ""WorldName"": ""w2"",
+                ""WorldId"": 2
+            }
+        ]
+    }");
+
+
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        // Act
+        var output = await userWebApiServices.GetLmsWorldList("testToken", 4);
+
+        // Assert
+        Assert.That(output[0].WorldId, Is.EqualTo(1));
+        Assert.That(output[0].WorldName, Is.EqualTo("w1"));
+        Assert.That(output[1].WorldId, Is.EqualTo(2));
+        Assert.That(output[1].WorldName, Is.EqualTo("w2"));
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_ValidRequest_ReturnsTrue()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var token = "testToken";
+        var worldId = 123;
+        var expectedUrl = $"Worlds/{worldId}";
+
+        mockedHttp
+            .When(HttpMethod.Delete, $"*{expectedUrl}")
+            .WithHeaders("token", token)
+            .Respond(HttpStatusCode.OK, "application/json", "true");
+
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        var result = await userWebApiServices.DeleteLmsWorld(token, worldId);
+
+        Assert.IsTrue(result);
+
+        mockedHttp.VerifyNoOutstandingExpectation();
+    }
+
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
         IApplicationConfiguration? configuration = null,

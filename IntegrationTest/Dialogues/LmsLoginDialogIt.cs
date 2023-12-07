@@ -8,6 +8,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using PresentationTest;
 using Shared.Configuration;
 
@@ -21,12 +22,15 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     {
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        _errorService = Substitute.For<IErrorService>();
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_applicationConfiguration);
+        Context.Services.AddSingleton(_errorService);
     }
 
     private IPresentationLogic _presentationLogic = null!;
     private IApplicationConfiguration _applicationConfiguration = null!;
+    private IErrorService _errorService = null!;
 
     [Test]
     public async Task DialogCreated_DependenciesInjected()
@@ -37,6 +41,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(_presentationLogic));
         Assert.That(systemUnderTest.Instance.Configuration, Is.EqualTo(_applicationConfiguration));
+        Assert.That(systemUnderTest.Instance.ErrorService, Is.EqualTo(_errorService));
     }
 
     [Test]

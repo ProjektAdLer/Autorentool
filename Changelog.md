@@ -7,7 +7,8 @@
 
 ### Added
 
--
+- New list of previously uploaded learning worlds that appears after logging in to the LMS
+- Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend
 
 ### Changed
 
