@@ -25,72 +25,81 @@
         </MudButton>
     </HeaderButtons>
     <Fields>
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-            <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                              For="@(() => FormModel.Name)"
-                              DebounceInterval="DebounceInterval"
-                              Label="@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]"/>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
-            <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudText Typo="Typo.caption">
-                    @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
-                </MudText>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                                 Min="0"
-                                 For="@(() => FormModel.RequiredPoints)"
-                                 DebounceInterval="DebounceInterval"
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"/>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
-            @*<MudText Typo="Typo.caption">
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+                <div class="rounded-lg w-4/4 px-4 pb-2">
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                                  For="@(() => FormModel.Name)"
+                                  DebounceInterval="DebounceInterval"
+                                  Label="@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]"/>
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
+                <div class="rounded-lg w-4/4 px-4 pb-2">
+                    <MudText Typo="Typo.caption">
+                        @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
+                    </MudText>
+                    <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                     Min="0"
+                                     For="@(() => FormModel.RequiredPoints)"
+                                     DebounceInterval="DebounceInterval"
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"/>
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
+                @*<MudText Typo="Typo.caption">
                                 @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
             </MudText>*@
-            <div class="flex rounded-lg w-4/4 px-1 pb-2">
-                <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
-            <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
-                           AnchorOrigin="Origin.BottomCenter"
-                           Label=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
-                           Text="@FormDataContainer.FormModel.Theme.ToString()"
-                           For="@(() => FormModel.Theme)">
-                    @foreach (var theme in _themes)
-                    {
-                        <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
-                    }
-                </MudSelect>
-            </div>
-        </Collapsable>
-
-        <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
-            <div class="rounded-lg w-4/4 px-4">
-                <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                              For="@(() => FormModel.Description)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                              For="@(() => FormModel.Goals)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-2 mt-0"/>
-            </div>
-        </Collapsable>
-
+                <div class="flex rounded-lg w-4/4 px-1 pb-2">
+                    <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
+                <div class="rounded-lg w-4/4 px-4 pb-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
+                               AnchorOrigin="Origin.BottomCenter"
+                               Label=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
+                               Text="@FormDataContainer.FormModel.Theme.ToString()"
+                               For="@(() => FormModel.Theme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+                <div class="rounded-lg w-4/4 px-4">
+                    <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                  For="@(() => FormModel.Description)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4 mt-0"/>
+                    <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                                  For="@(() => FormModel.Goals)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-2 mt-0"/>
+                </div>
+            </Collapsable>
+        </div>
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>

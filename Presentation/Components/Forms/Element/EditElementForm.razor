@@ -29,153 +29,162 @@
         </MudButton>
     </HeaderButtons>
     <Fields>
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                                  For="@(() => FormModel.Name)"
+                                  DebounceInterval="DebounceInterval"
+                                  Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
+                                  Class="pb-4"/>
 
-        <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-            <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                              For="@(() => FormModel.Name)"
-                              DebounceInterval="DebounceInterval"
-                              Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
-                              Class="pb-4"/>
+                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
+                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                     Min="1"
+                                     Max="1000"
+                                     For="@(() => FormModel.Points)"
+                                     DebounceInterval="DebounceInterval"
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"
+                                     Class="pb-4"/>
 
-                <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                 Min="1"
-                                 Max="1000"
-                                 For="@(() => FormModel.Points)"
-                                 DebounceInterval="DebounceInterval"
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"
-                                 Class="pb-4"/>
-
-                <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                 Min="0"
-                                 Max="1000"
-                                 For="@(() => FormModel.Workload)"
-                                 DebounceInterval="DebounceInterval"
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"
-                                 Class="pb-6"/>
-                
-                @if (!AdaptivityElementMode)
-                {
-                    <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                               Immediate="false"
-                               Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
-                               For="@(() => FormModel.Difficulty)"
-                               Variant="Variant.Outlined">
-                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                            <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Easy"]</p>
-                            </div>
-                        </MudSelectItem>
-                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                            <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Medium"]</p>
-                            </div>
-                        </MudSelectItem>
-                        <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                            <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Hard"]</p>
-                            </div>
-                        </MudSelectItem>
-                        <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
-                    </MudSelect>
-                }
-                else{}
-            </div>
-        </Collapsable>
-
+                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
+                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                     Min="0"
+                                     Max="1000"
+                                     For="@(() => FormModel.Workload)"
+                                     DebounceInterval="DebounceInterval"
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"
+                                     Class="pb-6"/>
+                    
+                    @if (!AdaptivityElementMode)
+                    {
+                        <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                                   Immediate="false"
+                                   Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
+                                   For="@(() => FormModel.Difficulty)"
+                                   Variant="Variant.Outlined">
+                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                                <div class="flex items-center gap-2">
+                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                    <p class="pt-1">@Localizer["EditElementForm.Difficulty.Easy"]</p>
+                                </div>
+                            </MudSelectItem>
+                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                                <div class="flex items-center gap-2">
+                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                    <p class="pt-1">@Localizer["EditElementForm.Difficulty.Medium"]</p>
+                                </div>
+                            </MudSelectItem>
+                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                                <div class="flex items-center gap-2">
+                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                    <p class="pt-1">@Localizer["EditElementForm.Difficulty.Hard"]</p>
+                                </div>
+                            </MudSelectItem>
+                            <MudSelectItem Value="@(LearningElementDifficultyEnum.None)">@Localizer["EditElementForm.Difficulty.None"]</MudSelectItem>
+                        </MudSelect>
+                    }
+                    else{}
+                </div>
+            </Collapsable>
+        </div>
+        
         @if (!AdaptivityElementMode)
         {
-            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
-                <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
-                <TableSelect
-                    T="ILearningContentViewModel"
-                    @bind-Value="FormDataContainer.FormModel.LearningContent"
-                    For="@(() => FormModel.LearningContent)"
-                    Elements="WorldPresenter.GetAllContent()"
-                    FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
-                    <HeaderContent>
-                        <MudTh></MudTh>
-                        <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
-                        <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd Class="p-0">
-                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                           OnClick="() => PreviewOnClick(context)"
-                                           Class="show-content-preview py-2"/>
-                        </MudTd>
-                        <MudTd Class="p-0" DataLabel="Name">
-                            <MudTooltip Text="@context.Name"
-                                        Arrow="true"
-                                        Placement="Placement.Right"
-                                        Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                        Duration="Double.Epsilon">
-                                <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
-                            </MudTooltip>
-                        </MudTd>
-                        <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
-                            @if (context is FileContentViewModel fileContentContext)
-                            {
-                                @fileContentContext.Type
-                            }
-                            else
-                            {
-                                <span>Link</span>
-                            }
-                        </MudTd>
-                    </RowTemplate>
-                </TableSelect>
-            </Collapsable>
+            <div class="px-4">
+                <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+                    <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
+                    <TableSelect
+                        T="ILearningContentViewModel"
+                        @bind-Value="FormDataContainer.FormModel.LearningContent"
+                        For="@(() => FormModel.LearningContent)"
+                        Elements="WorldPresenter.GetAllContent()"
+                        FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                        <HeaderContent>
+                            <MudTh></MudTh>
+                            <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
+                            <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd Class="p-0">
+                                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                               OnClick="() => PreviewOnClick(context)"
+                                               Class="show-content-preview py-2"/>
+                            </MudTd>
+                            <MudTd Class="p-0" DataLabel="Name">
+                                <MudTooltip Text="@context.Name"
+                                            Arrow="true"
+                                            Placement="Placement.Right"
+                                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                                            Duration="Double.Epsilon">
+                                    <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
+                                </MudTooltip>
+                            </MudTd>
+                            <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
+                                @if (context is FileContentViewModel fileContentContext)
+                                {
+                                    @fileContentContext.Type
+                                }
+                                else
+                                {
+                                    <span>Link</span>
+                                }
+                            </MudTd>
+                        </RowTemplate>
+                    </TableSelect>
+                </Collapsable>
+            </div>
         }
         else
         {
-            <Collapsable Style="" Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] @bind-Collapsed="_collapsedTasks">
                 <p class="text-xs pl-6">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                 <div class="flex flex-col items-center justify-center">
-                    <MudButton Class="btn-standard add-tasks" OnClick="OpenAdaptivityContentDialog">
+                    <MudButton Class="w-44 2xl:w-3/5 btn-standard add-tasks" OnClick="OpenAdaptivityContentDialog">
                         @Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
                     </MudButton>
                 </div>
             </Collapsable>
+        </div>
         }
 
-        <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
-            <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
-                                        For="@(() => FormModel.ElementModel)"
-                                        Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                        Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent,
-                                         ElementToEdit.Parent?.Theme, AdaptivityElementMode)">
-                </ElementModelGridSelect>
-            </div>
-        </Collapsable>
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                    <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                                            For="@(() => FormModel.ElementModel)"
+                                            Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                            Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent,
+        ElementToEdit.Parent?.Theme, AdaptivityElementMode)">
+                    </ElementModelGridSelect>
+                </div>
+            </Collapsable>
+        </div>
 
-        <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
-            <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                              For="@(() => FormModel.Description)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                              For="@(() => FormModel.Goals)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-2 mt-0"/>
-            </div>
-        </Collapsable>
-
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                  For="@(() => FormModel.Description)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4 mt-0"/>
+                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                                  For="@(() => FormModel.Goals)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-2 mt-0"/>
+                </div>
+            </Collapsable>
+        </div>
+        
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
