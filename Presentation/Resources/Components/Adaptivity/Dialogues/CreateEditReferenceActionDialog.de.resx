@@ -37,7 +37,7 @@
         <value>Kommentar</value>
     </data>
     <data name="Reference.Text" xml:space="preserve">
-        <value>Sie können bei einer falschen Antwort auf ein bereits in einem Lernraum platziertes Lernelement oder auf weiteres Lernmaterial verweisen. Zusätzlich haben Sie die Möglichkeit, dem Verweis einen ergänzenden Hinweis hinzufügen.</value>
+        <value>Sie können bei einer falschen Antwort auf ein Lernelement oder auf weiteres Lernmaterial verweisen. Zusätzlich haben Sie die Möglichkeit, dem Verweis einen ergänzenden Hinweis hinzufügen.</value>
     </data>
     <data name="Reference.Label.Text" xml:space="preserve">
         <value>Verweis</value>
