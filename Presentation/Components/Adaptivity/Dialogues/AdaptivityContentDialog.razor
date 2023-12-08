@@ -202,8 +202,10 @@
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Medium,
+            MaxWidth = MaxWidth.ExtraExtraLarge,
             FullWidth = false,
+            NoHeader = true,
+            CloseButton = true,
         };
         var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("", new DialogParameters()
         {
