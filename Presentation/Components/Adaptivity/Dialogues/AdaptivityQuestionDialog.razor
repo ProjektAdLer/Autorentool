@@ -4,11 +4,11 @@
 @using Shared.Adaptivity
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
-<div class="flex items-center m-2 border-adlerdarkblue bg-adlergrey-100 drop-shadow">
+<div class="flex items-center max-h-[1500px] mx-4 p-0 overflow-hidden">
     @if (_isSidePanelOpen)
     {
-        <div class="relative w-[300px] h-full transition">
-            <MudText Typo="Typo.h6">
+        <div class="relative w-[310px] transition">
+            <MudText Class="text-adlertextgrey text-sm">
                 @(Task.Questions.FirstOrDefault(x => x.Difficulty != Difficulty) == null
                     ? Localizer["AdaptivityQuestionDialog.Sidebar.Header.NoQuestions"]
                     : Localizer["AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions"])
@@ -23,12 +23,12 @@
             }
         </div>
     }
-    <MudToggleIconButton Class="h-10 w-10" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
+    <MudToggleIconButton Title="@Localizer["AdaptivityQuestionDialog.Sidebar.Toggle.Text"]" Class="h-10 w-10" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
 
-    <div class="overflow-auto">
-        <MudDialog>
+    <div class="w-[500px]">
+        <MudDialog ClassContent="p-0">
             <DialogContent>
-                <div class="flex flex-col gap-1 items-center">
+                <div class="flex flex-col items-center">
                     @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
                     {
                         <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
