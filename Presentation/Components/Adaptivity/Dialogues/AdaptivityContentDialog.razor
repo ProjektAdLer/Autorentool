@@ -42,10 +42,15 @@
     <RowTemplate>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
             <MudForm Model="context" @ref="_nameMudFormRefs[context]">
-                <span class="inline-flex">
-                    <MudTextField Class="break-words" T="string" @bind-Value="@_nameValues[context]" Required="true"
+                <span class="inline-flex min-w-full">
+                    <MudTextField Class="break-words" 
+                                  T="string" 
+                                  @bind-Value="@_nameValues[context]"
+                                  Lines="2"
+                                  Required="true"
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
-                                  DebounceInterval="300" OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
+                                  DebounceInterval="300" 
+                                  OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
                     <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>

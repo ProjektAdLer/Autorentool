@@ -4,11 +4,11 @@
 @using Shared.Adaptivity
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Forms.AdaptivityQuestion
-<div class="flex items-center max-h-[1500px] mx-4 p-0 overflow-hidden">
+<div class="flex items-center max-h-[1350px] mx-4 p-0 overflow-hidden">
     @if (_isSidePanelOpen)
     {
-        <div class="relative w-[310px] transition">
-            <MudText Class="text-adlertextgrey text-sm">
+        <div class="relative w-[310px] max-h-[650px] overflow-y-scroll transition py-2">
+            <MudText Class="text-adlertextgrey text-sm cursor-default">
                 @(Task.Questions.FirstOrDefault(x => x.Difficulty != Difficulty) == null
                     ? Localizer["AdaptivityQuestionDialog.Sidebar.Header.NoQuestions"]
                     : Localizer["AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions"])
