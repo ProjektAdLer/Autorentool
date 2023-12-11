@@ -24,7 +24,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="RichardSzalay.MockHttp" Version="6.0.0" />
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="20.0.4" />
     </ItemGroup>
 
     <ItemGroup>
