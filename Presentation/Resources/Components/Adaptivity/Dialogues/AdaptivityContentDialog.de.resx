@@ -54,13 +54,13 @@
         <value>Name für Aufgabe erforderlich!</value>
     </data>
     <data name="AdaptivityContentDialog.Subtitle" xml:space="preserve">
-        <value>Erstellen Sie eine neue Aufgabe und mindestens eine dazugehörige Frage mit gewünschtem Schwierigkeitsgrad. Sie können zu jeder Frage optional einen zusätzlichen Kommentar oder Verweis hinzufügen.</value>
+        <value>Erstellen Sie eine neue Aufgabe und mindestens eine dazugehörige Frage mit gewünschtem Schwierigkeitsgrad. Sie können zu jeder Frage optional einen zusätzlichen Kommentar oder Verweis ergänzen.</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Delete" xml:space="preserve">
         <value>Frage löschen</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.NewTask" xml:space="preserve">
-        <value>Aufgabe hinzufügen</value>
+        <value>Neue Aufgabe erstellen</value>
     </data>
     <data name="AdaptivityContent.Dialog.Table.Header.DeleteTask" xml:space="preserve">
         <value>Aufgabe entfernen</value>

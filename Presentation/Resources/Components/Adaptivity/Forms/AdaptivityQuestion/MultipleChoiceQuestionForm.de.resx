@@ -66,4 +66,16 @@
     <data name="MultipleChoiceQuestionForm.TitleContent.Edit.Medium" xml:space="preserve">
         <value>Bearbeiten der mittelschweren Frage</value>
     </data>
+    <data name="MultipleChoiceQuestionForm.Create.Text" xml:space="preserve">
+        <value>Formulieren Sie eine Frage und die dazugehörigen Antworten. Geben Sie dabei an, ob es sich um eine Single- oder Multiple-Choice-Frage handelt.</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Switch.SingleChoice" xml:space="preserve">
+        <value>Single-Choice</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Switch.MultipleChoice" xml:space="preserve">
+        <value>Multiple-Choice</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Switch.Question.Text" xml:space="preserve">
+        <value>Frage: </value>
+    </data>
 </root>

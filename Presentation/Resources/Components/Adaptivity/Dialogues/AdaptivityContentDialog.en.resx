@@ -52,7 +52,7 @@
         <value>Delete question</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Header.NewTask" xml:space="preserve">
-        <value>Add task</value>
+        <value>Create new task</value>
     </data>
     <data name="AdaptivityContent.Dialog.Table.Header.DeleteTask" xml:space="preserve">
         <value>Delete task</value>

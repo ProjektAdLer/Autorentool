@@ -43,6 +43,6 @@
         <value>Reference to learning element:</value>
     </data>
     <data name="AdaptivityQuestionPreview.ReferenceContent.Text" xml:space="preserve">
-        <value>Reference to externes learning material:</value>
+        <value>Reference to external learning material:</value>
     </data>
 </root>

@@ -9,7 +9,7 @@
 @using AutoMapper
 @using System.Diagnostics.CodeAnalysis
 
-<div class="w-full flex flex-row items-center justify-between">
+<div class="w-full flex flex-row items-center justify-between cursor-default">
     <MudText Class="px-2" Typo="Typo.h6">
         @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
             ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
@@ -18,7 +18,7 @@
     <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="() => OnSubmitted.InvokeAsync()" ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end"/>
 </div>
 
-<MudText Class="p-2 text-sm">Formulieren Sie Ihre Frage und die dazugehörigen Antworten. Geben Sie dabei an, ob es sich um eine Single- oder Multiple-Choice-Frage handelt.</MudText>
+<MudText Class="p-2 text-sm cursor-default">@Localizer["MultipleChoiceQuestionForm.Create.Text"]</MudText>
 
     <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_questionForm"
               OnValidSubmit="OnValidSubmit"
@@ -39,13 +39,22 @@
                                       Variant="Variant.Outlined"
                                       Class="m-0"/>
                     </div>
-                    <MudCheckBox T="bool"
-                                 Class="flex items-center justify-center"
-                                 Checked="FormDataContainer.FormModel.IsSingleResponse"
-                                 CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
-                                 For="@(() => FormModel.IsSingleResponse)"
-                                 Label="Single Choice-Frage">
-                    </MudCheckBox>
+                    
+                    <MudSwitch T="bool"
+                               Class="flex items-center justify-center"
+                               Checked="FormDataContainer.FormModel.IsSingleResponse"
+                               CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
+                               For="@(() => FormModel.IsSingleResponse)">
+                               
+                               @if (FormDataContainer.FormModel.IsSingleResponse == true)
+                               {
+                                   <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                               }
+                               else
+                               {
+                                   <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                               }
+                    </MudSwitch>
                 </div>
 
                 <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
