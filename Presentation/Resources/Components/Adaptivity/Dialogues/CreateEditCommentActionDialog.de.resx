@@ -31,6 +31,6 @@
         <value>Textfeld</value>
     </data>
     <data name="Comment.Text" xml:space="preserve">
-        <value>Sie haben hier die Möglichkeit, bei falscher Antwort einen Kommentar zu verfassen.</value>
+        <value>Sie haben hier die Möglichkeit, einen Kommentar zu verfassen. Dieser wird in der 3D-Lernumgebung angezeigt, wenn Studierende eine falsch Antwort abgeben.</value>
     </data>
 </root>

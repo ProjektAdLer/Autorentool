@@ -37,7 +37,7 @@
         <value>Kommentar</value>
     </data>
     <data name="Reference.Text" xml:space="preserve">
-        <value>Sie können bei einer falschen Antwort auf ein Lernelement oder auf weiteres Lernmaterial verweisen. Zusätzlich haben Sie die Möglichkeit, dem Verweis einen ergänzenden Hinweis hinzufügen.</value>
+        <value>Sie können auf ein Lernelement oder auf externes Lernmaterial verweisen. Dieser Verweis wird angezeigt, wenn Studierende in der 3D-Lernumgebung eine falsche Antwort abgeben. Zusätzlich haben Sie die Möglichkeit, dem Verweis einen ergänzenden Hinweis hinzufügen.</value>
     </data>
     <data name="Reference.Label.Text" xml:space="preserve">
         <value>Verweis</value>
@@ -53,5 +53,11 @@
     </data>
     <data name="Reference.Element.Label.Text" xml:space="preserve">
         <value>Verweis auf ein Lernelement</value>
+    </data>
+    <data name="Reference.Element.Info.Text" xml:space="preserve">
+        <value>Bei einem Verweis auf ein Lernelement können Sie auf alle unplatzierten und bereits in Lernräumen platzierten Lernelemente referieren.</value>
+    </data>
+    <data name="Reference.Content.Info.Text" xml:space="preserve">
+        <value>Bei einem Verweis auf ein externes Lernmaterial können Sie auf diejenigen Dateien und Links referieren, die Sie bereits dem Autorentool hinzugefügt, aber noch nicht zu einem Lernelement weiter ausgestaltet haben.</value>
     </data>
 </root>
