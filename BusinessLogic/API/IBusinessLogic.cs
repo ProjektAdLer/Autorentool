@@ -117,7 +117,7 @@ public interface IBusinessLogic
 
     #endregion
 
-    void ExportLearningWorldToArchive(LearningWorld world, string pathToFile);
+    Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile);
     Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
     IFileInfo GetFileInfoForPath(string savePath);
     void DeleteFileByPath(string savePath);

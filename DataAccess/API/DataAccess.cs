@@ -155,33 +155,24 @@ public class DataAccess : IDataAccess
 
     public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
 
-    /// <inheritdoc cref="IDataAccess.ExportLearningWorldToArchive"/>
-    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFile)
+    /// <inheritdoc cref="IDataAccess.ExportLearningWorldToArchiveAsync"/>
+    public async Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile)
     {
         //ensure folders are created
         if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
             FileSystem.Directory.CreateDirectory(ApplicationPaths.TempFolder);
-        var tempFolder = FileSystem.Path.Join(ApplicationPaths.TempFolder, Guid.NewGuid().ToString());
-        try
-        {
-            //create temp folder structure
-            FileSystem.Directory.CreateDirectory(tempFolder);
-            var tempContentFolder = FileSystem.Path.Join(tempFolder, "Content");
-            FileSystem.Directory.CreateDirectory(tempContentFolder);
-            //save world file
-            var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
-            SaveLearningWorldToFile(world, worldFilePath);
-            CopyContentFiles(world, tempContentFolder);
-            //zip up temp folder
-            var zipFilePath = FileSystem.Path.Join(pathToFile);
-            using var zipStream = FileSystem.File.Create(zipFilePath);
-            var fastZip = new FastZip();
-            fastZip.CreateZip(zipStream, tempFolder, true, ".*", ".*");
-        }
-        finally
-        {
-            FileSystem.Directory.Delete(tempFolder, true);
-        }
+        FileSystem.CreateDisposableDirectory(out var directoryInfo);
+        var tempFolder = directoryInfo.FullName;
+        //create temp folder structure
+        FileSystem.Directory.CreateDirectory(tempFolder);
+        var tempContentFolder = FileSystem.Path.Join(tempFolder, "Content");
+        FileSystem.Directory.CreateDirectory(tempContentFolder);
+        //save world file
+        var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
+        SaveLearningWorldToFile(world, worldFilePath);
+        CopyContentFiles(world, tempContentFolder);
+        //zip up temp folder
+        await ZipExtensions.CreateFromDirectoryAsync(FileSystem, tempFolder, pathToFile);
     }
 
     /// <inheritdoc cref="IDataAccess.ImportLearningWorldFromArchiveAsync"/>

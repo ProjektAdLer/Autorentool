@@ -16,6 +16,12 @@ public static class ZipExtensions
         var zipStream = fs.File.OpenRead(archivePath);
         return new ZipArchive(zipStream, ZipArchiveMode.Read);
     }
+
+    private static ZipArchive GetWritableZipArchive(IFileSystem fs, string archivePath)
+    {
+        var zipStream = fs.File.OpenWrite(archivePath);
+        return new ZipArchive(zipStream, ZipArchiveMode.Create);
+    }
     
     /// <summary>
     /// Extracts the contents of a <see cref="ZipArchive"/> to a given directory on the filesystem <paramref name="fs"/>.
@@ -40,6 +46,26 @@ public static class ZipExtensions
             using var destStream = fs.File.Create(path);
             using var sourceStream = entry.Open();
             sourceStream.CopyTo(destStream);
+        }
+    }
+    
+    /// <summary>
+    /// Creates a zip archive from a given directory on the filesystem <paramref name="fs"/>.
+    /// </summary>
+    /// <param name="fs">The filesystem to operate on.</param>
+    /// <param name="source">The folder that should be packed into the zip archive.</param>
+    /// <param name="destination">The file path the zip archive should be written to.</param>
+    public static async Task CreateFromDirectoryAsync(IFileSystem fs, string source, string destination)
+    {
+        using var archive = GetWritableZipArchive(fs, destination);
+        var files = fs.Directory.GetFiles(source, "*", SearchOption.AllDirectories);
+        foreach (var file in files)
+        {
+            var relativePath = file.Replace(source, "");
+            var entry = archive.CreateEntry(relativePath);
+            await using var entryStream = entry.Open();
+            await using var fileStream = fs.File.OpenRead(file);
+            await fileStream.CopyToAsync(entryStream);
         }
     }
 }

@@ -310,9 +310,9 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.GetContentFilesFolderPath();
     }
 
-    public void ExportLearningWorldToArchive(LearningWorld world, string pathToFile)
+    public async Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile)
     {
-        DataAccess.ExportLearningWorldToArchive(world, pathToFile);
+        await DataAccess.ExportLearningWorldToArchiveAsync(world, pathToFile);
     }
     
     public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile)

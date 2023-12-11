@@ -1059,7 +1059,7 @@ public class PresentationLogic : IPresentationLogic
             var pathToArchive = await _dialogManager!.ShowSaveAsDialogAsync("Archive export path",
                 fileFilters: new[] { new FileFilterProxy("Zip archive", new[] { "zip" }) }
             );
-            BusinessLogic.ExportLearningWorldToArchive(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world),
+            await BusinessLogic.ExportLearningWorldToArchiveAsync(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world),
                 pathToArchive);
         }
         catch (OperationCanceledException)

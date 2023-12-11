@@ -5,6 +5,7 @@ using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using DataAccess.Extensions;
 using DataAccess.Persistence;
 using DataAccessTest.Resources;
 using JetBrains.Annotations;
@@ -297,6 +298,65 @@ public class DataAccessUt
         Assert.That(
             (loadedWorld.LearningSpaces.ElementAt(1).ContainedLearningElements.First().LearningContent as FileContent)!
             .Filepath, Is.EqualTo(Path.Join(ApplicationPaths.ContentFolder, "regex.txt")));
+    }
+
+    [Test]
+    public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
+    {
+        var mapper = Substitute.For<IMapper>();
+        var filesystem = new MockFileSystem();
+        var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
+        var learningWorldPe = PersistEntityProvider.GetLearningWorld();
+        var learningWorld = EntityProvider.GetLearningWorldWithSpaceWithElement();
+        var element = learningWorld.LearningSpaces.First().ContainedLearningElements.First();
+        element.LearningContent = new FileContent("adler_logo.png", "png",
+            Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png"));
+        mapper.Map<LearningWorldPe>(learningWorld).Returns(learningWorldPe);
+        var expectedWorldData = new byte[] { 21, 22 };
+        xmlHandlerWorlds
+            .When(xmlfh => xmlfh.SaveToDisk(learningWorldPe, Arg.Any<string>()))
+            .Do(ci => filesystem.AddFile(ci.Arg<string>(), new MockFileData(expectedWorldData)));
+
+        var expectedPngData = new byte[] { 123, 69, 255, 123 };
+        var expectedHashData = new byte[] { 69, 69, 69, 69 };
+        filesystem.AddFile(Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png"),
+            new MockFileData(expectedPngData));
+        filesystem.AddFile(Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png.hash"),
+            new MockFileData(expectedHashData));
+
+        var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
+            fileSystem: filesystem);
+
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld, "C:\\export_test.zip");
+
+        var expectedZip = ZipExtensions.GetZipArchive(filesystem, "C:\\export_test.zip");
+        Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
+        
+        var png = expectedZip.Entries[1];
+        using var pngMemStream = new MemoryStream();
+        png.Open().CopyTo(pngMemStream);
+        var pngData = pngMemStream.ToArray();
+        var hash = expectedZip.Entries[2];
+        using var hashMemStream = new MemoryStream();
+        hash.Open().CopyTo(hashMemStream);
+        var hashData = hashMemStream.ToArray();
+        var world = expectedZip.Entries[0];
+        using var worldMemStream = new MemoryStream();
+        world.Open().CopyTo(worldMemStream);
+        var worldData = worldMemStream.ToArray();
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(png.Name, Is.EqualTo("adler_logo.png"));
+            Assert.That(png.Length, Is.EqualTo(4));
+            Assert.That(pngData, Is.EqualTo(expectedPngData));
+            Assert.That(hash.Name, Is.EqualTo("adler_logo.png.hash"));
+            Assert.That(hash.Length, Is.EqualTo(4));
+            Assert.That(hashData, Is.EqualTo(expectedHashData));
+            Assert.That(world.Name, Is.EqualTo("world.awf"));
+            Assert.That(world.Length, Is.EqualTo(2));
+            Assert.That(worldData, Is.EqualTo(expectedWorldData));
+        });
     }
 
     private class FindSuitableNewSavePathTestCases : IEnumerable
