@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Header.Text" xml:space="preserve">
-        <value>Dateien und Links hinzufügen</value>
+        <value>Dateien und Links als externes Lernmaterial hinzufügen</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>

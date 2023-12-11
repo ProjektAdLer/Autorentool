@@ -69,7 +69,7 @@
         <value>Keine Angabe</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Dateien und Links*</value>
+        <value>Externes Lernmaterial*</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
@@ -81,7 +81,7 @@
         <value>Ziele</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
-        <value>Dateien und Links</value>
+        <value>Externes Lernmaterial</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
         <value>Schwierigkeitsgrad</value>
@@ -105,7 +105,7 @@
         <value>Typ</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>Liste aller hinzugefügten Dateien und Links</value>
+        <value>Liste des gesamten hinzugefügten externen Lernmaterials</value>
     </data>
     <data name="EditElementForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
