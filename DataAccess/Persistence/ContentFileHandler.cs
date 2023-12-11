@@ -36,6 +36,7 @@ public class ContentFileHandler : IContentFileHandler
         return LoadContentAsyncInternal(filepath, duplicatePath, hash);
     }
 
+    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,byte[])"/>
     public async Task<ILearningContentPe> LoadContentAsync(string filepath, byte[] hash)
     {
         var (duplicatePath, _) = await GetFilePathOfExistingCopyAndHashAsync(filepath, hash);

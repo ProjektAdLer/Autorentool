@@ -256,16 +256,23 @@ public class DataAccess : IDataAccess
         }
     }
 
+    /// <inheritdoc cref="IDataAccess.GetFileInfoForPath"/>
     public IFileInfo GetFileInfoForPath(string savePath)
     {
         return FileSystem.FileInfo.New(savePath);
     }
 
+    /// <inheritdoc cref="IDataAccess.DeleteFileByPath"/>
     public void DeleteFileByPath(string savePath)
     {
         FileSystem.File.Delete(savePath);
     }
 
+    /// <summary>
+    /// For a given world, contains all referenced content files into <paramref name="contentFolder"/>.
+    /// </summary>
+    /// <param name="world">The world whose content shall be copied.</param>
+    /// <param name="contentFolder">The path to the directory the content shall be copied to.</param>
     private void CopyContentFiles(ILearningWorld world, string contentFolder)
     {
         var contentInWorld = world.LearningSpaces
@@ -297,11 +304,15 @@ public class DataAccess : IDataAccess
         XmlHandlerLink.SaveToDisk(linkContentPe, linkContentFilepath);
     }
 
-    private void EnsureCreated(string contentFolder)
+    /// <summary>
+    /// Ensures a directory exists at <paramref name="folder"/>.
+    /// </summary>
+    /// <param name="folder">The folder path.</param>
+    private void EnsureCreated(string folder)
     {
-        if (!FileSystem.Directory.Exists(contentFolder))
+        if (!FileSystem.Directory.Exists(folder))
         {
-            FileSystem.Directory.CreateDirectory(contentFolder);
+            FileSystem.Directory.CreateDirectory(folder);
         }
     }
 }

@@ -48,6 +48,10 @@ public interface IDataAccess
     /// <returns>An enumerable of content files.</returns>
     IEnumerable<ILearningContent> GetAllContent();
 
+    /// <summary>
+    /// Gets all paths to learning world files saved in <see cref="ApplicationPaths.SavedWorldsFolder"/>.
+    /// </summary>
+    /// <returns>An enumerable of <see cref="IFileInfo"/>.</returns>
     IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
@@ -75,6 +79,10 @@ public interface IDataAccess
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
 
+    /// <summary>
+    /// Gets path to the folder containing all content files, i.e. <see cref="ApplicationPaths.ContentFolder"/>.
+    /// </summary>
+    /// <returns>A filepath to a directory.</returns>
     string GetContentFilesFolderPath();
 
     /// <summary>
@@ -90,6 +98,16 @@ public interface IDataAccess
     /// <param name="pathToArchive">Filepath to the archive.</param>
     Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive);
 
+    /// <summary>
+    /// For a given path to a file, returns it's <see cref="IFileInfo"/> object.
+    /// </summary>
+    /// <param name="savePath">The path to the file.</param>
+    /// <returns>An <see cref="IFileInfo"/> object.</returns>
     IFileInfo GetFileInfoForPath(string savePath);
+    
+    /// <summary>
+    /// Deletes a file at the given path.
+    /// </summary>
+    /// <param name="savePath">The file to be deleted.</param>
     void DeleteFileByPath(string savePath);
 }

@@ -27,10 +27,12 @@ public class SaveLearningWorld : ISaveLearningWorld
 
     public void Execute()
     {
+        //get suitable file path for world
         if (string.IsNullOrWhiteSpace(Filepath))
         {
             Filepath = GetWorldFilepath();
         }
+        //update world save path if necessary
         if (LearningWorld.SavePath != Filepath)
         {
             LearningWorld.SavePath = Filepath;
