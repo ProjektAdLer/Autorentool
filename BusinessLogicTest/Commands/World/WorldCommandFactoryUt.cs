@@ -30,12 +30,13 @@ public class WorldCommandFactoryUt
         var language = "WorldLanguage";
         var description = "WorldDescription";
         var evaluationLink = "WorldEvaluationLink";
+        var enrolmentKey = "WorldEnrolmentKey";
         var goals = "WorldGoals";
         Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals, evaluationLink, mappingAction);
+            description, goals, evaluationLink, enrolmentKey, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -108,12 +109,13 @@ public class WorldCommandFactoryUt
         var language = "NewLanguage";
         var description = "NewDescription";
         var evaluationLink = "NewEvaluationLink";
+        var enrolmentKey = "NewEnrolmentKey";
         var goals = "NewGoals";
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals, evaluationLink, mappingAction);
+            description, goals, evaluationLink, enrolmentKey, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());

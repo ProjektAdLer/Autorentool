@@ -14,7 +14,7 @@ public class SelectedLearningWorldViewModelStackEntryUt
     public void Apply_InvokesActionWithCorrectParameter()
     {
         var command = Substitute.For<ICommand>();
-        var world = new LearningWorldViewModel("Test", "s", "f", "f", "d", "e", "f");
+        var world = new LearningWorldViewModel("Test", "s", "f", "f", "d", "e", "f", "g");
         Action<ILearningWorldViewModel?> action = Substitute.For<Action<ILearningWorldViewModel?>>();
 
         var systemUnderTest = new SelectedLearningWorldViewModelStackEntry(command, world, action);

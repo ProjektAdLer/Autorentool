@@ -51,4 +51,7 @@
     <data name="EditWorldForm.Text" xml:space="preserve">
         <value>* Required information</value>
     </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value>Enrolment key</value>
+    </data>
 </root>

@@ -14,6 +14,8 @@ public class MudDialogTestFixture<T> : MudBlazorTestFixture<T> where T : Compone
     {
         DialogProvider = Context.RenderComponent<MudDialogProvider>();
         var service = (DialogService)Context.Services.GetService<IDialogService>()!;
+        Context.ComponentFactories.AddStub<MudList>();
+        Context.ComponentFactories.AddStub<MudListItem>();
         IDialogReference? reference = null;
         options ??= new DialogOptions();
         parameters ??= new DialogParameters();

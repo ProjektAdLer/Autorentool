@@ -8,6 +8,7 @@ using BusinessLogic.ErrorManagement.DataAccess;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Exceptions;
 
 namespace BusinessLogic.API;
 
@@ -89,6 +90,20 @@ public interface IBusinessLogic
 
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
+
+    /// <summary>
+    /// Asynchronously retrieves a list of LMS World entities for the currently authenticated user.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorld objects associated with the current user.</returns>
+    /// <exception cref="BackendException">Thrown if there is an issue with the HTTP request.</exception>
+    Task<List<LmsWorld>> GetLmsWorldList();
+
+    /// <summary>
+    /// Asynchronously sends a request to delete a specified LMS World entity.
+    /// </summary>
+    /// <param name="world">The LmsWorld object representing the world to be deleted.</param>
+    /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
+    Task DeleteLmsWorld(LmsWorld world);
 
     #region BackendAccess
 

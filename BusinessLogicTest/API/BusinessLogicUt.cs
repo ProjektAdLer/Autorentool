@@ -7,6 +7,7 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
+using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -893,6 +894,106 @@ public class BusinessLogicUt
 
         backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
+    }
+
+    [Test]
+    public async Task GetLmsWorldList_CallsBackendAccess()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        var token = "token";
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
+
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
+
+        await systemUnderTest.GetLmsWorldList();
+
+        await backendAccess.Received().GetLmsWorldList(Arg.Is<UserToken>(c => c.Token == "token"), Arg.Any<int>());
+    }
+
+    [Test]
+    public void GetLmsWorldList_BackendThrowsHttpRequestException_ErrorManagerCalled()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        var errorManager = Substitute.For<IErrorManager>();
+        var token = "token";
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+
+        backendAccess.When(x => x.GetLmsWorldList(Arg.Any<UserToken>(), Arg.Any<int>()))
+            .Do(_ => throw new HttpRequestException());
+
+
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess,
+            fakeConfiguration: mockConfiguration, errorManager: errorManager);
+
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
+
+        Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await systemUnderTest.GetLmsWorldList());
+
+        errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_CallsBackendAccess()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        backendAccess.When(x => x.DeleteLmsWorld(Arg.Any<UserToken>(), Arg.Any<LmsWorld>()).Returns(true));
+        var token = "token";
+        var mockLmsWorld = Substitute.For<LmsWorld>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
+
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
+
+        await systemUnderTest.DeleteLmsWorld(mockLmsWorld);
+
+        await backendAccess.Received().DeleteLmsWorld(Arg.Is<UserToken>(c => c.Token == "token"), mockLmsWorld);
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_ResultIsFalse_ErrorManagerCalled()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        backendAccess.When(x => x.DeleteLmsWorld(Arg.Any<UserToken>(), Arg.Any<LmsWorld>()).Returns(false));
+        var errorManager = Substitute.For<IErrorManager>();
+        var mockLmsWorld = Substitute.For<LmsWorld>();
+        var token = "token";
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess,
+            fakeConfiguration: mockConfiguration, errorManager: errorManager);
+
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
+
+        await systemUnderTest.DeleteLmsWorld(mockLmsWorld);
+
+        errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<BackendWorldDeletionException>());
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_BackendThrowsHttpRequestException_ErrorManagerCalled()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        var errorManager = Substitute.For<IErrorManager>();
+        var mockLmsWorld = Substitute.For<LmsWorld>();
+        var token = "token";
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+
+        backendAccess.When(x => x.DeleteLmsWorld(Arg.Any<UserToken>(), Arg.Any<LmsWorld>()))
+            .Do(_ => throw new HttpRequestException());
+
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess,
+            fakeConfiguration: mockConfiguration, errorManager: errorManager);
+
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
+
+
+        await systemUnderTest.DeleteLmsWorld(mockLmsWorld);
+
+        errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(

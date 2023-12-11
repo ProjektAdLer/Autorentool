@@ -25,6 +25,7 @@ public class LearningWorldViewModelUt
         var description = "very cool element";
         var goals = "learn very many things";
         var evaluationLink = "https://www.prjekt-adler.eu";
+        var enrolmentKey = "asdf";
         var topic1 = new TopicViewModel("topic1");
         var topic2 = new TopicViewModel("topic2");
         var topics = new List<TopicViewModel> { topic1, topic2 };
@@ -36,7 +37,7 @@ public class LearningWorldViewModelUt
         var learningPathways = new List<ILearningPathWayViewModel> { pathWay };
 
         var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description, goals,
-            evaluationLink,
+            evaluationLink, enrolmentKey,
             unsavedChanges: false, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
             learningPathWays: learningPathways, topics: topics);
 
@@ -49,6 +50,7 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.UnsavedChanges, Is.False);
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
@@ -61,14 +63,14 @@ public class LearningWorldViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "awf";
-        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo", "foo");
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo");
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 
     [Test]
     public void Workload_ReturnsCorrectWorkload()
     {
-        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo", "foo");
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo");
         var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus,
             layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
         var spaceElement = ViewModelProvider.GetLearningElement(workload: 6);

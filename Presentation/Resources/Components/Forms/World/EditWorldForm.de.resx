@@ -59,4 +59,7 @@
     <data name="EditWorldForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
     </data>
+    <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value>Einschreibeschlüssel</value>
+    </data>
 </root>

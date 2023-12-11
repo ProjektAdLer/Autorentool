@@ -22,11 +22,13 @@ public class EditLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                enrolmentKey,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 
@@ -70,11 +72,13 @@ public class EditLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                enrolmentKey,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 
@@ -98,11 +102,13 @@ public class EditLearningWorldUt
         var description = "d";
         var goals = "g";
         var evaluationLink = "el";
+        var enrolmentKey = "ek";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
+                enrolmentKey,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 

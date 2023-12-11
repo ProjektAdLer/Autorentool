@@ -14,6 +14,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -165,14 +166,15 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals, evaluationLink,
+            description, goals, evaluationLink, enrolmentKey,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -181,12 +183,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals, evaluationLink,
+            goals, evaluationLink, enrolmentKey,
             world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())
@@ -934,6 +937,13 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
+    {
+        var worldsEntity = await BusinessLogic.GetLmsWorldList();
+        return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
+    }
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>
@@ -1127,6 +1137,13 @@ public class PresentationLogic : IPresentationLogic
             //delete file after upload or exception
             FileSystem.File.Delete(filepath);
         }
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)
+    {
+        var world = Mapper.Map<LmsWorld>(worldVm);
+        await BusinessLogic.DeleteLmsWorld(world);
     }
 
 #if DEBUG
