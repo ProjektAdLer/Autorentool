@@ -14,7 +14,7 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0-preview1" />
-      <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
+      <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
     </ItemGroup>
 
 </Project>
