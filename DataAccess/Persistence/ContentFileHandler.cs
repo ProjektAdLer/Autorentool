@@ -33,13 +33,25 @@ public class ContentFileHandler : IContentFileHandler
     public async Task<ILearningContentPe> LoadContentAsync(string filepath)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
+        return LoadContentAsyncInternal(filepath, duplicatePath, hash);
+    }
+
+    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,byte[])"/>
+    public async Task<ILearningContentPe> LoadContentAsync(string filepath, byte[] hash)
+    {
+        var (duplicatePath, _) = await GetFilePathOfExistingCopyAndHashAsync(filepath, hash);
+        return LoadContentAsyncInternal(filepath, duplicatePath, hash);
+    }
+
+    private ILearningContentPe LoadContentAsyncInternal(string filepath, string? duplicatePath, byte[] hash)
+    {
         if (duplicatePath == null)
             _logger.LogDebug("{File} not found in {ContentFilesFolderPath}, copying file", filepath,
                 ContentFilesFolderPath);
         else
         {
             _logger.LogDebug("{File} found at {DuplicateFilePath}, not copying", filepath, duplicatePath);
-            throw new HashExistsException(Path.GetFileName(duplicatePath));
+            throw new HashExistsException(Path.GetFileName(duplicatePath), duplicatePath);
         }
 
         var finalPath = duplicatePath ?? CopyFileToContentFilesFolder(filepath);
@@ -62,7 +74,7 @@ public class ContentFileHandler : IContentFileHandler
         else
         {
             _logger.LogDebug("stream {Name} found at {DuplicateFilePath}, not copying", name, duplicatePath);
-            throw new HashExistsException(Path.GetFileName(duplicatePath));
+            throw new HashExistsException(Path.GetFileName(duplicatePath), duplicatePath);
         }
 
         var finalPath = duplicatePath ?? await CopyFileToContentFilesFolderAsync(name, stream);
@@ -83,6 +95,14 @@ public class ContentFileHandler : IContentFileHandler
         if (links.Any(l => l.Name == linkContent.Name)) linkContent.Name += " (1)";
         links.Add(linkContent);
         OverwriteLinksFile(links);
+    }
+
+    public void SaveLinks(IEnumerable<LinkContentPe> links)
+    {
+        var existingLinks = GetAllLinks();
+        var newLinks = links.Where(l => !existingLinks.Contains(l));
+        var linksToSave = existingLinks.Union(newLinks);
+        OverwriteLinksFile(linksToSave.ToList());
     }
 
     /// <inheritdoc cref="IContentFileHandler.GetAllContent"/>
@@ -192,7 +212,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the file contents.</returns>
     /// <exception cref="IOException">The file has a length of 0 and is empty.</exception>
     /// <exception cref="ArgumentException">The <paramref name="filepath"/> was null or whitespace.</exception>
-    internal async Task<(string?, byte[])> GetFilePathOfExistingCopyAndHashAsync(string filepath)
+    internal async Task<(string?, byte[])> GetFilePathOfExistingCopyAndHashAsync(string filepath, byte[]? hash = null)
     {
         if (string.IsNullOrWhiteSpace(filepath))
             throw new ArgumentException("Path cannot be null or whitespace.", nameof(filepath));
@@ -201,7 +221,7 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogDebug("Opened file at {Filepath} for reading", filepath);
         try
         {
-            return await GetFilePathOfExistingCopyAndHashAsync(stream);
+            return await GetFilePathOfExistingCopyAndHashAsync(stream, hash);
         }
         catch (IOException ioex)
         {
@@ -216,7 +236,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <param name="stream">The stream which should be checked.</param>
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the stream contents.</returns>
     /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
-    private async Task<(string?, byte[])> GetFilePathOfExistingCopyAndHashAsync(Stream stream)
+    private async Task<(string?, byte[])> GetFilePathOfExistingCopyAndHashAsync(Stream stream, byte[]? hash = null)
     {
         if (stream.Length == 0)
         {
@@ -227,19 +247,19 @@ public class ContentFileHandler : IContentFileHandler
         AssertAllFilesInContentFilesFolderHaveHash();
 
         _logger.LogDebug("Calculating hash for stream");
-        var streamHash = await ComputeHashAsync(stream);
-        _logger.LogDebug("Calculated hash for stream: {Hash}", BitConverter.ToString(streamHash));
+        hash ??= await ComputeHashAsync(stream);
+        _logger.LogDebug("Calculated hash for stream: {Hash}", BitConverter.ToString(hash));
 
         var match = _fileSystem.Directory
             .GetFiles(ContentFilesFolderPath, "*.hash")
             //pre-filter all hash files where length of actual file is not equal to length of stream
             .Where(hashPath => RealFileHasSameLength(stream, hashPath))
-            .FirstOrDefault(path => streamHash.SequenceEqual(_fileSystem.File.ReadAllBytes(path)));
+            .FirstOrDefault(path => hash.SequenceEqual(_fileSystem.File.ReadAllBytes(path)));
         if (match != null)
             _logger.LogInformation("Found matching hash at {Match}", match);
         return match == null
-            ? (null, streamHash)
-            : (Path.Join(ContentFilesFolderPath, Path.GetFileNameWithoutExtension(match)), streamHash);
+            ? (null, streamHash: hash)
+            : (Path.Join(ContentFilesFolderPath, Path.GetFileNameWithoutExtension(match)), streamHash: hash);
     }
 
     private async void AssertAllFilesInContentFilesFolderHaveHash()

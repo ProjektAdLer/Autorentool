@@ -1,0 +1,4 @@
+S.*E(\d*)-.*
+
+.* - (\d*).*
+Slime Taoshite 300-nen, Shiranai Uchi ni Level Max ni Nattemashita S01E$1

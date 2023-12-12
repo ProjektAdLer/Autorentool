@@ -1,4 +1,5 @@
-﻿using BusinessLogic.API;
+﻿using System.IO.Abstractions;
+using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -127,8 +128,9 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">The Workspace ViewModel.</param>
     /// <param name="path">The Path, the Learning World should loaded from.</param>
-    /// <returns></returns>
-    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path);
+    /// <param name="setAsSelected">Whether or not the loaded Learning World should be set as the selected one.</param>
+    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path,
+        bool setAsSelected = true);
 
     /// <summary>
     /// Adds a new learning space in the given learning world with the corresponding command.
@@ -533,11 +535,7 @@ public interface IPresentationLogic
     /// The task result contains the file path for the Learning World.</returns>
     Task<string> GetWorldSavePath();
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
@@ -604,4 +602,9 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
+
+    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
+    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
+    void DeleteLearningWorldByPath(string savePath);
 }

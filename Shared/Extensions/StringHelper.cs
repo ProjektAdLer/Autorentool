@@ -14,7 +14,7 @@ public static class StringHelper
 
     }
     
-    public static string GetUniqueName(IEnumerable<string> takenNames, string name)
+    public static string GetUniqueName(IEnumerable<string?> takenNames, string name)
     {
         var enumerable = takenNames as string[] ?? takenNames.ToArray();
         while (enumerable.Any(takenName => takenName == name))
