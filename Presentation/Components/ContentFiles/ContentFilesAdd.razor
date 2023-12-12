@@ -2,11 +2,13 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared
 @using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
-@using BusinessLogic.Entities.LearningContent
-@using BusinessLogic.ErrorManagement.DataAccess
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
+@using System.Diagnostics.CodeAnalysis
+@using System.IO.Compression
+@using BusinessLogic.Entities.LearningContent
+@using BusinessLogic.ErrorManagement.DataAccess
+@using Presentation.Components.Dialogues
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -23,14 +25,14 @@
         }
 
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
-                       Accept="@AllowedFileEndings.EndingsCommaSeparated"
+                       Accept="@AllowedFileEndings.EndingsCommaSeparated" @ref="_fileUpload"
                        InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
                 <MudPaper Class="@PaperClasses" Outlined="true">
                     <MudElement Class="h-full w-full grow flex flex-col justify-center items-center">
-                    <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
+                        <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
                         <p class="flex justify-center text-xs 2xl:text-sm text-center break-word w-full mx-2 font-bold text-adlerdarkblue">@Localizer["FileUpload.ButtonTemplate.Text1"]</p>
                         <p class="flex justify-center text-xs text-center break-word w-full mx-2 text-adlerbggradientfrom">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</p>
                     </MudElement>
@@ -72,13 +74,15 @@
     private string PaperClasses => $"h-32 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
     private bool Working { get; set; } = false;
 
+    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
+
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
     /// </summary>
     private async Task OnFilesChangedAsync(InputFileChangeEventArgs obj)
     {
-    //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
-    //indefinitely for no apparent reason
+        //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
+        //indefinitely for no apparent reason
         try
         {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
@@ -91,11 +95,18 @@
             foreach (var file in files)
             {
                 var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
+                if (fileEnding is not null && fileEnding.ToLowerInvariant() == ".zip")
+                {
+                    await HandleZipFileAsync(file);
+                    continue;
+                }
+
                 if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
                 {
                     await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
                     continue;
                 }
+
                 await HandleFileAsync(file);
             }
 
@@ -108,7 +119,71 @@
         {
             ToggleSpinner();
             ClearDragClass();
+            await _fileUpload.ResetAsync();
         }
+    }
+
+    private async Task HandleZipFileAsync(IBrowserFile zipFile)
+    {
+        var zipStream = zipFile.OpenReadStream(1_000_000_000);
+        using var mS = new MemoryStream();
+        await zipStream.CopyToAsync(mS);
+        await zipStream.DisposeAsync();
+        mS.Position = 0;
+        using var archive = new ZipArchive(mS, ZipArchiveMode.Read);
+
+
+        var successfulFiles = new List<string>();
+        var unsupportedFiles = new List<string>();
+        var errorFiles = new List<string>();
+        var duplicateFiles = new List<string>();
+        foreach (var entry in archive.Entries)
+        {
+            if (entry.Length == 0) continue;
+            var fileName = PathHelper.TrimFileName(entry.Name);
+            var fileEnding = entry.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
+            if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+            {
+                unsupportedFiles.Add(entry.FullName);
+                continue;
+            }
+
+            using var memoryStream = new MemoryStream();
+            await entry.Open().CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            try
+            {
+                await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+                successfulFiles.Add(entry.FullName);
+            }
+            catch (IOException e)
+            {
+                ErrorService.SetError("Error while loading content", e.Message);
+                errorFiles.Add(entry.FullName);
+            }
+            catch (HashExistsException)
+            {
+                duplicateFiles.Add(entry.FullName);
+            }
+        }
+
+        var parameters = new DialogParameters
+        {
+            {nameof(ImportZipDialog.FileName), zipFile.Name},
+            {nameof(ImportZipDialog.SuccessfulFiles), successfulFiles},
+            {nameof(ImportZipDialog.DuplicateFiles), duplicateFiles},
+            {nameof(ImportZipDialog.UnsupportedFiles), unsupportedFiles},
+            {nameof(ImportZipDialog.ErrorFiles), errorFiles}
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false
+        };
+        var dialog = await DialogService.ShowAsync<ImportZipDialog>("Import Zip File", parameters, options);
+        await dialog.Result;
     }
 
     private async Task HandleFileAsync(IBrowserFile file)
@@ -116,10 +191,10 @@
         if (file.Size == 0)
         {
             Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
-    //we must run this on the UI thread, as it is a UI component
+            //we must run this on the UI thread, as it is a UI component
             await InvokeAsync(() =>
                 DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Title"], Localizer["DialogService.MessageBox.Text", file.Name])
-                );
+            );
             return;
         }
 
@@ -135,6 +210,7 @@
             ErrorService.SetError(Localizer["FileTooBig.Error.Title"], Localizer["FileTooBig.Error.Text"]);
             return;
         }
+
         Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
@@ -155,6 +231,7 @@
         {
             await InvokeAsync(() => { DialogService.ShowMessageBox("Duplicate file", $"File with same content as '{file.Name}' already exists in content folder in file '{hEEx.DuplicateFileName}'"); });
         }
+
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
