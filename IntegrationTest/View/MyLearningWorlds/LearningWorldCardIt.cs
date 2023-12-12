@@ -34,6 +34,27 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     }
 
     [Test]
+    public void Render_ShowFileNameTrue_ShowsFileNameFromFileInfo()
+    {
+        var world = Substitute.For<ILearningWorldViewModel>();
+        world.SavePath = "/somepath/foo.bar";
+        
+        var systemUnderTest = GetRenderedComponent(world, showFileName: true);
+        
+        Assert.That(systemUnderTest.Find("div.file-name-display").TextContent, Is.EqualTo("foo.bar"));
+    }
+
+    [Test]
+    public void Render_ShowFileNameTrue_NotYetSaved_ShowsSpecialMessage()
+    {
+        var world = Substitute.For<ILearningWorldViewModel>();
+        
+        var systemUnderTest = GetRenderedComponent(world, showFileName: true);
+        
+        Assert.That(systemUnderTest.Find("div.file-name-display").TextContent, Is.EqualTo("LearningWorldCard.PathDisplayMessage.NotYetSaved"));
+    }
+
+    [Test]
     public void CloseButtonPressed_CallsOnCloseCallback()
     {
         var callbackCallCount = 0;
@@ -67,7 +88,8 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
         ILearningWorldViewModel? learningWorld = null,
         EventCallback<ILearningWorldViewModel>? onOpenLearningWorld = null,
         EventCallback<ILearningWorldViewModel>? onCloseWorld = null,
-        IFileInfo? fileInfo = null
+        IFileInfo? fileInfo = null,
+        bool showFileName = true
     )
     {
         onOpenLearningWorld ??= EventCallback.Factory.Create<ILearningWorldViewModel>(this, () => { });
@@ -78,6 +100,7 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
             p.Add(c => c.OnOpenLearningWorld, onOpenLearningWorld.Value);
             p.Add(c => c.OnCloseLearningWorld, onCloseWorld.Value);
             p.Add(c => c.FileInfo, fileInfo);
+            p.Add(c => c.ShowFileName, showFileName);
         });
     }
 }

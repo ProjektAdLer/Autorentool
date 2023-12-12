@@ -50,21 +50,4 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     {
         return PresentationLogic.GetSavedLearningWorldPaths();
     }
-
-    private class FileInfoFullNameComparer : IEqualityComparer<IFileInfo?>
-    {
-        public bool Equals(IFileInfo? x, IFileInfo? y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (ReferenceEquals(x, null)) return false;
-            if (ReferenceEquals(y, null)) return false;
-            if (x.GetType() != y.GetType()) return false;
-            return x.FullName == y.FullName;
-        }
-
-        public int GetHashCode(IFileInfo obj)
-        {
-            return obj.FullName != null ? obj.FullName.GetHashCode() : 0;
-        }
-    }
 }

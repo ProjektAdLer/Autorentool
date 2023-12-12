@@ -14,7 +14,9 @@
                 <MudText Class="text-sm tracking-widers break-all">
                     @if (ShowFileName)
                     {
-                        @GetPathDisplayMessage()<br/>
+                        <div class="file-name-display">
+                            @GetPathDisplayMessage()
+                        </div>
                     }
                     @if (FileInfo != null)
                     {
