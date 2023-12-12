@@ -1,0 +1,76 @@
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+<MudDialog>
+    <DialogContent>
+        <MudText>@Localizer["ImportZipDialog.Heading.File.Name"] @FileName</MudText>
+        <MudText>@Localizer["ImportZipDialog.Heading.File.Count", SuccessfulFiles.Count + DuplicateFiles.Count + UnsupportedFiles.Count + ErrorFiles.Count]</MudText>
+        @if (SuccessfulFiles.Any())
+        {
+            <MudText>@Localizer["ImportZipDialog.Heading.Files.Successful"] @SuccessfulFiles.Count</MudText>
+            <MudList Dense="true">
+                @foreach (var item in SuccessfulFiles)
+                {
+                    <MudListItem>@item</MudListItem>
+                }
+            </MudList>
+        }
+        @if (DuplicateFiles.Any() || UnsupportedFiles.Any() || ErrorFiles.Any())
+        {
+            @if (DuplicateFiles.Any())
+            {
+                <MudText>@Localizer["ImportZipDialog.Heading.Files.Duplicate"] @DuplicateFiles.Count</MudText>
+                <MudList Dense="true">
+                    @foreach (var item in DuplicateFiles)
+                    {
+                        <MudListItem>@item</MudListItem>
+                    }
+                </MudList>
+            }
+
+            @if (UnsupportedFiles.Any())
+            {
+                <MudText>@Localizer["ImportZipDialog.Heading.Files.Unsupported"] @UnsupportedFiles.Count</MudText>
+                <MudList Dense="true">
+                    @foreach (var item in UnsupportedFiles)
+                    {
+                        <MudListItem>@item</MudListItem>
+                    }
+                </MudList>
+            }
+
+            @if (ErrorFiles.Any())
+            {
+                <MudText>@Localizer["ImportZipDialog.Heading.Files.Error"] @ErrorFiles.Count</MudText>
+                <MudList Dense="true">
+                    @foreach (var item in ErrorFiles)
+                    {
+                        <MudListItem>@item</MudListItem>
+                    }
+                </MudList>
+            }
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Ok">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    private IStringLocalizer<ImportZipDialog> Localizer { get; set; }
+
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter, EditorRequired] public string FileName { get; set; } = null!;
+
+    [Parameter] public List<string> SuccessfulFiles { get; set; } = new();
+
+    [Parameter] public List<string> DuplicateFiles { get; set; } = new();
+
+    [Parameter] public List<string> UnsupportedFiles { get; set; } = new();
+
+    [Parameter] public List<string> ErrorFiles { get; set; } = new();
+
+    private void Ok() => MudDialog?.Close();
+}
