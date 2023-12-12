@@ -14,7 +14,7 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         Logger = logger;
         FileSystem = fileSystem;
-        _folderPath = ApplicationPaths.RootFolder;
+        _folderPath = ApplicationPaths.RootAppDataFolder;
         _filePath = FileSystem.Path.Combine(_folderPath, "ApplicationConfig.json");
         Configuration = TryLoadConfiguration();
         CheckIfAllKeysExist();

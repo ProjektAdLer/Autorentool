@@ -28,12 +28,6 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     {
         _dialogService = Substitute.For<IDialogService>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
-        _presentationLogic.When(x =>
-                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("DUP_")), Arg.Any<Stream>()))
-            .Throw(args => new HashExistsException(args.ArgAt<string>(0)));
-        _presentationLogic.When(x =>
-                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("ERR_")), Arg.Any<Stream>()))
-            .Throw(args => new IOException(args.ArgAt<string>(0)));
         _errorService = Substitute.For<IErrorService>();
         Context.Services.AddSingleton(_dialogService);
         Context.Services.AddSingleton(_presentationLogic);
@@ -80,7 +74,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         var browserFile = new MockBrowserFile("testFileName.txt");
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
         _presentationLogic.LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>())
-            .Throws(new HashExistsException("duplicateFileName.txt"));
+            .Throws(new HashExistsException("duplicateFileName.txt", "/bogus/path/to/duplicateFileName.txt"));
 
         // Act
         await systemUnderTest.InvokeAsync(() =>
@@ -145,7 +139,13 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
             new List<string> {"duplicateFileName.txt"}, new List<string> {"unsupportedFileName"},
             new List<string> {"errorFileName.txt"});
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
-
+        _presentationLogic.When(x =>
+                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("DUP_")), Arg.Any<Stream>()))
+            .Throw(args => new HashExistsException(args.ArgAt<string>(0), "/bogus/path"));
+        _presentationLogic.When(x =>
+                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("ERR_")), Arg.Any<Stream>()))
+            .Throw(args => new IOException(args.ArgAt<string>(0)));
+        
         // Act
         await systemUnderTest.InvokeAsync(() =>
             fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));

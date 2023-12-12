@@ -21,6 +21,19 @@ public interface IContentFileHandler
     /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
     /// we don't copy the file and use the existing one instead.</remarks>
     public Task<ILearningContentPe> LoadContentAsync(string filepath);
+    
+    /// <summary>
+    /// Loads the file at the given filepath into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
+    /// </summary>
+    /// <param name="filepath">The path to the content file.</param>
+    /// <param name="hash">The SHA256 hash of the file at <paramref name="filepath"/>.</param>
+    /// <returns>A content object referencing the file.</returns>
+    /// <exception cref="ArgumentException">The <paramref name="filepath"/> was null or whitespace.</exception>
+    /// <exception cref="IOException">The file at <paramref name="filepath"/> has a length of 0 and is empty.</exception>
+    /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
+    /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
+    /// we don't copy the file and use the existing one instead.</remarks>
+    Task<ILearningContentPe> LoadContentAsync(string filepath, byte[] hash);
 
     /// <summary>
     /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
@@ -52,4 +65,11 @@ public interface IContentFileHandler
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContentPe linkContent);
+    
+    /// <summary>
+    /// Adds the given <see cref="LinkContentPe"/> to the link file.
+    /// </summary>
+    /// <param name="links">The links to add.</param>
+    void SaveLinks(IEnumerable<LinkContentPe> links);
+
 }

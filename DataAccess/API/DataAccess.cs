@@ -3,27 +3,32 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.ErrorManagement.DataAccess;
+using DataAccess.Extensions;
 using DataAccess.Persistence;
+using ICSharpCode.SharpZipLib.Zip;
 using PersistEntities;
 using PersistEntities.LearningContent;
-using Shared;
 using Shared.Configuration;
 
 namespace DataAccess.API;
 
 public class DataAccess : IDataAccess
 {
-    public readonly IContentFileHandler ContentFileHandler;
-    public readonly IFileSystem FileSystem;
-    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
-    public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
-    public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+    internal readonly IContentFileHandler ContentFileHandler;
+    internal readonly IFileSystem FileSystem;
+    internal readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
+    internal readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
+    internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
+    internal readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+    internal readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
 
-    public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
 
     public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement,
+        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink,
         IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler,
         IFileSystem fileSystem, IMapper mapper)
     {
@@ -35,6 +40,7 @@ public class DataAccess : IDataAccess
         FileSystem = fileSystem;
         Configuration = configuration;
         Mapper = mapper;
+        XmlHandlerLink = xmlHandlerLink;
     }
 
     public IMapper Mapper { get; }
@@ -112,33 +118,13 @@ public class DataAccess : IDataAccess
     public void SaveLink(LinkContent linkContent) =>
         ContentFileHandler.SaveLink(Mapper.Map<LinkContentPe>(linkContent));
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return WorldSavePathsHandler.GetSavedLearningWorldPaths();
     }
 
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        WorldSavePathsHandler.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        return WorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path);
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        WorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        WorldSavePathsHandler.RemoveSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
-    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
+    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iteration)
     {
         if (string.IsNullOrWhiteSpace(targetFolder))
         {
@@ -157,7 +143,7 @@ public class DataAccess : IDataAccess
 
         var baseSavePath = FileSystem.Path.Combine(targetFolder, fileName);
         var savePath = baseSavePath;
-        var iteration = 0;
+        iteration = 0;
         while (FileSystem.File.Exists($"{savePath}.{fileEnding}"))
         {
             iteration++;
@@ -168,4 +154,156 @@ public class DataAccess : IDataAccess
     }
 
     public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
+
+    /// <inheritdoc cref="IDataAccess.ExportLearningWorldToArchiveAsync"/>
+    public async Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile)
+    {
+        //ensure folders are created
+        if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
+            FileSystem.Directory.CreateDirectory(ApplicationPaths.TempFolder);
+        FileSystem.CreateDisposableDirectory(out var directoryInfo);
+        var tempFolder = directoryInfo.FullName;
+        //create temp folder structure
+        FileSystem.Directory.CreateDirectory(tempFolder);
+        var tempContentFolder = FileSystem.Path.Join(tempFolder, "Content");
+        FileSystem.Directory.CreateDirectory(tempContentFolder);
+        //save world file
+        var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
+        SaveLearningWorldToFile(world, worldFilePath);
+        CopyContentFiles(world, tempContentFolder);
+        //zip up temp folder
+        await ZipExtensions.CreateFromDirectoryAsync(FileSystem, tempFolder, pathToFile);
+    }
+
+    /// <inheritdoc cref="IDataAccess.ImportLearningWorldFromArchiveAsync"/>
+    public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive)
+    {
+        //we create a temp folder using IFileSystemExtensions which handles disposing of the folder for us
+        using var dispDir = FileSystem.CreateDisposableDirectory(out var dirInfo);
+        var tempFolder = dirInfo.FullName;
+        FileSystem.Directory.CreateDirectory(Path.Combine(tempFolder, "Content"));
+        //unzip archive into temp folder
+        using var zipArchive = ZipExtensions.GetZipArchive(FileSystem, pathToArchive);
+        zipArchive.ExtractToDirectory(FileSystem, tempFolder);
+        //load world file
+        var worldFilePath = FileSystem.Path.Join(tempFolder, "world.awf");
+        var world = LoadLearningWorld(worldFilePath);
+        var contentFolder = await CopyContentAsync(world);
+
+        //add links in linkstore to local linkstore
+        var linkListPath = FileSystem.Path.Join(contentFolder, ".linkstore");
+        var links = XmlHandlerLink.LoadFromDisk(linkListPath);
+        ContentFileHandler.SaveLinks(links);
+
+        //save world to savedworlds folder
+        var newSavePath =
+            FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
+        //parse save path back into name
+        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
+
+        SaveLearningWorldToFile(world, newSavePath);
+
+        //return world entity
+        return world;
+
+        async Task<string> CopyContentAsync(ILearningWorld world)
+        {
+            EnsureCreated(ApplicationPaths.ContentFolder);
+            var fileContents = world.LearningSpaces
+                .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
+                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+                .Where(content => content is FileContent)
+                .Cast<FileContent>()
+                .ToList();
+            //copy content files into content folder (avoiding duplicates) and changing filepaths in world
+            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
+            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
+                !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
+            foreach (var contentFile in contentFiles)
+            {
+                var contentFileHash = await FileSystem.File.ReadAllBytesAsync(contentFile + ".hash");
+                var affectedElements = fileContents.Where(content =>
+                    FileSystem.Path.GetFileName(content.Name) == FileSystem.Path.GetFileName(contentFile));
+                string newFilepath;
+                try
+                {
+                    var newContentPe =
+                        (FileContentPe)await ContentFileHandler.LoadContentAsync(contentFile, contentFileHash);
+                    newFilepath = newContentPe.Filepath;
+                }
+                catch (HashExistsException heex)
+                {
+                    newFilepath = heex.DuplicateFilePath;
+                }
+
+                //change filepaths in world
+                foreach (var affectedElement in affectedElements)
+                {
+                    affectedElement.Filepath = newFilepath;
+                }
+            }
+
+            return contentFolder;
+        }
+    }
+
+    /// <inheritdoc cref="IDataAccess.GetFileInfoForPath"/>
+    public IFileInfo GetFileInfoForPath(string savePath)
+    {
+        return FileSystem.FileInfo.New(savePath);
+    }
+
+    /// <inheritdoc cref="IDataAccess.DeleteFileByPath"/>
+    public void DeleteFileByPath(string savePath)
+    {
+        FileSystem.File.Delete(savePath);
+    }
+
+    /// <summary>
+    /// For a given world, contains all referenced content files into <paramref name="contentFolder"/>.
+    /// </summary>
+    /// <param name="world">The world whose content shall be copied.</param>
+    /// <param name="contentFolder">The path to the directory the content shall be copied to.</param>
+    private void CopyContentFiles(ILearningWorld world, string contentFolder)
+    {
+        var contentInWorld = world.LearningSpaces
+            .SelectMany(space =>
+                space.ContainedLearningElements.Select(element => element.LearningContent)
+            )
+            .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+            .ToList();
+        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>().Distinct();
+        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().Distinct()
+            .ToList();
+
+        //copy files
+        foreach (var file in fileContent)
+        {
+            //copy file
+            var sourceFileName = FileSystem.Path.GetFileName(file.Filepath);
+            var targetFilePath = FileSystem.Path.Join(contentFolder, sourceFileName);
+            FileSystem.File.Copy(file.Filepath, targetFilePath);
+            //copy it's hash
+            var sourceHashFileName = sourceFileName + ".hash";
+            var targetHashFilePath = FileSystem.Path.Join(contentFolder, sourceHashFileName);
+            FileSystem.File.Copy(file.Filepath + ".hash", targetHashFilePath);
+        }
+
+        //save links
+        var linkContentFilepath = FileSystem.Path.Join(contentFolder, ".linkstore");
+        var linkContentPe = Mapper.Map<List<LinkContentPe>>(linkContent);
+        XmlHandlerLink.SaveToDisk(linkContentPe, linkContentFilepath);
+    }
+
+    /// <summary>
+    /// Ensures a directory exists at <paramref name="folder"/>.
+    /// </summary>
+    /// <param name="folder">The folder path.</param>
+    private void EnsureCreated(string folder)
+    {
+        if (!FileSystem.Directory.Exists(folder))
+        {
+            FileSystem.Directory.CreateDirectory(folder);
+        }
+    }
 }

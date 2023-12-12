@@ -23,12 +23,18 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
+        <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="19.2.87" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
       <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\regex_but_different_name.txt.hash" />
+      <EmbeddedResource Include="Resources\regex_but_different_name.txt" />
+      <EmbeddedResource Include="Resources\import_test.zip" />
     </ItemGroup>
 
 </Project>

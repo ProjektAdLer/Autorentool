@@ -92,8 +92,6 @@ public class BackupFileGeneratorUt
         var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockEntityManager = Substitute.For<IXmlEntityManager>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport"), new MockFileData("Hello World"));
 
         var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
         systemUnderTest.CreateBackupFolders();

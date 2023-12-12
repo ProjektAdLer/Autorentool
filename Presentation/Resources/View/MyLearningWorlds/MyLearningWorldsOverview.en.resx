@@ -25,13 +25,13 @@
         <value>Create learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Import learning world</value>
+        <value>Use this option to import a learning world archive (e.g. from another computer or from a backup)</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEW</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>IMPORT</value>
+        <value>Import (.zip)</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug for Philipp</value>
@@ -41,5 +41,23 @@
     </data>
     <data name="Page.LearningWorld.Subheading" xml:space="preserve">
         <value>Hover over your learning worlds and open those subsequently.</value>
+    </data>
+    <data name="Page.LearningWorld.Button.Load.Hover" xml:space="preserve">
+        <value>Use this option to open locally saved worlds</value>
+    </data>
+    <data name="Page.LearningWorld.Button.Load.Text" xml:space="preserve">
+        <value>Load (.awf)</value>
+    </data>
+    <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
+        <value>Confirm deleting world</value>
+    </data>
+    <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
+        <value>Through this action the world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting world?</value>
+    </data>
+    <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
+        <value>Delete world</value>
+    </data>
+    <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
+        <value>Show file names</value>
     </data>
 </root>
