@@ -1,6 +1,6 @@
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Shared
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -29,23 +29,39 @@
             </section>
         </article>
         <section class="bg-white rounded w-full overflow-scroll grow pt-2">
-            <MudTreeView Hover="true" Class="mud-width-full" T="string">
-
-                @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
+            <div class="flex flex-col justify-start space-y-2">
+                @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
-                    @foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.ObjectsInPathWays))
+                    foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                     {
-                        <div class="text-adlergrey-700">
-                            <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
-                                @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
+                        <div>
+                            <span @onclick="() => ToggleLearningSpace(learningSpace)">
+                                @if (IsLearningSpaceExpanded(learningSpace))
                                 {
-                                    <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                    <span>&#9660;</span>
                                 }
-                            </MudTreeViewItem>
+                                else
+                                {
+                                    <span>&#9654;</span>
+                                }
+                            </span>
+                            <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">@learningSpace.Name</span>
+                            @if (IsLearningSpaceExpanded(learningSpace))
+                            {
+                                <div>
+                                    @foreach (var learningElement in learningSpace.ContainedLearningElements)
+                                    {
+                                        <p @onclick="@(e => SelectLearningElement(learningElement))"
+                                           class="@(IsLearningElementSelected(learningElement) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">
+                                            @learningElement.Name
+                                        </p>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 }
-            </MudTreeView>
+            </div>
         </section>
     </div>
 }
@@ -66,15 +82,22 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
+    [Inject, AllowNull]
+    public IMediator Mediator { get; set; }
+
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
     private Color Color { get; set; } = Color.Info;
+
+    private IDictionary<ILearningSpaceViewModel, bool> ExpandedLearningSpaces { get; set; } = new Dictionary<ILearningSpaceViewModel, bool>();
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+        UpdateExpandedLearningSpaces();
     }
 
     private string GetElementIcon(ILearningElementViewModel element)
@@ -163,6 +186,15 @@
         InvokeAsync(StateHasChanged);
     }
 
+    private void UpdateExpandedLearningSpaces()
+    {
+        ExpandedLearningSpaces.Clear();
+        foreach (var learningSpace in LearningWorldP.LearningWorldVm!.LearningSpaces)
+        {
+            ExpandedLearningSpaces.Add(learningSpace, false);
+        }
+    }
+
     private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         TriggerStateHasChanged();
@@ -183,6 +215,56 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
         }
+    }
+
+    private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        TriggerStateHasChanged();
+        if (args.PropertyName != nameof(SelectedViewModelsProvider.LearningElement)) return;
+        if (SelectedViewModelsProvider.LearningElement?.Parent != null && !IsLearningSpaceExpanded(SelectedViewModelsProvider.LearningElement.Parent))
+            ToggleLearningSpace(SelectedViewModelsProvider.LearningElement.Parent);
+    }
+
+    private void ToggleLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        ExpandedLearningSpaces[learningSpace] = !ExpandedLearningSpaces[learningSpace];
+        TriggerStateHasChanged();
+    }
+
+    private bool IsLearningSpaceExpanded(ILearningSpaceViewModel learningSpace)
+    {
+        if (ExpandedLearningSpaces.ContainsKey(learningSpace) == false)
+            UpdateExpandedLearningSpaces();
+
+        return ExpandedLearningSpaces[learningSpace];
+    }
+
+    private Task SelectLearningElement(ILearningElementViewModel learningElement)
+    {
+        if (SelectedViewModelsProvider.LearningObjectInPathWay != learningElement.Parent)
+            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
+        SelectedViewModelsProvider.SetLearningElement(learningElement, null);
+        return Task.CompletedTask;
+    }
+
+    private bool IsLearningElementSelected(ILearningElementViewModel learningElement)
+    {
+        return SelectedViewModelsProvider.LearningElement == learningElement;
+    }
+
+    private bool IsLearningSpaceSelected(ILearningSpaceViewModel learningSpace)
+    {
+        return SelectedViewModelsProvider.LearningObjectInPathWay == learningSpace;
+    }
+
+    private Task SelectLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        ExpandedLearningSpaces[learningSpace] = true;
+        Mediator.RequestOpenSpaceDialog();
+        if (SelectedViewModelsProvider.LearningElement != null && SelectedViewModelsProvider.LearningElement.Parent != learningSpace)
+            SelectedViewModelsProvider.SetLearningElement(null, null);
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpace, null);
+        return Task.CompletedTask;
     }
 
 }
