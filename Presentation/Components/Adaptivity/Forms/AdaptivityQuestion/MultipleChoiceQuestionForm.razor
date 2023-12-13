@@ -8,64 +8,63 @@
 @using BusinessLogic.Entities.LearningContent.Adaptivity.Question
 @using AutoMapper
 @using System.Diagnostics.CodeAnalysis
-
 <div class="w-full flex flex-row items-center justify-between cursor-default">
     <MudText Class="px-2" Typo="Typo.h6">
         @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
             ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
             : Localizer["MultipleChoiceQuestionForm.TitleContent.Edit." + Difficulty])
     </MudText>
-    <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="() => OnSubmitted.InvokeAsync()" ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end"/>
+    <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="() => OnSubmitted.InvokeAsync()"
+                   ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
 </div>
 
 <MudText Class="p-2 text-sm cursor-default">@Localizer["MultipleChoiceQuestionForm.Create.Text"]</MudText>
 
-    <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_questionForm"
-              OnValidSubmit="OnValidSubmit"
-              SnackbarMessage=@(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Create.SnackbarMessage"] : Localizer["MultipleChoiceQuestionForm.Edit.SnackbarMessage"])
-              FormDataContainer="FormDataContainer"
-              CustomValidatorFunc="ValidateModel">
-        
-        <Fields>
-            <div class="border-4 border-adlerdarkblue rounded-lg w-[500px] p-2">
-                <div class="flex flex-col gap-1">
-                    <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
-                    <div class="border-4 border-adlergrey-100 rounded-md mx-1.5">
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
-                                      For="@(() => FormModel.Text)"
-                                      Placeholder="Textfeld"
-                                      t="string"
-                                      Lines="3"
-                                      Variant="Variant.Outlined"
-                                      Class="m-0"/>
-                    </div>
-                    
-                    <MudSwitch T="bool"
-                               Class="flex items-center justify-center"
-                               Checked="FormDataContainer.FormModel.IsSingleResponse"
-                               CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
-                               For="@(() => FormModel.IsSingleResponse)">
-                               
-                               @if (FormDataContainer.FormModel.IsSingleResponse == true)
-                               {
-                                   <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
-                               }
-                               else
-                               {
-                                   <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
-                               }
-                    </MudSwitch>
+<BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_questionForm"
+          OnValidSubmit="OnValidSubmit"
+          SnackbarMessage=@(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Create.SnackbarMessage"] : Localizer["MultipleChoiceQuestionForm.Edit.SnackbarMessage"])
+          FormDataContainer="FormDataContainer"
+          CustomValidatorFunc="ValidateModel">
+
+    <Fields>
+        <div class="border-4 border-adlerdarkblue rounded-lg w-[500px] p-2">
+            <div class="flex flex-col gap-1">
+                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
+                <div class="border-4 border-adlergrey-100 rounded-md mx-1.5">
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
+                                  For="@(() => FormModel.Text)"
+                                  Placeholder="Textfeld"
+                                  t="string"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  Class="m-0"/>
                 </div>
 
-                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
-                <MudCollectionValidation T="ICollection<ChoiceViewModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
-           
+                <MudSwitch T="bool"
+                           Class="flex items-center justify-center"
+                           Checked="FormDataContainer.FormModel.IsSingleResponse"
+                           CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
+                           For="@(() => FormModel.IsSingleResponse)">
+
+                    @if (FormDataContainer.FormModel.IsSingleResponse == true)
+                    {
+                        <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                    }
+                    else
+                    {
+                        <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                    }
+                </MudSwitch>
+            </div>
+
+            <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
+            <MudCollectionValidation T="ICollection<ChoiceViewModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
+
             <div class="flex justify-center items-center w-full px-2 overflow-y-auto">
                 @if (FormModel.IsSingleResponse)
                 {
-                    
-                        <MudRadioGroup T="ChoiceViewModel" SelectedOption="FormModel.CorrectChoices.First()" SelectedOptionChanged="ChangeCorrectChoice" Class="overflow-y-auto">
-                            <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
+                    <MudRadioGroup T="ChoiceViewModel" SelectedOption="FormModel.CorrectChoices.First()" SelectedOptionChanged="ChangeCorrectChoice" Class="overflow-y-auto">
+                        <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
                             @foreach (var choice in FormDataContainer.FormModel.Choices)
                             {
                                 <div class="flex flex-row justify-center items-center">
@@ -83,39 +82,39 @@
                                                    Icon="@Icons.Material.Filled.Delete"
                                                    Disabled="FormModel.Choices.Count <= 2"
                                                    Size="Size.Small"
-                                                   Class="w-10 h-10"/>
+                                                   Class="w-10 h-10 button-delete-choice"/>
 
                                 </div>
-                            }</div>
-                        </MudRadioGroup>
-                    
+                            }
+                        </div>
+                    </MudRadioGroup>
                 }
                 else
                 {
                     <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
-                    @foreach (var choice in FormDataContainer.FormModel.Choices)
-                    {
-                        <div class="flex flex-row justify-center items-center">
-                            <MudCheckBox T="bool"
-                                         Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
-                                         CheckedChanged="b => ChangeCorrectness(choice, (bool) b!)"
-                                         Class="flex justify-center items-center m-0"
-                                         Size="Size.Small"/>
+                        @foreach (var choice in FormDataContainer.FormModel.Choices)
+                        {
+                            <div class="flex flex-row justify-center items-center">
+                                <MudCheckBox T="bool"
+                                             Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                             CheckedChanged="b => ChangeCorrectness(choice, (bool)b!)"
+                                             Class="flex justify-center items-center m-0"
+                                             Size="Size.Small"/>
 
-                            <MudForm Model="choice" Validation="ValidateChoiceModel">
-                                <MudTextField T="string"
-                                              Class="w-[350px]"
-                                              For="@(() => choice.Text)"
-                                              @bind-Value="@choice.Text">
-                                </MudTextField>
-                            </MudForm>
-                            <MudIconButton OnClick="() => RemoveChoice(choice)"
-                                           Icon="@Icons.Material.Filled.Delete"
-                                           Disabled="FormModel.Choices.Count <= 2"
-                                           Size="Size.Small"
-                                           Class="w-10 h-10"/>
-                        </div>
-                    }
+                                <MudForm Model="choice" Validation="ValidateChoiceModel">
+                                    <MudTextField T="string"
+                                                  Class="w-[350px]"
+                                                  For="@(() => choice.Text)"
+                                                  @bind-Value="@choice.Text">
+                                    </MudTextField>
+                                </MudForm>
+                                <MudIconButton OnClick="() => RemoveChoice(choice)"
+                                               Icon="@Icons.Material.Filled.Delete"
+                                               Disabled="FormModel.Choices.Count <= 2"
+                                               Size="Size.Small"
+                                               Class="w-10 h-10 button-delete-choice"/>
+                            </div>
+                        }
                     </div>
                 }
             </div>
@@ -130,15 +129,15 @@
                 </MudButton>
             </div>
         </div>
-        </Fields>
-        
-        <FooterButtons>
-            <MudButton Class="btn-standard m-0" OnClick="() => { _questionForm?.SubmitAsync(); }">
-                @(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Button.Create"] : Localizer["MultipleChoiceQuestionForm.Button.Edit"])
-            </MudButton>
-        </FooterButtons>
-        
-    </BaseForm>
+    </Fields>
+
+    <FooterButtons>
+        <MudButton Class="btn-standard m-0" OnClick="() => { _questionForm?.SubmitAsync(); }">
+            @(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Button.Create"] : Localizer["MultipleChoiceQuestionForm.Button.Edit"])
+        </MudButton>
+    </FooterButtons>
+
+</BaseForm>
 
 
 @code {
@@ -158,26 +157,19 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IPresentationLogic PresentationLogic { get; set; }
 
-    [Inject, AllowNull]
-    internal IValidationWrapper<MultipleChoiceMultipleResponseQuestion> MultipleResponseQuestionValidator { get; set; }
+    [Inject, AllowNull] internal IValidationWrapper<MultipleChoiceMultipleResponseQuestion> MultipleResponseQuestionValidator { get; set; }
 
-    [Inject, AllowNull]
-    internal IValidationWrapper<MultipleChoiceSingleResponseQuestion> SingleResponseQuestionValidator { get; set; }
+    [Inject, AllowNull] internal IValidationWrapper<MultipleChoiceSingleResponseQuestion> SingleResponseQuestionValidator { get; set; }
 
-    [Parameter, EditorRequired]
-    public IAdaptivityTaskViewModel Task { get; set; } = null!;
+    [Parameter, EditorRequired] public IAdaptivityTaskViewModel Task { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public QuestionDifficulty Difficulty { get; set; }
+    [Parameter, EditorRequired] public QuestionDifficulty Difficulty { get; set; }
 
-    [Parameter, EditorRequired]
-    public IMultipleChoiceQuestionViewModel? QuestionToEdit { get; set; }
+    [Parameter, EditorRequired] public IMultipleChoiceQuestionViewModel? QuestionToEdit { get; set; }
 
-    [Parameter]
-    public EventCallback OnSubmitted { get; set; }
+    [Parameter] public EventCallback OnSubmitted { get; set; }
 
-    [Parameter]
-    public int DebounceInterval { get; set; } = 300;
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
     private MultipleChoiceQuestionFormModel FormModel => FormDataContainer.FormModel;
 
@@ -213,6 +205,7 @@
         {
             EditQuestionOnValidSubmit(model);
         }
+
         OnSubmitted.InvokeAsync();
     }
 
@@ -238,6 +231,7 @@
             PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse,
                 model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
         }
+
         switch (QuestionToEdit)
         {
             case MultipleChoiceSingleResponseQuestionViewModel singleResponseQuestion:
@@ -287,12 +281,12 @@
             MultipleChoiceSingleResponseQuestion singleResponseQuestion => await SingleResponseQuestionValidator.ValidateAsync(singleResponseQuestion, propertyName),
             MultipleChoiceMultipleResponseQuestion multipleResponseQuestion => await MultipleResponseQuestionValidator.ValidateAsync(multipleResponseQuestion, propertyName),
             _ => throw new ArgumentOutOfRangeException(nameof(modelEntity), "Model entity is not a valid type")
-            };
+        };
     });
 
     private Func<object, string, Task<IEnumerable<string>>> ValidateChoiceModel => (async (obj, propertyName) =>
     {
-        var modelEntity = Mapper.Map<ChoiceViewModel, Choice>((ChoiceViewModel) obj);
+        var modelEntity = Mapper.Map<ChoiceViewModel, Choice>((ChoiceViewModel)obj);
         return await ChoiceValidator.ValidateAsync(modelEntity, propertyName);
     });
 

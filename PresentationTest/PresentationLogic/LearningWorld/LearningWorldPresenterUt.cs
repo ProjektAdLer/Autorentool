@@ -401,15 +401,15 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
         systemUnderTest.LearningWorldVm.PathWayConditions.Add(
-            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 405));
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 415));
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
-            null, 0, 405));
+            null, 0, 470));
 
         systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
         systemUnderTest.LearningWorldVm.PathWayConditions.Add(
-            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 405));
+            new PathWayConditionViewModel(ConditionEnum.And, false, 0, 540));
 
         Received.InOrder(() =>
         {
@@ -433,15 +433,15 @@ public class LearningWorldPresenterUt
 
             presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 360);
 
-            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 405);
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 415);
 
             //max value for positionY is 405
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), 0, 405, Arg.Any<TopicViewModel>());
+                Arg.Any<int>(), Arg.Any<Theme>(), 0, 470, Arg.Any<TopicViewModel>());
 
             //max value for positionY is 405
-            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 405);
+            presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 540);
         });
     }
 

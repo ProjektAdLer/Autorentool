@@ -47,7 +47,7 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
 
         var sut = GetRenderedComponent(adaptivityQuestion);
 
-        var header = sut.Find("h5");
+        var header = sut.Find("p");
         Assert.That(header.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.Question." + expectedDifficulty));
     }
 
@@ -60,7 +60,7 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
 
         var sut = GetRenderedComponent(adaptivityQuestion);
 
-        var questionText = sut.Find("p.mud-typography-body1");
+        var questionText = sut.FindAll("p.mud-typography-body1")[1];
         Assert.That(questionText.InnerHtml, Is.EqualTo(expectedQuestionText));
     }
 
@@ -72,12 +72,12 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         var expectedChoice2Text = "choice2";
         var choice1 = ViewModelProvider.GetChoice(expectedChoice1Text);
         var choice2 = ViewModelProvider.GetChoice(expectedChoice2Text);
-        adaptivityQuestion.Choices.Returns(new List<ChoiceViewModel> {choice1, choice2});
-        adaptivityQuestion.CorrectChoices.Returns(new List<ChoiceViewModel> {choice1});
+        adaptivityQuestion.Choices.Returns(new List<ChoiceViewModel> { choice1, choice2 });
+        adaptivityQuestion.CorrectChoices.Returns(new List<ChoiceViewModel> { choice1 });
 
         var sut = GetRenderedComponent(adaptivityQuestion, hideChoices);
 
-        var choices = sut.FindAll("p.mud-typography-body2");
+        var choices = sut.FindAll("p.mud-typography-body1.choice");
         if (hideChoices)
         {
             Assert.That(choices, Is.Empty);
@@ -100,12 +100,12 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         var rule = Substitute.For<IAdaptivityRuleViewModel>();
         rule.Action.Returns(commentAction);
         var adaptivityQuestion = Substitute.For<IAdaptivityQuestionViewModel>();
-        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> {rule});
+        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> { rule });
 
         var sut = GetRenderedComponent(adaptivityQuestion);
 
-        var commentHeader = sut.Find("h6");
-        var comment = sut.Find("p.mud-typography-body1");
+        var commentHeader = sut.FindAll("p")[1];
+        var comment = sut.FindAll("p")[2];
         Assert.Multiple(() =>
         {
             Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.Comment"));
@@ -120,12 +120,12 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         var rule = Substitute.For<IAdaptivityRuleViewModel>();
         rule.Action.Returns(contentReferenceAction);
         var adaptivityQuestion = Substitute.For<IAdaptivityQuestionViewModel>();
-        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> {rule});
+        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> { rule });
 
         var sut = GetRenderedComponent(adaptivityQuestion);
 
-        var commentHeader = sut.Find("h6");
-        var contentReference = sut.Find("p.mud-typography-body1");
+        var commentHeader = sut.FindAll("p")[1];
+        var contentReference = sut.FindAll("p")[5];
         Assert.Multiple(() =>
         {
             Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.ContentReference"));
@@ -140,26 +140,38 @@ public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuesti
         var elementId = elementReferenceAction.ElementId;
         const string elementName = "expected";
         _learningElementNamesProvider.ElementNames.Returns(doesElementExist
-            ? new List<(Guid, string)> {(elementId, elementName)}
+            ? new List<(Guid, string)> { (elementId, elementName) }
             : new List<(Guid, string)>());
         var rule = Substitute.For<IAdaptivityRuleViewModel>();
         rule.Action.Returns(elementReferenceAction);
         var adaptivityQuestion = Substitute.For<IAdaptivityQuestionViewModel>();
-        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> {rule});
+        adaptivityQuestion.Rules.Returns(new List<IAdaptivityRuleViewModel> { rule });
 
         var sut = GetRenderedComponent(adaptivityQuestion);
 
-        var commentHeader = sut.Find("h6");
-        var elementReference = sut.Find("p.mud-typography-body1");
-        Assert.Multiple(() =>
+        if (doesElementExist)
         {
-            Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.ElementReference"));
-            Assert.That(elementReference.InnerHtml, Is.Not.Empty);
+            var commentHeader = sut.FindAll("p")[1];
+            var elementReference = sut.FindAll("p")[6];
+            Assert.Multiple(() =>
+            {
+                Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.ElementReference"));
+                Assert.That(elementReference.InnerHtml, Is.Not.Empty);
+            });
+            Assert.That(elementReference.InnerHtml, Is.EqualTo(elementName));
+        }
+        else
+        {
+            var commentHeader = sut.FindAll("p")[1];
+            var elementReference = sut.FindAll("p")[2];
+            Assert.Multiple(() =>
+            {
+                Assert.That(commentHeader.InnerHtml, Is.EqualTo("AdaptivityQuestionPreview.Header.ElementReference"));
+                Assert.That(elementReference.InnerHtml, Is.Not.Empty);
+            });
             Assert.That(elementReference.InnerHtml,
-                doesElementExist
-                    ? Is.EqualTo(elementName)
-                    : Is.EqualTo("AdaptivityQuestionPreview.ElementReference.NotFound" + elementId));
-        });
+                Is.EqualTo("AdaptivityQuestionPreview.ElementReference.NotFound" + elementId));
+        }
     }
 
     private IRenderedComponent<AdaptivityQuestionPreview> GetRenderedComponent(

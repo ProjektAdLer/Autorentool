@@ -23,7 +23,7 @@
                         <MudIcon Icon="@(isCorrectChoice ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)"
                                  Size="Size.Small"
                                  Color="@(isCorrectChoice ? Color.Success : Color.Error)"/>
-                        <MudText Class="indent-2 text-sm text-adlerdarkblue">@choice.Text</MudText>
+                        <MudText Class="indent-2 text-sm text-adlerdarkblue choice">@choice.Text</MudText>
                     </div>
                 </div>
             }
@@ -38,7 +38,7 @@
                 <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.Comment"]</MudText>
                 <MudText Class="text-sm text-adlerdarkblue text-justify px-1">@commentAction.Comment</MudText>
                 break;
-                
+
             case ContentReferenceActionViewModel contentReferenceAction:
                 <MudDivider Class="my-2"></MudDivider>
                 <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ContentReference"]</MudText>
@@ -56,28 +56,26 @@
                     <MudText Class="text-sm text-adlerdarkblue">@contentReferenceAction.Content</MudText>
                 </section>
                 break;
-                
+
             case ElementReferenceActionViewModel elementReferenceAction:
                 <MudDivider Class="my-2"></MudDivider>
                 <MudText Class="text-md font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Header.ElementReference"]</MudText>
                 <MudText>
                     @if (LearningElementNamesProvider.ElementNames != null && LearningElementNamesProvider.ElementNames.FirstOrDefault(x => x.Item1 == elementReferenceAction.ElementId) != default)
                     {
-                        
-                            <section class="flex flex-col place-items-start px-1">
-                                <MudText Class="text-sm font-bold text-adlerdarkblue">
-                                    @if (elementReferenceAction.Comment != "")
-                                    {
-                                        @Localizer["AdaptivityQuestionPreview.Comment.Text"]
-                                    }
-                                </MudText>
-                                <MudText Class="text-sm text-adlerdarkblue text-justify pb-1">@elementReferenceAction.Comment</MudText>
-                            </section>
-                            <section class="flex flex-col place-items-start px-1">
-                                <MudText Class="text-sm font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Reference.Text"]</MudText>
-                                <MudText Class="text-sm text-adlerdarkblue">@LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2</MudText>
-                            </section>
-                        
+                        <section class="flex flex-col place-items-start px-1">
+                            <MudText Class="text-sm font-bold text-adlerdarkblue">
+                                @if (elementReferenceAction.Comment != "")
+                                {
+                                    @Localizer["AdaptivityQuestionPreview.Comment.Text"]
+                                }
+                            </MudText>
+                            <MudText Class="text-sm text-adlerdarkblue text-justify pb-1">@elementReferenceAction.Comment</MudText>
+                        </section>
+                        <section class="flex flex-col place-items-start px-1">
+                            <MudText Class="text-sm font-bold text-adlerdarkblue">@Localizer["AdaptivityQuestionPreview.Reference.Text"]</MudText>
+                            <MudText Class="text-sm text-adlerdarkblue">@LearningElementNamesProvider.ElementNames.First(x => x.Item1 == elementReferenceAction.ElementId).Item2</MudText>
+                        </section>
                     }
                     else
                     {
@@ -91,16 +89,12 @@
 
 @code {
 
-    [Inject]
-    internal IStringLocalizer<AdaptivityQuestionPreview> Localizer { get; set; } = null!;
+    [Inject] internal IStringLocalizer<AdaptivityQuestionPreview> Localizer { get; set; } = null!;
 
-    [Inject]
-    internal ILearningElementNamesProvider LearningElementNamesProvider { get; set; } = null!;
+    [Inject] internal ILearningElementNamesProvider LearningElementNamesProvider { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public IAdaptivityQuestionViewModel AdaptivityQuestion { get; set; } = null!;
+    [Parameter, EditorRequired] public IAdaptivityQuestionViewModel AdaptivityQuestion { get; set; } = null!;
 
-    [Parameter]
-    public bool HideChoices { get; set; } = false;
+    [Parameter] public bool HideChoices { get; set; } = false;
 
 }

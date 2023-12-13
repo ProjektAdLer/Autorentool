@@ -1,6 +1,5 @@
 @typeparam T where T : notnull
 @using System.Diagnostics.CodeAnalysis
-@using Microsoft.Extensions.Localization
 @using MudBlazor.Utilities
 @inherits MudBaseInput<T>
 <div class="flex flex-col w-[98%] h-52 bg-adlerbgbright border-adlergrey-100 border-4 rounded m-2">
@@ -14,40 +13,35 @@
             <MudTextField T="string"
                           Class="fixed w-1/3 px-2"
                           Placeholder="Suche..."
-                          Immediate="true" 
+                          Immediate="true"
                           Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search" 
+                          AdornmentIcon="@Icons.Material.Outlined.Search"
                           @bind-Value="_searchString"/>
         </div>
-    
-        <div class="h-2/3 w-full">
-            <div class="py-2 grid grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center overflow-scroll h-32 p-0 text-xs font-bold text-adlertextgrey break-words text-center leading-none truncate">
-                @for (var i = 0; i < FilteredElements.Count(); i++)
-                {
-                    var element = FilteredElements.ElementAt(i);
-                    <MudCard @onclick="() => SelectAsync(element)" Outlined="true" Class="@GetCssBuilder(element, i)" Style="background-color: #e9e9e9; border-color: rgb(204,204,204); border-width: 2px; border-radius: 0.5rem;">
-                        @ElementTemplate(element)
-                    </MudCard>
-                }
-            </div>
-        </div>
     }
+
+    <div class="h-2/3 w-full">
+        <div class="py-2 grid grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center overflow-scroll h-32 p-0 text-xs font-bold text-adlertextgrey break-words text-center leading-none truncate">
+            @for (var i = 0; i < FilteredElements.Count(); i++)
+            {
+                var element = FilteredElements.ElementAt(i);
+                <MudCard @onclick="() => SelectAsync(element)" Outlined="true" Class="@GetCssBuilder(element, i)" Style="background-color: #e9e9e9; border-color: rgb(204,204,204); border-width: 2px; border-radius: 0.5rem;">
+                    @ElementTemplate(element)
+                </MudCard>
+            }
+        </div>
+    </div>
 </div>
 
 @code {
 
-    [Parameter, EditorRequired, AllowNull]
-    public IEnumerable<T> Elements { get; set; }
+    [Parameter, EditorRequired, AllowNull] public IEnumerable<T> Elements { get; set; }
 
-    [Parameter, EditorRequired, AllowNull]
-    public RenderFragment<T> ElementTemplate { get; set; }
+    [Parameter, EditorRequired, AllowNull] public RenderFragment<T> ElementTemplate { get; set; }
 
-    [Parameter]
-    public Func<T, IEnumerable<string>>? FilterFuncSearchableStrings { get; set; }
+    [Parameter] public Func<T, IEnumerable<string>>? FilterFuncSearchableStrings { get; set; }
 
-    private IEnumerable<T> FilteredElements => FilterFuncSearchableStrings is null || string.IsNullOrWhiteSpace(_searchString) ?
-        Elements :
-        Elements.Where(ele => FilterFuncSearchableStrings(ele).Any(str => str.ToLower().Contains(_searchString.ToLower())));
+    private IEnumerable<T> FilteredElements => FilterFuncSearchableStrings is null || string.IsNullOrWhiteSpace(_searchString) ? Elements : Elements.Where(ele => FilterFuncSearchableStrings(ele).Any(str => str.ToLower().Contains(_searchString.ToLower())));
 
     private string? _searchString = "";
 
