@@ -69,4 +69,6 @@ public class CreateLearningSpace : ICreateLearningSpace
         Logger.LogTrace("Redoing CreateLearningSpace");
         Execute();
     }
+
+    public ILearningSpace NewSpace => LearningSpace;
 }
