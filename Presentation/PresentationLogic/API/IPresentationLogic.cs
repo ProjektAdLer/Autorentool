@@ -1,4 +1,5 @@
-﻿using BusinessLogic.API;
+﻿using System.IO.Abstractions;
+using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -17,6 +18,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Exceptions;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -73,8 +75,9 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink);
+        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey);
 
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
@@ -87,8 +90,9 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
+    /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink);
+        string language, string description, string goals, string evaluationLink, string enrolmentKey);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.
@@ -124,8 +128,9 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">The Workspace ViewModel.</param>
     /// <param name="path">The Path, the Learning World should loaded from.</param>
-    /// <returns></returns>
-    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path);
+    /// <param name="setAsSelected">Whether or not the loaded Learning World should be set as the selected one.</param>
+    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path,
+        bool setAsSelected = true);
 
     /// <summary>
     /// Adds a new learning space in the given learning world with the corresponding command.
@@ -530,11 +535,7 @@ public interface IPresentationLogic
     /// The task result contains the file path for the Learning World.</returns>
     Task<string> GetWorldSavePath();
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
@@ -565,6 +566,31 @@ public interface IPresentationLogic
     void ConstructDebugBackup(ILearningWorldViewModel world);
 #endif
 
+    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
+        IAdaptivityActionViewModel action);
+
+    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
+    void EditCommentAction(CommentActionViewModel action, string comment);
+
+    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
+        string comment);
+
+    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
+    
+    /// <summary>
+    /// Asynchronously retrieves a list of LMS World view models.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorldViewModel objects.</returns>
+    /// <exception cref="BackendException">Thrown if there is an issue with the HTTP request.</exception>
+    Task<List<LmsWorldViewModel>> GetLmsWorldList();
+
+    /// <summary>
+    /// Asynchronously sends a request to delete a specific LMS World entity represented by a view model.
+    /// </summary>
+    /// <param name="worldVm">The LmsWorldViewModel object representing the world to be deleted.</param>
+    /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
+    Task DeleteLmsWorld(LmsWorldViewModel worldVm);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -577,12 +603,8 @@ public interface IPresentationLogic
 
     #endregion
 
-    void CreateAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityTriggerViewModel trigger,
-        IAdaptivityActionViewModel action);
-
-    void DeleteAdaptivityRule(IAdaptivityQuestionViewModel question, IAdaptivityRuleViewModel rule);
-    void EditCommentAction(CommentActionViewModel action, string comment);
-    void EditContentReferenceAction(ContentReferenceActionViewModel action, ILearningContentViewModel content,
-        string comment);
-    void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
+    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
+    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
+    void DeleteLearningWorldByPath(string savePath);
 }

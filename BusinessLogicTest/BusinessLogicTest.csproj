@@ -23,6 +23,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="19.2.87" />
     </ItemGroup>
 
     <ItemGroup>

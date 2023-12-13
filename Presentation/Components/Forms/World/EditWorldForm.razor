@@ -40,7 +40,11 @@
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
                                   Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
-                </div>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                              For="@(() => FormModel.EnrolmentKey)"
+                              DebounceInterval="DebounceInterval"
+                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]"/>
+            </div>
             </Collapsable>
         </div>
 
@@ -69,7 +73,7 @@
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
-                       OnClick="@OnResetAsync" 
+                       OnClick="@OnResetAsync"
                        Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
         </MudIconButton>
     </FooterButtons>
@@ -105,7 +109,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
     }
 
     private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);

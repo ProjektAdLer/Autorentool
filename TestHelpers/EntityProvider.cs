@@ -79,12 +79,6 @@ public static class EntityProvider
         return new Topic("a topic" + append);
     }
 
-    public static SavedLearningWorldPath GetSavedLearningWorldPath()
-    {
-        return new SavedLearningWorldPath
-            { Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1" };
-    }
-
     public static LearningWorld GetLearningWorldWithSpace()
     {
         var world = GetLearningWorld();

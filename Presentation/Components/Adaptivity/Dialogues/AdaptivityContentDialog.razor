@@ -49,7 +49,7 @@
                                   Lines="2"
                                   Required="true"
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
-                                  DebounceInterval="300" 
+                                  DebounceInterval="DebounceInterval" 
                                   OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
                     <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
                 </span>
@@ -149,6 +149,9 @@
 
     [Parameter, EditorRequired]
     public IAdaptivityContentViewModel MyContent { get; set; } = null!;
+
+    [Parameter]
+    public int DebounceInterval { get; set; } = 300;
 
 
     private MudTable<IAdaptivityTaskViewModel>? _table;

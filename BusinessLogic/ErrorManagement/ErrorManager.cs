@@ -1,3 +1,4 @@
+using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
@@ -42,5 +43,14 @@ public class ErrorManager : IErrorManager
         _logger.LogError(exception, "an error has occurred during generator operation: {Message}", exception.Message);
 
         throw new GeneratorException(exception.Message, exception);
+    }
+
+    /// <inheritdoc cref="IErrorManager.LogAndRethrowBackendAccessError" />
+    public void LogAndRethrowBackendAccessError(Exception exception)
+    {
+        _logger.LogError(exception, "an error has occurred during backend access operation: {Message}",
+            exception.Message);
+
+        throw new BackendException(exception.Message, exception);
     }
 }

@@ -1,6 +1,9 @@
 @using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared.Configuration
+@using Shared.Exceptions
 @using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic
 @using BusinessLogic.ErrorManagement.BackendAccess
 @using System.Diagnostics.CodeAnalysis
 <MudDialog Class="relative flex rounded-lg bg-gradient-to-br from-adlerbggradientfrom to-adlerbggradientto w-[420px] h-[400px]">
@@ -22,6 +25,23 @@
                     <p class="text-lg text-adlerblue-700">@PresentationLogic.LoginName</p>
                 </div>
                 <MudButton Variant="Variant.Filled" Class="mt-12 btn-standard mx-28 place-items-center" title=@Localizer["DialogContent.Button.Logout.Title"] OnClick="Logout">@Localizer["DialogContent.Button.Logout"]</MudButton>
+
+                <MudList>
+                    @foreach (var lmsWorld in _lmsWorldList)
+                    {
+                        <MudListItem>
+                            @lmsWorld.WorldName
+                            @if (lmsWorld == _deleteWorld)
+                            {
+                                <MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary"/>
+                            }
+                            else
+                            {
+                                <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                            }
+                        </MudListItem>
+                    }
+                </MudList>
             </div>
         }
         else
@@ -97,6 +117,12 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<LmsLoginDialog> Logger { get; set; }
 
+    [Inject, AllowNull]
+    internal IErrorService ErrorService { get; set; }
+
+    [Inject, AllowNull]
+    internal IDialogService DialogService { get; set; }
+
     private string _backendUrl = "";
     private string _username = "";
     private string _password = "";
@@ -112,6 +138,10 @@
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
     private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+
+    private List<LmsWorldViewModel> _lmsWorldList = new();
+
+    private LmsWorldViewModel? _deleteWorld = null;
 
     protected override void OnParametersSet()
     {
@@ -147,6 +177,7 @@
             StopSpinner();
             StateHasChanged();
         }
+        if (_isLmsConnected) RefreshLmsWorldList();
     }
 
     private void StartSpinner() => _spinnerActive = true;
@@ -205,6 +236,52 @@
     {
         PresentationLogic.Logout();
         UpdateLmsIsConnected();
+    }
+
+    private async void RefreshLmsWorldList()
+    {
+        try
+        {
+            var courseList = await PresentationLogic.GetLmsWorldList();
+            _lmsWorldList = courseList;
+        }
+        catch (BackendException e)
+        {
+            ErrorService.SetError("Error while trying to get the LMS world list", e.Message);
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DeleteLmsWorld(LmsWorldViewModel world)
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["ConfirmDeleteLmsWorld.DialogText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["ConfirmDeleteLmsWorld.SubmitButtonText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error }
+        };
+
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ConfirmDeleteLmsWorld.Title"].Value, dialogParameters);
+        var result = await dialogReference.Result;
+        if (result.Canceled) return;
+
+        _deleteWorld = world;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            await PresentationLogic.DeleteLmsWorld(world);
+        }
+        catch (BackendException e)
+        {
+            ErrorService.SetError("Error while trying to delete the LMS world", e.Message);
+        }
+        finally
+        {
+            RefreshLmsWorldList();
+            _deleteWorld = null;
+        }
     }
 
     private void HandleInvalidLoginException()

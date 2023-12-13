@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using System.IO.Abstractions;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
@@ -47,12 +48,11 @@ public interface IDataAccess
     /// <returns>An enumerable of content files.</returns>
     IEnumerable<ILearningContent> GetAllContent();
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-
+    /// <summary>
+    /// Gets all paths to learning world files saved in <see cref="ApplicationPaths.SavedWorldsFolder"/>.
+    /// </summary>
+    /// <returns>An enumerable of <see cref="IFileInfo"/>.</returns>
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
     /// that does not yet exist.
@@ -64,7 +64,7 @@ public interface IDataAccess
     /// or <paramref name="fileEnding"/> is null, whitespace or empty.</exception>
     /// <returns>A save path of form <code>[targetFolder]/[fileName]_n.[fileEnding]</code> that does not yet exist,
     /// where n is an integer which is incremented until the path does not yet exist.</returns>
-    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations);
 
     /// <summary>
     /// Deletes the file referenced by the given content object.
@@ -79,5 +79,35 @@ public interface IDataAccess
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
 
+    /// <summary>
+    /// Gets path to the folder containing all content files, i.e. <see cref="ApplicationPaths.ContentFolder"/>.
+    /// </summary>
+    /// <returns>A filepath to a directory.</returns>
     string GetContentFilesFolderPath();
+
+    /// <summary>
+    /// Exports the given <see cref="LearningWorld"/> and all content it references to a zip archive at the given path.
+    /// </summary>
+    /// <param name="world">The world to export.</param>
+    /// <param name="pathToFile">Filepath to export it to</param>
+    Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile);
+
+    /// <summary>
+    /// Imports a <see cref="LearningWorld"/> and all content it references from a zip archive at the given path.
+    /// </summary>
+    /// <param name="pathToArchive">Filepath to the archive.</param>
+    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToArchive);
+
+    /// <summary>
+    /// For a given path to a file, returns it's <see cref="IFileInfo"/> object.
+    /// </summary>
+    /// <param name="savePath">The path to the file.</param>
+    /// <returns>An <see cref="IFileInfo"/> object.</returns>
+    IFileInfo GetFileInfoForPath(string savePath);
+    
+    /// <summary>
+    /// Deletes a file at the given path.
+    /// </summary>
+    /// <param name="savePath">The file to be deleted.</param>
+    void DeleteFileByPath(string savePath);
 }

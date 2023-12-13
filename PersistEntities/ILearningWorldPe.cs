@@ -12,4 +12,5 @@ public interface ILearningWorldPe
     string SavePath { get; set; }
     ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
     string EvaluationLink { get; set; }
+    string EnrolmentKey { get; set; }
 }

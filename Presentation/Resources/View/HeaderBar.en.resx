@@ -126,4 +126,10 @@
     <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
         <value>Upload successful</value>
     </data>
+    <data name="ExportArchive.Text" xml:space="preserve">
+        <value>Archive learning world (.zip)</value>
+    </data>
+    <data name="ExportArchive.Hover" xml:space="preserve">
+        <value>Use this option if you want to archive the learning world (e.g. to send to another computer or as a backup)</value>
+    </data>
 </root>

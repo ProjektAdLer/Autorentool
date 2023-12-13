@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.IO.Abstractions;
+using System.Runtime.Serialization;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
@@ -254,30 +255,9 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return DataAccess.GetSavedLearningWorldPaths();
-    }
-
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        DataAccess.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        var savedLearningWorldPath = DataAccess.AddSavedLearningWorldPathByPathOnly(path);
-        return savedLearningWorldPath;
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        DataAccess.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     public LearningWorld LoadLearningWorld(Stream stream)
@@ -319,15 +299,35 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
+    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations)
     {
-        var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        var targetPath = DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding, out iterations);
         return targetPath;
     }
 
     public string GetContentFilesFolderPath()
     {
         return DataAccess.GetContentFilesFolderPath();
+    }
+
+    public async Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile)
+    {
+        await DataAccess.ExportLearningWorldToArchiveAsync(world, pathToFile);
+    }
+    
+    public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile)
+    {
+        return await DataAccess.ImportLearningWorldFromArchiveAsync(pathToFile);
+    }
+
+    public IFileInfo GetFileInfoForPath(string savePath)
+    {
+        return DataAccess.GetFileInfoForPath(savePath);
+    }
+
+    public void DeleteFileByPath(string savePath)
+    {
+        DataAccess.DeleteFileByPath(savePath);
     }
 
     #region BackendAccess
@@ -413,6 +413,39 @@ public class BusinessLogic : IBusinessLogic
             ErrorManager.LogAndRethrowError(httpReqEx);
             throw;
         }
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.DeleteLmsWorld"/>
+    public async Task DeleteLmsWorld(LmsWorld world)
+    {
+        try
+        {
+            var result = await BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]), world);
+            if(!result)
+                ErrorManager.LogAndRethrowBackendAccessError(new BackendWorldDeletionException("Lms world could not be deleted."));
+        }
+        catch (HttpRequestException e)
+        {
+            ErrorManager.LogAndRethrowBackendAccessError(e);
+        }
+        
+        
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.GetLmsWorldList"/>
+    public async Task<List<LmsWorld>> GetLmsWorldList()
+    {
+        try
+        {
+            return await BackendAccess.GetLmsWorldList(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+                _userInformation.LmsId);
+        }
+        catch (HttpRequestException httpReqEx)
+        {
+            ErrorManager.LogAndRethrowBackendAccessError(httpReqEx);
+            throw;
+        }
+        
     }
 
     #endregion

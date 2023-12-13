@@ -27,11 +27,13 @@ public class BackupFileGenerator : IBackupFileGenerator
     public void CreateBackupFolders()
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities"));
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files"));
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
+        var xmlFilesBasePath = Path.Join(currWorkDir, "XMLFilesForExport");
+        if (_fileSystem.Directory.Exists(xmlFilesBasePath)) return;
+        _fileSystem.Directory.CreateDirectory(xmlFilesBasePath);
+        _fileSystem.Directory.CreateDirectory(Path.Join(xmlFilesBasePath, "activities"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(xmlFilesBasePath, "files"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(xmlFilesBasePath, "course"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(xmlFilesBasePath, "sections"));
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>

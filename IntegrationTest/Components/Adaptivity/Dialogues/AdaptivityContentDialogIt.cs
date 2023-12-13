@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,7 +67,8 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     {
         var dialogParameters = new DialogParameters
         {
-            {nameof(AdaptivityContentDialog.MyContent), AdaptivityContent}
+            {nameof(AdaptivityContentDialog.MyContent), AdaptivityContent},
+            {nameof(AdaptivityContentDialog.DebounceInterval), 10}
         };
         Dialog = await OpenDialogAndGetDialogReferenceAsync(options: new DialogOptions(),
             parameters: dialogParameters);
@@ -109,8 +111,8 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         textField.Input("NewName");
         // Wait for debounce
         await Task.Delay(500);
-        PresentationLogic.Received(1)
-            .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty);
+        DialogProvider.WaitForAssertion(() => PresentationLogic.Received(1)
+            .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty), TimeSpan.FromSeconds(2));
         PresentationLogic.ClearReceivedCalls();
 
         textField.Input("");

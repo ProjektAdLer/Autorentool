@@ -75,4 +75,27 @@ public class ApiAccessUt
         await _userWebApiServices.Received()
             .UploadLearningWorldAsync(token.Token, "testWorldName", "testWorldDescription", mockProgress);
     }
+
+    [Test]
+    public async Task GetLmsWorldList_CallsUserWebApiServices()
+    {
+        var token = new UserToken("testToken");
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
+
+        await systemUnderTest.GetLmsWorldList(token, 1);
+
+        await _userWebApiServices.Received().GetLmsWorldList(token.Token, 1);
+    }
+
+    [Test]
+    public async Task DeleteLmsWorld_CallsUserWebApiServices()
+    {
+        var token = new UserToken("testToken");
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
+        var world = new LmsWorld();
+
+        await systemUnderTest.DeleteLmsWorld(token, world);
+
+        await _userWebApiServices.Received().DeleteLmsWorld(token.Token, world.WorldId);
+    }
 }

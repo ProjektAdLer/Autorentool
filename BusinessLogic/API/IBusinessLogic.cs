@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Commands;
+﻿using System.IO.Abstractions;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
@@ -7,6 +8,7 @@ using BusinessLogic.ErrorManagement.DataAccess;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Exceptions;
 
 namespace BusinessLogic.API;
 
@@ -81,17 +83,27 @@ public interface IBusinessLogic
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
 
-    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
-    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
-    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
-    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
-    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath" />
-    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations);
 
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
+
+    /// <summary>
+    /// Asynchronously retrieves a list of LMS World entities for the currently authenticated user.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorld objects associated with the current user.</returns>
+    /// <exception cref="BackendException">Thrown if there is an issue with the HTTP request.</exception>
+    Task<List<LmsWorld>> GetLmsWorldList();
+
+    /// <summary>
+    /// Asynchronously sends a request to delete a specified LMS World entity.
+    /// </summary>
+    /// <param name="world">The LmsWorld object representing the world to be deleted.</param>
+    /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
+    Task DeleteLmsWorld(LmsWorld world);
 
     #region BackendAccess
 
@@ -104,4 +116,9 @@ public interface IBusinessLogic
         CancellationToken? cancellationToken = null);
 
     #endregion
+
+    Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile);
+    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
+    IFileInfo GetFileInfoForPath(string savePath);
+    void DeleteFileByPath(string savePath);
 }

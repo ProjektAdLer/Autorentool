@@ -54,4 +54,7 @@
     <data name="CreateWorldForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
     </data>
+    <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
+        <value>Einschreibeschlüssel</value>
+    </data>
 </root>

@@ -14,6 +14,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -45,9 +46,9 @@ namespace Presentation.PresentationLogic.API;
 
 public class PresentationLogic : IPresentationLogic
 {
-    private const string WorldFileEnding = "awf";
-    private const string SpaceFileEnding = "asf";
-    private const string ElementFileEnding = "aef";
+    private static string WorldFileEnding => FileEndings.WorldFileEnding;
+    private static string SpaceFileEnding => FileEndings.SpaceFileEnding;
+    private static string ElementFileEnding => FileEndings.ElementFileEnding;
     private const string WorldFileFormatDescriptor = "AdLer World File";
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
@@ -165,14 +166,15 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals, evaluationLink,
+            description, goals, evaluationLink, enrolmentKey,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -181,12 +183,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink)
+        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string enrolmentKey)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals, evaluationLink,
+            goals, evaluationLink, enrolmentKey,
             world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())
@@ -217,30 +220,11 @@ public class PresentationLogic : IPresentationLogic
     public void SaveLearningWorld(ILearningWorldViewModel learningWorldViewModel)
     {
         var filepath = learningWorldViewModel.SavePath;
-        if (string.IsNullOrWhiteSpace(filepath))
-        {
-            filepath = GetWorldFilepath();
-        }
-
         Logger.LogTrace("Saving world to {Path}", filepath);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var command = WorldCommandFactory.GetSaveCommand(BusinessLogic, worldEntity, filepath,
             world => CMapper.Map(world, learningWorldViewModel));
         BusinessLogic.ExecuteCommand(command);
-        learningWorldViewModel.SavePath = filepath;
-        AddSavedLearningWorldPath(new SavedLearningWorldPath
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
-        return;
-
-        string GetWorldFilepath()
-        {
-            var basePath = ApplicationPaths.SavedWorldsFolder;
-            var random = new Random();
-            //get random number between 0 and 999999 and pad with zeros in file name to prevent collisions
-            var fileName = $"{learningWorldViewModel.Name}-{random.Next(0, 1000000):000000}.{WorldFileEnding}";
-            filepath = Path.Join(basePath, fileName);
-            return filepath;
-        }
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -953,6 +937,13 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
+    {
+        var worldsEntity = await BusinessLogic.GetLmsWorldList();
+        return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
+    }
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>
@@ -1042,43 +1033,71 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldFromPath"/>
-    public void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path)
+    public void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path, bool setAsSelected = true)
     {
-        ElectronCheck();
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, path, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
+        if (!setAsSelected) return;
         var viewmodel = authoringToolWorkspaceVm.LearningWorlds.First(lw => lw.Id == command.LearningWorld!.Id);
         SelectedViewModelsProvider.SetLearningWorld(viewmodel, command);
     }
 
-    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return BusinessLogic.GetSavedLearningWorldPaths();
     }
 
-    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        BusinessLogic.AddSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
-    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
-    {
-        return BusinessLogic.AddSavedLearningWorldPathByPathOnly(path);
-    }
-
-    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
-    {
-        BusinessLogic.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
-    }
-
-    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
-    {
-        BusinessLogic.RemoveSavedLearningWorldPath(savedLearningWorldPath);
-    }
-
     #endregion
+
+    public async Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world)
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowSaveAsDialogAsync("Archive export path",
+                fileFilters: new[] { new FileFilterProxy("Zip archive", new[] { "zip" }) }
+            );
+            await BusinessLogic.ExportLearningWorldToArchiveAsync(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world),
+                pathToArchive);
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Export to archive canceled by user");
+        }
+    }
+
+    public async Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync()
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowOpenFileDialogAsync("Archive import path",
+                fileFilters: new[] { new FileFilterProxy("Zip archive", new[] { "zip" }) }
+            );
+            var worldEntity = await BusinessLogic.ImportLearningWorldFromArchiveAsync(pathToArchive);
+            var viewModel = Mapper.Map<LearningWorldViewModel>(worldEntity);
+            SelectedViewModelsProvider.SetLearningWorld(viewModel, null);
+            return viewModel;
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Import from archive canceled by user");
+            return null;
+        }
+    }
+
+    public IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world)
+    {
+        if (string.IsNullOrWhiteSpace(world.SavePath)) return null;
+        return BusinessLogic.GetFileInfoForPath(world.SavePath);
+    }
+
+    public void DeleteLearningWorldByPath(string savePath)
+    {
+        BusinessLogic.DeleteFileByPath(savePath);
+    }
 
     #region BackendAccess
 
@@ -1118,6 +1137,13 @@ public class PresentationLogic : IPresentationLogic
             //delete file after upload or exception
             FileSystem.File.Delete(filepath);
         }
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
+    public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)
+    {
+        var world = Mapper.Map<LmsWorld>(worldVm);
+        await BusinessLogic.DeleteLmsWorld(world);
     }
 
 #if DEBUG

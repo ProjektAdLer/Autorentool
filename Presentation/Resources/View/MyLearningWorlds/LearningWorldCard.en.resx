@@ -36,4 +36,10 @@
     <data name="LearningWorldCard.Button.Open.Title" xml:space="preserve">
         <value>Open learning world</value>
     </data>
+    <data name="LearningWorldCard.LastWriteTime" xml:space="preserve">
+        <value>Last changed: {0}</value>
+    </data>
+    <data name="LearningWorldCard.PathDisplayMessage.NotYetSaved" xml:space="preserve">
+        <value>Not yet saved</value>
+    </data>
 </root>

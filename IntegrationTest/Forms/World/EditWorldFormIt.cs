@@ -107,18 +107,19 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Assert.That(FormModel.Description, Is.EqualTo(""));
         Assert.That(FormModel.Goals, Is.EqualTo(""));
         Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
+        Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
 
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        foreach (var mudInput in mudInputs.Take(5))
+        foreach (var mudInput in mudInputs.Take(6))
         {
             var input = mudInput.Find("input");
             input.Change(Expected);
         }
 
-        foreach (var mudInput in mudInputs.Skip(5))
+        foreach (var mudInput in mudInputs.Skip(6))
         {
             var input = mudInput.Find("textarea");
             input.Change(Expected);
@@ -131,6 +132,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.EvaluationLink, Is.EqualTo(Expected));
+        Assert.That(FormModel.EnrolmentKey, Is.EqualTo(Expected));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
@@ -147,13 +149,13 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         systemUnderTest.FindComponents<Collapsable>()[1].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        foreach (var mudInput in mudInputs.Take(5))
+        foreach (var mudInput in mudInputs.Take(6))
         {
             var input = mudInput.Find("input");
             input.Change(Expected);
         }
 
-        foreach (var mudInput in mudInputs.Skip(5))
+        foreach (var mudInput in mudInputs.Skip(6))
         {
             var input = mudInput.Find("textarea");
             input.Change(Expected);
@@ -166,13 +168,14 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.EvaluationLink, Is.EqualTo(Expected));
+        Assert.That(FormModel.EnrolmentKey, Is.EqualTo(Expected));
 
         Mapper.ClearReceivedCalls();
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, Expected);
+            Expected, Expected, Expected, Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }
 
