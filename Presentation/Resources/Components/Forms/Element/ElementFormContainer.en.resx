@@ -15,7 +15,7 @@
         <value>List of all elements</value>
     </data>
     <data name="ElementFormContainer.UnplacedElements.Title" xml:space="preserve">
-        <value>List of all elements</value>
+        <value>All unplaced elements</value>
     </data>
     <data name="Tab.Element.Header" xml:space="preserve">
         <value>Default element</value>

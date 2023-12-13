@@ -21,10 +21,10 @@
         <value>Tasks</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text" xml:space="preserve">
-        <value>Tasks in this element</value>
+        <value>Tasks of this adaptivity element</value>
     </data>
     <data name="EditAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text" xml:space="preserve">
-        <value>Add tasks</value>
+        <value>Edit tasks</value>
     </data>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
         <value>Edit learning element</value>
@@ -54,7 +54,7 @@
         <value>None</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Files and links*</value>
+        <value>External learning material*</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
         <value>3D representation</value>
@@ -72,7 +72,7 @@
         <value>Goals</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
-        <value>Files and links</value>
+        <value>External learning material</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Points</value>
@@ -93,7 +93,7 @@
         <value>Type</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>List of all added files and links</value>
+        <value>List of all added external learning material</value>
     </data>
     <data name="EditElementForm.Text" xml:space="preserve">
         <value>* Required information</value>
@@ -102,6 +102,6 @@
         <value>3D representation icon</value>
     </data>
     <data name="EditElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
-        <value>Edit adaptivity content</value>
+        <value>Edit tasks of the adaptivity element</value>
     </data>
 </root>

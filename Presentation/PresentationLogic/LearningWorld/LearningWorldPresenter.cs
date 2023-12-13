@@ -438,7 +438,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     private double GetNextAvailableYPosition(double xOffset, double startY = 0)
     {
         var positionY = startY;
-        const double maxPositionY = 405;
+        const double maxPositionY = 950;
 
         while (true)
         {

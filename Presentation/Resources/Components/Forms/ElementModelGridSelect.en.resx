@@ -18,19 +18,7 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Comment.Label.Text" xml:space="preserve">
-        <value>Comment</value>
-    </data>
-    <data name="Comment.RequiredError.Text" xml:space="preserve">
-        <value>Comment required</value>
-    </data>
-    <data name="Button.Submit.Text" xml:space="preserve">
-        <value>Ok</value>
-    </data>
-    <data name="Comment.Label.Text.Placeholder" xml:space="preserve">
-        <value>Text field</value>
-    </data>
-    <data name="Comment.Text" xml:space="preserve">
-        <value>You have the option to write a comment here. This will be displayed in the 3D learning environment if students give an incorrect answer.</value>
+    <data name="ElementModelGridSelect.3DRepresentation.Title" xml:space="preserve">
+        <value>Presentation in the 3D learning environment</value>
     </data>
 </root>

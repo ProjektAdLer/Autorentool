@@ -5,17 +5,32 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
 @using Shared.Adaptivity
-<MudForm @ref="_form">
-    <MudCard>
-        <MudCardContent>
-            <MudTextField @bind-Value="_comment" T="string" Label="@Localizer["Comment.Label.Text"]" Required="true"
-                          RequiredError="@Localizer["Comment.RequiredError.Text"]"/>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Color="Color.Success" OnClick="SubmitAsync">@Localizer["Button.Submit.Text"]</MudButton>
-        </MudCardActions>
-    </MudCard>
-</MudForm>
+<div class="relative w-[800px] h-[230px] flex flex-col mx-4">
+    <MudText Class="px-2 mb-1 text-sm">@Localizer["Comment.Text"]</MudText>
+    <div class="border-adlerdarkblue border-4 rounded-lg m-2">
+        <MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
+            <div class="p-2 mb-4">
+                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Comment.Label.Text"]</MudText>
+                <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+                    <MudTextField Variant="Variant.Outlined"
+                                  Class="shadow-none m-0" 
+                                  T="string"
+                                  Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
+                                  @bind-Value="_comment"
+                                  Lines="4"
+                                  Required="true"
+                                  RequiredError="@Localizer["Comment.RequiredError.Text"]"/>
+                </div>
+            </div>
+        </MudForm>
+    </div>
+</div>
+<div class="flex justify-end items-center">
+    <MudButton Class="btn-standard sticky m-6" 
+               @onclick="SubmitAsync">
+               @Localizer["Button.Submit.Text"]
+    </MudButton>
+</div>
 
 @code {
 

@@ -11,7 +11,7 @@
         <MudListItem Value="@(elementModel)"
                      Class="@classString"
                      OnClick="() => OnItemClick(elementModel)">
-            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Duration="Double.Epsilon" Arrow="true">
+            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
                     <img class="inset-0 w-full drop-shadow-xl p-0"
                              src="@ElementModelHandler.GetIconForElementModel(elementModel)"
@@ -20,7 +20,7 @@
 
                 <TooltipContent>
                     <div class="flex flex-col gap-2 justify-center items-center w-56 h-64">
-                        <MudText>Darstellung in der 3D-Lernumgebung@*@Localizer["ElementModelGridSelect.3DRepresentation.Title"]*@</MudText>
+                        <MudText>@Localizer["ElementModelGridSelect.3DRepresentation.Title"]</MudText>
                         <MudImage Src="@ElementModelHandler.GetIconForElementModel(elementModel)" Width="180"></MudImage>
                     </div>
                 </TooltipContent>

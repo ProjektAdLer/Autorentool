@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Content.Text" xml:space="preserve">
-        <value>Learning content</value>
+        <value>ext. learning material</value>
     </data>
     <data name="Element.Text" xml:space="preserve">
         <value>Learning element</value>
@@ -28,12 +28,36 @@
         <value>Learning content required</value>
     </data>
     <data name="Element.RequiredError.Text" xml:space="preserve">
-        <value>Lerning element required</value>
+        <value>Lerning element required!</value>
     </data>
     <data name="Button.Submit.Text" xml:space="preserve">
         <value>Ok</value>
     </data>
     <data name="Comment.Label.Text" xml:space="preserve">
         <value>Comment</value>
+    </data>
+    <data name="Reference.Text" xml:space="preserve">
+        <value>You can refer to a learning element or to external learning material. This reference will be displayed in the 3D learning environment if students give an incorrect answer. You also have the option of adding a supplementary note to the reference.</value>
+    </data>
+    <data name="Reference.Label.Text" xml:space="preserve">
+        <value>Reference</value>
+    </data>
+    <data name="Comment.Label.Text.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="Note.Label.Text" xml:space="preserve">
+        <value>Note on the reference</value>
+    </data>
+    <data name="Reference.Content.Label.Text" xml:space="preserve">
+        <value>Reference to an external learning material</value>
+    </data>
+    <data name="Reference.Element.Label.Text" xml:space="preserve">
+        <value>Reference to a learning element</value>
+    </data>
+    <data name="Reference.Element.Info.Text" xml:space="preserve">
+        <value>When referring to a learning element, you can refer to all unplaced learning elements and to all learning elements that have already been placed in learning spaces.</value>
+    </data>
+    <data name="Reference.Content.Info.Text" xml:space="preserve">
+        <value>With a reference to external learning material, you can refer to those files and links that you have already added to the authoring tool but have not yet developed into a learning element.</value>
     </data>
 </root>

@@ -13,7 +13,7 @@
 </MudCardActions>
 
 <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
-    <MudCardContent Class="px-2 2xl:px-4">
+    <MudCardContent Class="p-0">
         @Fields
         @if (SubmitErrorMessage != null)
         {
