@@ -29,7 +29,10 @@
         </MudCard>
     </ActivatorContent>
     <ChildContent>
-        <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        @if (LearningElement.LearningContent is IFileContentViewModel or ILinkContentViewModel)
+        {
+            <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        }
         <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
         <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
     </ChildContent>
