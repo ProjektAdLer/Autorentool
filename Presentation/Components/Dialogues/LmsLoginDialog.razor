@@ -257,7 +257,7 @@
     {
         var dialogParameters = new DialogParameters
         {
-            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["ConfirmDeleteLmsWorld.DialogText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["ConfirmDeleteLmsWorld.DialogText", world.WorldName].Value },
             { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["ConfirmDeleteLmsWorld.SubmitButtonText"].Value },
             { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error }
         };
