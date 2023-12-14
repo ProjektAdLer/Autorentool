@@ -183,5 +183,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AdaptivityContentDialogRuleControl.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadSuccessfulDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadSuccessfulDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

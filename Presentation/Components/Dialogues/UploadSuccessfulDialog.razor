@@ -1,0 +1,37 @@
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using ElectronWrapper
+<MudDialog>
+    <DialogContent>
+        @Localizer["Dialog.UploadSuccessful.Text", WorldName]
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Open3D">@Localizer["Button.Open3D.Text"]</MudButton>
+        <MudButton Color="Color.Primary" OnClick="OpenMoodle">@Localizer["Button.OpenMoodle.Text"]</MudButton>
+        <MudButton Color="Color.Success" OnClick="Ok">OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public MudDialogInstance? MudDialog { get; set; }
+    
+    [Inject, AllowNull]
+    public IStringLocalizer<UploadSuccessfulDialog> Localizer { get; set; }
+    
+    [Inject, AllowNull]
+    public IShellWrapper ShellWrapper { get; set; }
+    
+    [Parameter, EditorRequired, AllowNull]
+    public string Url3D { get; set; }
+
+    [Parameter, EditorRequired, AllowNull]
+    public string UrlMoodle { get; set; }
+    
+    [Parameter, EditorRequired, AllowNull]
+    public string WorldName { get; set; }
+
+    private void Ok() => MudDialog?.Close();
+    private void Open3D() => ShellWrapper.OpenPathAsync(Url3D);
+    private void OpenMoodle() => ShellWrapper.OpenPathAsync(UrlMoodle);
+}
