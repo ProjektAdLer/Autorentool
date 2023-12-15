@@ -27,6 +27,7 @@ class EditCommentAction : IEditCommentAction
         Memento = Action.GetMemento();
 
         Action.Comment = Comment;
+        Action.UnsavedChanges = true;
         MappingAction.Invoke(Action);
 
         Logger.LogTrace("Edited CommentAction {CommentActionId} with new comment {Comment}", Action.Id, Comment);

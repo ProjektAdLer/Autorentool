@@ -37,6 +37,7 @@ public class DeleteAdaptivityTask : IDeleteAdaptivityTask
                 "Deleted AdaptivityTask {AdaptivityTaskName} ({AdaptivityTaskId}) in AdaptivityContent {AdaptivityContentName}",
                 AdaptivityTask.Name, AdaptivityTask.Id, AdaptivityContent.Name);
             MappingAction.Invoke(AdaptivityContent);
+            AdaptivityContent.UnsavedChanges = true;
         }
         else
         {

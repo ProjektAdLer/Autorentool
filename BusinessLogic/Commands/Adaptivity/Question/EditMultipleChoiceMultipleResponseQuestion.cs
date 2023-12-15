@@ -45,6 +45,7 @@ public class EditMultipleChoiceMultipleResponseQuestion : IEditMultipleChoiceMul
         Question.Choices = Choices;
         Question.CorrectChoices = CorrectChoices;
         Question.ExpectedCompletionTime = ExpectedCompletionTime;
+        Question.UnsavedChanges = true;
 
         Logger.LogTrace(
             "Edited MultipleChoiceMultipleResponseQuestion ({QuestionId}). Updated Values: Text {PreviousText}, Choices {@PreviousChoices}, CorrectChoices {@PreviousCorrectChoices}, ExpectedCompletionTime {PreviousExpectedCompletionTime}",

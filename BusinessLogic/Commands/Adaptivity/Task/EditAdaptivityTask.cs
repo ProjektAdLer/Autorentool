@@ -36,6 +36,7 @@ public class EditAdaptivityTask : IEditAdaptivityTask
 
         AdaptivityTask.Name = AdaptivityTaskName;
         AdaptivityTask.MinimumRequiredDifficulty = MinimumRequiredDifficulty;
+        AdaptivityTask.UnsavedChanges = true;
 
         Logger.LogTrace(
             "Edited AdaptivityTask {AdaptivityTaskName} ({AdaptivityTaskId}). Updated Values: Name {PreviousName}, MinimumRequiredDifficulty {PreviousMinimumRequiredDifficulty}",
