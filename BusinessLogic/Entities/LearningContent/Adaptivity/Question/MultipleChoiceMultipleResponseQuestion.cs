@@ -41,7 +41,8 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRule> Rules { get; set; }
 
-    private bool InternalUnsavedChanges { get; set; }
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public bool UnsavedChanges
     {

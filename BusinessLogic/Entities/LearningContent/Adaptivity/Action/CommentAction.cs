@@ -2,8 +2,6 @@ namespace BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 
 public class CommentAction : IAdaptivityAction
 {
-    private bool _unsavedChanges;
-
     public CommentAction(string comment)
     {
         Comment = comment;
@@ -24,10 +22,13 @@ public class CommentAction : IAdaptivityAction
     public string Comment { get; set; }
     public Guid Id { get; private set; }
 
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+    
     public bool UnsavedChanges
     {
-        get => _unsavedChanges;
-        set => _unsavedChanges = value;
+        get => InternalUnsavedChanges;
+        set => InternalUnsavedChanges = value;
     }
 
     public bool Equals(IAdaptivityAction? other)

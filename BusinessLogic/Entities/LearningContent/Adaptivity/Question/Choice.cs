@@ -6,12 +6,14 @@ public class Choice : IEquatable<Choice>
     {
         Text = text;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     private Choice()
     {
         Text = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public string Text { get; set; }

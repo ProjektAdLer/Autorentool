@@ -1,5 +1,8 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging;
 using Shared;
 using Shared.Configuration;
@@ -56,6 +59,9 @@ public class SaveLearningWorld : ISaveLearningWorld
         foreach (var element in LearningWorld.UnplacedLearningElements)
         {
             element.UnsavedChanges = false;
+            element.LearningContent.UnsavedChanges = false;
+            if (element.LearningContent is AdaptivityContent ac)
+                ResetUnsavedChangesAdaptivityContent(ac);
         }
 
         foreach (var space in LearningWorld.LearningSpaces)
@@ -75,6 +81,37 @@ public class SaveLearningWorld : ISaveLearningWorld
         foreach (var topic in LearningWorld.Topics)
         {
             topic.UnsavedChanges = false;
+        }
+    }
+    void ResetUnsavedChangesAdaptivityContent(IAdaptivityContent adaptivityContent)
+    {
+        foreach (var task in adaptivityContent.Tasks)
+        {
+            task.UnsavedChanges = false;
+            foreach (var question in task.Questions)
+            {
+                question.UnsavedChanges = false;
+                switch (question)
+                {
+                    case MultipleChoiceMultipleResponseQuestion mcmrq:
+                        foreach (var correctChoice in mcmrq.CorrectChoices) correctChoice.UnsavedChanges = false;
+                        foreach (var choice in mcmrq.Choices) choice.UnsavedChanges = false;
+                        break;
+                    case MultipleChoiceSingleResponseQuestion mcsrq:
+                        mcsrq.CorrectChoice.UnsavedChanges = false;
+                        foreach (var choice in mcsrq.Choices) choice.UnsavedChanges = false;
+                        break;
+                }
+
+                foreach (var rule in question.Rules)
+                {
+                    rule.UnsavedChanges = false;
+                    rule.Action.UnsavedChanges = false;
+                    rule.Action.UnsavedChanges = false;
+                    if (rule.Action is ContentReferenceAction cra)
+                        cra.Content.UnsavedChanges = false;
+                }
+            }
         }
     }
 }

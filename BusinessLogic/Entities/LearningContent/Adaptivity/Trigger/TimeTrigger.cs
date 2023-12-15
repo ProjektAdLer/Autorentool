@@ -11,6 +11,7 @@ public class TimeTrigger : IAdaptivityTrigger
     {
         Expected = expected;
         TimeFrameType = timeFrameType;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -20,6 +21,7 @@ public class TimeTrigger : IAdaptivityTrigger
     {
         Expected = 0;
         TimeFrameType = TimeFrameType.From;
+        UnsavedChanges = false;
     }
 
     /// <summary>

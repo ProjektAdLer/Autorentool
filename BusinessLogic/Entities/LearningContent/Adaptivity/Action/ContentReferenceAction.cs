@@ -33,7 +33,8 @@ public class ContentReferenceAction : IAdaptivityAction
     public string Comment { get; set; }
     public Guid Id { get; private set; }
 
-    private bool InternalUnsavedChanges { get; set; }
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public bool UnsavedChanges
     {
