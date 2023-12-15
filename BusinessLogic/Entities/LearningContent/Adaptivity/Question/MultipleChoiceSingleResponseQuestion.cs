@@ -39,6 +39,16 @@ public class MultipleChoiceSingleResponseQuestion : IMultipleChoiceQuestion
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRule> Rules { get; set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Rules.Any(rule => rule.UnsavedChanges) ||
+               Choices.Any(choice => choice.UnsavedChanges) || CorrectChoice.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public ICollection<Choice> Choices { get; set; }
     public ICollection<Choice> CorrectChoices => new List<Choice> {CorrectChoice};
     public string Text { get; set; }

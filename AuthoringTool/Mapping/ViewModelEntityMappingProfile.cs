@@ -186,18 +186,22 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.LearningContent, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap(ElementContentAfterMap)
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.Parent, opt => opt.Ignore());
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
         CreateMap<ILearningElementViewModel, LearningElement>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.LearningContent, opt => opt.DoNotUseDestinationValue())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.Parent, opt => opt.Ignore());
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
     }
 
     /// <summary>
@@ -548,7 +552,9 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(crvm => crvm.Content, opt => opt.Ignore())
             .AfterMap((cr, crvm, ctx) => crvm.Content = ctx.Mapper.Map<ILearningContentViewModel>(cr.Content))
             .IncludeBase<IAdaptivityAction, IAdaptivityActionViewModel>()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ForMember(cr => cr.Content, opt => opt.Ignore())
             .AfterMap((crvm, cr, ctx) => cr.Content = ctx.Mapper.Map<ILearningContent>(crvm.Content))
             .IncludeBase<IAdaptivityActionViewModel, IAdaptivityAction>();
@@ -575,23 +581,27 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
             .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap((entity, vm, context) =>
                 vm.CorrectChoice = vm.Choices.Single(choicevm => choicevm.Id == entity.CorrectChoice.Id))
             .ReverseMap()
             .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap((vm, entity, context) =>
                 entity.CorrectChoice = entity.Choices.Single(choicevm => choicevm.Id == vm.CorrectChoice.Id))
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>();
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap((entity, vm, context) =>
                 vm.CorrectChoices = vm.Choices.Where(choicevm =>
                     entity.CorrectChoices.Any(choiceentity => choiceentity.Id.Equals(choicevm.Id))).ToList())
             .ReverseMap()
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap((vm, entity, context) =>
                 entity.CorrectChoices = entity.Choices.Where(choiceentity =>
                     vm.CorrectChoices.Any(choicevm => choiceentity.Id.Equals(choicevm.Id))).ToList());
@@ -616,12 +626,14 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<AdaptivityRule, AdaptivityRuleViewModel>()
             .IncludeBase<IAdaptivityRule, IAdaptivityRuleViewModel>()
             .ForMember(x => x.Action, cfg => cfg.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap(
                 (entity, vm, context) => vm.Action = context.Mapper.Map<IAdaptivityActionViewModel>(entity.Action))
             .ForMember(x => x.Trigger, cfg => cfg.Ignore())
             .AfterMap((entity, vm, context) =>
                 vm.Trigger = context.Mapper.Map<IAdaptivityTriggerViewModel>(entity.Trigger))
             .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IAdaptivityRuleViewModel, IAdaptivityRule>();
     }
 
@@ -639,7 +651,9 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityTask, AdaptivityTaskViewModel>()
             .IncludeBase<IAdaptivityTask, IAdaptivityTaskViewModel>()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IAdaptivityTaskViewModel, IAdaptivityTask>();
     }
 
@@ -655,7 +669,9 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<AdaptivityContent, AdaptivityContentViewModel>()
             .IncludeBase<IAdaptivityContent, IAdaptivityContentViewModel>()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IAdaptivityContentViewModel, IAdaptivityContent>();
     }
 

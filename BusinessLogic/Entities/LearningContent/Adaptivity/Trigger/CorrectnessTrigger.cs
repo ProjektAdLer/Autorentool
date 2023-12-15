@@ -25,6 +25,8 @@ public class CorrectnessTrigger : IAdaptivityTrigger
     /// </summary>
     public AnswerResult ExpectedAnswer { get; set; }
 
+    public bool UnsavedChanges { get; set; }
+
     public bool Equals(IAdaptivityTrigger? other)
     {
         if (other is not CorrectnessTrigger correctnessTrigger)

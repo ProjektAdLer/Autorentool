@@ -26,6 +26,14 @@ public class AdaptivityRule : IAdaptivityRule
     public IAdaptivityTrigger Trigger { get; set; }
     public IAdaptivityAction Action { get; set; }
 
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Trigger.UnsavedChanges || Action.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public bool Equals(IAdaptivityRule? other)
     {
         if (other is not AdaptivityRule)

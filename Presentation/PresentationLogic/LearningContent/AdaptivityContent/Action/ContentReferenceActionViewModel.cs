@@ -14,6 +14,7 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
         Content = content;
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -24,9 +25,18 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
         Content = null!;
         Comment = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public ILearningContentViewModel Content { get; set; }
     public string Comment { get; set; } 
     public Guid Id { get; private set; }
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Content.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
 }

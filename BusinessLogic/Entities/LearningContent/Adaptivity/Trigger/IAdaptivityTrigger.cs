@@ -5,4 +5,5 @@ namespace BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 /// </summary>
 public interface IAdaptivityTrigger : IEquatable<IAdaptivityTrigger>
 {
+    bool UnsavedChanges { get; set; }
 }

@@ -2,10 +2,13 @@ namespace BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 
 public class CommentAction : IAdaptivityAction
 {
+    private bool _unsavedChanges;
+
     public CommentAction(string comment)
     {
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -15,10 +18,17 @@ public class CommentAction : IAdaptivityAction
     {
         Comment = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => _unsavedChanges;
+        set => _unsavedChanges = value;
+    }
 
     public bool Equals(IAdaptivityAction? other)
     {

@@ -3,4 +3,5 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Actio
 public interface IAdaptivityActionViewModel
 {
     public Guid Id { get; }
+    bool UnsavedChanges { get; set; }
 }

@@ -18,6 +18,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         Rules = rules;
         Text = text;
         Difficulty = difficulty;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -32,12 +33,22 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         Rules = null!;
         Text = null!;
         Difficulty = QuestionDifficulty.Easy;
+        UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRule> Rules { get; set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Rules.Any(rule => rule.UnsavedChanges) || Choices.Any(choice => choice.UnsavedChanges) || CorrectChoices.Any(choice => choice.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
     public ICollection<Choice> Choices { get; set; }
     public ICollection<Choice> CorrectChoices { get; set; }
     public string Text { get; set; }

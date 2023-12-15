@@ -40,6 +40,8 @@ public class CompositeTrigger : IAdaptivityTrigger
     /// </summary>
     public IAdaptivityTrigger Right { get; set; }
 
+    public bool UnsavedChanges { get; set; }
+
     public bool Equals(IAdaptivityTrigger? other)
     {
         if (other is not CompositeTrigger compositeTrigger)

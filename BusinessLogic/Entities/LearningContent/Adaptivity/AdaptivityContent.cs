@@ -20,6 +20,14 @@ public class AdaptivityContent : IAdaptivityContent
     public ICollection<IAdaptivityTask> Tasks { get; set; }
     public string Name { get; set; }
 
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Tasks.Any(task => task.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
     public bool Equals(ILearningContent? other)
     {
         if (other is not AdaptivityContent adaptivityContent)

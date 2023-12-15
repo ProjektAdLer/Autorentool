@@ -31,6 +31,8 @@ public class TimeTrigger : IAdaptivityTrigger
     /// Whether the user must spend less or more than <see cref="Expected"/> seconds for the trigger to be activated.
     /// </summary>
     public TimeFrameType TimeFrameType { get; set; }
+    
+    public bool UnsavedChanges { get; set; }
 
     public bool Equals(IAdaptivityTrigger? other)
     {
@@ -61,4 +63,5 @@ public class TimeTrigger : IAdaptivityTrigger
     {
         return !Equals(left, right);
     }
+
 }

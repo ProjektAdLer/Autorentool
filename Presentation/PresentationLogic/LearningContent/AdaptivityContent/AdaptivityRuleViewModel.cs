@@ -9,6 +9,7 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
     {
         Trigger = trigger;
         Action = action;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -18,9 +19,18 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
     {
         Trigger = null!;
         Action = null!;
+        UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public IAdaptivityTriggerViewModel Trigger { get; set; }
     public IAdaptivityActionViewModel Action { get; set; }
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Trigger.UnsavedChanges || Action.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
 }

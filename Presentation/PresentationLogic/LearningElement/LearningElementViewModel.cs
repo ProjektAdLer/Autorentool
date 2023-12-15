@@ -25,6 +25,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Points = 1;
         PositionX = 0;
         PositionY = 0;
+        UnsavedChanges = false;
     }
 
     /// <summary>
@@ -58,6 +59,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Points = points;
         PositionX = positionX;
         PositionY = positionY;
+        UnsavedChanges = true;
     }
     
     public const string fileEnding = "aef";
@@ -73,7 +75,15 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
-    public bool UnsavedChanges { get; set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || LearningContent.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public double PositionX { get; set; }
     public double PositionY { get; set; }
 }

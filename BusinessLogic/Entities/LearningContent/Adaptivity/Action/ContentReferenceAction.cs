@@ -15,6 +15,7 @@ public class ContentReferenceAction : IAdaptivityAction
         Content = content;
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -25,11 +26,20 @@ public class ContentReferenceAction : IAdaptivityAction
         Content = null!;
         Id = Guid.Empty;
         Comment = "";
+        UnsavedChanges = false;
     }
 
     public ILearningContent Content { get; set; }
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Content.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
 
     public bool Equals(IAdaptivityAction? other)
     {

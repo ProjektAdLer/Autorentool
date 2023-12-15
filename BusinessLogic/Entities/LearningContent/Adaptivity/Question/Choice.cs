@@ -16,6 +16,7 @@ public class Choice : IEquatable<Choice>
 
     public string Text { get; set; }
     public Guid Id { get; set; }
+    public bool UnsavedChanges { get; set; }
 
     public bool Equals(Choice? other)
     {

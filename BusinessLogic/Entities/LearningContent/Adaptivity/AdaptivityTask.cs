@@ -28,6 +28,15 @@ public class AdaptivityTask : IAdaptivityTask
     public ICollection<IAdaptivityQuestion> Questions { get; set; }
     public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
     public string Name { get; set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Questions.Any(question => question.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
     public Guid Id { get; set; }
 
     public bool Equals(IAdaptivityTask? other)

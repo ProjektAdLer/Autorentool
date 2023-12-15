@@ -60,7 +60,15 @@ public class LearningElement : ILearningElement, IOriginator
     public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
-    public bool UnsavedChanges { get; set; }
+
+    private bool InternalUnsavedChanges { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || LearningContent.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
