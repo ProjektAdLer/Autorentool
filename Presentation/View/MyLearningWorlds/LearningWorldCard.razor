@@ -4,11 +4,11 @@
 @using System.IO.Abstractions
 @using Presentation.PresentationLogic.LearningWorld
 <MudItem>
-    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40 mt-1 relative group/card hover:bg-[rgba(229,213,184,0.5)]">
+    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40 mt-1 relative group/card bg-buttonbgblue hover:bg-[rgba(229,213,184,0.5)]">
         <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-10 absolute inset-x-[60%] inset-y-[40%] w-24 h-24">
         <MudCardHeader Class="z-10 flex justify-center items-center break-word w-full">
             <CardHeaderContent>
-                <MudText Class="text-xl tracking-wider mt-8 font-bold break-all">
+                <MudText Class="text-lg 2xl:text-xl tracking-wider mt-8 font-bold break-all">
                     @LearningWorld.Name
                 </MudText>
                 <MudText Class="text-sm tracking-widers break-all">
@@ -36,8 +36,8 @@
         <MudCardContent Class="">
             <button @onclick="OnOpenButtonPressedAsync" title="@Localizer["LearningWorldCard.Button.Open.Title"]"
                     class="open-button group-hover/card:visible group-hover/card:opacity-100 invisible text-xl absolute
-                     top-[25%] left-[16%] btn-standard uppercase p-8 rounded-lg drop-shadow">
-                @Localizer["LearningWorldCard.Button.Open.Text"]
+                     top-[26%] left-[20%] 2xl:top-[25%] 2xl:left-[16%] btn-standard uppercase p-8 rounded-lg drop-shadow">
+                <p class="text-lg 2xl:text-xl">@Localizer["LearningWorldCard.Button.Open.Text"]</p>
             </button>
         </MudCardContent>
     </MudCard>

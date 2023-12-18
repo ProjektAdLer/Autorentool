@@ -22,7 +22,7 @@
         <value>Meine Lernwelten</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Hover" xml:space="preserve">
-        <value>Lernwelt erstellen</value>
+        <value>Neue Lernwelt erstellen</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug von Philipp</value>
@@ -31,10 +31,10 @@
         <value>Erstelle Debug-Welt</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Verwenden Sie diese Option, um ein Lernweltarchiv zu importieren (z.B. von anderem Rechner oder aus Sicherheitskopie)</value>
+        <value>Lernwelt als Zip importieren (z.B. von anderem Rechner oder aus Sicherheitskopie)</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>Importieren (.zip)</value>
+        <value>Importieren</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEU</value>
@@ -43,7 +43,7 @@
         <value>Fahren Sie mit der Maus über Ihre Lernwelten, und öffnen Sie diese anschließend.</value>
     </data>
     <data name="Page.LearningWorld.Button.Load.Hover" xml:space="preserve">
-        <value>Verwenden Sie diese Option, um lokal gespeicherte Welten zu öffnen</value>
+        <value>Lokal gespeicherte Welten öffnen</value>
     </data>
     <data name="Page.LearningWorld.Button.Load.Text" xml:space="preserve">
         <value>Laden (.awf)</value>
@@ -59,5 +59,14 @@
     </data>
     <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
         <value>Dateinamen anzeigen</value>
+    </data>
+    <data name="Page.LearningWorld.SortByDate" xml:space="preserve">
+        <value>Nach dem Änderungsdatum sortieren</value>
+    </data>
+    <data name="Page.LearningWorld.SortByName" xml:space="preserve">
+        <value>Alphanumerisch sortieren</value>
+    </data>
+    <data name="Page.LearningWorld.ShowFile.Checkbox" xml:space="preserve">
+        <value>Den gesamten Namen der .awf-Datei anzeigen</value>
     </data>
 </root>
