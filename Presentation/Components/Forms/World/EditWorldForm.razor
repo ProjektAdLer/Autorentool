@@ -40,14 +40,27 @@
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
                                   Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
-                              For="@(() => FormModel.EnrolmentKey)"
-                              DebounceInterval="DebounceInterval"
-                              Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]"/>
-            </div>
+                </div>
             </Collapsable>
         </div>
 
+        <div class="px-4">
+            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" @bind-Collapsed="_collapsedEnrolmentKey">
+                <div class="rounded-lg w-4/4 px-4">
+                      <div class="flex flex-row items-center gap-1 py-2">
+                           <MudText Class="font-bold text-sm pl-1">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</MudText>
+                           <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
+                                 <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                           </MudTooltip>
+                      </div>
+                        <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                                      For="@(() => FormModel.EnrolmentKey)"
+                                      DebounceInterval="DebounceInterval"
+                                      Variant="Variant.Outlined"/>
+                </div>
+            </Collapsable>
+        </div>    
+        
         <div class="px-4">
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"]
                                                @bind-Collapsed="_collapsedGoals">
@@ -105,6 +118,7 @@
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
+    private bool _collapsedEnrolmentKey = true;
     private bool _collapsedGoals = true;
 
     private void OnValidSubmit(LearningWorldFormModel model)

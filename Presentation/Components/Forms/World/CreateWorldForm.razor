@@ -43,16 +43,34 @@
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Label="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"/>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
-                              For="@(() => FormModel.EnrolmentKey)"
-                              DebounceInterval="DebounceInterval"
-                              OnKeyUp="HandleKeyEvent"
-                              Label="@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]"/>
-            </div>
+                </div>
             </Collapsable>
         </div>
         
         <div class="px-4">
+            <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" @bind-Collapsed="_collapsedEnrolmentKey">
+                <div class="rounded-lg w-4/4 px-4">
+                <div class="flex flex-row items-center gap-1 py-2">
+                   <MudText Class="font-bold text-sm pl-1">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</MudText>
+                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                        <TooltipContent>
+                            <MudText Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
+                        </TooltipContent>
+                        <ChildContent>
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </ChildContent>
+                    </MudTooltip>
+                </div>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                              For="@(() => FormModel.EnrolmentKey)"
+                              DebounceInterval="DebounceInterval"
+                              OnKeyUp="HandleKeyEvent"
+                              Variant="Variant.Outlined"/>
+                </div>
+            </Collapsable>
+        </div>    
+            
+            <div class="px-4">
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
@@ -105,6 +123,7 @@
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
+    private bool _collapsedEnrolmentKey = true;
     private bool _collapsedGoals = true;
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;

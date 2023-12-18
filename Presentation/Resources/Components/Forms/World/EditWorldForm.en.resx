@@ -54,4 +54,10 @@
     <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Enrolment key</value>
     </data>
+    <data name="EditWorldForm.EnrolmentKey.Title" xml:space="preserve">
+        <value>Enrolment method</value>
+    </data>
+    <data name="EditWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
+        <value>A password allows students access to the learning world to be restricted to only those who know the password. Students will be required to supply the password each time they access the learning world.</value>
+    </data>
 </root>
