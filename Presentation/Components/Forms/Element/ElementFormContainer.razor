@@ -1,23 +1,21 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View.LearningElement
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
-@using Presentation.PresentationLogic.LearningElement
-<MudCard Class="overflow-auto w-[70%]">
+<MudCard Class="overflow-auto">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
-        <MudTabs TabHeaderClass="sticky top-0 z-10 backdrop-blur-sm bg-adlerdeactivated/[.50]">
-            <MudTabPanel Text="@Localizer["Tab.Element.Header"]">
-                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="false"/>
-            </MudTabPanel>
-            <MudTabPanel Text="@Localizer["Tab.Adaptivity.Header"]">
-                <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="true"/>
-            </MudTabPanel>
-        </MudTabs>
+        if (ContentType == typeof(IAdaptivityContentViewModel))
+        {
+            <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="true"/>
+        }
+        else
+        {
+            <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="false"/>
+        }
     }
     else
     {
@@ -33,20 +31,6 @@
 
 </MudCard>
 
-<div class="flex flex-col items-center w-[30%] h-full bg-adlerdeactivated rounded-lg px-1.5">
-    <p class="cursor-default text-xs 2xl:text-sm text-center mx-1 py-2 text-adlergrey-500 font-bold">@Localizer["ElementFormContainer.UnplacedElements.Title"]</p>
-    <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                 Class="overflow-y-auto overflow-x-hidden rounded-lg border-2 border-solid h-[85svh] w-full bg-white flex flex-col justify-center pt-1 px-1">
-        <ItemRenderer>
-            <DragDropLearningElement
-                LearningElement="@context"
-                OnShowLearningElementContent="@WorldPresenter.ShowSelectedElementContentAsync"
-                OnEditLearningElement="@WorldPresenter.SetSelectedLearningElement"
-                OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
-                OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
-        </ItemRenderer>
-    </MudDropZone>
-</div>
 
 @code {
 
@@ -65,6 +49,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ElementFormContainer> Localizer { get; set; }
 
+    [Parameter, EditorRequired] public Type ContentType { get; set; } = null!;
+
     private void InvokeMasterLayoutStateHasChanged()
     {
         if (TriggerMasterLayoutStateHasChanged != null) InvokeAsync(TriggerMasterLayoutStateHasChanged);
@@ -74,6 +60,17 @@
     {
         base.OnParametersSet();
         if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (!firstRender) return;
+        if (SelectedViewModelsProvider.LearningElement == null
+            || ((ContentType != typeof(IAdaptivityContentViewModel) || SelectedViewModelsProvider.LearningElement.LearningContent is IAdaptivityContentViewModel)
+                && (ContentType == typeof(IAdaptivityContentViewModel) || SelectedViewModelsProvider.LearningElement.LearningContent is not AdaptivityContentViewModel))) return;
+        SelectedViewModelsProvider.SetLearningElement(null, null);
+        InvokeMasterLayoutStateHasChanged();
     }
 
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

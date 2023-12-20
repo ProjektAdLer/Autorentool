@@ -1,10 +1,14 @@
 @page "/app"
 @using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.Layout
 @using Presentation.View.LearningSpace
 @using Presentation.View.LearningWorld
 @using Presentation.PresentationLogic.DropZone
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningSpace
 @using BusinessLogic.Commands
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -14,8 +18,6 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
-@using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
@@ -62,7 +64,19 @@
                                 </div>
                             </SidebarContent>
                             <MainContent>
-                                <ElementFormContainer/>
+                                <ElementFormContainer ContentType="@typeof(ILearningContentViewModel)"/>
+                            </MainContent>
+                        </SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.AdaptivityElementDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleAdaptivityElementDialog">
+                            <SidebarContent>
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/adaptivityelement-icon.png" alt=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Alt"]>
+                                </div>
+                            </SidebarContent>
+                            <MainContent>
+                                <ElementFormContainer ContentType="@typeof(IAdaptivityContentViewModel)"/>
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
@@ -79,16 +93,29 @@
                         </SidebarItem>
                     </Sidebar>
                 </SideContainer>
-                <CenterContainer>
-                    @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
-                    {
-                        <LearningSpaceView/>
-                    }
-                    else
-                    {
-                        <img class="w-1/3 opacity-10 pt-28 mx-auto absolute bottom-1/6 left-1/3" src="CustomIcons/autorentool-logo.png">
-                    }
-                </CenterContainer>
+                <div class="flex flex-col">
+                    <CenterContainer>
+                        @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
+                        {
+                            <LearningSpaceView/>
+                        }
+                        else
+                        {
+                            <img class="w-1/3 opacity-10 pt-28 mx-auto absolute bottom-1/6 left-1/3" src="CustomIcons/autorentool-logo.png">
+                        }
+
+                    </CenterContainer>
+                    <BottomContainer>
+                        @if (SelectedViewModelsProvider.LearningWorld is not null)
+                        {
+                            <UnplacedElementsDropZone/>
+                        }
+                        else
+                        {
+                            <img class="w-1/3 opacity-10 pt-28 mx-auto absolute bottom-1/6 left-1/3" src="CustomIcons/autorentool-logo.png">
+                        }
+                    </BottomContainer>
+                </div>
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem
@@ -138,12 +165,11 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IStringLocalizer<MasterLayout> Localizer { get; set; }
-    
+
     [Inject, AllowNull] //see above
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    [Inject, AllowNull]
-    internal NavigationManager NavManager { get; set; }
+
+    [Inject, AllowNull] internal NavigationManager NavManager { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application
