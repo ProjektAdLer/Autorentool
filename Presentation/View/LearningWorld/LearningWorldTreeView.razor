@@ -45,7 +45,10 @@
                                     <span>&#9654;</span>
                                 }
                             </span>
-                            <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">@learningSpace.Name</span>
+                            <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">
+                                <MudIcon Icon="@SpaceIcon"></MudIcon>
+                                @learningSpace.Name
+                            </span>
                             @if (IsLearningSpaceExpanded(learningSpace))
                             {
                                 <div>
@@ -53,6 +56,7 @@
                                     {
                                         <p @onclick="@(e => SelectLearningElement(learningElement))"
                                            class="@(IsLearningElementSelected(learningElement) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">
+                                            <MudIcon Icon="@GetElementIcon(learningElement)"></MudIcon>
                                             @learningElement.Name
                                         </p>
                                     }
