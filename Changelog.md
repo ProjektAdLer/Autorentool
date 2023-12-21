@@ -22,6 +22,9 @@
 - Changed the way learning worlds are fetched internally and displayed on the start screen.
     - You can now see the last modify time and optionally file name of worlds.
     - You can now sort worlds by name or last modify time.
+- UI:
+  - Optimized styling of the adaptivity dialog
+  - Optimized responsive design
 
 ### Deprecated
 
