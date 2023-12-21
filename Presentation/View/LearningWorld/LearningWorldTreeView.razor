@@ -29,35 +29,41 @@
             </section>
         </article>
         <section class="bg-white rounded w-full overflow-scroll grow pt-2">
-            <div class="flex flex-col justify-start space-y-2">
+            <div class="cursor-pointer flex flex-col justify-start">
                 @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
                     foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                     {
                         <div>
-                            <span @onclick="() => ToggleLearningSpace(learningSpace)">
-                                @if (IsLearningSpaceExpanded(learningSpace))
-                                {
-                                    <span>&#9660;</span>
-                                }
-                                else
-                                {
-                                    <span>&#9654;</span>
-                                }
-                            </span>
-                            <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">
-                                <MudIcon Icon="@SpaceIcon"></MudIcon>
-                                @learningSpace.Name
-                            </span>
+                            <div class="flex flex-row items-center">
+                                <span @onclick="() => ToggleLearningSpace(learningSpace)">
+                                    @if (IsLearningSpaceExpanded(learningSpace))
+                                    {
+                                        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => ToggleLearningSpace(learningSpace)" Icon="@Icons.Material.Filled.KeyboardArrowDown"></MudIconButton>
+                                    }
+                                    else
+                                    {
+                                        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => ToggleLearningSpace(learningSpace)" Icon="@Icons.Material.Filled.KeyboardArrowRight"></MudIconButton>
+                                    }
+                                </span>
+                                <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-sm 2xl:text-base text-adlerblue-600 select-none" : "text-sm 2xl:text-base select-none text-adlergrey-600")">
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                                        <p class="break-words">@learningSpace.Name</p>
+                                    </div>
+                                </span>
+                            </div>
                             @if (IsLearningSpaceExpanded(learningSpace))
                             {
                                 <div>
                                     @foreach (var learningElement in learningSpace.ContainedLearningElements)
                                     {
                                         <p @onclick="@(e => SelectLearningElement(learningElement))"
-                                           class="@(IsLearningElementSelected(learningElement) ? "text-adlerblue-600 select-none" : "text-adlerdarkblue select-none")">
-                                            <MudIcon Icon="@GetElementIcon(learningElement)"></MudIcon>
-                                            @learningElement.Name
+                                           class="@(IsLearningElementSelected(learningElement) ? "text-sm 2xl:text-base text-adlerblue-600 select-none" : "text-sm 2xl:text-base select-none text-adlergrey-600")">
+                                            <div class="flex flex-row gap-2 items-center p-2 ml-14">
+                                                <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon(learningElement)"></MudIcon>
+                                                <p class="break-words">@learningElement.Name</p>
+                                            </div>
                                         </p>
                                     }
                                 </div>
@@ -248,6 +254,7 @@
         if (SelectedViewModelsProvider.LearningObjectInPathWay != learningElement.Parent)
             SelectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         SelectedViewModelsProvider.SetLearningElement(learningElement, null);
+        Mediator.RequestOpenElementDialog();
         return Task.CompletedTask;
     }
 
