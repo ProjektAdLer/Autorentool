@@ -42,7 +42,7 @@
         <value>Ziele</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Authors.Text" xml:space="preserve">
-        <value>Autor(en)</value>
+        <value>Autoren:innen</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>

@@ -25,7 +25,7 @@
         <value>Create new learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Hover" xml:space="preserve">
-        <value>Import a learning world as zip (e.g. from another computer or from a backup)</value>
+        <value>Import a learning world as ZIP file (e.g. from another computer or from a backup)</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
         <value>NEW</value>

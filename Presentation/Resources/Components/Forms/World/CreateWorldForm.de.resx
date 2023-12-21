@@ -28,7 +28,7 @@
         <value>Kurzname</value>
     </data>
     <data name="CreateWorldForm.General.Field.Authors.Text" xml:space="preserve">
-        <value>Autor(en)</value>
+        <value>Autoren:innen</value>
     </data>
     <data name="CreateWorldForm.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>
