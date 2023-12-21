@@ -35,11 +35,13 @@ public class SaveLearningWorld : ISaveLearningWorld
         {
             Filepath = GetWorldFilepath();
         }
+
         //update world save path if necessary
         if (LearningWorld.SavePath != Filepath)
         {
             LearningWorld.SavePath = Filepath;
         }
+
         BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);
         Logger.LogTrace("Saved LearningWorld {Name} ({Id}) to {Path}", LearningWorld.Name, LearningWorld.Id, Filepath);
         ResetWorldUnsavedChangesState();
@@ -49,7 +51,8 @@ public class SaveLearningWorld : ISaveLearningWorld
         string GetWorldFilepath()
         {
             var basePath = ApplicationPaths.SavedWorldsFolder;
-            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding, out _);
+            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding,
+                out _);
         }
     }
 
@@ -58,10 +61,7 @@ public class SaveLearningWorld : ISaveLearningWorld
         LearningWorld.UnsavedChanges = false;
         foreach (var element in LearningWorld.UnplacedLearningElements)
         {
-            element.UnsavedChanges = false;
-            element.LearningContent.UnsavedChanges = false;
-            if (element.LearningContent is AdaptivityContent ac)
-                ResetUnsavedChangesAdaptivityContent(ac);
+            ResetElementUnsavedChangesState(element);
         }
 
         foreach (var space in LearningWorld.LearningSpaces)
@@ -69,7 +69,7 @@ public class SaveLearningWorld : ISaveLearningWorld
             space.UnsavedChanges = false;
             foreach (var element in space.ContainedLearningElements)
             {
-                element.UnsavedChanges = false;
+                ResetElementUnsavedChangesState(element);
             }
         }
 
@@ -83,6 +83,15 @@ public class SaveLearningWorld : ISaveLearningWorld
             topic.UnsavedChanges = false;
         }
     }
+
+    private void ResetElementUnsavedChangesState(ILearningElement element)
+    {
+        element.UnsavedChanges = false;
+        element.LearningContent.UnsavedChanges = false;
+        if (element.LearningContent is AdaptivityContent ac)
+            ResetUnsavedChangesAdaptivityContent(ac);
+    }
+
     void ResetUnsavedChangesAdaptivityContent(IAdaptivityContent adaptivityContent)
     {
         foreach (var task in adaptivityContent.Tasks)

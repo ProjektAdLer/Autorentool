@@ -27,12 +27,12 @@ public class AdaptivityTask : IAdaptivityTask
         UnsavedChanges = false;
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
     public ICollection<IAdaptivityQuestion> Questions { get; set; }
     public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
     public string Name { get; set; }
-
-    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
-    public bool InternalUnsavedChanges { get; private set; }
 
     public bool UnsavedChanges
     {
@@ -52,7 +52,7 @@ public class AdaptivityTask : IAdaptivityTask
 
     public IMemento GetMemento()
     {
-        return new AdaptivityTaskMemento(Questions, MinimumRequiredDifficulty, Name);
+        return new AdaptivityTaskMemento(Questions, MinimumRequiredDifficulty, Name, UnsavedChanges);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -65,6 +65,7 @@ public class AdaptivityTask : IAdaptivityTask
         Questions = adaptivityTaskMemento.Questions;
         MinimumRequiredDifficulty = adaptivityTaskMemento.MinimumRequiredDifficulty;
         Name = adaptivityTaskMemento.Name;
+        UnsavedChanges = adaptivityTaskMemento.UnsavedChanges;
     }
 
     public override bool Equals(object? obj)
@@ -94,15 +95,17 @@ public class AdaptivityTask : IAdaptivityTask
     private record AdaptivityTaskMemento : IMemento
     {
         internal AdaptivityTaskMemento(ICollection<IAdaptivityQuestion> questions,
-            QuestionDifficulty? minimumRequiredDifficulty, string name)
+            QuestionDifficulty? minimumRequiredDifficulty, string name, bool unsavedChanges)
         {
             Questions = questions.ToList();
             MinimumRequiredDifficulty = minimumRequiredDifficulty;
             Name = name;
+            UnsavedChanges = unsavedChanges;
         }
 
         internal ICollection<IAdaptivityQuestion> Questions { get; set; }
         internal QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
         internal string Name { get; set; }
+        internal bool UnsavedChanges { get; set; }
     }
 }

@@ -32,6 +32,7 @@ public class DeleteAdaptivityTask : IDeleteAdaptivityTask
         if (taskToDelete != null)
         {
             AdaptivityContent.Tasks.Remove(taskToDelete);
+            AdaptivityContent.UnsavedChanges = true;
 
             Logger.LogTrace(
                 "Deleted AdaptivityTask {AdaptivityTaskName} ({AdaptivityTaskId}) in AdaptivityContent {AdaptivityContentName}",
