@@ -8,10 +8,11 @@
         <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-10 absolute inset-x-[60%] inset-y-[40%] w-24 h-24">
         <MudCardHeader Class="z-10 flex justify-center items-center break-word w-full">
             <CardHeaderContent>
-                <MudText Class="text-lg 2xl:text-xl tracking-wider mt-8 font-bold break-all">
+                <div class="flex flex-col gap-1.5 px-1">
+                <MudText Class="text-base 2xl:text-lg tracking-wider mt-7 font-bold break-words leading-none 2xl:leading-none">
                     @LearningWorld.Name
                 </MudText>
-                <MudText Class="text-sm tracking-widers break-all">
+                <MudText Class="text-xs 2xl:text-sm tracking-widers break-words leading-none 2xl:leading-none">
                     @if (ShowFileName)
                     {
                         <div class="file-name-display">
@@ -20,9 +21,10 @@
                     }
                     @if (FileInfo != null)
                     {
-                        @Localizer["LearningWorldCard.LastWriteTime", FileInfo.LastWriteTime]
+                        <MudText Class="text-xs 2xl:text-sm break-words pt-1 leading-none 2xl:leading-none">@Localizer["LearningWorldCard.LastWriteTime", FileInfo.LastWriteTime]</MudText>
                     }
                 </MudText>
+                </div>
             </CardHeaderContent>
             <CardHeaderActions>
                 @if (!string.IsNullOrWhiteSpace(LearningWorld.SavePath))
@@ -37,7 +39,7 @@
             <button @onclick="OnOpenButtonPressedAsync" title="@Localizer["LearningWorldCard.Button.Open.Title"]"
                     class="open-button group-hover/card:visible group-hover/card:opacity-100 invisible text-xl absolute
                      top-[26%] left-[20%] 2xl:top-[25%] 2xl:left-[16%] btn-standard uppercase p-8 rounded-lg drop-shadow">
-                <p class="text-lg 2xl:text-xl">@Localizer["LearningWorldCard.Button.Open.Text"]</p>
+                <p class="text-base 2xl:text-lg">@Localizer["LearningWorldCard.Button.Open.Text"]</p>
             </button>
         </MudCardContent>
     </MudCard>
