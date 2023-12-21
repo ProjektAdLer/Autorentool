@@ -16,5 +16,6 @@ public interface ILearningElement
     int Workload { get; set; }
     int Points { get; set; }
     bool UnsavedChanges { get; set; }
+    bool InternalUnsavedChanges { get; }
     LearningElementDifficultyEnum Difficulty { get; set; }
 }

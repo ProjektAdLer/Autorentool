@@ -9,6 +9,7 @@ public class FileContentViewModel : IFileContentViewModel
         Name = name;
         Type = type;
         Filepath = filepath;
+        UnsavedChanges = true;
     }
     
     /// <summary>
@@ -20,9 +21,11 @@ public class FileContentViewModel : IFileContentViewModel
         Name = "";
         Type = "";
         Filepath = "";
+        UnsavedChanges = false;
     }
     
     public string Name { get; init; }
+    public bool UnsavedChanges { get; set; }
     public string Type { get; init; }
     public string Filepath { get; init; }
 

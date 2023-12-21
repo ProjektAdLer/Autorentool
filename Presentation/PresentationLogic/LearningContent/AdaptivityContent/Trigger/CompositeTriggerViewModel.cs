@@ -12,6 +12,7 @@ public class CompositeTriggerViewModel : IAdaptivityTriggerViewModel
         Condition = condition;
         Left = left;
         Right = right;
+        UnsavedChanges = true;
     }
     
     /// <summary>
@@ -23,6 +24,7 @@ public class CompositeTriggerViewModel : IAdaptivityTriggerViewModel
         //suppress null ref exception as automapper will set these properties immediately
         Left = null!;
         Right = null!;
+        UnsavedChanges = false;
     }
 
     /// <summary>
@@ -39,4 +41,6 @@ public class CompositeTriggerViewModel : IAdaptivityTriggerViewModel
     /// The right side of the boolean composite trigger expression.
     /// </summary>
     public IAdaptivityTriggerViewModel Right { get; set; }
+
+    public bool UnsavedChanges { get; set; }
 }

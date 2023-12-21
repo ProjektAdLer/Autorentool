@@ -11,6 +11,7 @@ public class TimeTriggerViewModel : IAdaptivityTriggerViewModel
     {
         Expected = expected;
         TimeFrameType = timeFrameType;
+        UnsavedChanges = true;
     }
     
     /// <summary>
@@ -20,6 +21,7 @@ public class TimeTriggerViewModel : IAdaptivityTriggerViewModel
     {
         Expected = 0;
         TimeFrameType = TimeFrameType.From;
+        UnsavedChanges = false;
     }
 
     /// <summary>
@@ -30,4 +32,6 @@ public class TimeTriggerViewModel : IAdaptivityTriggerViewModel
     /// Whether the user must spend less or more than <see cref="Expected"/> seconds for the trigger to be activated.
     /// </summary>
     public TimeFrameType TimeFrameType { get; set; }
+
+    public bool UnsavedChanges { get; set; }
 }
