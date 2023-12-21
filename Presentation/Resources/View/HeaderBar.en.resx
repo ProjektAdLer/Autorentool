@@ -28,7 +28,7 @@
         <value>Publish learning world</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Publish moodle learning world file (.mbz)</value>
+        <value>Publish learning world as moodle learning world file (.mbz)</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>My learning worlds</value>
