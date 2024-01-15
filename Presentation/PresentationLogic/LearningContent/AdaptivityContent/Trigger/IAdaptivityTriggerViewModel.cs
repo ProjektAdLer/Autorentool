@@ -5,4 +5,5 @@ namespace Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigg
 /// </summary>
 public interface IAdaptivityTriggerViewModel
 {
+    bool UnsavedChanges { get; set; }
 }

@@ -20,4 +20,6 @@ public interface IAdaptivityQuestionViewModel
     /// Rules that are applied to the question.
     /// </summary>
     public ICollection<IAdaptivityRuleViewModel> Rules { get; set; }
+
+    bool UnsavedChanges { get; set; }
 }

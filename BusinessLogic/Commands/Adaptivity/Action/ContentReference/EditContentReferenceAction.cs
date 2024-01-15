@@ -33,6 +33,7 @@ class EditContentReferenceAction : IEditContentReferenceAction
 
         Action.Content = Content;
         Action.Comment = Comment;
+        Action.UnsavedChanges = true;
         MappingAction.Invoke(Action);
 
         Logger.LogTrace("Edited ContentReferenceAction {ContentReferenceActionId}", Action.Id);

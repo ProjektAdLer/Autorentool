@@ -20,4 +20,6 @@ public interface IAdaptivityQuestion : IEquatable<IAdaptivityQuestion>, IOrigina
     /// Rules that are applied to the question.
     /// </summary>
     public ICollection<IAdaptivityRule> Rules { get; set; }
+
+    bool UnsavedChanges { get; set; }
 }

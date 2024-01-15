@@ -8,6 +8,7 @@ public class LinkContent : ILinkContent
     {
         Name = name;
         Link = link;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -18,9 +19,11 @@ public class LinkContent : ILinkContent
     {
         Name = "";
         Link = "";
+        UnsavedChanges = false;
     }
 
     public string Name { get; set; }
+    public bool UnsavedChanges { get; set; }
     public string Link { get; set; }
 
     public bool Equals(ILearningContent? other)
