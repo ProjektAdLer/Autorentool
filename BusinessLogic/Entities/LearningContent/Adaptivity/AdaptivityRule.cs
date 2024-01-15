@@ -10,6 +10,7 @@ public class AdaptivityRule : IAdaptivityRule
         Trigger = trigger;
         Action = action;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -20,11 +21,21 @@ public class AdaptivityRule : IAdaptivityRule
         Trigger = null!;
         Action = null!;
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public IAdaptivityTrigger Trigger { get; set; }
     public IAdaptivityAction Action { get; set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Trigger.UnsavedChanges || Action.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
 
     public bool Equals(IAdaptivityRule? other)
     {

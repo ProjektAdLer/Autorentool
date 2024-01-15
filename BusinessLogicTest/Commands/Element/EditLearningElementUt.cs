@@ -14,7 +14,7 @@ public class EditLearningElementUt
     public void Execute_EditsLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = EntityProvider.GetFileContent();
+        var content = EntityProvider.GetFileContent(unsavedChanges: false);
         var element = EntityProvider.GetLearningElement(parent: parent, content: content,
             elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
@@ -102,7 +102,7 @@ public class EditLearningElementUt
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = EntityProvider.GetFileContent();
+        var content = EntityProvider.GetFileContent(unsavedChanges: false);
         var element = EntityProvider.GetLearningElement(parent: parent, content: content,
             elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>

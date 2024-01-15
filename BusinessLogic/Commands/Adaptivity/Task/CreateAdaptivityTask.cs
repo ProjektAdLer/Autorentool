@@ -29,6 +29,7 @@ public class CreateAdaptivityTask : ICreateAdaptivityTask
         _memento = AdaptivityContent.GetMemento();
 
         AdaptivityContent.Tasks.Add(AdaptivityTask);
+        AdaptivityContent.UnsavedChanges = true;
 
         Logger.LogTrace(
             "Created AdaptivityTask {AdaptivityTaskName} ({AdaptivityTaskId}) in AdaptivityContent {AdaptivityContentName}",
