@@ -58,7 +58,7 @@ public class EditLearningElementUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(newContent));
@@ -95,7 +95,7 @@ public class EditLearningElementUt
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
 
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(actionWasInvoked, Is.False);
     }
 
     [Test]

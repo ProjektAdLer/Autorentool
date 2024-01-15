@@ -34,12 +34,12 @@ public class BatchCommandUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsEmpty(world.LearningSpaces);
-            Assert.IsEmpty(world.Topics);
-            Assert.IsEmpty(world.PathWayConditions);
-            Assert.IsFalse(actionWasInvoked1);
-            Assert.IsFalse(actionWasInvoked2);
-            Assert.IsFalse(actionWasInvoked3);
+            Assert.That(world.LearningSpaces, Is.Empty);
+            Assert.That(world.Topics, Is.Empty);
+            Assert.That(world.PathWayConditions, Is.Empty);
+            Assert.That(actionWasInvoked1, Is.False);
+            Assert.That(actionWasInvoked2, Is.False);
+            Assert.That(actionWasInvoked3, Is.False);
         });
 
         batchCommand.Execute();
@@ -49,11 +49,11 @@ public class BatchCommandUt
             Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(world.Topics, Has.Count.EqualTo(1));
             Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.IsTrue(actionWasInvoked1);
+            Assert.That(actionWasInvoked1, Is.True);
             actionWasInvoked1 = false;
-            Assert.IsTrue(actionWasInvoked2);
+            Assert.That(actionWasInvoked2, Is.True);
             actionWasInvoked2 = false;
-            Assert.IsTrue(actionWasInvoked3);
+            Assert.That(actionWasInvoked3, Is.True);
             actionWasInvoked3 = false;
         });
 
@@ -61,14 +61,14 @@ public class BatchCommandUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsEmpty(world.LearningSpaces);
-            Assert.IsEmpty(world.Topics);
-            Assert.IsEmpty(world.PathWayConditions);
-            Assert.IsTrue(actionWasInvoked1);
+            Assert.That(world.LearningSpaces, Is.Empty);
+            Assert.That(world.Topics, Is.Empty);
+            Assert.That(world.PathWayConditions, Is.Empty);
+            Assert.That(actionWasInvoked1, Is.True);
             actionWasInvoked1 = false;
-            Assert.IsTrue(actionWasInvoked2);
+            Assert.That(actionWasInvoked2, Is.True);
             actionWasInvoked2 = false;
-            Assert.IsTrue(actionWasInvoked3);
+            Assert.That(actionWasInvoked3, Is.True);
             actionWasInvoked3 = false;
         });
 
@@ -79,9 +79,9 @@ public class BatchCommandUt
             Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(world.Topics, Has.Count.EqualTo(1));
             Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.IsTrue(actionWasInvoked1);
-            Assert.IsTrue(actionWasInvoked2);
-            Assert.IsTrue(actionWasInvoked3);
+            Assert.That(actionWasInvoked1, Is.True);
+            Assert.That(actionWasInvoked2, Is.True);
+            Assert.That(actionWasInvoked3, Is.True);
         });
     }
 }

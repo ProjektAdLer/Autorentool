@@ -22,7 +22,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
         });
 
@@ -30,7 +30,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(condition));
         });
     }
@@ -47,7 +47,7 @@ public class EditPathWayConditionUt
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(actionWasInvoked, Is.False);
     }
 
     [Test]
@@ -63,7 +63,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
         });
 
@@ -71,7 +71,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(condition));
         });
         actionWasInvoked = false;
@@ -80,7 +80,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
         });
         actionWasInvoked = false;
@@ -89,7 +89,7 @@ public class EditPathWayConditionUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(pathWayCondition.Condition, Is.EqualTo(condition));
         });
     }
