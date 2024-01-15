@@ -1,17 +1,17 @@
-using System.Globalization;
 using System.Text;
 
 namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 
 public class StructuredLearningOutcomeViewModel : ILearningOutcomeViewModel
 {
-    public StructuredLearningOutcomeViewModel(string what, string whereby, string whatFor, string verbOfVisibility)
+    public StructuredLearningOutcomeViewModel(string what, string whereby, string whatFor, string verbOfVisibility,
+        string language)
     {
         What = what;
         Whereby = whereby;
         WhatFor = whatFor;
         VerbOfVisibility = verbOfVisibility;
-        Language = CultureInfo.CurrentCulture.Name;
+        Language = language;
     }
 
     private string What { get; }
