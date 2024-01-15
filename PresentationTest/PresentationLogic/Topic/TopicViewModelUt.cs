@@ -13,7 +13,10 @@ public class TopicViewModelUt
 
         var systemUnderTest = new TopicViewModel(name);
 
-        Assert.That(systemUnderTest.Name, Is.EqualTo(name));
-        Assert.IsFalse(systemUnderTest.UnsavedChanges);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.UnsavedChanges, Is.False);
+        });
     }
 }
