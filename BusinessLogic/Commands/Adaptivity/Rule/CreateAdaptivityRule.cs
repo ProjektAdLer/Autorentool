@@ -31,6 +31,7 @@ internal class CreateAdaptivityRule : ICreateAdaptivityRule
         Memento = Question.GetMemento();
         
         Question.Rules.Add(Rule);
+        Question.UnsavedChanges = true;
         MappingAction.Invoke(Question);
 
         Logger.LogTrace(

@@ -17,4 +17,5 @@ public interface IAdaptivityTask : IEquatable<IAdaptivityTask>, IOriginator
 
     Guid Id { get; set; }
     string Name { get; set; }
+    bool UnsavedChanges { get; set; }
 }

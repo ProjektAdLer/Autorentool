@@ -16,4 +16,5 @@ public interface IAdaptivityTaskViewModel
 
     Guid Id { get; set; }
     string Name { get; set; }
+    bool UnsavedChanges { get; set; }
 }

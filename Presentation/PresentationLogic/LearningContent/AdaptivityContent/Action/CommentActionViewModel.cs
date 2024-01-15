@@ -6,6 +6,7 @@ public class CommentActionViewModel : IAdaptivityActionViewModel
     {
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -15,8 +16,10 @@ public class CommentActionViewModel : IAdaptivityActionViewModel
     {
         Comment = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+    public bool UnsavedChanges { get; set; }
 }

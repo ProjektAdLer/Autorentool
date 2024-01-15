@@ -33,7 +33,7 @@ public static class TestExtensions
         Assert.That(() => element = component.Find(selector), Throws.Nothing);
         if (element == null)
         {
-            Assert.Fail("Couldn't find element with selector: {0}", selector);
+            Assert.Fail($"Couldn't find element with selector: {selector}");
         }
 
         return element!;
@@ -45,7 +45,7 @@ public static class TestExtensions
         Assert.That(() => element = fragment.Find(selector), Throws.Nothing);
         if (element == null)
         {
-            Assert.Fail("Couldn't find element with selector: {0}", selector);
+            Assert.Fail($"Couldn't find element with selector: {selector}");
         }
 
         return element!;
@@ -65,7 +65,7 @@ public static class TestExtensions
         Assert.That(() => elements = component.FindAll(selector), Throws.Nothing);
         if (elements == null)
         {
-            Assert.Fail("Couldn't find elements with selector: {0}", selector);
+            Assert.Fail($"Couldn't find elements with selector: {selector}");
         }
 
         return elements!;

@@ -18,6 +18,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         Rules = rules;
         Text = text;
         Difficulty = difficulty;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -32,12 +33,24 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         Rules = null!;
         Text = null!;
         Difficulty = QuestionDifficulty.Easy;
+        UnsavedChanges = false;
     }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public Guid Id { get; private set; }
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRule> Rules { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Rules.Any(rule => rule.UnsavedChanges) ||
+               Choices.Any(choice => choice.UnsavedChanges) || CorrectChoices.Any(choice => choice.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
     public ICollection<Choice> Choices { get; set; }
     public ICollection<Choice> CorrectChoices { get; set; }
     public string Text { get; set; }
@@ -55,7 +68,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
     public IMemento GetMemento()
     {
         return new MultipleChoiceMultipleResponseQuestionMemento(ExpectedCompletionTime, Choices, Text,
-            CorrectChoices, Difficulty, Rules);
+            CorrectChoices, Difficulty, Rules, UnsavedChanges);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -71,6 +84,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         CorrectChoices = multipleChoiceMultipleResponseQuestionMemento.CorrectChoices;
         Difficulty = multipleChoiceMultipleResponseQuestionMemento.Difficulty;
         Rules = multipleChoiceMultipleResponseQuestionMemento.Rules;
+        UnsavedChanges = multipleChoiceMultipleResponseQuestionMemento.UnsavedChanges;
     }
 
     public override bool Equals(object? obj)
@@ -102,7 +116,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
     {
         internal MultipleChoiceMultipleResponseQuestionMemento(int expectedCompletionTime,
             ICollection<Choice> choices, string text, ICollection<Choice> correctChoices, QuestionDifficulty difficulty,
-            ICollection<IAdaptivityRule> rules)
+            ICollection<IAdaptivityRule> rules, bool unsavedChanges)
         {
             ExpectedCompletionTime = expectedCompletionTime;
             Choices = choices.ToList();
@@ -110,6 +124,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
             CorrectChoices = correctChoices.ToList();
             Difficulty = difficulty;
             Rules = rules.ToList();
+            UnsavedChanges = unsavedChanges;
         }
 
         internal int ExpectedCompletionTime { get; }
@@ -118,5 +133,6 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         internal ICollection<Choice> CorrectChoices { get; }
         internal QuestionDifficulty Difficulty { get; }
         internal ICollection<IAdaptivityRule> Rules { get; }
+        internal bool UnsavedChanges { get; }
     }
 }

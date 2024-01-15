@@ -33,6 +33,7 @@ public class DeleteAdaptivityQuestion : IDeleteAdaptivityQuestion
         if (questionToDelete != null)
         {
             Task.Questions.Remove(questionToDelete);
+            Task.UnsavedChanges = true;
             if (Task.MinimumRequiredDifficulty == questionToDelete.Difficulty)
             {
                 Task.MinimumRequiredDifficulty = Task.Questions.Any() ? Task.Questions.Min(x => x.Difficulty) : null;

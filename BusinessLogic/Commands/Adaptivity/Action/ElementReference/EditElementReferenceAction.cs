@@ -31,6 +31,7 @@ class EditElementReferenceAction : IEditElementReferenceAction
 
         Action.ElementId = ElementId;
         Action.Comment = Comment;
+        Action.UnsavedChanges = true;
         MappingAction.Invoke(Action);
 
         Logger.LogTrace("Edited ElementReferenceAction {ElementReferenceActionId} in AdaptivityRule {AdaptivityRuleId}",
