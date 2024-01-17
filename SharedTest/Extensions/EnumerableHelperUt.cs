@@ -13,8 +13,8 @@ public class EnumerableHelperUt
     {
         //no systemUnderTest because its a static method
         var actual = collection.Split(length);
-        
-        CollectionAssert.AreEqual(expected, actual);
+
+        Assert.That(actual, Is.EqualTo(expected).AsCollection);
     }
 
     [Test]

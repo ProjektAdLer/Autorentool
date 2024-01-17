@@ -21,15 +21,21 @@ public class CreateTopicUt
 
         var command = new CreateTopic(world, name, mappingAction, new NullLogger<CreateTopic>());
 
-        Assert.IsEmpty(world.Topics);
-        Assert.IsFalse(actionWasInvoked);
-        Assert.IsFalse(world.UnsavedChanges);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
-        Assert.IsTrue(world.UnsavedChanges);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
         var topic = world.Topics.First();
         Assert.That(topic.Name, Is.EqualTo("topic1"));
     }
@@ -46,21 +52,30 @@ public class CreateTopicUt
 
         var command = new CreateTopic(world, name, mappingAction, new NullLogger<CreateTopic>());
 
-        Assert.That(world.Topics, Has.Count.EqualTo(1));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
         var topic1 = world.Topics.Last();
         Assert.That(topic1.Name, Is.EqualTo("topic1(1)"));
 
         command.Execute();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(3));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(3));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         var topic2 = world.Topics.Last();
         Assert.That(topic2.Name, Is.EqualTo("topic1(2)"));
     }
@@ -76,9 +91,11 @@ public class CreateTopicUt
         var command = new CreateTopic(world, name, mappingAction, new NullLogger<CreateTopic>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -91,24 +108,36 @@ public class CreateTopicUt
 
         var command = new CreateTopic(world, name, mappingAction, new NullLogger<CreateTopic>());
 
-        Assert.That(world.Topics, Has.Count.EqualTo(0));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(0));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(0));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(0));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(world.Topics, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 }

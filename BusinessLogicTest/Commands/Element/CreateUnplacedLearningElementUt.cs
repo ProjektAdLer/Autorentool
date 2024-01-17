@@ -108,6 +108,6 @@ public class CreateUnplacedLearningElementUt
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(actionWasInvoked, Is.False);
     }
 }

@@ -411,7 +411,7 @@ public class UserBackendServicesUt
 
         var result = await userWebApiServices.DeleteLmsWorld(token, worldId);
 
-        Assert.IsTrue(result);
+        Assert.That(result, Is.True);
 
         mockedHttp.VerifyNoOutstandingExpectation();
     }

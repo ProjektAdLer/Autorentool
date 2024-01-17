@@ -19,13 +19,19 @@ public class DeleteLearningWorldUt
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction, new NullLogger<DeleteLearningWorld>());
 
-        Assert.That(workspace.LearningWorlds, Does.Contain(world));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Does.Contain(world));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Is.Empty);
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Is.Empty);
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
@@ -41,16 +47,22 @@ public class DeleteLearningWorldUt
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction, new NullLogger<DeleteLearningWorld>());
 
-        Assert.That(workspace.LearningWorlds.Count, Is.EqualTo(2));
-        Assert.That(workspace.LearningWorlds, Does.Contain(world));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Does.Contain(world));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
 
-        Assert.That(workspace.LearningWorlds.Count, Is.EqualTo(1));
-        Assert.That(workspace.LearningWorlds, Does.Not.Contain(world));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Does.Not.Contain(world));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
@@ -65,9 +77,11 @@ public class DeleteLearningWorldUt
         var command = new DeleteLearningWorld(workspace, world, mappingAction, new NullLogger<DeleteLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -83,24 +97,36 @@ public class DeleteLearningWorldUt
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction, new NullLogger<DeleteLearningWorld>());
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 }

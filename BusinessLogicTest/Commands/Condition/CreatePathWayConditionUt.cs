@@ -203,24 +203,36 @@ public class CreatePathWayConditionUt
         var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction,
             new NullLogger<CreatePathWayCondition>());
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 }
