@@ -72,7 +72,7 @@
         <value>Please log in again.</value>
     </data>
     <data name="ConfirmDeleteLmsWorld.DialogText" xml:space="preserve">
-        <value>Are you sure you really want to delete the learning world  &lt;b&gt;{0}&lt;/b&gt; on Moodle?</value>
+        <value>Are you sure you really want to delete the learning world on Moodle?</value>
     </data>
     <data name="ConfirmDeleteLmsWorld.SubmitButtonText" xml:space="preserve">
         <value>Yes</value>
