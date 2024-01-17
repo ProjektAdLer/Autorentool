@@ -24,26 +24,6 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 [TestFixture]
 public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEditReferenceActionDialog>
 {
-    private IDialogReference Dialog { get; set; }
-    private IAdaptivityActionViewModel? ExistingAction { get; set; }
-    private IAdaptivityQuestionViewModel Question { get; set; }
-    private IPresentationLogic PresentationLogic { get; set; }
-    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
-    private ILearningWorldViewModel World { get; set; }
-    private ILearningContentViewModel[] Contents { get; set; }
-
-    private async Task GetDialogAsync()
-    {
-        var dialogParameters = new DialogParameters
-        {
-            { nameof(CreateEditReferenceActionDialog.Question), Question },
-        };
-        if (ExistingAction != null)
-            dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingAction), ExistingAction);
-        Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
-            dialogParameters);
-    }
-
     [SetUp]
     public async Task Setup()
     {
@@ -69,8 +49,28 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         DialogProvider.Dispose();
     }
 
+    private IDialogReference Dialog { get; set; }
+    private IAdaptivityActionViewModel? ExistingAction { get; set; }
+    private IAdaptivityQuestionViewModel Question { get; set; }
+    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
+    private ILearningWorldViewModel World { get; set; }
+    private ILearningContentViewModel[] Contents { get; set; }
+
+    private async Task GetDialogAsync()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditReferenceActionDialog.Question), Question },
+        };
+        if (ExistingAction != null)
+            dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingAction), ExistingAction);
+        Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
+            dialogParameters);
+    }
+
     [Test]
-    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-01-01")]
+    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-02-01")]
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
@@ -101,21 +101,21 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
-    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-01-01")]
+    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-02-01")]
     public async Task ExistingAction_ContentSelected_CallsUpdateContentReferenceAction()
     {
         var cravm = ViewModelProvider.GetContentReferenceAction();
         cravm.Content = Contents.First();
         ExistingAction = cravm;
         await GetDialogAsync();
-        
+
         await DialogProvider.Find("input").ChangeAsync(new ChangeEventArgs { Value = "foo" });
-        
+
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.Received().EditContentReferenceAction(cravm, cravm.Content, "foo");
     }
-    
+
     [Test]
     public async Task ExistingAction_ElementSelected_CallsUpdateElementReferenceAction()
     {
@@ -123,9 +123,10 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         eravm.ElementId = World.AllLearningElements.First().Id;
         ExistingAction = eravm;
         await GetDialogAsync();
-        
-        await DialogProvider.Find("input").ChangeAsync(new ChangeEventArgs { Value = "foo" });
-        
+
+        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
+            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
+
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.Received().EditElementReferenceAction(eravm, eravm.ElementId, "foo");
@@ -138,12 +139,12 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         cravm.Content = Contents.First();
         ExistingAction = cravm;
         await GetDialogAsync();
-        
+
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.DidNotReceiveWithAnyArgs().EditContentReferenceAction(cravm, cravm.Content, "foo");
     }
-    
+
     [Test]
     public async Task ExistingAction_ContentSelected_NoChange_CallsNothing()
     {
@@ -151,7 +152,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         eravm.ElementId = World.AllLearningElements.First().Id;
         ExistingAction = eravm;
         await GetDialogAsync();
-        
+
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.DidNotReceiveWithAnyArgs().EditElementReferenceAction(eravm, eravm.ElementId, "foo");

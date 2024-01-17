@@ -33,6 +33,7 @@ public class CreateMultipleChoiceMultipleResponseQuestion : ICreateMultipleChoic
         _memento = AdaptivityTask.GetMemento();
 
         AdaptivityTask.Questions.Add(Question);
+        AdaptivityTask.UnsavedChanges = true;
         if (AdaptivityTask.Questions.Count == 1)
         {
             AdaptivityTask.MinimumRequiredDifficulty = Question.Difficulty;

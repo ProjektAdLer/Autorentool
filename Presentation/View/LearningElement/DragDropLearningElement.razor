@@ -10,8 +10,8 @@
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start">
-                <MudCardContent Class="relative flex justify-center w-[68px] 2xl:w-[100px] h-[40px] 2xl:h-[48px] 2500p:w-[132px] 2500p:h-[56px] p-0">
-                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
+                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[48px] 2500p:h-[56px] p-0">
+                    <MudIcon Icon="@GetElementIcon()" Class="w-10 h-10 2xl:w-12 2xl:h-12 absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
                         <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
                     </div>
@@ -20,7 +20,7 @@
                         var item = LearningElement;
                         var text = item.Name;
                     }
-                    <MudListItem Class="text-[11px] 2xl:text-sm font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
+                    <MudListItem Class="text-[11px] 2xl:text-xs 1080p:text-sm font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
 
                 </MudCardContent>
             </section>
@@ -29,7 +29,10 @@
         </MudCard>
     </ActivatorContent>
     <ChildContent>
-        <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        @if (LearningElement.LearningContent is IFileContentViewModel or ILinkContentViewModel)
+        {
+            <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        }
         <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
         <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
     </ChildContent>

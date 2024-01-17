@@ -27,4 +27,10 @@
     <data name="Button.Submit.Text" xml:space="preserve">
         <value>Ok</value>
     </data>
+    <data name="Comment.Label.Text.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="Comment.Text" xml:space="preserve">
+        <value>You have the option to write a comment here. This will be displayed in the 3D learning environment if students give an incorrect answer.</value>
+    </data>
 </root>

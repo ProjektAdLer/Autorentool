@@ -11,19 +11,21 @@
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
-        <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                      For="@(() => FormModel.Name)"
-                      DebounceInterval="DebounceInterval"
-                      OnKeyUp="HandleKeyEvent"
-                      Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
-                      For="@(() => FormModel.Link)"
-                      DebounceInterval="DebounceInterval"
-                      OnKeyUp="HandleKeyEvent"
-                      Label="@Localizer["AddLinkForm.Field.Link.Text"]"
-                      Adornment="Adornment.End"
-                      AdornmentIcon="@Icons.Material.Filled.Link"/>
+        <div class="px-4">
+            <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          DebounceInterval="DebounceInterval"
+                          OnKeyUp="HandleKeyEvent"
+                          Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
+                          For="@(() => FormModel.Link)"
+                          DebounceInterval="DebounceInterval"
+                          OnKeyUp="HandleKeyEvent"
+                          Label="@Localizer["AddLinkForm.Field.Link.Text"]"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@Icons.Material.Filled.Link"/>
+        </div>
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>

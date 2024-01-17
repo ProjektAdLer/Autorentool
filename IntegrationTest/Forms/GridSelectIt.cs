@@ -17,11 +17,6 @@ namespace IntegrationTest.Forms;
 [TestFixture(TypeArgs = new[] { typeof(GridSelectTestType) })]
 public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : notnull
 {
-    private IEnumerable<T> Elements { get; set; }
-    private RenderFragment<T> ElementTemplate { get; set; }
-    private IRenderedComponent<GridSelect<T>> Component { get; set; }
-    private T? Value => Component.Instance.Value;
-
     [SetUp]
     public void Init()
     {
@@ -37,10 +32,15 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
         Component.Dispose();
     }
 
+    private IEnumerable<T> Elements { get; set; }
+    private RenderFragment<T> ElementTemplate { get; set; }
+    private IRenderedComponent<GridSelect<T>> Component { get; set; }
+    private T? Value => Component.Instance.Value;
+
     [Test]
     public void Render_RendersAllElements_WithTemplate()
     {
-        var elements = FindAllMudpaperDivs();
+        var elements = FindAllMudcardDivs();
         Assert.That(elements, Has.Count.EqualTo(Elements.Count()));
         for (var i = 0; i < elements.Count; i++)
         {
@@ -52,12 +52,16 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
     [Test]
     public void ClickElement_SelectsElementAsValue()
     {
-        var elements = FindAllMudpaperDivs();
-        Assert.That(() => Value, Is.EqualTo(default(T)).After(300, 10));
+        var elements = FindAllMudcardDivs();
+        Assert.Multiple(() =>
+        {
+            Assert.That(elements, Has.Count.GreaterThan(0));
+            Assert.That(() => Value, Is.EqualTo(default(T)).After(300, 10));
+        });
         for (var i = 0; i < elements.Count; i++)
         {
             //force re-evaluation after every re-render (click changes rendertree)
-            elements = FindAllMudpaperDivs();
+            elements = FindAllMudcardDivs();
             var element = elements[i];
             element.Click();
             Assert.That(() => Value, Is.EqualTo(Elements.ElementAt(i)).After(300, 10));
@@ -67,17 +71,21 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
     [Test]
     public async Task ClickElementAgain_UnselectsElement()
     {
-        var elements = FindAllMudpaperDivs();
-        Assert.That(() => Value, Is.EqualTo(default(T)).After(300, 10), "Initial value is not default(T).");
+        var elements = FindAllMudcardDivs();
+        Assert.Multiple(() =>
+        {
+            Assert.That(elements, Has.Count.GreaterThan(0));
+            Assert.That(() => Value, Is.EqualTo(default(T)).After(300, 10), "Initial value is not default(T).");
+        });
         for (var i = 0; i < elements.Count; i++)
         {
             //force re-evaluation after every re-render (click changes rendertree)
-            elements = FindAllMudpaperDivs();
+            elements = FindAllMudcardDivs();
             var element = elements.Single(ele => ele.ClassList.Contains($"element-{i}"));
             await element.ClickAsync(new MouseEventArgs());
             Assert.That(() => Value, Is.EqualTo(Elements.ElementAt(i)).After(300, 10));
             //force re-evaluation after every re-render (click changes rendertree)
-            elements = FindAllMudpaperDivs();
+            elements = FindAllMudcardDivs();
             element = elements.Single(ele => ele.ClassList.Contains($"element-{i}"));
             await element.ClickAsync(new MouseEventArgs());
             Assert.That(() => Value, Is.EqualTo(default(T)).After(300, 10), $"Unselecting element {i} failed.");
@@ -95,9 +103,9 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
         errorText.MarkupMatches("<p diff:ignoreAttributes>some error</p>");
     }
 
-    private IRefreshableElementCollection<IElement> FindAllMudpaperDivs()
+    private IRefreshableElementCollection<IElement> FindAllMudcardDivs()
     {
-        return Component.FindAll("div.mud-paper");
+        return Component.FindAll("div.mud-card");
     }
 
     private IRenderedComponent<GridSelect<T>> GetRenderedComponent()
@@ -118,14 +126,14 @@ internal static class GridSelectItHelper
         builder.AddContent(1, str);
         builder.CloseElement();
     };
-    
+
     private static RenderFragment<int> IntRenderer => i => builder =>
     {
         builder.OpenElement(0, "p");
         builder.AddContent(1, i);
         builder.CloseElement();
     };
-    
+
     private static RenderFragment<GridSelectTestType> GridSelectTestTypeRenderer => t => builder =>
     {
         builder.OpenElement(0, "p");
@@ -137,7 +145,7 @@ internal static class GridSelectItHelper
     internal static IEnumerable<T> GetElementsForType<T>()
     {
         if (typeof(T) == typeof(string)) return (new[] { "Foo1", "Foo2", "bar" } as IEnumerable<T>)!;
-        if (typeof(T) == typeof(int)) return (new[] { 1, int.MaxValue, int.MinValue,  } as IEnumerable<T>)!;
+        if (typeof(T) == typeof(int)) return (new[] { 1, int.MaxValue, int.MinValue, } as IEnumerable<T>)!;
         if (typeof(T) == typeof(GridSelectTestType))
             return (new[] { new GridSelectTestType("Foo", 1), new GridSelectTestType("Bar", 123) } as IEnumerable<T>)!;
         throw new ArgumentOutOfRangeException();

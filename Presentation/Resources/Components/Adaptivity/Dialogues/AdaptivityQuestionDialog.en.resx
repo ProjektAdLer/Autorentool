@@ -27,6 +27,9 @@
         <value>There are no other questions for this task yet</value>
     </data>
     <data name="AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions" xml:space="preserve">
-        <value>Other questions for this task</value>
+        <value>Other questions for this task:</value>
+    </data>
+    <data name="AdaptivityQuestionDialog.Sidebar.Toggle.Text" xml:space="preserve">
+        <value>Preview window: Other questions already formulated for this task with a different level of difficulty</value>
     </data>
 </root>

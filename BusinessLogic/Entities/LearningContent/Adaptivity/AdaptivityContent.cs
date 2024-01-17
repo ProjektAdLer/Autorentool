@@ -6,6 +6,7 @@ public class AdaptivityContent : IAdaptivityContent
     {
         Tasks = tasks;
         Name = "";
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -15,10 +16,20 @@ public class AdaptivityContent : IAdaptivityContent
     {
         Tasks = null!;
         Name = "";
+        UnsavedChanges = false;
     }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public ICollection<IAdaptivityTask> Tasks { get; set; }
     public string Name { get; set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Tasks.Any(task => task.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
 
     public bool Equals(ILearningContent? other)
     {
@@ -29,7 +40,7 @@ public class AdaptivityContent : IAdaptivityContent
 
     public IMemento GetMemento()
     {
-        return new AdaptivityContentMemento(Name, Tasks);
+        return new AdaptivityContentMemento(Name, Tasks, UnsavedChanges);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -41,6 +52,7 @@ public class AdaptivityContent : IAdaptivityContent
 
         Name = adaptivityContentMemento.Name;
         Tasks = adaptivityContentMemento.Tasks;
+        UnsavedChanges = adaptivityContentMemento.UnsavedChanges;
     }
 
     public override bool Equals(object? obj)
@@ -68,13 +80,15 @@ public class AdaptivityContent : IAdaptivityContent
 
     private record AdaptivityContentMemento : IMemento
     {
-        internal AdaptivityContentMemento(string name, ICollection<IAdaptivityTask> tasks)
+        internal AdaptivityContentMemento(string name, ICollection<IAdaptivityTask> tasks, bool unsavedChanges)
         {
             Name = name;
             Tasks = tasks.ToList();
+            UnsavedChanges = unsavedChanges;
         }
 
         internal string Name { get; }
         internal ICollection<IAdaptivityTask> Tasks { get; }
+        internal bool UnsavedChanges { get; }
     }
 }

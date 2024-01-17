@@ -19,24 +19,24 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="CommentDialog.Title.Text" xml:space="preserve">
-        <value>Kommentar setzen</value>
+        <value>Kommentar hinzufügen</value>
     </data>
     <data name="Tooltip.DeleteRule.Text" xml:space="preserve">
-        <value>Regel löschen</value>
+        <value>Zusätzlichen Hinweis löschen</value>
     </data>
     <data name="ReferenceDialog.Title.Text" xml:space="preserve">
-        <value>Referenz setzen</value>
+        <value>Verweis hinzufügen</value>
     </data>
     <data name="Button.EditReference.Text" xml:space="preserve">
-        <value>Referenz ändern</value>
+        <value>Verweis</value>
     </data>
     <data name="Button.EditComment.Text" xml:space="preserve">
-        <value>Kommentar ändern</value>
+        <value>Kommentar</value>
     </data>
     <data name="Button.AddReference.Text" xml:space="preserve">
-        <value>Referenz hinzufügen</value>
+        <value>Verweis</value>
     </data>
     <data name="Button.AddComment.Text" xml:space="preserve">
-        <value>Kommentar hinzufügen</value>
+        <value>Kommentar</value>
     </data>
 </root>

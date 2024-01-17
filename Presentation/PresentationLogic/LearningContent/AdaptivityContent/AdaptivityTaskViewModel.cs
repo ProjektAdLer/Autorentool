@@ -11,6 +11,7 @@ public class AdaptivityTaskViewModel : IAdaptivityTaskViewModel
         MinimumRequiredDifficulty = minimumRequiredDifficulty;
         Name = name;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -22,10 +23,21 @@ public class AdaptivityTaskViewModel : IAdaptivityTaskViewModel
         MinimumRequiredDifficulty = QuestionDifficulty.Easy;
         Name = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public ICollection<IAdaptivityQuestionViewModel> Questions { get; set; }
     public QuestionDifficulty? MinimumRequiredDifficulty { get; set; }
     public string Name { get; set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Questions.Any(question => question.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
     public Guid Id { get; set; }
 }

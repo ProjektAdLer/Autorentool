@@ -67,8 +67,8 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     {
         var dialogParameters = new DialogParameters
         {
-            {nameof(AdaptivityContentDialog.MyContent), AdaptivityContent},
-            {nameof(AdaptivityContentDialog.DebounceInterval), 10}
+            { nameof(AdaptivityContentDialog.MyContent), AdaptivityContent },
+            { nameof(AdaptivityContentDialog.DebounceInterval), 10 }
         };
         Dialog = await OpenDialogAndGetDialogReferenceAsync(options: new DialogOptions(),
             parameters: dialogParameters);
@@ -107,12 +107,13 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         var button = DialogProvider.FindComponent<MudIconButton>().Find("button");
         await button.ClickAsync(new MouseEventArgs());
         var textFields = DialogProvider.FindComponents<MudTextField<string>>();
-        var textField = textFields[0].Find("input");
+        var textField = textFields[0].Find("textarea");
         textField.Input("NewName");
         // Wait for debounce
         await Task.Delay(500);
         DialogProvider.WaitForAssertion(() => PresentationLogic.Received(1)
-            .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty), TimeSpan.FromSeconds(2));
+                .EditAdaptivityTask(Tasks.First(), "NewName", Tasks.First().MinimumRequiredDifficulty),
+            TimeSpan.FromSeconds(2));
         PresentationLogic.ClearReceivedCalls();
 
         textField.Input("");
@@ -128,7 +129,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         var task = Substitute.For<IAdaptivityTaskViewModel>();
         var question = Substitute.For<IAdaptivityQuestionViewModel>();
         question.Difficulty.Returns(QuestionDifficulty.Medium);
-        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {question});
+        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> { question });
         task.MinimumRequiredDifficulty.Returns(wasSelectedAsRequired
             ? QuestionDifficulty.Medium
             : null);
@@ -147,7 +148,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         var task = Substitute.For<IAdaptivityTaskViewModel>();
         var question = Substitute.For<IAdaptivityQuestionViewModel>();
         question.Difficulty.Returns(QuestionDifficulty.Medium);
-        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {question});
+        task.Questions.Returns(new List<IAdaptivityQuestionViewModel> { question });
         AdaptivityContent.Tasks.Add(task);
         await GetDialogAsync();
         var iconButtons = DialogProvider.FindComponents<MudIconButton>();

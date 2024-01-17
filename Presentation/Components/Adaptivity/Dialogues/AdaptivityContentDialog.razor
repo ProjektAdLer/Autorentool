@@ -7,70 +7,109 @@
 @using BusinessLogic.Entities.LearningContent.Adaptivity
 @using Presentation.Components.Forms
 @using System.Diagnostics.CodeAnalysis
-<MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Style="border: 2px solid black; margin: 5px;"
-          FixedHeader="true"
-          FixedFooter="false" CustomFooter="true"
-          Bordered="true">
+<p class="text-sm 2xl:text-lg mx-6">@Localizer["AdaptivityContentDialog.Subtitle"]</p>
+<MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Class="rounded-lg border-4 border-adlerdarkblue-100 m-4"
+          FixedHeader="true" r="false" CustomFooter="true" Bordered="true">
     <ColGroup>
         <col/>
-        <col style="width: 20px;"/>
+        <col style="width: 15px;"/>
         <col/>
         <col/>
         <col/>
     </ColGroup>
     <HeaderContent>
-        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]</MudTh>
-        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]</MudTh>
-        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Easy"]</MudTh>
-        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Medium"]</MudTh>
-        <MudTh>@Localizer["AdaptivityContentDialog.Table.Header.Hard"]</MudTh>
+        <MudTh Class="cursor-default font-bold text-adlerdarkblue-800 text-lg bg-adlergrey-100">@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]</MudTh>
+        <MudTh Class="cursor-default text-xs px-2 leading-tight font-bold text-adlerdarkblue-800 break-words bg-adlergrey-100">@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]</MudTh>
+        <MudTh Class="cursor-default text-adlerdarkblue-800 font-bold bg-adlerbgbright">
+            <div class="flex justify-center items-center pa-3 gap-2">
+                <MudText Class="font-bold text-sm pt-1">@Localizer["AdaptivityContentDialog.Table.Header.Easy"]</MudText>
+                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+            </div>
+        </MudTh>
+        <MudTh Class="cursor-default text-adlerdarkblue-800 font-bold bg-adlerbgbright">
+            <div class="flex justify-center items-center pa-3 gap-2">
+                <MudText Class="font-bold text-sm pt-1">@Localizer["AdaptivityContentDialog.Table.Header.Medium"]</MudText>
+                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+            </div>
+        </MudTh>
+        <MudTh Class="cursor-default text-adlerdarkblue-800 font-bold bg-adlerbgbright">
+            <div class="flex justify-center items-center pa-3 gap-2">
+                <MudText Class="font-bold text-sm pt-1">@Localizer["AdaptivityContentDialog.Table.Header.Hard"]</MudText>
+                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+            </div>
+        </MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
             <MudForm Model="context" @ref="_nameMudFormRefs[context]">
-                <span class="inline-flex">
-                    <MudTextField T="string" @bind-Value="@_nameValues[context]" Required="true"
+                <span class="inline-flex min-w-full">
+                    <MudTextField Class="break-words" 
+                                  T="string" 
+                                  @bind-Value="@_nameValues[context]"
+                                  Lines="2"
+                                  Required="true"
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
-                                  DebounceInterval="DebounceInterval" OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
+                                  DebounceInterval="DebounceInterval" 
+                                  OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>
         </MudTd>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]">
-            <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
+            <div class="flex justify-center">
+                <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
+            </div>
         </MudTd>
         @foreach (var difficulty in Enum.GetValues(typeof(QuestionDifficulty)).Cast<QuestionDifficulty>())
         {
-            <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header." + difficulty]">
+            <MudTd Class="p-1" DataLabel="@Localizer["AdaptivityContentDialog.Table.Header." + difficulty]">
                 @if (GetTaskQuestionWithQuestionDifficulty(context, difficulty) is {} question)
                 {
-                    <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">
-                        <ChildContent>
-                            <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.RemoveRedEye"></MudIconButton>
-                        </ChildContent>
-                        <TooltipContent>
-                            <AdaptivityQuestionPreview
-                                AdaptivityQuestion="question">
-                            </AdaptivityQuestionPreview>
-                        </TooltipContent>
-                    </MudTooltip>
+                    <div class="flex flex-row justify-between">
+                        
+                        <div class="flex items-center justify-center">
+                            <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">
+                                <ChildContent>
+                                    <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.RemoveRedEye"></MudIconButton>
+                                </ChildContent>
+                                <TooltipContent>
+                                    <AdaptivityQuestionPreview
+                                        AdaptivityQuestion="question">
+                                    </AdaptivityQuestionPreview>
+                                </TooltipContent>
+                            </MudTooltip>
+                        </div>
+                        
+                        <div style="vertical-align: top; align-items: center;" class="flex flex-col justify-center items-center">
+                            
+                                <MudButton Class="shadow btn-standard px-1 w-36 2xl:w-40 mt-2 relative" OnClick="() => AddOrEditQuestion(context, difficulty)">
+                                    <MudText Class="flex justify-start items-center uppercase font-bold text-xs 2xl:text-sm">@Localizer["AdaptivityContentDialog.Table.Button.Question." + difficulty]</MudText>
+                                    <div class="flex justify-end absolute w-2.5 h-1.5 top-0.5 -right-0.5 m-0.5">
+                                        <MudIconButton Title="@Localizer["AdaptivityContentDialog.Table.Button.Question.Delete"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-adlerblue-200 p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerblue-200 hover:text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"></MudIconButton>
+                                    </div>
+                                </MudButton>
 
-                    <MudButtonGroup Variant="Variant.Filled">
-                        <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="() => AddOrEditQuestion(context, difficulty)">
-                            @Localizer["AdaptivityContentDialog.Table.Button.Question." + difficulty]
-                        </MudButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"/>
-                    </MudButtonGroup>
-                    <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(difficulty)"
-                                         ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
-                                         ToggledIcon="@Icons.Material.Filled.Key" Icon="@Icons.Material.Outlined.KeyOff"/>
-                    <div>
-                        <AdaptivityContentDialogRuleControl Question="question"/>
+                            <MudDivider></MudDivider>
+                            
+                                <AdaptivityContentDialogRuleControl Question="question"/>
+                        </div>
+                        
+                        <div class="flex justify-center items-start">
+                            <MudToggleIconButton Toggled="@context.MinimumRequiredDifficulty.Equals(difficulty)"
+                                                 ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
+                                                 ToggledIcon="@Icons.Material.Filled.Key" 
+                                                 Icon="@Icons.Material.Outlined.KeyOff"
+                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"/>
+                        </div>
                     </div>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddOrEditQuestion(context, difficulty)">@Localizer["AdaptivityContentDialog.Table.Button.Question." + difficulty]</MudButton>
+                    <div style="vertical-align: center; align-items: center;" class="flex justify-center items-start">
+                        <MudButton Variant="Variant.Filled" Class="btn-standard shadow px-1 w-36 2xl:w-40 mt-2 relative" OnClick="() => AddOrEditQuestion(context, difficulty)">
+                            <MudText Class="flex justify-start items-center uppercase font-bold text-xs 2xl:text-sm">@Localizer["AdaptivityContentDialog.Table.Button.Question." + difficulty]</MudText>
+                        </MudButton>
+                    </div>
                 }
             </MudTd>
         }
@@ -80,7 +119,7 @@
         <MudTFootRow>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
                 <span class="inline-flex">
-                    <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContentDialog.Table.Header.NewTask"]" Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
                 </span>
             </MudTd>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]"/>
@@ -116,8 +155,7 @@
 
 
     private MudTable<IAdaptivityTaskViewModel>? _table;
-
-
+    
     private readonly Dictionary<IAdaptivityTaskViewModel, MudForm> _nameMudFormRefs = new();
 
     private readonly Dictionary<IAdaptivityTaskViewModel, string> _nameValues = new();
@@ -172,8 +210,10 @@
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Medium,
+            MaxWidth = MaxWidth.ExtraExtraLarge,
             FullWidth = false,
+            NoHeader = true,
+            CloseButton = true,
         };
         var dialog = await DialogService.ShowAsync<AdaptivityQuestionDialog>("", new DialogParameters()
         {

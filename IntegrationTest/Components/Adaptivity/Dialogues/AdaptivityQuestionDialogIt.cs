@@ -41,8 +41,8 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
     {
         var dialogParameters = new DialogParameters
         {
-            {nameof(AdaptivityQuestionDialog.Task), Task},
-            {nameof(AdaptivityQuestionDialog.Difficulty), Difficulty}
+            { nameof(AdaptivityQuestionDialog.Task), Task },
+            { nameof(AdaptivityQuestionDialog.Difficulty), Difficulty }
         };
         Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
             dialogParameters);
@@ -69,7 +69,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
         question.Difficulty.Returns(Difficulty);
         if (hasQuestionToEdit)
         {
-            Task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {question});
+            Task.Questions.Returns(new List<IAdaptivityQuestionViewModel> { question });
         }
 
         await GetDialogAsync();
@@ -95,7 +95,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
         questionHard.Difficulty.Returns(QuestionDifficulty.Hard);
         if (hasOtherQuestions)
         {
-            Task.Questions.Returns(new List<IAdaptivityQuestionViewModel> {questionEasy, questionHard});
+            Task.Questions.Returns(new List<IAdaptivityQuestionViewModel> { questionEasy, questionHard });
         }
 
         await GetDialogAsync();
@@ -116,7 +116,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
         Assert.Multiple(() =>
         {
             Assert.That(textComponents[0].Find("h6").InnerHtml, Is.EqualTo("title"));
-            Assert.That(textComponents[1].Find("h6").InnerHtml,
+            Assert.That(textComponents[1].Find("p").InnerHtml,
                 Is.EqualTo(hasOtherQuestions
                     ? "AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions"
                     : "AdaptivityQuestionDialog.Sidebar.Header.NoQuestions"));

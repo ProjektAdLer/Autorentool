@@ -18,6 +18,7 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
         Difficulty = difficulty;
         Choices = choices;
         Rules = rules ?? new List<IAdaptivityRuleViewModel>();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
         CorrectChoice = null!;
         Difficulty = QuestionDifficulty.Easy;
         Rules = null!;
+        UnsavedChanges = false;
     }
 
     public ChoiceViewModel CorrectChoice { get; set; }
@@ -40,6 +42,17 @@ public class MultipleChoiceSingleResponseQuestionViewModel : IMultipleChoiceQues
     public int ExpectedCompletionTime { get; set; }
     public QuestionDifficulty Difficulty { get; set; }
     public ICollection<IAdaptivityRuleViewModel> Rules { get; set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Rules.Any(rule => rule.UnsavedChanges) ||
+               Choices.Any(choice => choice.UnsavedChanges) || CorrectChoice.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public ICollection<ChoiceViewModel> Choices { get; set; }
     public ICollection<ChoiceViewModel> CorrectChoices => new List<ChoiceViewModel> {CorrectChoice};
     public string Text { get; set; }

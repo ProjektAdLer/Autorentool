@@ -223,9 +223,7 @@ public static class CustomIcons
             <polygon fill=""rgb(128,128,128)"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
         </svg>";
 
-    public const string DifficultyPolygonHard = @"<svg>
-            <polygon fill=""rgb(229,189,115)"" points=""13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1""></polygon>
-        </svg>";
+    public const string DifficultyPolygonHard = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 8338 8334"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;""><path d=""M1994.53,3701.85l-1586.47,-1586.47l2228.31,278.539l-132.494,-1110.89l865.095,647.207l799.773,-1866.14l810.738,1891.72l1000.16,-757.103l-204.979,1186.01l2154.76,-269.346l-1321.43,1585.72l1036.52,381.25l-1105.92,466.589l1390.84,1669l-2228.31,-278.539l132.494,1110.89l-865.095,-647.207l-799.773,1866.14l-810.738,-1891.72l-1000.16,757.102l321.7,-1200.6l-2271.49,283.936l1611.51,-1611.51l-1326.59,-355.459l1301.55,-549.127Z"" style=""fill:#e5bd73;""/></svg>";
 
     public const string DifficultyPolygonNone = @"<svg>
             <polygon fill=""lightblue"" points=""0""></polygon>

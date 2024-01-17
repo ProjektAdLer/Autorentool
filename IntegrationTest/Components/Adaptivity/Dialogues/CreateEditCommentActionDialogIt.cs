@@ -10,7 +10,6 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
-using PresentationTest;
 using Shared.Adaptivity;
 using TestHelpers;
 
@@ -19,24 +18,6 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 [TestFixture]
 public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCommentActionDialog>
 {
-    private IDialogReference Dialog { get; set; }
-    private CommentActionViewModel? ExistingAction { get; set; }
-    private IAdaptivityQuestionViewModel Question { get; set; }
-    private IPresentationLogic PresentationLogic { get; set; }
-
-    private async Task GetDialogAsync()
-    {
-        var dialogParameters = new DialogParameters
-        {
-            { nameof(CreateEditCommentActionDialog.Question), Question },
-            
-        };
-        if(ExistingAction != null)
-            dialogParameters.Add(nameof(CreateEditCommentActionDialog.ExistingAction), ExistingAction);
-        Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
-            dialogParameters);
-    }
-
     [SetUp]
     public async Task Setup()
     {
@@ -53,11 +34,28 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
         DialogProvider.Dispose();
     }
 
+    private IDialogReference Dialog { get; set; }
+    private CommentActionViewModel? ExistingAction { get; set; }
+    private IAdaptivityQuestionViewModel Question { get; set; }
+    private IPresentationLogic PresentationLogic { get; set; }
+
+    private async Task GetDialogAsync()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditCommentActionDialog.Question), Question },
+        };
+        if (ExistingAction != null)
+            dialogParameters.Add(nameof(CreateEditCommentActionDialog.ExistingAction), ExistingAction);
+        Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
+            dialogParameters);
+    }
+
     [Test]
     public async Task NoExistingAction_TextSet_CallsCreateAdaptivityRule()
     {
         var textField = DialogProvider.FindComponent<MudTextField<string>>();
-        textField.Find("input").Change("foo");
+        textField.Find("textarea").Change("foo");
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
@@ -73,13 +71,13 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
         await GetDialogAsync();
 
         var textField = DialogProvider.FindComponent<MudTextField<string>>();
-        textField.Find("input").Change("foo");
+        textField.Find("textarea").Change("foo");
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.Received(1).EditCommentAction(ExistingAction, "foo");
     }
-    
+
     [Test]
     public async Task ExistingAction_SameTextSet_DoesNotCallEditCommentAction()
     {
@@ -88,7 +86,7 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
         await GetDialogAsync();
 
         var textField = DialogProvider.FindComponent<MudTextField<string>>();
-        textField.Find("input").Change(ExistingAction.Comment);
+        textField.Find("textarea").Change(ExistingAction.Comment);
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 

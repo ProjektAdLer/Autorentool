@@ -27,6 +27,9 @@
         <value>Für diese Aufgabe gibt es noch keine anderen Fragen</value>
     </data>
     <data name="AdaptivityQuestionDialog.Sidebar.Header.ExistingQuestions" xml:space="preserve">
-        <value>Andere Fragen für diese Aufgabe</value>
+        <value>Weitere Fragen für diese Aufgabe:</value>
+    </data>
+    <data name="AdaptivityQuestionDialog.Sidebar.Toggle.Text" xml:space="preserve">
+        <value>Vorschaufenster: Weitere, bereits formulierte Fragen für diese Aufgabe mit anderem Schwierigkeitsgrad</value>
     </data>
 </root>
