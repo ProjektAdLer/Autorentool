@@ -1,9 +1,11 @@
+using System.Globalization;
+
 namespace PersistEntities.LearningOutcome;
 
 public class StructuredLearningOutcomePe : ILearningOutcomePe
 {
     public StructuredLearningOutcomePe(string what, string whereby, string whatFor, string verbOfVisibility,
-        string language)
+        CultureInfo language)
     {
         What = what;
         Whereby = whereby;
@@ -16,5 +18,10 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
     private string Whereby { get; }
     private string WhatFor { get; }
     private string VerbOfVisibility { get; }
-    private string Language { get; }
+    private CultureInfo Language { get; }
+
+    public string GetOutcome()
+    {
+        throw new NotImplementedException();
+    }
 }

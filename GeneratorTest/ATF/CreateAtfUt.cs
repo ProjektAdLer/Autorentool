@@ -245,9 +245,9 @@ public class CreateAtfUt
 
         var ele7 = PersistEntityProvider.GetLearningElement(name: "ele7", content: adaptivityContent2);
 
-        var space1 = new LearningSpacePe("a", "ff", "ff", 5, Theme.Campus,
+        var space1 = new LearningSpacePe("a", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic1)
         {
             LearningSpaceLayout =
             {
@@ -265,9 +265,9 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X20_6L
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
+        var space2 = new LearningSpacePe("b", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), null)
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: null)
         {
             LearningSpaceLayout =
             {
@@ -289,9 +289,9 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space3 = new LearningSpacePe("c", "ff", "ff", 5, Theme.Campus,
+        var space3 = new LearningSpacePe("c", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic2)
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2)
         {
             LearningSpaceLayout =
             {
@@ -309,10 +309,10 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.L_32X31_10L
             }
         };
-        var space4 = new LearningSpacePe("d", "ff", "ff", 5, Theme.Campus,
+        var space4 = new LearningSpacePe("d", "ff", 5, Theme.Campus, PersistEntityProvider.GetLearningOutcomes(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2);
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
             new List<IObjectInPathWayPe>());
@@ -699,7 +699,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: content1);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -756,7 +756,7 @@ public class CreateAtfUt
         const string enrolmentKey = "1234";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -808,7 +808,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {

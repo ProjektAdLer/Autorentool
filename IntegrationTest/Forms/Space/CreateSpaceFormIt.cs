@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -12,6 +13,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.Space;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
@@ -60,7 +62,6 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
-        Assert.That(FormModel.Goals, Is.EqualTo(""));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(0));
         Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -79,7 +80,6 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -119,7 +119,8 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
-        WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<List<ILearningOutcomeViewModel>>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
@@ -131,7 +132,8 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Assert.That(mudForm.Instance.IsValid, Is.True);
 
         submitButton.Find("button").Click();
-        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<List<ILearningOutcomeViewModel>>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 
@@ -150,13 +152,15 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
         input.KeyUp(Key.Enter);
-        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<List<ILearningOutcomeViewModel>>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
-        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<List<ILearningOutcomeViewModel>>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 
@@ -165,9 +169,9 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string) FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
                     ? Enumerable.Empty<string>()
-                    : new[] {"Must be test"};
+                    : new[] { "Must be test" };
             }
         );
     }
@@ -185,7 +189,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
                     Theme t => t == Theme.Campus,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
             }
         );
     }

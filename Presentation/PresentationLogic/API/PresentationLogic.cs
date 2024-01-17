@@ -21,6 +21,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -34,6 +35,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -256,13 +258,16 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
-        string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        List<ILearningOutcomeViewModel> learningOutcomes, int requiredPoints, Theme theme, double positionX,
+        double positionY,
         ITopicViewModel? topicVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
+        var learningOutcomesEntities = Mapper.Map<List<ILearningOutcome>>(learningOutcomes);
 
-        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, goals, requiredPoints, theme,
+        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, learningOutcomesEntities,
+            requiredPoints, theme,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -273,12 +278,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm)
+        string description, int requiredPoints, Theme theme,
+        ITopicViewModel? topicVm)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
+        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, requiredPoints, theme,
             topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         if (!command.AnyChanges())
@@ -432,7 +438,7 @@ public class PresentationLogic : IPresentationLogic
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
                 .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
-                    t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
+                    t.spaceEntity.Description, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
                     space => CMapper.Map(space, t.spaceVm)))
                 .Cast<IUndoCommand>()

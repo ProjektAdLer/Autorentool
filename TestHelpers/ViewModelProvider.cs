@@ -1,4 +1,5 @@
-﻿using Presentation.PresentationLogic;
+﻿using System.Globalization;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
@@ -10,6 +11,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
@@ -33,9 +35,19 @@ public static class ViewModelProvider
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.Campus, 4,
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.Campus, 4, GetLearningOutcomes(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+    }
+
+    public static List<ILearningOutcomeViewModel> GetLearningOutcomes()
+    {
+        return new List<ILearningOutcomeViewModel>()
+        {
+            new ManualLearningOutcomeViewModel("Outcome"),
+            new StructuredLearningOutcomeViewModel("what", "whereby", "whatFor", "verbOfVisibility",
+                CultureInfo.CurrentCulture)
+        };
     }
 
     public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(

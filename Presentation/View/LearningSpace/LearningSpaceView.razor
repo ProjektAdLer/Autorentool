@@ -29,13 +29,13 @@
                     </p>
                     <div class="flex flex-row justify-start items-center gap-1">
                         <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
-                    <MudTooltip Text="@LearningSpaceP.LearningSpaceVm?.Goals"
+                        <!--<MudTooltip Text="@LearningSpaceP.LearningSpaceVm?.LearningOutcomes"
                                 Placement="Placement.Right"
                                 Duration="Double.Epsilon"
                                 Class="bg-adlergrey-200 drop-shadow-xl h-fit w-40 text-adlergrey-800"
                                 Arrow="true">
-                        <p class="text-sm 2xl:text-base w-[8rem] 2xl:w-[24rem] text-adlerblue-600 truncate text-ellipsis">@LearningSpaceP.LearningSpaceVm?.Goals</p>
-                    </MudTooltip>
+                        <p class="text-sm 2xl:text-base w-[8rem] 2xl:w-[24rem] text-adlerblue-600 truncate text-ellipsis">@LearningSpaceP.LearningSpaceVm?.LearningOutcomes</p>
+                    </MudTooltip> !-->
                     </div>
                 </label>
                 <div class="w-2/5">
@@ -52,6 +52,7 @@
             </div>
         </section>
     }
+
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
         <LearningSpaceLayoutView LearningSpace="LearningSpaceP.LearningSpaceVm"/>
@@ -70,8 +71,7 @@
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 
 
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action? TriggerMasterLayoutStateHasChanged { get; set; }
@@ -92,8 +92,8 @@
     private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
     {
         await InvokeAsync(StateHasChanged);
-        if (e.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
-            "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
+        if (e.CommandName is "CreateLearningElement" or "LoadLearningElement" or
+            "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or
             "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
         {
             await InvokeAsync(TriggerMasterLayoutStateHasChanged!);

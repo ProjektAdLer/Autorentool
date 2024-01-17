@@ -3,8 +3,8 @@
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
+@using System.Diagnostics.CodeAnalysis
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
@@ -17,7 +17,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]  @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -27,9 +27,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]  @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -44,9 +44,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]  @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -62,9 +62,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]  @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -78,8 +78,8 @@
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]
                     </MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                                  For="@(() => FormModel.Goals)"
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.LearningOutcomes"
+                                  For="@(() => FormModel.LearningOutcomes)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"
@@ -105,8 +105,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
 
-    [Parameter]
-    public int DebounceInterval { get; set; } = 300;
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -117,14 +116,14 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
-    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, model.RequiredPoints, model.Theme);
+            model.LearningOutcomes, model.RequiredPoints, model.Theme);
     }
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)

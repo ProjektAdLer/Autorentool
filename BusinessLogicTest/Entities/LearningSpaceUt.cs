@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningOutcome;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -13,7 +14,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var goals = "learn very many things";
+        var learningOutcomes = EntityProvider.GetLearningOutcomes();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
@@ -28,17 +29,19 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements, floorPlan: FloorPlanEnum.R_20X20_6L);
+        var learningSpaceLayout =
+            EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
+                floorPlan: FloorPlanEnum.R_20X20_6L);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.Campus, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(learningOutcomes));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
             Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -52,7 +55,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var goals = "learn very many things";
+        var learningOutcomes = EntityProvider.GetLearningOutcomes();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
@@ -72,7 +75,7 @@ public class LearningSpaceUt
         var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.Campus, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
@@ -80,7 +83,7 @@ public class LearningSpaceUt
 
         var nameChanged = "qwertz";
         var descriptionChanged = "changed description";
-        var goalsChanged = "new goals";
+        var LOutcomesChanged = new List<ILearningOutcome>() { new ManualLearningOutcome("New Outcome") };
         var positionXChanged = 10f;
         var positionYChanged = 14f;
         var content1Changed = EntityProvider.GetFileContent(append: "c1");
@@ -100,7 +103,7 @@ public class LearningSpaceUt
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Description = descriptionChanged;
-        systemUnderTest.Goals = goalsChanged;
+        systemUnderTest.LearningOutcomes = LOutcomesChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
         systemUnderTest.AssignedTopic = topicChanged;
@@ -110,7 +113,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
+            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(LOutcomesChanged));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele1Changed));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
@@ -125,7 +128,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(learningOutcomes));
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele1Changed));
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -139,7 +142,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var goals = "learn very many things";
+        var learningOutcomes = EntityProvider.GetLearningOutcomes();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
@@ -160,7 +163,7 @@ public class LearningSpaceUt
             EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
                 floorPlan: FloorPlanEnum.R_20X20_6L);
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.Campus, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();

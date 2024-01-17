@@ -1,9 +1,11 @@
+using System.Globalization;
+
 namespace BusinessLogic.Entities.LearningOutcome;
 
 public class StructuredLearningOutcome : ILearningOutcome
 {
     public StructuredLearningOutcome(string what, string whereby, string whatFor, string verbOfVisibility,
-        string language)
+        CultureInfo language)
     {
         What = what;
         Whereby = whereby;
@@ -16,5 +18,5 @@ public class StructuredLearningOutcome : ILearningOutcome
     private string Whereby { get; }
     private string WhatFor { get; }
     private string VerbOfVisibility { get; }
-    private string Language { get; }
+    private CultureInfo Language { get; }
 }

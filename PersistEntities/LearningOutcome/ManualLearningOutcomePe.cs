@@ -8,4 +8,9 @@ public class ManualLearningOutcomePe : ILearningOutcomePe
     {
         _outcome = outcome;
     }
+
+    public string GetOutcome()
+    {
+        return _outcome;
+    }
 }

@@ -12,20 +12,19 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "d", "e", 5, Theme.Arcade)
+        var space = new LearningSpace("a", "d", 5, Theme.Arcade)
         {
             UnsavedChanges = false
         };
         var name = "space1";
         var description = "space for learning";
-        var goals = "learning";
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+        var command = new EditLearningSpace(space, name, description, requiredPoints, theme, topic,
             mappingAction, new NullLogger<EditLearningSpace>());
 
         Assert.Multiple(() =>
@@ -33,7 +32,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.Name, Is.EqualTo("a"));
             Assert.That(space.Description, Is.EqualTo("d"));
-            Assert.That(space.Goals, Is.EqualTo("e"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
             Assert.That(space.Theme, Is.EqualTo(Theme.Arcade));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
@@ -47,7 +45,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
-            Assert.That(space.Goals, Is.EqualTo("learning"));
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
             Assert.That(space.Theme, Is.EqualTo(theme));
             Assert.That(space.AssignedTopic, Is.EqualTo(topic));
@@ -58,17 +55,16 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "d", "e", 5, Theme.Arcade);
+        var space = new LearningSpace("a", "d", 5, Theme.Arcade);
         var name = "space1";
         var description = "space for learning";
-        var goals = "learning";
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+        var command = new EditLearningSpace(space, name, description, requiredPoints, theme, topic,
             mappingAction, new NullLogger<EditLearningSpace>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -79,20 +75,19 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "j", "k", 5, Theme.Arcade)
+        var space = new LearningSpace("g", "j", 5, Theme.Arcade)
         {
             UnsavedChanges = false
         };
         var name = "space1";
         var description = "space for learning";
-        var goals = "learning";
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic,
+        var command = new EditLearningSpace(space, name, description, requiredPoints, theme, topic,
             mappingAction, new NullLogger<EditLearningSpace>());
 
         Assert.Multiple(() =>
@@ -100,7 +95,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.Name, Is.EqualTo("g"));
             Assert.That(space.Description, Is.EqualTo("j"));
-            Assert.That(space.Goals, Is.EqualTo("k"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
             Assert.That(space.Theme, Is.EqualTo(Theme.Arcade));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
@@ -114,7 +108,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
-            Assert.That(space.Goals, Is.EqualTo("learning"));
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
             Assert.That(space.Theme, Is.EqualTo(theme));
             Assert.That(space.AssignedTopic, Is.EqualTo(topic));
@@ -129,7 +122,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.Name, Is.EqualTo("g"));
             Assert.That(space.Description, Is.EqualTo("j"));
-            Assert.That(space.Goals, Is.EqualTo("k"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
             Assert.That(space.Theme, Is.EqualTo(Theme.Arcade));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
@@ -144,7 +136,6 @@ public class EditLearningSpaceUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
-            Assert.That(space.Goals, Is.EqualTo("learning"));
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
             Assert.That(space.Theme, Is.EqualTo(theme));
             Assert.That(space.AssignedTopic, Is.EqualTo(topic));

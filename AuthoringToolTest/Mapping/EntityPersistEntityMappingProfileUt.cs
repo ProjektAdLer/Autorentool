@@ -2,10 +2,12 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningOutcome;
 using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningOutcome;
 using Shared;
 using TestHelpers;
 
@@ -120,10 +122,10 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
-        var destination = new LearningSpacePe("", "", "", 0, Theme.Campus);
+        var destination = new LearningSpacePe("", "", 0, Theme.Campus);
 
         systemUnderTest.Map(source, destination);
 
@@ -132,7 +134,6 @@ public class EntityPersistEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Description = NewDescription;
-        destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementPe>();
         destination.PositionX = NewPositionX;
@@ -150,12 +151,13 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
+            EntityProvider.GetLearningOutcomes(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpacePe("", "", "", 0, Theme.Campus);
+        var destination = new LearningSpacePe("", "", 0, Theme.Campus);
 
         systemUnderTest.Map(source, destination);
 
@@ -164,7 +166,6 @@ public class EntityPersistEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Description = NewDescription;
-        destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementPe>
         {
@@ -265,7 +266,7 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
         var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
@@ -290,7 +291,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
+            new(NewName, NewDescription, NewRequiredPoints, Theme.Campus,
                 positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };
@@ -519,7 +520,8 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
+            new List<ILearningOutcome>() { new ManualLearningOutcome("outcome") },
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
@@ -529,7 +531,8 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
+        return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, Theme.Campus,
+            new List<ILearningOutcomePe>() { new ManualLearningOutcomePe("newOutcome") },
             new LearningSpaceLayoutPe(
                 new Dictionary<int, ILearningElementPe>
                 {
@@ -614,7 +617,6 @@ public class EntityPersistEntityMappingProfileUt
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
-                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
@@ -626,7 +628,6 @@ public class EntityPersistEntityMappingProfileUt
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
-                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.LearningSpaceLayout.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));

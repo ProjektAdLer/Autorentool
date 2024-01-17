@@ -27,7 +27,7 @@ public class SpaceCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var name = "Space 1";
         var description = "Space description";
-        var goals = "Space goals";
+        var learningOutcomes = EntityProvider.GetLearningOutcomes();
         var requiredPoints = 10;
         var positionX = 1.5;
         var positionY = 2.5;
@@ -36,7 +36,8 @@ public class SpaceCommandFactoryUt
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme,
+        var result = _factory.GetCreateCommand(learningWorld, name, description, learningOutcomes, requiredPoints,
+            theme,
             positionX, positionY, topic, mappingAction);
 
         // Assert
@@ -47,7 +48,7 @@ public class SpaceCommandFactoryUt
             Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
             Assert.That(resultCasted.LearningSpace.Name, Is.EqualTo(name));
             Assert.That(resultCasted.LearningSpace.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.LearningSpace.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningSpace.LearningOutcomes, Is.EqualTo(learningOutcomes));
             Assert.That(resultCasted.LearningSpace.RequiredPoints, Is.EqualTo(requiredPoints));
             Assert.That(resultCasted.LearningSpace.PositionX, Is.EqualTo(positionX));
             Assert.That(resultCasted.LearningSpace.PositionY, Is.EqualTo(positionY));
@@ -107,14 +108,13 @@ public class SpaceCommandFactoryUt
         var learningSpace = EntityProvider.GetLearningSpace();
         var name = "Updated Space";
         var description = "Updated description";
-        var goals = "Updated goals";
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
         Action<ILearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, theme,
+        var result = _factory.GetEditCommand(learningSpace, name, description, requiredPoints, theme,
             topic, mappingAction);
 
         // Assert
@@ -125,7 +125,6 @@ public class SpaceCommandFactoryUt
             Assert.That(resultCasted!.LearningSpace, Is.EqualTo(learningSpace));
             Assert.That(resultCasted.SpaceName, Is.EqualTo(name));
             Assert.That(resultCasted.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.Goals, Is.EqualTo(goals));
             Assert.That(resultCasted.RequiredPoints, Is.EqualTo(requiredPoints));
             Assert.That(resultCasted.Topic, Is.EqualTo(topic));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));

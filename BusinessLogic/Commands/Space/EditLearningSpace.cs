@@ -8,14 +8,13 @@ public class EditLearningSpace : IEditLearningSpace
 {
     private IMemento? _memento;
 
-    public EditLearningSpace(ILearningSpace learningSpace, string name, string description, string goals,
+    public EditLearningSpace(ILearningSpace learningSpace, string name, string description,
         int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction,
         ILogger<EditLearningSpace> logger)
     {
         LearningSpace = learningSpace;
         SpaceName = name;
         Description = description;
-        Goals = goals;
         Topic = topic;
         RequiredPoints = requiredPoints;
         Theme = theme;
@@ -26,7 +25,6 @@ public class EditLearningSpace : IEditLearningSpace
     internal ILearningSpace LearningSpace { get; }
     internal string SpaceName { get; }
     internal string Description { get; }
-    internal string Goals { get; }
     internal Entities.Topic? Topic { get; }
     internal int RequiredPoints { get; }
     internal Theme Theme { get; }
@@ -39,22 +37,21 @@ public class EditLearningSpace : IEditLearningSpace
         _memento = LearningSpace.GetMemento();
 
         Logger.LogTrace(
-            "Editing LearningSpace {Id}. Previous Values: Name {PreviousName}, Description {PreviousDescription}, Goals {PreviousGoals}, RequiredPoints {PreviousRequiredPoints}, Theme {PreviousTheme}, Topic {PreviousTopic}",
-            LearningSpace.Id, LearningSpace.Name, LearningSpace.Description, LearningSpace.Goals,
+            "Editing LearningSpace {Id}. Previous Values: Name {PreviousName}, Description {PreviousDescription}, RequiredPoints {PreviousRequiredPoints}, Theme {PreviousTheme}, Topic {PreviousTopic}",
+            LearningSpace.Id, LearningSpace.Name, LearningSpace.Description,
             LearningSpace.RequiredPoints, LearningSpace.Theme, LearningSpace.AssignedTopic?.Name);
 
 
         if (AnyChanges()) LearningSpace.UnsavedChanges = true;
         LearningSpace.Name = SpaceName;
         LearningSpace.Description = Description;
-        LearningSpace.Goals = Goals;
         LearningSpace.AssignedTopic = Topic;
         LearningSpace.RequiredPoints = RequiredPoints;
         LearningSpace.Theme = Theme;
 
         Logger.LogTrace(
-            "Edited LearningSpace {Id}. Updated Values: Name {UpdatedName}, Description {UpdatedDescription}, Goals {UpdatedGoals}, RequiredPoints {UpdatedRequiredPoints}, Theme {UpdatedTheme}, Topic {UpdatedTopic}",
-            LearningSpace.Id, LearningSpace.Name, LearningSpace.Description, LearningSpace.Goals,
+            "Edited LearningSpace {Id}. Updated Values: Name {UpdatedName}, Description {UpdatedDescription},  RequiredPoints {UpdatedRequiredPoints}, Theme {UpdatedTheme}, Topic {UpdatedTopic}",
+            LearningSpace.Id, LearningSpace.Name, LearningSpace.Description,
             LearningSpace.RequiredPoints, LearningSpace.Theme, LearningSpace.AssignedTopic?.Name);
 
         MappingAction.Invoke(LearningSpace);
@@ -84,7 +81,6 @@ public class EditLearningSpace : IEditLearningSpace
     public bool AnyChanges() =>
         LearningSpace.Name != SpaceName ||
         LearningSpace.Description != Description ||
-        LearningSpace.Goals != Goals ||
         LearningSpace.AssignedTopic != Topic ||
         LearningSpace.RequiredPoints != RequiredPoints ||
         LearningSpace.Theme != Theme;

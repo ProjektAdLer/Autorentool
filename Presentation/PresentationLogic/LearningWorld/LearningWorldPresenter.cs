@@ -9,6 +9,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -260,7 +261,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
-    public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
+    public void CreateLearningSpace(string name, string description, List<ILearningOutcomeViewModel> learningOutcomes,
+        int requiredPoints,
         Theme theme, TopicViewModel? topic = null)
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
@@ -269,7 +271,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         var positionY = GetNextAvailableYPosition(25);
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
+        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomes,
             requiredPoints, theme, 0, positionY, topic);
     }
 

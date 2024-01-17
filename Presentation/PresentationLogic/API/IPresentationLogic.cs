@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -145,14 +146,15 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Space.</param>
     /// <param name="name">The name of the Learning Space.</param>
     /// <param name="description">The description of the Learning Space.</param>
-    /// <param name="goals">The goals of the Learning Space.</param>
+    /// <param name="learningOutcomes">The learning outcomes of the Learning Space.</param>
     /// <param name="requiredPoints">The points required to access the Learning Space.</param>
     /// <param name="theme">The theme of the Learning Space.</param>
     /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        string description, List<ILearningOutcomeViewModel> learningOutcomes, int requiredPoints, Theme theme,
+        double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
     /// <summary>
@@ -161,12 +163,11 @@ public interface IPresentationLogic
     /// <param name="learningSpaceVm">The Learning Space view model to edit.</param>
     /// <param name="name">The new name of the Learning Space.</param>
     /// <param name="description">The new description of the Learning Space.</param>
-    /// <param name="goals">The new goals of the Learning Space.</param>
     /// <param name="requiredPoints">The new points required to access the Learning Space.</param>
     /// <param name="theme">The new theme of the Learning Space.</param>
     /// <param name="topicVm">The new topic associated with the Learning Space. Can be null.</param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
+        string description, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.
@@ -576,7 +577,7 @@ public interface IPresentationLogic
         string comment);
 
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
-    
+
     /// <summary>
     /// Asynchronously retrieves a list of LMS World view models.
     /// </summary>
@@ -591,6 +592,11 @@ public interface IPresentationLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
+    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
+    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
+    void DeleteLearningWorldByPath(string savePath);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -602,9 +608,4 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
-
-    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
-    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
-    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
-    void DeleteLearningWorldByPath(string savePath);
 }

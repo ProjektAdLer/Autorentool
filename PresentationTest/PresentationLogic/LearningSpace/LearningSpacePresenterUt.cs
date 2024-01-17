@@ -8,7 +8,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -28,7 +27,7 @@ public class LearningSpacePresenterUt
         var mockErrorService = Substitute.For<IErrorService>();
         var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        systemUnderTest.EditLearningSpace("a", "d", "e", 5, Theme.Campus, null);
+        systemUnderTest.EditLearningSpace("a", "d", 5, Theme.Campus, null);
 
         mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
@@ -42,9 +41,9 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space", "d", "e", 5, Theme.Campus, topic);
+        systemUnderTest.EditLearningSpace("space", "d", 5, Theme.Campus, topic);
 
-        presentationLogic.Received().EditLearningSpace(space, "space", "d", "e", 5, Theme.Campus, topic);
+        presentationLogic.Received().EditLearningSpace(space, "space", "d", 5, Theme.Campus, topic);
     }
 
     [Test]
