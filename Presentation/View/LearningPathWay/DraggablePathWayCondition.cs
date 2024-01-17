@@ -47,7 +47,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
                                         style=""fill:none;stroke:white;stroke-width:1""/>";
 
     protected override string DeleteObjectButtonShape =>
-        @"<text font-size=""12"" transform=""translate(65,12)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
+        @"<text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
 

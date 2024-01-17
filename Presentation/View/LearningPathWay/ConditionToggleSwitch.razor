@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic.LearningPathway
 @using Shared
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 <foreignObject transform="translate(9,7)" x=@ObjectInPathWay.PositionX y=@ObjectInPathWay.PositionY width="56" height="28">
     <label class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox" checked="@ConditionValue" @onclick="@HandleCheckboxChanged" class="sr-only peer">
@@ -13,6 +14,9 @@
 
 @code {
 
+    [Inject, AllowNull]
+    internal IStringLocalizer<ConditionToggleSwitch> Localizer { get; set; }
+    
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
@@ -38,7 +42,23 @@
         }
     }
 
-    private string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
+    
+
+    private string ObjectName
+    {
+        get
+        {
+            switch (((PathWayConditionViewModel)ObjectInPathWay).Condition)
+            {
+                case ConditionEnum.Or:
+                    return @Localizer["ConditionToggleSwitch.Condition.Or"];
+                case ConditionEnum.And:
+                    return @Localizer["ConditionToggleSwitch.Condition.And"];
+                default:
+                    throw new ApplicationException(message: "No valid condition set");
+            }
+        }
+    }
 
     private string Text
     {
@@ -47,9 +67,10 @@
             switch (((PathWayConditionViewModel)ObjectInPathWay).Condition)
             {
                 case ConditionEnum.Or:
-                    return @"<text x={1} y={2} font-size=""12"" transform=""translate(43,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
+                    return @"<text x={1} y={2} font-size=""11"" transform=""translate(39,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
+                    
                 case ConditionEnum.And:
-                    return @"<text x={1} y={2} font-size=""12"" transform=""translate(12,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
+                    return @"<text x={1} y={2} font-size=""11"" transform=""translate(14,26)"" pointer-events=""none"" fill=""white"" style=""user-select:none;"">{0}</text>";
                 default:
                     throw new ApplicationException("No valid condition set");
             }

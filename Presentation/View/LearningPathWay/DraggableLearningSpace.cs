@@ -85,7 +85,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
 
     protected override string DeleteObjectButtonShape =>
-        @"<text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
+        @"<text font-size=""14"" transform=""translate(52,13)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
 
     private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null
         ? ""
