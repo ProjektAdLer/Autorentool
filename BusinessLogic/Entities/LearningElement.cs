@@ -60,7 +60,16 @@ public class LearningElement : ILearningElement, IOriginator
     public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
-    public bool UnsavedChanges { get; set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || LearningContent.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }

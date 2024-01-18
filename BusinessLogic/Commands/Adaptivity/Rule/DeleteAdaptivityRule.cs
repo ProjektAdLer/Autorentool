@@ -29,6 +29,7 @@ internal class DeleteAdaptivityRule : IDeleteAdaptivityRule
 
         var rule = Question.Rules.Single(q => q.Id == Rule.Id);
         Question.Rules.Remove(rule);
+        Question.UnsavedChanges = true;
         MappingAction.Invoke(Question);
 
         Logger.LogTrace("Deleted AdaptivityRule {AdaptivityRuleId} from AdaptivityQuestion {AdaptivityQuestionId}",

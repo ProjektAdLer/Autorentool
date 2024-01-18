@@ -22,13 +22,13 @@
         <value>Authoring tool</value>
     </data>
     <data name="AuthoringTool.Version" xml:space="preserve">
-        <value>v2.0.0</value>
+        <value>v2.1.0</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
         <value>Publish learning world</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Publish learning world as moodle learning world file (.mbz)</value>
+        <value>Export moodle learning world file (.mbz)</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>My learning worlds</value>

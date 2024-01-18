@@ -27,16 +27,25 @@ public class LoadLearningElementUt
         var command = new LoadLearningElement(space, 0, filepath, mockBusinessLogic, mappingAction,
             new NullLogger<LoadLearningElement>());
 
-        Assert.That(space.ContainedLearningElements, Is.Empty);
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
         mockBusinessLogic.Received().LoadLearningElement(filepath);
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element));
-        Assert.That(space.ContainedLearningElements.First(), Is.InstanceOf(typeof(LearningElement)));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.First(), Is.InstanceOf(typeof(LearningElement)));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
@@ -50,9 +59,11 @@ public class LoadLearningElementUt
         var command = new LoadLearningElement(space, 0, "element", mockBusinessLogic, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -75,45 +86,63 @@ public class LoadLearningElementUt
         var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction,
             new NullLogger<LoadLearningElement>());
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+        });
 
         command.Execute();
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
+            Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
     }
 }

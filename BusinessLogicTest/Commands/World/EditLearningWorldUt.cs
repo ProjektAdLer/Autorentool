@@ -49,7 +49,7 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));
@@ -83,9 +83,11 @@ public class EditLearningWorldUt
                 new NullLogger<EditLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]

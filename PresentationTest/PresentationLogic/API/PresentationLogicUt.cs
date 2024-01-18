@@ -31,6 +31,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using ElectronWrapper;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -397,6 +398,7 @@ public class PresentationLogicUt
         mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", "z", 5, Theme.Campus,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
+        mockCommand.NewSpace.Id.Returns(mockSpaceVm.Id);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
@@ -1593,7 +1595,10 @@ public class PresentationLogicUt
         var result = systemUnderTest.GetSavedLearningWorldPaths().ToList();
 
         Assert.That(result, Has.Count.EqualTo(fileInfos.Length));
-        Assert.That(result, Is.EquivalentTo(fileInfos));
+        //Assert.That(result, Is.EquivalentTo(fileInfos)); 
+        // for some reason this assert and this assert only is broken in NUnit 4.0.1 throwing a stack overflow
+        // i gave up on debugging after i was 4 levels deep into the same NUnit function over and over again
+        result.Should().BeEquivalentTo(fileInfos);
     }
 
     [Test]

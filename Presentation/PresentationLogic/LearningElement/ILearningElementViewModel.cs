@@ -19,4 +19,5 @@ public interface ILearningElementViewModel : IDisplayableLearningObject
     double PositionX { get; set; }
     double PositionY { get; set; }
     bool UnsavedChanges { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

@@ -183,6 +183,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AdaptivityContentDialogRuleControl.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\UploadSuccessfulDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadSuccessfulDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\View\LearningPathWay\ConditionToggleSwitch.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConditionToggleSwitch.de.Designer.cs</LastGenOutput>

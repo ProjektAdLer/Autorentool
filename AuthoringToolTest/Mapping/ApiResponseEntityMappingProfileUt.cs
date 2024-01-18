@@ -23,10 +23,13 @@ public class ApiResponseEntityMappingProfileUt
 
         var dest = systemUnderTest.Map<UserInformation>(source);
 
-        Assert.AreEqual(source.LmsUserName, dest.LmsUsername);
-        Assert.AreEqual(source.IsAdmin, dest.IsLmsAdmin);
-        Assert.AreEqual(source.UserId, dest.LmsId);
-        Assert.AreEqual(source.UserEmail, dest.LmsEmail);
+        Assert.Multiple(() =>
+        {
+            Assert.That(dest.LmsUsername, Is.EqualTo(source.LmsUserName));
+            Assert.That(dest.IsLmsAdmin, Is.EqualTo(source.IsAdmin));
+            Assert.That(dest.LmsId, Is.EqualTo(source.UserId));
+            Assert.That(dest.LmsEmail, Is.EqualTo(source.UserEmail));
+        });
     }
 
     // Test for UserTokenBE to UserToken
@@ -42,7 +45,7 @@ public class ApiResponseEntityMappingProfileUt
 
         var dest = systemUnderTest.Map<UserToken>(source);
 
-        Assert.AreEqual(source.LmsToken, dest.Token);
+        Assert.That(dest.Token, Is.EqualTo(source.LmsToken));
     }
 
     private static IMapper CreateTestableMapper()

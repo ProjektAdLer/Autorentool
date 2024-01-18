@@ -1,5 +1,8 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using Microsoft.Extensions.Logging;
 using Shared;
 using Shared.Configuration;
@@ -32,11 +35,13 @@ public class SaveLearningWorld : ISaveLearningWorld
         {
             Filepath = GetWorldFilepath();
         }
+
         //update world save path if necessary
         if (LearningWorld.SavePath != Filepath)
         {
             LearningWorld.SavePath = Filepath;
         }
+
         BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);
         Logger.LogTrace("Saved LearningWorld {Name} ({Id}) to {Path}", LearningWorld.Name, LearningWorld.Id, Filepath);
         ResetWorldUnsavedChangesState();
@@ -46,7 +51,8 @@ public class SaveLearningWorld : ISaveLearningWorld
         string GetWorldFilepath()
         {
             var basePath = ApplicationPaths.SavedWorldsFolder;
-            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding, out _);
+            return BusinessLogic.FindSuitableNewSavePath(basePath, LearningWorld.Name, FileEndings.WorldFileEnding,
+                out _);
         }
     }
 
@@ -55,7 +61,7 @@ public class SaveLearningWorld : ISaveLearningWorld
         LearningWorld.UnsavedChanges = false;
         foreach (var element in LearningWorld.UnplacedLearningElements)
         {
-            element.UnsavedChanges = false;
+            ResetElementUnsavedChangesState(element);
         }
 
         foreach (var space in LearningWorld.LearningSpaces)
@@ -63,7 +69,7 @@ public class SaveLearningWorld : ISaveLearningWorld
             space.UnsavedChanges = false;
             foreach (var element in space.ContainedLearningElements)
             {
-                element.UnsavedChanges = false;
+                ResetElementUnsavedChangesState(element);
             }
         }
 
@@ -75,6 +81,46 @@ public class SaveLearningWorld : ISaveLearningWorld
         foreach (var topic in LearningWorld.Topics)
         {
             topic.UnsavedChanges = false;
+        }
+    }
+
+    private void ResetElementUnsavedChangesState(ILearningElement element)
+    {
+        element.UnsavedChanges = false;
+        element.LearningContent.UnsavedChanges = false;
+        if (element.LearningContent is AdaptivityContent ac)
+            ResetUnsavedChangesAdaptivityContent(ac);
+    }
+
+    void ResetUnsavedChangesAdaptivityContent(IAdaptivityContent adaptivityContent)
+    {
+        foreach (var task in adaptivityContent.Tasks)
+        {
+            task.UnsavedChanges = false;
+            foreach (var question in task.Questions)
+            {
+                question.UnsavedChanges = false;
+                switch (question)
+                {
+                    case MultipleChoiceMultipleResponseQuestion mcmrq:
+                        foreach (var correctChoice in mcmrq.CorrectChoices) correctChoice.UnsavedChanges = false;
+                        foreach (var choice in mcmrq.Choices) choice.UnsavedChanges = false;
+                        break;
+                    case MultipleChoiceSingleResponseQuestion mcsrq:
+                        mcsrq.CorrectChoice.UnsavedChanges = false;
+                        foreach (var choice in mcsrq.Choices) choice.UnsavedChanges = false;
+                        break;
+                }
+
+                foreach (var rule in question.Rules)
+                {
+                    rule.UnsavedChanges = false;
+                    rule.Action.UnsavedChanges = false;
+                    rule.Action.UnsavedChanges = false;
+                    if (rule.Action is ContentReferenceAction cra)
+                        cra.Content.UnsavedChanges = false;
+                }
+            }
         }
     }
 }

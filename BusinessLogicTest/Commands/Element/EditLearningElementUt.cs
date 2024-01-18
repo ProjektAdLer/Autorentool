@@ -14,7 +14,7 @@ public class EditLearningElementUt
     public void Execute_EditsLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = EntityProvider.GetFileContent();
+        var content = EntityProvider.GetFileContent(unsavedChanges: false);
         var element = EntityProvider.GetLearningElement(parent: parent, content: content,
             elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
@@ -58,7 +58,7 @@ public class EditLearningElementUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(newContent));
@@ -95,14 +95,14 @@ public class EditLearningElementUt
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
 
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(actionWasInvoked, Is.False);
     }
 
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = EntityProvider.GetFileContent();
+        var content = EntityProvider.GetFileContent(unsavedChanges: false);
         var element = EntityProvider.GetLearningElement(parent: parent, content: content,
             elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>

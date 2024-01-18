@@ -32,14 +32,20 @@ public class DeletePathWayConditionUt
         var command = new DeletePathWayCondition(world, pathWayCondition1, mappingAction,
             new NullLogger<DeletePathWayCondition>());
 
-        Assert.That(world.PathWayConditions, Does.Contain(pathWayCondition1));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Does.Contain(pathWayCondition1));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+        });
     }
 
     [Test]
@@ -53,9 +59,11 @@ public class DeletePathWayConditionUt
         var command = new DeletePathWayCondition(world, pathWayCondition, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -72,24 +80,36 @@ public class DeletePathWayConditionUt
         var command = new DeletePathWayCondition(world, pathWayCondition, mappingAction,
             new NullLogger<DeletePathWayCondition>());
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 }

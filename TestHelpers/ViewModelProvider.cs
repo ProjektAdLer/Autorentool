@@ -53,6 +53,15 @@ public static class ViewModelProvider
             points: points);
     }
 
+    public static LearningElementViewModel GetAdaptivityElement(string append = "",
+        IAdaptivityContentViewModel? content = null, ILearningSpaceViewModel? parent = null, int workload = 1,
+        int points = 1)
+    {
+        return new LearningElementViewModel("LEVMn" + append, content ?? GetAdaptivityContent(), "LEVMd" + append,
+            "LEVMg" + append, LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, parent: parent,
+            workload: workload, points: points);
+    }
+
     public static PathWayConditionViewModel GetPathWayCondition()
     {
         return new PathWayConditionViewModel(ConditionEnum.And, false);
