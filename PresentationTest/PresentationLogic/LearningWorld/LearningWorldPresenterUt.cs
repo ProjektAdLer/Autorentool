@@ -1180,15 +1180,31 @@ public class LearningWorldPresenterUt
     {
         var world = ViewModelProvider.GetLearningWorld();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest =
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         var element = ViewModelProvider.GetLearningElement();
 
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningElement(element);
         selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
-        selectedViewModelsProvider.LearningElement.Returns(element);
+        mediator.Received(1).RequestOpenElementDialog();
+    }
 
-        Assert.That(selectedViewModelsProvider.LearningElement, Is.EqualTo(element));
+    [Test]
+    public void SetSelectedLearningElement_SetsSelectedAdaptivityElement()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest =
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
+        var element = ViewModelProvider.GetAdaptivityElement();
+
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningElement(element);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        mediator.Received(1).RequestOpenAdaptivityElementDialog();
     }
 
     [Test]

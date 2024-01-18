@@ -5,13 +5,14 @@ namespace Presentation.PresentationLogic.Mediator;
 
 public class Mediator : IMediator
 {
+    private bool _adaptivityElementDialogOpen;
     private bool _contentDialogOpen;
     private bool _elementDialogOpen;
     private bool _overwriteElementEdit;
     private bool _spaceDialogOpen;
     private bool _worldDialogOpen;
-    private bool _worldTreeViewOpen;
     private bool _worldPathwayViewOpen;
+    private bool _worldTreeViewOpen;
 
     public void CloseBothSides()
     {
@@ -27,6 +28,7 @@ public class Mediator : IMediator
         WorldDialogOpen = false;
         SpaceDialogOpen = false;
         ElementDialogOpen = false;
+        AdaptivityElementDialogOpen = false;
         ContentDialogOpen = false;
     }
 
@@ -57,6 +59,12 @@ public class Mediator : IMediator
     {
         get => _elementDialogOpen;
         private set => SetField(ref _elementDialogOpen, value);
+    }
+
+    public bool AdaptivityElementDialogOpen
+    {
+        get => _adaptivityElementDialogOpen;
+        private set => SetField(ref _adaptivityElementDialogOpen, value);
     }
 
     public bool OverwriteElementEdit
@@ -107,6 +115,12 @@ public class Mediator : IMediator
     {
         CloseAllLeftSide();
         ElementDialogOpen = true;
+    }
+
+    public void RequestOpenAdaptivityElementDialog()
+    {
+        CloseAllLeftSide();
+        AdaptivityElementDialogOpen = true;
     }
 
     public void RequestOpenNewElementDialog()
@@ -171,6 +185,18 @@ public class Mediator : IMediator
         else
         {
             RequestOpenElementDialog();
+        }
+    }
+
+    public void RequestToggleAdaptivityElementDialog()
+    {
+        if (AdaptivityElementDialogOpen)
+        {
+            AdaptivityElementDialogOpen = false;
+        }
+        else
+        {
+            RequestOpenAdaptivityElementDialog();
         }
     }
 

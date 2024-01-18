@@ -6,6 +6,7 @@ using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -153,7 +154,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.SaveLearningWorld((LearningWorldViewModel)LearningWorldVm!);
+        _presentationLogic.SaveLearningWorld((LearningWorldViewModel) LearningWorldVm!);
     }
 
     #endregion
@@ -317,7 +318,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         try
         {
             await _presentationLogic.SaveLearningSpaceAsync(
-                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
+                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
         }
         catch (SerializationException e)
         {
@@ -422,7 +423,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 66 >= x && ls.PositionY <= y &&
                                    ls.PositionY + 64 >= y) ??
-                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
@@ -523,7 +524,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
-        _mediator.RequestOpenElementDialog();
+        if (learningElement.LearningContent is AdaptivityContentViewModel)
+        {
+            _mediator.RequestOpenAdaptivityElementDialog();
+        }
+        else
+        {
+            _mediator.RequestOpenElementDialog();
+        }
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningElement"/>
@@ -565,7 +573,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         SetSelectedLearningElement(learningElement);
         try
         {
-            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
         }
         catch (ArgumentOutOfRangeException e)
         {

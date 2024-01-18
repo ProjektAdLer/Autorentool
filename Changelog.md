@@ -25,6 +25,8 @@
 - UI:
   - Optimized styling of the adaptivity dialog.
   - Optimized responsive design.
+  - The container for the unplaced learning elements is now in the bottom center below the space view.
+  - Separate sidebar panel for different types of learning elements
 
 ### Deprecated
 
