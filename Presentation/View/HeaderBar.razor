@@ -141,8 +141,23 @@
                 </div>
             </ChildContent>
         </MudMenu>
-
+        
         <CultureSelector/>
+        
+        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
+            <MudMenuItem Disabled="true">Benutzerhandbuch</MudMenuItem>
+            <MudMenuItem Disabled="true">Tutorials</MudMenuItem>
+            <MudDivider></MudDivider>
+            <MudMenuItem>Feedback geben</MudMenuItem>
+            <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
+                <MudMenuItem>Technischen Fehler melden</MudMenuItem>
+            </a>
+            <MudDivider></MudDivider>
+            <a href="https://www.projekt-adler.eu" target="_blank">
+                <MudMenuItem>Über AdLer</MudMenuItem>
+            </a>
+        </MudMenu>
+
         <LmsLoginButton/>
         @if (PresentationLogic.RunningElectron)
         {
@@ -504,5 +519,30 @@
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }
     }
+
+    private string icon = help;
+
+        const string help = 
+    @"<?xml version=""1.0"" encoding=""UTF-8""?>
+        <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+            <defs>
+                <style>
+                    .cls-1 {
+                        fill: #172d4d;
+                    }
+
+                        .cls-1, .cls-2 {
+                            stroke-width: 0px;
+                        }
+
+                            .cls-2 {
+                                fill: #e9f2fa;
+                            }
+    </style>
+    </defs>
+    <circle class=""cls-1"" cx=""1000"" cy=""1002"" r=""979""/>
+    <path class=""cls-2"" d=""m544.25,614.03s161.83-383.69,652.2-240.32c2.7.79,5.38,1.68,8.02,2.66,193.68,72.11,231.78,155.81,262.57,236.47,1.08,2.83,2.06,5.7,2.92,8.6,110.36,376.9-370.36,480.48-375.65,635.86-.76,127.58-322.4,150.5-229.19-142.86,79.89-251.46,305.72-177.93,320.02-343.75,5.03-58.36,4.33-105.36-37.37-151.01-14.12-15.46-32.17-26.82-52.08-33.31-336.37-109.7-265.48,333.41-498.75,220.87-43.55-21.01-71.01-65.56-69.45-113.89,1.45-44.95,16.76-79.31,16.76-79.31Z""/>
+    <ellipse class=""cls-2"" cx=""986.74"" cy=""1572.63"" rx=""133.38"" ry=""134.89""/>
+    </svg>";
 
 }
