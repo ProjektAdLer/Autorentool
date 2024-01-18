@@ -92,8 +92,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
-    [Inject, AllowNull]
-    public IMediator Mediator { get; set; }
+    [Inject, AllowNull] public IMediator Mediator { get; set; }
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
     private Color Color { get; set; } = Color.Info;
@@ -110,6 +109,16 @@
         UpdateExpandedLearningSpaces();
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (!firstRender) return;
+        if (SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel learningSpace)
+        {
+            ToggleLearningSpace(learningSpace);
+        }
+    }
+
     private string GetElementIcon(ILearningElementViewModel element)
     {
         return element.LearningContent switch
@@ -119,13 +128,13 @@
             IFileContentViewModel
             {
                 Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
-                    "js" or "php" or "html" or "css"
-                } => CustomIcons.TextElementIcon,
+                "js" or "php" or "html" or "css"
+            } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
             _ => ""
-            };
+        };
     }
 
     /// <summary>
@@ -216,6 +225,7 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
         }
+
         TriggerStateHasChanged();
     }
 
