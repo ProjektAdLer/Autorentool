@@ -37,7 +37,7 @@ public class ElementModelHandler : IElementModelHandler
     }
 
     internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
+        { ElementModel.a_npc_alerobot, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -87,6 +87,7 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
+            ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
             ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
