@@ -27,13 +27,19 @@ public class CreateLearningWorldUt
             evaluationLink, enrolmentKey,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
-        Assert.IsEmpty(workspace.LearningWorlds);
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         var world = workspace.LearningWorlds.First();
         Assert.Multiple(() =>
         {
@@ -71,13 +77,19 @@ public class CreateLearningWorldUt
 
         var command = new CreateLearningWorld(workspace, world, mappingAction, new NullLogger<CreateLearningWorld>());
 
-        Assert.IsEmpty(workspace.LearningWorlds);
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         Assert.That(workspace.LearningWorlds.First(), Is.EqualTo(world));
     }
 
@@ -101,9 +113,11 @@ public class CreateLearningWorldUt
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -127,24 +141,36 @@ public class CreateLearningWorldUt
             evaluationLink, enrolmentKey,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 }

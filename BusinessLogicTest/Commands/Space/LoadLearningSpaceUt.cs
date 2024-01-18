@@ -25,15 +25,21 @@ public class LoadLearningSpaceUt
         var command = new LoadLearningSpace(world, filepath, mockBusinessLogic, mappingAction,
             new NullLogger<LoadLearningSpace>());
 
-        Assert.That(world.LearningSpaces, Is.Empty);
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
         mockBusinessLogic.Received().LoadLearningSpace(filepath);
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.That(world.LearningSpaces[0], Is.EqualTo(space));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces[0], Is.EqualTo(space));
+            Assert.That(actionWasInvoked, Is.True);
+        });
     }
 
     [Test]
@@ -48,9 +54,11 @@ public class LoadLearningSpaceUt
             new NullLogger<LoadLearningSpace>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]
@@ -72,34 +80,49 @@ public class LoadLearningSpaceUt
         command.Execute();
 
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces[1], Is.EqualTo(space));
+            Assert.That(actionWasInvoked, Is.True);
+        });
         actionWasInvoked = false;
     }
 }

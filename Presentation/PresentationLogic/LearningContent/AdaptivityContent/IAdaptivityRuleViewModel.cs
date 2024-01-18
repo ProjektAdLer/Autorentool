@@ -14,4 +14,6 @@ public interface IAdaptivityRuleViewModel
     /// The action that is performed when the rule is activated.
     /// </summary>
     public IAdaptivityActionViewModel Action { get; set; }
+
+    bool UnsavedChanges { get; set; }
 }

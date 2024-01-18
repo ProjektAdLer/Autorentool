@@ -72,6 +72,7 @@ public class EditMultipleChoiceQuestionWithTypeChange : IEditMultipleChoiceQuest
             Task.Questions.Remove(questionToDelete);
             Task.Questions.Add(MultipleResponseQuestion!);
         }
+        Task.UnsavedChanges = true;
 
 
         Logger.LogTrace(

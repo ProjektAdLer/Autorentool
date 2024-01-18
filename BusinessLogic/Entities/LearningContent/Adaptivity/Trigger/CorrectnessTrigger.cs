@@ -10,6 +10,7 @@ public class CorrectnessTrigger : IAdaptivityTrigger
     public CorrectnessTrigger(AnswerResult expectedAnswer)
     {
         ExpectedAnswer = expectedAnswer;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -18,12 +19,15 @@ public class CorrectnessTrigger : IAdaptivityTrigger
     private CorrectnessTrigger()
     {
         ExpectedAnswer = AnswerResult.Correct;
+        UnsavedChanges = false;
     }
 
     /// <summary>
     /// Whether the answer must be correct or incorrect for the trigger to be activated.
     /// </summary>
     public AnswerResult ExpectedAnswer { get; set; }
+
+    public bool UnsavedChanges { get; set; }
 
     public bool Equals(IAdaptivityTrigger? other)
     {

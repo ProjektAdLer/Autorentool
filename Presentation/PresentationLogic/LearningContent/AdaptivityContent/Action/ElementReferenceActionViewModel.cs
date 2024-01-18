@@ -7,6 +7,7 @@ public class ElementReferenceActionViewModel : IAdaptivityActionViewModel
         ElementId = elementId;
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -17,9 +18,11 @@ public class ElementReferenceActionViewModel : IAdaptivityActionViewModel
         ElementId = Guid.Empty;
         Comment = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public Guid ElementId { get; set; }
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+    public bool UnsavedChanges { get; set; }
 }

@@ -9,6 +9,7 @@ public class FileContent : IFileContent
         Name = name;
         Type = type;
         Filepath = filepath;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -20,9 +21,11 @@ public class FileContent : IFileContent
         Name = "";
         Type = "";
         Filepath = "";
+        UnsavedChanges = false;
     }
 
     public string Name { get; set; }
+    public bool UnsavedChanges { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
 

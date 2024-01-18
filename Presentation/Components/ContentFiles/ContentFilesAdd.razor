@@ -141,8 +141,8 @@
         {
             if (entry.Length == 0) continue;
             var fileName = PathHelper.TrimFileName(entry.Name);
-            var fileEnding = entry.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
-            if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+            var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
+            if (!AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
             {
                 unsupportedFiles.Add(entry.FullName);
                 continue;
@@ -170,11 +170,11 @@
 
         var parameters = new DialogParameters
         {
-            {nameof(ImportZipDialog.FileName), zipFile.Name},
-            {nameof(ImportZipDialog.SuccessfulFiles), successfulFiles},
-            {nameof(ImportZipDialog.DuplicateFiles), duplicateFiles},
-            {nameof(ImportZipDialog.UnsupportedFiles), unsupportedFiles},
-            {nameof(ImportZipDialog.ErrorFiles), errorFiles}
+            { nameof(ImportZipDialog.FileName), zipFile.Name },
+            { nameof(ImportZipDialog.SuccessfulFiles), successfulFiles },
+            { nameof(ImportZipDialog.DuplicateFiles), duplicateFiles },
+            { nameof(ImportZipDialog.UnsupportedFiles), unsupportedFiles },
+            { nameof(ImportZipDialog.ErrorFiles), errorFiles }
         };
         var options = new DialogOptions
         {

@@ -36,7 +36,7 @@ public class DragLearningElementUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
             Assert.That(element.UnsavedChanges, Is.True);
@@ -58,8 +58,11 @@ public class DragLearningElementUt
             mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 
     [Test]

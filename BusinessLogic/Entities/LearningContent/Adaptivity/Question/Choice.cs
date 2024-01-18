@@ -6,16 +6,19 @@ public class Choice : IEquatable<Choice>
     {
         Text = text;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     private Choice()
     {
         Text = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public string Text { get; set; }
     public Guid Id { get; set; }
+    public bool UnsavedChanges { get; set; }
 
     public bool Equals(Choice? other)
     {

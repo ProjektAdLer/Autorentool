@@ -9,6 +9,7 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
     {
         Trigger = trigger;
         Action = action;
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -18,9 +19,19 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
     {
         Trigger = null!;
         Action = null!;
+        UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public IAdaptivityTriggerViewModel Trigger { get; set; }
     public IAdaptivityActionViewModel Action { get; set; }
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Trigger.UnsavedChanges || Action.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
+
 }
