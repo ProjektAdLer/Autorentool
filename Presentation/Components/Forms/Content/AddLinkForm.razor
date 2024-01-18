@@ -12,7 +12,7 @@
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
+            <p class="text-[12px] text-justify">@Localizer["AddLinkForm.Info.Text"]</p>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           DebounceInterval="DebounceInterval"
