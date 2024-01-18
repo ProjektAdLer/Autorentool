@@ -25,6 +25,7 @@
 - UI:
   - Optimized styling of the adaptivity dialog.
   - Optimized responsive design.
+  - Reworked learning world tree view.
 
 ### Deprecated
 
