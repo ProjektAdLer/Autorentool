@@ -13,7 +13,7 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null,
-        Theme? theme = null, bool adaptivityElementMode = false)
+        Theme? theme = null, bool npcMode = false)
     {
         var type = learningContentViewModel switch
         {
@@ -25,18 +25,18 @@ public class ElementModelHandler : IElementModelHandler
 
         IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
 
-        if (adaptivityElementMode)
+        if (npcMode)
         {
-            return AdaptivityModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
+            return NpcModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
         }
         else
         {
             var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
-            return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
+            return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
         }
     }
 
-    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
+    internal static readonly IEnumerable<ElementModel> NpcModels = new[]
         { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
 
     public string GetIconForElementModel(ElementModel elementModel)
