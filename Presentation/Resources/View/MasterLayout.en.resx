@@ -51,4 +51,10 @@
     <data name="SideBarContent.LearningWorldOverView.Alt" xml:space="preserve">
         <value>learning world overview</value>
     </data>
+    <data name="SideBarContent.AdaptivityLearningElementMetadata.Alt" xml:space="preserve">
+        <value>Adaptivity learning element metadata icon</value>
+    </data>
+    <data name="SideBarContent.AdaptivityLearningElementMetadata.Title" xml:space="preserve">
+        <value>Adaptivity learning element details</value>
+    </data>
 </root>
