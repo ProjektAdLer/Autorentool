@@ -12,12 +12,12 @@
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start">
-                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[48px] 2500p:h-[56px] p-0">
-                    <MudIcon Icon="@GetElementIcon()" Class="w-10 h-10 2xl:w-12 2xl:h-12 absolute flex opacity-20 rounded-lg p-1 element-icon"/>
-                    <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
-                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
+                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[80px] 2500p:h-[80px] p-0">
+                    
+                    <div class="absolute flex justify-center -top-5">
+                        <MudIcon Icon="@GetElementIcon()" Class="w-8 h-8 2xl:w-8 2xl:h-8 -top-5 flex rounded-lg p-1 element-icon"/>
                     </div>
-
+                    
                     <div class="flex flex-col">
                         
                         
@@ -28,9 +28,7 @@
                             }
                             <MudListItem Class="w-20 h-14 text-[11px] 2xl:text-xs 1080p:text-xs 1080p:text-sm font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none p-0" Text="@text"></MudListItem>
                         </div>
-                        
-                        
-                        
+
                         <div class="flex flex-row justify-between items-center">
                             <div>
                                 <MudIcon Class="flex difficulty-icon drop-shadow h-4 w-4" Icon="@GetDifficultyIcon(LearningElement.Difficulty)"></MudIcon>
