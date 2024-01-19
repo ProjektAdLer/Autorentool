@@ -20,9 +20,14 @@ public interface IMediator : INotifyPropertyChanged
     bool ElementDialogOpen { get; }
 
     /// <summary>
-    /// Indicates whether the element dialog is open.
+    /// Indicates whether the adaptivity element dialog is open.
     /// </summary>
     bool AdaptivityElementDialogOpen { get; }
+
+    /// <summary>
+    /// Indicates whether the story element dialog is open.
+    /// </summary>
+    bool StoryElementDialogOpen { get; }
 
     /// <summary>
     /// Indicates whether the content dialog is open.
@@ -60,6 +65,11 @@ public interface IMediator : INotifyPropertyChanged
     /// Requests the opening of the adaptivity element dialog.
     /// </summary>
     void RequestOpenAdaptivityElementDialog();
+
+    /// <summary>
+    /// Requests the opening of the story element dialog.
+    /// </summary>
+    void RequestOpenStoryElementDialog();
 
     /// <summary>
     /// Requests the opening of the element dialog with the new element dialog being forced.
@@ -100,6 +110,11 @@ public interface IMediator : INotifyPropertyChanged
     /// Requests toggling the adaptivity element dialog.
     /// </summary>
     void RequestToggleAdaptivityElementDialog();
+
+    /// <summary>
+    /// Requests toggling the story element dialog.
+    /// </summary>
+    void RequestToggleStoryElementDialog();
 
     /// <summary>
     /// Requests toggling the content dialog.

@@ -6,6 +6,7 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningContent.Story
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
         <MudCard Outlined="true" Class="@GetElementStyleString()">
@@ -97,6 +98,7 @@
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
+            IStoryContentViewModel => "",
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }

@@ -13,6 +13,7 @@ public class Mediator : IMediator
     private bool _worldDialogOpen;
     private bool _worldPathwayViewOpen;
     private bool _worldTreeViewOpen;
+    private bool _storyElementDialogOpen;
 
     public void CloseBothSides()
     {
@@ -29,6 +30,7 @@ public class Mediator : IMediator
         SpaceDialogOpen = false;
         ElementDialogOpen = false;
         AdaptivityElementDialogOpen = false;
+        StoryElementDialogOpen = false;
         ContentDialogOpen = false;
     }
 
@@ -65,6 +67,12 @@ public class Mediator : IMediator
     {
         get => _adaptivityElementDialogOpen;
         private set => SetField(ref _adaptivityElementDialogOpen, value);
+    }
+
+    public bool StoryElementDialogOpen
+    {
+        get => _storyElementDialogOpen;
+        private set => SetField(ref _storyElementDialogOpen, value);
     }
 
     public bool OverwriteElementEdit
@@ -121,6 +129,12 @@ public class Mediator : IMediator
     {
         CloseAllLeftSide();
         AdaptivityElementDialogOpen = true;
+    }
+    
+    public void RequestOpenStoryElementDialog()
+    {
+        CloseAllLeftSide();
+        StoryElementDialogOpen = true;
     }
 
     public void RequestOpenNewElementDialog()
@@ -197,6 +211,18 @@ public class Mediator : IMediator
         else
         {
             RequestOpenAdaptivityElementDialog();
+        }
+    }
+
+    public void RequestToggleStoryElementDialog()
+    {
+        if(StoryElementDialogOpen)
+        {
+            StoryElementDialogOpen = false;
+        }
+        else
+        {
+            RequestOpenStoryElementDialog();
         }
     }
 

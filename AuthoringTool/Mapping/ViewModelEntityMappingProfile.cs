@@ -9,6 +9,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -18,6 +19,7 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -118,14 +120,20 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap();
         CreateMap<LinkContent, LinkContentViewModel>()
             .ReverseMap();
+        CreateMap<StoryContent, StoryContentViewModel>()
+            .ReverseMap();
         CreateMap<FileContent, ILearningContentViewModel>()
             .As<FileContentViewModel>();
         CreateMap<LinkContent, ILearningContentViewModel>()
             .As<LinkContentViewModel>();
+        CreateMap<StoryContent, ILearningContentViewModel>()
+            .As<StoryContentViewModel>();
         CreateMap<FileContentViewModel, ILearningContent>()
             .As<FileContent>();
         CreateMap<LinkContentViewModel, ILearningContent>()
             .As<LinkContent>();
+        CreateMap<StoryContentViewModel, ILearningContent>()
+            .As<StoryContent>();
         CreateMap<ILearningContent, ILearningContentViewModel>()
             .IncludeAllDerived()
             .ReverseMap()

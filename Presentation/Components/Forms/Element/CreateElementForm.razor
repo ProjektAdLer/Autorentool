@@ -10,8 +10,10 @@
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities.LearningContent.Story
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.LearningContent.Story
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">
@@ -27,7 +29,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]      @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -35,28 +37,30 @@
                                   OnKeyUp="HandleKeyEvent"
                                   Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
                                   Class="pb-4"/>
+                    @if (ElementMode != ElementMode.Story)
+                    {
+                        <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
+                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                         Min="1"
+                                         Max="1000"
+                                         For="@(() => FormModel.Points)"
+                                         DebounceInterval="DebounceInterval"
+                                         OnKeyUp="HandleKeyEvent"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Class="pb-4"/>
 
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                     Min="1"
-                                     Max="1000"
-                                     For="@(() => FormModel.Points)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-4"/>
-
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                     Min="0"
-                                     Max="1000"
-                                     For="@(() => FormModel.Workload)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-6"/>
+                        <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
+                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                         Min="0"
+                                         Max="1000"
+                                         For="@(() => FormModel.Workload)"
+                                         DebounceInterval="DebounceInterval"
+                                         OnKeyUp="HandleKeyEvent"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Class="pb-6"/>
+                    }
 
                     @if (ElementMode == ElementMode.Normal)
                     {
@@ -98,7 +102,7 @@
         {
             case ElementMode.Normal:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]    @bind-Collapsed="_collapsedContent">
+                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]      @bind-Collapsed="_collapsedContent">
                         <p class="text-xs pl-6">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         @if (!WorldPresenter.GetAllContent().Any())
                         {
@@ -151,7 +155,7 @@
                 break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]    @bind-Collapsed="_collapsedTasks">
+                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]      @bind-Collapsed="_collapsedTasks">
                         <p class="text-xs pl-6">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                         <div class="flex flex-col items-center justify-center">
                             <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard" OnClick="OpenAdaptivityContentDialog">
@@ -162,13 +166,28 @@
                 </div>
                 break;
             case ElementMode.Story:
+                <div class="px-4">
+                    <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
+                        <PseudoFormFieldGrouping 
+                            For="() => FormModel.LearningContent"
+                            @ref="_pseudoGroupStoryContent">
+                            <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
+                            <!-- Overriding nullability here because we ensure learning content is set during initialization -->
+                            <MudTextField T="string" Label="@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]"
+                                          Variant="Variant.Outlined" Lines="5"
+                                          Value="@(StoryContentModel?.StoryText)"
+                                          ValueChanged="@OnStoryTextChanged"/>
+
+                        </PseudoFormFieldGrouping>
+                    </Collapsable>
+                </div>
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(ElementMode));
         }
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]    @bind-Collapsed="_collapsedElementModel">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]      @bind-Collapsed="_collapsedElementModel">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
@@ -179,26 +198,30 @@
             </Collapsable>
         </div>
 
-        <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
-                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                                  For="@(() => FormModel.Description)"
-                                  Lines="3"
-                                  Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                                  For="@(() => FormModel.Goals)"
-                                  Lines="3"
-                                  Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-2 mt-0"/>
-                </div>
-            </Collapsable>
-        </div>
+        @if (ElementMode != ElementMode.Story)
+        {
+            <div class="px-4">
+                <Collapsable
+                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
+                    <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                        <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                      For="@(() => FormModel.Description)"
+                                      Lines="3"
+                                      Variant="Variant.Outlined"
+                                      DebounceInterval="DebounceInterval"
+                                      Class="pb-4 mt-0"/>
+                        <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                                      For="@(() => FormModel.Goals)"
+                                      Lines="3"
+                                      Variant="Variant.Outlined"
+                                      DebounceInterval="DebounceInterval"
+                                      Class="pb-2 mt-0"/>
+                    </div>
+                </Collapsable>
+            </div>
+        }
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -239,12 +262,16 @@
 
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+    private IStoryContentViewModel? StoryContentModel => (IStoryContentViewModel?)FormDataContainer.FormModel.LearningContent;
 
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
     private bool _collapsedTasks = false;
+    private bool _collapsedStory = false;
     private bool _collapsedElementModel = true;
     private bool _collapsedGoals = true;
+
+    private PseudoFormFieldGrouping<ILearningContentViewModel?>? _pseudoGroupStoryContent;
 
     private BaseForm<LearningElementFormModel, LearningElement> _form = null!;
 
@@ -272,15 +299,22 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        if (ElementMode == ElementMode.Adaptivity)
+        switch (ElementMode)
         {
-            FormDataContainer.FormModel.LearningContent = new AdaptivityContentViewModel();
-            return;
+            case ElementMode.Adaptivity:
+                FormDataContainer.FormModel.LearningContent = new AdaptivityContentViewModel();
+                break;
+            case ElementMode.Story:
+                FormDataContainer.FormModel.LearningContent = new StoryContentViewModel();
+                break;
+            case ElementMode.Normal:
+                if (SelectedViewModelsProvider.LearningContent == null) return;
+                FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
+                SelectedViewModelsProvider.SetLearningContent(null, null);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-
-        if (SelectedViewModelsProvider.LearningContent == null) return;
-        FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
-        SelectedViewModelsProvider.SetLearningContent(null, null);
     }
 
     private async void OpenAdaptivityContentDialog()
@@ -329,6 +363,12 @@
             ElementMode.Story => Localizer["CreateStoryElementForm.Header.Text"],
             _ => throw new InvalidOperationException($"{nameof(ElementMode)} is out of range")
         };
+    }
+
+    private void OnStoryTextChanged(string val)
+    {
+        if (StoryContentModel != null) StoryContentModel.StoryText = val;
+        _pseudoGroupStoryContent?.Validate();
     }
 
 }
