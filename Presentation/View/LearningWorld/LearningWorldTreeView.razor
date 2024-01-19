@@ -11,6 +11,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -37,16 +38,11 @@
                         <div>
                             <div class="flex flex-row items-center">
                                 <span @onclick="() => ToggleLearningSpace(learningSpace)">
-                                    @if (IsLearningSpaceExpanded(learningSpace))
-                                    {
-                                        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => ToggleLearningSpace(learningSpace)" Icon="@Icons.Material.Filled.KeyboardArrowDown"></MudIconButton>
-                                    }
-                                    else
-                                    {
-                                        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => ToggleLearningSpace(learningSpace)" Icon="@Icons.Material.Filled.KeyboardArrowRight"></MudIconButton>
-                                    }
+                                    <MudIconButton Class="p-2" Size="Size.Small"
+                                                   OnClick="() => ToggleLearningSpace(learningSpace)"
+                                                   Icon="@(GetSpaceToggleIcon(learningSpace))"/>
                                 </span>
-                                <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@(IsLearningSpaceSelected(learningSpace) ? "text-sm 2xl:text-base text-adlerblue-600 select-none" : "text-sm 2xl:text-base select-none text-adlergrey-600")">
+                                <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
                                     <div class="flex flex-row gap-2 items-center">
                                         <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
                                         <p class="break-words">@learningSpace.Name</p>
@@ -58,13 +54,13 @@
                                 <div>
                                     @foreach (var learningElement in learningSpace.ContainedLearningElements)
                                     {
-                                        <p @onclick="@(e => SelectLearningElement(learningElement))"
-                                           class="@(IsLearningElementSelected(learningElement) ? "text-sm 2xl:text-base text-adlerblue-600 select-none" : "text-sm 2xl:text-base select-none text-adlergrey-600")">
+                                        <div @onclick="@(e => SelectLearningElement(learningElement))"
+                                             class="@GetElementDivCss(learningElement)">
                                             <div class="flex flex-row gap-2 items-center p-2 ml-14">
                                                 <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon(learningElement)"></MudIcon>
                                                 <p class="break-words">@learningElement.Name</p>
                                             </div>
-                                        </p>
+                                        </div>
                                     }
                                 </div>
                             }
@@ -136,6 +132,30 @@
             _ => ""
         };
     }
+
+    private string GetSpaceDivCss(ILearningSpaceViewModel space)
+    {
+        var isLearningSpaceSelected = IsLearningSpaceSelected(space);
+        return new CssBuilder("text-sm 2xl:text-base select-none")
+            .AddClass("text-adlerblue-600", isLearningSpaceSelected)
+            .AddClass("text-adlergrey-600", !isLearningSpaceSelected)
+            .ToString();
+    }
+
+    private string GetElementDivCss(ILearningElementViewModel ele)
+    {
+        var isLearningElementSelected = IsLearningElementSelected(ele);
+        return new CssBuilder("text-sm 2xl:text-base select-none")
+            .AddClass("text-adlerblue-600", isLearningElementSelected)
+            .AddClass("text-adlergrey-600", !isLearningElementSelected)
+            .ToString();
+    }
+    
+    private string GetSpaceToggleIcon(ILearningSpaceViewModel space)
+    {
+        return IsLearningSpaceExpanded(space) ? Icons.Material.Filled.KeyboardArrowDown : Icons.Material.Filled.KeyboardArrowRight;
+    }
+
 
     /// <summary>
     /// Determines the order of learning spaces based on the provided paths and returns them as a list.
