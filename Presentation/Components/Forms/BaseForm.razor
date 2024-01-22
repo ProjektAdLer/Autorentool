@@ -4,34 +4,36 @@
 @using System.Diagnostics.CodeAnalysis
 @implements IBaseForm
 
-<MudCardActions Class="flex flex-col justify-center items-center p-0">
-    <MudButtonGroup OverrideStyles="false">
-        <CascadingValue Value="this">
-            @HeaderButtons
-        </CascadingValue>
-    </MudButtonGroup>
-</MudCardActions>
+<MudFocusTrap DefaultFocus="DefaultFocus.None">
+    <MudCardActions Class="flex flex-col justify-center items-center p-0">
+        <MudButtonGroup OverrideStyles="false">
+            <CascadingValue Value="this">
+                @HeaderButtons
+            </CascadingValue>
+        </MudButtonGroup>
+    </MudCardActions>
 
-<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
-    <MudCardContent Class="p-0">
-        @Fields
-        @if (SubmitErrorMessage != null)
-        {
-            <div class="mt-2 form-error-message">
-                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
-            </div>
-        }
-    </MudCardContent>
-</MudForm>
+    <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel" FieldChanged="@FieldChanged">
+        <MudCardContent Class="p-0">
+            @Fields
+            @if (SubmitErrorMessage != null)
+            {
+                <div class="mt-2 form-error-message">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
+                </div>
+            }
+        </MudCardContent>
+    </MudForm>
 
-<MudCardActions Class="flex justify-end">
-    <MudButtonGroup OverrideStyles="false">
-        <CascadingValue Value="this">
-            @FooterButtons
-        </CascadingValue>
-    </MudButtonGroup>
-</MudCardActions>
+    <MudCardActions Class="flex justify-end">
+        <MudButtonGroup OverrideStyles="false">
+            <CascadingValue Value="this">
+                @FooterButtons
+            </CascadingValue>
+        </MudButtonGroup>
+    </MudCardActions>
 
+</MudFocusTrap>
 
 @code {
 
@@ -41,11 +43,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISnackbar Snackbar { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<TForm> OnValidSubmit { get; set; }
+    [Parameter, EditorRequired] public EventCallback<TForm> OnValidSubmit { get; set; }
 
-    [Parameter]
-    public EventCallback<TForm> OnValidFieldChange { get; set; }
+    [Parameter] public EventCallback<TForm> OnValidFieldChange { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string SnackbarMessage { get; set; }
@@ -56,20 +56,25 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment Fields { get; set; }
 
-    [Parameter]
-    public RenderFragment? HeaderButtons { get; set; }
+    [Parameter] public RenderFragment? HeaderButtons { get; set; }
 
-    [Parameter, EditorRequired]
-    public RenderFragment? FooterButtons { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? FooterButtons { get; set; }
 
+    [Parameter] public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
+
+    internal string? SubmitErrorMessage { get; set; }
 
     private MudForm? _form;
 
 
-    internal string? SubmitErrorMessage { get; set; }
-
-    [Parameter]
-    public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
+    public async Task FocusField(MudTextField<string> focusField)
+    {
+        if (focusField != null)
+        {
+            await focusField.FocusAsync();
+            focusField.ResetValidation();
+        }
+    }
 
     //Wrapper function around ValidateAsync to only validate a given property
     //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
@@ -110,7 +115,7 @@
 
     private async Task FieldChanged(FormFieldChangedEventArgs e)
     {
-    //quit early if nobody is listening anyway
+        //quit early if nobody is listening anyway
         if (!OnValidFieldChange.HasDelegate) return;
         if (_form == null) throw new ApplicationException("_form is null");
         await _form.Validate();
