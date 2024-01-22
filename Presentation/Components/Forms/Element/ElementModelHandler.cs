@@ -1,4 +1,5 @@
-﻿using Presentation.PresentationLogic.LearningContent;
+﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -27,7 +28,7 @@ public class ElementModelHandler : IElementModelHandler
 
         if (adaptivityElementMode)
         {
-            return AdaptivityModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
+            return AdaptivityModels.OrderBy(m => m, comparer);
         }
         else
         {
@@ -35,9 +36,9 @@ public class ElementModelHandler : IElementModelHandler
             return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
         }
     }
-
+    
     internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_alerobot, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
+        { ElementModel.a_npc_alerobot };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -95,9 +96,13 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
-    public static ElementModel GetElementModelRandom()
+    public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
-        return ElementModel.l_random;
+        return modelType switch
+        {
+            ContentTypeEnum.Adaptivity => ElementModel.a_npc_alerobot,
+            _ => ElementModel.l_random
+        };
     }
 
     internal static IEnumerable<ElementModel> GetElementModelsForModelType(ContentTypeEnum modelType)
