@@ -18,7 +18,7 @@
     <Fields>
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
                                   DebounceInterval="DebounceInterval"

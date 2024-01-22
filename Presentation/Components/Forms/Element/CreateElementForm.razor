@@ -26,35 +26,42 @@
     <Fields>
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
-                                  Class="pb-4"/>
+                                  Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]/>
 
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                     Min="1"
-                                     Max="1000"
-                                     For="@(() => FormModel.Points)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-4"/>
-
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                     Min="0"
-                                     Max="1000"
-                                     For="@(() => FormModel.Workload)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-6"/>
+                    <div class="flex flex-row justify-between py-6 gap-6">
+                        <div class="flex-initial w-34 items-center gap-2">
+                            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                             Min="1"
+                                             Max="1000"
+                                             For="@(() => FormModel.Points)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"
+                                             Class="w-24"/>
+                        </div>
+                        
+                        <MudDivider Style="border-style: dashed; border-color: rgb(230,230,230)" Vertical="true" FlexItem="true"></MudDivider>
+                        
+                        <div class="flex-initial w-34 items-center gap-2">
+                            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                             Min="0"
+                                             Max="1000"
+                                             For="@(() => FormModel.Workload)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"
+                                             Class="w-24"/>
+                        </div>
+                    </div>
             
                     @if (!AdaptivityElementMode)
                     {
@@ -191,9 +198,13 @@
             </Collapsable>
         </div>
     </Fields>
+    
     <FooterButtons>
-        <DefaultSubmitButton/>
+        <div class="">
+            <DefaultSubmitButton/>
+        </div>
     </FooterButtons>
+
 </BaseForm>
 
 @code {
