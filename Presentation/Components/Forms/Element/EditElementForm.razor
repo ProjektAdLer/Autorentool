@@ -11,6 +11,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.LearningContent.Story
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@(GetHeaderText())</h2>
@@ -37,26 +38,28 @@
                                   DebounceInterval="DebounceInterval"
                                   Label=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
                                   Class="pb-4"/>
+                    @if (ElementMode != ElementMode.Story)
+                    {
+                        <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
+                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                         Min="1"
+                                         Max="1000"
+                                         For="@(() => FormModel.Points)"
+                                         DebounceInterval="DebounceInterval"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Class="pb-4"/>
 
-                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                     Min="1"
-                                     Max="1000"
-                                     For="@(() => FormModel.Points)"
-                                     DebounceInterval="DebounceInterval"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-4"/>
-
-                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                     Min="0"
-                                     Max="1000"
-                                     For="@(() => FormModel.Workload)"
-                                     DebounceInterval="DebounceInterval"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-6"/>
+                        <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
+                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                         Min="0"
+                                         Max="1000"
+                                         For="@(() => FormModel.Workload)"
+                                         DebounceInterval="DebounceInterval"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Class="pb-6"/>
+                    }
 
                     @if (ElementMode == ElementMode.Normal)
                     {
@@ -97,11 +100,11 @@
                     <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"]   @bind-Collapsed="_collapsedContent">
                         <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         <TableSelect
-                            T="ILearningContentViewModel"
+                            T="ILearningContentFormModel"
                             @bind-Value="FormDataContainer.FormModel.LearningContent"
                             For="@(() => FormModel.LearningContent!)"
-                            Elements="WorldPresenter.GetAllContent()"
-                            FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                            Elements="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
+                            FilterFuncSearchableStrings="ILearningContentFormModel.GetSearchableStrings">
                             <HeaderContent>
                                 <MudTh></MudTh>
                                 <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
@@ -110,7 +113,7 @@
                             <RowTemplate>
                                 <MudTd Class="p-0">
                                     <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                                   OnClick="() => PreviewOnClick(context)"
+                                                   OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
                                                    Class="show-content-preview py-2"/>
                                 </MudTd>
                                 <MudTd Class="p-0" DataLabel="Name">
@@ -150,6 +153,22 @@
                 </div>
                 break;
             case ElementMode.Story:
+                <div class="px-4">
+                    <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
+                        <PseudoFormFieldGrouping 
+                            For="() => FormModel.LearningContent"
+                            @ref="_pseudoGroupStoryContent">
+                            <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
+                            <!-- Overriding nullability here because we ensure learning content is set during initialization -->
+                            <MudTextField T="string" Label="@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]"
+                                          Variant="Variant.Outlined" Lines="5"
+                                          Value="@(StoryContentModel?.StoryText)"
+                                          ValueChanged="@OnStoryTextChanged"
+                                          DebounceInterval="DebounceInterval"/>
+
+                        </PseudoFormFieldGrouping>
+                    </Collapsable>
+                </div>
                 break;
             default:
                 throw new InvalidOperationException($"{nameof(ElementMode)} is out of range");
@@ -161,7 +180,7 @@
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
                                             Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                            Elements="ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent, ElementToEdit.Parent?.Theme, ElementMode is ElementMode.Adaptivity or ElementMode.Story)">
+                                            Elements="GetElementModels()">
                     </ElementModelGridSelect>
                 </div>
             </Collapsable>
@@ -240,19 +259,26 @@
 
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+    private IStoryContentViewModel? StoryContentModel => (IStoryContentViewModel?)FormDataContainer.FormModel.LearningContent;
 
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
     private bool _collapsedTasks = false;
-    private bool _collapsedGoals = true;
+    private bool _collapsedStory = false;
     private bool _collapsedElementModel = true;
+    private bool _collapsedGoals = true;
 
+    private PseudoFormFieldGrouping<ILearningContentFormModel?>? _pseudoGroupStoryContent;
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
-            //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-            model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, model.LearningContent!);
+
+        WorldPresenter.EditLearningElementFromFormModel(ElementToEdit.Parent, ElementToEdit, model);
+        // WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
+        //     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+        //     model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, content);
         TriggerMasterLayoutStateHasChanged?.Invoke();
+        //batch command: EditElement + EditStoryContent
+        //execute batch command
     }
 
     private void OnValidFieldChange(LearningElementFormModel model) => OnValidSubmit(model);
@@ -319,4 +345,26 @@
         };
     }
 
+    private IEnumerable<ElementModel> GetElementModels()
+    {
+        var elementModelContentType = ElementMode switch
+        {
+            ElementMode.Normal when FormModel.LearningContent is FileContentFormModel => ElementModelContentType.File,
+            ElementMode.Normal when FormModel.LearningContent is LinkContentFormModel => ElementModelContentType.Link,
+            ElementMode.Adaptivity => ElementModelContentType.Adaptivity,
+            ElementMode.Story => ElementModelContentType.Story,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
+        return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
+            ElementToEdit.Parent?.Theme,
+            ElementMode is ElementMode.Adaptivity or ElementMode.Story);
+    }
+
+    //We need a manual OnChanged callback for this because we need to make sure that StoryContentModel is not null
+    private void OnStoryTextChanged(string val)
+    {
+        if (StoryContentModel != null) StoryContentModel.StoryText = val;
+        _pseudoGroupStoryContent?.Validate();
+    }
 }

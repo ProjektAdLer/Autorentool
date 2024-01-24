@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -496,6 +497,14 @@ public interface IPresentationLogic
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentViewModel or LinkContentViewModel.</exception>
     Task ShowLearningContentAsync(ILearningContentViewModel content);
+    
+    /// <summary>
+    /// Asynchronously shows the content of a Learning Content view model.
+    /// </summary>
+    /// <param name="content">The Learning Content view model to display. It must be either a FileContentFormModel or a LinkContentViewModel.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentFormModel or LinkContentViewModel.</exception>
+    Task ShowLearningContentAsync(ILearningContentFormModel content);
 
     /// <summary>
     /// Saves a link associated with a LinkContentViewModel.

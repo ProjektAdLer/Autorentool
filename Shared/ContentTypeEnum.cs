@@ -6,5 +6,6 @@ public enum ContentTypeEnum
     Image,
     Video,
     H5P,
-    Adaptivity
+    Adaptivity,
+    Story
 }

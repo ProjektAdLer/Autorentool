@@ -22,6 +22,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using ElectronWrapper;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -702,8 +703,8 @@ public class PresentationLogic : IPresentationLogic
         var error =
             await (content switch
             {
-                FileContentViewModel fileContentVm => ShellWrapper.OpenPathAsync(fileContentVm.Filepath),
-                LinkContentViewModel linkContentVm => ShellWrapper.OpenExternalAsync(linkContentVm.Link),
+                FileContentViewModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
+                LinkContentViewModel linkContentVm => ShowLinkContent(linkContentVm.Link),
                 _ => throw new ArgumentOutOfRangeException(nameof(content),
                     "LearningContent is not of type FileContentViewModel or LinkContentViewModel")
             });
@@ -714,6 +715,28 @@ public class PresentationLogic : IPresentationLogic
             throw new IOException("Could not open file in OS viewer" + error);
         }
     }
+
+    public async Task ShowLearningContentAsync(ILearningContentFormModel content)
+    {
+        ElectronCheck();
+        var error =
+            await (content switch
+            {
+                FileContentFormModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
+                LinkContentFormModel linkContentVm => ShowLinkContent(linkContentVm.Link),
+                _ => throw new ArgumentOutOfRangeException(nameof(content),
+                    "LearningContent is not of type FileContentFormModel or LinkContentFormModel")
+            });
+
+        if (error != "")
+        {
+            Logger.LogError("Could not open file in OS viewer: {Error}", error);
+            throw new IOException("Could not open file in OS viewer" + error);
+        }
+    }
+
+    private Task<string> ShowFileContent(string filePath) => ShellWrapper.OpenPathAsync(filePath);
+    private Task<string> ShowLinkContent(string link) => ShellWrapper.OpenExternalAsync(link);
 
     /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
     public IEnumerable<ILearningContentViewModel> GetAllContent() =>

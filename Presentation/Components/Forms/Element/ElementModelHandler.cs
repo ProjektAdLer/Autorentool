@@ -1,10 +1,8 @@
-﻿using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
-using Presentation.PresentationLogic.LearningContent.FileContent;
-using Presentation.PresentationLogic.LearningContent.LinkContent;
-using Shared;
+﻿using Shared;
 
 namespace Presentation.Components.Forms.Element;
+
+public enum ElementModelContentType {File, Link, Adaptivity, Story}
 
 public class ElementModelHandler : IElementModelHandler
 {
@@ -12,15 +10,16 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetIconForElementModel: Add the path to the icon for the new ElementModel
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
-    public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null,
+    public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
         Theme? theme = null, bool npcMode = false)
     {
-        var type = learningContentViewModel switch
+        var type = contentType switch
         {
-            IFileContentViewModel fileContentViewModel => ContentTypeHelper.GetContentType(fileContentViewModel.Type),
-            ILinkContentViewModel => ContentTypeEnum.Video,
-            IAdaptivityContentViewModel => ContentTypeEnum.Adaptivity,
-            _ => ContentTypeEnum.H5P
+            ElementModelContentType.File => ContentTypeHelper.GetContentType(fileType),
+            ElementModelContentType.Link => ContentTypeEnum.Video,
+            ElementModelContentType.Adaptivity => ContentTypeEnum.Adaptivity,
+            ElementModelContentType.Story => ContentTypeEnum.Story,
+            _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
         IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
@@ -29,11 +28,9 @@ public class ElementModelHandler : IElementModelHandler
         {
             return NpcModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
         }
-        else
-        {
-            var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
-            return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
-        }
+
+        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+        return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
     }
 
     internal static readonly IEnumerable<ElementModel> NpcModels = new[]

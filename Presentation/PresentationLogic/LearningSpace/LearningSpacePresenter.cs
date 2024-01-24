@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using MudBlazor;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -181,6 +182,11 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+    }
+
+    public void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model)
+    {
+        throw new NotImplementedException();
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>

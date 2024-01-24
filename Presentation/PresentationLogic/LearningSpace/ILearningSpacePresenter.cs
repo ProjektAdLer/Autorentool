@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using MudBlazor;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -127,4 +128,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// <param name="points">The points associated with the learning element.</param>
     void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent, string description,
         string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
+
+    void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model);
 }

@@ -88,7 +88,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_AdaptivityElementModeTrue_SetsContentInFormModel()
     {
         Assert.That(FormModel.LearningContent, Is.Null);
-        GetFormWithPopoverProvider(adaptivityElementMode: true);
+        GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentViewModel>());
     }
@@ -96,7 +96,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Test]
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         Assert.That(() => collapsables.Single(collapsable =>
@@ -278,7 +278,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var dialogServiceMock = Substitute.For<IDialogService>();
         Context.Services.AddSingleton(dialogServiceMock);
 
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
@@ -342,19 +342,19 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.RenderComponent<CreateElementForm>(p =>
         {
             p.Add(c => c.OnSubmitted, onSubmitted.Value);
             p.Add(c => c.DebounceInterval, 0);
-            p.Add(c => c.AdaptivityElementMode, adaptivityElementMode);
+            p.Add(c => c.ElementMode, elementMode);
         });
     }
 
     private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.Render(builder =>
@@ -364,7 +364,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             builder.OpenComponent<CreateElementForm>(1);
             builder.AddAttribute(2, nameof(CreateElementForm.OnSubmitted), onSubmitted);
             builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
-            builder.AddAttribute(4, nameof(CreateElementForm.AdaptivityElementMode), adaptivityElementMode);
+            builder.AddAttribute(4, nameof(CreateElementForm.ElementMode), elementMode);
             builder.CloseComponent();
         });
     }

@@ -89,7 +89,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Test]
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         Assert.That(() => collapsables.Single(collapsable =>
@@ -227,7 +227,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
          var dialogServiceMock = Substitute.For<IDialogService>();
          Context.Services.AddSingleton(dialogServiceMock);
         
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
         
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
@@ -238,7 +238,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
     private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,
         EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         vm ??= ViewModelProvider.GetLearningElement();
         onNewClicked ??= EventCallback.Empty;
@@ -248,14 +248,14 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             p.Add(c => c.ElementToEdit, vm);
             p.Add(c => c.OnNewButtonClicked, onNewClicked.Value);
             p.Add(c => c.DebounceInterval, 0);
-            p.Add(c => c.AdaptivityElementMode, adaptivityElementMode);
+            p.Add(c => c.ElementMode, elementMode);
             p.AddCascadingValue("TriggerMasterLayoutStateHasChanged", masterLayoutStateHasChanged);
         });
     }
 
     private IRenderedFragment GetFormWithPopoverProvider(ILearningElementViewModel? vm = null,
         EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null, int debounceInterval = 0,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         vm ??= ViewModelProvider.GetLearningElement();
         onNewClicked ??= EventCallback.Empty;
@@ -268,7 +268,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             builder.AddAttribute(2, nameof(EditElementForm.ElementToEdit), vm);
             builder.AddAttribute(3, nameof(EditElementForm.DebounceInterval), debounceInterval);
             builder.AddAttribute(4, nameof(EditElementForm.OnNewButtonClicked), onNewClicked.Value);
-            builder.AddAttribute(5, nameof(EditElementForm.AdaptivityElementMode), adaptivityElementMode);
+            builder.AddAttribute(5, nameof(EditElementForm.ElementMode), elementMode);
             builder.CloseComponent();
         };
         return Context.Render(builder =>

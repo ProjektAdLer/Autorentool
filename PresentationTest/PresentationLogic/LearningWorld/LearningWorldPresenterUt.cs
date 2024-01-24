@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -1459,7 +1460,7 @@ public class LearningWorldPresenterUt
         ILearningSpacePresenter? learningSpacePresenter = null,
         ILogger<LearningWorldPresenter>? logger = null, IMediator? mediator = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        IErrorService? errorService = null)
+        IErrorService? errorService = null, IMapper? mapper = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
@@ -1467,7 +1468,8 @@ public class LearningWorldPresenterUt
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         errorService ??= Substitute.For<IErrorService>();
+        mapper ??= Substitute.For<IMapper>();
         return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger,
-            mediator, selectedViewModelsProvider, errorService);
+            mediator, selectedViewModelsProvider, errorService, mapper);
     }
 }

@@ -8,7 +8,7 @@ namespace Presentation.Components.Forms.Models;
 
 public class LearningElementFormModel
 {
-    private ILearningContentViewModel? _learningContent;
+    private ILearningContentFormModel? _learningContent;
 
     public LearningElementFormModel()
     {
@@ -32,15 +32,15 @@ public class LearningElementFormModel
     public int Workload { get; set; }
     public int Points { get; set; }
 
-    public ILearningContentViewModel? LearningContent
+    public ILearningContentFormModel? LearningContent
     {
         get => _learningContent;
         set
         {
             if (Equals(value, _learningContent)) return;
             var learningContentIsSameType =
-                (_learningContent is LinkContentViewModel && value is LinkContentViewModel) ||
-                (_learningContent is FileContentViewModel lC && value is FileContentViewModel vC &&
+                (_learningContent is LinkContentFormModel && value is LinkContentFormModel) ||
+                (_learningContent is FileContentFormModel lC && value is FileContentFormModel vC &&
                  lC.Type == vC.Type);
 
             _learningContent = value;

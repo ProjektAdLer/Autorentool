@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using AutoMapper;
 using BusinessLogic.Validation;
 using Presentation.Components;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -28,13 +30,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private readonly IMapper _mapper;
 
     private ILearningWorldViewModel? _learningWorldVm;
 
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
-        ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
+        ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService,
+        IMapper mapper)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
@@ -45,6 +49,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         //first-time update in case a learning world was selected before we were instantiated 
         LearningWorldVm = selectedViewModelsProvider.LearningWorld;
         _errorService = errorService;
+        _mapper = mapper;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.LearningWorldVm"/>
@@ -154,7 +159,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.SaveLearningWorld((LearningWorldViewModel) LearningWorldVm!);
+        _presentationLogic.SaveLearningWorld((LearningWorldViewModel)LearningWorldVm!);
     }
 
     #endregion
@@ -318,7 +323,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         try
         {
             await _presentationLogic.SaveLearningSpaceAsync(
-                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
+                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
         }
         catch (SerializationException e)
         {
@@ -343,6 +348,26 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _mediator.RequestOpenSpaceDialog();
+    }
+
+    public void CreateUnplacedLearningElementFromFormModel(LearningElementFormModel model)
+    {
+        CreateUnplacedLearningElement(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
+    }
+
+    public void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent,
+        ILearningElementViewModel elementToEdit,
+        LearningElementFormModel model)
+    {
+        //map content except when it is an adaptivity content, as this is not editable in the normal form
+        //in that case just take existing content in the element
+        var content = elementToEdit.LearningContent is IAdaptivityContentViewModel && model.LearningContent == null
+            ? elementToEdit.LearningContent
+            : _mapper.Map<ILearningContentViewModel>(model.LearningContent);
+        //unpack model and call edit
+        EditLearningElement(parent, elementToEdit, model.Name, model.Description, model.Goals, model.Difficulty,
+            model.ElementModel, model.Workload, model.Points, content);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningSpace"/>
@@ -423,7 +448,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 66 >= x && ls.PositionY <= y &&
                                    ls.PositionY + 64 >= y) ??
-                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
@@ -573,7 +598,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         SetSelectedLearningElement(learningElement);
         try
         {
-            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
         }
         catch (ArgumentOutOfRangeException e)
         {
