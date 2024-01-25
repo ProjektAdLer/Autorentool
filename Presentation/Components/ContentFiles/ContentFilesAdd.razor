@@ -9,14 +9,14 @@
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
 @using Presentation.Components.Dialogues
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
-<MudStack Class="w-full">
-    <div class="flex flex-col relative px-2">
+
+<MudStack Class="w-full px-2 2xl:px-3">
+    <div class="flex flex-col relative p-2">
 
         @if (Working)
         {

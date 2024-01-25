@@ -1,11 +1,13 @@
-<MudButton Class="btn-standard rounded-lg p-2 shadow-lg" 
-           OnClick="@Submit">
-    <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Success"></MudIcon>
-    <MudText Class="px-2 uppercase font-bold">Ok</MudText>
-</MudButton>
+    <MudButton Class="@buttonStyle" 
+               OnClick="@Submit">
+        <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Success"></MudIcon>
+        <MudText Class="px-2 uppercase font-bold">Ok</MudText>
+    </MudButton>
 
 @code {
-
+    [Parameter]
+    public string buttonStyle { get; set; } = "btn-standard rounded-lg p-2 shadow-lg";
+    
     [CascadingParameter]
     public IBaseForm? Form { get; set; }
 
