@@ -10,35 +10,25 @@
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
-    <div class="mx-2 rounded-lg">
+    <div class="cursor-default mx-2 rounded-lg">
         <div class="flex justify-center p-2">
             <p class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</p>
         </div>
     </div>
-    <div class="p-2 flex justify-start items-center space-x-2">
-        <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
-        <p class="text-sm 2xl:text-lg text-adlerblue-600 font-bold truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
-    </div>
+
     @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
     {
-        <section class="p-2 flex flex-col justify-start">
-            <div class="gap-2 flex justify-between items-start">
-                <label id="learning-element-info" class="font-medium flex flex-col w-3/5">
+        <div class="cursor-default flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-start">
+            <div class="px-1 flex justify-start items-center space-x-2 2xl:max-w-[70%]">
+                <img class="w-6 2xl:w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
+                <p class="text-sm 2xl:text-lg text-adlerblue-600 font-bold truncate 2xl:whitespace-normal 2xl:break-words" title="@LearningSpaceP.LearningSpaceVm.Name">@LearningSpaceP.LearningSpaceVm.Name</p>
+            </div>
+ 
+            <section class="p-1 flex justify-end items-center">
+                <div class="flex flex-col justify-start">
                     <p class="text-sm 2xl:text-base text-adlerblue-600 space-theme">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
                     </p>
-                    <div class="flex flex-row justify-start items-center gap-1">
-                        <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
-                    <MudTooltip Text="@LearningSpaceP.LearningSpaceVm?.Goals"
-                                Placement="Placement.Right"
-                                Duration="Double.Epsilon"
-                                Class="bg-adlergrey-200 drop-shadow-xl h-fit w-40 text-adlergrey-800"
-                                Arrow="true">
-                        <p class="text-sm 2xl:text-base w-[8rem] 2xl:w-[24rem] text-adlerblue-600 truncate text-ellipsis">@LearningSpaceP.LearningSpaceVm?.Goals</p>
-                    </MudTooltip>
-                    </div>
-                </label>
-                <div class="w-2/5">
                     <p class="text-sm 2xl:text-base text-adlerblue-600 space-workload">
                         <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
                     </p>
@@ -49,9 +39,10 @@
                     </p>
                     @ChildContent
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     }
+    
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
         <LearningSpaceLayoutView LearningSpace="LearningSpaceP.LearningSpaceVm"/>
