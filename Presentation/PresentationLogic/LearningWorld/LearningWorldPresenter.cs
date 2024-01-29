@@ -9,6 +9,9 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -548,15 +551,29 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         }
 
+        _mediator.CloseAllLeftSide();
+
+        switch (learningElement.LearningContent)
+        {
+            case AdaptivityContentViewModel:
+                _mediator.RequestOpenAdaptivityElementDialog();
+                break;
+            case StoryContentViewModel:
+                _mediator.RequestOpenStoryElementDialog();
+                break;
+            case FileContentViewModel or LinkContentViewModel:
+                _mediator.RequestOpenElementDialog();
+                break;
+        }
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
-        if (learningElement.LearningContent is AdaptivityContentViewModel)
-        {
-            _mediator.RequestOpenAdaptivityElementDialog();
-        }
-        else
-        {
-            _mediator.RequestOpenElementDialog();
-        }
+        // if (learningElement.LearningContent is AdaptivityContentViewModel)
+        // {
+        //     _mediator.RequestOpenAdaptivityElementDialog();
+        // }
+        // else
+        // {
+        //     _mediator.RequestOpenElementDialog();
+        // }
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningElement"/>

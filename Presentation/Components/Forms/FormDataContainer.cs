@@ -21,4 +21,8 @@ public class FormDataContainer<TForm, TEntity> : IFormDataContainer<TForm, TEnti
     private IMapper Mapper { get; }
 
     public TEntity GetMappedEntity() => Mapper.Map<TForm, TEntity>(FormModel);
+    public void Reset()
+    {
+        FormModel = new TForm();
+    }
 }

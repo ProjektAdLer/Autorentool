@@ -24,7 +24,7 @@ public class Mediator : IMediator
     /// <summary>
     /// Closes all dialogs on the left side.
     /// </summary>
-    private void CloseAllLeftSide()
+    public void CloseAllLeftSide()
     {
         WorldDialogOpen = false;
         SpaceDialogOpen = false;
@@ -37,7 +37,7 @@ public class Mediator : IMediator
     /// <summary>
     /// Closes all dialogs on the right side.
     /// </summary>
-    private void CloseAllRightSide()
+    public void CloseAllRightSide()
     {
         WorldPathwayViewOpen = false;
         WorldTreeViewOpen = false;

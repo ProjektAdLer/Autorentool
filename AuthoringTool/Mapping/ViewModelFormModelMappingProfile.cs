@@ -44,7 +44,9 @@ public class ViewModelFormModelMappingProfile : Profile
             .ReverseMap();
         
         CreateMap<ILearningContentViewModel, ILearningContentFormModel>()
-            .ReverseMap();
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
         
         CreateMap<LinkContentViewModel, ILearningContentFormModel>()
             .As<LinkContentFormModel>();

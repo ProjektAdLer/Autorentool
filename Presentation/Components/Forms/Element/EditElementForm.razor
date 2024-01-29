@@ -31,7 +31,7 @@
     </HeaderButtons>
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]   @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -97,7 +97,7 @@
         {
             case ElementMode.Normal:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"]   @bind-Collapsed="_collapsedContent">
+                    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"]    @bind-Collapsed="_collapsedContent">
                         <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         <TableSelect
                             T="ILearningContentFormModel"
@@ -126,13 +126,17 @@
                                     </MudTooltip>
                                 </MudTd>
                                 <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
-                                    @if (context is FileContentViewModel fileContentContext)
+                                    @switch (context)
                                     {
-                                        @fileContentContext.Type
-                                    }
-                                    else
-                                    {
-                                        <span>Link</span>
+                                        case FileContentFormModel fileContentContext:
+                                            <span>@fileContentContext.Type</span>
+                                            break;
+                                        case LinkContentFormModel:
+                                            <span>Link</span>
+                                            break;
+                                        default:
+                                            <span>???</span>
+                                            break;
                                     }
                                 </MudTd>
                             </RowTemplate>
@@ -142,7 +146,7 @@
                 break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]   @bind-Collapsed="_collapsedTasks">
+                    <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]    @bind-Collapsed="_collapsedTasks">
                         <p class="text-xs pl-6">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                         <div class="flex flex-col items-center justify-center">
                             <MudButton Class="w-44 2xl:w-3/5 btn-standard add-tasks" OnClick="OpenAdaptivityContentDialog">
@@ -155,7 +159,7 @@
             case ElementMode.Story:
                 <div class="px-4">
                     <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
-                        <PseudoFormFieldGrouping 
+                        <PseudoFormFieldGrouping
                             For="() => FormModel.LearningContent"
                             @ref="_pseudoGroupStoryContent">
                             <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
@@ -175,7 +179,7 @@
         }
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"]   @bind-Collapsed="_collapsedElementModel">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"]    @bind-Collapsed="_collapsedElementModel">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
@@ -187,7 +191,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -259,7 +263,7 @@
 
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
-    private IStoryContentViewModel? StoryContentModel => (IStoryContentViewModel?)FormDataContainer.FormModel.LearningContent;
+    private StoryContentFormModel? StoryContentModel => FormDataContainer.FormModel.LearningContent as StoryContentFormModel;
 
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
@@ -269,9 +273,9 @@
     private bool _collapsedGoals = true;
 
     private PseudoFormFieldGrouping<ILearningContentFormModel?>? _pseudoGroupStoryContent;
+
     private void OnValidSubmit(LearningElementFormModel model)
     {
-
         WorldPresenter.EditLearningElementFromFormModel(ElementToEdit.Parent, ElementToEdit, model);
         // WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
         //     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
@@ -285,6 +289,10 @@
 
     private async Task MapIntoContainer()
     {
+        //this is a hacky workaround. we need to reset the container because when we switch between elements, the container still contains the old element before this component is disposed.
+        //this is because in ElementFormContainer all element modes use the same component (this one). so when we switch between elements, the component is not disposed and the container is not reset before the new element is mapped into it.
+        //TODO: fix this during our 3.0 refactoring - n.stich
+        FormDataContainer.Reset();
         Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
         await InvokeAsync(StateHasChanged);
     }
@@ -367,4 +375,5 @@
         if (StoryContentModel != null) StoryContentModel.StoryText = val;
         _pseudoGroupStoryContent?.Validate();
     }
+
 }

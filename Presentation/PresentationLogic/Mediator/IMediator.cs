@@ -135,4 +135,14 @@ public interface IMediator : INotifyPropertyChanged
     /// Closes every dialog and view.
     /// </summary>
     void CloseBothSides();
+
+    /// <summary>
+    /// Closes all dialogs on the left side.
+    /// </summary>
+    void CloseAllLeftSide();
+
+    /// <summary>
+    /// Closes all dialogs on the right side.
+    /// </summary>
+    void CloseAllRightSide();
 }
