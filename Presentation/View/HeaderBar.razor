@@ -7,6 +7,7 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using System.Drawing
 @using System.Text
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
@@ -20,6 +21,8 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Shared.Extensions
+@using Size = MudBlazor.Size
+@using Color = MudBlazor.Color
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -91,56 +94,29 @@
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
         <div class="flex justify-center items-center gap-2">
-            <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world-icon-nobg.png" alt="learningworld">
+            <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world_adlerdarkblue.png" alt="learningworld">
             <p class="font-bold text-lg truncate hover:text-clip"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
 
     <div class="flex justify-end items-center gap-2 border-solid">
-        <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
-            <ActivatorContent>
-                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">Feedback</MudButton>
-            </ActivatorContent>
-            <ChildContent>
-                <div class="w-64">
 
-                    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
+        @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
                     {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
                             <div class="flex flex-row items-center gap-4">
-                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
-                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
+                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
                             </div>
                         </a>
                     }
                     else
                     {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
                             <div class="flex flex-row items-center gap-4">
-                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
-                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
+                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
                             </div>
                         </a>
                     }
-
-                    <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
-                        <div class="flex flex-row justify-start items-center gap-4">
-                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.Technical.Text"]</MudMenuItem>
-                        </div>
-                    </a>
-
-                    @*<MudDivider></MudDivider>
-
-                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page">
-                    <div class="flex flex-row justify-start items-center gap-4">
-                        <img class="opacity-60 w-9 h-7 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-adlerdarkblue-nobg.png" alt="final-feedback-icon"/>
-                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Final feedback</MudMenuItem>
-                    </div>
-                </a>*@
-                </div>
-            </ChildContent>
-        </MudMenu>
         
         <CultureSelector/>
         
@@ -148,13 +124,15 @@
             <MudMenuItem Disabled="true">Benutzerhandbuch</MudMenuItem>
             <MudMenuItem Disabled="true">Tutorials</MudMenuItem>
             <MudDivider></MudDivider>
-            <MudMenuItem>Feedback geben</MudMenuItem>
+            <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+                <MudMenuItem>@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
+            </a>
             <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
-                <MudMenuItem>Technischen Fehler melden</MudMenuItem>
+                <MudMenuItem>@Localizer["Feedback.MenuItem.Technical.Text"]</MudMenuItem>
             </a>
             <MudDivider></MudDivider>
-            <a href="https://www.projekt-adler.eu" target="_blank">
-                <MudMenuItem>Über AdLer</MudMenuItem>
+            <a href="https://www.projekt-adler.eu" target="_blank" title="@Localizer["HeaderBar.Help.About.Hover"]">
+                <MudMenuItem>@Localizer["HeaderBar.Help.About"]</MudMenuItem>
             </a>
         </MudMenu>
 

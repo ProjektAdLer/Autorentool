@@ -37,7 +37,7 @@
         <value>Save learning world</value>
     </data>
     <data name="Feedback.Text" xml:space="preserve">
-        <value>Feedback</value>
+        <value>Tester feedback</value>
     </data>
     <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
         <value>Technical feedback - Opens new web page</value>
@@ -64,10 +64,10 @@
         <value>In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</value>
     </data>
     <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
-        <value>User experience feedback</value>
+        <value>Give feedback</value>
     </data>
     <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
-        <value>Technical feedback</value>
+        <value>Report technical error</value>
     </data>
     <data name="Export.SnackBar.Message" xml:space="preserve">
         <value>World upload completed.</value>
@@ -131,5 +131,11 @@
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
         <value>Archive the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
+    </data>
+    <data name="HeaderBar.Help.About" xml:space="preserve">
+        <value>About AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.About.Hover" xml:space="preserve">
+        <value>Learn more about the AdLer project</value>
     </data>
 </root>
