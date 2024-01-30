@@ -12,16 +12,20 @@ public class LearningSpaceLayout : ILearningSpaceLayout
     private LearningSpaceLayout()
     {
         LearningElements = new Dictionary<int, ILearningElement>();
+        StoryElements = new Dictionary<int, ILearningElement>();
         FloorPlanName = FloorPlanEnum.R_20X30_8L;
     }
 
-    public LearningSpaceLayout(IDictionary<int, ILearningElement> learningElements, FloorPlanEnum floorPlanName)
+    public LearningSpaceLayout(IDictionary<int, ILearningElement> learningElements,
+        IDictionary<int, ILearningElement> storyElements, FloorPlanEnum floorPlanName)
     {
         LearningElements = learningElements;
+        StoryElements = storyElements;
         FloorPlanName = floorPlanName;
     }
 
     public IDictionary<int, ILearningElement> LearningElements { get; set; }
+    public IDictionary<int, ILearningElement> StoryElements { get; set; }
     public FloorPlanEnum FloorPlanName { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningElements.Values;
 

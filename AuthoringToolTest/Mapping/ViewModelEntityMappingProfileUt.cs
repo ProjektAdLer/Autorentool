@@ -160,7 +160,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), TODO, FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
         var destination = new LearningSpaceViewModel("", "", "", Theme.Campus);
@@ -617,7 +617,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), TODO, FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
         space.LearningSpaceLayout.LearningElements[0] = element;

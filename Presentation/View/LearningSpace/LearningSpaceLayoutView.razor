@@ -4,6 +4,7 @@
 @using Presentation.View.LearningElement
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
+@using MudBlazor.Utilities
 @using Presentation.PresentationLogic.LearningElement
 <div class="w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated">
     <div class="drop-shadow-xl w-full h-full">
@@ -16,7 +17,7 @@
 
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                              Class="@GetSlotStyleString(x)"
-                             style="@GetSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
+                             style="@GetElementSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
                              @onclick="() => ClickOnSlot(x)">
                     <ItemRenderer>
                         <DragDropLearningElement
@@ -33,6 +34,29 @@
                         }
                     </ChildContent>
                 </MudDropZone>
+            }
+            @for (var i = 0; i < 2; i++)
+            {
+                var x = i;
+                var identifier = $"StoryEntrance{x}";
+                <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                         Class="@GetSlotStyleString(-1)"
+                         style="@GetStorySlotPositionString(x)">
+                <ItemRenderer>
+                        <DragDropLearningElement
+                            LearningElement="@context"
+                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
+                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
+                            OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                            OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                </ItemRenderer>
+                    <ChildContent>
+                        @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                        }
+                    </ChildContent>
+            </MudDropZone>
             }
         </div>
     </div>
@@ -98,7 +122,7 @@
         return doorsString.ToString();
     }
 
-    private string GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
     {
         var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
         var slotPositionString = new StringBuilder();
@@ -109,15 +133,26 @@
         return slotPositionString.ToString();
     }
 
+    private string GetStorySlotPositionString(int position)
+    {
+        var slotPos = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[position];
+        var slotPositionString = new StringBuilder();
+        slotPositionString.Append("position: absolute; ");
+        slotPositionString.Append($"top: {(int) ((slotPos.Y + 1) / 35.0 * 100)}%; ");
+        slotPositionString.Append($"left: {(int) ((slotPos.X + 1) / 35.0 * 100)}%; ");
+        slotPositionString.Append("transform: translate(-70%, -100%);");
+        return slotPositionString.ToString();
+    }
+
     private string GetSlotStyleString(int position)
     {
         if (LearningSpaceP.LearningSpaceVm == null) return "";
 
-        if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
-        {
-            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center";
-        }
-        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
+        var activeSlotIsPos = SelectedViewModelsProvider.ActiveSlotInSpace == position;
+        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
+            .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
+            .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        return cssBuilder.ToString();
     }
 
     private void ClickOnSlot(int i)

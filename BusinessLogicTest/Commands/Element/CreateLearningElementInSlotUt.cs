@@ -180,7 +180,7 @@ public class TestParameter
     internal TestParameter()
     {
         SpaceParent = new LearningSpace("l", "o", "p", 0, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), TODO, FloorPlanEnum.R_20X30_8L))
         {
             UnsavedChanges = false
         };

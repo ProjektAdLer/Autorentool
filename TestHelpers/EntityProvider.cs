@@ -34,14 +34,18 @@ public static class EntityProvider
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
-        IDictionary<int, ILearningElement>? learningElements = null)
+        IDictionary<int, ILearningElement>? learningElements = null,
+        IDictionary<int, ILearningElement>? storyElements = null)
     {
-        return new LearningSpaceLayout(learningElements ?? new Dictionary<int, ILearningElement>(), floorPlan);
+        learningElements ??= new Dictionary<int, ILearningElement>();
+        storyElements ??= new Dictionary<int, ILearningElement>();
+        return new LearningSpaceLayout(learningElements, storyElements, floorPlan);
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
         return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
+            new Dictionary<int, ILearningElement>(),
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -122,7 +126,8 @@ public static class EntityProvider
             _ => throw new ArgumentOutOfRangeException()
         })!;
 
-    public static ContentReferenceAction GetContentReferenceAction(ILearningContent? content = null, string comment = "")
+    public static ContentReferenceAction GetContentReferenceAction(ILearningContent? content = null,
+        string comment = "")
     {
         content ??= GetLinkContent();
         return new ContentReferenceAction(content, comment);
@@ -172,7 +177,6 @@ public static class EntityProvider
 
     private static CorrectnessTrigger GetCorrectnessTrigger()
     {
-        
         return new CorrectnessTrigger(AnswerResult.Correct);
     }
 
@@ -180,7 +184,7 @@ public static class EntityProvider
     {
         return new TimeTrigger(123, TimeFrameType.Until);
     }
-    
+
     private static CompositeTrigger GetCompositeTrigger()
     {
         return new CompositeTrigger(ConditionEnum.And, GetTimeTrigger(), GetCorrectnessTrigger());

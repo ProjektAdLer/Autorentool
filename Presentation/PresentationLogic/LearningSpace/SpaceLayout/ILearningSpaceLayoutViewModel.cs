@@ -31,6 +31,9 @@ public interface ILearningSpaceLayoutViewModel
     /// List of currently held <see cref="ILearningElementViewModel"/>.
     /// </summary>
     IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
+
+    IDictionary<int, ILearningElementViewModel> StoryElements { get; set; }
+
     /// <summary>
     /// Gets the element at the specified index.
     /// </summary>
