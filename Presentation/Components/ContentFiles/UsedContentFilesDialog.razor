@@ -1,0 +1,33 @@
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningWorld
+@using System.Diagnostics.CodeAnalysis
+<div class="max-w-[18rem]">
+    <MudText >@Localizer["UsedContentFilesDialog.Text.ContentIsUsed"]</MudText>
+    <MudSimpleTable Dense="true" FixedHeader="true">
+        <thead>
+        <th>@Localizer["UsedContentFilesDialog.TableHeader.World"]</th>
+        <th>@Localizer["UsedContentFilesDialog.TableHeader.Element"]</th>
+        </thead>
+        <tbody>
+        @foreach (var entry in Usages)
+        {
+            <tr>
+                <td DataLabel="World">@entry.Item1.Name</td>
+                <td DataLabel="Element">@entry.Item2.Name</td>
+            </tr>
+        }
+        </tbody>
+    </MudSimpleTable>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<UsedContentFilesDialog> Localizer { get; set; }
+
+    [Parameter, EditorRequired] public ILearningContentViewModel LearningContent { get; set; } = null!;
+
+    [Parameter, EditorRequired] public IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> Usages { get; set; } = null!;
+}

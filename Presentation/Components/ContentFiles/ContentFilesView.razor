@@ -10,7 +10,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
-
 <style type="text/css">  
    .mud-table-toolbar {
    padding:  0;
@@ -21,9 +20,10 @@
    padding: 7px 0 0 0;
    }      
 </style>
-
-<MudTable Items="Items" Class="w-full h-full flex flex-col flex-nowrap mb-2 px-0 mx-0"
-          Virtualize="true" Filter="Filter" Hover="true" Striped="true" HeaderClass="table-head-bordered" CustomHeader="true" FixedHeader="true">
+<MudTable T="ILearningContentViewModel" Items="Items" Class="w-full h-full flex flex-col flex-nowrap mb-2 px-0 mx-0"
+          Virtualize="true" Filter="Filter" Hover="true" Striped="true" HeaderClass="table-head-bordered" CustomHeader="true" FixedHeader="true"
+          OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
+          OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
     <ToolBarContent>
         <div class="bg-adlerbgbright rounded-lg flex flex-row gap-2 p-2">
             <p class="text-sm 2xl:text-base font-bold leading-tight">@Localizer["Header"]</p>
@@ -33,7 +33,31 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTHeadRow Class="header-centered">
-            <MudTh Class="pl-2 cursor-default">@Localizer["Content.MudTh.Delete"]</MudTh>
+            <MudTh Class="pl-2 cursor-default">
+                <div class="flex flex-row items-center">
+                    <MudMenu Dense="true">
+                        <ActivatorContent>
+                            <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Class="p-0 m-0"></MudIconButton>
+                        </ActivatorContent>
+                        <ChildContent>
+                            <MudText>@Localizer["Content.Select.Text"]</MudText>
+                            <MudDivider></MudDivider>
+                            <MudMenuItem OnClick="OnSelectAll">@Localizer["Content.Select.Option.All"]</MudMenuItem>
+                            <MudMenuItem OnClick="OnSelectAllUnused">@Localizer["Content.Select.Option.AllUnused"]</MudMenuItem>
+                        </ChildContent>
+
+                    </MudMenu>
+                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" CheckedChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
+
+                    <MudText Class="m-0 p-0">@_deletionCandidates.Count()</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Class="m-0 p-0"
+                                   Disabled="@(!_deletionCandidates.Any())"
+                                   OnClick="() => DeleteSelected()"
+                                   Title="@Localizer["Content.MudTd.Delete"]"/>
+
+                </div>
+            </MudTh>
             <MudTh Class="px-2">
                 <MudTableSortLabel InitialDirection="SortDirection.Ascending"
                                    SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
@@ -45,8 +69,6 @@
                     @Localizer["Content.MudTh.Type"]
                 </MudTableSortLabel>
             </MudTh>
-            <MudTh Class="cursor-default text-center">@Localizer["Content.MudTh.NewElement"]</MudTh>
-            <MudTh Class="cursor-default text-center">@Localizer["Content.MudTh.Preview"]</MudTh>
             @if (_showFilepath)
             {
                 <MudTh>@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
@@ -54,21 +76,35 @@
         </MudTHeadRow>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="py-0" DataLabel="Delete">
-            <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                           Class="py-2" 
-                           OnClick="() => Delete(context)"
-                           Title="@Localizer["Content.MudTd.Delete"]"/>
+        <MudTd Class="py-0 flex flex-row" DataLabel="Delete">
+
+            <MudCheckBox T="bool" Checked="_deletionCandidates.Contains(context)" CheckedChanged="b => OnCheckedChange(context, b)" Class="m-0 p-1.5"></MudCheckBox>
+
+            @if (GetUsage(context).Any())
+            {
+                <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
+                    <ActivatorContent>
+
+                        <MudBadge Content="@GetUsage(context).Count().ToString()" Class="mx-1 my-3 p-0" Overlap="false" Origin="Origin.CenterRight">
+                            <MudText></MudText>
+                        </MudBadge>
+                    </ActivatorContent>
+                    <ChildContent >
+                        <UsedContentFilesDialog LearningContent="@context" Usages="@GetUsage(context)"></UsedContentFilesDialog>
+                    </ChildContent>
+                </MudMenu>
+            }
         </MudTd>
         <MudTd Class="py-0" DataLabel="Name">
             <MudTooltip Text="@context.Name"
                         Arrow="true"
-                        Placement="Placement.Right"
+                        Placement="Placement.Top"
                         Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                         Duration="Double.Epsilon">
-                <p class="pt-2 cursor-default max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
+                <p class="pt-2 cursor-default max-w-[8rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
             </MudTooltip>
         </MudTd>
+
         <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
             @if (context is FileContentViewModel fileContentContext)
             {
@@ -78,19 +114,23 @@
             {
                 <span>Link</span>
             }
+            <MudPopover Open="Equals(_rowShowingPopover, context)" Class="flex flex-row"
+                        AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterRight"
+                        @onmouseover="() => { _cursorInsidePopover = true; }"
+                        @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
+
+                <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
+                               Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Preview"]>
+                </MudIconButton>
+                <MudIconButton OnClick="() => NewElementWithContent(context)"
+                               Icon="@Icons.Material.Filled.Create" Class="m-0 p-1" Title=@Localizer["Content.MudTd.NewElement"]>
+                </MudIconButton>
+                <MudIconButton OnClick="() => Delete(context)"
+                               Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Delete"]>
+                </MudIconButton>
+            </MudPopover>
         </MudTd>
-        <MudTd Class="p-0">
-            <MudIconButton Icon="@Icons.Material.Filled.Create"
-                           Class="create-element-with-content py-2"
-                           OnClick="() => NewElementWithContent(context)"
-                           Title="@Localizer["Content.MudTd.NewElement"]"/>
-        </MudTd>
-        <MudTd Class="py-0">
-            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                           Class="show-content-preview py-2"
-                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                           Title="@Localizer["Content.MudTd.Preview"]"/>
-        </MudTd>
+
         @if (_showFilepath)
         {
             <MudTd Class="py-0" DataLabel="Filepath/Link">
@@ -118,7 +158,7 @@
                 <p class="pl-1 font-bold uppercase">@Localizer["PagerContent.Button.Text"]</p>
             </button>
         </div>
-            
+
     </PagerContent>
 </MudTable>
 
@@ -148,6 +188,32 @@
 
     private bool _showFilepath;
 
+
+    private MudTable<ILearningContentViewModel>? _table;
+    private IEnumerable<ILearningContentViewModel> _deletionCandidates = new List<ILearningContentViewModel>();
+
+    private bool? MultipleSelected
+    {
+        get
+        {
+            if (_table == null) return null;
+            if (_table.Items.Count() == _deletionCandidates.Count())
+            {
+                return true;
+            }
+
+            if (!_deletionCandidates.Any())
+            {
+                return false;
+            }
+
+            return null;
+        }
+    }
+
+    private ILearningContentViewModel? _rowShowingPopover = null;
+    private bool _cursorInsidePopover = false;
+
     private object TypeSortBy(ILearningContentViewModel content) =>
         content is FileContentViewModel fc ? fc.Type : "Link";
 
@@ -167,7 +233,7 @@
 
     private async Task Delete(ILearningContentViewModel item)
     {
-    //present "Delete/Cancel" dialog
+        //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
         {
             { "SubmitButtonText", Localizer["Dialog.Delete.Button.Text"].ToString() },
@@ -197,7 +263,7 @@
             if (await ShowContentInUseWarningAsync(item, matches, options)) return;
         }
 
-    //not cancelled, delete content
+        //not cancelled, delete content
         try
         {
             PresentationLogic.RemoveContent(item);
@@ -214,6 +280,29 @@
         {
             ErrorService.SetError("Error deleting content", e.Message);
         }
+    }
+
+    private async Task DeleteSelected()
+    {
+        //present "Delete/Cancel" dialog
+        var parameters = new DialogParameters
+        {
+            { "SubmitButtonText", Localizer["Dialog.Delete.Button.Text"].ToString() },
+            { "SubmitButtonColor", Color.Error },
+            { "DialogText", Localizer["Dialog.DeleteSelected.DialogText"].ToString() },
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+        };
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled) return;
+        await Task.Delay(1);
+        _deletionCandidates = new List<ILearningContentViewModel>();
     }
 
     /// <summary>
@@ -233,6 +322,15 @@
                 parameters, options);
         var warningResult = await warningDialog.Result;
         return warningResult.Canceled;
+    }
+
+    private IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> GetUsage(ILearningContentViewModel item)
+    {
+        var matches = WorkspaceViewModel.LearningWorlds
+            .SelectMany(world => world.AllLearningElements
+                .Where(element => element.LearningContent.Equals(item))
+                .Select(el => (world, el)));
+        return matches;
     }
 
     public async Task RerenderAsync()
@@ -256,6 +354,41 @@
     {
         PresentationLogic.SetSelectedLearningContentViewModel(content);
         Mediator.RequestOpenNewElementDialog();
+    }
+
+    private void OnCheckedChange(ILearningContentViewModel content, bool isChecked)
+    {
+        _deletionCandidates = isChecked ? _deletionCandidates.Append(content) : _deletionCandidates.Where(c => !c.Equals(content));
+    }
+
+    private void OnSelectAll()
+    {
+        if (_table != null)
+        {
+            _deletionCandidates = _table.FilteredItems;
+        }
+    }
+
+    private void OnSelectAllUnused()
+    {
+        if (_table != null)
+        {
+            _deletionCandidates = _table.FilteredItems.Where(i => !GetUsage(i).Any());
+        }
+    }
+
+    private void OnMultipleSelectedChanged()
+    {
+        switch (MultipleSelected)
+        {
+            case null:
+            case false:
+                OnSelectAll();
+                break;
+            default:
+                _deletionCandidates = new List<ILearningContentViewModel>();
+                break;
+        }
     }
 
 }
