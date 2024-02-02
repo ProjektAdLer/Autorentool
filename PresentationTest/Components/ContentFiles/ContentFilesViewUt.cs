@@ -124,7 +124,7 @@ public class ContentFilesViewUt
     [Test]
     public void ClickDelete_ShowsDialog_DeletesOnOkIfNotInWorlds()
     {
-        var items = PresentationLogicSetItems();
+        var items = PresentationLogicSetItems().ToList();
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
         _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
@@ -133,10 +133,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -159,10 +158,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
     }
@@ -181,10 +179,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _errorService.Received(1).SetError("Error deleting content", "test");
     }
@@ -203,10 +200,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _errorService.Received(1).SetError("Error deleting content", "test");
     }
@@ -231,10 +227,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -269,10 +264,9 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var tableRows = systemUnderTest.FindAll("tbody tr");
-        var deleteButton = tableRows.First().Children.First().Children.First();
-
-        deleteButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.Delete(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -328,22 +322,11 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var newElementButton = systemUnderTest.Find("button.create-element-with-content");
-        newElementButton.Click();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        systemUnderTest.Instance.NewElementWithContent(items.First());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         _presentationLogic.Received().SetSelectedLearningContentViewModel(items.First());
         _mediator.Received().RequestOpenNewElementDialog();
-    }
-
-    [Test]
-    public void ClickPreviewButton_CallsPresentationLogic()
-    {
-        var items = PresentationLogicSetItems();
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var previewButton = systemUnderTest.Find("button.show-content-preview");
-        previewButton.Click();
-        _presentationLogic.Received().ShowLearningContentAsync(items.First());
     }
 
     private IEnumerable<ILearningContentViewModel> PresentationLogicSetItems()

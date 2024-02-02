@@ -197,16 +197,8 @@
         get
         {
             if (_table == null) return null;
-            if (_table.Items.Count() == _deletionCandidates.Count())
-            {
-                return true;
-            }
-
-            if (!_deletionCandidates.Any())
-            {
-                return false;
-            }
-
+            if (!_deletionCandidates.Any()) return false;
+            if (_table.Items.Count() == _deletionCandidates.Count()) return true;
             return null;
         }
     }
@@ -231,7 +223,7 @@
         return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
-    private async Task Delete(ILearningContentViewModel item)
+    internal async Task Delete(ILearningContentViewModel item)
     {
         //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
@@ -350,7 +342,7 @@
         }
     }
 
-    private void NewElementWithContent(ILearningContentViewModel content)
+    internal void NewElementWithContent(ILearningContentViewModel content)
     {
         PresentationLogic.SetSelectedLearningContentViewModel(content);
         Mediator.RequestOpenNewElementDialog();
