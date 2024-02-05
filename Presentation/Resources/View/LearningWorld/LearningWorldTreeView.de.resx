@@ -32,4 +32,7 @@
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
     </data>
+    <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
+        <value> Pkt.</value>
+    </data>
 </root>
