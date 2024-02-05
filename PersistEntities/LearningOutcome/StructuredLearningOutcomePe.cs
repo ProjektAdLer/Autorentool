@@ -31,12 +31,12 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
         Language = language;
     }
 
-    private TaxonomyLevel TaxonomyLevel { get; }
-    private string What { get; }
-    private string Whereby { get; }
-    private string WhatFor { get; }
-    private string VerbOfVisibility { get; }
-    private CultureInfo Language { get; }
+    public TaxonomyLevel TaxonomyLevel { get; set; }
+    public string What { get; set; }
+    public string Whereby { get; set; }
+    public string WhatFor { get; set; }
+    public string VerbOfVisibility { get; set; }
+    public CultureInfo Language { get; set; }
 
     public Guid Id { get; set; }
 

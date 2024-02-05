@@ -72,7 +72,6 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
