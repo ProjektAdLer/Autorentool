@@ -55,7 +55,7 @@ public static class ViewModelProvider
         {
             new ManualLearningOutcomeViewModel("Outcome"),
             new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what", "whereby", "whatFor",
-                PredefinedVerbOfVisibility.Verb1,
+                "VerbOfVisibility",
                 CultureInfo.CurrentCulture)
         };
     }

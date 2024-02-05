@@ -7,6 +7,7 @@ using PersistEntities.LearningContent.Trigger;
 using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -44,7 +45,7 @@ public static class PersistEntityProvider
         return new List<ILearningOutcomePe>()
         {
             new ManualLearningOutcomePe("Outcome"),
-            new StructuredLearningOutcomePe("what", "whereby", "whatFor", "verbOfVisibility",
+            new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "what", "whereby", "whatFor", "verbOfVisibility",
                 CultureInfo.CurrentCulture)
         };
     }

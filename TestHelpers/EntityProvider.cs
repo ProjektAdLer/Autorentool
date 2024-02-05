@@ -10,6 +10,7 @@ using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -48,7 +49,8 @@ public static class EntityProvider
         return new List<ILearningOutcome>()
         {
             new ManualLearningOutcome("ManualOutcome"),
-            new StructuredLearningOutcome("What", "Whereby", "WhatFor", "VerbOfVisibility", CultureInfo.CurrentCulture),
+            new StructuredLearningOutcome(TaxonomyLevel.Level1, "What", "Whereby", "WhatFor", "VerbOfVisibility",
+                CultureInfo.CurrentCulture),
             outcome ?? new ManualLearningOutcome("ManualOutcome2")
         };
     }

@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -217,6 +218,7 @@ public class CachingMapperIt
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
+        ILearningOutcomeCommandFactory? learningOutcomeCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null,
         IAdaptivityRuleCommandFactory? adaptivityRuleCommandFactory = null,
@@ -240,6 +242,7 @@ public class CachingMapperIt
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
+        learningOutcomeCommandFactory ??= Substitute.For<ILearningOutcomeCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
         adaptivityRuleCommandFactory ??= Substitute.For<IAdaptivityRuleCommandFactory>();
@@ -249,7 +252,8 @@ public class CachingMapperIt
         return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
             serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, TODO, worldCommandFactory, batchCommandFactory,
+            spaceCommandFactory, topicCommandFactory, learningOutcomeCommandFactory, worldCommandFactory,
+            batchCommandFactory,
             adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
             fileSystem);
     }

@@ -19,6 +19,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -96,6 +97,7 @@ public class PresentationLogicUt
         var mockPathwayCommandFactory = Substitute.For<IPathwayCommandFactory>();
         var mockSpaceCommandFactory = Substitute.For<ISpaceCommandFactory>();
         var mockTopicCommandFactory = Substitute.For<ITopicCommandFactory>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
         var mockWorldCommandFactory = Substitute.For<IWorldCommandFactory>();
         var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
 
@@ -104,7 +106,8 @@ public class PresentationLogicUt
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
             mockHybridSupportWrapper, mockShellWrapper, mockQuestionCommandFactory, mockTaskCommandFactory,
             mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory,
-            mockSpaceCommandFactory, mockTopicCommandFactory, mockWorldCommandFactory, mockBatchCommandFactory);
+            mockSpaceCommandFactory, mockTopicCommandFactory, mockLearningOutcomeCommandFactory,
+            mockWorldCommandFactory, mockBatchCommandFactory);
         Assert.Multiple(() =>
         {
             //Assert
@@ -122,6 +125,7 @@ public class PresentationLogicUt
             Assert.That(systemUnderTest.PathwayCommandFactory, Is.EqualTo(mockPathwayCommandFactory));
             Assert.That(systemUnderTest.SpaceCommandFactory, Is.EqualTo(mockSpaceCommandFactory));
             Assert.That(systemUnderTest.TopicCommandFactory, Is.EqualTo(mockTopicCommandFactory));
+            Assert.That(systemUnderTest.LearningOutcomeCommandFactory, Is.EqualTo(mockLearningOutcomeCommandFactory));
             Assert.That(systemUnderTest.WorldCommandFactory, Is.EqualTo(mockWorldCommandFactory));
         });
     }
@@ -2591,6 +2595,7 @@ public class PresentationLogicUt
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
+        ILearningOutcomeCommandFactory? learningOutcomeCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null,
         IAdaptivityRuleCommandFactory? adaptivityRuleCommandFactory = null,
@@ -2616,6 +2621,7 @@ public class PresentationLogicUt
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
+        learningOutcomeCommandFactory ??= Substitute.For<ILearningOutcomeCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
         adaptivityRuleCommandFactory ??= Substitute.For<IAdaptivityRuleCommandFactory>();
@@ -2624,7 +2630,8 @@ public class PresentationLogicUt
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
             questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
-            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, TODO,
+            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory,
+            learningOutcomeCommandFactory,
             worldCommandFactory,
             batchCommandFactory, adaptivityRuleCommandFactory, adaptivityActionCommandFactory, fileSystem);
     }
