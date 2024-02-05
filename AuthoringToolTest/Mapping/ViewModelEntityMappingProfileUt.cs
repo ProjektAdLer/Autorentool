@@ -159,7 +159,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
-            EntityProvider.GetLearningOutcomes(),
+            EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
@@ -376,7 +376,7 @@ public class ViewModelEntityMappingProfileUt
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
 
         var space = new LearningSpaceViewModel("space", Description, Theme.Campus, RequiredPoints,
-                ViewModelProvider.GetLearningOutcomes(),
+                ViewModelProvider.GetLearningOutcomeCollection(),
                 new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L)
                 {
                     LearningElements = new Dictionary<int, ILearningElementViewModel>
@@ -617,7 +617,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
-            EntityProvider.GetLearningOutcomes(),
+            EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
@@ -628,7 +628,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
         var space = new LearningSpaceViewModel(NewName, NewDescription, Theme.Campus,
-            NewRequiredPoints, ViewModelProvider.GetLearningOutcomes(),
+            NewRequiredPoints, ViewModelProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L), positionX: NewPositionX,
             positionY: NewPositionY);
         var element = GetTestableElementViewModelWithParent(space);

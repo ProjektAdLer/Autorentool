@@ -12,7 +12,7 @@ namespace PersistEntities;
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string description,
-        int requiredPoints, Theme theme, List<ILearningOutcomePe>? learningOutcomes = null,
+        int requiredPoints, Theme theme, LearningOutcomeCollectionPe? learningOutcomes = null,
         ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
         TopicPe? assignedTopic = null)
@@ -20,7 +20,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
-        LearningOutcomes = learningOutcomes ?? new List<ILearningOutcomePe>();
+        LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollectionPe();
         RequiredPoints = requiredPoints;
         Theme = theme;
         LearningSpaceLayout = learningSpaceLayout ??
@@ -41,7 +41,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Id = Guid.Empty;
         Name = "";
         Description = "";
-        LearningOutcomes = new List<ILearningOutcomePe>();
+        LearningOutcomeCollection = new LearningOutcomeCollectionPe();
         RequiredPoints = 0;
         //overriding nullability as serializer must set value
         LearningSpaceLayout = null!;
@@ -64,7 +64,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 
     [DataMember] public string Description { get; set; }
 
-    [DataMember] public List<ILearningOutcomePe> LearningOutcomes { get; set; }
+    [DataMember] public LearningOutcomeCollectionPe LearningOutcomeCollection { get; set; }
 
     [DataMember] public int RequiredPoints { get; set; }
 

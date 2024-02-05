@@ -14,7 +14,8 @@ public interface ISpaceCommandFactory
     /// Creates a command to create a learning space.
     /// </summary>
     ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name,
-        string description, List<ILearningOutcome> learningOutcomes, int requiredPoints, Theme theme, double positionX,
+        string description, LearningOutcomeCollection learningOutcomeCollection, int requiredPoints, Theme theme,
+        double positionX,
         double positionY,
         Entities.Topic? topic, Action<LearningWorld> mappingAction);
 

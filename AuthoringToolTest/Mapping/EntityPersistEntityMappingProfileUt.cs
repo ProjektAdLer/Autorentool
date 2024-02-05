@@ -2,12 +2,10 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
-using BusinessLogic.Entities.LearningOutcome;
 using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
-using PersistEntities.LearningOutcome;
 using Shared;
 using TestHelpers;
 
@@ -152,7 +150,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
-            EntityProvider.GetLearningOutcomes(),
+            EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
@@ -521,7 +519,7 @@ public class EntityPersistEntityMappingProfileUt
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Description, RequiredPoints, Theme.Campus,
-            new List<ILearningOutcome>() { new ManualLearningOutcome("outcome") },
+            EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
@@ -532,7 +530,7 @@ public class EntityPersistEntityMappingProfileUt
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
         return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, Theme.Campus,
-            new List<ILearningOutcomePe>() { new ManualLearningOutcomePe("newOutcome") },
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(
                 new Dictionary<int, ILearningElementPe>
                 {

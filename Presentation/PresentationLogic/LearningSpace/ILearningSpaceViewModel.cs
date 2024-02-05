@@ -18,6 +18,6 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     Theme Theme { get; set; }
     new string Name { get; set; }
     string Description { get; set; }
-    List<ILearningOutcomeViewModel> LearningOutcomes { get; set; }
+    LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     bool InternalUnsavedChanges { get; }
 }

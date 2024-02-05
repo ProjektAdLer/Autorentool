@@ -261,7 +261,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
-    public void CreateLearningSpace(string name, string description, List<ILearningOutcomeViewModel> learningOutcomes,
+    public void CreateLearningSpace(string name, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
         int requiredPoints,
         Theme theme, TopicViewModel? topic = null)
     {
@@ -271,7 +272,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         var positionY = GetNextAvailableYPosition(25);
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomes,
+        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomeCollectionVm,
             requiredPoints, theme, 0, positionY, topic);
     }
 

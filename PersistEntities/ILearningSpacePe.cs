@@ -6,7 +6,7 @@ public interface ILearningSpacePe : ISpacePe, IObjectInPathWayPe
 {
     string Name { get; set; }
     string Description { get; set; }
-    List<ILearningOutcomePe> LearningOutcomes { get; }
+    LearningOutcomeCollectionPe LearningOutcomeCollection { get; }
     int RequiredPoints { get; set; }
     ILearningSpaceLayoutPe LearningSpaceLayout { get; set; }
 }

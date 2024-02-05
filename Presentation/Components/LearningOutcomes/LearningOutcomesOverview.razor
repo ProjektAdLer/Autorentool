@@ -1,0 +1,123 @@
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using Presentation.PresentationLogic.API
+@using System.Diagnostics.CodeAnalysis
+<h3>LearningOutcomesOverview</h3>
+
+<MudList>
+    @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
+    {
+        <MudListItem>
+            <MudText Typo="Typo.h6">@learningOutcome.GetOutcome()</MudText> <MudIconButton OnClick="() => EditLearningOutcome(learningOutcome)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit"/> <MudIconButton OnClick="() => DeleteLearningOutcome(learningOutcome)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete"/>
+        </MudListItem>
+    }
+</MudList>
+
+<MudButton Variant="Variant.Filled" OnClick="CreateManualLearningOutcome"> Manual </MudButton>
+<MudButton Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome"> Structured </MudButton>
+
+
+@code {
+    [Parameter, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; } = null!;
+
+    [Inject, AllowNull] private IPresentationLogic PresentationLogic { get; set; }
+
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+
+    private async Task CreateManualLearningOutcome()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("DialogTitle", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CreateStructuredLearningOutcome()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("DialogTitle", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task EditLearningOutcome(ILearningOutcomeViewModel learningOutcome)
+    {
+        switch (learningOutcome)
+        {
+            case ManualLearningOutcomeViewModel manualLearningOutcomeViewModel:
+                await EditManualLearningOutcome(manualLearningOutcomeViewModel);
+                break;
+            case StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel:
+                await EditStructuredLearningOutcome(structuredLearningOutcomeViewModel);
+                break;
+        }
+    }
+
+    private async Task EditStructuredLearningOutcome(StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection },
+            { nameof(CreateEditStructuredLearningOutcome.CurrentLearningOutcome), structuredLearningOutcomeViewModel }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("DialogTitle", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task EditManualLearningOutcome(ManualLearningOutcomeViewModel manualLearningOutcomeViewModel)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection },
+            { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), manualLearningOutcomeViewModel }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("DialogTitle", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void DeleteLearningOutcome(ILearningOutcomeViewModel learningOutcome)
+    {
+        PresentationLogic.DeleteLearningOutcome(LearningOutcomeCollection, learningOutcome);
+        InvokeAsync(StateHasChanged);
+    }
+
+}

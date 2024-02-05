@@ -25,7 +25,8 @@ public class BatchCommandUt
         Action<LearningWorld> mappingAction2 = _ => actionWasInvoked2 = true;
         Action<LearningWorld> mappingAction3 = _ => actionWasInvoked3 = true;
 
-        var command1 = new CreateLearningSpace(world, "a", "b", EntityProvider.GetLearningOutcomes(), 2, Theme.Campus,
+        var command1 = new CreateLearningSpace(world, "a", "b", EntityProvider.GetLearningOutcomeCollection(), 2,
+            Theme.Campus,
             0, 0, null, mappingAction: mappingAction1, new NullLogger<CreateLearningSpace>());
         var command2 = new CreateTopic(world, name, mappingAction2, new NullLogger<CreateTopic>());
         var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3,

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
@@ -9,6 +10,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -43,6 +45,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.LearningOutcomes;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -71,6 +74,7 @@ public class PresentationLogic : IPresentationLogic
         IPathwayCommandFactory pathwayCommandFactory,
         ISpaceCommandFactory spaceCommandFactory,
         ITopicCommandFactory topicCommandFactory,
+        ILearningOutcomeCommandFactory learningOutcomeCommandFactory,
         IWorldCommandFactory worldCommandFactory,
         IBatchCommandFactory batchCommandFactory,
         IAdaptivityRuleCommandFactory adaptivityRuleCommandFactory,
@@ -94,6 +98,7 @@ public class PresentationLogic : IPresentationLogic
         PathwayCommandFactory = pathwayCommandFactory;
         SpaceCommandFactory = spaceCommandFactory;
         TopicCommandFactory = topicCommandFactory;
+        LearningOutcomeCommandFactory = learningOutcomeCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
         AdaptivityRuleCommandFactory = adaptivityRuleCommandFactory;
@@ -120,6 +125,7 @@ public class PresentationLogic : IPresentationLogic
     public IPathwayCommandFactory PathwayCommandFactory { get; }
     public ISpaceCommandFactory SpaceCommandFactory { get; }
     public ITopicCommandFactory TopicCommandFactory { get; }
+    public ILearningOutcomeCommandFactory LearningOutcomeCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
     public IAdaptivityRuleCommandFactory AdaptivityRuleCommandFactory { get; }
@@ -258,15 +264,16 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
-        List<ILearningOutcomeViewModel> learningOutcomes, int requiredPoints, Theme theme, double positionX,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints, Theme theme,
+        double positionX,
         double positionY,
         ITopicViewModel? topicVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
-        var learningOutcomesEntities = Mapper.Map<List<ILearningOutcome>>(learningOutcomes);
+        var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
-        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, learningOutcomesEntities,
+        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, learningOutcomeCollection,
             requiredPoints, theme,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
@@ -481,6 +488,91 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.AddStructuredLearningOutcome"/>
+    public void AddStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+
+        var command = LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            taxonomyLevel, what, verbOfVisibility, whereby, whatFor, language,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.AddManualLearningOutcome"/>
+    public void AddManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        string manualLearningOutcomeText)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+
+        var command = LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            manualLearningOutcomeText,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditStructuredLearningOutcome"/>
+    public void EditStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        StructuredLearningOutcomeViewModel learningOutcome,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<StructuredLearningOutcome>(learningOutcome);
+
+        var listOfCommands = new List<IUndoCommand>
+        {
+            LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                learningOutcomeEntity,
+                collection => Mapper.Map(collection, learningOutcomes)),
+            LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity, taxonomyLevel,
+                what, verbOfVisibility, whereby, whatFor, language,
+                collection => Mapper.Map(collection, learningOutcomes))
+        };
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditManualLearningOutcome"/>
+    public void EditManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ManualLearningOutcomeViewModel learningOutcome, string manualLearningOutcomeText)
+    {
+        var index = learningOutcomes.LearningOutcomes.IndexOf(learningOutcome);
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<ManualLearningOutcome>(learningOutcome);
+
+        var listOfCommands = new List<IUndoCommand>
+        {
+            LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                learningOutcomeEntity,
+                collection => Mapper.Map(collection, learningOutcomes)),
+            LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                manualLearningOutcomeText,
+                collection => Mapper.Map(collection, learningOutcomes), index)
+        };
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningOutcome"/>
+    public void DeleteLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ILearningOutcomeViewModel learningOutcome)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<ILearningOutcome>(learningOutcome);
+
+        var command = LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            learningOutcomeEntity,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
@@ -1149,6 +1241,7 @@ public class PresentationLogic : IPresentationLogic
             FileSystem.File.Delete(filepath);
         }
     }
+
 
     /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
     public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)

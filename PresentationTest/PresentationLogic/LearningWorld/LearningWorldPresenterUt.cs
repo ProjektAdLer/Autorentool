@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -337,10 +336,11 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<List<ILearningOutcomeViewModel>>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(),
             Arg.Any<double>(), Arg.Any<TopicViewModel>());
     }
@@ -354,7 +354,8 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
 
         errorService.Received().SetError("Operation failed", "No learning world selected");
     }
@@ -368,10 +369,12 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", Theme.Campus));
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
 
         var space = new LearningSpaceViewModel("aa", "bb", Theme.Campus, 0,
             null, positionX: 0, positionY: 70);
@@ -381,7 +384,8 @@ public class LearningWorldPresenterUt
         space.PositionX = 15;
         space.PositionY = 85;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", Theme.Campus, 0,
             null, positionX: 0, positionY: 155));
 
@@ -394,7 +398,8 @@ public class LearningWorldPresenterUt
         condition.PositionX = 15;
         condition.PositionY = 235;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", Theme.Campus, 0,
             null, positionX: 0, positionY: 290));
 
@@ -406,7 +411,8 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm.PathWayConditions.Add(
             new PathWayConditionViewModel(ConditionEnum.And, false, 0, 415));
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomes(), 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.Campus);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", Theme.Campus, 0,
             null, positionX: 0, positionY: 470));
 
@@ -417,21 +423,21 @@ public class LearningWorldPresenterUt
         Received.InOrder(() =>
         {
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<List<ILearningOutcomeViewModel>>(),
+                Arg.Any<LearningOutcomeCollectionViewModel>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), 0, 0, Arg.Any<TopicViewModel>());
 
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<List<ILearningOutcomeViewModel>>(),
+                Arg.Any<LearningOutcomeCollectionViewModel>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), 0, 70, Arg.Any<TopicViewModel>());
 
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<List<ILearningOutcomeViewModel>>(),
+                Arg.Any<LearningOutcomeCollectionViewModel>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), 0, 155, Arg.Any<TopicViewModel>());
 
             presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 225);
 
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<List<ILearningOutcomeViewModel>>(),
+                Arg.Any<LearningOutcomeCollectionViewModel>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), 0, 290, Arg.Any<TopicViewModel>());
 
             presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 0, 360);
@@ -440,7 +446,7 @@ public class LearningWorldPresenterUt
 
             //max value for positionY is 405
             presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<List<ILearningOutcomeViewModel>>(),
+                Arg.Any<LearningOutcomeCollectionViewModel>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), 0, 470, Arg.Any<TopicViewModel>());
 
             //max value for positionY is 405

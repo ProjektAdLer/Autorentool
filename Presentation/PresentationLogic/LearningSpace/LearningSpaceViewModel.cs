@@ -32,7 +32,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Id = Guid.Empty;
         Name = "";
         Description = "";
-        LearningOutcomes = new List<ILearningOutcomeViewModel>();
+        LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         RequiredPoints = 0;
         LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
@@ -56,7 +56,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
     public LearningSpaceViewModel(string name, string description, Theme theme,
-        int requiredPoints = 0, List<ILearningOutcomeViewModel>? learningOutcomes = null,
+        int requiredPoints = 0, LearningOutcomeCollectionViewModel? learningOutcomes = null,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
         ICollection<IObjectInPathWayViewModel>? outBoundObjects = null,
@@ -66,7 +66,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
-        LearningOutcomes = learningOutcomes ?? new List<ILearningOutcomeViewModel>();
+        LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollectionViewModel();
         Theme = theme;
         RequiredPoints = requiredPoints;
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
@@ -81,7 +81,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public TopicViewModel? AssignedTopic { get; set; }
-    public List<ILearningOutcomeViewModel> LearningOutcomes { get; set; }
+    public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     public int Workload => ContainedLearningElements.Sum(element => element.Workload);
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich

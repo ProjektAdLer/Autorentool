@@ -13,7 +13,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
-        var parent = new LearningSpace("sn", "sd", 5, Theme.Campus, EntityProvider.GetLearningOutcomes(),
+        var parent = new LearningSpace("sn", "sd", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false

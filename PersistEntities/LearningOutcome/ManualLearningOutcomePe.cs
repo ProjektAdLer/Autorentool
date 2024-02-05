@@ -1,16 +1,28 @@
+using JetBrains.Annotations;
+
 namespace PersistEntities.LearningOutcome;
 
 public class ManualLearningOutcomePe : ILearningOutcomePe
 {
-    private readonly string _outcome;
-
     public ManualLearningOutcomePe(string outcome)
     {
-        _outcome = outcome;
+        Outcome = outcome;
+        Id = Guid.NewGuid();
     }
+
+    [UsedImplicitly]
+    private ManualLearningOutcomePe()
+    {
+        Outcome = string.Empty;
+        Id = Guid.Empty;
+    }
+
+    public string Outcome { get; set; }
+
+    public Guid Id { get; set; }
 
     public string GetOutcome()
     {
-        return _outcome;
+        return Outcome;
     }
 }

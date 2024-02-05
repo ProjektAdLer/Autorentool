@@ -16,10 +16,11 @@ public class SpaceCommandFactory : ISpaceCommandFactory
     private ILoggerFactory LoggerFactory { get; }
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
-        List<ILearningOutcome> learningOutcomes,
+        LearningOutcomeCollection learningOutcomeCollection,
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction) =>
-        new CreateLearningSpace(learningWorld, name, description, learningOutcomes, requiredPoints, theme, positionX,
+        new CreateLearningSpace(learningWorld, name, description, learningOutcomeCollection, requiredPoints, theme,
+            positionX,
             positionY,
             topic, mappingAction, LoggerFactory.CreateLogger<CreateLearningSpace>());
 

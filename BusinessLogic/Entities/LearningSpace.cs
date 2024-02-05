@@ -15,7 +15,7 @@ public class LearningSpace : ILearningSpace
         Id = Guid.NewGuid();
         Name = "";
         Description = "";
-        LearningOutcomes = new List<ILearningOutcome>();
+        LearningOutcomeCollection = new LearningOutcomeCollection();
         RequiredPoints = 0;
         UnsavedChanges = false;
         //null warning override okay here as automapper must set this value after construction - n.stich
@@ -28,7 +28,7 @@ public class LearningSpace : ILearningSpace
     }
 
     public LearningSpace(string name, string description,
-        int requiredPoints, Theme theme, List<ILearningOutcome>? learningOutcomes = null,
+        int requiredPoints, Theme theme, LearningOutcomeCollection? learningOutcomes = null,
         LearningSpaceLayout? learningSpaceLayout = null,
         double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null,
@@ -38,7 +38,7 @@ public class LearningSpace : ILearningSpace
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
-        LearningOutcomes = learningOutcomes ?? new List<ILearningOutcome>();
+        LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollection();
         RequiredPoints = requiredPoints;
         Theme = theme;
         UnsavedChanges = true;
@@ -71,7 +71,7 @@ public class LearningSpace : ILearningSpace
     public List<IObjectInPathWay> InBoundObjects { get; set; }
     public List<IObjectInPathWay> OutBoundObjects { get; set; }
     public Topic? AssignedTopic { get; set; }
-    public List<ILearningOutcome> LearningOutcomes { get; set; }
+    public LearningOutcomeCollection LearningOutcomeCollection { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
@@ -81,7 +81,8 @@ public class LearningSpace : ILearningSpace
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, LearningOutcomes, RequiredPoints, Theme, LearningSpaceLayout,
+        return new LearningSpaceMemento(Name, Description, LearningOutcomeCollection, RequiredPoints, Theme,
+            LearningSpaceLayout,
             InBoundObjects,
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
@@ -95,7 +96,7 @@ public class LearningSpace : ILearningSpace
 
         Name = learningSpaceMemento.Name;
         Description = learningSpaceMemento.Description;
-        LearningOutcomes = learningSpaceMemento.LearningOutcomes;
+        LearningOutcomeCollection = learningSpaceMemento.LearningOutcomeCollection;
         RequiredPoints = learningSpaceMemento.RequiredPoints;
         Theme = learningSpaceMemento.Theme;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
@@ -110,7 +111,7 @@ public class LearningSpace : ILearningSpace
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            List<ILearningOutcome> learningOutcomes, int requiredPoints, Theme theme,
+            LearningOutcomeCollection learningOutcomeCollection, int requiredPoints, Theme theme,
             ILearningSpaceLayout learningSpaceLayout,
             List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX, double positionY,
@@ -118,7 +119,7 @@ public class LearningSpace : ILearningSpace
         {
             Name = name;
             Description = description;
-            LearningOutcomes = learningOutcomes;
+            LearningOutcomeCollection = learningOutcomeCollection;
             RequiredPoints = requiredPoints;
             Theme = theme;
             LearningSpaceLayout = learningSpaceLayout;
@@ -132,7 +133,7 @@ public class LearningSpace : ILearningSpace
 
         internal string Name { get; }
         internal string Description { get; }
-        internal List<ILearningOutcome> LearningOutcomes { get; }
+        internal LearningOutcomeCollection LearningOutcomeCollection { get; }
         internal int RequiredPoints { get; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future

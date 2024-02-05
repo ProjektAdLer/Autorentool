@@ -4,6 +4,7 @@ using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
 
@@ -16,7 +17,6 @@ public class CreateLearningSpaceUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var name = "space1";
         var description = "space for learning";
-        var learningOutcomes = new List<ILearningOutcome>() { new ManualLearningOutcome("Outcome") };
         var requiredPoints = 10;
         var theme = Theme.Campus;
         var positionX = 1;
@@ -26,7 +26,8 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, learningOutcomes, requiredPoints, theme,
+        var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
+            requiredPoints, theme,
             positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
 
@@ -48,7 +49,7 @@ public class CreateLearningSpaceUt
         {
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
-            Assert.That(space.LearningOutcomes, Is.EqualTo(learningOutcomes));
+            Assert.That(space.LearningOutcomeCollection.LearningOutcomes, Is.Not.Empty);
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
             Assert.That(space.Theme, Is.EqualTo(Theme.Campus));
             Assert.That(space.PositionX, Is.EqualTo(1));
@@ -97,9 +98,9 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, learningOutcomes, requiredPoints, Theme.Campus,
-            positionX,
-            positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
+        var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
+            requiredPoints, Theme.Campus, positionX, positionY, topic, mappingAction,
+            new NullLogger<CreateLearningSpace>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -126,8 +127,8 @@ public class CreateLearningSpaceUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, learningOutcomes, requiredPoints, Theme.Campus,
-            positionX,
+        var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
+            requiredPoints, Theme.Campus, positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
 
         Assert.Multiple(() =>

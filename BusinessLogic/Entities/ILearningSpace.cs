@@ -8,7 +8,7 @@ public interface ILearningSpace : IObjectInPathWay
     //Guid Id { get; }
     string Name { get; set; }
     string Description { get; set; }
-    List<ILearningOutcome> LearningOutcomes { get; }
+    LearningOutcomeCollection LearningOutcomeCollection { get; }
     int RequiredPoints { get; set; }
 
     Theme Theme { get; set; }

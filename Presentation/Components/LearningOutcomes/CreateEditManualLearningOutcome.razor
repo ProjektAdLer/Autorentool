@@ -1,0 +1,77 @@
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using Presentation.PresentationLogic.API
+@using System.Diagnostics.CodeAnalysis
+<h3>CreateEditManualLearningOutcome</h3>
+
+<div class="relative w-[800px] h-[230px] flex flex-col mx-4">
+    <MudText Class="px-2 mb-1 text-sm"> MudText </MudText>
+    <div class="border-adlerdarkblue border-4 rounded-lg m-2">
+        <MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
+            <div class="p-2 mb-4">
+                <MudText Class="cursor-default font-bold text-sm pl-2"> MudText2 </MudText>
+                <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+                    <MudTextField Variant="Variant.Outlined"
+                                  Class="shadow-none m-0"
+                                  T="string"
+                                  Placeholder="Placeholder"
+                                  @bind-Value="_outcome"
+                                  Lines="4"
+                                  Required="true"
+                                  RequiredError="RequiredError"/>
+                </div>
+            </div>
+        </MudForm>
+    </div>
+</div>
+<div class="flex justify-end items-center">
+    <MudButton Class="btn-standard sticky m-6"
+               @onclick="SubmitAsync">
+        MudButton
+    </MudButton>
+</div>
+
+@code {
+    private MudForm _form = null!;
+    private string _outcome = null!; //set in OnParametersSet
+
+    [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
+
+    [Parameter] public ManualLearningOutcomeViewModel? CurrentManualLearningOutcome { get; set; }
+
+    [CascadingParameter, AllowNull] //injected by MudDialog
+    public MudDialogInstance DialogInstance { get; set; }
+
+    [Inject, AllowNull] internal IPresentationLogic PresentationLogic { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _outcome = CurrentManualLearningOutcome?.GetOutcome() ?? string.Empty;
+    }
+
+    private async Task SubmitAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        try
+        {
+            if (CurrentManualLearningOutcome != null)
+            {
+                if (CurrentManualLearningOutcome.GetOutcome() != _outcome)
+                {
+                    PresentationLogic.EditManualLearningOutcome(LearningOutcomeCollection, CurrentManualLearningOutcome, _outcome);
+                }
+            }
+            else
+            {
+                PresentationLogic.AddManualLearningOutcome(LearningOutcomeCollection, _outcome);
+            }
+        }
+        finally
+        {
+            DialogInstance.Close();
+        }
+    }
+
+}

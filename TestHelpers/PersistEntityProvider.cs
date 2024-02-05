@@ -24,10 +24,19 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
-            Theme.Campus, GetLearningOutcomes(),
+            Theme.Campus, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
             outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);
+    }
+
+    public static LearningOutcomeCollectionPe GetLearningOutcomeCollection(
+        List<ILearningOutcomePe>? learningOutcomes = null)
+    {
+        return new LearningOutcomeCollectionPe
+        {
+            LearningOutcomes = learningOutcomes ?? new List<ILearningOutcomePe>()
+        };
     }
 
     public static List<ILearningOutcomePe> GetLearningOutcomes()

@@ -14,7 +14,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var learningOutcomes = EntityProvider.GetLearningOutcomes();
+        var learningOutcomes = EntityProvider.GetLearningOutcomeCollection();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
@@ -41,7 +41,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(learningOutcomes));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomes));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
             Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -55,7 +55,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var learningOutcomes = EntityProvider.GetLearningOutcomes();
+        var learningOutcomes = EntityProvider.GetLearningOutcomeCollection();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
@@ -83,7 +83,7 @@ public class LearningSpaceUt
 
         var nameChanged = "qwertz";
         var descriptionChanged = "changed description";
-        var LOutcomesChanged = new List<ILearningOutcome>() { new ManualLearningOutcome("New Outcome") };
+        var LOutcomesChanged = EntityProvider.GetLearningOutcomeCollection(new ManualLearningOutcome("outcome123"));
         var positionXChanged = 10f;
         var positionYChanged = 14f;
         var content1Changed = EntityProvider.GetFileContent(append: "c1");
@@ -103,7 +103,7 @@ public class LearningSpaceUt
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Description = descriptionChanged;
-        systemUnderTest.LearningOutcomes = LOutcomesChanged;
+        systemUnderTest.LearningOutcomeCollection = LOutcomesChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
         systemUnderTest.AssignedTopic = topicChanged;
@@ -113,7 +113,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
-            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(LOutcomesChanged));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(LOutcomesChanged));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele1Changed));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
@@ -128,7 +128,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(learningOutcomes));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomes));
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele1Changed));
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -142,7 +142,7 @@ public class LearningSpaceUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var learningOutcomes = EntityProvider.GetLearningOutcomes();
+        var learningOutcomes = EntityProvider.GetLearningOutcomeCollection();
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;

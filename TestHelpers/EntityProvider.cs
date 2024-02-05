@@ -30,17 +30,26 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", 4, Theme.Campus, GetLearningOutcomes(),
+        return new LearningSpace("a", "d", 4, Theme.Campus, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
-    public static List<ILearningOutcome> GetLearningOutcomes()
+    public static LearningOutcomeCollection GetLearningOutcomeCollection(ILearningOutcome? outcome = null)
+    {
+        return new LearningOutcomeCollection()
+        {
+            LearningOutcomes = GetLearningOutcomes(outcome)
+        };
+    }
+
+    public static List<ILearningOutcome> GetLearningOutcomes(ILearningOutcome? outcome = null)
     {
         return new List<ILearningOutcome>()
         {
             new ManualLearningOutcome("ManualOutcome"),
-            new StructuredLearningOutcome("What", "Whereby", "WhatFor", "VerbOfVisibility", CultureInfo.CurrentCulture)
+            new StructuredLearningOutcome("What", "Whereby", "WhatFor", "VerbOfVisibility", CultureInfo.CurrentCulture),
+            outcome ?? new ManualLearningOutcome("ManualOutcome2")
         };
     }
 

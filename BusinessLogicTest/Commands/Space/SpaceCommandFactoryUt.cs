@@ -27,16 +27,17 @@ public class SpaceCommandFactoryUt
         var learningWorld = EntityProvider.GetLearningWorld();
         var name = "Space 1";
         var description = "Space description";
-        var learningOutcomes = EntityProvider.GetLearningOutcomes();
         var requiredPoints = 10;
         var positionX = 1.5;
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         var theme = Theme.Campus;
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, description, learningOutcomes, requiredPoints,
+        var result = _factory.GetCreateCommand(learningWorld, name, description, learningOutcomeCollection,
+            requiredPoints,
             theme,
             positionX, positionY, topic, mappingAction);
 
@@ -48,7 +49,7 @@ public class SpaceCommandFactoryUt
             Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
             Assert.That(resultCasted.LearningSpace.Name, Is.EqualTo(name));
             Assert.That(resultCasted.LearningSpace.Description, Is.EqualTo(description));
-            Assert.That(resultCasted.LearningSpace.LearningOutcomes, Is.EqualTo(learningOutcomes));
+            Assert.That(resultCasted.LearningSpace.LearningOutcomeCollection, Is.EqualTo(learningOutcomeCollection));
             Assert.That(resultCasted.LearningSpace.RequiredPoints, Is.EqualTo(requiredPoints));
             Assert.That(resultCasted.LearningSpace.PositionX, Is.EqualTo(positionX));
             Assert.That(resultCasted.LearningSpace.PositionY, Is.EqualTo(positionY));

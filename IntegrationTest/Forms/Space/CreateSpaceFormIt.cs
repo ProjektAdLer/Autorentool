@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -120,7 +119,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
         WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(),
-            Arg.Any<List<ILearningOutcomeViewModel>>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
@@ -133,7 +132,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         submitButton.Find("button").Click();
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
-            Arg.Any<List<ILearningOutcomeViewModel>>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 
@@ -153,14 +152,14 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var input = mudInput.Find("input");
         input.KeyUp(Key.Enter);
         WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<List<ILearningOutcomeViewModel>>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
-            Arg.Any<List<ILearningOutcomeViewModel>>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 

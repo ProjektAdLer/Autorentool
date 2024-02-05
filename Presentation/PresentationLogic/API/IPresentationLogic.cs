@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Globalization;
+using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -20,6 +21,7 @@ using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
+using Shared.LearningOutcomes;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -146,14 +148,15 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Space.</param>
     /// <param name="name">The name of the Learning Space.</param>
     /// <param name="description">The description of the Learning Space.</param>
-    /// <param name="learningOutcomes">The learning outcomes of the Learning Space.</param>
+    /// <param name="learningOutcomeCollectionVm">The learning outcomes of the Learning Space.</param>
     /// <param name="requiredPoints">The points required to access the Learning Space.</param>
     /// <param name="theme">The theme of the Learning Space.</param>
     /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, List<ILearningOutcomeViewModel> learningOutcomes, int requiredPoints, Theme theme,
+        string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints,
+        Theme theme,
         double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
@@ -596,6 +599,72 @@ public interface IPresentationLogic
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
     IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
     void DeleteLearningWorldByPath(string savePath);
+
+    /// <summary>
+    /// Adds a structured learning outcome to the specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model to which the new learning outcome will be added.</param>
+    /// <param name="taxonomyLevel">The taxonomy level of the learning outcome.</param>
+    /// <param name="what">A description of the learning outcome.</param>
+    /// <param name="verbOfVisibility">The verb indicating the visibility or action associated with the learning outcome.</param>
+    /// <param name="whereby">The method or process by which the learning outcome can be achieved.</param>
+    /// <param name="whatFor">The purpose or reason for the learning outcome.</param>
+    /// <param name="language">The culture info specifying the language in which the learning outcome is described.</param>
+    void AddStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language);
+
+    /// <summary>
+    /// Adds a manual learning outcome to the specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model to which the new learning outcome will be added.</param>
+    /// <param name="manualLearningOutcomeText">The text of the manual learning outcome.</param>
+    void AddManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        string manualLearningOutcomeText);
+
+
+    /// <summary>
+    /// Edits an existing structured learning outcome within a specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model containing the learning outcome to be edited.</param>
+    /// <param name="learningOutcome">The learning outcome view model to be edited.</param>
+    /// <param name="taxonomyLevel">The new taxonomy level for the edited learning outcome.</param>
+    /// <param name="what">The new description of the learning outcome.</param>
+    /// <param name="verbOfVisibility">The new verb indicating the visibility or action associated with the learning outcome.</param>
+    /// <param name="whereby">The new method or process by which the learning outcome can be achieved.</param>
+    /// <param name="whatFor">The new purpose or reason for the learning outcome.</param>
+    /// <param name="language">The culture info specifying the language in which the learning outcome is described.</param>
+    /// <remarks>
+    /// This method performs an edit operation by first deleting the existing learning outcome and then adding
+    /// a new learning outcome with the updated details. It achieves this through a batch command that
+    /// executes both delete and add operations atomically to ensure data consistency.
+    /// </remarks>
+    void EditStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        StructuredLearningOutcomeViewModel learningOutcome, TaxonomyLevel taxonomyLevel,
+        string what, string verbOfVisibility, string whereby, string whatFor, CultureInfo language);
+
+    /// <summary>
+    /// Edits an existing manual learning outcome within a specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model containing the manual learning outcome to be edited.</param>
+    /// <param name="learningOutcome">The manual learning outcome view model to be edited.</param>
+    /// <param name="manualLearningOutcomeText">The new text for the edited manual learning outcome.</param>
+    /// <remarks>
+    /// This method updates a manual learning outcome by first deleting the existing outcome and then adding a new outcome
+    /// with the updated text. The operations are encapsulated in a batch command to ensure that the changes are
+    /// applied atomically, maintaining the integrity of the learning outcomes collection. The position of the updated
+    /// learning outcome within the collection is preserved.
+    /// </remarks>
+    void EditManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ManualLearningOutcomeViewModel learningOutcome, string manualLearningOutcomeText);
+
+    /// <summary>
+    /// Deletes a specified learning outcome from a learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model from which the learning outcome will be deleted.</param>
+    /// <param name="learningOutcome">The learning outcome view model to be deleted.</param>
+    void DeleteLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ILearningOutcomeViewModel learningOutcome);
 
     #region BackendAccess
 

@@ -18,7 +18,7 @@ public class LearningSpaceViewModelUt
     {
         var name = "asdf";
         var description = "very cool element";
-        var learningOutcomes = ViewModelProvider.GetLearningOutcomes();
+        var learningOutcomes = ViewModelProvider.GetLearningOutcomeCollection();
         var requiredPoints = 10;
         var positionX = 20;
         var positionY = 30;
@@ -52,7 +52,7 @@ public class LearningSpaceViewModelUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
-            Assert.That(systemUnderTest.LearningOutcomes, Is.EqualTo(learningOutcomes));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(learningOutcomes));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));

@@ -17,6 +17,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -35,9 +36,17 @@ public static class ViewModelProvider
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.Campus, 4, GetLearningOutcomes(),
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.Campus, 4, GetLearningOutcomeCollection(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+    }
+
+    public static LearningOutcomeCollectionViewModel GetLearningOutcomeCollection()
+    {
+        return new LearningOutcomeCollectionViewModel()
+        {
+            LearningOutcomes = GetLearningOutcomes()
+        };
     }
 
     public static List<ILearningOutcomeViewModel> GetLearningOutcomes()
@@ -45,7 +54,8 @@ public static class ViewModelProvider
         return new List<ILearningOutcomeViewModel>()
         {
             new ManualLearningOutcomeViewModel("Outcome"),
-            new StructuredLearningOutcomeViewModel("what", "whereby", "whatFor", "verbOfVisibility",
+            new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what", "whereby", "whatFor",
+                PredefinedVerbOfVisibility.Verb1,
                 CultureInfo.CurrentCulture)
         };
     }

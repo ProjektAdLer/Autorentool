@@ -9,7 +9,7 @@ public class LearningSpaceFormModel
     {
         Name = "";
         Description = "";
-        LearningOutcomes = new List<ILearningOutcomeViewModel>();
+        LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         RequiredPoints = 0;
         Theme = default;
     }
@@ -17,7 +17,7 @@ public class LearningSpaceFormModel
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public List<ILearningOutcomeViewModel> LearningOutcomes { get; set; }
+    public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     public int RequiredPoints { get; set; }
     public Theme Theme { get; set; }
 }

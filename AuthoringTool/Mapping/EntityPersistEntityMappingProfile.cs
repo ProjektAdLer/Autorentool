@@ -8,11 +8,13 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 
 namespace AuthoringTool.Mapping;
 
@@ -33,6 +35,7 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
         CreateAdaptivityMap();
+        CreateLearningOutcomeMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -40,6 +43,27 @@ public class EntityPersistEntityMappingProfile : Profile
         cfg.AddProfile(new EntityPersistEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
     };
+
+    private void CreateLearningOutcomeMap()
+    {
+        CreateMap<ManualLearningOutcomePe, ManualLearningOutcome>().ReverseMap();
+        CreateMap<StructuredLearningOutcomePe, StructuredLearningOutcome>()
+            .ReverseMap();
+
+        CreateMap<ManualLearningOutcomePe, ILearningOutcome>().As<ManualLearningOutcome>();
+        CreateMap<StructuredLearningOutcomePe, ILearningOutcome>().As<StructuredLearningOutcome>();
+
+        CreateMap<ManualLearningOutcome, ILearningOutcomePe>().As<ManualLearningOutcomePe>();
+        CreateMap<StructuredLearningOutcome, ILearningOutcomePe>().As<StructuredLearningOutcomePe>();
+
+        CreateMap<ILearningOutcomePe, ILearningOutcome>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
+
+        CreateMap<LearningOutcomeCollectionPe, LearningOutcomeCollection>()
+            .ReverseMap();
+    }
 
     private void CreateTopicMap()
     {

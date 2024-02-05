@@ -1,0 +1,270 @@
+@using Shared.LearningOutcomes
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+@using Presentation.PresentationLogic.API
+@using System.Text.RegularExpressions
+<text> @Culture </text>
+<text> @_currentVerbOfVisibility</text>
+<MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
+    <MudSelect T="CultureInfo" @bind-Value="Culture">
+        <MudSelectItem Value="@(new CultureInfo("de-DE"))">
+            <div class="min-w-[15%] text-md break-keep text-adlergrey">Deutsch/German</div>
+        </MudSelectItem>
+        <MudSelectItem Value="@(new CultureInfo("en-DE"))">
+            <div class="min-w-[15%] text-md break-keep text-adlergrey">Englisch/English</div>
+        </MudSelectItem>
+    </MudSelect>
+
+    <div class="flex flex-row gap-4 m-2 pb-8">
+
+        <MudSelect T="TaxonomyLevel" OnOpen="UpdateTaxonomyLevelNames" class="w-40 break-all" @bind-Value="_selectedTaxonomyLevel" Placeholder="Auswahl der Taxonomiestufe">
+
+            <MudSelectItem Value="@TaxonomyLevelNames.ElementAt(0).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep text-adlergrey">Keine Angabe</div>
+                </div>
+            </MudSelectItem>
+
+            <MudSelectItem Value="@TaxonomyLevelNames.ElementAt(1).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(1).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Auf relevantes Wissen im Langzeitgedächtnis zugreifen" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Auf relevantes Wissen im Langzeitgedächtnis zugreifen</span>
+                </div>
+            </MudSelectItem>
+
+            <MudSelectItem T="TaxonomyLevel" Value="@TaxonomyLevelNames.ElementAt(2).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(2).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Informationen (mündlich, schriftlich oder grafisch) in der Lerneinheit Bedeutung zuordnen" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Informationen (mündlich, schriftlich oder grafisch) in der Lerneinheit Bedeutung zuordnen</span>
+                </div>
+            </MudSelectItem>
+            <MudSelectItem T="TaxonomyLevel" Value="@TaxonomyLevelNames.ElementAt(3).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(3).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Einen Handlungsablauf oder eine Methode in einer bestimmten Situation anwenden" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Einen Handlungsablauf oder eine Methode in einer bestimmten Situation anwenden</span>
+                </div>
+            </MudSelectItem>
+
+            <MudSelectItem T="TaxonomyLevel" Value="@TaxonomyLevelNames.ElementAt(4).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(4).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Lerninhalte in ihre Elemente zerlegen und ihre Verbindung zu einer übergreifenden Struktur oder einem übergreifenden Zweck bestimmen" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Lerninhalte in ihre Elemente zerlegen und ihre Verbindung zu einer übergreifenden Struktur oder einem übergreifenden Zweck bestimmen</span>
+                </div>
+            </MudSelectItem>
+
+            <MudSelectItem T="TaxonomyLevel" Value="@TaxonomyLevelNames.ElementAt(5).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(5).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Urteile aufgrund von Kriterien oder Standards abgeben" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Urteile aufgrund von Kriterien oder Standards abgeben</span>
+                </div>
+            </MudSelectItem>
+
+            <MudSelectItem T="TaxonomyLevel" Value="@TaxonomyLevelNames.ElementAt(6).Key">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="min-w-[15%] text-md break-keep font-bold text-adlerblue-500">@TaxonomyLevelNames.ElementAt(6).Value</div>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ArrowRightAlt" Color="Color.Default"></MudIcon>
+                    <span title="Elemente zu einer zusammenhängenden Struktur oder zu einem zusammenhängenden Muster zusammenfügen" class="max-w-[65%] text-adlergrey text-xs italic break-word"> Elemente zu einer zusammenhängenden Struktur oder zu einem zusammenhängenden Muster zusammenfügen</span>
+                </div>
+            </MudSelectItem>
+        </MudSelect>
+    </div>
+
+    <MudTextField @bind-Value="_currentWhat" DebounceInterval="1" Placeholder="What"> </MudTextField>
+
+    <MudAutocomplete T="string" Placeholder="Formulieren oder auswählen" MaxItems="1000"
+                     @bind-Value="@_currentVerbOfVisibility"
+                     @bind-Text="@_currentVerbOfVisibilityText"
+                     CoerceText="true"
+                     CoerceValue="true"
+                     SearchFunc="@SearchVerbOfVisibility"
+                     OnBlur="OnBlurVerbOfVisibility"
+                     DebounceInterval="300"/>
+
+    <MudTextField @bind-Value="_currentWhereby" DebounceInterval="1" Placeholder="Whereby"> </MudTextField>
+    <MudTextField @bind-Value="_currentWhatFor" DebounceInterval="1" Placeholder="WhatFor"> </MudTextField>
+</MudForm>
+
+<div class="flex flex-col gap-2 mx-4">
+    <MudText Class="cursor-default text-adlergrey-800 text-sm">Vorschau des formulierten Lernziels/Lernergebnisses:</MudText>
+    <div class="bg-white border border-adlergrey-300 border-2 rounded px-4 pt-5">
+        @GetMarkDownFormattedOutcome()
+    </div>
+</div>
+
+<div class="flex justify-end items-center">
+    <MudButton Class="btn-standard sticky m-6"
+               @onclick="SubmitAsync">
+        Submit
+    </MudButton>
+</div>
+
+@code {
+    private LearningOutcomesVerbManager _learningOutcomesVerbManager = new();
+
+    private Dictionary<TaxonomyLevel, string> TaxonomyLevelNames { get; set; } = null!;
+
+    [Parameter] public StructuredLearningOutcomeViewModel? CurrentLearningOutcome { get; set; }
+
+    private CultureInfo _culture = null!;
+
+    [Parameter]
+    public CultureInfo Culture
+    {
+        get => _culture;
+        set
+        {
+            if (Equals(_culture, value)) return;
+            _culture = value;
+            OnCultureChange();
+        }
+    }
+
+    [CascadingParameter, AllowNull] //injected by MudDialog
+    public MudDialogInstance DialogInstance { get; set; }
+
+    [Inject, AllowNull] //allow null as injected
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+    private TaxonomyLevel _selectedTaxonomyLevel;
+
+    private string _currentWhat = "";
+
+    private string _currentVerbOfVisibility = null!;
+
+    private string _currentVerbOfVisibilityText = "";
+
+    private string _currentWhereby = "";
+
+    private string _currentWhatFor = "";
+
+    private MudForm _form = null!;
+
+    private MarkupString GetMarkDownFormattedOutcome()
+    {
+        var formattedText = "";
+        switch (Culture)
+        {
+            case { Name: "de-DE" }:
+                formattedText = $"Die Studierenden können {FormatWithPlaceholder(_currentWhat, "[Was?]")} {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")}, \n indem sie {FormatWithPlaceholder(_currentWhereby, "[Womit?]")},\n um {FormatWithPlaceholder(_currentWhatFor, "[Wozu?]")}.";
+                break;
+            case { Name: "en-DE" }:
+                formattedText = $"The students will be able to {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")}, {FormatWithPlaceholder(_currentWhat, "[What?]")} \n by {FormatWithPlaceholder(_currentWhereby, "[Whereby?]")},\n to {FormatWithPlaceholder(_currentWhatFor, "[What for?]")}.";
+                break;
+        }
+
+        var html = MarkdownToHtml(formattedText);
+        return new MarkupString(html);
+    }
+
+    private string GetUnformattedOutcome()
+    {
+        switch (Culture)
+        {
+            case { Name: "de-DE" }:
+                return $"Die Studierenden können {_currentWhat} {_currentVerbOfVisibility} {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")}, \n indem sie {_currentWhereby},\n um {_currentWhatFor}.";
+            case { Name: "en-DE" }:
+                return $"The students will be able to {_currentVerbOfVisibility}, {_currentWhat} \n by {_currentWhereby},\n to {_currentWhatFor}.";
+            default:
+                throw new ArgumentOutOfRangeException($"Culture {Culture.Name} not supported");
+        }
+    }
+
+    private static string FormatWithPlaceholder(string value, string placeholder = "[ ... ]")
+    {
+        return string.IsNullOrWhiteSpace(value) ? $"*{placeholder}*" : $"**{value.Trim()}**";
+    }
+
+    private string MarkdownToHtml(string markdown)
+    {
+        markdown = Regex.Replace(markdown, @"\*\*(.*?)\*\*", "<b>$1</b>");
+        markdown = Regex.Replace(markdown, @"\*(.*?)\*", "<i>$1</i>");
+        markdown = markdown.Replace("\n", "<br>");
+
+        return markdown;
+    }
+
+    [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomes { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Culture = CurrentLearningOutcome == null ? CultureInfo.CurrentCulture : CurrentLearningOutcome.Language;
+
+        OnCultureChange();
+        _selectedTaxonomyLevel = CurrentLearningOutcome?.TaxonomyLevel ?? TaxonomyLevel.None;
+        _currentWhat = CurrentLearningOutcome?.What ?? "";
+        _currentVerbOfVisibility = CurrentLearningOutcome?.VerbOfVisibility ?? "";
+        _currentWhereby = CurrentLearningOutcome?.Whereby ?? "";
+        _currentWhatFor = CurrentLearningOutcome?.WhatFor ?? "";
+    }
+
+    private void OnCultureChange()
+    {
+        UpdateTaxonomyLevelNames();
+        _currentVerbOfVisibility = "";
+        _currentVerbOfVisibilityText = "";
+    }
+
+    private void UpdateTaxonomyLevelNames()
+    {
+        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(Culture);
+    }
+
+    private async Task<IEnumerable<string>> SearchVerbOfVisibility(string value)
+    {
+        var results = new List<string>();
+
+        results.AddRange(_learningOutcomesVerbManager.GetVerbsOfVisibility(_selectedTaxonomyLevel, Culture)
+            .Where(verb => verb.ToString().Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .Select(verb => verb.ToString().Replace("_", " ")));
+
+        if (!string.IsNullOrEmpty(value) && !results.Contains(value))
+        {
+            results.Insert(0, value);
+        }
+
+        return await Task.FromResult(results);
+    }
+
+    private void OnBlurVerbOfVisibility()
+    {
+        _currentVerbOfVisibility = _currentVerbOfVisibilityText;
+    }
+
+    private async Task SubmitAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        try
+        {
+            if (CurrentLearningOutcome is not null)
+            {
+                if (CurrentLearningOutcome.TaxonomyLevel != _selectedTaxonomyLevel
+                    || CurrentLearningOutcome.What != _currentWhat
+                    || CurrentLearningOutcome.VerbOfVisibility != _currentVerbOfVisibility
+                    || CurrentLearningOutcome.Whereby != _currentWhereby
+                    || CurrentLearningOutcome.WhatFor != _currentWhatFor
+                    || !Equals(CurrentLearningOutcome.Language, Culture))
+                {
+                    PresentationLogic.EditStructuredLearningOutcome(LearningOutcomes, CurrentLearningOutcome, _selectedTaxonomyLevel, _currentWhat, _currentVerbOfVisibility, _currentWhereby, _currentWhatFor, Culture);
+                }
+            }
+            else
+            {
+                PresentationLogic.AddStructuredLearningOutcome(LearningOutcomes, _selectedTaxonomyLevel, _currentWhat, _currentVerbOfVisibility, _currentWhereby, _currentWhatFor, Culture);
+            }
+        }
+        finally
+        {
+            DialogInstance.Close();
+        }
+    }
+
+}

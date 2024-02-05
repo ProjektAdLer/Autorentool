@@ -93,7 +93,8 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomes(), 1, Theme.Campus,
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
+            Theme.Campus,
             2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
@@ -153,7 +154,8 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomes(), 1, Theme.Campus,
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
+            Theme.Campus,
             2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 
@@ -247,7 +249,7 @@ public class CachingMapperIt
         return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
             serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory,
+            spaceCommandFactory, topicCommandFactory, TODO, worldCommandFactory, batchCommandFactory,
             adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
             fileSystem);
     }

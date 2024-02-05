@@ -1,16 +1,28 @@
+using JetBrains.Annotations;
+
 namespace Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 
 public class ManualLearningOutcomeViewModel : ILearningOutcomeViewModel
 {
-    private readonly string _outcome;
+    [UsedImplicitly]
+    private ManualLearningOutcomeViewModel()
+    {
+        Outcome = string.Empty;
+        Id = Guid.Empty;
+    }
 
     public ManualLearningOutcomeViewModel(string outcome)
     {
-        _outcome = outcome;
+        Outcome = outcome;
+        Id = Guid.NewGuid();
     }
+
+    public string Outcome { get; set; }
+
+    public Guid Id { get; set; }
 
     public string GetOutcome()
     {
-        return _outcome;
+        return Outcome;
     }
 }

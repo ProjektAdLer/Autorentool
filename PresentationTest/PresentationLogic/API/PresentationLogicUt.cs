@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -390,18 +389,19 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = EntityProvider.GetLearningWorld();
         var topicEntity = EntityProvider.GetTopic();
-        var learningOutcomeEntity = EntityProvider.GetLearningOutcomes();
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
         mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
             .Returns(topicEntity);
-        mockMapper.Map<List<ILearningOutcome>>(Arg.Any<List<ILearningOutcomeViewModel>>())
-            .Returns(learningOutcomeEntity);
+        mockMapper.Map<LearningOutcomeCollection>(Arg.Any<LearningOutcomeCollectionViewModel>())
+            .Returns(learningOutcomeCollection);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockSpaceVm = ViewModelProvider.GetLearningSpace();
         Substitute.For<ILogger<SpaceCommandFactory>>();
         learningWorldVm.LearningSpaces.Add(mockSpaceVm);
-        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", learningOutcomeEntity, 5, Theme.Campus,
+        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", learningOutcomeCollection, 5,
+                Theme.Campus,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
         mockCommand.NewSpace.Id.Returns(mockSpaceVm.Id);
@@ -409,13 +409,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z",
-            new List<ILearningOutcomeViewModel>()
-            {
-                new ManualLearningOutcomeViewModel("Outcome"),
-                new StructuredLearningOutcomeViewModel("What", "Whereby", "WhatFor", "VerbOfVisibility",
-                    CultureInfo.CurrentCulture)
-            }, 5, Theme.Campus, 6, 7, topicVm);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", ViewModelProvider.GetLearningOutcomeCollection(),
+            5, Theme.Campus, 6, 7, topicVm);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -2629,7 +2624,8 @@ public class PresentationLogicUt
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
             questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
-            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory,
+            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, TODO,
+            worldCommandFactory,
             batchCommandFactory, adaptivityRuleCommandFactory, adaptivityActionCommandFactory, fileSystem);
     }
 }

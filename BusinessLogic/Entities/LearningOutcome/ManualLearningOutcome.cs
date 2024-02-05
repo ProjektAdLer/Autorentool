@@ -1,11 +1,23 @@
+using JetBrains.Annotations;
+
 namespace BusinessLogic.Entities.LearningOutcome;
 
 public class ManualLearningOutcome : ILearningOutcome
 {
-    private readonly string _outcome;
-
     public ManualLearningOutcome(string outcome)
     {
-        _outcome = outcome;
+        Outcome = outcome;
+        Id = Guid.NewGuid();
     }
+
+    [UsedImplicitly]
+    private ManualLearningOutcome()
+    {
+        Outcome = string.Empty;
+        Id = Guid.Empty;
+    }
+
+    public string Outcome { get; set; }
+
+    public Guid Id { get; set; }
 }

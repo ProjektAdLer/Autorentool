@@ -309,7 +309,8 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.L_32X31_10L
             }
         };
-        var space4 = new LearningSpacePe("d", "ff", 5, Theme.Campus, PersistEntityProvider.GetLearningOutcomes(),
+        var space4 = new LearningSpacePe("d", "ff", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2);

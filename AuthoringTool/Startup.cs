@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -281,6 +282,7 @@ public class Startup
         services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
         services.AddSingleton<IAdaptivityRuleCommandFactory, AdaptivityRuleCommandFactory>();
         services.AddSingleton<IAdaptivityActionCommandFactory, AdaptivityActionCommandFactory>();
+        services.AddSingleton<ILearningOutcomeCommandFactory, LearningOutcomeCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
