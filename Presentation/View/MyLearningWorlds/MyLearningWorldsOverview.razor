@@ -14,7 +14,7 @@
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
-        <div class="flex flex-col bg-blacktrans-200 rounded-xl">
+        <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
                 <div class="btn-standard w-36 flex justify-center items-center create-world-button"
                      @onclick="CreateLearningWorld"
@@ -23,7 +23,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
                         <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                     </button>
-                    <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+                    <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
                 <div class="btn-standard w-36 flex justify-center items-center import-world-button"
                      @onclick="ImportLearningWorldAsync"
@@ -32,11 +32,11 @@
                         <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
                         <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                     </button>
-                    <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+                    <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
             </section>
         </div>
-        <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
+        <section class="flex flex-col w-5/6 m-auto bg-blacktrans-100 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
             <div class="flex flex-row gap-2 justify-between">
                 <div class="flex justify-start">
                     <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByDate"]"/>

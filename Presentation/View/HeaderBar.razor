@@ -11,6 +11,7 @@
 @using System.Text
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
+@using ElectronWrapper
 @using MudBlazor.Utilities
 @using Presentation.Components.Culture
 @using Presentation.Components
@@ -86,16 +87,16 @@
     </div>
     @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
-        <div class="flex justify-center items-center gap-2">
-            <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
-            <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+        <div class="flex justify-center items-center gap-2 cursor-default">
+            <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
+            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</p>
         </div>
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
-        <div class="flex justify-center items-center gap-2">
-            <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world_adlerdarkblue.png" alt="learningworld">
-            <p class="font-bold text-lg truncate hover:text-clip"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
+        <div class="flex justify-center items-center gap-2 cursor-default">
+            <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld">
+            <p class="font-bold text-base 2xl:text-lg truncate hover:text-clip opacity-80 text-adlerdarkblue-800"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
 
@@ -121,19 +122,24 @@
         <CultureSelector/>
         
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
-            <MudMenuItem Disabled="true">Benutzerhandbuch</MudMenuItem>
-            <MudMenuItem Disabled="true">Tutorials</MudMenuItem>
+            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
+            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
             <MudDivider></MudDivider>
-            <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
-                <MudMenuItem>@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
-            </a>
-            <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
-                <MudMenuItem>@Localizer["Feedback.MenuItem.Technical.Text"]</MudMenuItem>
-            </a>
+            
+            <MudListItem>
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX" title="@Localizer["MudPopover.Feedback.Final.Hover"]">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            </MudListItem>
+
+            <MudListItem>
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug" title="@Localizer["Feedback.Button.Technical.Hover"]">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            </MudListItem>
+
             <MudDivider></MudDivider>
-            <a href="https://www.projekt-adler.eu" target="_blank" title="@Localizer["HeaderBar.Help.About.Hover"]">
-                <MudMenuItem>@Localizer["HeaderBar.Help.About"]</MudMenuItem>
-            </a>
+
+            <MudListItem>
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer" title="@Localizer["HeaderBar.Help.About.Hover"]">@Localizer["HeaderBar.Help.About"]</MudLink>
+            </MudListItem>
+            
         </MudMenu>
 
         <LmsLoginButton/>
@@ -148,7 +154,10 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
-
+    
+    [Inject, AllowNull]
+    public IShellWrapper ShellWrapper { get; set; }
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
@@ -501,6 +510,12 @@
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }
     }
+    
+    private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
+
+    private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
+    
+    private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
 
     private string icon = help;
 

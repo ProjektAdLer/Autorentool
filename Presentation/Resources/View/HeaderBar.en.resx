@@ -136,6 +136,12 @@
         <value>About AdLer</value>
     </data>
     <data name="HeaderBar.Help.About.Hover" xml:space="preserve">
-        <value>Learn more about the AdLer project</value>
+        <value>Information about the AdLer project</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual" xml:space="preserve">
+        <value>User manual</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
+        <value>Tutorial</value>
     </data>
 </root>
