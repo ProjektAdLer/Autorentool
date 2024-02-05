@@ -75,7 +75,7 @@
         </MudSelect>
     </div>
 
-    <MudTextField @bind-Value="_currentWhat" DebounceInterval="1" Placeholder="What"> </MudTextField>
+    <MudTextField @bind-Value="_currentWhat" DebounceInterval="1" Placeholder="What" Required="true" RequiredError="What required"> </MudTextField>
 
     <MudAutocomplete T="string" Placeholder="Formulieren oder auswählen" MaxItems="1000"
                      @bind-Value="@_currentVerbOfVisibility"
@@ -84,7 +84,9 @@
                      CoerceValue="true"
                      SearchFunc="@SearchVerbOfVisibility"
                      OnBlur="OnBlurVerbOfVisibility"
-                     DebounceInterval="300"/>
+                     DebounceInterval="300"
+                     Required="true"
+                     RequiredError="Verb required"/>
 
     <MudTextField @bind-Value="_currentWhereby" DebounceInterval="1" Placeholder="Whereby"> </MudTextField>
     <MudTextField @bind-Value="_currentWhatFor" DebounceInterval="1" Placeholder="WhatFor"> </MudTextField>
