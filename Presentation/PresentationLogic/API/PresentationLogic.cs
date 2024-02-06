@@ -572,11 +572,29 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = LayoutCommandFactory.GetPlaceFromUnplacedCommand(worldEntity, spaceEntity, elementEntity,
+        var command = LayoutCommandFactory.GetPlaceLearningElementFromUnplacedCommand(worldEntity, spaceEntity, elementEntity,
             newSlotIndex,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
+        }
+    }
+
+    public void DragStoryElementFromUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        
+        var command = LayoutCommandFactory.GetPlaceStoryElementFromUnplacedCommand(worldEntity, spaceEntity, elementEntity,
+            newSlotIndex,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+        
         if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
             SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
@@ -603,10 +621,26 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = LayoutCommandFactory.GetPlaceFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
+        var command = LayoutCommandFactory.GetPlaceLearningElementFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
 
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
+        }
+    }
+
+    public void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
+        int newSlotIndex)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        
+        var command = LayoutCommandFactory.GetPlaceStoryElementFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+        
         if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
             SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);

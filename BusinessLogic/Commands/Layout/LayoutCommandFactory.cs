@@ -18,16 +18,28 @@ public class LayoutCommandFactory : ILayoutCommandFactory
         new ChangeLearningSpaceLayout(learningSpace, learningWorld, floorPlanName, mappingAction,
             LoggerFactory.CreateLogger<ChangeLearningSpaceLayout>());
 
-    public IPlaceLearningElementInLayoutFromLayout GetPlaceFromLayoutCommand(LearningSpace parentSpace,
+    public IPlaceLearningElementInLayoutFromLayout GetPlaceLearningElementFromLayoutCommand(LearningSpace parentSpace,
         ILearningElement learningElement, int newSlotIndex, Action<LearningSpace> mappingAction) =>
         new PlaceLearningElementInLayoutFromLayout(parentSpace, learningElement, newSlotIndex, mappingAction,
             LoggerFactory.CreateLogger<PlaceLearningElementInLayoutFromLayout>());
 
-    public IPlaceLearningElementInLayoutFromUnplaced GetPlaceFromUnplacedCommand(LearningWorld learningWorld,
+    public IPlaceStoryElementInLayoutFromLayout GetPlaceStoryElementFromLayoutCommand(LearningSpace parentSpace,
+        ILearningElement learningElement, int newSlotIndex, Action<LearningSpace> mappingAction) =>
+        new PlaceStoryElementInLayoutFromLayout(parentSpace, learningElement, newSlotIndex, mappingAction,
+            LoggerFactory.CreateLogger<PlaceStoryElementInLayoutFromLayout>());
+
+    public IPlaceLearningElementInLayoutFromUnplaced GetPlaceLearningElementFromUnplacedCommand(LearningWorld learningWorld,
         LearningSpace learningSpace, ILearningElement learningElement, int newSlotIndex,
         Action<LearningWorld> mappingAction) =>
         new PlaceLearningElementInLayoutFromUnplaced(learningWorld, learningSpace, learningElement, newSlotIndex,
             mappingAction, LoggerFactory.CreateLogger<PlaceLearningElementInLayoutFromUnplaced>());
+
+    public IPlaceStoryElementInLayoutFromUnplaced GetPlaceStoryElementFromUnplacedCommand(LearningWorld learningWorld,
+        LearningSpace learningSpace, ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction)
+    {
+        return new PlaceStoryElementInLayoutFromUnplaced(learningWorld, learningSpace, learningElement, newSlotIndex,
+            mappingAction, LoggerFactory.CreateLogger<PlaceStoryElementInLayoutFromUnplaced>());
+    }
 
     public IRemoveLearningElementFromLayout GetRemoveCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction) =>

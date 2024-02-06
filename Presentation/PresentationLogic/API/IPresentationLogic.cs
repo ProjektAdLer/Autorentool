@@ -335,6 +335,16 @@ public interface IPresentationLogic
     /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
     void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
         ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
+    
+    /// <summary>
+    /// Moves the given story element from unplaced elements to the given slot index in the given learning space.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space to place the learning element in.</param>
+    /// <param name="learningElementVm">Learning element to place.</param>
+    /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
+    void DragStoryElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
 
     /// <summary>
     /// Moves the given learning element from the learning space to unplaced elements in the learning world.
@@ -356,6 +366,17 @@ public interface IPresentationLogic
     /// </remarks>
     void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
         int newSlotIndex);
+    
+    /// <summary>
+    /// Switches the slot of a Story Element within a Learning Space.
+    /// </summary>
+    /// <param name="learningSpaceVm">The Learning Space view model in which the Learning Element resides.</param>
+    /// <param name="learningElementVm">The Learning Element view model to switch the slot of.</param>
+    /// <param name="newSlotIndex">The new slot index to place the Learning Element at.</param>
+    /// <remarks>
+    /// If the active slot in the Learning Space is the new slot index, it will be set to -1.
+    /// </remarks>
+    void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
 
     /// <summary>
     /// Deletes the given learning element in the given learning space.

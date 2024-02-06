@@ -680,7 +680,7 @@ public class PresentationLogicUt
             .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
-            .GetPlaceFromUnplacedCommand(learningWorldEntity, learningSpaceEntity,
+            .GetPlaceLearningElementFromUnplacedCommand(learningWorldEntity, learningSpaceEntity,
                 learningElementEntity, 1, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
@@ -753,7 +753,7 @@ public class PresentationLogicUt
             .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
-            .GetPlaceFromLayoutCommand(learningSpaceEntity, learningElementEntity, 4,
+            .GetPlaceLearningElementFromLayoutCommand(learningSpaceEntity, learningElementEntity, 4,
                 Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
             .Returns(mockCommand);
 

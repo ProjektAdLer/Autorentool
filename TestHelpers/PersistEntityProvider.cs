@@ -28,9 +28,11 @@ public static class PersistEntityProvider
     }
 
     public static LearningSpaceLayoutPe GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
-        Dictionary<int, ILearningElementPe>? learningElements = null)
+        Dictionary<int, ILearningElementPe>? learningElements = null,
+        Dictionary<int, ILearningElementPe>? storyElements = null)
     {
-        return new LearningSpaceLayoutPe(learningElements ?? new Dictionary<int, ILearningElementPe>(), floorPlan);
+        return new LearningSpaceLayoutPe(learningElements ?? new Dictionary<int, ILearningElementPe>(),
+            storyElements ?? new Dictionary<int, ILearningElementPe>(), floorPlan);
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,

@@ -13,7 +13,7 @@
             @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
             {
                 var x = i;
-                var identifier = LearningSpace.Id.ToString() + x;
+                var identifier = $"{LearningSpace.Id.ToString()}_ele_{x}";
 
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                              Class="@GetSlotStyleString(x)"
@@ -38,7 +38,7 @@
             @for (var i = 0; i < 2; i++)
             {
                 var x = i;
-                var identifier = $"StoryEntrance{x}";
+                var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                          Class="@GetSlotStyleString(-1)"
                          style="@GetStorySlotPositionString(x)">

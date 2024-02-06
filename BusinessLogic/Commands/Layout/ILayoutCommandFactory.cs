@@ -17,14 +17,22 @@ public interface ILayoutCommandFactory
     /// <summary>
     /// Creates a command to place a learning element in a layout from another layout.
     /// </summary>
-    IPlaceLearningElementInLayoutFromLayout GetPlaceFromLayoutCommand(LearningSpace parentSpace,
+    IPlaceLearningElementInLayoutFromLayout GetPlaceLearningElementFromLayoutCommand(LearningSpace parentSpace,
+        ILearningElement learningElement, int newSlotIndex,
+        Action<LearningSpace> mappingAction);
+
+    IPlaceStoryElementInLayoutFromLayout GetPlaceStoryElementFromLayoutCommand(LearningSpace parentSpace,
         ILearningElement learningElement, int newSlotIndex,
         Action<LearningSpace> mappingAction);
 
     /// <summary>
     /// Creates a command to place a learning element in a layout from the unplaced elements in the world.
     /// </summary>
-    IPlaceLearningElementInLayoutFromUnplaced GetPlaceFromUnplacedCommand(LearningWorld learningWorld,
+    IPlaceLearningElementInLayoutFromUnplaced GetPlaceLearningElementFromUnplacedCommand(LearningWorld learningWorld,
+        LearningSpace learningSpace,
+        ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction);
+
+    IPlaceStoryElementInLayoutFromUnplaced GetPlaceStoryElementFromUnplacedCommand(LearningWorld learningWorld,
         LearningSpace learningSpace,
         ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction);
 

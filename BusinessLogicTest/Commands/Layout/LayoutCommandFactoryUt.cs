@@ -54,7 +54,7 @@ public class LayoutCommandFactoryTests
         Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetPlaceFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
+        var result = _factory.GetPlaceLearningElementFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<PlaceLearningElementInLayoutFromLayout>());
@@ -82,7 +82,7 @@ public class LayoutCommandFactoryTests
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetPlaceFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex,
+        var result = _factory.GetPlaceLearningElementFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex,
             mappingAction);
 
         // Assert

@@ -23,6 +23,11 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     bool ReplaceLearningElementDialogOpen { get; }
 
     /// <summary>
+    /// Gets a value indicating whether the dialog for replacing a story element is currently open.
+    /// </summary>
+    bool ReplaceStoryElementDialogOpen { get; }
+
+    /// <summary>
     /// Edits an existing learning space with the specified properties.
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
@@ -101,6 +106,15 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// <param name="dropItem">The learning element view model to replace.</param>
     /// <param name="slotId">The slot ID where the learning element is located.</param>
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId);
+    
+    /// <summary>
+    /// Opens the dialog for replacing a story element, initializing the necessary data.
+    /// </summary>
+    /// <param name="learningWorldVm">The learning world view model that contains the element to be replaced.</param>
+    /// <param name="dropItem">The learning element view model to replace.</param>
+    /// <param name="slotId">The slot ID where the learning element is located.</param>
+    void OpenReplaceStoryElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
         int slotId);
 
     /// <summary>

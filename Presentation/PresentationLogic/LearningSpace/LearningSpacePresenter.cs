@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using AutoMapper;
 using MudBlazor;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
@@ -21,18 +22,21 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public sealed class LearningSpacePresenter : ILearningSpacePresenter
 {
     private readonly IErrorService _errorService;
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData? _replaceLearningElementData;
+    private ReplaceLearningElementData? _replaceStoryElementData;
     private bool _replaceLearningElementDialogOpen;
+    private bool _replaceStoryElementDialogOpen;
 
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
         ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger,
-        IErrorService errorService)
+        IErrorService errorService, IMapper mapper)
     {
         Logger = logger;
         _presentationLogic = presentationLogic;
@@ -40,6 +44,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _selectedViewModelsProvider = selectedViewModelsProvider;
         _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
         _errorService = errorService;
+        _mapper = mapper;
     }
 
     private ILogger<LearningSpacePresenter> Logger { get; }
@@ -74,6 +79,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     {
         get => _replaceLearningElementDialogOpen;
         private set => SetField(ref _replaceLearningElementDialogOpen, value);
+    }
+
+    /// <inheritdoc cref="ILearningSpacePresenter.ReplaceStoryElementDialogOpen"/>
+    public bool ReplaceStoryElementDialogOpen
+    {
+        get => _replaceStoryElementDialogOpen;
+        private set => SetField(ref _replaceStoryElementDialogOpen, value);
     }
 
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
@@ -139,6 +151,15 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         ReplaceLearningElementDialogOpen = true;
     }
 
+    [MemberNotNull(nameof(_replaceStoryElementData))]
+    public void OpenReplaceStoryElementDialog(ILearningWorldViewModel learningWorldVm,
+        ILearningElementViewModel dropItem,
+        int slotId)
+    {
+        _replaceStoryElementData = new ReplaceLearningElementData(learningWorldVm, dropItem, slotId);
+        ReplaceStoryElementDialogOpen = true;
+    }
+
     /// <inheritdoc cref="ILearningSpacePresenter.OnReplaceLearningElementDialogClose"/>
     public void OnReplaceLearningElementDialogClose(DialogResult closeResult)
     {
@@ -152,6 +173,18 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData!.LearningWorldVm,
             LearningSpaceVm!,
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
+    }
+
+    public void OnReplaceStoryElementDialogClose(DialogResult closeResult)
+    {
+        ReplaceStoryElementDialogOpen = false;
+        if (!CheckLearningSpaceNotNull("OnReplaceStoryElementDialogClose"))
+            return;
+
+        if (closeResult.Canceled) return;
+
+        _presentationLogic.DragStoryElementFromUnplaced(_replaceStoryElementData!.LearningWorldVm, LearningSpaceVm!,
+            _replaceStoryElementData.DropItem, _replaceStoryElementData.SlotId);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ClickOnSlot"/>
@@ -186,7 +219,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
 
     public void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model)
     {
-        throw new NotImplementedException();
+        CreateLearningElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>

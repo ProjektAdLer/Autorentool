@@ -250,9 +250,15 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((_, d) =>
             {
+                //set mapped parent object for learning element
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+                //analogous for story
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             })
             .ReverseMap()
@@ -265,6 +271,11 @@ public class ViewModelEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             });
         CreateMap<ILearningSpaceViewModel, LearningSpace>()
@@ -280,6 +291,11 @@ public class ViewModelEntityMappingProfile : Profile
                 {
                     element.Parent = d;
                 }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
+                }
             });
         CreateMap<ILearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
@@ -294,6 +310,11 @@ public class ViewModelEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             });
     }
