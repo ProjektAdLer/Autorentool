@@ -1,15 +1,15 @@
 @page "/MyLearningWorldsOverview"
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.MyLearningWorlds
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.API
-@using System.Diagnostics.CodeAnalysis
-@using System.IO.Abstractions
 @using MudBlazor.Utilities
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.SelectedViewModels
+@using System.Diagnostics.CodeAnalysis
+@using System.IO.Abstractions
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
@@ -56,7 +56,10 @@
             </MudGrid>
         </section>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
-            <CreateWorldForm OnSubmitted="OnNewLearningWorldCreated"/>
+            @if (_createLearningWorldDialogOpen)
+            {
+                <CreateWorldForm OnSubmitted="OnNewLearningWorldCreated"/>
+            }
         </MudDrawer>
     </article>
     <img class="pointer-events-none w-20 opacity-50 absolute bottom-1 right-1" src="/CustomIcons/autorentool-logo.png"/>
@@ -71,14 +74,11 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IMyLearningWorldsProvider MyLearningWorldsProvider { get; private init; }
 
-    [Inject, AllowNull]
-    internal IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; private init; }
+    [Inject, AllowNull] internal IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; private init; }
 
-    [Inject, AllowNull]
-    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; private init; }
+    [Inject, AllowNull] internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; private init; }
 
-    [Inject, AllowNull]
-    internal IDialogService DialogService { get; private init; }
+    [Inject, AllowNull] internal IDialogService DialogService { get; private init; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
@@ -90,11 +90,11 @@
     private bool _createLearningWorldDialogOpen;
     private bool _showFileName;
     private bool _sortByDate = true;
-    
+
     private CssBuilder SortByDateButtonClass => new CssBuilder()
         .AddClass("opacity-20", !_sortByDate)
         .AddClass("opacity-90", _sortByDate);
-    
+
     private CssBuilder SortByNameButtonClass => new CssBuilder()
         .AddClass("opacity-20", _sortByDate)
         .AddClass("opacity-90", !_sortByDate);
@@ -102,16 +102,14 @@
     private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> WorldsWithFileinfos => WorkspaceViewModel.LearningWorlds
         .Select(world => (world, MyLearningWorldsProvider.GetFileInfoFromPath(world.SavePath)));
 
-    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos => _sortByDate ?
-        WorldsWithFileinfos.OrderByDescending(tuple => tuple.Item2?.LastWriteTime) :
-        WorldsWithFileinfos.OrderBy(tuple => tuple.Item1.Name);
+    private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos => _sortByDate ? WorldsWithFileinfos.OrderByDescending(tuple => tuple.Item2?.LastWriteTime) : WorldsWithFileinfos.OrderBy(tuple => tuple.Item1.Name);
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) =>
         {
-            if (args.CommandName is "CreateLearningWorld" or "DeleteLearningWorld" 
+            if (args.CommandName is "CreateLearningWorld" or "DeleteLearningWorld"
                 or "EditLearningWorld" or "LoadLearningWorld")
             {
                 await InvokeAsync(StateHasChanged);
