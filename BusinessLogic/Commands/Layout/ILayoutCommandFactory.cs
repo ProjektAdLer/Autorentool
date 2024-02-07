@@ -39,6 +39,9 @@ public interface ILayoutCommandFactory
     /// <summary>
     /// Creates a command to remove a learning element from a layout.
     /// </summary>
-    IRemoveLearningElementFromLayout GetRemoveCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+    IRemoveLearningElementFromLayout GetRemoveLearningElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+        ILearningElement learningElement, Action<LearningWorld> mappingAction);
+
+    IRemovedStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction);
 }

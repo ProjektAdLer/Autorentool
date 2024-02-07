@@ -70,7 +70,9 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.LearningElements, opt => opt.Ignore())
-            .AfterMap(MapSpaceLayoutElements);
+            .ForMember(x => x.StoryElements, opt => opt.Ignore())
+            .AfterMap(MapSpaceLayoutElements)
+            .AfterMap(MapSpaceLayoutStoryElements);
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
@@ -109,10 +111,44 @@ public class ViewModelEntityMappingProfile : Profile
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
+    
+    private static void MapSpaceLayoutStoryElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
+        ResolutionContext ctx)
+    {
+        //gather view models for all elements that are in source but not in destination
+        var sourceNewElementsViewModels = source.StoryElements
+            .Where(x => !SameIdAtSameIndexStory(destination, x))
+            .Select(tup =>
+                new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
+                    ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
+
+        //remove all elements from destination that are not in source
+        foreach (var (key, _) in destination.StoryElements.Where(x =>
+                     !source.StoryElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id)))
+        {
+            destination.StoryElements.Remove(key);
+        }
+
+        //map all elements that are in source and destination already into the respective destination element
+        foreach (var (key, value) in destination.StoryElements)
+        {
+            var entity = source.StoryElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(entity.Value, value);
+        }
+
+        destination.StoryElements = sourceNewElementsViewModels
+            .Union(destination.StoryElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
 
     private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+    
+    private static bool SameIdAtSameIndexStory(ILearningSpaceLayoutViewModel destination,
+        KeyValuePair<int, ILearningElement> kvp) =>
+        destination.StoryElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CreateLearningContentMap()
     {

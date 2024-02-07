@@ -719,7 +719,7 @@ public class PresentationLogicUt
             .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
             .Returns(learningElementEntity);
         mockLayoutCommandFactory
-            .GetRemoveCommand(learningWorldEntity, learningSpaceEntity,
+            .GetRemoveLearningElementCommand(learningWorldEntity, learningSpaceEntity,
                 learningElementEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 

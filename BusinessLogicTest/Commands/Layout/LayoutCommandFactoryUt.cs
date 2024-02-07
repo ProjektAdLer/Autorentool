@@ -111,7 +111,7 @@ public class LayoutCommandFactoryTests
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetRemoveCommand(learningWorld, learningSpace, learningElement, mappingAction);
+        var result = _factory.GetRemoveLearningElementCommand(learningWorld, learningSpace, learningElement, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<RemoveLearningElementFromLayout>());

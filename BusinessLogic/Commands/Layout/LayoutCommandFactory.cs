@@ -41,8 +41,15 @@ public class LayoutCommandFactory : ILayoutCommandFactory
             mappingAction, LoggerFactory.CreateLogger<PlaceStoryElementInLayoutFromUnplaced>());
     }
 
-    public IRemoveLearningElementFromLayout GetRemoveCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+    public IRemoveLearningElementFromLayout GetRemoveLearningElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction) =>
         new RemoveLearningElementFromLayout(learningWorld, learningSpace, learningElement, mappingAction,
             LoggerFactory.CreateLogger<RemoveLearningElementFromLayout>());
+
+    public IRemovedStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+        ILearningElement learningElement, Action<LearningWorld> mappingAction)
+    {
+        return new RemoveStoryElementFromLayout(learningWorld, learningSpace, learningElement, mappingAction,
+            LoggerFactory.CreateLogger<RemoveStoryElementFromLayout>());
+    }
 }

@@ -354,6 +354,15 @@ public interface IPresentationLogic
     /// <param name="learningElementVm">Learning element to remove.</param>
     void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
         ILearningElementViewModel learningElementVm);
+    
+    /// <summary>
+    /// Moves the given story element from the learning space to unplaced elements in the learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space from which the element should be removed.</param>
+    /// <param name="learningElementVm">Learning element to remove.</param>
+    void DragStoryElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm);
 
     /// <summary>
     /// Switches the slot of a Learning Element within a Learning Space.

@@ -73,6 +73,14 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
         LearningElements[index] = element;
     }
 
+    public void PutStoryElement(int index, ILearningElementViewModel element)
+    {
+        if (index < 0)
+            throw new ArgumentOutOfRangeException(nameof(index), index,
+                $"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
+        StoryElements[index] = element;
+    }
+
     public void RemoveElement(int index)
     {
         if (!LearningElements.ContainsKey(index))

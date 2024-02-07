@@ -13,7 +13,7 @@ public class PlaceStoryElementInLayoutFromLayout : IPlaceStoryElementInLayoutFro
         ILogger<PlaceStoryElementInLayoutFromLayout> logger)
     {
         ParentSpace = parentSpace;
-        LearningElement = ParentSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
+        LearningElement = ParentSpace.LearningSpaceLayout.StoryElements.First(x => x.Value.Id == learningElement.Id).Value;
         NewSlotIndex = newSlotIndex;
         MappingAction = mappingAction;
         Logger = logger;

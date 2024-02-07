@@ -33,7 +33,11 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
     {
         var list = Enumerable.Empty<ILearningElementViewModel>();
         if (SpaceP.LearningSpaceVm != null)
+        {
             list = list.Union(SpaceP.LearningSpaceVm.ContainedLearningElements);
+            list = list.Union(SpaceP.LearningSpaceVm.LearningSpaceLayout.StoryElements.Values);
+        }
+
         if (WorldP.LearningWorldVm != null)
             list = list.Union(WorldP.LearningWorldVm.UnplacedLearningElements);
         return list;
@@ -66,11 +70,11 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         if (dropzoneIdentifier != "unplacedElements") return false;
         return WorldP.LearningWorldVm != null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
 
-        bool CheckInElementDropZone() => CheckInDropZone("ele");
-        bool CheckInStoryDropZone() => CheckInDropZone("story");
+        bool CheckInElementDropZone() => CheckInDropZone("ele", item.Parent.LearningSpaceLayout.LearningElements);
+        bool CheckInStoryDropZone() => CheckInDropZone("story", item.Parent.LearningSpaceLayout.StoryElements);
 
-        bool CheckInDropZone(string dropzoneType) =>
-            $"{item.Parent.Id.ToString()}_{dropzoneType}_{item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key}" ==
+        bool CheckInDropZone(string dropzoneType, IDictionary<int, ILearningElementViewModel> dict) =>
+            $"{item.Parent.Id.ToString()}_{dropzoneType}_{dict.First(kvP => kvP.Value.Equals(item)).Key}" ==
             dropzoneIdentifier;
     }
 
@@ -81,22 +85,38 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
         if (element is null)
             throw new ApplicationException("Received null element from MudItemDropInfo");
-        if (element.Parent is null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(element))
-            return; //we can simply return because the item is already in unplaced elements, where it's trying to be placed
+        switch (element.Parent)
+        {
+            case null when WorldP.LearningWorldVm.UnplacedLearningElements.Contains(element):
+                return; //we can simply return because the item is already in unplaced elements, where it's trying to be placed
+            case null:
+                throw new ApplicationException("DragDropItem has no parent");
+        }
+
+        if (element.Parent != SpaceP.LearningSpaceVm)
+            throw new ApplicationException("DragDropItem's parent is not the selected space");
 
         //at this point selected space can't be null, because the element is in a space
         if (SpaceP.LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        if (element.Parent is null ||
-            !element.Parent.ContainedLearningElements.Contains(element) ||
-            element.Parent != SpaceP.LearningSpaceVm)
+        switch (dropItem.Item!.LearningContent)
         {
-            //if we got here, the element is neither in unplaced elements nor in the selected space
-            throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
+            case IStoryContentViewModel when !element.Parent.LearningSpaceLayout.StoryElements.Values.Contains(element):
+            case IFileContentViewModel or ILinkContentViewModel or IAdaptivityContentViewModel
+                when !element.Parent.LearningSpaceLayout.LearningElements.Values.Contains(element):
+                throw new InvalidOperationException("Space does not contain element");
+            case IStoryContentViewModel:
+                PresentationL.DragStoryElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm, element);
+                break;
+            case IFileContentViewModel or ILinkContentViewModel or IAdaptivityContentViewModel:
+                PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                    element);
+                break;
+            default:
+            {
+                throw new InvalidOperationException("LearningContent type is not recognized");
+            }
         }
-
-        PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
-            element);
     }
 
     private void DragItemToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem)
