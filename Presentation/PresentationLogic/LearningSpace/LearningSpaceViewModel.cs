@@ -151,10 +151,10 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         }
     }
 
-    public double InputConnectionX => PositionX + 33;
+    public double InputConnectionX => PositionX + 40;
     public double InputConnectionY => PositionY - 7;
-    public double OutputConnectionX => PositionX + 32;
-    public double OutputConnectionY => PositionY + 62;
+    public double OutputConnectionX => PositionX + 40;
+    public double OutputConnectionY => PositionY + 78;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;

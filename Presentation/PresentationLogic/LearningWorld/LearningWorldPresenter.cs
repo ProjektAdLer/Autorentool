@@ -453,7 +453,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
             var currentOffset = objAtPosition switch
             {
-                ILearningSpaceViewModel => 70,
+                ILearningSpaceViewModel => 85,
                 PathWayConditionViewModel => 55,
                 null when objAtPositionWithOffset is PathWayConditionViewModel condition => 55 +
                     (condition.PositionY - positionY),
