@@ -32,7 +32,7 @@ public class LearningSpaceLayout : ILearningSpaceLayout
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceLayoutMemento(LearningElements, FloorPlanName);
+        return new LearningSpaceLayoutMemento(LearningElements, StoryElements, FloorPlanName);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -43,20 +43,24 @@ public class LearningSpaceLayout : ILearningSpaceLayout
         }
 
         LearningElements = learningSpaceLayoutMemento.LearningElements;
+        StoryElements = learningSpaceLayoutMemento.StoryElements;
         FloorPlanName = learningSpaceLayoutMemento.FloorPlanName;
     }
 
     private record LearningSpaceLayoutMemento : IMemento
     {
         internal LearningSpaceLayoutMemento(IDictionary<int, ILearningElement> learningElements,
+            IDictionary<int, ILearningElement> storyElements,
             FloorPlanEnum floorPlanName)
         {
             //shallow copy dictionary
             LearningElements = new Dictionary<int, ILearningElement>(learningElements);
+            StoryElements = new Dictionary<int, ILearningElement>(storyElements);
             FloorPlanName = floorPlanName;
         }
 
         internal IDictionary<int, ILearningElement> LearningElements { get; }
+        internal IDictionary<int, ILearningElement> StoryElements { get; }
         internal FloorPlanEnum FloorPlanName { get; }
     }
 }
