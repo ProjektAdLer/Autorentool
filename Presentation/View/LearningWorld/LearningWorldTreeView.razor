@@ -39,7 +39,10 @@
                             <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
                                 @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
                                 {
-                                    <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                    <div class="flex flex-row gap-2 pl-12 py-2" @onclick="() => OnElementClicked(element)">
+                                        <MudIcon Icon="@GetElementIcon(element)" Class="w-4 h-4 2xl:w-5 2xl:h-5"></MudIcon>
+                                        <MudText Class="text-sm 2xl:text-base break-normal">@element.Name</MudText>
+                                    </div>
                                 }
                             </MudTreeViewItem>
                         </div>
