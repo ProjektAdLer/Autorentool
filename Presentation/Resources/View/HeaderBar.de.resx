@@ -106,7 +106,7 @@
         <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an, um Lernwelten in das Backend hochzuladen.</value>
     </data>
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
-        <value>Welt {0} erfolgreich gespeichert</value>
+        <value>Lernwelt {0} erfolgreich gespeichert</value>
     </data>
     <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element, welches nicht in einem Raum platziert wurde.</value>
@@ -124,7 +124,7 @@
         <value>Hochladen erfolgreich</value>
     </data>
     <data name="UploadLearningWorld.Success.DialogText" xml:space="preserve">
-        <value>Ihre Welt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
+        <value>Ihre Lernwelt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
         <value>Lernwelt archivieren (.zip)</value>
