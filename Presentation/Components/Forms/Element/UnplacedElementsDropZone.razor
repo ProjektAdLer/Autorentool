@@ -4,7 +4,10 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Commands
 @using Presentation.PresentationLogic.LearningElement
+@implements IDisposable
+@implements IAsyncDisposable
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
     <p class="cursor-default text-xs h-1/4 2xl:text-sm text-center mx-1 py-2 flex-auto basis-1/5 text-adlergrey-500 font-bold">@Localizer["ElementFormContainer.UnplacedElements.Title"]</p>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
@@ -32,16 +35,39 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    
+    [Inject, AllowNull]
+    public IOnUndoRedo UndoRedoSource { get; set; }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+        UndoRedoSource.OnUndo += OnUndoOrRedo;
+        UndoRedoSource.OnRedo += OnUndoOrRedo;
+        if (SelectedViewModelsProvider.LearningWorld != null) 
+            SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
     }
 
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async void OnUndoOrRedo(ICommand command) => await InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        UndoRedoSource.OnUndo -= OnUndoOrRedo;
+        UndoRedoSource.OnRedo -= OnUndoOrRedo;
+        if (SelectedViewModelsProvider.LearningWorld != null)
+            SelectedViewModelsProvider.PropertyChanged -= SelectedViewModelsProviderOnPropertyChanged;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
     }
 
 }
