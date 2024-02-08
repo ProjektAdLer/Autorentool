@@ -18,7 +18,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
         @"fill:#e9e9e9;opacity:80%;stroke:rgb(204,204,204);stroke-width:50";
 
     protected override string OnHoveredObjectShape =>
-        @"<rect transform=""translate(0,0)"" height=""5rem"" width=""5rem"" rx=5 style=""fill:rgb(229,189,115);stroke:rgba(229,189,115,0.5);stroke-width:5""></rect>
+        @"<rect transform=""translate(0,0)"" height=""5rem"" width=""5rem"" rx=5 style=""fill:rgb(229,189,115);stroke:rgba(229,189,115,0.5);stroke-width:8""></rect>
         ";
 
     protected override string ObjectShape =>
