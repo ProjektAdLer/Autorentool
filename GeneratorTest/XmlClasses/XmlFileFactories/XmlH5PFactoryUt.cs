@@ -83,7 +83,7 @@ public class XmlH5PFactoryUt
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
-        var space_1 = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2 }, 10, "space", "", "");
+        var space_1 = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2 }, 10, "space", "");
         mockReadAtf.GetH5PElementsList().Returns(h5PList);
         systemUnderTest.CreateH5PFileFactory();
 
@@ -122,7 +122,7 @@ public class XmlH5PFactoryUt
         };
 
         var space_1 =
-            new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "space", "", "");
+            new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "space", "");
         mockReadAtf.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "space"), new MockFileData("Hello World"));
 

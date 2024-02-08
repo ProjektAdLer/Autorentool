@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
 using Shared.Extensions;
@@ -269,9 +270,22 @@ public class CreateAtf : ICreateAtf
     {
         var storyElements = space.LearningSpaceLayout.StoryElements;
 
-        //TODO: Check if there is an Intro and/Or an Outro Story and map ILearningElementPe -> SpaceStoryJson
+        StoryElementJson? introStoryJson = null;
+        StoryElementJson? outroStoryJson = null;
 
-        return new SpaceStoryJson(null, null);
+        if (storyElements.TryGetValue(0, out var introStory))
+        {
+            introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
+                introStory.ElementModel.ToString());
+        }
+
+        if (storyElements.TryGetValue(1, out var outroStory))
+        {
+            outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
+                outroStory.ElementModel.ToString());
+        }
+
+        return new SpaceStoryJson(introStoryJson, outroStoryJson);
     }
 
     /// <summary>

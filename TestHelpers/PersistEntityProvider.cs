@@ -2,6 +2,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Story;
 using PersistEntities.LearningContent.Trigger;
 using Shared;
 using Shared.Adaptivity;
@@ -63,6 +64,13 @@ public static class PersistEntityProvider
     public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null)
     {
         return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath");
+    }
+
+    public static StoryContentPe GetStoryContent(string? name = null, bool unsavedChanges = false,
+        List<string>? story = null)
+    {
+        return new StoryContentPe(name ?? "a name", unsavedChanges,
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" });
     }
 
     public static TopicPe GetTopic(string? name = null)
