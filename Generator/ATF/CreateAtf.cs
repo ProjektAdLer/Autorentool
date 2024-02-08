@@ -251,15 +251,27 @@ public class CreateAtf : ICreateAtf
 
             AssignTopicToSpace(space, learningSpaceId);
 
+            var spaceStoryJson = GetSpaceStoryJson(space);
+
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
-                space.Name, _listLearningSpaceElements,
-                space.RequiredPoints, space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
-                space.Description, space.Goals.Split("\n"), _booleanAlgebraRequirements));
+                space.Name, _listLearningSpaceElements, space.RequiredPoints,
+                space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
+                spaceStoryJson, space.Description, space.Goals.Split("\n"),
+                _booleanAlgebraRequirements));
 
             learningSpaceId++;
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
+    }
+
+    private ISpaceStoryJson GetSpaceStoryJson(LearningSpacePe space)
+    {
+        var storyElements = space.LearningSpaceLayout.StoryElements;
+
+        //TODO: Check if there is an Intro and/Or an Outro Story and map ILearningElementPe -> SpaceStoryJson
+
+        return new SpaceStoryJson(null, null);
     }
 
     /// <summary>
