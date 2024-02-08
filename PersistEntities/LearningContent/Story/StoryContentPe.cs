@@ -23,6 +23,9 @@ public class StoryContentPe : IStoryContentPe
 
     public bool Equals(ILearningContentPe? other)
     {
-        throw new NotImplementedException();
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not StoryContentPe otherCast) return false;
+        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText);
     }
 }

@@ -20,7 +20,10 @@ public class StoryContent : IStoryContent
 
     public bool Equals(ILearningContent? other)
     {
-        throw new NotImplementedException();
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not StoryContent otherCast) return false;
+        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText);
     }
 
     public string Name { get; set; }

@@ -10,6 +10,7 @@
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using System.Drawing
 @using AutoMapper
 @using BusinessLogic.Entities.LearningContent.Story
 @using Presentation.Components.Adaptivity.Dialogues
@@ -30,7 +31,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]      @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]       @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -103,7 +104,7 @@
         {
             case ElementMode.Normal:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]      @bind-Collapsed="_collapsedContent">
+                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]       @bind-Collapsed="_collapsedContent">
                         <p class="text-xs pl-6">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         @if (!WorldPresenter.GetAllContent().Any())
                         {
@@ -156,7 +157,7 @@
                 break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]      @bind-Collapsed="_collapsedTasks">
+                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]       @bind-Collapsed="_collapsedTasks">
                         <p class="text-xs pl-6">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                         <div class="flex flex-col items-center justify-center">
                             <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard" OnClick="OpenAdaptivityContentDialog">
@@ -169,17 +170,31 @@
             case ElementMode.Story:
                 <div class="px-4">
                     <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
-                        <PseudoFormFieldGrouping 
+                        <PseudoFormFieldGrouping
                             For="() => FormModel.LearningContent"
                             @ref="_pseudoGroupStoryContent">
                             <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
-                            <!-- Overriding nullability here because we ensure learning content is set during initialization -->
-                            <MudTextField T="string" Label="@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]"
-                                          Variant="Variant.Outlined" Lines="5"
-                                          Value="@(StoryContentModel?.StoryText)"
-                                          ValueChanged="@OnStoryTextChanged"
-                                          DebounceInterval="DebounceInterval"/>
+                            @if (StoryContentModel != null)
+                            {
+                                @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
+                                {
+                                    var x = i;
+                                    <div class="flex flex-col">
+                                        <div class="flex flex-row">
+                                            <MudIconButton Icon="@Icons.Material.Outlined.Delete"
+                                                           OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"/>
+                                            <MudTextField T="string" Label="@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]"
+                                                          Variant="Variant.Outlined" Lines="5"
+                                                          @bind-Value="@(StoryContentModel.StoryText[x])"
+                                                          DebounceInterval="DebounceInterval"/>
+                                        </div>
+                                        <p>@($"{StoryContentModel.StoryText[x].Length}/550")</p>
+                                    </div>
+                                }
 
+                                <MudIconButton Icon="@Icons.Material.Outlined.Add"
+                                               OnClick="@(() => StoryContentModel.StoryText.Add(""))"/>
+                            }
                         </PseudoFormFieldGrouping>
                     </Collapsable>
                 </div>
@@ -189,13 +204,12 @@
         }
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]      @bind-Collapsed="_collapsedElementModel">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]       @bind-Collapsed="_collapsedElementModel">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
                                             Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                            Elements="GetElementModels()"
-                                            >
+                                            Elements="GetElementModels()">
                     </ElementModelGridSelect>
                 </div>
             </Collapsable>
@@ -205,7 +219,7 @@
         {
             <div class="px-4">
                 <Collapsable
-                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
+                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
                     <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                         <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                         <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -256,9 +270,8 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IDialogService DialogService { get; set; }
-    
-    [Inject, AllowNull]
-    internal IMapper Mapper { get; set; }
+
+    [Inject, AllowNull] internal IMapper Mapper { get; set; }
 
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
@@ -290,8 +303,8 @@
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == -1)
             WorldPresenter.CreateUnplacedLearningElementFromFormModel(model);
-                // model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
-                // model.Workload, model.Points);
+        // model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
+        // model.Workload, model.Points);
         else
         {
             SpacePresenter.CreateLearningElementInSlotFromFormModel(model);
@@ -387,11 +400,5 @@
             ElementMode is ElementMode.Adaptivity or ElementMode.Story);
     }
 
-    //We need a manual OnChanged callback for this because we need to make sure that StoryContentModel is not null
-    private void OnStoryTextChanged(string val)
-    {
-        if (StoryContentModel != null) StoryContentModel.StoryText = val;
-        _pseudoGroupStoryContent?.Validate();
-    }
 
 }

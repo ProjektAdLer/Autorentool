@@ -41,11 +41,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISnackbar Snackbar { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<TForm> OnValidSubmit { get; set; }
+    [Parameter, EditorRequired] public EventCallback<TForm> OnValidSubmit { get; set; }
 
-    [Parameter]
-    public EventCallback<TForm> OnValidFieldChange { get; set; }
+    [Parameter] public EventCallback<TForm> OnValidFieldChange { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string SnackbarMessage { get; set; }
@@ -56,11 +54,9 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment Fields { get; set; }
 
-    [Parameter]
-    public RenderFragment? HeaderButtons { get; set; }
+    [Parameter] public RenderFragment? HeaderButtons { get; set; }
 
-    [Parameter, EditorRequired]
-    public RenderFragment? FooterButtons { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? FooterButtons { get; set; }
 
 
     private MudForm? _form;
@@ -68,8 +64,7 @@
 
     internal string? SubmitErrorMessage { get; set; }
 
-    [Parameter]
-    public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
+    [Parameter] public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
 
     //Wrapper function around ValidateAsync to only validate a given property
     //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
@@ -88,29 +83,28 @@
         FormDataContainer.FormModel = new TForm();
     }
 
-    public async Task SubmitAsync()
+    public async Task<bool> SubmitAsync()
     {
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
-        if (_form.IsValid)
+        if (!_form.IsValid) return false;
+        try
         {
-            try
-            {
-                await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
-                Snackbar.Add(SnackbarMessage);
-                Reset();
-            }
-            catch (Exception e)
-            {
-                SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
-            }
+            await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
+            Snackbar.Add(SnackbarMessage);
+            Reset();
         }
+        catch (Exception e)
+        {
+            SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
+        }
+        return true;
     }
 
 
     private async Task FieldChanged(FormFieldChangedEventArgs e)
     {
-    //quit early if nobody is listening anyway
+        //quit early if nobody is listening anyway
         if (!OnValidFieldChange.HasDelegate) return;
         if (_form == null) throw new ApplicationException("_form is null");
         await _form.Validate();

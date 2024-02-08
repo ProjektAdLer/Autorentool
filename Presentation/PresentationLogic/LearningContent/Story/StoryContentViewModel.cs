@@ -23,6 +23,9 @@ public class StoryContentViewModel : IStoryContentViewModel
 
     public bool Equals(ILearningContentViewModel? other)
     {
-        throw new NotImplementedException();
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not StoryContentViewModel otherCast) return false;
+        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText);
     }
 }
