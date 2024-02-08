@@ -2,5 +2,5 @@ namespace Presentation.PresentationLogic.LearningContent.Story;
 
 public interface IStoryContentViewModel : ILearningContentViewModel
 {
-    public string StoryText { get; set; }
+    public List<string> StoryText { get; set; }
 }

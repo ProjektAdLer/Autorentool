@@ -6,14 +6,17 @@ public class StoryContent : IStoryContent
     {
         Name = "";
         UnsavedChanges = false;
-        StoryText = "";
+        StoryText = new List<string>();
     }
-    public StoryContent(string name, bool unsavedChanges, string storyText)
+
+    public StoryContent(string name, bool unsavedChanges, List<string> storyText)
     {
         Name = name;
         UnsavedChanges = unsavedChanges;
         StoryText = storyText;
     }
+
+    public bool UnsavedChanges { get; set; }
 
     public bool Equals(ILearningContent? other)
     {
@@ -21,6 +24,5 @@ public class StoryContent : IStoryContent
     }
 
     public string Name { get; set; }
-    public bool UnsavedChanges { get; set; }
-    public string StoryText { get; set; }
+    public List<string> StoryText { get; set; }
 }

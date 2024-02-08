@@ -8,9 +8,10 @@ public class StoryContentFormModel : ILearningContentFormModel
     public StoryContentFormModel()
     {
         Name = "";
-        StoryText = "";
+        StoryText = new List<string>();
     }
 
+    public List<string> StoryText { get; set; }
+
     public string Name { get; set; }
-    public string StoryText { get; set; }
 }
