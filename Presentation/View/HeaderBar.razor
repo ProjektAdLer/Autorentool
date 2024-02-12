@@ -1,30 +1,28 @@
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.Mediator
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Shared.Exceptions
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
-@using System.Text
-@using Presentation.Components.Dialogues
-@using System.Runtime.Serialization
-@using MudBlazor.Utilities
-@using Presentation.Components.Culture
-@using Presentation.Components
-@using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.Extensions
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
-@using Shared.Extensions
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared.Exceptions
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic
+@using Presentation.Components.Culture
+@using Presentation.Components.Dialogues
+@using Presentation.Components
+@using System.Text
+@using System.Runtime.Serialization
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]    @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
@@ -138,12 +136,17 @@
             </ChildContent>
         </MudMenu>
 
+        <button @onclick="@ShowLearningOutcomesOverview" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <MudIcon Icon="@Icons.Material.Filled.Book"></MudIcon>
+        </button>
+
         <CultureSelector/>
         <LmsLoginButton/>
         @if (PresentationLogic.RunningElectron)
         {
             <CloseAppButton/>
         }
+
     </div>
 </header>
 
@@ -228,14 +231,14 @@
         var world = SelectedViewModelsProvider.LearningWorld;
         if (world == null) return;
         if (!IsLearningWorldValid(world)) return;
-    //check if lms is connected here before generating the backup just to save time
+        //check if lms is connected here before generating the backup just to save time
         if (!await PresentationLogic.IsLmsConnected())
         {
             await ShowNotLoggedInDialog();
             return;
         }
 
-    //present "Upload/Cancel" dialog
+        //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
             { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
@@ -256,10 +259,10 @@
                 options);
         var result = await dialog.Result;
 
-    //if not cancelled, upload LearningWorld
+        //if not cancelled, upload LearningWorld
         if (result.Canceled) return;
 
-    //present progress dialog
+        //present progress dialog
         var cancellationTokenSource = new CancellationTokenSource();
         var progress = new Progress<int>();
         options = new DialogOptions
@@ -351,6 +354,7 @@
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
             }
+
             if (space.Points < space.RequiredPoints)
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
@@ -358,8 +362,8 @@
         }
 
         foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
-            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
         {
             if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
             if (TaskReferencesNonexistantElement(adaptivityContent, world))
@@ -403,25 +407,25 @@
     private IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> ReferencesElementInSpaceAfterOwnSpace(ILearningElementViewModel element, ILearningWorldViewModel world)
     {
         var ownSpace = world.LearningSpaces.SingleOrDefault(space => space.ContainedLearningElements.Contains(element));
-    //element isn't placed yet, can't say anything about it
+        //element isn't placed yet, can't say anything about it
         if (ownSpace is null) return Enumerable.Empty<(ILearningSpaceViewModel, ILearningElementViewModel)>();
 
-    //find all the id's of elements that the adaptivity content of this element we are looking at references
+        //find all the id's of elements that the adaptivity content of this element we are looking at references
         var adaptivityContent = (AdaptivityContentViewModel)element.LearningContent;
         var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
 
-    //create a tuple of (space,ele) for every element in every space
+        //create a tuple of (space,ele) for every element in every space
         IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> spaceElementTuples = world.LearningSpaces
             .SelectMany(space => space.ContainedLearningElements
                 .Select(ele => (space, ele)));
 
-    //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
+        //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
         var spaceElementTuplesReferenced = spaceElementTuples.Where(tup => adaptivityContentReferencedIds.Contains(tup.Element.Id));
 
-    //find all spaces that are after the space the element we are looking at is in
+        //find all spaces that are after the space the element we are looking at is in
         var spacesAfterOwn = ownSpace.GetFollowingSpaces();
 
-    //find all tuples that contain a space that is after our own space
+        //find all tuples that contain a space that is after our own space
         return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
     }
 
@@ -438,7 +442,7 @@
 
     private async Task ShowNotLoggedInDialog()
     {
-    //present Info dialog
+        //present Info dialog
         var parameters = new DialogParameters
         {
             { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"].ToString() },
@@ -503,6 +507,25 @@
         {
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }
+    }
+
+    private void ShowLearningOutcomesOverview()
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false,
+            FullWidth = true,
+        };
+
+        var parameters = new DialogParameters
+        {
+            {
+                nameof(LearningOutcomesOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
+            }
+        };
+        DialogService.Show<LearningOutcomesOverview>("Title", parameters, options);
     }
 
 }

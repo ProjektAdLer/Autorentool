@@ -1,0 +1,23 @@
+@using Presentation.PresentationLogic.LearningWorld
+<h3>LearningOutcomes von @LearningWorld.Name</h3>
+
+@foreach (var learningSpace in LearningWorld.LearningSpaces)
+{
+    <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+    <p class="break-words">@learningSpace.Name</p>
+
+
+    @if (learningSpace.LearningOutcomeCollection != null) //Collection is null when Space was created before LearningOutcomeCollection was introduced
+    {
+        @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)
+        {
+            <p class="break-words">@outcome.GetOutcome()</p>
+        }
+    }
+}
+
+@code {
+    [Parameter, EditorRequired] public ILearningWorldViewModel LearningWorld { get; set; } = null!;
+
+    private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+}
