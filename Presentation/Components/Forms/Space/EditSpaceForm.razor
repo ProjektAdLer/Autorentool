@@ -1,4 +1,5 @@
 @using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 @using Shared
 @using AutoMapper
 @using BusinessLogic.Entities
@@ -27,7 +28,7 @@
     </HeaderButtons>
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"]   @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -38,7 +39,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"]   @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"]    @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -54,7 +55,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]   @bind-Collapsed="_collapsedFloorplan">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]    @bind-Collapsed="_collapsedFloorplan">
                 @*<MudText Typo="Typo.caption">
                                 @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
             </MudText>*@
@@ -65,7 +66,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"]   @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"]    @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -82,7 +83,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -186,6 +187,13 @@
             FullWidth = true,
             CloseButton = true,
         };
+        //Spaces created before the introduction of learning outcomes will not have a collection, so we need to create one
+        if (SpaceToEdit.LearningOutcomeCollection == null)
+        {
+            SpaceToEdit.LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
+            await MapIntoContainer();
+        }
+
         var parameters = new DialogParameters
         {
             { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
