@@ -41,7 +41,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 </svg>";
 
     protected override string DeletePathButtonShape =>
-        @"<circle r=""7"" transform=""translate(40,0)"" fill=""red"" stroke=""red""/>
+        @"<circle r=""7"" transform=""translate(40,0)"" fill=""rgb(23,45,77)"" stroke=""rgb(23,45,77)""/>
                                     <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(40,0)"" 
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
 

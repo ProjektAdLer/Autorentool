@@ -42,7 +42,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
         @"<rect x=""0"" y=""0"" width=""75"" height=""41.5"" rx=""2"" style={0}></rect>";
 
     protected override string DeletePathButtonShape =>
-        @"<circle r=""7"" transform=""translate(37.5, -3)"" fill=""red"" stroke=""red""/>
+        @"<circle r=""7"" transform=""translate(37.5, -3)"" fill=""rgb(23,45,77)"" stroke=""rgb(23,45,77)""/>
                                        <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(37.5, -3)"" 
                                         style=""fill:none;stroke:white;stroke-width:1""/>";
 
