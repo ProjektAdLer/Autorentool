@@ -390,6 +390,7 @@
         {
             ElementMode.Normal when FormModel.LearningContent is FileContentFormModel => ElementModelContentType.File,
             ElementMode.Normal when FormModel.LearningContent is LinkContentFormModel => ElementModelContentType.Link,
+            ElementMode.Normal => ElementModelContentType.Any,
             ElementMode.Adaptivity => ElementModelContentType.Adaptivity,
             ElementMode.Story => ElementModelContentType.Story,
             _ => throw new ArgumentOutOfRangeException()

@@ -2,7 +2,7 @@
 
 namespace Presentation.Components.Forms.Element;
 
-public enum ElementModelContentType {File, Link, Adaptivity, Story}
+public enum ElementModelContentType {Any, File, Link, Adaptivity, Story}
 
 public class ElementModelHandler : IElementModelHandler
 {
@@ -15,6 +15,7 @@ public class ElementModelHandler : IElementModelHandler
     {
         var type = contentType switch
         {
+            ElementModelContentType.Any => ContentTypeEnum.Text,
             ElementModelContentType.File => ContentTypeHelper.GetContentType(fileType),
             ElementModelContentType.Link => ContentTypeEnum.Video,
             ElementModelContentType.Adaptivity => ContentTypeEnum.Adaptivity,
@@ -151,6 +152,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
+            case ContentTypeEnum.Story:
                 //campus
                 yield return ElementModel.a_npc_dozentlukas;
                 //arcade
