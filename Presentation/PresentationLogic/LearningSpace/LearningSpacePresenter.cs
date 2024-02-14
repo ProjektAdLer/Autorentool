@@ -9,6 +9,9 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
@@ -226,13 +229,17 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>
     public void ClickedLearningElement(ILearningElementViewModel learningElementViewModel)
     {
-        if (learningElementViewModel.LearningContent is AdaptivityContentViewModel)
+        switch (learningElementViewModel.LearningContent)
         {
-            _mediator.RequestOpenAdaptivityElementDialog();
-        }
-        else
-        {
-            _mediator.RequestOpenElementDialog();
+            case IAdaptivityContentViewModel:
+                _mediator.RequestOpenAdaptivityElementDialog();
+                break;
+            case IStoryContentViewModel:
+                _mediator.RequestOpenStoryElementDialog();
+                break;
+            case IFileContentViewModel or ILinkContentViewModel:
+                _mediator.RequestOpenElementDialog();
+                break;
         }
 
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
