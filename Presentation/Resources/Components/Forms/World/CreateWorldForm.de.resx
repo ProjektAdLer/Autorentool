@@ -37,16 +37,16 @@
         <value>Link zur Evaluation</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung</value>
+        <value>Formulieren Sie hier eine Beschreibung für Ihre Lernwelt.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diese Lernwelt.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Lernwelt erstellen</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Lernziele</value>
     </data>
     <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
         <value>Lernwelt erstellt</value>
@@ -56,5 +56,8 @@
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Einschreibeschlüssel</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Beschreibung</value>
     </data>
 </root>

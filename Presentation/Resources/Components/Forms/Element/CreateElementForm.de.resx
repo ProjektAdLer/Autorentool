@@ -72,13 +72,13 @@
         <value>Externes Lernmaterial*</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Lernziele</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung</value>
+        <value>Formulieren Sie hier eine Beschreibung für Ihr Lernelement.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für dieses Lernelement.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
         <value>Schwierigkeitsgrad</value>
@@ -112,5 +112,8 @@
     </data>
     <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
         <value>Darstellung in der 3D-Lernumgebung</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Beschreibung</value>
     </data>
 </root>

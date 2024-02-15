@@ -55,13 +55,6 @@
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                                  For="@(() => FormModel.Description)"
-                                  Lines="3"
-                                  Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="text-adlergrey-800 pb-4 mt-0"/>
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
@@ -72,6 +65,21 @@
                 </div>
             </Collapsable>
         </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] @bind-Collapsed="_collapsedDescription">
+                <div class="rounded-lg w-4/4 px-4">
+                    <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                  For="@(() => FormModel.Description)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="text-adlergrey-800 pb-4 mt-0"/>
+                </div>
+            </Collapsable>
+        </div>
+
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -106,6 +114,7 @@
 
     private bool _collapsedGeneral = false;
     private bool _collapsedGoals = true;
+    private bool _collapsedDescription = true;
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
 

@@ -41,7 +41,7 @@
         <value>Thema: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
-        <value>Ziele: </value>
+        <value>Lernziele</value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
         <value>Ersetze Lernelement</value>

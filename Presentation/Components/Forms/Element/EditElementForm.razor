@@ -167,13 +167,6 @@
         <div class="px-4">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                                  For="@(() => FormModel.Description)"
-                                  Lines="3"
-                                  Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
                     <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
@@ -185,6 +178,20 @@
             </Collapsable>
         </div>
         
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Description.Title"] @bind-Collapsed="_collapsedDescription">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                    <MudText Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                  For="@(() => FormModel.Description)"
+                                  Lines="3"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4 mt-0"/>
+                </div>
+            </Collapsable>
+        </div>
+
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -245,6 +252,7 @@
     private bool _collapsedContent = false;
     private bool _collapsedTasks = false;
     private bool _collapsedGoals = true;
+    private bool _collapsedDescription = true;
     private bool _collapsedElementModel = true;
 
     private void OnValidSubmit(LearningElementFormModel model)
