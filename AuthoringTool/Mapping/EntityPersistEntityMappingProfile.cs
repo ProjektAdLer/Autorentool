@@ -212,6 +212,8 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+#pragma warning disable
+            .ForMember(x => x.Goals /* obsolete */, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())

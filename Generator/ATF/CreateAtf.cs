@@ -252,21 +252,14 @@ public class CreateAtf : ICreateAtf
             AssignTopicToSpace(space, learningSpaceId);
 
             string[] spaceGoals;
-            // Ensure backward compatibility
-            if (space.LearningOutcomeCollection != null)
-            {
-                spaceGoals = new string[space.LearningOutcomeCollection.LearningOutcomes.Count];
-                var index = 0;
 
-                foreach (var learningOutcome in space.LearningOutcomeCollection.LearningOutcomes)
-                {
-                    spaceGoals[index] = learningOutcome.GetOutcome();
-                    index++;
-                }
-            }
-            else
+            spaceGoals = new string[space.LearningOutcomeCollection.LearningOutcomes.Count];
+            var index = 0;
+
+            foreach (var learningOutcome in space.LearningOutcomeCollection.LearningOutcomes)
             {
-                spaceGoals = Array.Empty<string>();
+                spaceGoals[index] = learningOutcome.GetOutcome();
+                index++;
             }
 
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),

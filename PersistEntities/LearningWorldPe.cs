@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using PersistEntities.LearningOutcome;
 
 namespace PersistEntities;
 
@@ -99,5 +100,17 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
             learningPathwayPe.SourceObject.OutBoundObjects.Add(learningPathwayPe.TargetObject);
             learningPathwayPe.TargetObject.InBoundObjects.Add(learningPathwayPe.SourceObject);
         }
+
+        //LearningWorlds created in or before Version 2.0.0 have Goals instead of LearningOutcomeCollection
+        //To ensure compatibility, we convert Goals to ManualLearningOutcomePe and add them to LearningOutcomeCollection - m.ho
+#pragma warning disable
+        if (!LearningSpaces.Any(x => x.LearningOutcomeCollection == null)) return;
+        foreach (var space in LearningSpaces)
+        {
+            space.LearningOutcomeCollection = new LearningOutcomeCollectionPe();
+            if (!string.IsNullOrEmpty(space.Goals))
+                space.LearningOutcomeCollection.LearningOutcomes.Add(new ManualLearningOutcomePe(space.Goals));
+        }
     }
+#pragma warning restore
 }
