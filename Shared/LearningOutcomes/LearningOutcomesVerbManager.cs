@@ -252,7 +252,6 @@ public class LearningOutcomesVerbManager
                     "zerlegen",
                     "zitieren",
                     "zuordnen",
-                    "zuordnen",
                     "zusammenfassen",
                     "zusammenfügen",
                     "zusammensetzen",
