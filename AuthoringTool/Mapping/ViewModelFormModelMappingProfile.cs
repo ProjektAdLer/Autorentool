@@ -70,7 +70,16 @@ public class ViewModelFormModelMappingProfile : Profile
     private void CreateElementMap()
     {
         CreateMap<LearningElementViewModel, LearningElementFormModel>()
+            .ForMember(x => x.LearningContent, opt => opt.Ignore())
+            .AfterMap(MapContent)
             .ReverseMap();
+        return;
+
+        void MapContent(LearningElementViewModel source, LearningElementFormModel dest, ResolutionContext ctx)
+        {
+            dest.LearningContent =
+                ctx.Mapper.Map<ILearningContentFormModel>(source.LearningContent);
+        }
     }
 
     private void CreateSpaceMap()

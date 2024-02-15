@@ -1,3 +1,4 @@
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
@@ -8,8 +9,6 @@ namespace Presentation.Components.Forms.Models;
 
 public class LearningElementFormModel
 {
-    private ILearningContentFormModel? _learningContent;
-
     public LearningElementFormModel()
     {
         Name = "";
@@ -32,20 +31,5 @@ public class LearningElementFormModel
     public int Workload { get; set; }
     public int Points { get; set; }
 
-    public ILearningContentFormModel? LearningContent
-    {
-        get => _learningContent;
-        set
-        {
-            if (Equals(value, _learningContent)) return;
-            var learningContentIsSameType =
-                (_learningContent is LinkContentFormModel && value is LinkContentFormModel) ||
-                (_learningContent is FileContentFormModel lC && value is FileContentFormModel vC &&
-                 lC.Type == vC.Type);
-
-            _learningContent = value;
-            if (learningContentIsSameType) return;
-            ElementModel = ElementModelHandler.GetElementModelRandom();
-        }
-    }
+    public ILearningContentFormModel? LearningContent { get; set; }
 }

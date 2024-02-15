@@ -9,4 +9,6 @@ public interface IElementModelHandler
 
     IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
         Theme? theme = null, bool npcMode = false);
+
+    ElementModel GetElementModelRandom();
 }

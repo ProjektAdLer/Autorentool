@@ -12,6 +12,7 @@
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.LearningContent.Story
+@using Shared.Observer
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@(GetHeaderText())</h2>
@@ -102,6 +103,7 @@
                         <TableSelect
                             T="ILearningContentFormModel"
                             @bind-Value="FormDataContainer.FormModel.LearningContent"
+                            OnPropertyChangingWithValue="OnContentChanging"
                             For="@(() => FormModel.LearningContent!)"
                             Elements="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
                             FilterFuncSearchableStrings="ILearningContentFormModel.GetSearchableStrings">
@@ -308,7 +310,6 @@
         //this is a hacky workaround. we need to reset the container because when we switch between elements, the container still contains the old element before this component is disposed.
         //this is because in ElementFormContainer all element modes use the same component (this one). so when we switch between elements, the component is not disposed and the container is not reset before the new element is mapped into it.
         //TODO: fix this during our 3.0 refactoring - n.stich
-        FormDataContainer.Reset();
         Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
         await InvokeAsync(StateHasChanged);
     }
@@ -383,6 +384,21 @@
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
             ElementToEdit.Parent?.Theme,
             ElementMode is ElementMode.Adaptivity or ElementMode.Story);
+    }
+
+    private void OnContentChanging(PropertyChangingWithValueEventArgs<ILearningContentFormModel> e)
+    {
+        switch (e.OldValue)
+        {
+            case LinkContentFormModel when e.NewValue is LinkContentFormModel:
+            case FileContentFormModel lC when e.NewValue is FileContentFormModel vC && lC.Type == vC.Type:
+            case StoryContentFormModel when e.NewValue is StoryContentFormModel:
+            case AdaptivityContentFormModel when e.NewValue is AdaptivityContentFormModel:
+                return;
+            default:
+                FormModel.ElementModel = ElementModelHandler.GetElementModelRandom();
+                break;
+        }
     }
 
 }
