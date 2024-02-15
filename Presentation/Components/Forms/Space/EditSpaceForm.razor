@@ -82,7 +82,18 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]     @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
+                <div class="w-4/4 px-4">
+                    <MudText Class="text-justify" Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                    <div class="flex justify-center">
+                        <MudButton Class="btn-standard w-64" OnClick="OpenLearningOutcomesOverview">@Localizer["EditSpaceForm.Goals.Button"]</MudButton>
+                    </div>
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Description.Title"]    @bind-Collapsed="_collapsedDescription">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -91,11 +102,10 @@
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"
                                   Class="pb-4 mt-0"/>
-                    <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
-                    <MudButton OnClick="OpenLearningOutcomesOverview"> LearningOutcomes </MudButton>
                 </div>
             </Collapsable>
         </div>
+        
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -141,6 +151,7 @@
     private bool _collapsedFloorplan = false;
     private bool _collapsedTheme = true;
     private bool _collapsedGoals = true;
+    private bool _collapsedDescription = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)
@@ -182,7 +193,7 @@
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Large,
+            MaxWidth = MaxWidth.Small,
             FullWidth = true,
             CloseButton = true,
         };
@@ -193,7 +204,7 @@
         {
             { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
         };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("Title", parameters, options);
+        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
     }

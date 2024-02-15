@@ -21,10 +21,10 @@
         <value>New</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning space.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
         <value>Theme</value>
@@ -39,7 +39,7 @@
         <value>General</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning space.</value>
     </data>
     <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
@@ -58,5 +58,11 @@
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
         <value />
+    </data>
+    <data name="EditSpaceForm.Goals.Button" xml:space="preserve">
+        <value>Learning outcome formulation</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
     </data>
 </root>
