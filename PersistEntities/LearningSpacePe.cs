@@ -56,6 +56,11 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 
     [DataMember] public TopicPe? AssignedTopic { get; set; }
 
+    [DataMember]
+    [Obsolete(
+        "The 'Goals' field is deprecated as of version 2.0.0 and has been replaced by 'LearningOutcomeCollection'. Use 'LearningOutcomeCollection' for new developments. 'Goals' is retained only for compatibility with LearningWorlds created in or before version 2.0.0.")]
+    public string? Goals { get; set; }
+
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
     [IgnoreDataMember] public Guid Id { get; set; }
