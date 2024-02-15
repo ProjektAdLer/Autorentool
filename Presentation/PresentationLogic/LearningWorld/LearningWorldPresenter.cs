@@ -458,8 +458,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
                 null when objAtPositionWithOffset is PathWayConditionViewModel condition => 55 +
                     (condition.PositionY - positionY),
                 null when objAtPositionWithOffset is ILearningSpaceViewModel space =>
-                    70 + (space.PositionY - positionY),
-                _ => 70 + xOffset
+                    85 + (space.PositionY - positionY),
+                _ => 85 + xOffset
             };
 
             positionY += currentOffset;

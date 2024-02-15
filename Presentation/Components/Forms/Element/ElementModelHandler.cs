@@ -160,12 +160,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
-                //campus
-                yield return ElementModel.a_npc_dozentlukas;
-                //arcade
-                yield return ElementModel.a_npc_sheriffjustice;
-                //suburb
-                yield return ElementModel.a_npc_defaultnpc;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
