@@ -1,10 +1,13 @@
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text;
 using JetBrains.Annotations;
 using Shared.LearningOutcomes;
 
 namespace PersistEntities.LearningOutcome;
 
+[Serializable]
+[DataContract]
 public class StructuredLearningOutcomePe : ILearningOutcomePe
 {
     [UsedImplicitly]
@@ -31,14 +34,22 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
         Language = language;
     }
 
-    public TaxonomyLevel TaxonomyLevel { get; set; }
-    public string What { get; set; }
-    public string Whereby { get; set; }
-    public string WhatFor { get; set; }
-    public string VerbOfVisibility { get; set; }
-    public CultureInfo Language { get; set; }
+    [DataMember] public TaxonomyLevel TaxonomyLevel { get; set; }
+    [DataMember] public string What { get; set; }
+    [DataMember] public string Whereby { get; set; }
+    [DataMember] public string WhatFor { get; set; }
+    [DataMember] public string VerbOfVisibility { get; set; }
 
-    public Guid Id { get; set; }
+    [DataMember]
+    public string CultureCode
+    {
+        get => Language.Name;
+        set => Language = new CultureInfo(value);
+    }
+
+    [IgnoreDataMember] public CultureInfo Language { get; set; }
+
+    [IgnoreDataMember] public Guid Id { get; set; }
 
     public string GetOutcome()
     {
@@ -95,4 +106,11 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
 
     private static bool IsNullOrEmpty(string value) =>
         string.IsNullOrWhiteSpace(value);
+
+
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }

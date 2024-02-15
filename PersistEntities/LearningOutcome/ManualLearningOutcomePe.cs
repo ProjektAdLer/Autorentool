@@ -1,7 +1,10 @@
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
 namespace PersistEntities.LearningOutcome;
 
+[Serializable]
+[DataContract]
 public class ManualLearningOutcomePe : ILearningOutcomePe
 {
     public ManualLearningOutcomePe(string outcome)
@@ -17,12 +20,18 @@ public class ManualLearningOutcomePe : ILearningOutcomePe
         Id = Guid.Empty;
     }
 
-    public string Outcome { get; set; }
+    [DataMember] public string Outcome { get; set; }
 
-    public Guid Id { get; set; }
+    [IgnoreDataMember] public Guid Id { get; set; }
 
     public string GetOutcome()
     {
         return Outcome;
+    }
+
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
     }
 }

@@ -1,7 +1,12 @@
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
 namespace PersistEntities.LearningOutcome;
 
+[Serializable]
+[DataContract]
+[KnownType(typeof(ManualLearningOutcomePe))]
+[KnownType(typeof(StructuredLearningOutcomePe))]
 public class LearningOutcomeCollectionPe
 {
     public LearningOutcomeCollectionPe(List<ILearningOutcomePe>? learningOutcomes = null)
@@ -15,5 +20,5 @@ public class LearningOutcomeCollectionPe
         LearningOutcomes = new List<ILearningOutcomePe>();
     }
 
-    public List<ILearningOutcomePe> LearningOutcomes { get; set; }
+    [DataMember] public List<ILearningOutcomePe> LearningOutcomes { get; set; }
 }
