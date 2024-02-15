@@ -3,8 +3,8 @@
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
+@using System.Diagnostics.CodeAnalysis
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
@@ -17,19 +17,20 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]       @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]       @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -44,9 +45,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]       @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -62,9 +63,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]  @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -105,8 +106,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
 
-    [Parameter]
-    public int DebounceInterval { get; set; } = 300;
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -117,9 +117,19 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
-    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
+    private MudTextField<string> _nameField = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await _form.FocusField(_nameField);
+        }
+    }
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {

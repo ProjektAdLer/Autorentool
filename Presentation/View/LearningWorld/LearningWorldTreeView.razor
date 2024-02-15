@@ -1,6 +1,6 @@
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Shared
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -11,6 +11,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -29,26 +30,44 @@
             </section>
         </article>
         <section class="bg-white rounded w-full overflow-scroll grow pt-2">
-            <MudTreeView Hover="true" Class="mud-width-full" T="string" >
-
-                @if (LearningWorldP.LearningWorldVm is {LearningSpaces.Count: > 0 })
+            <div class="cursor-pointer flex flex-col justify-start">
+                @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
-                    @foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.ObjectsInPathWays))
+                    foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                     {
-                        <div class="text-adlergrey-700">
-                            <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
-                                @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
-                                {
-                                    <div class="flex flex-row gap-2 pl-12 py-2" @onclick="() => OnElementClicked(element)">
-                                        <MudIcon Icon="@GetElementIcon(element)" Class="w-4 h-4 2xl:w-5 2xl:h-5"></MudIcon>
-                                        <MudText Class="text-sm 2xl:text-base break-normal">@element.Name</MudText>
+                        <div>
+                            <div class="flex flex-row items-center">
+                                <span @onclick="() => ToggleLearningSpace(learningSpace)">
+                                    <MudIconButton Class="p-2" Size="Size.Small"
+                                                   OnClick="() => ToggleLearningSpace(learningSpace)"
+                                                   Icon="@(GetSpaceToggleIcon(learningSpace))"/>
+                                </span>
+                                <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                                        <p class="break-words">@learningSpace.Name</p>
                                     </div>
-                                }
-                            </MudTreeViewItem>
+                                </span>
+                            </div>
+                            @if (IsLearningSpaceExpanded(learningSpace))
+                            {
+                                <div>
+                                    @foreach (var learningElement in learningSpace.ContainedLearningElements)
+                                    {
+                                        <div @onclick="@(e => SelectLearningElement(learningElement))"
+                                             class="@GetElementDivCss(learningElement)">
+                                            <div class="flex flex-row gap-2 items-center p-2 ml-14">
+                                                <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon(learningElement)"></MudIcon>
+                                                <p class="break-words">@learningElement.Name</p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 }
-            </MudTreeView>
+            </div>
         </section>
     </div>
 }
@@ -69,15 +88,31 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
+    [Inject, AllowNull] public IMediator Mediator { get; set; }
+
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
     private Color Color { get; set; } = Color.Info;
+
+    private IDictionary<ILearningSpaceViewModel, bool> ExpandedLearningSpaces { get; set; } = new Dictionary<ILearningSpaceViewModel, bool>();
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+        UpdateExpandedLearningSpaces();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (!firstRender) return;
+        if (SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel learningSpace)
+        {
+            ToggleLearningSpace(learningSpace);
+        }
     }
 
     private string GetElementIcon(ILearningElementViewModel element)
@@ -89,14 +124,38 @@
             IFileContentViewModel
             {
                 Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
-                    "js" or "php" or "html" or "css"
-                } => CustomIcons.TextElementIcon,
+                "js" or "php" or "html" or "css"
+            } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
             _ => ""
-            };
+        };
     }
+
+    private string GetSpaceDivCss(ILearningSpaceViewModel space)
+    {
+        var isLearningSpaceSelected = IsLearningSpaceSelected(space);
+        return new CssBuilder("text-sm 2xl:text-base select-none")
+            .AddClass("text-adlerblue-600", isLearningSpaceSelected)
+            .AddClass("text-adlergrey-600", !isLearningSpaceSelected)
+            .ToString();
+    }
+
+    private string GetElementDivCss(ILearningElementViewModel ele)
+    {
+        var isLearningElementSelected = IsLearningElementSelected(ele);
+        return new CssBuilder("text-sm 2xl:text-base select-none")
+            .AddClass("text-adlerblue-600", isLearningElementSelected)
+            .AddClass("text-adlergrey-600", !isLearningElementSelected)
+            .ToString();
+    }
+    
+    private string GetSpaceToggleIcon(ILearningSpaceViewModel space)
+    {
+        return IsLearningSpaceExpanded(space) ? Icons.Material.Filled.KeyboardArrowDown : Icons.Material.Filled.KeyboardArrowRight;
+    }
+
 
     /// <summary>
     /// Determines the order of learning spaces based on the provided paths and returns them as a list.
@@ -166,6 +225,15 @@
         InvokeAsync(StateHasChanged);
     }
 
+    private void UpdateExpandedLearningSpaces()
+    {
+        ExpandedLearningSpaces.Clear();
+        foreach (var learningSpace in LearningWorldP.LearningWorldVm!.LearningSpaces)
+        {
+            ExpandedLearningSpaces.Add(learningSpace, false);
+        }
+    }
+
     private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         TriggerStateHasChanged();
@@ -177,6 +245,7 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
         }
+
         TriggerStateHasChanged();
     }
 
@@ -186,6 +255,57 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
         }
+    }
+
+    private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        TriggerStateHasChanged();
+        if (args.PropertyName != nameof(SelectedViewModelsProvider.LearningElement)) return;
+        if (SelectedViewModelsProvider.LearningElement?.Parent != null && !IsLearningSpaceExpanded(SelectedViewModelsProvider.LearningElement.Parent))
+            ToggleLearningSpace(SelectedViewModelsProvider.LearningElement.Parent);
+    }
+
+    private void ToggleLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        ExpandedLearningSpaces[learningSpace] = !ExpandedLearningSpaces[learningSpace];
+        TriggerStateHasChanged();
+    }
+
+    private bool IsLearningSpaceExpanded(ILearningSpaceViewModel learningSpace)
+    {
+        if (ExpandedLearningSpaces.ContainsKey(learningSpace) == false)
+            UpdateExpandedLearningSpaces();
+
+        return ExpandedLearningSpaces[learningSpace];
+    }
+
+    private Task SelectLearningElement(ILearningElementViewModel learningElement)
+    {
+        if (SelectedViewModelsProvider.LearningObjectInPathWay != learningElement.Parent)
+            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
+        SelectedViewModelsProvider.SetLearningElement(learningElement, null);
+        Mediator.RequestOpenElementDialog();
+        return Task.CompletedTask;
+    }
+
+    private bool IsLearningElementSelected(ILearningElementViewModel learningElement)
+    {
+        return SelectedViewModelsProvider.LearningElement == learningElement;
+    }
+
+    private bool IsLearningSpaceSelected(ILearningSpaceViewModel learningSpace)
+    {
+        return SelectedViewModelsProvider.LearningObjectInPathWay == learningSpace;
+    }
+
+    private Task SelectLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        ExpandedLearningSpaces[learningSpace] = true;
+        Mediator.RequestOpenSpaceDialog();
+        if (SelectedViewModelsProvider.LearningElement != null && SelectedViewModelsProvider.LearningElement.Parent != learningSpace)
+            SelectedViewModelsProvider.SetLearningElement(null, null);
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpace, null);
+        return Task.CompletedTask;
     }
 
 }
