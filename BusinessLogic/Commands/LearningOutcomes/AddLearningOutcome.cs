@@ -36,7 +36,7 @@ public class AddLearningOutcome : IAddLearningOutcome
     internal ILearningOutcome LearningOutcome { get; }
     internal Action<LearningOutcomeCollection> MappingAction { get; }
     private ILogger<AddLearningOutcome> Logger { get; }
-    private int Index { get; }
+    internal int Index { get; }
     public string Name => nameof(AddLearningOutcome);
 
     public void Execute()
