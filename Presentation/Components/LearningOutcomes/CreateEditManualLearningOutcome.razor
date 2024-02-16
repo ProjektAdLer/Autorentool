@@ -1,19 +1,21 @@
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 @using Presentation.PresentationLogic.API
 @using System.Diagnostics.CodeAnalysis
-<h3>CreateEditManualLearningOutcome</h3>
+@using Microsoft.Extensions.Localization
 
-<div class="relative w-[800px] h-[230px] flex flex-col mx-4">
-    <MudText Class="px-2 mb-1 text-sm"> MudText </MudText>
+<p class="text-lg mx-6">@Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span></p>
+
+<div class="relative max-w-full h-[300px] flex flex-col m-4">
+    <MudText Class="px-2 mb-1 text-sm">@Localizer["CreateEditManualLearningOutcome.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
         <MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
             <div class="p-2 mb-4">
-                <MudText Class="cursor-default font-bold text-sm pl-2"> MudText2 </MudText>
+                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["CreateEditManualLearningOutcome.Subtitle"]</MudText>
                 <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
                     <MudTextField Variant="Variant.Outlined"
                                   Class="shadow-none m-0"
                                   T="string"
-                                  Placeholder="Placeholder"
+                                  Placeholder="@Localizer["CreateEditManualLearningOutcome.Placeholder"]"
                                   @bind-Value="_outcome"
                                   Lines="4"
                                   Required="true"
@@ -22,13 +24,14 @@
             </div>
         </MudForm>
     </div>
+    <div class="flex justify-end items-center mt-2">
+        <MudButton Class="btn-standard sticky"
+                   @onclick="SubmitAsync">
+            @Localizer["CreateEditManualLearningOutcome.Button.Create"]
+        </MudButton>
+    </div>
 </div>
-<div class="flex justify-end items-center">
-    <MudButton Class="btn-standard sticky m-6"
-               @onclick="SubmitAsync">
-        MudButton
-    </MudButton>
-</div>
+
 
 @code {
     private MudForm _form = null!;
@@ -37,6 +40,9 @@
     [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
 
     [Parameter] public ManualLearningOutcomeViewModel? CurrentManualLearningOutcome { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<CreateEditManualLearningOutcome> Localizer { get; set; }
 
     [CascadingParameter, AllowNull] //injected by MudDialog
     public MudDialogInstance DialogInstance { get; set; }
