@@ -36,4 +36,7 @@
     <data name="CreateEditManualLearningOutcome.Placeholder" xml:space="preserve">
         <value>Sie können...</value>
     </data>
+    <data name="CreateEditManualLearningOutcome.RequiredError" xml:space="preserve">
+        <value>Formulieren Sie ein Lernziel</value>
+    </data>
 </root>

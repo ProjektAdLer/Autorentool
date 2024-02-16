@@ -5,8 +5,8 @@
 
 <div class="pb-4">
     <div class="flex flex-col gap-4">
-        <p class="text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
-        <p class="text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesOverview.Text"]</p>
+        <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
+        <p class="cursor-default text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesOverview.Text"]</p>
     </div>
 
     <div class="flex flex-col justify-center items-center py-4">
@@ -18,14 +18,14 @@
     {
         <div class="h-[320px]">
             <MudDivider DividerType="DividerType.Middle"></MudDivider>
-            <p class="text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
+            <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
     
             <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6">
                 @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
                 {
                     <div class="mx-2 p-4">
                         <ul class="list-disc list-outside">
-                            <li class="text-sm text-justify">@learningOutcome.GetOutcome()</li>
+                            <li class="cursor-default text-sm text-justify">@learningOutcome.GetOutcome()</li>
                         </ul>
                         <div class="flex flex-row gap-2">
                             <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="Lernziel bearbeiten"/>
@@ -77,7 +77,6 @@
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
-            
         };
 
         var dialogParameters = new DialogParameters

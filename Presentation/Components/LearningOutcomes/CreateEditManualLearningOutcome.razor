@@ -3,10 +3,10 @@
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
 
-<p class="text-lg mx-6">@Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span></p>
+<p class="cursor-default text-lg mx-6">@Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span></p>
 
 <div class="relative max-w-full h-[300px] flex flex-col m-4">
-    <MudText Class="px-2 mb-1 text-sm">@Localizer["CreateEditManualLearningOutcome.Text"]</MudText>
+    <MudText Class="cursor-default px-2 mb-1 text-sm">@Localizer["CreateEditManualLearningOutcome.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
         <MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
             <div class="p-2 mb-4">
@@ -19,7 +19,7 @@
                                   @bind-Value="_outcome"
                                   Lines="4"
                                   Required="true"
-                                  RequiredError="RequiredError"/>
+                                  RequiredError="@Localizer["CreateEditManualLearningOutcome.RequiredError"]"/>
                 </div>
             </div>
         </MudForm>
