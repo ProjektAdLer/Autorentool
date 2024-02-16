@@ -1,20 +1,43 @@
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 @using Presentation.PresentationLogic.API
 @using System.Diagnostics.CodeAnalysis
-<h3>LearningOutcomesOverview</h3>
+@using Microsoft.Extensions.Localization
 
-<MudList>
-    @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
+<div class="pb-4">
+    <div class="flex flex-col gap-4">
+        <p class="text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
+        <p class="text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesOverview.Text"]</p>
+    </div>
+
+    <div class="flex flex-col justify-center items-center py-4">
+        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">@Localizer["LearningOutcomesOverview.Button.Structured"]</MudButton>
+        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">@Localizer["LearningOutcomesOverview.Button.Manual"]</MudButton>
+    </div>
+
+    @if(LearningOutcomeCollection.LearningOutcomes.Count > 0)
     {
-        <MudListItem>
-            <MudText Typo="Typo.h6">@learningOutcome.GetOutcome()</MudText> <MudIconButton OnClick="() => EditLearningOutcome(learningOutcome)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit"/> <MudIconButton OnClick="() => DeleteLearningOutcome(learningOutcome)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete"/>
-        </MudListItem>
+        <div class="h-[320px]">
+            <MudDivider DividerType="DividerType.Middle"></MudDivider>
+            <p class="text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
+    
+            <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6">
+                @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
+                {
+                    <div class="mx-2 p-4">
+                        <ul class="list-disc list-outside">
+                            <li class="text-sm text-justify">@learningOutcome.GetOutcome()</li>
+                        </ul>
+                        <div class="flex flex-row gap-2">
+                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="Lernziel bearbeiten"/>
+                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="Lernziel löschen"/>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
     }
-</MudList>
-
-<MudButton Variant="Variant.Filled" OnClick="CreateManualLearningOutcome"> Manual </MudButton>
-<MudButton Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome"> Structured </MudButton>
-
+</div>
 
 @code {
     [Parameter, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; } = null!;
@@ -22,6 +45,9 @@
     [Inject, AllowNull] private IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<LearningOutcomesOverview> Localizer { get; set; }
 
     private async Task CreateManualLearningOutcome()
     {
@@ -31,13 +57,14 @@
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
+            
         };
 
         var dialogParameters = new DialogParameters
         {
             { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection }
         };
-        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("DialogTitle", dialogParameters, options);
+        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;
         await InvokeAsync(StateHasChanged);
     }
@@ -50,13 +77,14 @@
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
+            
         };
 
         var dialogParameters = new DialogParameters
         {
             { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection }
         };
-        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("DialogTitle", dialogParameters, options);
+        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;
         await InvokeAsync(StateHasChanged);
     }
@@ -89,7 +117,7 @@
             { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection },
             { nameof(CreateEditStructuredLearningOutcome.CurrentLearningOutcome), structuredLearningOutcomeViewModel }
         };
-        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("DialogTitle", dialogParameters, options);
+        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;
         await InvokeAsync(StateHasChanged);
     }
@@ -109,7 +137,7 @@
             { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection },
             { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), manualLearningOutcomeViewModel }
         };
-        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("DialogTitle", dialogParameters, options);
+        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;
         await InvokeAsync(StateHasChanged);
     }
