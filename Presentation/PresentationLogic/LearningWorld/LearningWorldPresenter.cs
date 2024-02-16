@@ -154,7 +154,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.SaveLearningWorld((LearningWorldViewModel) LearningWorldVm!);
+        _presentationLogic.SaveLearningWorld((LearningWorldViewModel)LearningWorldVm!);
     }
 
     #endregion
@@ -318,7 +318,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         try
         {
             await _presentationLogic.SaveLearningSpaceAsync(
-                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
+                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
         }
         catch (SerializationException e)
         {
@@ -421,11 +421,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
-                                   ls.PositionX <= x && ls.PositionX + 66 >= x && ls.PositionY <= y &&
-                                   ls.PositionY + 64 >= y) ??
-                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                                   ls.PositionX <= x && ls.PositionX + 80 >= x && ls.PositionY <= y &&
+                                   ls.PositionY + 82 >= y) ??
+                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
-                                   lc.PositionY + 43 >= y);
+                                   lc.PositionY + 41 >= y);
         return objectAtPosition;
     }
 
@@ -573,7 +573,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         SetSelectedLearningElement(learningElement);
         try
         {
-            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+            await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
         }
         catch (ArgumentOutOfRangeException e)
         {
