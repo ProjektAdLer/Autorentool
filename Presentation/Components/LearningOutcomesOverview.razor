@@ -1,14 +1,23 @@
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningSpace
 <h3>LearningOutcomes von @LearningWorld.Name</h3>
 
 @foreach (var learningSpace in LearningWorld.LearningSpaces)
 {
-    <div class="flex items-center gap-2">
-        <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
-        <p class="font-bold break-words">@learningSpace.Name</p>
+    <div class="flex flex-row items-center">
+        <span @onclick="() => ToggleLearningSpace(learningSpace)">
+            <MudIconButton Class="p-2" Size="Size.Small"
+                           OnClick="() => ToggleLearningSpace(learningSpace)"
+                           Icon="@(GetSpaceToggleIcon(learningSpace))"/>
+        </span>
+        <span>
+            <div class="flex flex-row gap-2 items-center">
+                <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                <p class="break-words">@learningSpace.Name</p>
+            </div>
+        </span>
     </div>
-
-    @if (learningSpace.LearningOutcomeCollection != null) //Collection is null when Space was created before LearningOutcomeCollection was introduced
+    @if (IsLearningSpaceExpanded(learningSpace))
     {
         @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)
         {
@@ -21,4 +30,38 @@
     [Parameter, EditorRequired] public ILearningWorldViewModel LearningWorld { get; set; } = null!;
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+
+    private IDictionary<ILearningSpaceViewModel, bool> ExpandedLearningSpaces { get; set; } = new Dictionary<ILearningSpaceViewModel, bool>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        UpdateExpandedLearningSpaces();
+    }
+
+    private void UpdateExpandedLearningSpaces()
+    {
+        ExpandedLearningSpaces.Clear();
+        foreach (var learningSpace in LearningWorld.LearningSpaces)
+        {
+            ExpandedLearningSpaces.Add(learningSpace, false);
+        }
+    }
+
+    private string GetSpaceToggleIcon(ILearningSpaceViewModel space)
+    {
+        return IsLearningSpaceExpanded(space) ? Icons.Material.Filled.KeyboardArrowDown : Icons.Material.Filled.KeyboardArrowRight;
+    }
+
+    private void ToggleLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        ExpandedLearningSpaces[learningSpace] = !ExpandedLearningSpaces[learningSpace];
+        InvokeAsync(StateHasChanged);
+    }
+
+    private bool IsLearningSpaceExpanded(ILearningSpaceViewModel learningSpace)
+    {
+        return ExpandedLearningSpaces[learningSpace];
+    }
+
 }
