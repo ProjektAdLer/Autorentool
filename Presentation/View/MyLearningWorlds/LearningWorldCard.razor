@@ -4,14 +4,15 @@
 @using System.IO.Abstractions
 @using Presentation.PresentationLogic.LearningWorld
 <MudItem>
-    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40 mt-1 relative group/card hover:bg-[rgba(229,213,184,0.5)]">
-        <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-10 absolute inset-x-[60%] inset-y-[40%] w-24 h-24">
+    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40 mt-1 relative group/card bg-adlerbggradientto hover:bg-[rgba(229,213,184,0.5)]">
+        <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute inset-x-[60%] inset-y-[40%] w-24 h-24">
         <MudCardHeader Class="z-10 flex justify-center items-center break-word w-full">
             <CardHeaderContent>
-                <MudText Class="text-xl tracking-wider mt-8 font-bold break-all">
+                <div class="flex flex-col gap-1.5 px-1">
+                <MudText Class="text-base 2xl:text-lg tracking-wider mt-7 font-bold break-words leading-none 2xl:leading-none">
                     @LearningWorld.Name
                 </MudText>
-                <MudText Class="text-sm tracking-widers break-all">
+                <MudText Class="text-xs 2xl:text-sm tracking-widers break-words leading-none 2xl:leading-none">
                     @if (ShowFileName)
                     {
                         <div class="file-name-display">
@@ -20,15 +21,16 @@
                     }
                     @if (FileInfo != null)
                     {
-                        @Localizer["LearningWorldCard.LastWriteTime", FileInfo.LastWriteTime]
+                        <MudText Class="text-xs 2xl:text-sm break-words pt-1 leading-none 2xl:leading-none">@Localizer["LearningWorldCard.LastWriteTime", FileInfo.LastWriteTime]</MudText>
                     }
                 </MudText>
+                </div>
             </CardHeaderContent>
             <CardHeaderActions>
                 @if (!string.IsNullOrWhiteSpace(LearningWorld.SavePath))
                 {
                     <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
-                            Class="close-button absolute -right-1 -top-1 w-9 btn-standard rounded-full"
+                            Class="close-button absolute -right-1 -top-1 w-9 h-8 text-blacktrans-200 p-4 font-bold drop-shadow transform ease-in-out duration-75 active:drop-shadow-none hover:text-buttonbgblue m-2 rounded-full"
                             Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
                 }
             </CardHeaderActions>
@@ -36,8 +38,8 @@
         <MudCardContent Class="">
             <button @onclick="OnOpenButtonPressedAsync" title="@Localizer["LearningWorldCard.Button.Open.Title"]"
                     class="open-button group-hover/card:visible group-hover/card:opacity-100 invisible text-xl absolute
-                     top-[25%] left-[16%] btn-standard uppercase p-8 rounded-lg drop-shadow">
-                @Localizer["LearningWorldCard.Button.Open.Text"]
+                     top-[30%] left-[24%] 2xl:top-[30%] 2xl:left-[22%] btn-standard uppercase p-6 rounded-lg drop-shadow">
+                <p class="text-base 2xl:text-lg">@Localizer["LearningWorldCard.Button.Open.Text"]</p>
             </button>
         </MudCardContent>
     </MudCard>

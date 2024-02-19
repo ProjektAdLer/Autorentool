@@ -28,16 +28,16 @@
         <value>Veröffentlichen der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Moodle Lernwelt-Datei (.mbz) veröffentlichen</value>
+        <value>Lernwelt als Moodle Lernwelt-Datei (.mbz) veröffentlichen</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
     </data>
     <data name="Feedback.Text" xml:space="preserve">
-        <value>Feedback</value>
+        <value>Tester-Feedback</value>
     </data>
     <data name="Feedback.Button.UX.Hover" xml:space="preserve">
-        <value>Nutzererfahrungsfeedback - Öffnet eine neue Seite</value>
+        <value>Feedback zur Benutzeroberfläche - Öffnet eine neue Seite</value>
     </data>
     <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
         <value>Technisches Feedback - Öffnet eine neue Seite</value>
@@ -61,13 +61,13 @@
         <value>Zum finalen Feedback</value>
     </data>
     <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
-        <value>Finales Feedback - Öffnet eine neue Seite</value>
+        <value>Allgemeines Feedback zu AdLer - Öffnet eine neue Seite</value>
     </data>
     <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
-        <value>Nutzererfahrungsfeedback</value>
+        <value>Feedback geben</value>
     </data>
     <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
-        <value>Technisches Feedback</value>
+        <value>Technischen Fehler melden</value>
     </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
         <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; in das Backend hochladen?</value>
@@ -106,7 +106,7 @@
         <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an, um Lernwelten in das Backend hochzuladen.</value>
     </data>
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
-        <value>Welt {0} erfolgreich gespeichert</value>
+        <value>Lernwelt {0} erfolgreich gespeichert</value>
     </data>
     <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element, welches nicht in einem Raum platziert wurde.</value>
@@ -124,12 +124,24 @@
         <value>Hochladen erfolgreich</value>
     </data>
     <data name="UploadLearningWorld.Success.DialogText" xml:space="preserve">
-        <value>Ihre Welt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
+        <value>Ihre Lernwelt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
-        <value>Lernwelt Archivieren (.zip)</value>
+        <value>Lernwelt archivieren (.zip)</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Nutzen Sie diese Option, falls Sie die Lernwelt archivieren möchten (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei archivieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+    </data>
+    <data name="HeaderBar.Help.About" xml:space="preserve">
+        <value>Über AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.About.Hover" xml:space="preserve">
+        <value>Informationen über das Projekt AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual" xml:space="preserve">
+        <value>Benutzerhandbuch</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
+        <value>Tutorial</value>
     </data>
 </root>

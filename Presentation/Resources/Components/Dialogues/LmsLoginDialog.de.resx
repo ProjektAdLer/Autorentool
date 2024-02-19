@@ -30,7 +30,7 @@
         <value>Anmelden</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Angemeldet als</value>
+        <value>Erfolgreich angemeldet als</value>
     </data>
     <data name="DialogContent.Button.Logout" xml:space="preserve">
         <value>Abmelden</value>
@@ -54,7 +54,7 @@
         <value>Erfolgreich angemeldet!</value>
     </data>
     <data name="Header.Moodle.Text" xml:space="preserve">
-        <value>Einloggen auf AdLer-Server</value>
+        <value>Anmelden auf AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
         <value>Passwort vergessen?</value>
@@ -66,10 +66,10 @@
         <value>Passwort anzeigen</value>
     </data>
     <data name="DialogContent.Button.Login.Title" xml:space="preserve">
-        <value>Einloggen auf AdLer-Server</value>
+        <value>Anmelden auf AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.Logout.Title" xml:space="preserve">
-        <value>Ausloggen vom AdLer-Server</value>
+        <value>Abmelden vom AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword.Title" xml:space="preserve">
         <value>Passwort vergessen?</value>
@@ -91,5 +91,33 @@
     </data>
     <data name="ConfirmDeleteLmsWorld.Title" xml:space="preserve">
         <value>Lernwelt aus LMS löschen</value>
+    </data>
+    <data name="LmsLoginDialog.Title.Tooltip" xml:space="preserve">
+        <value>Die hier aufgeführten Moodle-Kurse sind all jene Kurse, die Sie bereits erstellt und veröffentlicht haben. 
+&lt;br&gt;&lt;br&gt;
+Sie haben in diesem Abschnitt die Möglichkeit, diese Kurse zu löschen. 
+&lt;br&gt;&lt;br&gt;
+Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich aus Moodle entfernt.</value>
+    </data>
+    <data name="DialogContent.Field.Password.Required" xml:space="preserve">
+        <value>Die eingegebene URL, der Benutzername oder das Kennwort ist ungültig. Wiederholen Sie die Eingabe, und versuchen Sie es nochmal. </value>
+    </data>
+    <data name="DialogContent.LoggedIn.Info" xml:space="preserve">
+        <value>Damit Sie Ihre im Autorentool erstellte Lernwelt Ihren Studierenden als 3D-Lernumgebung zur Verfügung stellen können, ist zunächst eine Anmeldung auf dem AdLer-Server notwendig.</value>
+    </data>
+    <data name="DialogContent.Header" xml:space="preserve">
+        <value>Administration</value>
+    </data>
+    <data name="DialogContent.LeftSidebar.AdLerServer" xml:space="preserve">
+        <value>AdLer-Server</value>
+    </data>
+    <data name="DialogContent.Delete.Title" xml:space="preserve">
+        <value>Löschen von Moodle-Kursen</value>
+    </data>
+    <data name="DialogContent.Delete.Subtitle" xml:space="preserve">
+        <value>Moodle-Kurse</value>
+    </data>
+    <data name="DialogContent.Delete.MoodleCourse" xml:space="preserve">
+        <value>Moodle-Kurs löschen</value>
     </data>
 </root>

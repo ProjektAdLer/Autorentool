@@ -26,7 +26,7 @@ public class ElementModelHandlerUt
         Assert.That(enumerable, Is.Not.Empty);
         Assert.That(enumerable.First(), Is.EqualTo(ElementModel.l_random));
     }
-    
+
     [Test]
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeTrue_ReturnsTextElementModels()
     {
@@ -36,10 +36,9 @@ public class ElementModelHandlerUt
         var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus, true);
         var expectedModels = new[]
         {
-            ElementModel.l_random, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice,
-            ElementModel.a_npc_defaultnpc
+            ElementModel.a_npc_alerobot
         };
-        
+
         Assert.That(elementModels, Is.EquivalentTo(expectedModels));
     }
 
@@ -47,7 +46,7 @@ public class ElementModelHandlerUt
     public void GetIconForElementModel_EachEnumValue_ReturnsIconPath()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         foreach (var elementModel in elementModels)
         {
             Assert.That(systemUnderTest.GetIconForElementModel(elementModel), Is.Not.Null);
@@ -60,14 +59,14 @@ public class ElementModelHandlerUt
         var systemUnderTest = new ElementModelHandler();
         var unknownEnumValue = Enum.GetValues(typeof(ElementModel)).Length;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            systemUnderTest.GetIconForElementModel((ElementModel) unknownEnumValue));
+            systemUnderTest.GetIconForElementModel((ElementModel)unknownEnumValue));
     }
 
     [Test]
     public void GetIconForElementModel_EachEnumValue_ReturnedIconPathExists()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
 
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
@@ -90,22 +89,21 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Video))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
             .ToList();
-        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+        var elementModels = ((ElementModel[])Enum.GetValues(typeof(ElementModel))).Except(new[]
+        {
+            ElementModel.a_npc_defaultnpc, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice
+        });
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
-        Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        foreach (var elementModel in elementModels)
-        {
-            Assert.That(elementModelsFromAllTypes.Contains(elementModel), Is.True,
-                $"ElementModel {elementModel} is not assigned to any type");
-        }
+        // Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
+        Assert.That(elementModels, Is.EquivalentTo(elementModelsFromAllTypes));
     }
 
     [Test]
     public void GetElementModelsForTheme_ContainsCaseForEachTheme()
     {
         var systemUnderTest = new ElementModelHandler();
-        var themes = (Theme[]) Enum.GetValues(typeof(Theme));
+        var themes = (Theme[])Enum.GetValues(typeof(Theme));
         foreach (var theme in themes)
         {
             Assert.DoesNotThrow(() =>
@@ -121,7 +119,7 @@ public class ElementModelHandlerUt
         var unknownEnumValue = Enum.GetValues(typeof(Theme)).Length;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            ElementModelHandler.GetElementModelsForTheme((Theme) unknownEnumValue).ToList());
+            ElementModelHandler.GetElementModelsForTheme((Theme)unknownEnumValue).ToList());
     }
 
     [Test]
@@ -129,7 +127,7 @@ public class ElementModelHandlerUt
     {
         var systemUnderTest = new ElementModelHandler();
 
-        var themes = (Theme[]) Enum.GetValues(typeof(Theme));
+        var themes = (Theme[])Enum.GetValues(typeof(Theme));
 
         var elementModelsFromAllThemes = new List<ElementModel>();
         foreach (var theme in themes)
@@ -137,14 +135,12 @@ public class ElementModelHandlerUt
             elementModelsFromAllThemes.AddRange(ElementModelHandler.GetElementModelsForTheme(theme));
         }
 
-        var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+        var adaptivityNpcs = systemUnderTest.GetElementModels(null, null, true);
+        elementModelsFromAllThemes = elementModelsFromAllThemes.Union(adaptivityNpcs).ToList();
+
+        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
-        //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        foreach (var elementModel in elementModels)
-        {
-            Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
-                $"ElementModel {elementModel} is not assigned to any theme");
-        }
+        Assert.That(elementModels, Is.EquivalentTo(elementModelsFromAllThemes));
     }
 }

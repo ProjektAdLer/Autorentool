@@ -1,4 +1,5 @@
-﻿using Presentation.PresentationLogic.LearningContent;
+﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -27,7 +28,7 @@ public class ElementModelHandler : IElementModelHandler
 
         if (adaptivityElementMode)
         {
-            return AdaptivityModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
+            return AdaptivityModels.OrderBy(m => m, comparer);
         }
         else
         {
@@ -35,9 +36,9 @@ public class ElementModelHandler : IElementModelHandler
             return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
         }
     }
-
+    
     internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
+        { ElementModel.a_npc_alerobot };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -87,6 +88,7 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
+            ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
             ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
@@ -94,9 +96,13 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
-    public static ElementModel GetElementModelRandom()
+    public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
-        return ElementModel.l_random;
+        return modelType switch
+        {
+            ContentTypeEnum.Adaptivity => ElementModel.a_npc_alerobot,
+            _ => ElementModel.l_random
+        };
     }
 
     internal static IEnumerable<ElementModel> GetElementModelsForModelType(ContentTypeEnum modelType)
@@ -154,12 +160,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
-                //campus
-                yield return ElementModel.a_npc_dozentlukas;
-                //arcade
-                yield return ElementModel.a_npc_sheriffjustice;
-                //suburb
-                yield return ElementModel.a_npc_defaultnpc;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);

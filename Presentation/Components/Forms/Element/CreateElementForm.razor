@@ -12,13 +12,16 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Dialogues
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
+
+
+
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@(!AdaptivityElementMode ? Localizer["CreateElementForm.Header.Text"] : Localizer["CreateAdaptivityElementForm.Header.Text"])</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
-<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateElementForm.Text"]</MudText>
+<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateElementForm.Text"]</MudText>
+
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement" @ref="_form"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage=@(!AdaptivityElementMode ? Localizer["CreateElementForm.SnackbarMessage"] : Localizer["CreateAdaptivityElementForm.SnackbarMessage"])
@@ -26,37 +29,41 @@
     <Fields>
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]   @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
                                   @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
-                                  Class="pb-4"/>
+                                  Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]/>
 
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                     Min="1"
-                                     Max="1000"
-                                     For="@(() => FormModel.Points)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-4"/>
+                    <div class="flex flex-row justify-between py-6 gap-2">
+                        <div class="flex-initial items-center gap-2">
+                            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]</MudText>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                             Min="1"
+                                             Max="1000"
+                                             For="@(() => FormModel.Points)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"/>
+                        </div>
 
-                    <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                     Min="0"
-                                     Max="1000"
-                                     For="@(() => FormModel.Workload)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"
-                                     Class="pb-6"/>
+                        <MudDivider Style="border-style: dashed; border-color: rgb(230,230,230)" Vertical="true" FlexItem="true"></MudDivider>
 
+                        <div class="flex-initial items-center gap-2">
+                            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]</MudText>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                             Min="0"
+                                             Max="1000"
+                                             For="@(() => FormModel.Workload)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"/>
+                        </div>
+                    </div>
                     @if (!AdaptivityElementMode)
                     {
                         <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
@@ -194,9 +201,13 @@
             </Collapsable>
         </div>
     </Fields>
+    
     <FooterButtons>
-        <DefaultSubmitButton/>
+        <div class="">
+            <DefaultSubmitButton/>
+        </div>
     </FooterButtons>
+
 </BaseForm>
 
 @code {

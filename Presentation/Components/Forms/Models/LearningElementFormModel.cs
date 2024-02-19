@@ -1,5 +1,7 @@
+using BusinessLogic.Entities.LearningContent.Adaptivity;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Shared;
@@ -45,7 +47,7 @@ public class LearningElementFormModel
 
             _learningContent = value;
             if (learningContentIsSameType) return;
-            ElementModel = ElementModelHandler.GetElementModelRandom();
+            ElementModel = ElementModelHandler.GetElementModelDefault(_learningContent is AdaptivityContentViewModel ? ContentTypeEnum.Adaptivity : ContentTypeEnum.H5P);
         }
     }
 }

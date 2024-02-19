@@ -28,7 +28,7 @@
         <value>Kurzname</value>
     </data>
     <data name="CreateWorldForm.General.Field.Authors.Text" xml:space="preserve">
-        <value>Autor(en)</value>
+        <value>Autoren:innen</value>
     </data>
     <data name="CreateWorldForm.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>
@@ -56,5 +56,11 @@
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Einschreibeschlüssel</value>
+    </data>
+    <data name="CreateWorldForm.EnrolmentKey.Title" xml:space="preserve">
+        <value>Einschreibemethode</value>
+    </data>
+    <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
+        <value>Ein Einschreibeschlüssel erlaubt den Lernwelt-Zugriff nur für diejenigen Nutzer/innen, die den Einschreibeschlüssel kennen. &lt;br&gt; &lt;br&gt; Wenn das Feld leer bleibt, können sich alle Nutzer/innen in die Lernwelt einschreiben. &lt;br&gt; &lt;br&gt; Wenn ein Einschreibeschlüssel angegeben ist, müssen alle Nutzer/innen notwendigerweise bei der Lernwelteinschreibung den Einschreibeschlüssel eingeben. Beachten Sie, dass Nutzer/innen den Einschreibeschlüssel nur einmal bei der Lernwelteinschreibung eingeben müssen und danach dauerhaft eingeschriebene Lernweltteilnehmer/innen sind.</value>
     </data>
 </root>
