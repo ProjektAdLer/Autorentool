@@ -309,6 +309,11 @@ public interface IPresentationLogic
         int workload, int points,
         double positionX = 0D, double positionY = 0D);
 
+    void CreateStoryElementInSlot(ILearningSpaceViewModel learningSpaceVm, int slotIndex, string name,
+        ILearningContentViewModel learningContent, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        double positionX = 0, double positionY = 0);
+
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.
     /// </summary>
@@ -335,7 +340,7 @@ public interface IPresentationLogic
     /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
     void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
         ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
-    
+
     /// <summary>
     /// Moves the given story element from unplaced elements to the given slot index in the given learning space.
     /// </summary>
@@ -354,7 +359,7 @@ public interface IPresentationLogic
     /// <param name="learningElementVm">Learning element to remove.</param>
     void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
         ILearningElementViewModel learningElementVm);
-    
+
     /// <summary>
     /// Moves the given story element from the learning space to unplaced elements in the learning world.
     /// </summary>
@@ -375,7 +380,7 @@ public interface IPresentationLogic
     /// </remarks>
     void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
         int newSlotIndex);
-    
+
     /// <summary>
     /// Switches the slot of a Story Element within a Learning Space.
     /// </summary>
@@ -385,7 +390,8 @@ public interface IPresentationLogic
     /// <remarks>
     /// If the active slot in the Learning Space is the new slot index, it will be set to -1.
     /// </remarks>
-    void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
+    void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
+        int newSlotIndex);
 
     /// <summary>
     /// Deletes the given learning element in the given learning space.
@@ -527,7 +533,7 @@ public interface IPresentationLogic
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentViewModel or LinkContentViewModel.</exception>
     Task ShowLearningContentAsync(ILearningContentViewModel content);
-    
+
     /// <summary>
     /// Asynchronously shows the content of a Learning Content view model.
     /// </summary>
@@ -615,7 +621,7 @@ public interface IPresentationLogic
         string comment);
 
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
-    
+
     /// <summary>
     /// Asynchronously retrieves a list of LMS World view models.
     /// </summary>

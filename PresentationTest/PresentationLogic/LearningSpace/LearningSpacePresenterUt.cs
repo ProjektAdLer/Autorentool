@@ -62,7 +62,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.ClickedLearningElement(element);
 
         mediator.Received().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
         selectedViewModelsProvider.Received().SetLearningElement(element, null);
     }
 
@@ -93,10 +93,10 @@ public class LearningSpacePresenterUt
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.DidNotReceive().RequestOpenElementDialog();
-        selectedViewModelsProvider.DidNotReceive().SetActiveSlotInSpace(1, null);
+        selectedViewModelsProvider.DidNotReceive().SetActiveElementSlotInSpace(1, null);
     }
 
     [Test]
@@ -106,16 +106,16 @@ public class LearningSpacePresenterUt
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
 
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
 
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.DidNotReceive().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
     }
 
     [Test]
@@ -129,17 +129,17 @@ public class LearningSpacePresenterUt
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.Received().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(1, null);
     }
 
     [Test]
     public void CreateLearningElementInSlot_SpaceVmIsNull_SetsError()
     {
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var mockErrorService = Substitute.For<IErrorService>();
         var name = "name";
@@ -166,7 +166,7 @@ public class LearningSpacePresenterUt
     {
         var space = ViewModelProvider.GetLearningSpace();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var name = "name";
         var content = new FileContentViewModel("abc", "def", "ghi");
@@ -187,7 +187,7 @@ public class LearningSpacePresenterUt
 
         presentationLogic.Received().CreateLearningElementInSlot(space, 1, name, content, description, goals,
             difficulty, elementModel, workload, points);
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
     }
 
     [Test]

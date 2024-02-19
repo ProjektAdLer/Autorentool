@@ -124,10 +124,16 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
 
     /// <summary>
-    /// Handles a click event on a specific slot within the learning space layout.
+    /// Handles a click event on a specific element slot within the learning space layout.
     /// </summary>
-    /// <param name="i">The index of the clicked slot.</param>
-    void ClickOnSlot(int i);
+    /// <param name="i">The index of the clicked element slot.</param>
+    void ClickOnElementSlot(int i);
+
+    /// <summary>
+    /// Handles a click event on a specific story slot within the learning space layout.
+    /// </summary>
+    /// <param name="i">The index of the clicked story slot.</param>
+    void ClickOnStorySlot(int i);
 
     /// <summary>
     /// Creates a new learning element in the specified slot of the learning space layout.
@@ -144,4 +150,5 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
         string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
 
     void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model);
+    void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model);
 }

@@ -301,16 +301,12 @@
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
-        if (SelectedViewModelsProvider.ActiveSlotInSpace == -1)
-            WorldPresenter.CreateUnplacedLearningElementFromFormModel(model);
-        // model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
-        // model.Workload, model.Points);
-        else
-        {
+        if (SelectedViewModelsProvider.ActiveElementSlotInSpace != -1 && ElementMode is not ElementMode.Story)
             SpacePresenter.CreateLearningElementInSlotFromFormModel(model);
-            // model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
-            // model.Workload, model.Points);
-        }
+        else if (SelectedViewModelsProvider.ActiveStorySlotInSpace != -1 && ElementMode is ElementMode.Story)
+            SpacePresenter.CreateStoryElementInSlotFromFormModel(model);
+        else
+            WorldPresenter.CreateUnplacedLearningElementFromFormModel(model);
 
         OnSubmitted.InvokeAsync();
     }

@@ -18,7 +18,7 @@
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                              Class="@GetSlotStyleString(x)"
                              style="@GetElementSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
-                             @onclick="() => ClickOnSlot(x)">
+                             @onclick="() => ClickOnElementSlot(x)">
                     <ItemRenderer>
                         <DragDropLearningElement
                             LearningElement="@context"
@@ -41,7 +41,8 @@
                 var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                          Class="@GetSlotStyleString(-1)"
-                         style="@GetStorySlotPositionString(x)">
+                         style="@GetStorySlotPositionString(x)"
+                         @onclick="() => ClickOnStorySlot(x)">
                 <ItemRenderer>
                         <DragDropLearningElement
                             LearningElement="@context"
@@ -148,16 +149,18 @@
     {
         if (LearningSpaceP.LearningSpaceVm == null) return "";
 
-        var activeSlotIsPos = SelectedViewModelsProvider.ActiveSlotInSpace == position;
+        var activeSlotIsPos = SelectedViewModelsProvider.ActiveElementSlotInSpace == position;
         var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
             .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
             .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
         return cssBuilder.ToString();
     }
 
-    private void ClickOnSlot(int i)
+    private void ClickOnElementSlot(int i)
     {
-        LearningSpaceP.ClickOnSlot(i);
+        LearningSpaceP.ClickOnElementSlot(i);
     }
+
+    private void ClickOnStorySlot(int i) => LearningSpaceP.ClickOnStorySlot(i);
 
 }

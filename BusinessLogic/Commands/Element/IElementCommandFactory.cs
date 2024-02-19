@@ -18,6 +18,11 @@ public interface IElementCommandFactory
         ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction);
 
+    ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
+        string name,
+        ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<object> action);
+
     /// <summary>
     /// Creates a command to create a learning element in a slot.
     /// </summary>

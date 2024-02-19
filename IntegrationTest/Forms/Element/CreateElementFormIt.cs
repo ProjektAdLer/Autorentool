@@ -183,7 +183,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         WorldPresenter.ClearReceivedCalls();
         SpacePresenter.ClearReceivedCalls();
 
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(-1);
+        SelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(-1);
         submitButton.Find("button").Click();
         systemUnderTest.WaitForAssertion(() =>
             WorldPresenter.Received().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0], Expected,
@@ -201,7 +201,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         WorldPresenter.ClearReceivedCalls();
         SpacePresenter.ClearReceivedCalls();
 
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(0);
+        SelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(0);
         submitButton.Find("button").Click();
         submitButton.WaitForAssertion(() =>
                 WorldPresenter.DidNotReceive().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0],

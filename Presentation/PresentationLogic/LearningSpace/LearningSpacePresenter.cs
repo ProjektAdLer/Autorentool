@@ -111,7 +111,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm!, _selectedViewModelsProvider.LearningWorld,
             floorPlanName);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -190,20 +190,34 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             _replaceStoryElementData.DropItem, _replaceStoryElementData.SlotId);
     }
 
-    /// <inheritdoc cref="ILearningSpacePresenter.ClickOnSlot"/>
-    public void ClickOnSlot(int i)
+    /// <inheritdoc cref="ILearningSpacePresenter.ClickOnElementSlot"/>
+    public void ClickOnElementSlot(int i)
     {
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
             return;
-        if (_selectedViewModelsProvider.ActiveSlotInSpace == i)
+        if (_selectedViewModelsProvider.ActiveElementSlotInSpace == i)
         {
-            _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+            _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
             return;
         }
 
         SetSelectedLearningElement(null);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(i, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(i, null);
         _mediator.RequestOpenElementDialog();
+    }
+
+    public void ClickOnStorySlot(int i)
+    {
+        if (LearningSpaceVm?.LearningSpaceLayout.StoryElements.ContainsKey(i) ?? false) return;
+        if (_selectedViewModelsProvider.ActiveStorySlotInSpace == i)
+        {
+            _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
+            return;
+        }
+        
+        SetSelectedLearningElement(null);
+        _selectedViewModelsProvider.SetActiveStorySlotInSpace(i, null);
+        _mediator.RequestOpenStoryElementDialog();
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.CreateLearningElementInSlot"/>
@@ -214,15 +228,34 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveSlotInSpace,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveElementSlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
+    }
+    
+    public void CreateStoryElementInSlot(string name, ILearningContentViewModel learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
+        int workload, int points)
+    {
+        if (!CheckLearningSpaceNotNull("CreateStoryElementInSlot"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveStorySlotInSpace,
+            name, learningContent, description,
+            goals, difficulty, elementModel, workload, points);
+        _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
     }
 
     public void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model)
     {
         CreateLearningElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
+    }
+    
+    public void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model)
+    {
+        CreateStoryElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
             model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
     }
 
@@ -242,7 +275,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
                 break;
         }
 
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
         SetSelectedLearningElement(learningElementViewModel);
     }
 
