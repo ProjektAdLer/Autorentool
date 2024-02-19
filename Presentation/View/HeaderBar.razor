@@ -22,7 +22,7 @@
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]    @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]     @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
@@ -137,7 +137,7 @@
         </MudMenu>
 
         <CultureSelector/>
-        
+
         <button @onclick="@ShowLearningOutcomesOverview" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled.Book"></MudIcon>
         </button>
@@ -523,10 +523,10 @@
         var parameters = new DialogParameters
         {
             {
-                nameof(LearningOutcomesOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
+                nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
             }
         };
-        DialogService.Show<LearningOutcomesOverview>("Title", parameters, options);
+        DialogService.Show<LearningOutcomesWorldOverview>("Title", parameters, options);
     }
 
 }

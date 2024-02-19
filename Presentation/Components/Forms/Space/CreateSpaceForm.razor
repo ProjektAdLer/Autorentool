@@ -18,7 +18,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]   @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]   @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]    @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -47,7 +47,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]   @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]    @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -65,7 +65,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
                 <div class="w-4/4 px-4 flex flex-col">
                     <MudText Class="cursor-default text-justify" Typo="Typo.caption">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                     <div class="flex justify-center">
@@ -74,9 +74,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]   @bind-Collapsed="_collapsedDescription">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]    @bind-Collapsed="_collapsedDescription">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -90,7 +90,7 @@
                 </div>
             </Collapsable>
         </div>
-        
+
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -153,9 +153,9 @@
         };
         var parameters = new DialogParameters
         {
-            { nameof(LearningOutcomesOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
+            { nameof(LearningOutcomesSpaceOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
         };
-        var dialog = await DialogService.ShowAsync<LearningOutcomesOverview>("", parameters, options);
+        var dialog = await DialogService.ShowAsync<LearningOutcomesSpaceOverview>("", parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
     }

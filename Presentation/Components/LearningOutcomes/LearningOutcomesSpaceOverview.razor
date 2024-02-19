@@ -1,8 +1,7 @@
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 @using Presentation.PresentationLogic.API
-@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
-
+@using System.Diagnostics.CodeAnalysis
 <div class="pb-4">
     <div class="flex flex-col gap-4">
         <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
@@ -14,12 +13,12 @@
         <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">@Localizer["LearningOutcomesOverview.Button.Manual"]</MudButton>
     </div>
 
-    @if(LearningOutcomeCollection.LearningOutcomes.Count > 0)
+    @if (LearningOutcomeCollection.LearningOutcomes.Count > 0)
     {
         <div class="h-[320px]">
             <MudDivider DividerType="DividerType.Middle"></MudDivider>
             <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
-    
+
             <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6">
                 @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
                 {
@@ -35,7 +34,6 @@
                 }
             </div>
         </div>
-        
     }
 </div>
 
@@ -45,9 +43,9 @@
     [Inject, AllowNull] private IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
-    
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    internal IStringLocalizer<LearningOutcomesOverview> Localizer { get; set; }
+    internal IStringLocalizer<LearningOutcomesSpaceOverview> Localizer { get; set; }
 
     private async Task CreateManualLearningOutcome()
     {
@@ -57,7 +55,6 @@
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
-            
         };
 
         var dialogParameters = new DialogParameters
