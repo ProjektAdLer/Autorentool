@@ -4,31 +4,31 @@
 @using System.Diagnostics.CodeAnalysis
 <div class="pb-4">
     <div class="flex flex-col gap-4">
-        <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesOverview.Title"]</p>
-        <p class="cursor-default text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesOverview.Text"]</p>
+        <p class="cursor-default text-lg mx-6">@Localizer["LearningOutcomesSpaceOverview.Title"]</p>
+        <p class="cursor-default text-sm 2xl:text-base mx-6">@Localizer["LearningOutcomesSpaceOverview.Text"]</p>
     </div>
 
     <div class="flex flex-col justify-center items-center py-4">
-        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">@Localizer["LearningOutcomesOverview.Button.Structured"]</MudButton>
-        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">@Localizer["LearningOutcomesOverview.Button.Manual"]</MudButton>
+        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">@Localizer["LearningOutcomesSpaceOverview.Button.Structured"]</MudButton>
+        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">@Localizer["LearningOutcomesSpaceOverview.Button.Manual"]</MudButton>
     </div>
 
     @if (LearningOutcomeCollection.LearningOutcomes.Count > 0)
     {
         <div class="h-[320px]">
             <MudDivider DividerType="DividerType.Middle"></MudDivider>
-            <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesOverview.Overview.Subtitle"]</p>
+            <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesSpaceOverview.Overview.Subtitle"]</p>
 
             <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6">
                 @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
                 {
                     <div class="mx-2 p-4">
                         <ul class="list-disc list-outside">
-                            <li class="cursor-default text-sm text-justify">@learningOutcome.GetOutcome()</li>
+                            <li class="marker:text-adlergrey cursor-default text-sm text-justify">@learningOutcome.GetOutcome()</li>
                         </ul>
                         <div class="flex flex-row gap-2">
-                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="Lernziel bearbeiten"/>
-                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="Lernziel löschen"/>
+                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Edit"]"/>
+                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Delete"]"/>
                         </div>
                     </div>
                 }
