@@ -382,8 +382,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            ElementToEdit.Parent?.Theme,
-            ElementMode is ElementMode.Adaptivity or ElementMode.Story);
+            ElementToEdit.Parent?.Theme);
     }
 
     private void OnContentChanging(PropertyChangingWithValueEventArgs<ILearningContentFormModel> e)

@@ -325,6 +325,7 @@
                 break;
             case ElementMode.Story:
                 FormDataContainer.FormModel.LearningContent = new StoryContentFormModel();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story).First();
                 break;
             case ElementMode.Normal:
                 if (SelectedViewModelsProvider.LearningContent == null) return;
@@ -397,8 +398,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null,
-            ElementMode is ElementMode.Adaptivity or ElementMode.Story);
+            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null);
     }
 
 

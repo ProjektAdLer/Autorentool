@@ -19,7 +19,7 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeFalse_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus, false);
+        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus);
         var enumerable = elementModels.ToList();
         Assert.That(enumerable, Is.Not.Null);
         Assert.That(enumerable, Is.Not.Empty);
@@ -30,7 +30,7 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeTrue_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus, true);
+        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus);
         var expectedModels = new[]
         {
             ElementModel.l_random, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice,
