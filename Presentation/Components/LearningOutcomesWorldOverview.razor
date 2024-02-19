@@ -1,33 +1,52 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.LearningSpace
-<h3>LearningOutcomes von @LearningWorld.Name</h3>
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
 
-@foreach (var learningSpace in LearningWorld.LearningSpaces)
-{
-    <div class="flex flex-row items-center">
-        <span @onclick="() => ToggleLearningSpace(learningSpace)">
-            <MudIconButton Class="p-2" Size="Size.Small"
-                           OnClick="() => ToggleLearningSpace(learningSpace)"
-                           Icon="@(GetSpaceToggleIcon(learningSpace))"/>
-        </span>
-        <span>
-            <div class="flex flex-row gap-2 items-center">
-                <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
-                <p class="break-words">@learningSpace.Name</p>
-            </div>
-        </span>
+<div class="px-4 pb-6">
+    <div class="flex flex-col gap-1 px-2">
+        <p class="cursor-default text-lg">@Localizer["LearningOutcomesWorldOverview.Title"]</p>
+        <p class="cursor-default text-sm">@Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span></p>
     </div>
-    @if (IsLearningSpaceExpanded(learningSpace))
-    {
-        @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)
+    <div class="max-h-[500px] overflow-y-scroll py-2">
+        @foreach (var learningSpace in LearningWorld.LearningSpaces)
         {
-            <p class="break-words">@outcome.GetOutcome()</p>
+            <div class="flex flex-row items-center">
+                <span @onclick="() => ToggleLearningSpace(learningSpace)">
+                    <MudIconButton Class="p-2" Size="Size.Small"
+                                   OnClick="() => ToggleLearningSpace(learningSpace)"
+                                   Icon="@(GetSpaceToggleIcon(learningSpace))"/>
+                </span>
+                <span>
+                    <div class="flex flex-row gap-2 items-center">
+                        <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                        <p class="cursor-default break-words">@learningSpace.Name</p>
+                    </div>
+                </span>
+            </div>
+            @if (IsLearningSpaceExpanded(learningSpace))
+            {
+                @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)
+                {
+                    <div class="py-2 px-4">
+                        <ul class="list-disc list-outside pl-2 mx-4">
+                            <li class="cursor-default text-xs 2xl:text-sm text-justify marker:text-adlergrey break-words">@outcome.GetOutcome()</li>
+                        </ul>
+                    </div>
+                    
+                }
+            }
         }
-    }
-}
+    </div>
+</div>
 
 @code {
-    [Parameter, EditorRequired] public ILearningWorldViewModel LearningWorld { get; set; } = null!;
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<LearningOutcomesWorldOverview> Localizer { get; set; }
+    
+    [Parameter, EditorRequired]
+    public ILearningWorldViewModel LearningWorld { get; set; } = null!;
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
 
@@ -44,7 +63,8 @@
         ExpandedLearningSpaces.Clear();
         foreach (var learningSpace in LearningWorld.LearningSpaces)
         {
-            ExpandedLearningSpaces.Add(learningSpace, false);
+            var initialOpen = learningSpace.LearningOutcomeCollection.LearningOutcomes.Any();
+            ExpandedLearningSpaces.Add(learningSpace, initialOpen);
         }
     }
 
