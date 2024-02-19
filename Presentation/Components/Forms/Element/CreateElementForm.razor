@@ -31,7 +31,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]       @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]        @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -104,7 +104,7 @@
         {
             case ElementMode.Normal:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]       @bind-Collapsed="_collapsedContent">
+                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]        @bind-Collapsed="_collapsedContent">
                         <p class="text-xs pl-6">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         @if (!WorldPresenter.GetAllContent().Any())
                         {
@@ -157,7 +157,7 @@
                 break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
-                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]       @bind-Collapsed="_collapsedTasks">
+                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]        @bind-Collapsed="_collapsedTasks">
                         <p class="text-xs pl-6">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                         <div class="flex flex-col items-center justify-center">
                             <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard" OnClick="OpenAdaptivityContentDialog">
@@ -204,7 +204,7 @@
         }
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]       @bind-Collapsed="_collapsedElementModel">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]        @bind-Collapsed="_collapsedElementModel">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
@@ -219,7 +219,7 @@
         {
             <div class="px-4">
                 <Collapsable
-                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
+                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]     @bind-Collapsed="_collapsedGoals">
                     <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                         <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                         <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -321,7 +321,7 @@
                 break;
             case ElementMode.Story:
                 FormDataContainer.FormModel.LearningContent = new StoryContentFormModel();
-                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story).First();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
                 break;
             case ElementMode.Normal:
                 if (SelectedViewModelsProvider.LearningContent == null) return;
