@@ -187,6 +187,14 @@
             @Localizer["CreateEditStructuredLearningOutcome.Button.Create"]
         </MudButton>
     </div>
+
+    <div class="flex flex-row justify-end items-center mx-4">
+        <MudButton Class="mt-1.5" OnClick="ResetInputFields">
+            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Refresh"></MudIcon>
+            <MudText Class="uppercase pl-1 text-sm text-adlergrey-700 font-bold">Eingaben zurücksetzen</MudText>
+        </MudButton>
+    </div>
+
 </div>
 
 @code {
@@ -353,6 +361,16 @@
         {
             DialogInstance.Close();
         }
+    }
+
+    private void ResetInputFields()
+    {
+        _selectedTaxonomyLevel = TaxonomyLevel.None;
+        _currentWhat = "";
+        _currentVerbOfVisibility = "";
+        _currentVerbOfVisibilityText = "";
+        _currentWhereby = "";
+        _currentWhatFor = "";
     }
 
 }
