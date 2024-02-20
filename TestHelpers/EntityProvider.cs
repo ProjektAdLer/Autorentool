@@ -36,11 +36,13 @@ public static class EntityProvider
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
-    public static LearningOutcomeCollection GetLearningOutcomeCollection(ILearningOutcome? outcome = null)
+    public static LearningOutcomeCollection GetLearningOutcomeCollection(ILearningOutcome? outcome = null,
+        bool unsavedChanges = false)
     {
         return new LearningOutcomeCollection()
         {
-            LearningOutcomes = GetLearningOutcomes(outcome)
+            LearningOutcomes = GetLearningOutcomes(outcome),
+            UnsavedChanges = unsavedChanges
         };
     }
 

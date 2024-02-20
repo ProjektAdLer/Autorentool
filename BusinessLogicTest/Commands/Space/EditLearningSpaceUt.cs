@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
 
@@ -12,7 +13,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "d", 5, Theme.Arcade)
+        var space = new LearningSpace("a", "d", 5, Theme.Arcade, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
@@ -55,7 +56,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "d", 5, Theme.Arcade);
+        var space = new LearningSpace("a", "d", 5, Theme.Arcade, EntityProvider.GetLearningOutcomeCollection());
         var name = "space1";
         var description = "space for learning";
         var requiredPoints = 10;
@@ -78,7 +79,7 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "j", 5, Theme.Arcade)
+        var space = new LearningSpace("g", "j", 5, Theme.Arcade, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };

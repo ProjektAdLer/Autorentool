@@ -19,7 +19,13 @@ public class LearningOutcomeCollection
 
     public List<ILearningOutcome> LearningOutcomes { get; set; }
 
-    public bool UnsavedChanges { get; set; }
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
 
     public IMemento GetMemento()
     {

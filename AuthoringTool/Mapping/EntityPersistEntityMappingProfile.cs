@@ -62,6 +62,8 @@ public class EntityPersistEntityMappingProfile : Profile
             .IncludeAllDerived();
 
         CreateMap<LearningOutcomeCollectionPe, LearningOutcomeCollection>()
+            .ForMember(x => x.InternalUnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .ReverseMap();
     }
 

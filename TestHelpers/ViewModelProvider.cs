@@ -45,7 +45,8 @@ public static class ViewModelProvider
     {
         return new LearningOutcomeCollectionViewModel()
         {
-            LearningOutcomes = GetLearningOutcomes()
+            LearningOutcomes = GetLearningOutcomes(),
+            UnsavedChanges = false
         };
     }
 

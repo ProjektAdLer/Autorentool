@@ -29,7 +29,8 @@ public class LearningWorldViewModelUt
         var topic1 = new TopicViewModel("topic1");
         var topic2 = new TopicViewModel("topic2");
         var topics = new List<TopicViewModel> { topic1, topic2 };
-        var space1 = new LearningSpaceViewModel("ff", "ff", Theme.Campus);
+        var space1 = new LearningSpaceViewModel("ff", "ff", Theme.Campus, 0,
+            ViewModelProvider.GetLearningOutcomeCollection());
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { condition };

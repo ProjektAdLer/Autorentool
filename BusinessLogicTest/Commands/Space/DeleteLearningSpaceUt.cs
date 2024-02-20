@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
 
@@ -16,15 +17,15 @@ public class DeleteLearningSpaceUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("a", "d", 4, Theme.Campus)
+        var space1 = new LearningSpace("a", "d", 4, Theme.Campus, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("g", "j", 5, Theme.Campus)
+        var space2 = new LearningSpace("g", "j", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space3 = new LearningSpace("g", "j", 5, Theme.Campus)
+        var space3 = new LearningSpace("g", "j", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
@@ -65,7 +66,7 @@ public class DeleteLearningSpaceUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", 5, Theme.Campus);
+        var space = new LearningSpace("g", "j", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection());
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -87,11 +88,11 @@ public class DeleteLearningSpaceUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("g", "j", 5, Theme.Campus)
+        var space1 = new LearningSpace("g", "j", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", 7, Theme.Campus)
+        var space2 = new LearningSpace("l", "o", 7, Theme.Campus, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };

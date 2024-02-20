@@ -76,7 +76,8 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeAllDerived();
 
         CreateMap<LearningOutcomeCollection, LearningOutcomeCollectionViewModel>()
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
     }
 
     private void CreateTopicMap()

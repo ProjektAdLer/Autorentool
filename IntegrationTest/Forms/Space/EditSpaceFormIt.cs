@@ -113,6 +113,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
 
         ConfigureValidatorAllMembersTestOr123OrCampus();
 
@@ -157,6 +158,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
