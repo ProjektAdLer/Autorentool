@@ -52,7 +52,7 @@
         <value>Learning world created</value>
     </data>
     <data name="CreateWorldForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Enrolment key</value>

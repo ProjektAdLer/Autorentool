@@ -54,7 +54,7 @@
         <value>Theme of learning space</value>
     </data>
     <data name="CreateSpaceForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="CreateSpaceForm.Goals.Button" xml:space="preserve">
         <value>Learning outcome formulation</value>

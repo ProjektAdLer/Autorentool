@@ -54,7 +54,7 @@
         <value>Theme of learning space</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
         <value />

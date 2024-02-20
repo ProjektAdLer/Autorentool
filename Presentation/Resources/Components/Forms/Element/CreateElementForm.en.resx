@@ -90,7 +90,7 @@
         <value>List of all added external learning material</value>
     </data>
     <data name="CreateElementForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="CreateElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
         <value>3D representation icon</value>
