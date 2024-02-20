@@ -534,7 +534,6 @@ public class LearningOutcomesVerbManager
                     "validieren",
                     "vereinfachen",
                     "vergleichen",
-                    "vergleichen",
                     "verifzieren",
                     "verteidigen",
                     "vertreten",
