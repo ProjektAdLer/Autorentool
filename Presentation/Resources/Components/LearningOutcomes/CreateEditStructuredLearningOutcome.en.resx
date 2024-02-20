@@ -37,7 +37,7 @@
         <value>Taxonomy level</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
-        <value>The formulation of a learning objective/learning outcome focuses on the description of corresponding abilities, skills or competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable verb of visibility in the further processing steps of the learning objective/learning outcome formulation.</value>
+        <value>The formulation of a learning objective/learning outcome focuses on the description of corresponding abilities, skills or competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable verb of visibility in the further processing steps of the learning objective/learning outcome formulation</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
         <value>You are able to...</value>
@@ -46,7 +46,7 @@
         <value>Verb of visibility*</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Info" xml:space="preserve">
-        <value>The learning objective/learning outcome describes desired behavioral dispositions and which abilities, skills or competencies the students will have developed at the end of the learning process. It therefore describes actions that are formulated with the help of verbs of external visibility. These represent an action on or with an external object. Verbs such as "understand" or "recognize" are therefore not suitable. The verbs of external visibility can be assigned to a taxonomy level.</value>
+        <value>The learning outcome describes desired behavioral dispositions and which abilities, skills or competencies the students will have developed at the end of the learning process. It therefore describes actions that are formulated with the help of verbs of external visibility. These represent an action on or with an external object. Verbs such as "understand" or "recognize" are therefore not suitable. The verbs of external visibility can be assigned to a taxonomy level.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Placeholder" xml:space="preserve">
         <value>Formulate or select</value>
@@ -95,5 +95,32 @@
     </data>
     <data name="CreateEditStructuredLearningOutcome.Preview" xml:space="preserve">
         <value>Preview of the formulated learning outcome:</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Reset" xml:space="preserve">
+        <value>Reset entries</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Required" xml:space="preserve">
+        <value>* Required</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Remember" xml:space="preserve">
+        <value>Accessing relevant knowledge in long-term memory</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Example" xml:space="preserve">
+        <value>Example of a learning outcome formulation</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Create" xml:space="preserve">
+        <value>Assemble elements into a coherent structure or pattern</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Understand" xml:space="preserve">
+        <value>Assign meaning to information (oral, written or graphic) in the learning unit</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Apply" xml:space="preserve">
+        <value>Apply a course of action or a method in a specific situation</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Analyse" xml:space="preserve">
+        <value>Break down learning content into its elements and determine their connection to an overarching structure or purpose</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Evaluate" xml:space="preserve">
+        <value>Make judgments based on criteria or standards</value>
     </data>
 </root>

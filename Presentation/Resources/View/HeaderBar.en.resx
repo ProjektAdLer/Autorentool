@@ -132,4 +132,7 @@
     <data name="ExportArchive.Hover" xml:space="preserve">
         <value>Use this option if you want to archive the learning world (e.g. to send to another computer or as a backup)</value>
     </data>
+    <data name="LearningOutcomes.Overview" xml:space="preserve">
+        <value>Learning outcomes of this learning world</value>
+    </data>
 </root>

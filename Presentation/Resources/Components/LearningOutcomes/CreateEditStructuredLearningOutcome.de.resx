@@ -37,7 +37,7 @@
         <value>Taxonomiestufe</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
-        <value>Die Formulierung eines Lernziels/Lernergebnisses fokussiert die Beschreibung von entsprechenden Fähigkeiten, Fertigkeiten oder Kompetenzen des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernziel/Lernergebnis-Formulierung zum Finden eines passenden Verbes der Sichtbarkeit.</value>
+        <value>Die Formulierung eines Lernziels/Lernergebnisses fokussiert die Beschreibung von entsprechenden Fähigkeiten, Fertigkeiten oder Kompetenzen des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernziel/Lernergebnis-Formulierung zum Finden eines passenden Verbes der Sichtbarkeit</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
         <value>Sie können...</value>
@@ -46,7 +46,7 @@
         <value>Verb der Sichtbarkeit*</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Info" xml:space="preserve">
-        <value>Das Lernziel/Lernergebnis beschreibt gewünschte Verhaltensdispositionen und welche Fähigkeiten, Fertigkeiten oder Kompetenzen die Studierenden am Ende des Lernprozesses entwickelt haben werden. Es beschreibt also Handlungen, welche mit Hilfe von Verben der äußeren Sichtbarkeit formuliert werden. Diese stellen ein Tun an oder mit einem äußeren Objekt dar. Verben wie „verstehen“ oder „erkennen“ sind deshalb nicht geeignet. Die Verben der äußeren Sichtbarkeit lassen sich einer Taxonomiestufe zuordnen.</value>
+        <value>Das Lernziel beschreibt gewünschte Verhaltensdispositionen und welche Fähigkeiten, Fertigkeiten oder Kompetenzen die Studierenden am Ende des Lernprozesses entwickelt haben werden. Es beschreibt also Handlungen, welche mit Hilfe von Verben der äußeren Sichtbarkeit formuliert werden. Diese stellen ein Tun an oder mit einem äußeren Objekt dar. Verben wie „verstehen“ oder „erkennen“ sind deshalb nicht geeignet. Die Verben der äußeren Sichtbarkeit lassen sich einer Taxonomiestufe zuordnen.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Placeholder" xml:space="preserve">
         <value>Formulieren oder auswählen</value>
@@ -70,7 +70,7 @@
         <value>Textfeld</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Whereby.Text" xml:space="preserve">
-        <value>indem sie...</value>
+        <value>indem Sie...</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Whereby" xml:space="preserve">
         <value>Womit?</value>
@@ -95,5 +95,32 @@
     </data>
     <data name="CreateEditStructuredLearningOutcome.Preview" xml:space="preserve">
         <value>Vorschau des formulierten Lernziels:</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Reset" xml:space="preserve">
+        <value>Eingaben zurücksetzen</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Required" xml:space="preserve">
+        <value>* Erforderliche Angabe</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Remember" xml:space="preserve">
+        <value>Auf relevantes Wissen im Langzeitgedächtnis zugreifen</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Example" xml:space="preserve">
+        <value>Beispiel für eine Lernziel-Formulierung</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Create" xml:space="preserve">
+        <value>Elemente zu einer zusammenhängenden Struktur oder zu einem zusammenhängenden Muster zusammenfügen</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Understand" xml:space="preserve">
+        <value>Informationen (mündlich, schriftlich oder grafisch) in der Lerneinheit Bedeutung zuordnen</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Apply" xml:space="preserve">
+        <value>Einen Handlungsablauf oder eine Methode in einer bestimmten Situation anwenden</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Analyse" xml:space="preserve">
+        <value>Lerninhalte in ihre Elemente zerlegen und ihre Verbindung zu einer übergreifenden Struktur oder einem übergreifenden Zweck bestimmen</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Evaluate" xml:space="preserve">
+        <value>Urteile aufgrund von Kriterien oder Standards abgeben</value>
     </data>
 </root>
