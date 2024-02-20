@@ -30,6 +30,8 @@ public class DeleteLearningOutcome : IDeleteLearningOutcome
 
         LearningOutcomeCollection.LearningOutcomes.Remove(LearningOutcome);
 
+        LearningOutcomeCollection.UnsavedChanges = true;
+
         Logger.LogTrace("Deleted LearningOutcome {@LearningOutcome} from LearningOutcomeCollection",
             LearningOutcome.Id);
 

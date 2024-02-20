@@ -52,6 +52,8 @@ public class AddLearningOutcome : IAddLearningOutcome
             LearningOutcomeCollection.LearningOutcomes.Insert(Index, LearningOutcome);
         }
 
+        LearningOutcomeCollection.UnsavedChanges = true;
+
         Logger.LogTrace("Added LearningOutcome {@LearningOutcome} to LearningOutcomeCollection", LearningOutcome.Id);
 
         MappingAction.Invoke(LearningOutcomeCollection);

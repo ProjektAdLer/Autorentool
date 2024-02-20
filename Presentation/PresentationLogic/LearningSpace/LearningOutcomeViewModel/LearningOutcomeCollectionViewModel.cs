@@ -16,4 +16,6 @@ public class LearningOutcomeCollectionViewModel
     }
 
     public List<ILearningOutcomeViewModel> LearningOutcomes { get; set; }
+
+    public bool UnsavedChanges { get; private set; }
 }

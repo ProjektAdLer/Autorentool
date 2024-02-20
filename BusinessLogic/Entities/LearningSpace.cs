@@ -63,7 +63,8 @@ public class LearningSpace : ILearningSpace
     public bool UnsavedChanges
     {
         get => InternalUnsavedChanges ||
-               ContainedLearningElements.Any(element => element.UnsavedChanges);
+               ContainedLearningElements.Any(element => element.UnsavedChanges) ||
+               LearningOutcomeCollection.UnsavedChanges;
         set => InternalUnsavedChanges = value;
     }
 
