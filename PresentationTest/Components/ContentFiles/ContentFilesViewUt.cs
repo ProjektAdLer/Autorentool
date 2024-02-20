@@ -4,8 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Bunit;
+using Bunit.TestDoubles;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -44,6 +48,9 @@ public class ContentFilesViewUt
             new LocalizedString(ci.Arg<string>() + string.Concat(ci.Arg<object[]>()),
                 ci.Arg<string>() + string.Concat(ci.Arg<object[]>())));
         _errorService = Substitute.For<IErrorService>();
+
+        _testContext.ComponentFactories.AddStub<MudMenu>();
+        _testContext.ComponentFactories.AddStub<MudMenuItem>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
@@ -273,6 +280,433 @@ public class ContentFilesViewUt
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>(Arg.Any<string>(),
             Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+    }
+
+    [Test]
+    public void SelectionCheckbox_Click_ChangeToCorrectState()
+    {
+        var items = PresentationLogicSetItems();
+        var world = ViewModelProvider.GetLearningWorld();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var checkboxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
+        Assert.That(checkboxes, Has.Count.EqualTo(3));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        }
+
+        var selectionCheckbox = systemUnderTest.FindComponent<MudCheckBox<bool?>>();
+        var selectionCheckboxElement = selectionCheckbox.Find("input");
+        Assert.That(selectionCheckbox.Instance.Value, Is.EqualTo(false));
+
+        checkboxes[0].Find("input").Change(true);
+        Assert.Multiple(() =>
+        {
+            Assert.That(checkboxes[0].Instance.Value, Is.EqualTo(true));
+            Assert.That(checkboxes[1].Instance.Value, Is.EqualTo(false));
+            Assert.That(checkboxes[2].Instance.Value, Is.EqualTo(false));
+
+            Assert.That(selectionCheckbox.Instance.Value, Is.EqualTo(null));
+        });
+
+        selectionCheckboxElement.Change(true);
+
+        Assert.That(selectionCheckbox.Instance.Value, Is.EqualTo(true));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+        }
+
+        selectionCheckboxElement.Change(true);
+        Assert.That(selectionCheckbox.Instance.Value, Is.EqualTo(false));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        }
+
+        selectionCheckboxElement.Change(true);
+        Assert.That(selectionCheckbox.Instance.Value, Is.EqualTo(true));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+        }
+    }
+
+    [Test]
+    public async Task SelectDropdown_SelectAll_AllContentIsSelected()
+    {
+        var items = PresentationLogicSetItems().ToArray();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var world2 = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world, world2 });
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        world2.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.Last();
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var multipleSelectMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var menuContent = _testContext.Render((RenderFragment)multipleSelectMenu.Instance.Parameters["ChildContent"]);
+        var menuContentItems = menuContent.FindComponentsOrFail<Stub<MudMenuItem>>();
+        var selectAllMenuItem = (EventCallback<MouseEventArgs>)menuContentItems.First().Instance.Parameters["OnClick"];
+
+        var checkboxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
+        Assert.That(checkboxes, Has.Count.EqualTo(3));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        }
+
+        await _testContext.Renderer.Dispatcher.InvokeAsync(() =>
+            selectAllMenuItem.InvokeAsync(new MouseEventArgs()));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+        }
+    }
+
+    [Test]
+    public async Task SelectDropdown_SelectAllUnused_AllUnusedContentIsSelected()
+    {
+        var items = PresentationLogicSetItems().ToArray();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var world2 = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world, world2 });
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        world2.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.Last();
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var multipleSelectMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var menuContent = _testContext.Render((RenderFragment)multipleSelectMenu.Instance.Parameters["ChildContent"]);
+        var menuContentItems = menuContent.FindComponentsOrFail<Stub<MudMenuItem>>();
+        var selectAllUnusedMenuItem =
+            (EventCallback<MouseEventArgs>)menuContentItems.Last().Instance.Parameters["OnClick"];
+
+        var checkboxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
+        Assert.That(checkboxes, Has.Count.EqualTo(3));
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        }
+
+        await _testContext.Renderer.Dispatcher.InvokeAsync(() =>
+            selectAllUnusedMenuItem.InvokeAsync(new MouseEventArgs()));
+        Assert.Multiple(() =>
+        {
+            Assert.That(checkboxes[0].Instance.Value, Is.EqualTo(false));
+            Assert.That(checkboxes[1].Instance.Value, Is.EqualTo(true));
+            Assert.That(checkboxes[2].Instance.Value, Is.EqualTo(false));
+        });
+    }
+
+    [Test]
+    public void DeleteMultiple_SelectedNone_ButtonIsDisabled()
+    {
+        var items = PresentationLogicSetItems();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Cancel());
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference1);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var iconButtons = systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponents<MudIconButton>();
+        // the contained MudIconButtons are: delete, first page, previous page, next page, last page
+        Assert.That(iconButtons, Has.Count.EqualTo(5));
+        var deleteMultipleButton = iconButtons[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That(deleteMultipleButton.Instance.Icon, Is.EqualTo(Icons.Material.Filled.Delete));
+            Assert.That(deleteMultipleButton, Is.Not.Null);
+            Assert.That(deleteMultipleButton.Instance.Disabled, Is.EqualTo(true));
+        });
+    }
+
+    [Test]
+    public async Task DeleteMultiple_CancelFirstDialog_CallsNothing()
+    {
+        var items = PresentationLogicSetItems();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Cancel());
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference1);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var checkboxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        }
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+        }
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        await _dialogService.Received()
+            .ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+
+        foreach (var checkbox in checkboxes)
+        {
+            Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+        }
+    }
+
+    [Test]
+    public async Task DeleteMultiple_NoContentsInUse_ConfirmFirstDialog_CallsPresentationLogic()
+    {
+        var items = PresentationLogicSetItems();
+        var world = ViewModelProvider.GetLearningWorldWithSpace();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference1);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        await _dialogService.Received()
+            .ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+        _presentationLogic.Received()
+            .RemoveMultipleContents(Arg.Is<List<ILearningContentViewModel>>(x => x.SequenceEqual(items)));
+    }
+
+    [Test]
+    public async Task DeleteMultiple_ContentsInUse_SelectAllAndClickDelete_ConfirmFirstDialog_ShowsConfirmationDialog()
+    {
+        var items = PresentationLogicSetItems().ToArray();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var world2 = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world, world2 });
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        world2.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.Last();
+        var expectedDialogParameters =
+            new List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>
+            {
+                (items.First(), world, world.LearningSpaces.First().ContainedLearningElements.First()),
+                (items.Last(), world2, world2.LearningSpaces.First().ContainedLearningElements.First())
+            };
+
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference1);
+
+        var dialogReference2 = Substitute.For<IDialogReference>();
+        dialogReference2.Result.Returns(DialogResult.Cancel());
+        _dialogService
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference2);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        await _dialogService.Received()
+            .ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+        await _dialogService.Received()
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Any<DialogOptions>());
+    }
+
+    [Test]
+    public async Task DeleteMultiple_ContentsInUse_ConfirmFirstDialog_DeleteAll()
+    {
+        var items = PresentationLogicSetItems().ToArray();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var world2 = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world, world2 });
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        world2.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.Last();
+        var expectedDialogParameters =
+            new List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>
+            {
+                (items.First(), world, world.LearningSpaces.First().ContainedLearningElements.First()),
+                (items.Last(), world2, world2.LearningSpaces.First().ContainedLearningElements.First())
+            };
+
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference1);
+
+        var dialogReference2 = Substitute.For<IDialogReference>();
+        dialogReference2.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference2);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        await _dialogService.Received()
+            .ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+        await _dialogService.Received()
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Any<DialogOptions>());
+        _presentationLogic.Received()
+            .RemoveMultipleContents(Arg.Is<IEnumerable<ILearningContentViewModel>>(x => x.SequenceEqual(items)));
+    }
+
+    [Test]
+    public async Task DeleteMultiple_ContentsInUse_ConfirmFirstDialog_DeleteUnused()
+    {
+        var items = PresentationLogicSetItems().ToArray();
+        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        var world2 = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
+        _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world, world2 });
+        world.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.First();
+        world2.LearningSpaces.First().ContainedLearningElements.First().LearningContent = items.Last();
+        var expectedDialogParameters =
+            new List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>
+            {
+                (items.First(), world, world.LearningSpaces.First().ContainedLearningElements.First()),
+                (items.Last(), world2, world2.LearningSpaces.First().ContainedLearningElements.First())
+            };
+
+        var dialogReference1 = Substitute.For<IDialogReference>();
+        dialogReference1.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference1);
+
+        var dialogReference2 = Substitute.For<IDialogReference>();
+        dialogReference2.Result.Returns(DialogResult.Ok(false));
+        _dialogService
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>()).Returns(dialogReference2);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        await _dialogService.Received()
+            .ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
+        await _dialogService.Received()
+            .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Any<DialogOptions>());
+        _presentationLogic.Received()
+            .RemoveMultipleContents(
+                Arg.Is<IEnumerable<ILearningContentViewModel>>(x => x.SequenceEqual(new[] { items[1] })));
+    }
+
+    [Test]
+    public void DeleteMultiple_ArgumentOutOfRangeException_CallsErrorService()
+    {
+        PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        _presentationLogic.When(x => x.RemoveMultipleContents(Arg.Any<IEnumerable<ILearningContentViewModel>>()))
+            .Throw(new ArgumentOutOfRangeException());
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+    }
+
+    [Test]
+    public void DeleteMultiple_FileNotFoundException_CallsErrorService()
+    {
+        PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        _presentationLogic.When(x => x.RemoveMultipleContents(Arg.Any<IEnumerable<ILearningContentViewModel>>()))
+            .Throw(new FileNotFoundException("test"));
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        _errorService.Received(1).SetError("Error deleting content", "test");
+    }
+
+    [Test]
+    public void DeleteMultiple_SerializationException_CallsErrorService()
+    {
+        PresentationLogicSetItems();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        _presentationLogic.When(x => x.RemoveMultipleContents(Arg.Any<IEnumerable<ILearningContentViewModel>>()))
+            .Throw(new SerializationException("test"));
+
+        var systemUnderTest = GetRenderedComponent();
+
+        systemUnderTest.FindComponent<MudCheckBox<bool?>>().Find("input").Change(true);
+
+        systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
+            .FindComponent<MudIconButton>().Find("button").Click();
+
+        _errorService.Received(1).SetError("Error deleting content", "test");
     }
 
     [Test]

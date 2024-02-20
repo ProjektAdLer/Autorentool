@@ -450,6 +450,13 @@ public interface IPresentationLogic
     public void RemoveContent(ILearningContentViewModel content);
 
     /// <summary>
+    /// Deletes the files referenced by the given content objects.
+    /// </summary>
+    /// <param name="contents">The contents whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents"/> weren't found.</exception>
+    public void RemoveMultipleContents(IEnumerable<ILearningContentViewModel> contents);
+
+    /// <summary>
     /// Loads a Learning World view model into the authoring tool workspace.
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">The authoring tool workspace view model to load into.</param>
@@ -576,7 +583,7 @@ public interface IPresentationLogic
         string comment);
 
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
-    
+
     /// <summary>
     /// Asynchronously retrieves a list of LMS World view models.
     /// </summary>
@@ -591,6 +598,11 @@ public interface IPresentationLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
+    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
+    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
+    void DeleteLearningWorldByPath(string savePath);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -602,9 +614,4 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
-
-    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
-    Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
-    IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
-    void DeleteLearningWorldByPath(string savePath);
 }

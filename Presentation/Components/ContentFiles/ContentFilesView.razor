@@ -1,3 +1,5 @@
+@using MudBlazor.Extensions
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningContent
@@ -8,7 +10,6 @@
 @using Presentation.PresentationLogic.Mediator
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
-@using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
 <style type="text/css">  
    .mud-table-toolbar {
@@ -123,7 +124,7 @@
                                Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Preview"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => NewElementWithContent(context)"
-                               Icon="@Icons.Material.Filled.Create" Class="m-0 p-1" Title=@Localizer["Content.MudTd.NewElement"]>
+                               Icon="@Icons.Material.Filled.Add" Class="m-0 p-1" Title=@Localizer["Content.MudTd.NewElement"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => Delete(context)"
                                Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Delete"]>
@@ -293,8 +294,60 @@
         var result = await dialog.Result;
 
         if (result.Canceled) return;
-        await Task.Delay(1);
-        _deletionCandidates = new List<ILearningContentViewModel>();
+
+        var contentInUse = GetContentInUseFromDeletionCandidates();
+
+        var doNotFilterForUnused = true;
+        if (contentInUse.Any())
+        {
+            //present "Delete Multiple Contents" dialog
+            var parameters2 = new DialogParameters
+            {
+                { "ContentWorldElementInUseList", contentInUse },
+            };
+            var dialog2 = await DialogService.ShowAsync<DeleteMultipleContentConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters2, options);
+            var result2 = await dialog2.Result;
+            if (result2.Canceled) return;
+            doNotFilterForUnused = result2.Data.As<bool>();
+        }
+
+        try
+        {
+            PresentationLogic.RemoveMultipleContents(doNotFilterForUnused ? _deletionCandidates : _deletionCandidates.Where(x => !contentInUse.Any(y => y.Item1.Equals(x))));
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError("Error deleting content", e.Message);
+        }
+
+        _deletionCandidates = _deletionCandidates.Where(x => Items.Contains(x));
+    }
+
+    private List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)> GetContentInUseFromDeletionCandidates()
+    {
+        var contentInUse = new List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>();
+        foreach (var candidate in _deletionCandidates)
+        {
+            var matches = WorkspaceViewModel.LearningWorlds
+                .SelectMany(world => world.AllLearningElements
+                    .Where(element => element.LearningContent.Equals(candidate))
+                    .Select(el => (candidate, world, el)))
+                .ToList();
+            if (matches.Any())
+            {
+                contentInUse.AddRange(matches);
+            }
+        }
+
+        return contentInUse;
     }
 
     /// <summary>

@@ -723,6 +723,10 @@ public class PresentationLogic : IPresentationLogic
     public void RemoveContent(ILearningContentViewModel content) =>
         BusinessLogic.RemoveContent(Mapper.Map<ILearningContent>(content));
 
+    /// <inheritdoc cref="IPresentationLogic.RemoveMultipleContents"/>
+    public void RemoveMultipleContents(IEnumerable<ILearningContentViewModel> contents) =>
+        BusinessLogic.RemoveMultipleContents(Mapper.Map<IEnumerable<ILearningContent>>(contents));
+
     /// <inheritdoc cref="IPresentationLogic.SaveLink"/>
     public void SaveLink(LinkContentViewModel linkContentVm) =>
         BusinessLogic.SaveLink(Mapper.Map<LinkContent>(linkContentVm));

@@ -8,7 +8,6 @@ using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
-using Shared;
 using Shared.Command;
 using Shared.Configuration;
 
@@ -59,6 +58,31 @@ public class BusinessLogic : IBusinessLogic
         {
             DataAccess.RemoveContent(content);
             Logger.LogTrace("Removed {Type} : {Name}", content.GetType(), content.Name);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (FileNotFoundException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+        catch (SerializationException e)
+        {
+            ErrorManager.LogAndRethrowError(e);
+        }
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.RemoveMultipleContents"/>
+    public void RemoveMultipleContents(IEnumerable<ILearningContent> contents)
+    {
+        try
+        {
+            foreach (var content in contents)
+            {
+                DataAccess.RemoveContent(content);
+                Logger.LogTrace("Removed {Type} : {Name}", content.GetType(), content.Name);
+            }
         }
         catch (ArgumentOutOfRangeException e)
         {
@@ -314,7 +338,7 @@ public class BusinessLogic : IBusinessLogic
     {
         await DataAccess.ExportLearningWorldToArchiveAsync(world, pathToFile);
     }
-    
+
     public async Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile)
     {
         return await DataAccess.ImportLearningWorldFromArchiveAsync(pathToFile);
@@ -420,16 +444,17 @@ public class BusinessLogic : IBusinessLogic
     {
         try
         {
-            var result = await BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]), world);
-            if(!result)
-                ErrorManager.LogAndRethrowBackendAccessError(new BackendWorldDeletionException("Lms world could not be deleted."));
+            var result =
+                await BackendAccess.DeleteLmsWorld(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+                    world);
+            if (!result)
+                ErrorManager.LogAndRethrowBackendAccessError(
+                    new BackendWorldDeletionException("Lms world could not be deleted."));
         }
         catch (HttpRequestException e)
         {
             ErrorManager.LogAndRethrowBackendAccessError(e);
         }
-        
-        
     }
 
     /// <inheritdoc cref="IBusinessLogic.GetLmsWorldList"/>
@@ -437,7 +462,8 @@ public class BusinessLogic : IBusinessLogic
     {
         try
         {
-            return await BackendAccess.GetLmsWorldList(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+            return await BackendAccess.GetLmsWorldList(
+                new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
                 _userInformation.LmsId);
         }
         catch (HttpRequestException httpReqEx)
@@ -445,7 +471,6 @@ public class BusinessLogic : IBusinessLogic
             ErrorManager.LogAndRethrowBackendAccessError(httpReqEx);
             throw;
         }
-        
     }
 
     #endregion
