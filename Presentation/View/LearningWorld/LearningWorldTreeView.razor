@@ -37,9 +37,19 @@
                     {
                         <div class="text-adlergrey-700">
                             <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-words" Value="@learningSpace.Name" OnClick="() => OnSpaceClicked(learningSpace)" Icon="@SpaceIcon">
-                                @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
-                                {
-                                    <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                @{
+                                    @if (learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(0, out var storyEle1))
+                                    {
+                                        <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(storyEle1)" OnClick="() => OnElementClicked(storyEle1)" Value="@storyEle1.Name"></MudTreeViewItem>
+                                    }
+                                    @foreach (var element in FloorPlanElementSorter.GetElementsInOrder(learningSpace.LearningSpaceLayout.LearningElements, learningSpace.LearningSpaceLayout.FloorPlanName))
+                                    {
+                                        <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)" Value="@element.Name"></MudTreeViewItem>
+                                    }
+                                    @if (learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(1, out var storyEle2))
+                                    {
+                                        <MudTreeViewItem TextClass="text-sm 2xl:text-base" Class="break-normal md:break-all" Icon="@GetElementIcon(storyEle2)" OnClick="() => OnElementClicked(storyEle2)" Value="@storyEle2.Name"></MudTreeViewItem>
+                                    }
                                 }
                             </MudTreeViewItem>
                         </div>
