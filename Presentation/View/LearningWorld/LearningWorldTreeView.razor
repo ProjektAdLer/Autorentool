@@ -11,6 +11,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningContent.Story
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -101,6 +102,7 @@
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
+            IStoryContentViewModel => CustomIcons.StoryElementIcon,
             _ => ""
             };
     }

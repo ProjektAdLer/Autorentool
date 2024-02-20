@@ -215,6 +215,43 @@ public static class CustomIcons
             </g>
         </svg>";
 
+    public const string StoryElementIcon = @"
+<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <g id=""uuid-8428f316-3525-4e41-8fdf-540375500c31"" data-name=""R-Storyelement"">
+    <rect x=""46"" y=""571.42"" width=""1904"" height=""1379.83"" rx=""137.35"" ry=""137.35"" style=""fill: #363f4d; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 34px;""/>
+    <g>
+      <rect x=""128.93"" y=""427.98"" width=""1735.6"" height=""1414.48"" rx=""137.35"" ry=""137.35"" style=""fill: #cfd8e5; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 70px;""/>
+      <g>
+        <line x1=""540.67"" y1=""1232.74"" x2=""854.91"" y2=""1232.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""278.74"" y1=""1233.07"" x2=""381.49"" y2=""1233.07"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""270.91"" y1=""1481.26"" x2=""585.15"" y2=""1481.26"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""744.33"" y1=""1477.15"" x2=""847.08"" y2=""1477.15"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""270.91"" y1=""998.26"" x2=""854.91"" y2=""998.26"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+      </g>
+      <g>
+        <line x1=""1411.09"" y1=""991.21"" x2=""1725.33"" y2=""991.21"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""1103.83"" y1=""1235.79"" x2=""1744"" y2=""1235.79"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""1141.33"" y1=""1476.72"" x2=""1455.57"" y2=""1476.72"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+        <line x1=""1614.75"" y1=""1472.61"" x2=""1717.5"" y2=""1472.61"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+      </g>
+      <path d=""M945.53,1852.46H297.73s-159.43-12-165.2-192c0,0,34.63,69,188.28,69h442.21s114.7,0,182.51,123Z"" style=""fill: #cfd8e5; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 48px;""/>
+      <path d=""M1039.85,1851.46h647.8s159.43-12,165.2-192c0,0-34.63,69-188.28,69h-442.21s-114.7,0-182.51,123Z"" style=""fill: #cfd8e5; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 48px;""/>
+    </g>
+    <g>
+      <path d=""M275.53,777.46c0-401.51,325.49-727,727-727s727,325.49,727,727"" style=""fill: #363f4d; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 34px;""/>
+      <path d=""M468.53,777.96c0-293.54,237.96-531.5,531.5-531.5s531.5,237.96,531.5,531.5"" style=""fill: #363f4d; stroke: #cfd8e5; stroke-miterlimit: 10; stroke-width: 34px;""/>
+      <path d=""M669.56,778.4c0-182.8,148.19-330.99,330.99-330.99s330.99,148.19,330.99,330.99"" style=""fill: #363f4d; stroke: #cfd8e5; stroke-miterlimit: 10; stroke-width: 34px;""/>
+      <path d=""M822.48,778.74c0-96.92,78.57-175.49,175.49-175.49s175.49,78.57,175.49,175.49"" style=""fill: #cfd8e5; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 34px;""/>
+    </g>
+    <line x1=""986.53"" y1=""1850.46"" x2=""986.53"" y2=""620.25"" style=""fill: #e6e6e6; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 70px;""/>
+  </g>
+  <g id=""uuid-2b517155-17c0-4b36-a225-7636414b3976"" data-name=""Ebene 8"">
+    <path d=""M1694.21,1636.36c0-57.46-20.25-101.77-60.7-132.89-40.47-31.13-113.45-62.58-218.94-94.38-105.5-31.77-189.42-67.16-251.76-106.14-119.28-74.95-178.92-172.68-178.92-293.21,0-105.54,43-192.48,129.01-260.84s197.65-102.55,334.94-102.55c91.11,0,172.32,16.81,243.65,50.37,71.33,33.57,127.39,81.39,168.15,143.44,40.76,62.07,61.14,130.87,61.14,206.42h-226.58c0-67.85-21.45-120.95-64.29-159.36-42.87-38.39-104.17-57.59-183.87-57.59-74.33,0-132.03,15.83-173.1,47.49-41.07,31.66-61.58,75.86-61.58,132.6,0,47.8,22.18,87.67,66.54,119.62,44.36,31.97,117.49,63.03,219.39,93.18,101.9,30.17,183.71,64.6,245.45,103.28,61.74,38.67,107.01,83.05,135.78,133.12,28.77,50.08,43.16,108.69,43.16,175.85,0,109.16-41.83,195.97-125.43,260.44-83.61,64.47-197.05,96.68-340.32,96.68-94.71,0-181.78-17.54-261.19-52.62-79.43-35.08-141.17-83.5-185.22-145.26-44.07-61.76-66.09-133.72-66.09-215.86h227.49c0,74.19,24.58,131.61,73.73,172.28,49.15,40.67,119.57,61.01,211.28,61.01,79.12,0,138.6-16.01,178.47-48.04,39.87-32.01,59.81-74.37,59.81-127.05Z"" style=""fill: #172d4d; stroke-width: 0px;""/>
+    <path d=""M1740.53,1570.5c0-57.46-20.25-101.77-60.7-132.89-40.47-31.13-113.45-62.58-218.94-94.38-105.5-31.77-189.42-67.16-251.76-106.14-119.28-74.95-178.92-172.68-178.92-293.21,0-105.54,43-192.48,129.01-260.84,86.01-68.36,197.65-102.55,334.94-102.55,91.11,0,172.32,16.81,243.65,50.37,71.33,33.57,127.39,81.39,168.15,143.44,40.76,62.07,61.14,130.87,61.14,206.42h-226.58c0-67.85-21.45-120.95-64.29-159.36-42.87-38.39-104.17-57.59-183.87-57.59-74.33,0-132.03,15.83-173.1,47.49-41.07,31.66-61.58,75.86-61.58,132.6,0,47.8,22.18,87.67,66.54,119.62,44.36,31.97,117.49,63.03,219.39,93.18,101.9,30.17,183.71,64.6,245.45,103.28,61.74,38.67,107.01,83.05,135.78,133.12,28.77,50.08,43.16,108.69,43.16,175.85,0,109.16-41.83,195.97-125.43,260.44-83.61,64.47-197.05,96.68-340.32,96.68-94.71,0-181.78-17.54-261.19-52.62-79.43-35.08-141.17-83.5-185.22-145.26-44.07-61.76-66.09-133.72-66.09-215.86h227.49c0,74.19,24.58,131.61,73.73,172.28,49.15,40.67,119.57,61.01,211.28,61.01,79.12,0,138.6-16.01,178.47-48.04,39.87-32.01,59.81-74.37,59.81-127.05Z"" style=""fill: #e5bd73; stroke-width: 0px;""/>
+  </g>
+</svg>
+";
+
     public const string DifficultyPolygonEasy = @"<svg>
             <polygon fill=""rgb(191,137,112)"" points=""13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10""></polygon>
         </svg>";
@@ -223,7 +260,8 @@ public static class CustomIcons
             <polygon fill=""rgb(128,128,128)"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
         </svg>";
 
-    public const string DifficultyPolygonHard = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 8338 8334"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;""><path d=""M1994.53,3701.85l-1586.47,-1586.47l2228.31,278.539l-132.494,-1110.89l865.095,647.207l799.773,-1866.14l810.738,1891.72l1000.16,-757.103l-204.979,1186.01l2154.76,-269.346l-1321.43,1585.72l1036.52,381.25l-1105.92,466.589l1390.84,1669l-2228.31,-278.539l132.494,1110.89l-865.095,-647.207l-799.773,1866.14l-810.738,-1891.72l-1000.16,757.102l321.7,-1200.6l-2271.49,283.936l1611.51,-1611.51l-1326.59,-355.459l1301.55,-549.127Z"" style=""fill:#e5bd73;""/></svg>";
+    public const string DifficultyPolygonHard =
+        @"<svg width=""100%"" height=""100%"" viewBox=""0 0 8338 8334"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;""><path d=""M1994.53,3701.85l-1586.47,-1586.47l2228.31,278.539l-132.494,-1110.89l865.095,647.207l799.773,-1866.14l810.738,1891.72l1000.16,-757.103l-204.979,1186.01l2154.76,-269.346l-1321.43,1585.72l1036.52,381.25l-1105.92,466.589l1390.84,1669l-2228.31,-278.539l132.494,1110.89l-865.095,-647.207l-799.773,1866.14l-810.738,-1891.72l-1000.16,757.102l321.7,-1200.6l-2271.49,283.936l1611.51,-1611.51l-1326.59,-355.459l1301.55,-549.127Z"" style=""fill:#e5bd73;""/></svg>";
 
     public const string DifficultyPolygonNone = @"<svg>
             <polygon fill=""lightblue"" points=""0""></polygon>
