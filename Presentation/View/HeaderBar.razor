@@ -71,7 +71,7 @@
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
-                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</Button>
+                <button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</button>
             </div>
             <div class="flex justify-center items-center pb-6 pt-1">
                 <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title=@Localizer["MudPopover.Feedback.Final.Hover"] class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
