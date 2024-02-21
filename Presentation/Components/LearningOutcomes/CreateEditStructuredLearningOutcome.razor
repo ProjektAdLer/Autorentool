@@ -38,7 +38,7 @@
                     </MudTooltip>
                 </div>
 
-                <MudSelect T="TaxonomyLevel" OnOpen="UpdateTaxonomyLevelNames" Class="w-40 break-all" @bind-Value="_selectedTaxonomyLevel">
+                <MudSelect T="TaxonomyLevel" Class="w-40 break-all" @bind-Value="_selectedTaxonomyLevel">
 
                     <MudSelectItem Value="@TaxonomyLevelNames.ElementAt(0).Key">
                         <div class="flex flex-row items-center gap-2">
@@ -94,7 +94,7 @@
                     </MudSelectItem>
                 </MudSelect>
             </div>
-            
+
             <MudText Class="ml-48 2xl:ml-52 cursor-default text-sm 2xl:text-base text-adlertextgrey">@introText</MudText>
 
             <GrammarOrder Culture="Culture">
@@ -116,7 +116,7 @@
                         </MudTextField>
                     </div>
                 </WhatContent>
-                
+
                 <VerbContent>
                     <div class="flex flex-row gap-4 m-2">
                         <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
@@ -172,23 +172,23 @@
             <MudText Class="px-2 cursor-default flex justify-start text-xs text-adlergrey-300">@Localizer["CreateEditStructuredLearningOutcome.Required"]</MudText>
         </div>
     </MudForm>
-    
+
     <div class="flex flex-row justify-end items-center mx-4">
         <MudButton OnClick="ResetInputFields">
             <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Refresh"></MudIcon>
             <MudText Class="uppercase pl-1 text-sm text-adlergrey-700 font-bold">@Localizer["CreateEditStructuredLearningOutcome.Reset"]</MudText>
         </MudButton>
     </div>
-    
+
     <div class="flex flex-col gap-2 mx-4">
         <MudText Class="cursor-default text-adlertextgrey text-sm font-bold">@Localizer["CreateEditStructuredLearningOutcome.Preview"]</MudText>
         <div class="bg-white border border-adlergrey-300 border-2 rounded px-4 p-5">
             @GetMarkDownFormattedOutcome()
         </div>
     </div>
-    
+
     <div class="flex flex-row justify-between">
-        
+
         <div class="flex items-end">
             @if (Culture.Name == "de-DE")
             {
@@ -209,7 +209,7 @@
             @Localizer["CreateEditStructuredLearningOutcome.Button.Create"]
         </MudButton>
     </div>
-    
+
 </div>
 
 @code {
@@ -225,9 +225,9 @@
     private CultureInfo _culture = null!;
 
     private string introText => Culture.Name == "de-DE" ? "Sie können..." : "You will be able to...";
-    
+
     private string WherebyText => Culture.Name == "de-DE" ? "indem Sie..." : "by...";
-    
+
     private string WhatForText => Culture.Name == "de-DE" ? "um..." : "to...";
 
     [Parameter]
@@ -313,7 +313,7 @@
         base.OnParametersSet();
         Culture = CurrentLearningOutcome == null ? CultureInfo.CurrentCulture : CurrentLearningOutcome.Language;
 
-        OnCultureChange();
+        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(CultureInfo.CurrentCulture);
         _selectedTaxonomyLevel = CurrentLearningOutcome?.TaxonomyLevel ?? TaxonomyLevel.None;
         _currentWhat = CurrentLearningOutcome?.What ?? "";
         _currentVerbOfVisibility = CurrentLearningOutcome?.VerbOfVisibility ?? "";
@@ -323,14 +323,8 @@
 
     private void OnCultureChange()
     {
-        UpdateTaxonomyLevelNames();
         _currentVerbOfVisibility = "";
         _currentVerbOfVisibilityText = "";
-    }
-
-    private void UpdateTaxonomyLevelNames()
-    {
-        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(Culture);
     }
 
     private async Task<IEnumerable<string>> SearchVerbOfVisibility(string value)
