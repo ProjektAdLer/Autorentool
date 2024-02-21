@@ -5,11 +5,21 @@
 @using BusinessLogic.Entities
 
 <div class="px-4 pb-6">
-    <div class="flex flex-col gap-1 px-1 pb-2">
+    <div class="flex flex-col px-1">
         <p class="cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningOutcomesWorldOverview.Title"]</p>
-        <p class="cursor-default">@Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span></p>
     </div>
-    <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
+    
+    @if (!IsAnyOutcomeInWorld())
+    {
+        <div class="flex justify-center items-center p-4 bg-adlerbgbright border border-adlergrey-100 rounded">
+            <p class="cursor-default pl-1 text-lg font-bold text-adlertextgrey">@Localizer["LearningOutcomesWorldOverview.NoOutcome"]</p>
+        </div>
+    }
+    
+    else 
+    {
+        <p class="pl-1 pb-2 cursor-default">@Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span></p>
+        <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
         @foreach (var learningSpace in LearningWorld.LearningSpaces)
         {
             <div class="flex flex-row items-center">
@@ -39,6 +49,8 @@
             }
         }
     </div>
+    }
+    
 </div>
 
 @code {
@@ -57,6 +69,11 @@
     {
         base.OnParametersSet();
         UpdateExpandedLearningSpaces();
+    }
+
+    private bool IsAnyOutcomeInWorld()
+    {
+        return LearningWorld.LearningSpaces.Any(x => x.LearningOutcomeCollection.LearningOutcomes.Count() > 0);
     }
 
     private void UpdateExpandedLearningSpaces()

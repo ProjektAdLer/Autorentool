@@ -24,4 +24,7 @@
     <data name="LearningOutcomesWorldOverview.Text.Part1" xml:space="preserve">
         <value>Lernziele zur Lernwelt </value>
     </data>
+    <data name="LearningOutcomesWorldOverview.NoOutcome" xml:space="preserve">
+        <value>Zu dieser Lernwelt existieren aktuell noch keine Lernziele.</value>
+    </data>
 </root>
