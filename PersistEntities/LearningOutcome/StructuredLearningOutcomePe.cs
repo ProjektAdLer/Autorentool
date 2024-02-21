@@ -66,17 +66,17 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
 
     private string GetOutcomeEn()
     {
-        var sb = new StringBuilder("The students will be able to ");
-        sb.Append(VerbOfVisibility).Append(", ").Append(What);
+        var sb = new StringBuilder("You will be able to ");
+        sb.Append(VerbOfVisibility).Append(" ").Append(What);
 
         if (!IsNullOrEmpty(Whereby))
         {
-            sb.Append(", \n by ").Append(Whereby);
+            sb.Append(" by ").Append(Whereby);
         }
 
         if (!IsNullOrEmpty(WhatFor))
         {
-            sb.Append(",\n to ").Append(WhatFor);
+            sb.Append(" to ").Append(WhatFor);
         }
 
         sb.Append(".");
@@ -86,12 +86,12 @@ public class StructuredLearningOutcomePe : ILearningOutcomePe
 
     private string GetOutcomeDe()
     {
-        var sb = new StringBuilder("Die Studierenden können ");
+        var sb = new StringBuilder("Sie können ");
         sb.Append(What).Append(" ").Append(VerbOfVisibility);
 
         if (!IsNullOrEmpty(Whereby))
         {
-            sb.Append(", \n indem sie ").Append(Whereby);
+            sb.Append(", \n indem Sie ").Append(Whereby);
         }
 
         if (!IsNullOrEmpty(WhatFor))
