@@ -59,6 +59,6 @@
         <value> min</value>
     </data>
     <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
-        <value>points</value>
+        <value>pt</value>
     </data>
 </root>

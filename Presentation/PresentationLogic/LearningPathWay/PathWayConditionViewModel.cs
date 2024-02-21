@@ -7,9 +7,9 @@ namespace Presentation.PresentationLogic.LearningPathway;
 public class PathWayConditionViewModel : IObjectInPathWayViewModel
 {
     public const int InputConnectionXOffset = 38;
-    public const int InputConnectionYOffset = -10;
+    public const int InputConnectionYOffset = -11;
     public const int OutputConnectionXOffset = 38;
-    public const int OutputConnectionYOffset = 45;
+    public const int OutputConnectionYOffset = 44;
 
     private double _positionX;
     private double _positionY;

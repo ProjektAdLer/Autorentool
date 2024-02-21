@@ -82,7 +82,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
     }
 
     [Test]
@@ -104,7 +104,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.WrongUserOrPassword"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.WrongUserOrPassword"));
     }
 
     [Test]
@@ -125,7 +125,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
     }
 
     [Test]
@@ -146,7 +146,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
     }
 
     [Test]

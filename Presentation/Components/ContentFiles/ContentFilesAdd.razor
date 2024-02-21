@@ -9,14 +9,25 @@
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
 @using Presentation.Components.Dialogues
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"].Value</h2>
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
-<MudStack Class="w-full">
-    <div class="flex flex-col relative px-2">
+
+<MudStack Class="w-full px-2 2xl:px-3 gap-0">
+    <div class="flex flex-col relative p-2">
+
+        <div class="flex justify-end">
+            <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                <TooltipContent>
+                    <MudText Class="cursor-default text-xs">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</MudText>
+                </TooltipContent>
+                <ChildContent>
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                </ChildContent>
+            </MudTooltip>
+        </div>
 
         @if (Working)
         {
@@ -30,11 +41,14 @@
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
+
                 <MudPaper Class="@PaperClasses" Outlined="true">
+
                     <MudElement Class="h-full w-full grow flex flex-col justify-center items-center">
                         <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
-                        <p class="flex justify-center text-xs 2xl:text-sm text-center break-word w-full mx-2 font-bold text-adlerdarkblue">@Localizer["FileUpload.ButtonTemplate.Text1"]</p>
-                        <p class="flex justify-center text-xs text-center break-word w-full mx-2 text-adlerbggradientfrom">@Localizer["FileUpload.ButtonTemplate.Text2", AllowedFileEndings.EndingsCommaSeparatedNicely]</p>
+                        <div class="flex flex-row gap-2">
+                            <p class="flex justify-center text-xs 2xl:text-sm text-center break-word w-full mx-2 font-bold text-adlerdarkblue">@Localizer["FileUpload.ButtonTemplate.Text1"]</p>
+                        </div>
                     </MudElement>
                 </MudPaper>
 
@@ -71,7 +85,7 @@
 
 
     private string DragClass { get; set; } = "";
-    private string PaperClasses => $"h-32 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
+    private string PaperClasses => $"h-28 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
     private bool Working { get; set; } = false;
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;

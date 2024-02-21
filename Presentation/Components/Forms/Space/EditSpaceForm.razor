@@ -7,17 +7,17 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
-<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditSpaceForm.Text"]</MudText>
+
+<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
           SnackbarMessage=@Localizer["EditSpaceForm.SnackbarMessage"]
-          FormDataContainer="FormDataContainer">
+          FormDataContainer="FormDataContainer" @ref="_form">
     <HeaderButtons>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard"
                    OnClick="async () => await OnNewButtonClicked.InvokeAsync()">
@@ -26,18 +26,19 @@
     </HeaderButtons>
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"]   @bind-Collapsed="_collapsedGeneral">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   Label="@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]"/>
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"]   @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -51,9 +52,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]   @bind-Collapsed="_collapsedFloorplan">
                 @*<MudText Typo="Typo.caption">
                                 @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
             </MudText>*@
@@ -62,9 +63,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"]   @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -79,9 +80,9 @@
                 </div>
             </Collapsable>
         </div>
-        
+
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]   @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -104,7 +105,7 @@
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
-                       OnClick="@OnResetAsync" 
+                       OnClick="@OnResetAsync"
                        Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
         </MudIconButton>
     </FooterButtons>
@@ -128,11 +129,9 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningSpaceViewModel SpaceToEdit { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback OnNewButtonClicked { get; set; }
+    [Parameter, EditorRequired] public EventCallback OnNewButtonClicked { get; set; }
 
-    [Parameter]
-    public int DebounceInterval { get; set; } = 300;
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
@@ -144,11 +143,25 @@
     private bool _collapsedFloorplan = false;
     private bool _collapsedTheme = true;
     private bool _collapsedGoals = true;
-    private Theme[] _themes = (Theme[]) Enum.GetValues(typeof(Theme));
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+
+    private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
+    private MudTextField<string> _nameField = null!;
+    private bool _focusCalled = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!_focusCalled)
+        {
+            _focusCalled = true;
+            await _form.FocusField(_nameField);
+        }
+    }
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-    //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
+        //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
             model.Goals, model.RequiredPoints, model.Theme);
     }
@@ -168,13 +181,14 @@
         if (LearningSpacePresenter.LearningSpaceVm == null)
             throw new ApplicationException(Localizer["EditSpaceForm.ApplicationException.Message"]);
         LearningSpacePresenter.LearningSpaceVm.PropertyChanged += LearningSpacePropertyChanged;
+        _focusCalled = false;
     }
 
     private void LearningSpacePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(LearningSpaceViewModel.Name) or nameof(LearningSpaceViewModel.Description) 
+        if (e.PropertyName is nameof(LearningSpaceViewModel.Name) or nameof(LearningSpaceViewModel.Description)
             or nameof(LearningSpaceViewModel.Goals) or nameof(LearningSpaceViewModel.RequiredPoints)
-            )
+           )
         {
             InvokeAsync(MapIntoContainer);
         }

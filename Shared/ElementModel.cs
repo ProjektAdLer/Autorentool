@@ -52,6 +52,7 @@ public enum ElementModel
     
     
     //Adaptivity
+    a_npc_alerobot,
     
     //ArcadeTheme
     a_npc_sheriffjustice,

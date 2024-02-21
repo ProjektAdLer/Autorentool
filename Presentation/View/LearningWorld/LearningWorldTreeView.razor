@@ -15,17 +15,17 @@
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
-        <article class="flex flex-col justify-content mb-2">
-            <section class="bg-white rounded p-2 w-full grow">
+        <article class="flex flex-col justify-content mb-2 cursor-default">
+            <section class="bg-adlerbgbright rounded p-2 w-full grow">
                 <div class="flex justify-start items-center space-x-2 py-1">
-                    <img src="CustomIcons/world-icon-nobg.png" alt="world" class="opacity-50 w-7 h-7">
-                    <p class="text-base 2xl:text-xl font-bold text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
+                    <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-7 h-7">
+                    <p class="text-base 2xl:text-lg font-bold opacity-80 text-adlerdarkblue-800 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
                 </div>
                 <p class="text-sm 2xl:text-base text-adlerblue-600">
                     <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
                 </p>
                 <p class="text-sm 2xl:text-base text-adlerblue-600">
-                    <span class="text-adlergrey-600">@Localizer["OverView.Points"] </span> @LearningWorldP.LearningWorldVm?.Points
+                    <span class="text-adlergrey-600">@Localizer["OverView.Points"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldTreeView.Points.Summary"]</span>
                 </p>
             </section>
         </article>
