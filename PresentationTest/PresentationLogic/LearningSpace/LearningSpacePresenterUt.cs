@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -459,14 +460,15 @@ public class LearningSpacePresenterUt
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         IMediator? mediator = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null)
+        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null, IMapper? mapper = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         logger ??= new NullLogger<LearningSpacePresenter>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         errorService ??= Substitute.For<IErrorService>();
+        mapper ??= Substitute.For<IMapper>();
         return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger,
-            errorService);
+            errorService, mapper);
     }
 }

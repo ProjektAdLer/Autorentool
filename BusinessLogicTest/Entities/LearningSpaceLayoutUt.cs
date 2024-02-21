@@ -26,7 +26,7 @@ public class LearningSpaceLayoutUt
         };
         var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
-        var systemUnderTest = new LearningSpaceLayout(learningElements, TODO, floorPlanName);
+        var systemUnderTest = new LearningSpaceLayout(learningElements, new Dictionary<int, ILearningElement>(), floorPlanName);
 
         Assert.Multiple(() =>
         {
@@ -58,7 +58,7 @@ public class LearningSpaceLayoutUt
         };
         var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
-        var systemUnderTest = new LearningSpaceLayout(learningElements, TODO, floorPlanName);
+        var systemUnderTest = new LearningSpaceLayout(learningElements, new Dictionary<int, ILearningElement>(), floorPlanName);
 
         var learningSpaceLayoutMemento = systemUnderTest.GetMemento();
 
@@ -123,7 +123,7 @@ public class LearningSpaceLayoutUt
         };
         var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
-        var systemUnderTest = new LearningSpaceLayout(learningElements, TODO, floorPlanName);
+        var systemUnderTest = EntityProvider.GetLearningSpaceLayout(floorPlanName, learningElements);
 
         var mementoMock = new MementoMock();
 
