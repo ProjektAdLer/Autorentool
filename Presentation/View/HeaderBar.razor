@@ -1,3 +1,5 @@
+@using Size = MudBlazor.Size
+@using Color = MudBlazor.Color
 @using Presentation.PresentationLogic.Extensions
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
@@ -9,34 +11,21 @@
 @using Shared.Exceptions
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using ElectronWrapper
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using System.Drawing
 @using Presentation.PresentationLogic
 @using Presentation.Components.Culture
 @using Presentation.Components.Dialogues
 @using Presentation.Components
 @using System.Text
 @using System.Runtime.Serialization
-@using ElectronWrapper
-@using MudBlazor.Utilities
-@using Presentation.Components.Culture
-@using Presentation.Components
-@using Presentation.PresentationLogic
-@using Presentation.PresentationLogic.Extensions
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningSpace
-@using Shared.Extensions
-@using Size = MudBlazor.Size
-@using Color = MudBlazor.Color
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]     @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]      @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
@@ -55,23 +44,23 @@
                            Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
-        
-        <div class="flex gap-2">
-        <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
-                       Icon="@Icons.Material.Filled.Archive"
-                       Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
-                       Title=@Localizer["ExportArchive.Hover"]
-                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-        </MudIconButton>
 
-        <MudIconButton OnClick="@GenerateLearningWorld" 
-                       Title="@Localizer["3DWorld.Generate.Hover"].Value"
-                       Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
-                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
-                       Icon="@Icons.Material.Filled.Publish">
-        </MudIconButton>
+        <div class="flex gap-2">
+            <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
+                           Icon="@Icons.Material.Filled.Archive"
+                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
+                           Title=@Localizer["ExportArchive.Hover"]
+                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            </MudIconButton>
+
+            <MudIconButton OnClick="@GenerateLearningWorld"
+                           Title="@Localizer["3DWorld.Generate.Hover"].Value"
+                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
+                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
+                           Icon="@Icons.Material.Filled.Publish">
+            </MudIconButton>
         </div>
-        
+
         @if (_debugBuild)
         {
             <button @onclick="DebugButtonClick" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
@@ -111,29 +100,29 @@
     <div class="flex justify-end items-center gap-2 border-solid">
 
         @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
-                    {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
-                            <div class="flex flex-row items-center gap-4">
-                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                            </div>
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
-                            <div class="flex flex-row items-center gap-4">
-                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                            </div>
-                        </a>
-                    }
-        
+        {
+            <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
+                <div class="flex flex-row items-center gap-4">
+                    <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
+                </div>
+            </a>
+        }
+        else
+        {
+            <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
+                <div class="flex flex-row items-center gap-4">
+                    <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
+                </div>
+            </a>
+        }
+
         <CultureSelector/>
-        
+
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
             <MudDivider></MudDivider>
-            
+
             <MudListItem>
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX" title="@Localizer["MudPopover.Feedback.Final.Hover"]">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
             </MudListItem>
@@ -147,7 +136,7 @@
             <MudListItem>
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer" title="@Localizer["HeaderBar.Help.About.Hover"]">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
-            
+
         </MudMenu>
 
         <CultureSelector/>
@@ -167,10 +156,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
-    
-    [Inject, AllowNull]
-    public IShellWrapper ShellWrapper { get; set; }
-    
+
+    [Inject, AllowNull] public IShellWrapper ShellWrapper { get; set; }
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
@@ -524,7 +512,7 @@
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }
     }
-    
+
     private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
 
     private void ShowLearningOutcomesOverview()
@@ -548,7 +536,7 @@
     }
 
     private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
-    
+
     const string learningOutcomeIconActivated =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
             <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
@@ -568,8 +556,8 @@
                                                                     <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                         </svg>";
 
-        const string learningOutcomeIconDeactivated =
-            @"<?xml version=""1.0"" encoding=""UTF-8""?>
+    const string learningOutcomeIconDeactivated =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
             <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
                 <circle cx=""1004.73"" cy=""1004.77"" r=""892.6"" style=""fill: none; stroke: rgb(179,179,179); stroke-miterlimit: 10; stroke-width: 200px;""/>
                     <circle cx=""1007.35"" cy=""1003.55"" r=""526.15"" style=""fill: none; stroke: rgb(179,179,179); stroke-miterlimit: 10; stroke-width: 200px;""/>
@@ -588,13 +576,13 @@
                                                                         </svg>";
 
     private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
-    
+
     private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
 
     private string icon = help;
 
-        const string help = 
-    @"<?xml version=""1.0"" encoding=""UTF-8""?>
+    const string help =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
         <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
             <defs>
                 <style>
