@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -59,6 +60,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.LearningOutcomes;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.API;
@@ -2471,6 +2473,184 @@ public class PresentationLogicUt
         await systemUnderTest.ShowLearningElementContentAsync(mockLearningElement);
 
         await mockShellWrapper.Received().OpenPathAsync("pathpath");
+    }
+
+    [Test]
+    public void AddStructuredLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+        var taxonomyLevel = TaxonomyLevel.Level1;
+        var what = "what";
+        var verbOfVisibility = "verbOfVisibility";
+        var whereby = "whereby";
+        var whatFor = "whatFor";
+        var cultureInfo = new CultureInfo("de-DE");
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            taxonomyLevel, what, verbOfVisibility, whereby, whatFor, cultureInfo,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.AddStructuredLearningOutcome(mockLearningOutcomeCollectionViewModel, taxonomyLevel, what,
+            verbOfVisibility, whereby, whatFor, cultureInfo);
+
+        mockMapper.Received().Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel);
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void AddManualLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+        var manualLearningOutcomeText = "manualLearningOutcomeText";
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            manualLearningOutcomeText,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.AddManualLearningOutcome(mockLearningOutcomeCollectionViewModel, manualLearningOutcomeText);
+
+        mockMapper.Received().Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel);
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void EditStructuredLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+        var mockDeleteCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockAddCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what",
+            "whereby", "whatFor", "verbOfVisibility", new CultureInfo("de-DE"));
+        var mockLearningOutcomeEntity = new StructuredLearningOutcome(TaxonomyLevel.Level1, "what",
+            "whereby", "whatFor", "verbOfVisibility", new CultureInfo("de-DE"));
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<StructuredLearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor", new CultureInfo("de-DE"),
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockAddCommand);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity, Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockDeleteCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.EditStructuredLearningOutcome(mockLearningOutcomeCollectionViewModel,
+            mockLearningOutcomeViewModel, TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor",
+            new CultureInfo("de-DE"));
+
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity, Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockLearningOutcomeCommandFactory.Received().GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor", new CultureInfo("de-DE"),
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
+    }
+
+    [Test]
+    public void EditManualLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+        var mockDeleteCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockAddCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new ManualLearningOutcomeViewModel("manualLearningOutcomeText");
+        var mockLearningOutcomeEntity = new ManualLearningOutcome("manualLearningOutcomeText");
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<ManualLearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            "manualLearningOutcomeText",
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockAddCommand);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockDeleteCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.EditManualLearningOutcome(mockLearningOutcomeCollectionViewModel, mockLearningOutcomeViewModel,
+            "manualLearningOutcomeText");
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity, mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockLearningOutcomeCommandFactory.Received().GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            "manualLearningOutcomeText", Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
 
     [Test]

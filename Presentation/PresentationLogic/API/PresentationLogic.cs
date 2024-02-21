@@ -521,6 +521,7 @@ public class PresentationLogic : IPresentationLogic
         TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
         string whatFor, CultureInfo language)
     {
+        var index = learningOutcomes.LearningOutcomes.IndexOf(learningOutcome);
         var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
         var learningOutcomeEntity = Mapper.Map<StructuredLearningOutcome>(learningOutcome);
 
@@ -531,7 +532,7 @@ public class PresentationLogic : IPresentationLogic
                 collection => Mapper.Map(collection, learningOutcomes)),
             LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity, taxonomyLevel,
                 what, verbOfVisibility, whereby, whatFor, language,
-                collection => Mapper.Map(collection, learningOutcomes))
+                collection => Mapper.Map(collection, learningOutcomes), index)
         };
 
         var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
