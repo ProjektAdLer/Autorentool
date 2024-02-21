@@ -118,6 +118,8 @@
 
         <CultureSelector/>
 
+        <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
+        
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
@@ -138,10 +140,6 @@
             </MudListItem>
 
         </MudMenu>
-
-        <CultureSelector/>
-
-        <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
         <LmsLoginButton/>
         @if (PresentationLogic.RunningElectron)
