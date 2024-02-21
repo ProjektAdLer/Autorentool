@@ -4,6 +4,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
@@ -97,6 +98,77 @@ public class BusinessLogicUt
         var content = new FileContent("foo", "bar", "baz");
 
         systemUnderTest.RemoveContent(content);
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());
+    }
+
+    [Test]
+    public void RemoveMultipleContents_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+        var content1 = Substitute.For<IFileContent>();
+        var content2 = Substitute.For<ILinkContent>();
+        var content3 = Substitute.For<IAdaptivityContent>();
+        var contents = new List<ILearningContent>() { content1, content2, content3 };
+
+        systemUnderTest.RemoveMultipleContents(contents);
+        foreach (var content in contents)
+        {
+            dataAccess.Received().RemoveContent(content);
+        }
+    }
+
+    [Test]
+    public void RemoveMultipleContents_ArgumentOutOfRangeException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(_ => throw new ArgumentOutOfRangeException());
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
+        var content1 = Substitute.For<IFileContent>();
+        var content2 = Substitute.For<ILinkContent>();
+        var content3 = Substitute.For<IAdaptivityContent>();
+        var contents = new List<ILearningContent>() { content1, content2, content3 };
+
+        systemUnderTest.RemoveMultipleContents(contents);
+        dataAccess.Received(1).RemoveContent(Arg.Any<ILearningContent>());
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<ArgumentOutOfRangeException>());
+    }
+
+    [Test]
+    public void RemoveMultipleContents_FileNotFoundException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(_ => throw new FileNotFoundException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
+        var content1 = Substitute.For<IFileContent>();
+        var content2 = Substitute.For<ILinkContent>();
+        var content3 = Substitute.For<IAdaptivityContent>();
+        var contents = new List<ILearningContent>() { content1, content2, content3 };
+
+        systemUnderTest.RemoveMultipleContents(contents);
+        dataAccess.Received(1).RemoveContent(Arg.Any<ILearningContent>());
+        errorManager.Received(1).LogAndRethrowError(Arg.Any<FileNotFoundException>());
+    }
+
+    [Test]
+    public void RemoveMultipleContents_SerializationException_CallsErrorManager()
+    {
+        var errorManager = Substitute.For<IErrorManager>();
+        var dataAccess = Substitute.For<IDataAccess>();
+        dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
+            .Do(_ => throw new SerializationException("test"));
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
+        var content1 = Substitute.For<IFileContent>();
+        var content2 = Substitute.For<ILinkContent>();
+        var content3 = Substitute.For<IAdaptivityContent>();
+        var contents = new List<ILearningContent>() { content1, content2, content3 };
+
+        systemUnderTest.RemoveMultipleContents(contents);
+        dataAccess.Received(1).RemoveContent(Arg.Any<ILearningContent>());
         errorManager.Received(1).LogAndRethrowError(Arg.Any<SerializationException>());
     }
 

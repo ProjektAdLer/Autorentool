@@ -2463,6 +2463,41 @@ public class PresentationLogicUt
     }
 
     [Test]
+    public void RemoveContent_CallsMapperAndBusinessLogic()
+    {
+        var mockMapper = Substitute.For<IMapper>();
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockContentViewModel = Substitute.For<ILearningContentViewModel>();
+        var mockContentEntity = Substitute.For<ILearningContent>();
+        mockMapper.Map<ILearningContent>(mockContentViewModel).Returns(mockContentEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.RemoveContent(mockContentViewModel);
+
+        mockMapper.Received().Map<ILearningContent>(mockContentViewModel);
+        mockBusinessLogic.Received().RemoveContent(mockContentEntity);
+    }
+
+    [Test]
+    public void RemoveMultipleContents_CallsMapperAndBusinessLogic()
+    {
+        var mockMapper = Substitute.For<IMapper>();
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockContentViewModelEnumerable = Substitute.For<IEnumerable<ILearningContentViewModel>>();
+        var mockContentEntityEnumerable = Substitute.For<IEnumerable<ILearningContent>>();
+        mockMapper.Map<IEnumerable<ILearningContent>>(mockContentViewModelEnumerable)
+            .Returns(mockContentEntityEnumerable);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.RemoveMultipleContents(mockContentViewModelEnumerable);
+
+        mockMapper.Received().Map<IEnumerable<ILearningContent>>(mockContentViewModelEnumerable);
+        mockBusinessLogic.Received().RemoveMultipleContents(mockContentEntityEnumerable);
+    }
+
+    [Test]
     public void IsLmsConnected_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
