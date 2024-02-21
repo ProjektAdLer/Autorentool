@@ -36,12 +36,12 @@ public class LearningSpaceLayoutViewUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
 
     private const string BackgroundOpen =
-        @"<div class=""w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated"">";
+        @"<div class=""w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated"">";
 
     private const string ShadowOpen = @"<div class=""drop-shadow-xl w-full h-full"">";
 
     private const string FloorPlanClass =
-        @"<div class=""mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""";
+        @"<div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""";
 
     private const string FloorPlanStyleOpen =
         @"style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;";
@@ -62,9 +62,9 @@ public class LearningSpaceLayoutViewUt
 
         // These two MarkupMatches calls are equivalent
         systemUnderTest.MarkupMatches(
-            @"<div class=""w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated"">
+            @"<div class=""w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated"">
                   <div class=""drop-shadow-xl w-full h-full"">
-                      <div class=""mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""
+                      <div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""
                            style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;&quot; style=&quot;fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2&quot; /></svg>'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; "">
                       </div>
                   </div>
@@ -81,10 +81,10 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.CornerPoints.Returns(new List<Point>
-            {new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}});
+            { new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 } });
         const string expectedCorners = "0,1 2,3 4,5 6,7 ";
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
-            {(new Point {X = 8, Y = 9}, new Point {X = 10, Y = 11})});
+            { (new Point { X = 8, Y = 9 }, new Point { X = 10, Y = 11 }) });
         const string expectedDoors =
             "<line x1=&quot;8&quot; y1=&quot;9&quot; x2=&quot;10&quot; y2=&quot;11&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
@@ -105,7 +105,7 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.CornerPoints.Returns(new List<Point>
-            {new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}});
+            { new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 } });
         const string expectedCorners = "0,1 2,3 4,5 6,7 ";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
@@ -125,7 +125,7 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
-            {(new Point {X = 0, Y = 1}, new Point {X = 2, Y = 3})});
+            { (new Point { X = 0, Y = 1 }, new Point { X = 2, Y = 3 }) });
         const string expectedDoors =
             "<line x1=&quot;0&quot; y1=&quot;1&quot; x2=&quot;2&quot; y2=&quot;3&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
@@ -150,7 +150,7 @@ public class LearningSpaceLayoutViewUt
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.ElementSlotPositions.Returns(new List<Point>
         {
-            new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}
+            new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 }
         });
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
@@ -182,7 +182,7 @@ public class LearningSpaceLayoutViewUt
 
     private static string GetSlotPositionPercentValue(int abs)
     {
-        return ((int) ((abs + 1) / 35.0 * 100)).ToString();
+        return ((int)((abs + 1) / 35.0 * 100)).ToString();
     }
 
     private IRenderedComponent<LearningSpaceLayoutView> GetRenderedLearningSpaceLayoutView(

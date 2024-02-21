@@ -1,0 +1,47 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningElement
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningElement
+<div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
+    <p class="cursor-default text-xs h-1/4 2xl:text-sm text-center mx-1 py-2 flex-auto basis-1/5 text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
+    <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+                 Class="overflow-y-auto overflow-x-hidden flex-wrap rounded-lg flex-auto basis-4/5 border-2 border-solid p-2 mb-2 gap-4 bg-white flex flex-row justify-center w-full">
+        <ItemRenderer>
+            <DragDropLearningElement
+                LearningElement="@context"
+                OnShowLearningElementContent="@WorldPresenter.ShowSelectedElementContentAsync"
+                OnEditLearningElement="@WorldPresenter.SetSelectedLearningElement"
+                OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
+                OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
+        </ItemRenderer>
+    </MudDropZone>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    public ILearningWorldPresenter WorldPresenter { get; set; }
+
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    private IStringLocalizer<UnplacedElementsDropZone> Localizer { get; set; }
+
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+    }
+
+    private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

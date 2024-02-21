@@ -1,10 +1,14 @@
 @page "/app"
 @using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.Layout
 @using Presentation.View.LearningSpace
 @using Presentation.View.LearningWorld
 @using Presentation.PresentationLogic.DropZone
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningSpace
 @using BusinessLogic.Commands
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -14,17 +18,15 @@
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
-@using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.SelectedViewModels
 @implements IDisposable
 
-<div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
+<div class="flex flex-col h-[calc(100dvh)] overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
     <MudDropContainer T="ILearningElementViewModel"
                       Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                       ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                       ItemDropped="ElementDropZoneHelper.ItemUpdated"
-                      class="flex-1 flex flex-row justify-between items-start">
+                      class="flex flex-row justify-between gap-1 items-start max-h-[calc(95dvh)] flex-auto">
         <ChildContent>
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
@@ -33,8 +35,8 @@
                             IsActive="Mediator.WorldDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningWorldMetadata.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningWorldMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/world-metadata-icon.png" alt=@Localizer["SideBarContent.LearningWorldMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -45,8 +47,8 @@
                             IsActive="Mediator.SpaceDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningSpaceMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningSpaceMetadata.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningSpaceMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/space-metadata-icon.png" alt=@Localizer["SideBarContent.LearningSpaceMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -57,20 +59,32 @@
                             IsActive="Mediator.ElementDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningElementMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt=@Localizer["SideBarContent.LearningElementMetadata.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningElementMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/learningelements-icon.png" alt=@Localizer["SideBarContent.LearningElementMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
-                                <ElementFormContainer/>
+                                <ElementFormContainer ContentType="@typeof(ILearningContentViewModel)"/>
+                            </MainContent>
+                        </SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.AdaptivityElementDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleAdaptivityElementDialog">
+                            <SidebarContent>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/adaptivityelement-icon.png" alt=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Alt"]>
+                                </div>
+                            </SidebarContent>
+                            <MainContent>
+                                <ElementFormContainer ContentType="@typeof(IAdaptivityContentViewModel)"/>
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
                             IsActive="Mediator.ContentDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.ImportFiles.Title"]>
-                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt=@Localizer["SideBarContent.ImportFiles.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.ImportFiles.Title"]>
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/all-data-icon.png" alt=@Localizer["SideBarContent.ImportFiles.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -79,24 +93,29 @@
                         </SidebarItem>
                     </Sidebar>
                 </SideContainer>
-                <CenterContainer>
-                    @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
-                    {
-                        <LearningSpaceView/>
-                    }
-                    else
-                    {
-                        <img class="w-1/3 opacity-10 pt-28 mx-auto absolute bottom-1/6 left-1/3" src="CustomIcons/autorentool-logo.png">
-                    }
-                </CenterContainer>
+                <div class="flex flex-col grow min-w-[30vw] max-w-[98vw] h-[98%]">
+                    <CenterContainer>
+                            @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
+                            {
+                                <LearningSpaceView/>
+                            }
+                        else
+                        {
+                            <img class="w-64 2xl:w-96 opacity-5 inset-0 m-auto absolute" src="CustomIcons/autorentool-logo.png">
+                        }
+                    </CenterContainer>
+                    <BottomContainer>
+                        <UnplacedElementsDropZone/>
+                    </BottomContainer>
+                    </div>
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem
                             IsActive="Mediator.WorldPathwayViewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldPathwayView">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
-                                    <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
+                                    <img class="w-full" src="CustomIcons/RightSidebar/path-icon.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -107,8 +126,8 @@
                             IsActive="Mediator.WorldTreeViewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldTreeView">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
-                                    <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
+                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
+                                    <img class="w-full" src="CustomIcons/RightSidebar/overview-icon.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -138,12 +157,11 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IStringLocalizer<MasterLayout> Localizer { get; set; }
-    
+
     [Inject, AllowNull] //see above
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    [Inject, AllowNull]
-    internal NavigationManager NavManager { get; set; }
+
+    [Inject, AllowNull] internal NavigationManager NavManager { get; set; }
 
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application

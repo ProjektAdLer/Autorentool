@@ -5,9 +5,9 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
 @using Presentation.PresentationLogic.LearningElement
-<div class="w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated">
+<div class="w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated">
     <div class="drop-shadow-xl w-full h-full">
-        <div class="mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
+        <div class="mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
 
             @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
             {
@@ -115,9 +115,9 @@
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == position)
         {
-            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 mud-border-lines-default text-white w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center";
+            return "cursor-pointer rounded-lg border-2 bg-adlerblue-100 border-adlerblue-300 mud-border-lines-default text-white w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[84px] 2500p:h-[84px] flex justify-center items-center";
         }
-        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
+        return "cursor-pointer rounded-lg border-2 border-adlergrey-200 bg-adlerdeactivatedtext mud-border-lines-default w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[84px] 2500p:h-[84px] flex justify-center items-center hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
     private void ClickOnSlot(int i)

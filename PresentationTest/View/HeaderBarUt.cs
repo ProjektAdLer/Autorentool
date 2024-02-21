@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bunit;
 using Bunit.Rendering;
 using Bunit.TestDoubles;
+using ElectronWrapper;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -59,6 +60,7 @@ public class HeaderBarUt
         _dialogService = Substitute.For<IDialogService>();
         _errorService = Substitute.For<IErrorService>();
         _logger = Substitute.For<ILogger>();
+        _shellwrapper = Substitute.For<IShellWrapper>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
@@ -67,6 +69,7 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_logger);
+        _testContext.Services.AddSingleton(_shellwrapper);
     }
 
     [TearDown]
@@ -127,8 +130,8 @@ public class HeaderBarUt
 
         var systemUnderTest = GetRenderedComponent();
 
-        var element = systemUnderTest.Find("header div h1");
-        element.MarkupMatches(@"<h1 class=""font-bold text-lg"">TestName v3</h1>");
+        var element = systemUnderTest.FindAll("div p")[1];
+        element.MarkupMatches(@"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
     }
 
     [Test]
@@ -502,5 +505,6 @@ public class HeaderBarUt
     private IDialogService _dialogService;
     private IErrorService _errorService;
     private ILogger _logger;
+    private IShellWrapper _shellwrapper;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

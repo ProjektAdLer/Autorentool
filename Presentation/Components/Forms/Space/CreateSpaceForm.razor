@@ -6,22 +6,23 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
-<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
+
+<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace" @ref="_form"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
@@ -127,6 +128,16 @@
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
+    private MudTextField<string> _nameField = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await _form.FocusField(_nameField);
+        }
+    }
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {

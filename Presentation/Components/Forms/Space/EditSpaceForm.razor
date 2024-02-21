@@ -8,17 +8,17 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
+<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
+    <div class="flex justify-center py-2 2xl:py-3">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
-<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["EditSpaceForm.Text"]</MudText>
+
+<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
           SnackbarMessage=@Localizer["EditSpaceForm.SnackbarMessage"]
-          FormDataContainer="FormDataContainer">
+          FormDataContainer="FormDataContainer" @ref="_form">
     <HeaderButtons>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard"
                    OnClick="async () => await OnNewButtonClicked.InvokeAsync()">
@@ -28,9 +28,10 @@
     <Fields>
         <div class="px-4">
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"]      @bind-Collapsed="_collapsedGeneral">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-2 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   Label="@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]"/>
                 </div>
@@ -154,6 +155,20 @@
     private bool _collapsedDescription = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
+    private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
+    private MudTextField<string> _nameField = null!;
+    private bool _focusCalled = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (!_focusCalled)
+        {
+            _focusCalled = true;
+            await _form.FocusField(_nameField);
+        }
+    }
+
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
@@ -176,6 +191,7 @@
         if (LearningSpacePresenter.LearningSpaceVm == null)
             throw new ApplicationException(Localizer["EditSpaceForm.ApplicationException.Message"]);
         LearningSpacePresenter.LearningSpaceVm.PropertyChanged += LearningSpacePropertyChanged;
+        _focusCalled = false;
     }
 
     private void LearningSpacePropertyChanged(object? sender, PropertyChangedEventArgs e)

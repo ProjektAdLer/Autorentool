@@ -1,0 +1,11 @@
+@using System.Diagnostics.CodeAnalysis
+<div class="flex-auto basis-1/5 box-border m-1 p-1 bg-white rounded-lg overflow-auto">
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter, EditorRequired, AllowNull] //suppress nullability as EditorRequired - n.stich
+    public RenderFragment ChildContent { get; set; }
+
+}

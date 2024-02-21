@@ -27,6 +27,13 @@
 - UI:
   - Optimized styling of the adaptivity dialog.
   - Optimized responsive design.
+  - Reworked learning world tree view.
+    - Selecting a learning space while tree view is open now shows the learning space in blue in the tree view.
+    - Selecting a learning element while tree view is open now opens the learning space in the tree view (if not open yet) and shows the learning element in blue in the tree view.
+    - Creating a new learning space while tree view is open now also shows the learning space in blue in the tree view.
+    - Creating a new learning element inside a learning space (by clicking the "+" button on an empty slow) now also shows the learning element in blue in the tree view.
+  - The container for the unplaced learning elements is now in the bottom center below the space view.
+  - Separate sidebar panel for different types of learning elements
 
 ### Deprecated
 

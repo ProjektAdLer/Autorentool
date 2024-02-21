@@ -36,7 +36,7 @@ public class CloseAppButtonUt
         {
             var systemUnderTest = CreateTestableCloseAppButtonComponent();
 
-            var button = systemUnderTest.Find(".btn-standard");
+            var button = systemUnderTest.Find("button");
             button.Click();
 
             _shutdownManager.Received().RequestShutdownAsync();

@@ -69,7 +69,7 @@
         <value>Keine Angabe</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>Externes Lernmaterial*</value>
+        <value>Externes Lernmaterial</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Lernziele</value>
@@ -99,7 +99,7 @@
         <value>Typ</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>Liste des gesamten hinzugefügten externen Lernmaterials</value>
+        <value>Wählen Sie ein externes Lernmaterial (Datei oder Link) aus*</value>
     </data>
     <data name="CreateElementForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>

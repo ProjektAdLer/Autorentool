@@ -6,6 +6,7 @@ using MudBlazor;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
@@ -185,7 +186,15 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>
     public void ClickedLearningElement(ILearningElementViewModel learningElementViewModel)
     {
-        _mediator.RequestOpenElementDialog();
+        if (learningElementViewModel.LearningContent is AdaptivityContentViewModel)
+        {
+            _mediator.RequestOpenAdaptivityElementDialog();
+        }
+        else
+        {
+            _mediator.RequestOpenElementDialog();
+        }
+
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
         SetSelectedLearningElement(learningElementViewModel);
     }

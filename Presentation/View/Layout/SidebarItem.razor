@@ -1,5 +1,5 @@
 @using System.Diagnostics.CodeAnalysis
-<button @onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
+<button @onclick="@SetAsCurrentItem" class="@BackgroundColour() h-full cursor-pointer flex justify-center items-center @Rounded()">
     @SidebarContent
 </button>
 
@@ -46,13 +46,13 @@
     }
 
     private bool IsCurrentItem() => Sidebar?.CurrentItem == this;
-    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-adlergrey-100";
-    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-lg";
+    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-none";
+    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-md";
 
     private string RoundedInFocus() => Sidebar?.Side switch
     {
-        Side.Left => "rounded-l-lg",
-        Side.Right => "rounded-r-lg",
+        Side.Left => "rounded-l-md",
+        Side.Right => "rounded-r-md",
         _ => throw new ArgumentOutOfRangeException()
         };
 

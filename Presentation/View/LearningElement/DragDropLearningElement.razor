@@ -2,25 +2,39 @@
 @using Shared
 @using Presentation.PresentationLogic.LearningElement
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Extensions
 @using Presentation.Components
+@using Presentation.Components.Forms.Element
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
-        <MudCard Outlined="true" Class="@GetElementStyleString()">
-            <section class="flex flex-col justify-start">
-                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[48px] 2500p:h-[56px] p-0">
-                    <MudIcon Icon="@GetElementIcon()" Class="w-10 h-10 2xl:w-12 2xl:h-12 absolute flex opacity-20 rounded-lg p-1 element-icon"/>
-                    <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
-                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon drop-shadow absolute h-4 w-4"/>
+        <MudCard title="@LearningElement.Name" Outlined="true" Class="@GetElementStyleString()">
+            <section class="flex flex-col justify-start items-start">
+                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[80px] 2500p:h-[80px] p-0">
+                    
+                    <div class="absolute flex justify-center -top-3 2xl:-top-4">
+                        <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-8 2xl:h-8 -top-5 flex rounded-lg p-1 element-icon"/>
                     </div>
+                    
+                    <div class="flex flex-col items-center">
+                        
+                        
+                        <div class="flex justify-center items-center">
 
-                    @{
-                        var item = LearningElement;
-                        var text = item.Name;
-                    }
-                    <MudListItem Class="text-[11px] 2xl:text-xs 1080p:text-sm font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
+                            <MudListItem Class="truncate w-20 h-6 2xl:h-14 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 1080p:text-sm font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none p-0" Text="@LearningElement.Name"></MudListItem>
+                        </div>
+
+                        <div class="flex flex-row justify-between items-center rounded-md bg-gray-300 w-[60px] 2xl:w-[70px] 3xl:w-[75px] 1080p:w-[80px] 2500p:w-[120px] border-2 border-gray-400 p-0.5 mt-0.5">
+                            <div>
+                                <MudIcon Class="flex difficulty-icon drop-shadow w-3 h-3 2xl:h-4 2xl:w-4" Icon="@GetDifficultyIcon(LearningElement.Difficulty)"></MudIcon>
+                            </div>
+                            <div>
+                                <MudText Class="flex text-adlerdarkblue-200 text-[8px] 2xl:text-xs font-bold">@LearningElement.Points P.</MudText>
+                            </div>
+                        </div>
+                    </div>
 
                 </MudCardContent>
             </section>
@@ -61,7 +75,6 @@
     [Parameter]
     public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
 
-
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -82,7 +95,7 @@
             _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
             };
     }
-
+    
     private string GetElementIcon()
     {
         return LearningElement.LearningContent switch
@@ -103,7 +116,7 @@
 
     private string GetElementStyleString()
     {
-        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerbggradientfrom bg-adlerblue-100 bg-opacity-30 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerbggradientto hover:bg-adlerblue-300";
+        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerblue-300 bg-adlerblue-100 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
 }

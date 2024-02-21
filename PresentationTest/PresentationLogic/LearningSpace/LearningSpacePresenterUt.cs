@@ -66,6 +66,25 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    public void ClickedAdaptivityElement_CallsMediatorAndSelectedViewModelsProvider()
+    {
+        var space = ViewModelProvider.GetLearningSpace();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mediator = Substitute.For<IMediator>();
+        var adaptivityElement = ViewModelProvider.GetAdaptivityElement();
+
+        var systemUnderTest =
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
+
+        systemUnderTest.SetLearningSpace(space);
+        systemUnderTest.ClickedLearningElement(adaptivityElement);
+
+        mediator.Received().RequestOpenAdaptivityElementDialog();
+        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetLearningElement(adaptivityElement, null);
+    }
+
+    [Test]
     public void ClickedLearningElement_CallsErrorServiceWhenSpaceIsNull()
     {
         var mockErrorService = Substitute.For<IErrorService>();

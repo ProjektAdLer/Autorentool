@@ -59,8 +59,10 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
 
-        systemUnderTest.FindComponents<Collapsable>()[1].Find("div.toggler").Click();
-        systemUnderTest.FindComponents<Collapsable>()[2].Find("div.toggler").Click();
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();

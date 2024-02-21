@@ -2,24 +2,25 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
-@using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-<header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
+@using System.Diagnostics.CodeAnalysis
+<header class="py-2 2xl:py-3 rounded bg-adlergrey-100">
+    <div class="flex justify-center p-1 2xl:p-2">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
     </div>
 </header>
-<MudDivider DividerType="DividerType.Middle" Class="mt-4 mb-2"></MudDivider>
-<MudText Class="text-adlergrey-200 w-4/4 px-4 text-xs">@Localizer["CreateWorldForm.Text"]</MudText>
+
+<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateWorldForm.Text"]</MudText>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["CreateWorldForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateWorldForm.General.Text"]  @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Label="@Localizer["CreateWorldForm.General.Field.Name.Text"]"/>
@@ -43,16 +44,34 @@
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Label="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"/>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
-                              For="@(() => FormModel.EnrolmentKey)"
-                              DebounceInterval="DebounceInterval"
-                              OnKeyUp="HandleKeyEvent"
-                              Label="@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]"/>
-            </div>
+                    </div>
             </Collapsable>
         </div>
         
         <div class="px-4">
+            <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" @bind-Collapsed="_collapsedEnrolmentKey">
+                <div class="rounded-lg w-4/4 px-4">
+                <div class="flex flex-row items-center gap-1 py-2">
+                   <MudText Class="font-bold text-sm pl-1">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</MudText>
+                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                        <TooltipContent>
+                            <MudText Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
+                        </TooltipContent>
+                        <ChildContent>
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </ChildContent>
+                    </MudTooltip>
+                </div>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                                  For="@(() => FormModel.EnrolmentKey)"
+                                  DebounceInterval="DebounceInterval"
+                                  OnKeyUp="HandleKeyEvent"
+                                  Variant="Variant.Outlined"/>
+                </div>
+            </Collapsable>
+        </div>    
+            
+            <div class="px-4">
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
@@ -102,21 +121,30 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 
-    [Parameter]
-    public EventCallback OnSubmitted { get; set; }
+    [Parameter] public EventCallback OnSubmitted { get; set; }
 
-    [Parameter]
-    public int DebounceInterval { get; set; } = 300;
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
 
     private bool _collapsedGeneral = false;
+    private bool _collapsedEnrolmentKey = true;
     private bool _collapsedGoals = true;
     private bool _collapsedDescription = true;
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
+    private MudTextField<string> _nameField = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await _form.FocusField(_nameField);
+        }
+    }
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {

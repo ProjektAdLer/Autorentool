@@ -38,4 +38,7 @@
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
         <value>Create learning space</value>
     </data>
+    <data name="LearningWorldPathwayView.Points.Summary" xml:space="preserve">
+        <value> pt</value>
+    </data>
 </root>

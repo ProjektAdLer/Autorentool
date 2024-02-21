@@ -95,8 +95,10 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
 
-        systemUnderTest.FindComponents<Collapsable>()[1].Find("div.toggler").Click();
-        systemUnderTest.FindComponents<Collapsable>()[2].Find("div.toggler").Click();
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -147,8 +149,10 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
 
-        systemUnderTest.FindComponents<Collapsable>()[1].Find("div.toggler").Click();
-        systemUnderTest.FindComponents<Collapsable>()[2].Find("div.toggler").Click();
+        var collapsables = systemUnderTest.FindComponents<Collapsable>();
+        collapsables[1].Find("div.toggler").Click();
+        collapsables[2].Find("div.toggler").Click();
+        collapsables[3].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         foreach (var mudInput in mudInputs.Take(6))

@@ -6,6 +6,7 @@ using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -423,11 +424,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
-                                   ls.PositionX <= x && ls.PositionX + 66 >= x && ls.PositionY <= y &&
-                                   ls.PositionY + 64 >= y) ??
+                                   ls.PositionX <= x && ls.PositionX + 80 >= x && ls.PositionY <= y &&
+                                   ls.PositionY + 82 >= y) ??
                                (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
-                                   lc.PositionY + 43 >= y);
+                                   lc.PositionY + 41 >= y);
         return objectAtPosition;
     }
 
@@ -455,13 +456,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
             var currentOffset = objAtPosition switch
             {
-                ILearningSpaceViewModel => 70,
+                ILearningSpaceViewModel => 85,
                 PathWayConditionViewModel => 55,
                 null when objAtPositionWithOffset is PathWayConditionViewModel condition => 55 +
                     (condition.PositionY - positionY),
                 null when objAtPositionWithOffset is ILearningSpaceViewModel space =>
-                    70 + (space.PositionY - positionY),
-                _ => 70 + xOffset
+                    85 + (space.PositionY - positionY),
+                _ => 85 + xOffset
             };
 
             positionY += currentOffset;
@@ -526,7 +527,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
-        _mediator.RequestOpenElementDialog();
+        if (learningElement.LearningContent is AdaptivityContentViewModel)
+        {
+            _mediator.RequestOpenAdaptivityElementDialog();
+        }
+        else
+        {
+            _mediator.RequestOpenElementDialog();
+        }
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningElement"/>
