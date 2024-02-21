@@ -5,11 +5,11 @@
 @using BusinessLogic.Entities
 
 <div class="px-4 pb-6">
-    <div class="flex flex-col gap-1 px-2">
-        <p class="cursor-default text-lg">@Localizer["LearningOutcomesWorldOverview.Title"]</p>
-        <p class="cursor-default text-sm">@Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span></p>
+    <div class="flex flex-col gap-1 px-1 pb-2">
+        <p class="cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningOutcomesWorldOverview.Title"]</p>
+        <p class="cursor-default">@Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span></p>
     </div>
-    <div class="max-h-[500px] overflow-y-scroll py-2">
+    <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
         @foreach (var learningSpace in LearningWorld.LearningSpaces)
         {
             <div class="flex flex-row items-center">
@@ -21,7 +21,7 @@
                 <span>
                     <div class="flex flex-row gap-2 items-center">
                         <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
-                        <p class="cursor-default break-words">@learningSpace.Name</p>
+                        <p class="cursor-default break-words font-bold text-adlertextgrey">@learningSpace.Name</p>
                     </div>
                 </span>
             </div>

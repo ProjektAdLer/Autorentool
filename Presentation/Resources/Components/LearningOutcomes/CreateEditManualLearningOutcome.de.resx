@@ -28,7 +28,7 @@
         <value>Lernziel selbst formulieren</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr Lernziel für diesen Lernraum.</value>
+        <value>Formulieren Sie Ihr Lernziel für diesen Lernraum.</value>
     </data>
     <data name="CreateEditManualLearningOutcome.Subtitle" xml:space="preserve">
         <value>Lernziel</value>
