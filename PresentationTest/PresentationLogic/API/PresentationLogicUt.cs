@@ -2654,6 +2654,42 @@ public class PresentationLogicUt
     }
 
     [Test]
+    public void DeleteLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new ManualLearningOutcomeViewModel("manualLearningOutcomeText");
+        var mockLearningOutcomeEntity = new ManualLearningOutcome("manualLearningOutcomeText");
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<ILearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.DeleteLearningOutcome(mockLearningOutcomeCollectionViewModel, mockLearningOutcomeViewModel);
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity, mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
     public void IsLmsConnected_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
