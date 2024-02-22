@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.Globalization;
+using System.IO.Abstractions.TestingHelpers;
 using Generator.ATF;
 using Generator.ATF.AdaptivityElement;
 using Microsoft.Extensions.Logging;
@@ -9,8 +10,10 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 using TestHelpers;
 
 namespace GeneratorTest.ATF;
@@ -245,8 +248,17 @@ public class CreateAtfUt
 
         var ele7 = PersistEntityProvider.GetLearningElement(name: "ele7", content: adaptivityContent2);
 
+        var manualLearningOutcome = new ManualLearningOutcomePe("Outcome");
+        var structuredLearningOutcome1 = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "whatDe", "wherebyDe",
+            "whatForDe", "verbOfVisibilityDe", new CultureInfo("de-DE"));
+        var structuredLearningOutcome2 = new StructuredLearningOutcomePe(TaxonomyLevel.Level2, "whatEn", "wherebyEn",
+            "whatForEn",
+            "verbOfVisibilityEn", new CultureInfo("en-DE"));
+
         var space1 = new LearningSpacePe("a", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
+                { structuredLearningOutcome1 }),
+            positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic1)
         {
             LearningSpaceLayout =
@@ -310,7 +322,8 @@ public class CreateAtfUt
             }
         };
         var space4 = new LearningSpacePe("d", "ff", 5, Theme.Campus,
-            PersistEntityProvider.GetLearningOutcomeCollection(),
+            PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
+                { structuredLearningOutcome2, manualLearningOutcome }),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2);
@@ -387,6 +400,12 @@ public class CreateAtfUt
                 Is.EqualTo("1"));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].RequiredSpacesToEnter,
                 Is.EqualTo("(3)^(2)"));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceGoals[0],
+                Is.EqualTo(structuredLearningOutcome1.GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceGoals[0],
+                Is.EqualTo(structuredLearningOutcome2.GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceGoals[1],
+                Is.EqualTo(manualLearningOutcome.GetOutcome()));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(8));

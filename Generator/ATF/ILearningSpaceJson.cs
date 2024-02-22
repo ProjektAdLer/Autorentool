@@ -23,4 +23,5 @@ public interface ILearningSpaceJson
     string SpaceTemplateStyle { get; set; }
     string SpaceName { get; set; }
     int RequiredPointsToComplete { get; set; }
+    string[] SpaceGoals { get; set; }
 }
