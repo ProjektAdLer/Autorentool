@@ -50,7 +50,7 @@ public class StructuredLearningOutcomeViewModel : ILearningOutcomeViewModel
             case { Name: "en-DE" }:
                 return GetOutcomeEn();
             default:
-                return "Failure";
+                throw new NotSupportedException("Language not supported");
         }
     }
 
