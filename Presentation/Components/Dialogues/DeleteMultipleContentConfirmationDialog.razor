@@ -32,7 +32,7 @@
 @code {
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
+    internal IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
 
     [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
 

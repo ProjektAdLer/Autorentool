@@ -51,6 +51,7 @@ public class ContentFilesViewUt
 
         _testContext.ComponentFactories.AddStub<MudMenu>();
         _testContext.ComponentFactories.AddStub<MudMenuItem>();
+        _testContext.ComponentFactories.AddStub<MudPopover>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
@@ -140,9 +141,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -165,9 +171,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
     }
@@ -186,9 +197,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _errorService.Received(1).SetError("Error deleting content", "test");
     }
@@ -207,9 +223,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _errorService.Received(1).SetError("Error deleting content", "test");
     }
@@ -234,9 +255,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -271,9 +297,14 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.Delete(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var deleteButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Delete"));
+        Assert.That(deleteButton, Is.Not.Null);
+
+        deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
@@ -756,11 +787,36 @@ public class ContentFilesViewUt
 
         var systemUnderTest = GetRenderedComponent();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        systemUnderTest.Instance.NewElementWithContent(items.First());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var newElementButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("NewElement"));
+
+        Assert.That(newElementButton, Is.Not.Null);
+        newElementButton!.Click();
+
         _presentationLogic.Received().SetSelectedLearningContentViewModel(items.First());
         _mediator.Received().RequestOpenNewElementDialog();
+    }
+
+    [Test]
+    public void ClickPreviewButton_CallsPresentationLogic()
+    {
+        var items = PresentationLogicSetItems();
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var mudPopovers = systemUnderTest.FindComponentsOrFail<Stub<MudPopover>>();
+        var hoverMenu = mudPopovers.First(x => x.Instance.Parameters["AnchorOrigin"].ToString() == "CenterRight");
+        var hoverMenuContent = _testContext.Render((RenderFragment)hoverMenu.Instance.Parameters["ChildContent"]);
+        var previewButton = hoverMenuContent.FindAll("button").FirstOrDefault(x =>
+            x.Attributes["title"] != null && x.Attributes["title"]!.Value.Contains("Preview"));
+
+        Assert.That(previewButton, Is.Not.Null);
+        previewButton!.Click();
+
+        _presentationLogic.Received().ShowLearningContentAsync(items.First());
     }
 
     private IEnumerable<ILearningContentViewModel> PresentationLogicSetItems()

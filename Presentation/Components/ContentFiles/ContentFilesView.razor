@@ -224,7 +224,7 @@
         return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
-    internal async Task Delete(ILearningContentViewModel item)
+    private async Task Delete(ILearningContentViewModel item)
     {
         //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
@@ -395,7 +395,7 @@
         }
     }
 
-    internal void NewElementWithContent(ILearningContentViewModel content)
+    private void NewElementWithContent(ILearningContentViewModel content)
     {
         PresentationLogic.SetSelectedLearningContentViewModel(content);
         Mediator.RequestOpenNewElementDialog();
