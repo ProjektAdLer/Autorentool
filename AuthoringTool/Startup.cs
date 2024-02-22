@@ -312,6 +312,8 @@ public class Startup
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
         ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
+        LearningElementDifficultyHelper.Initialize(app.ApplicationServices
+            .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
 
         app.UseRouting();
 

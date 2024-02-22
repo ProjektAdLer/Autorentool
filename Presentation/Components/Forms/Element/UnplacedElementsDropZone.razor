@@ -1,21 +1,93 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
+@using Shared
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningElement
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
     <p class="cursor-default text-xs h-1/4 2xl:text-sm text-center mx-1 py-2 flex-auto basis-1/5 text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
+    <MudPaper>
+        <MudToolBar Class="my-0 py-0">
+            <MudMenu>
+                <ActivatorContent>
+                    <MudToggleIconButton>Element-Art</MudToggleIconButton>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem>Normales Element</MudMenuItem>
+                    <MudMenuItem>Adaptivitäts Element</MudMenuItem>
+                    <MudMenuItem>Story Element</MudMenuItem>
+                </ChildContent>
+            </MudMenu>
+            <MudMenu>
+                <ActivatorContent>
+                    <MudToggleIconButton>Typ</MudToggleIconButton>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem>Text</MudMenuItem>
+                    <MudMenuItem>Bild</MudMenuItem>
+                    <MudMenuItem>Video</MudMenuItem>
+                    <MudMenuItem>H5P</MudMenuItem>
+                </ChildContent>
+            </MudMenu>
+            <MudMenu Dense="true">
+                <ActivatorContent>
+                    <MudToggleIconButton>Schwierigkeit</MudToggleIconButton>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem
+                        IconColor="@(_difficultyFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => ResetDifficultyFilter()" AutoClose="false">
+                        All
+                    </MudMenuItem>
+                    @foreach (LearningElementDifficultyEnum difficulty in Enum.GetValues(typeof(LearningElementDifficultyEnum)))
+                    {
+                        <MudMenuItem
+                            IconColor="@(_difficultyFilter.Contains(difficulty) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                            OnClick="() => ToggleDifficultyFilter(difficulty)" AutoClose="false">
+                            @LearningElementDifficultyHelper.Localize(difficulty)
+                        </MudMenuItem>
+                    }
+                </ChildContent>
+            </MudMenu>
+            <MudMenu Dense="true">
+                <ActivatorContent>
+                    <MudToggleIconButton>Theme</MudToggleIconButton>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem
+                        IconColor="@(_themeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => ResetThemeFilter()" AutoClose="false">
+                        All
+                    </MudMenuItem>
+                    @foreach (Theme theme in Enum.GetValues(typeof(Theme)))
+                    {
+                        <MudMenuItem
+                            IconColor="@(_themeFilter.Contains(theme) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                            OnClick="() => ToggleThemeFilter(theme)" AutoClose="false">
+                            @ThemeHelper.Localize(theme)
+                        </MudMenuItem>
+                    }
+                </ChildContent>
+            </MudMenu>
+            <MudSpacer/>
+            <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Outlined.Search" Class="my-0"/>
+        </MudToolBar>
+    </MudPaper>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
                  Class="overflow-y-auto overflow-x-hidden flex-wrap rounded-lg flex-auto basis-4/5 border-2 border-solid p-2 mb-2 gap-4 bg-white flex flex-row justify-center w-full">
         <ItemRenderer>
-            <DragDropLearningElement
-                LearningElement="@context"
-                OnShowLearningElementContent="@WorldPresenter.ShowSelectedElementContentAsync"
-                OnEditLearningElement="@WorldPresenter.SetSelectedLearningElement"
-                OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
-                OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
+            @if (ShowAfterFilter(@context))
+            {
+                <DragDropLearningElement
+                    LearningElement="@context"
+                    OnShowLearningElementContent="@WorldPresenter.ShowSelectedElementContentAsync"
+                    OnEditLearningElement="@WorldPresenter.SetSelectedLearningElement"
+                    OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
+                    OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
+            }
         </ItemRenderer>
     </MudDropZone>
 </div>
@@ -25,13 +97,15 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ILearningWorldPresenter WorldPresenter { get; set; }
 
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     private IStringLocalizer<UnplacedElementsDropZone> Localizer { get; set; }
 
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    internal string? SearchString { get; set; }
+    private List<LearningElementDifficultyEnum> _difficultyFilter = new();
+    private List<Theme> _themeFilter = new();
 
     protected override void OnParametersSet()
     {
@@ -42,6 +116,70 @@
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         await InvokeAsync(StateHasChanged);
+    }
+
+    private bool ShowAfterFilter(ILearningElementViewModel element)
+    {
+        if (SearchString != null && !element.Name.Contains(SearchString))
+        {
+            return false;
+        }
+
+        if (_difficultyFilter.Count != 0 && !_difficultyFilter.Contains(element.Difficulty))
+        {
+            return false;
+        }
+
+        if (_themeFilter.Count != 0 && element.ElementModel != ElementModel.l_random)
+        {
+            var foundElementModelInThemes = false;
+            foreach (var theme in _themeFilter)
+            {
+                if (ElementModelHandler.GetElementModelsForTheme(theme).Contains(element.ElementModel))
+                {
+                    foundElementModelInThemes = true;
+                    break;
+                }
+            }
+
+            if (!foundElementModelInThemes) return false;
+        }
+
+        return true;
+    }
+
+    private void ResetDifficultyFilter()
+    {
+        _difficultyFilter.Clear();
+    }
+
+    private void ToggleDifficultyFilter(LearningElementDifficultyEnum difficulty)
+    {
+        if (_difficultyFilter.Contains(difficulty))
+        {
+            _difficultyFilter.Remove(difficulty);
+        }
+        else
+        {
+            _difficultyFilter.Add(difficulty);
+        }
+    }
+
+    private void ResetThemeFilter()
+    {
+        _themeFilter.Clear();
+    }
+
+    private void ToggleThemeFilter(Theme theme)
+    {
+        if (_themeFilter.Contains(theme))
+        {
+            _themeFilter.Remove(theme);
+        }
+        else
+        {
+            _themeFilter.Add(theme);
+        }
     }
 
 }
