@@ -35,7 +35,7 @@
                     </ChildContent>
                 </MudDropZone>
             }
-            @for (var i = 0; i < 2; i++)
+            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions.Count; i++)
             {
                 var x = i;
                 var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";

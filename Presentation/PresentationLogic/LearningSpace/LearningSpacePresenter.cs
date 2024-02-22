@@ -273,6 +273,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             case IFileContentViewModel or ILinkContentViewModel:
                 _mediator.RequestOpenElementDialog();
                 break;
+            case null:
+                throw new ApplicationException("Element has no content");
         }
 
         _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);

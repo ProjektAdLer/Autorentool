@@ -41,7 +41,7 @@ public class LearningSpaceLayoutViewUt
     private const string ShadowOpen = @"<div class=""drop-shadow-xl w-full h-full"">";
 
     private const string FloorPlanClass =
-        @"<div class=""mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""";
+        @"<div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""";
 
     private const string FloorPlanStyleOpen =
         @"style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;";
@@ -62,17 +62,14 @@ public class LearningSpaceLayoutViewUt
 
         // These two MarkupMatches calls are equivalent
         systemUnderTest.MarkupMatches(
-            @"<div class=""w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated"">
+            @"<div class=""w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated"">
                   <div class=""drop-shadow-xl w-full h-full"">
-                      <div class=""mt-15 mx-auto w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""
+                      <div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""
                            style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;&quot; style=&quot;fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2&quot; /></svg>'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; "">
                       </div>
                   </div>
               </div>"
         );
-        systemUnderTest.MarkupMatches(BackgroundOpen + ShadowOpen + FloorPlanClass + FloorPlanStyleOpen +
-                                      FloorPlanStyleMid + FloorPlanStyleClose +
-                                      DivClose + DivClose + DivClose);
     }
 
     [Test]
@@ -169,7 +166,7 @@ public class LearningSpaceLayoutViewUt
         {
             Assert.Multiple(() =>
             {
-                Assert.That(dropZones[i].Attributes["identifier"]?.Value, Is.EqualTo(expectedId.ToString() + i));
+                Assert.That(dropZones[i].Attributes["identifier"]?.Value, Is.EqualTo($"{expectedId.ToString()}_ele_{i}"));
                 Assert.That(dropZones[i].Attributes["style"]?.Value,
                     Is.EqualTo(
                         $"position: absolute; " +

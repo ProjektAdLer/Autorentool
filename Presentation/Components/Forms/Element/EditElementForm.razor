@@ -295,21 +295,13 @@
     private void OnValidSubmit(LearningElementFormModel model)
     {
         WorldPresenter.EditLearningElementFromFormModel(ElementToEdit.Parent, ElementToEdit, model);
-        // WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
-        //     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-        //     model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, content);
         TriggerMasterLayoutStateHasChanged?.Invoke();
-        //batch command: EditElement + EditStoryContent
-        //execute batch command
     }
 
     private void OnValidFieldChange(LearningElementFormModel model) => OnValidSubmit(model);
 
     private async Task MapIntoContainer()
     {
-        //this is a hacky workaround. we need to reset the container because when we switch between elements, the container still contains the old element before this component is disposed.
-        //this is because in ElementFormContainer all element modes use the same component (this one). so when we switch between elements, the component is not disposed and the container is not reset before the new element is mapped into it.
-        //TODO: fix this during our 3.0 refactoring - n.stich
         Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
         await InvokeAsync(StateHasChanged);
     }
@@ -378,7 +370,7 @@
             ElementMode.Normal when FormModel.LearningContent is LinkContentFormModel => ElementModelContentType.Link,
             ElementMode.Adaptivity => ElementModelContentType.Adaptivity,
             ElementMode.Story => ElementModelContentType.Story,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => ElementModelContentType.Any
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,

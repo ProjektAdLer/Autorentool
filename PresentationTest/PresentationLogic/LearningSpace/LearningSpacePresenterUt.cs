@@ -54,7 +54,7 @@ public class LearningSpacePresenterUt
         var space = ViewModelProvider.GetLearningSpace();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
 
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
@@ -71,7 +71,7 @@ public class LearningSpacePresenterUt
     public void ClickedLearningElement_CallsErrorServiceWhenSpaceIsNull()
     {
         var mockErrorService = Substitute.For<IErrorService>();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
 
         var systemUnderTest =
             CreatePresenterForTesting(errorService: mockErrorService);

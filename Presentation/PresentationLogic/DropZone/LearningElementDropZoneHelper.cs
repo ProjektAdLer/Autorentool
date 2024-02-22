@@ -135,17 +135,12 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
         switch (dropzoneType)
         {
-            case "ele" when dropItem.Item.LearningContent is IFileContentViewModel or ILinkContentViewModel
-                or IAdaptivityContentViewModel:
+            case "ele":
                 DragLearningElmeentToLayoutSlot(dropItem, slotId);
                 break;
-            case "ele":
-                return;
-            case "story" when dropItem.Item.LearningContent is IStoryContentViewModel:
+            case "story":
                 DragStoryElementToLayoutSlot(dropItem, slotId);
                 break;
-            case "story":
-                return;
             default:
                 throw new ArgumentOutOfRangeException(nameof(dropItem), dropItem.DropzoneIdentifier,
                     "DropzoneIdentifier is not recognized");
