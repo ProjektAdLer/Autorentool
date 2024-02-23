@@ -105,7 +105,7 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
-    public static ElementModel GetElementModelRandom()
+    public ElementModel GetElementModelRandom()
     {
         return ElementModel.l_random;
     }

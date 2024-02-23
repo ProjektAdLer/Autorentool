@@ -81,7 +81,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.ClickedLearningElement(adaptivityElement);
 
         mediator.Received().RequestOpenAdaptivityElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
         selectedViewModelsProvider.Received().SetLearningElement(adaptivityElement, null);
     }
 
