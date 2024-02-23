@@ -70,4 +70,7 @@
     <data name="LearningSpace.LearningOutcomesOverview.Text.Part1" xml:space="preserve">
         <value>Learning outcomes for the learning space</value>
     </data>
+    <data name="LearningSpaceView.NoOutcome" xml:space="preserve">
+        <value>There are currently no learning outcomes for this learning space.</value>
+    </data>
 </root>

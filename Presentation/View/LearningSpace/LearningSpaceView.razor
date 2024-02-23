@@ -54,8 +54,15 @@
                                     <MudIconButton Class="w-8 h-8" OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.Close"></MudIconButton>
                                 </div>
                                 <p class="pl-1 pb-2 cursor-default">@Localizer["LearningSpace.LearningOutcomesOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningSpaceP.LearningSpaceVm?.Name</span></p>
-                                <div class="h-[250px] overflow-y-scroll bg-adlerbgbright rounded border border-adlergrey-200 p-2">
+                                
+                                <div class="h-[150px] overflow-y-scroll bg-adlerbgbright rounded border border-adlergrey-200 p-2">
 
+                                    @if (LearningSpaceP.LearningSpaceVm?.LearningOutcomeCollection.LearningOutcomes.Count == 0)
+                                    {
+                                        <div class="flex justify-center items-center p-4">
+                                            <p class="cursor-default pl-1 text-base font-bold text-adlertextgrey opacity-80">@Localizer["LearningSpaceView.NoOutcome"]</p>
+                                        </div>
+                                    }
 
                                     @if (LearningSpaceP?.LearningSpaceVm != null)
                                     {
