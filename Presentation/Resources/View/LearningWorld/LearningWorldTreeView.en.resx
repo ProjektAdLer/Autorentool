@@ -24,4 +24,7 @@
     <data name="OverView.Points" xml:space="preserve">
         <value>Total points:</value>
     </data>
+    <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
+        <value> pt</value>
+    </data>
 </root>

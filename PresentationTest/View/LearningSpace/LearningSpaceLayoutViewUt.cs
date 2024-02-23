@@ -36,7 +36,7 @@ public class LearningSpaceLayoutViewUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
 
     private const string BackgroundOpen =
-        @"<div class=""w-full min-h-[400px] bg-adlergreybright border-2 border-b-adlerdeactivated"">";
+        @"<div class=""w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated"">";
 
     private const string ShadowOpen = @"<div class=""drop-shadow-xl w-full h-full"">";
 
@@ -78,10 +78,10 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.CornerPoints.Returns(new List<Point>
-            {new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}});
+            { new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 } });
         const string expectedCorners = "0,1 2,3 4,5 6,7 ";
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
-            {(new Point {X = 8, Y = 9}, new Point {X = 10, Y = 11})});
+            { (new Point { X = 8, Y = 9 }, new Point { X = 10, Y = 11 }) });
         const string expectedDoors =
             "<line x1=&quot;8&quot; y1=&quot;9&quot; x2=&quot;10&quot; y2=&quot;11&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
@@ -102,7 +102,7 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.CornerPoints.Returns(new List<Point>
-            {new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}});
+            { new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 } });
         const string expectedCorners = "0,1 2,3 4,5 6,7 ";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
@@ -122,7 +122,7 @@ public class LearningSpaceLayoutViewUt
         // Arrange
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
-            {(new Point {X = 0, Y = 1}, new Point {X = 2, Y = 3})});
+            { (new Point { X = 0, Y = 1 }, new Point { X = 2, Y = 3 }) });
         const string expectedDoors =
             "<line x1=&quot;0&quot; y1=&quot;1&quot; x2=&quot;2&quot; y2=&quot;3&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
@@ -147,7 +147,7 @@ public class LearningSpaceLayoutViewUt
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.ElementSlotPositions.Returns(new List<Point>
         {
-            new() {X = 0, Y = 1}, new() {X = 2, Y = 3}, new() {X = 4, Y = 5}, new() {X = 6, Y = 7}
+            new() { X = 0, Y = 1 }, new() { X = 2, Y = 3 }, new() { X = 4, Y = 5 }, new() { X = 6, Y = 7 }
         });
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
@@ -179,7 +179,7 @@ public class LearningSpaceLayoutViewUt
 
     private static string GetSlotPositionPercentValue(int abs)
     {
-        return ((int) ((abs + 1) / 35.0 * 100)).ToString();
+        return ((int)((abs + 1) / 35.0 * 100)).ToString();
     }
 
     private IRenderedComponent<LearningSpaceLayoutView> GetRenderedLearningSpaceLayoutView(

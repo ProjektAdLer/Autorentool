@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -81,7 +82,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
     }
 
     [Test]
@@ -103,7 +104,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.WrongUserOrPassword"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.WrongUserOrPassword"));
     }
 
     [Test]
@@ -124,7 +125,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
     }
 
     [Test]
@@ -145,7 +146,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[0].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
+        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
     }
 
     [Test]
@@ -155,7 +156,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         _presentationLogic.When(x => x.Login(Arg.Any<string>(), Arg.Any<string>()))
-            .Throw(new System.Exception("nix gut"));
+            .Throw(new Exception("nix gut"));
 
         var mudTextFields = DialogProvider.FindComponentsOrFail<MudTextField<string>>().ToArray();
         mudTextFields[0].Find("input").Change("URL");
@@ -185,6 +186,8 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     [Test]
     public async Task IsLmsConnectedTrue_LogoutButtonClicked_CallsLogout()
     {
+        Context.ComponentFactories.AddStub<MudList>();
+        Context.ComponentFactories.AddStub<MudListItem>();
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.LoginName.Returns("MySecretUsername");
         await OpenDialogAndGetDialogReferenceAsync();

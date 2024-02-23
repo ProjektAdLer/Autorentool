@@ -15,6 +15,7 @@ public class ContentReferenceAction : IAdaptivityAction
         Content = content;
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -25,11 +26,21 @@ public class ContentReferenceAction : IAdaptivityAction
         Content = null!;
         Id = Guid.Empty;
         Comment = "";
+        UnsavedChanges = false;
     }
 
     public ILearningContent Content { get; set; }
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges || Content.UnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
 
     public bool Equals(IAdaptivityAction? other)
     {

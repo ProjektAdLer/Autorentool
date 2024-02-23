@@ -53,7 +53,8 @@ public static class EntityProvider
         string append = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1,
         ILearningSpace? parent = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningElement("a" + append, content!, "d" + append, "e" + append,
+        content ??= GetLinkContent(unsavedChanges);
+        return new LearningElement("a" + append, content, "d" + append, "e" + append,
             LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges };
     }
@@ -68,14 +69,18 @@ public static class EntityProvider
         return new LearningPathway(source ?? GetPathWayCondition(), target ?? GetPathWayCondition());
     }
 
-    public static LinkContent GetLinkContent()
+    public static LinkContent GetLinkContent(bool unsavedChanges = false)
     {
-        return new LinkContent("a name", "a link");
+        return new LinkContent("a name", "a link")
+        {
+            UnsavedChanges = unsavedChanges
+        };
     }
 
-    public static FileContent GetFileContent(string append = "")
+    public static FileContent GetFileContent(string append = "", bool unsavedChanges = false)
     {
-        return new FileContent("a name" + append, "a type" + append, "a filepath" + append);
+        return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
+            { UnsavedChanges = unsavedChanges };
     }
 
     public static Topic GetTopic(string append = "")

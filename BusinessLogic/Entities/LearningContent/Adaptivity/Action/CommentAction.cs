@@ -6,6 +6,7 @@ public class CommentAction : IAdaptivityAction
     {
         Comment = comment;
         Id = Guid.NewGuid();
+        UnsavedChanges = true;
     }
 
     /// <summary>
@@ -15,10 +16,20 @@ public class CommentAction : IAdaptivityAction
     {
         Comment = "";
         Id = Guid.Empty;
+        UnsavedChanges = false;
     }
 
     public string Comment { get; set; }
     public Guid Id { get; private set; }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+    
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges;
+        set => InternalUnsavedChanges = value;
+    }
 
     public bool Equals(IAdaptivityAction? other)
     {

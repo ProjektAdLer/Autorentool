@@ -28,6 +28,9 @@ public class BaseFormUt
         //cannot stub mudform because we @ref it in BaseForm
         //_testContext.ComponentFactories.AddStub<MudForm>();
         _testContext.ComponentFactories.AddStub<MudAlert>();
+        // needed for BaseForm to work because of added MudFocusTrap
+        _testContext.JSInterop.SetupVoid("mudElementRef.saveFocus", _ => true);
+        _testContext.JSInterop.SetupVoid("mudElementRef.focusFirst", _ => true);
     }
 
     [TearDown]

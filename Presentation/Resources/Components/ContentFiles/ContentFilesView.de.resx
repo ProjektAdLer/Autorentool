@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value>Liste des gesamten hinzugefügten externen Lernmaterials</value>
+        <value>Hinzufgefügtes Lernmaterial</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Löschen</value>

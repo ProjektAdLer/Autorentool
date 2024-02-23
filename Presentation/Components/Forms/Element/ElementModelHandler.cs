@@ -1,4 +1,8 @@
-﻿using Shared;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Shared;
 
 namespace Presentation.Components.Forms.Element;
 
@@ -30,7 +34,7 @@ public class ElementModelHandler : IElementModelHandler
             case ContentTypeEnum.Story:
                 return NpcModels.OrderBy(m => m, comparer);
             case ContentTypeEnum.Adaptivity:
-                return NpcModels.Concat(new [] {ElementModel.l_random}).OrderBy(m => m, comparer);
+                return AdaptivityModels;
             default:
             {
                 var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
@@ -41,6 +45,9 @@ public class ElementModelHandler : IElementModelHandler
 
     internal static readonly IEnumerable<ElementModel> NpcModels = new[]
         { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
+    
+    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
+        { ElementModel.a_npc_alerobot };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -90,6 +97,7 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
+            ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
             ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
@@ -97,9 +105,18 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
-    public ElementModel GetElementModelRandom()
+    public static ElementModel GetElementModelRandom()
     {
         return ElementModel.l_random;
+    }
+    
+    public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
+    {
+        return modelType switch
+        {
+            ContentTypeEnum.Adaptivity => ElementModel.a_npc_alerobot,
+            _ => ElementModel.l_random
+        };
     }
 
     internal static IEnumerable<ElementModel> GetElementModelsForModelType(ContentTypeEnum modelType)
@@ -157,6 +174,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
+                yield return ElementModel.a_npc_alerobot;
+                break;
             case ContentTypeEnum.Story:
                 //campus
                 yield return ElementModel.a_npc_dozentlukas;

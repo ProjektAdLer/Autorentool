@@ -50,4 +50,7 @@
     <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
         <value>Speichere Lernwelt</value>
     </data>
+    <data name="LearningWorldPathwayView.Points.Summary" xml:space="preserve">
+        <value> Pkt.</value>
+    </data>
 </root>

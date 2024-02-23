@@ -22,7 +22,7 @@ public class EditTopicUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(topic.Name, Is.EqualTo("Topic 1"));
             Assert.That(topic.UnsavedChanges, Is.False);
         });
@@ -31,7 +31,7 @@ public class EditTopicUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(topic.Name, Is.EqualTo(name));
             Assert.That(topic.UnsavedChanges, Is.True);
         });
@@ -41,7 +41,7 @@ public class EditTopicUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(topic.Name, Is.EqualTo("Topic 1"));
         });
 
@@ -50,7 +50,7 @@ public class EditTopicUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(topic.Name, Is.EqualTo(name));
         });
     }
@@ -67,6 +67,6 @@ public class EditTopicUt
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.That(actionWasInvoked, Is.False);
     }
 }

@@ -64,18 +64,21 @@ public class CreateLearningElementInSlotUt
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, element, mappingAction,
             new NullLogger<CreateLearningElementInSlot>());
 
-        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(actionWasInvoked, Is.True);
-        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
-
         Assert.Multiple(() =>
         {
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
         });
+
     }
 
     [Test]
@@ -157,8 +160,11 @@ public class CreateLearningElementInSlotUt
             testParameter.PositionY, mappingAction, null!);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 }
 

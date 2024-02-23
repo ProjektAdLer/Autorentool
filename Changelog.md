@@ -11,17 +11,27 @@
   - You can now archive your learning worlds as a .zip archive which you can store elsewhere for backup purposes or
   share with others. It contains all the data necessary to restore the entire world on another machine.
   - You can now import learning worlds from .zip archives.
-- New list of previously uploaded learning worlds that appears after logging in to the LMS
-- Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend
-- Authors can now assign an enrolment key for their learning world
+- New list of previously uploaded learning worlds that appears after logging in to the LMS.
+- Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend.
+- Authors can now assign an enrolment key for their learning world.
 
 ### Changed
 
 - Presentation of the learning elements in the hierarchy and in Moodle according to the linear order of the floor plan.
-- The Create-World, -Space, -Element and -Link dialogs can be confirmed with the Enter key
+- The Create-World, -Space, -Element and -Link dialogs can be confirmed with the Enter key.
 - Changed the way learning worlds are fetched internally and displayed on the start screen.
     - You can now see the last modify time and optionally file name of worlds.
     - You can now sort worlds by name or last modify time.
+- UI:
+  - Optimized styling of the adaptivity dialog.
+  - Optimized responsive design.
+  - Reworked learning world tree view.
+    - Selecting a learning space while tree view is open now shows the learning space in blue in the tree view.
+    - Selecting a learning element while tree view is open now opens the learning space in the tree view (if not open yet) and shows the learning element in blue in the tree view.
+    - Creating a new learning space while tree view is open now also shows the learning space in blue in the tree view.
+    - Creating a new learning element inside a learning space (by clicking the "+" button on an empty slow) now also shows the learning element in blue in the tree view.
+  - The container for the unplaced learning elements is now in the bottom center below the space view.
+  - Separate sidebar panel for different types of learning elements
 
 ### Deprecated
 
@@ -29,11 +39,11 @@
 
 ### Removed
 
--
+- Removed right click menu entry "Show" for adaptivity elements.
 
 ### Fixed
 
--
+- Fixed bug where world has no unsaved changes when editing the content of a adaptivity element.
 
 ### Security
 

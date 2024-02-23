@@ -11,14 +11,15 @@
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-4">
-            <MudText Typo="Typo.caption">@Localizer["AddLinkForm.Info.Text"]</MudText>
+        <div class="px-3 2xl:px-4">
+            <p class="text-[12px] text-justify">@Localizer["AddLinkForm.Info.Text"]</p>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
                           Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
+                          Variant="Variant.Filled"
                           For="@(() => FormModel.Link)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
@@ -27,9 +28,9 @@
                           AdornmentIcon="@Icons.Material.Filled.Link"/>
         </div>
     </Fields>
+
     <FooterButtons>
         <DefaultSubmitButton/>
-        <DefaultResetButton/>
     </FooterButtons>
 </BaseForm>
 

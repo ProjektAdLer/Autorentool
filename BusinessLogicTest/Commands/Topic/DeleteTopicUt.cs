@@ -24,28 +24,40 @@ public class DeleteTopicUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new DeleteTopic(world, topic, mappingAction, new NullLogger<DeleteTopic>());
 
-        Assert.That(world.Topics, Does.Contain(topic));
-        Assert.IsFalse(actionWasInvoked);
-        Assert.That(world.UnsavedChanges, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Does.Contain(topic));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
 
         command.Execute();
 
-        Assert.That(world.Topics, Is.Empty);
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Is.Empty);
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
         actionWasInvoked = false;
-        Assert.That(world.UnsavedChanges, Is.True);
 
         command.Undo();
 
-        Assert.That(world.Topics, Does.Contain(topic));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Does.Contain(topic));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
         actionWasInvoked = false;
-        Assert.That(world.UnsavedChanges, Is.False);
 
         command.Redo();
-        Assert.That(world.Topics, Is.Empty);
-        Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.UnsavedChanges, Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.Topics, Is.Empty);
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
     }
 
     [Test]
@@ -60,8 +72,10 @@ public class DeleteTopicUt
         var command = new DeleteTopic(world, topic, mappingAction, new NullLogger<DeleteTopic>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
-
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
 }

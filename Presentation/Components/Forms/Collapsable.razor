@@ -1,5 +1,5 @@
 <div class="gap-2 my-4 @Style">
-    <div class="flex flex-row toggler" @onclick="@Toggle">
+    <div class="flex flex-row toggler" @onclick="@Toggle" tabindex="0" @onkeydown="@OnKeyDown">
         @if (Collapsed)
         {
             <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
@@ -21,25 +21,29 @@
 
 @code {
 
-    [Parameter]
-    public string? Style { get; set; }
+    [Parameter] public string? Style { get; set; }
 
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter]
-    public bool Collapsed { get; set; }
+    [Parameter] public bool Collapsed { get; set; }
 
-    [Parameter]
-    public EventCallback<bool> CollapsedChanged { get; set; }
+    [Parameter] public EventCallback<bool> CollapsedChanged { get; set; }
 
-    [Parameter]
-    public string? Title { get; set; }
+    [Parameter] public string? Title { get; set; }
 
-    void Toggle()
+    public void Toggle()
     {
         Collapsed = !Collapsed;
         CollapsedChanged.InvokeAsync(Collapsed);
+    }
+
+
+    private void OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            Toggle();
+        }
     }
 
 }
