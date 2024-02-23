@@ -27,4 +27,10 @@
     <data name="FloorPlanEnum.R_20X30_8L.DisplayName" xml:space="preserve">
         <value>Rectangle with 8 elements</value>
     </data>
+    <data name="FloorPlanEnum.T_40X32_13L.DisplayName" xml:space="preserve">
+        <value>T shape with 13 elements</value>
+    </data>
+    <data name="FloorPlanEnum.D_40X37_15L.DisplayName" xml:space="preserve">
+        <value>D shape with 15 elements</value>
+    </data>
 </root>
