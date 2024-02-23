@@ -6,6 +6,9 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
     <p class="cursor-default text-xs h-1/4 2xl:text-sm text-center mx-1 py-2 flex-auto basis-1/5 text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
     <MudPaper>
@@ -15,20 +18,43 @@
                     <MudToggleIconButton>Element-Art</MudToggleIconButton>
                 </ActivatorContent>
                 <ChildContent>
-                    <MudMenuItem>Normales Element</MudMenuItem>
-                    <MudMenuItem>Adaptivitäts Element</MudMenuItem>
-                    <MudMenuItem>Story Element</MudMenuItem>
+                    <MudMenuItem
+                        IconColor="@(_elementTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => ResetElementTypeFilter()" AutoClose="false">
+                        All
+                    </MudMenuItem>
+
+                    <MudMenuItem
+                        IconColor="@(_elementTypeFilter.Contains(typeof(FileContentViewModel)) || _elementTypeFilter.Contains(typeof(LinkContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => { ToggleElementTypeFilter(typeof(FileContentViewModel)); ToggleElementTypeFilter(typeof(LinkContentViewModel)); }" AutoClose="false">
+                        Normales Element
+                    </MudMenuItem>
+                    <MudMenuItem
+                        IconColor="@(_elementTypeFilter.Contains(typeof(AdaptivityContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => ToggleElementTypeFilter(typeof(AdaptivityContentViewModel))" AutoClose="false">
+                        Adaptivitäts Element
+                    </MudMenuItem>
+
                 </ChildContent>
             </MudMenu>
-            <MudMenu>
+            <MudMenu Dense="true">
                 <ActivatorContent>
                     <MudToggleIconButton>Typ</MudToggleIconButton>
                 </ActivatorContent>
                 <ChildContent>
-                    <MudMenuItem>Text</MudMenuItem>
-                    <MudMenuItem>Bild</MudMenuItem>
-                    <MudMenuItem>Video</MudMenuItem>
-                    <MudMenuItem>H5P</MudMenuItem>
+                    <MudMenuItem
+                        IconColor="@(_typeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                        OnClick="() => ResetTypeFilter()" AutoClose="false">
+                        All
+                    </MudMenuItem>
+                    @foreach (ContentTypeEnum type in Enum.GetValues(typeof(ContentTypeEnum)))
+                    {
+                        <MudMenuItem
+                            IconColor="@(_typeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                            OnClick="() => ToggleTypeFilter(type)" AutoClose="false">
+                            @type.ToString()
+                        </MudMenuItem>
+                    }
                 </ChildContent>
             </MudMenu>
             <MudMenu Dense="true">
@@ -73,7 +99,7 @@
             </MudMenu>
             <MudSpacer/>
             <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search" Class="my-0"/>
+                          AdornmentIcon="@Icons.Material.Outlined.Search" Clearable="true" Class="my-0"/>
         </MudToolBar>
     </MudPaper>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
@@ -106,6 +132,8 @@
     internal string? SearchString { get; set; }
     private List<LearningElementDifficultyEnum> _difficultyFilter = new();
     private List<Theme> _themeFilter = new();
+    private List<ContentTypeEnum> _typeFilter = new();
+    private List<Type> _elementTypeFilter = new();
 
     protected override void OnParametersSet()
     {
@@ -128,6 +156,36 @@
         if (_difficultyFilter.Count != 0 && !_difficultyFilter.Contains(element.Difficulty))
         {
             return false;
+        }
+
+        if (_elementTypeFilter.Count != 0 && !_elementTypeFilter.Contains(element.LearningContent.GetType()))
+        {
+            return false;
+        }
+
+        if (_typeFilter.Count != 0)
+        {
+            if (element.LearningContent.GetType() == typeof(FileContentViewModel))
+            {
+                if (!_typeFilter.Contains(ContentTypeHelper.GetContentType(((FileContentViewModel)element.LearningContent).Type)))
+                {
+                    return false;
+                }
+            }
+            else if (element.LearningContent.GetType() == typeof(LinkContentViewModel))
+            {
+                if (!_typeFilter.Contains(ContentTypeEnum.Video))
+                {
+                    return false;
+                }
+            }
+            else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel))
+            {
+                if (!_typeFilter.Contains(ContentTypeEnum.Adaptivity))
+                {
+                    return false;
+                }
+            }
         }
 
         if (_themeFilter.Count != 0 && element.ElementModel != ElementModel.l_random)
@@ -165,6 +223,23 @@
         }
     }
 
+    private void ResetElementTypeFilter()
+    {
+        _elementTypeFilter.Clear();
+    }
+
+    private void ToggleElementTypeFilter(Type elementType)
+    {
+        if (_elementTypeFilter.Contains(elementType))
+        {
+            _elementTypeFilter.Remove(elementType);
+        }
+        else
+        {
+            _elementTypeFilter.Add(elementType);
+        }
+    }
+
     private void ResetThemeFilter()
     {
         _themeFilter.Clear();
@@ -179,6 +254,23 @@
         else
         {
             _themeFilter.Add(theme);
+        }
+    }
+
+    private void ResetTypeFilter()
+    {
+        _typeFilter.Clear();
+    }
+
+    private void ToggleTypeFilter(ContentTypeEnum type)
+    {
+        if (_typeFilter.Contains(type))
+        {
+            _typeFilter.Remove(type);
+        }
+        else
+        {
+            _typeFilter.Add(type);
         }
     }
 
