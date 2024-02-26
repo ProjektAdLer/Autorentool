@@ -25,7 +25,7 @@
         <value>Eingabeunterstützung</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Info.Text" xml:space="preserve">
-        <value>Im Zusammenhang mit der kompetenzorientierten Hochschullehre und dem damit verbundenen Perspektivwechsel „Shift from Teaching to Learning“, wurden auch Lernziele in den Fokus gerückt. Lernziele beschreiben, was Studierende am Ende eines Lernabschnitts wissen und können sollen sowie welche Einstellungen von ihnen erwartet werden. Lernziele sind damit die möglichst exakte Beschreibung der angestrebten Lernergebnisse (engl. Learning Outcomes). Sie werden in schriftlicher Form festgehalten und situationsgerecht kommuniziert. Hilfestellungen dafür sind die Was-Womit-Wozu-Struktur und Lernzieltaxonomien (z.B. nach Anderson/Krathwohl), welche auf Basis von verschiedenen Kompetenzstufen passende Verben für die Formulierung von Lernzielen/Lernergebnissen vorschlagen.</value>
+        <value>Im Zusammenhang mit der kompetenzorientierten Hochschullehre und dem damit verbundenen Perspektivwechsel „Shift from Teaching to Learning“, wurden auch Lernziele in den Fokus gerückt. Lernziele beschreiben, was Studierende am Ende eines Lernabschnitts wissen und können sollen sowie welche Einstellungen von ihnen erwartet werden. Lernziele sind damit die möglichst exakte Beschreibung der angestrebten Lernergebnisse (engl. Learning Outcomes). Sie werden in schriftlicher Form festgehalten und situationsgerecht kommuniziert. Hilfestellungen dafür sind die Was-Womit-Wozu-Struktur und Lernzieltaxonomien (z.B. nach Anderson/Krathwohl), welche auf Basis von verschiedenen Kompetenzstufen passende Verben für die Formulierung von Lernzielen vorschlagen.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Button.Create" xml:space="preserve">
         <value>Erstellen</value>
@@ -37,7 +37,7 @@
         <value>Taxonomiestufe</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
-        <value>Die Formulierung eines Lernziels/Lernergebnisses fokussiert die Beschreibung von entsprechenden Fähigkeiten, Fertigkeiten oder Kompetenzen des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernziel/Lernergebnis-Formulierung zum Finden eines passenden Verbes der Sichtbarkeit</value>
+        <value>Die Formulierung eines Lernziels/Lernergebnisses fokussiert die Beschreibung von entsprechenden Fähigkeiten, Fertigkeiten oder Kompetenzen des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernziel/Lernergebnis-Formulierung zum Finden eines passenden Verbes der Sichtbarkeit.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
         <value>Sie können...</value>
@@ -55,7 +55,7 @@
         <value>Angabe des Verbes ist notwendig</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.What.RequiredError" xml:space="preserve">
-        <value>Angabe von 'Was' ist notwendig</value>
+        <value>Angabe von „Was" ist notwendig</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.What.Placeholder" xml:space="preserve">
         <value>Textfeld</value>

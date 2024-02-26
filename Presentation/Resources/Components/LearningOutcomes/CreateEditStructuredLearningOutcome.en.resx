@@ -25,7 +25,7 @@
         <value>Input support</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Info.Text" xml:space="preserve">
-        <value>In the context of competence-oriented university teaching and the associated change in perspective "Shift from Teaching to Learning", the focus has also shifted to learning outcomes. Learning outcomes describe what students should know and be able to do at the end of a learning section and what attitudes are expected of them. Learning outcomes are therefore the most precise possible description of the intended learning outcomes. They are recorded in writing and communicated as appropriate to the situation. The what-with-what-for structure and learning outcome taxonomies (e.g. according to Anderson/Krathwohl), which suggest suitable verbs for the formulation of learning outcomes on the basis of different competence levels, are helpful for this.</value>
+        <value>In the context of competency-based higher education and the associated shift in perspective from "teaching to learning", learning objectives have also come into focus. Learning objectives are also the most precise description of the desired learning outcomes. Learning outcomes describe what students should know and be able to do at the end of a learning section and what attitudes are expected of them. They are recorded in writing and communicated in a situational manner. The what-whereby-what-for-structure and taxonomy of learning objectives (e.g. according to Anderson/Krathwohl) are helpful in this context, to select appropriate verbs for formulating learning outcomes on the basis of different levels of competence.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Button.Create" xml:space="preserve">
         <value>Create</value>
@@ -37,7 +37,7 @@
         <value>Taxonomy level</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
-        <value>The formulation of a learning objective/learning outcome focuses on the description of corresponding abilities, skills or competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable verb of visibility in the further processing steps of the learning objective/learning outcome formulation</value>
+        <value>The formulation of a learning outcome focuses on the description of corresponding abilities, skills or competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable verb of visibility in the further processing steps of the learning outcome formulation.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
         <value>You are able to...</value>
@@ -55,7 +55,7 @@
         <value>Specification of the verb is necessary</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.What.RequiredError" xml:space="preserve">
-        <value>Specification of 'What' is necessary</value>
+        <value>Specification of "What" is necessary</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.What.Placeholder" xml:space="preserve">
         <value>Text field</value>
