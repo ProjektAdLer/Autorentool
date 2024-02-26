@@ -336,6 +336,7 @@
         {
             case ElementMode.Adaptivity:
                 FormDataContainer.FormModel.LearningContent = new AdaptivityContentFormModel();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
                 break;
             case ElementMode.Story:
                 FormDataContainer.FormModel.LearningContent = new StoryContentFormModel();
