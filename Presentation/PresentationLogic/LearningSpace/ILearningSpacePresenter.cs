@@ -123,6 +123,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// </summary>
     /// <param name="closeResult">The result of the dialog close operation, indicating whether the operation was canceled or confirmed.</param>
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
+    void OnReplaceStoryElementDialogClose(DialogResult closeResult);
 
     /// <summary>
     /// Handles a click event on a specific element slot within the learning space layout.

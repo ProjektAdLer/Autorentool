@@ -102,6 +102,10 @@
                 when LearningSpaceP.ReplaceLearningElementDialogOpen:
                 await ShowReplaceLearningElementDialog();
                 break;
+            case nameof(LearningSpaceP.ReplaceStoryElementDialogOpen)
+            when LearningSpaceP.ReplaceStoryElementDialogOpen:
+                await ShowReplaceStoryElementDialog();
+                break;
         }
     }
 
@@ -110,6 +114,13 @@
         var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
         var result = await dialog.Result;
         LearningSpaceP.OnReplaceLearningElementDialogClose(result);
+    }
+
+    private async Task ShowReplaceStoryElementDialog()
+    {
+        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
+        var result = await dialog.Result;
+        LearningSpaceP.OnReplaceStoryElementDialogClose(result);
     }
 
     public void Dispose()
