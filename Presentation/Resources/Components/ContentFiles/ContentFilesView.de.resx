@@ -58,7 +58,7 @@
         <value>Löschen</value>
     </data>
     <data name="TaskDelete.DialogService.Title" xml:space="preserve">
-        <value>Inhalt löschen</value>
+        <value>Externes Lernmaterial löschen</value>
     </data>
     <data name="Content.MudTh.Name" xml:space="preserve">
         <value>Name</value>
@@ -91,6 +91,6 @@
         <value>Alle</value>
     </data>
     <data name="Content.Select.Option.AllUnused" xml:space="preserve">
-        <value>Alle nicht verwendeten Lerninhalte</value>
+        <value>Nicht verwendetes Lernmaterial</value>
     </data>
 </root>

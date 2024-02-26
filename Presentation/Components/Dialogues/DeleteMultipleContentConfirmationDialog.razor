@@ -11,9 +11,9 @@
         </MudText>
         <MudTable Items="ContentWorldElementInUseList">
             <HeaderContent>
-                <MudTh>Content</MudTh>
-                <MudTh>World</MudTh>
-                <MudTh>Element</MudTh>
+                <MudTh Class="pl-4">@Localizer["Dialog.Header.Content"]</MudTh>
+                <MudTh Class="pl-4">@Localizer["Dialog.Header.World"]</MudTh>
+                <MudTh Class="pl-4">@Localizer["Dialog.Header.Element"]</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Content">@context.Item1.Name</MudTd>
@@ -23,8 +23,8 @@
         </MudTable>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Error" OnClick="Submit">@Localizer["Dialog.Button.Delete.Text"]</MudButton>
-        <MudButton Color="Color.Warning" OnClick="DeleteUnused">Lösche nicht verwendete Contents</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">@Localizer["Dialog.Button.DeleteAll.Text"]</MudButton>
+        <MudButton Color="Color.Warning" OnClick="DeleteUnused">@Localizer["Dialog.Button.DeleteUnused.Text"]</MudButton>
         <MudButton OnClick="Cancel">@Localizer["Dialog.Button.Cancel.Text"]</MudButton>
     </DialogActions>
 </MudDialog>

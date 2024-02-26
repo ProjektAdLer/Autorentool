@@ -3,19 +3,20 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using System.Diagnostics.CodeAnalysis
-<div class="max-w-[18rem]">
-    <MudText >@Localizer["UsedContentFilesDialog.Text.ContentIsUsed"]</MudText>
-    <MudSimpleTable Dense="true" FixedHeader="true">
-        <thead>
+<div class="max-w-[20rem] px-2">
+    <MudText Class="cursor-default text-sm p-1">@Localizer["UsedContentFilesDialog.Text.ContentIsUsed"]</MudText>
+    <MudSimpleTable Dense="true" Bordered="true" FixedHeader="true" Class="cursor-default text-sm bg-adlerbgbright m-0 p-2 shadow-none">
+    <thead>
         <th>@Localizer["UsedContentFilesDialog.TableHeader.World"]</th>
         <th>@Localizer["UsedContentFilesDialog.TableHeader.Element"]</th>
-        </thead>
+    </thead>
+
         <tbody>
         @foreach (var entry in Usages)
         {
             <tr>
-                <td DataLabel="World">@entry.Item1.Name</td>
-                <td DataLabel="Element">@entry.Item2.Name</td>
+                <td DataLabel="@Localizer["UsedContentFilesDialog.Table.Subtitle.World"]">@entry.Item1.Name</td>
+                <td DataLabel="@Localizer["UsedContentFilesDialog.Table.Subtitle.Element"]">@entry.Item2.Name</td>
             </tr>
         }
         </tbody>

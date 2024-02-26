@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="UsedContentFilesDialog.Text.ContentIsUsed" xml:space="preserve">
-        <value>Dieser Lerninhalt wird in folgenden Lernelementen verwendet:</value>
+        <value>Dieses Lernmaterial wird in folgenden Lernelementen verwendet:</value>
     </data>
     <data name="UsedContentFilesDialog.TableHeader.World" xml:space="preserve">
         <value>Lernwelt</value>

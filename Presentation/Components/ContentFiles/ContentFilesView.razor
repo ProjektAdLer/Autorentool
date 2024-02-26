@@ -41,7 +41,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Class="p-0 m-0"></MudIconButton>
                         </ActivatorContent>
                         <ChildContent>
-                            <MudText>@Localizer["Content.Select.Text"]</MudText>
+                            <MudText Class="text-sm py-2 px-4">@Localizer["Content.Select.Text"]</MudText>
                             <MudDivider></MudDivider>
                             <MudMenuItem OnClick="OnSelectAll">@Localizer["Content.Select.Option.All"]</MudMenuItem>
                             <MudMenuItem OnClick="OnSelectAllUnused">@Localizer["Content.Select.Option.AllUnused"]</MudMenuItem>
@@ -50,9 +50,9 @@
                     </MudMenu>
                     <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" CheckedChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
 
-                    <MudText Class="m-0 p-0">@_deletionCandidates.Count()</MudText>
+                    <MudText Class="m-0 pl-1 pt-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Class="m-0 p-0"
+                                   Class="m-0 pl-2 py-0"
                                    Disabled="@(!_deletionCandidates.Any())"
                                    OnClick="() => DeleteSelected()"
                                    Title="@Localizer["Content.MudTd.Delete"]"/>
@@ -77,16 +77,16 @@
         </MudTHeadRow>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="py-0 flex flex-row" DataLabel="Delete">
+        <MudTd Class="py-0 flex flex-row gap-2" DataLabel="Delete">
 
-            <MudCheckBox T="bool" Checked="_deletionCandidates.Contains(context)" CheckedChanged="b => OnCheckedChange(context, b)" Class="m-0 p-1.5"></MudCheckBox>
+            <MudCheckBox T="bool" Checked="_deletionCandidates.Contains(context)" CheckedChanged="b => OnCheckedChange(context, b)" Class="m-0 pl-3.5 py-1.5"></MudCheckBox>
 
             @if (GetUsage(context).Any())
             {
                 <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
                     <ActivatorContent>
 
-                        <MudBadge Content="@GetUsage(context).Count().ToString()" Class="mx-1 my-3 p-0" Overlap="false" Origin="Origin.CenterRight">
+                        <MudBadge Content="@GetUsage(context).Count().ToString()" Class="mx-1 my-3 p-0" BadgeClass="text-white bg-adlerblue-200" Overlap="false" Origin="Origin.CenterRight">
                             <MudText></MudText>
                         </MudBadge>
                     </ActivatorContent>
@@ -96,7 +96,7 @@
                 </MudMenu>
             }
         </MudTd>
-        <MudTd Class="py-0" DataLabel="Name">
+        <MudTd Class="py-0 pl-2" DataLabel="Name">
             <MudTooltip Text="@context.Name"
                         Arrow="true"
                         Placement="Placement.Top"
@@ -115,19 +115,19 @@
             {
                 <span>Link</span>
             }
-            <MudPopover Open="Equals(_rowShowingPopover, context)" Class="flex flex-row"
+            <MudPopover Open="Equals(_rowShowingPopover, context)" Class="bg-adlerdarkblue flex flex-row"
                         AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterRight"
                         @onmouseover="() => { _cursorInsidePopover = true; }"
                         @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
 
                 <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                               Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Preview"]>
+                               Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.Preview"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => NewElementWithContent(context)"
-                               Icon="@Icons.Material.Filled.Add" Class="m-0 p-1" Title=@Localizer["Content.MudTd.NewElement"]>
+                               Icon="@Icons.Material.Filled.Add" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.NewElement"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => Delete(context)"
-                               Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1" Title=@Localizer["Content.MudTd.Delete"]>
+                               Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.Delete"]>
                 </MudIconButton>
             </MudPopover>
         </MudTd>
@@ -148,7 +148,7 @@
         }
     </RowTemplate>
     <PagerContent>
-        <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
+        <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Left"/>
         <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center mb-2 justify-between">
             <div class="flex justify-center items-center">
                 <MudSwitch Class="pl-2 w-12" @bind-Checked="_showFilepath" Color="Color.Info"></MudSwitch>
@@ -229,7 +229,7 @@
         //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
         {
-            { "SubmitButtonText", Localizer["Dialog.Delete.Button.Text"].ToString() },
+            { "SubmitButtonText", Localizer["Dialog.Delete.Button.Text"].ToString()},
             { "SubmitButtonColor", Color.Error },
             {
                 "DialogText", Localizer["Dialog.Delete.DialogText", item.Name].ToString()
@@ -289,6 +289,7 @@
             CloseButton = true,
             CloseOnEscapeKey = true,
             DisableBackdropClick = true,
+            MaxWidth = MaxWidth.Medium,
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
         var result = await dialog.Result;
