@@ -711,6 +711,18 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
 
+    public void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        
+        var command = ElementCommandFactory.GetDeleteStoryInSpaceCommand(elementEntity, parentSpaceEntity,
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+        
+        SelectedViewModelsProvider.SetLearningElement(null, command);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInWorld"/>
     public void DeleteLearningElementInWorld(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel learningElementVm)

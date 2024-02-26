@@ -401,6 +401,8 @@ public interface IPresentationLogic
     void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm);
 
+    void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm);
+
     /// <summary>
     /// Deletes the given learning element in the given learning world.
     /// </summary>

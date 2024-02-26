@@ -43,6 +43,9 @@ public interface IElementCommandFactory
     IDeleteLearningElementInSpace GetDeleteInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
         Action<LearningSpace> mappingAction);
 
+    IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
+        Action<LearningSpace> mappingAction);
+
     /// <summary>
     /// Creates a command to delete a learning element from a world.
     /// </summary>
@@ -78,4 +81,5 @@ public interface IElementCommandFactory
     /// Creates a command to save a learning element to a file.
     /// </summary>
     ISaveLearningElement GetSaveCommand(IBusinessLogic businessLogic, LearningElement learningElement, string filepath);
+
 }

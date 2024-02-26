@@ -317,6 +317,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!, learningElementViewModel);
     }
 
+    public void DeleteStoryElement(ILearningElementViewModel learningElementViewModel)
+    {
+        if (!CheckLearningSpaceNotNull(nameof(DeleteStoryElement)))
+            return;
+        _presentationLogic.DeleteStoryElementInSpace(LearningSpaceVm!, learningElementViewModel);
+    }
+
     /// <inheritdoc cref="ILearningSpacePresenter.ShowElementContent"/>
     public async void ShowElementContent(ILearningElementViewModel learningElementViewModel)
     {

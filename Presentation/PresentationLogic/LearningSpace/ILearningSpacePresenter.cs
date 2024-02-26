@@ -86,6 +86,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// </summary>
     /// <param name="learningElementViewModel">The learning element to be deleted.</param>
     void DeleteLearningElement(ILearningElementViewModel learningElementViewModel);
+    void DeleteStoryElement(ILearningElementViewModel learningElementViewModel);
 
     /// <summary>
     /// Sets the selected learning element and asynchronously displays its content.

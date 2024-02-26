@@ -48,6 +48,11 @@ public class ElementCommandFactory : IElementCommandFactory
         new DeleteLearningElementInSpace(learningElement, parentSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInSpace>());
 
+    public IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
+        Action<LearningSpace> mappingAction) =>
+        new DeleteStoryElementInSpace(learningElement, parentSpace, mappingAction,
+            LoggerFactory.CreateLogger<DeleteStoryElementInSpace>());
+
     public IDeleteLearningElementInWorld GetDeleteInWorldCommand(LearningElement learningElement,
         LearningWorld parentWorld, Action<LearningWorld> mappingAction) =>
         new DeleteLearningElementInWorld(learningElement, parentWorld, mappingAction,
