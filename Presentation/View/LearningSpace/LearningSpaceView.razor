@@ -83,9 +83,14 @@
     private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
     {
         await InvokeAsync(StateHasChanged);
-        if (e.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
-            "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
-            "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
+        var commandName = e.CommandName;
+        // if (commandName is "CreateLearningElement" or "LoadLearningElement" or 
+        //     "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
+        //     "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
+        if(commandName.StartsWith("CreateLearningElement") ||
+           commandName.StartsWith("LoadLearningElement") ||
+           commandName.StartsWith("PlaceLearningElement") ||
+           commandName.StartsWith("PlaceStoryElement"))
         {
             await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
         }
