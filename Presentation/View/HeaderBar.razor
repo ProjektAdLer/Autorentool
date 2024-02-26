@@ -1,34 +1,32 @@
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.Mediator
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Shared.Exceptions
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
-@using System.Drawing
-@using System.Text
-@using Presentation.Components.Dialogues
-@using System.Runtime.Serialization
-@using ElectronWrapper
-@using MudBlazor.Utilities
-@using Presentation.Components.Culture
-@using Presentation.Components
-@using Presentation.PresentationLogic
+@using Size = MudBlazor.Size
+@using Color = MudBlazor.Color
 @using Presentation.PresentationLogic.Extensions
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
-@using Shared.Extensions
-@using Size = MudBlazor.Size
-@using Color = MudBlazor.Color
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared
+@using Shared.Exceptions
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using ElectronWrapper
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic
+@using Presentation.Components.Culture
+@using Presentation.Components.Dialogues
+@using Presentation.Components
+@using System.Text
+@using System.Runtime.Serialization
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]  @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
@@ -47,23 +45,23 @@
                            Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
-        
-        <div class="flex gap-2">
-        <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
-                       Icon="@Icons.Material.Filled.Archive"
-                       Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
-                       Title=@Localizer["ExportArchive.Hover"]
-                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-        </MudIconButton>
 
-        <MudIconButton OnClick="@GenerateLearningWorld" 
-                       Title="@Localizer["3DWorld.Generate.Hover"].Value"
-                       Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
-                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
-                       Icon="@Icons.Material.Filled.Publish">
-        </MudIconButton>
+        <div class="flex gap-2">
+            <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
+                           Icon="@Icons.Material.Filled.Archive"
+                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
+                           Title=@Localizer["ExportArchive.Hover"]
+                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            </MudIconButton>
+
+            <MudIconButton OnClick="@GenerateLearningWorld"
+                           Title="@Localizer["3DWorld.Generate.Hover"].Value"
+                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
+                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
+                           Icon="@Icons.Material.Filled.Publish">
+            </MudIconButton>
         </div>
-        
+
         @if (_debugBuild)
         {
             <button @onclick="DebugButtonClick" class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
@@ -103,29 +101,29 @@
     <div class="flex justify-end items-center gap-2 border-solid">
 
         @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
-                    {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
-                            <div class="flex flex-row items-center gap-4">
-                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                            </div>
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
-                            <div class="flex flex-row items-center gap-4">
-                                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                            </div>
-                        </a>
-                    }
-        
+        {
+            <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
+                <div class="flex flex-row items-center gap-4">
+                    <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
+                </div>
+            </a>
+        }
+        else
+        {
+            <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="@Localizer["Feedback.Button.UX.Hover"]">
+                <div class="flex flex-row items-center gap-4">
+                    <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
+                </div>
+            </a>
+        }
+
         <CultureSelector/>
-        
+
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
             <MudDivider></MudDivider>
-            
+
             <MudListItem>
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX" title="@Localizer["MudPopover.Feedback.Final.Hover"]">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
             </MudListItem>
@@ -139,7 +137,7 @@
             <MudListItem>
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer" title="@Localizer["HeaderBar.Help.About.Hover"]">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
-            
+
         </MudMenu>
 
         <LmsLoginButton/>
@@ -154,10 +152,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IPresentationLogic PresentationLogic { get; set; }
-    
-    [Inject, AllowNull]
-    public IShellWrapper ShellWrapper { get; set; }
-    
+
+    [Inject, AllowNull] public IShellWrapper ShellWrapper { get; set; }
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal NavigationManager NavManager { get; private init; }
 
@@ -234,14 +231,14 @@
         var world = SelectedViewModelsProvider.LearningWorld;
         if (world == null) return;
         if (!IsLearningWorldValid(world)) return;
-    //check if lms is connected here before generating the backup just to save time
+        //check if lms is connected here before generating the backup just to save time
         if (!await PresentationLogic.IsLmsConnected())
         {
             await ShowNotLoggedInDialog();
             return;
         }
 
-    //present "Upload/Cancel" dialog
+        //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
             { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
@@ -262,10 +259,28 @@
                 options);
         var result = await dialog.Result;
 
-    //if not cancelled, upload LearningWorld
+        //if not cancelled, upload LearningWorld
         if (result.Canceled) return;
 
-    //present progress dialog
+        var existingLmsWorlds = await PresentationLogic.GetLmsWorldList();
+
+        if (existingLmsWorlds.Any(lmsWord => lmsWord.WorldName == world.Name))
+        {
+            var overwriteLmsWorldDialog = await DialogService.ShowAsync<OverwriteLmsWorldDialog>("Title", options);
+            var overwriteResult = await overwriteLmsWorldDialog.Result;
+
+            if (overwriteResult.Canceled) return;
+            switch ((OverwriteLmsWorldDialogResult)overwriteResult.Data)
+            {
+                case OverwriteLmsWorldDialogResult.Overwrite:
+                    await PresentationLogic.DeleteLmsWorld(existingLmsWorlds.First(lmsWord => lmsWord.WorldName == world.Name));
+                    break;
+                case OverwriteLmsWorldDialogResult.Copy:
+                    break;
+            }
+        }
+
+        //present progress dialog
         var cancellationTokenSource = new CancellationTokenSource();
         var progress = new Progress<int>();
         options = new DialogOptions
@@ -357,6 +372,7 @@
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
             }
+
             if (space.Points < space.RequiredPoints)
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
@@ -364,8 +380,8 @@
         }
 
         foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
-            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
         {
             if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
             if (TaskReferencesNonexistantElement(adaptivityContent, world))
@@ -409,25 +425,25 @@
     private IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> ReferencesElementInSpaceAfterOwnSpace(ILearningElementViewModel element, ILearningWorldViewModel world)
     {
         var ownSpace = world.LearningSpaces.SingleOrDefault(space => space.ContainedLearningElements.Contains(element));
-    //element isn't placed yet, can't say anything about it
+        //element isn't placed yet, can't say anything about it
         if (ownSpace is null) return Enumerable.Empty<(ILearningSpaceViewModel, ILearningElementViewModel)>();
 
-    //find all the id's of elements that the adaptivity content of this element we are looking at references
+        //find all the id's of elements that the adaptivity content of this element we are looking at references
         var adaptivityContent = (AdaptivityContentViewModel)element.LearningContent;
         var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
 
-    //create a tuple of (space,ele) for every element in every space
+        //create a tuple of (space,ele) for every element in every space
         IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> spaceElementTuples = world.LearningSpaces
             .SelectMany(space => space.ContainedLearningElements
                 .Select(ele => (space, ele)));
 
-    //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
+        //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
         var spaceElementTuplesReferenced = spaceElementTuples.Where(tup => adaptivityContentReferencedIds.Contains(tup.Element.Id));
 
-    //find all spaces that are after the space the element we are looking at is in
+        //find all spaces that are after the space the element we are looking at is in
         var spacesAfterOwn = ownSpace.GetFollowingSpaces();
 
-    //find all tuples that contain a space that is after our own space
+        //find all tuples that contain a space that is after our own space
         return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
     }
 
@@ -444,7 +460,7 @@
 
     private async Task ShowNotLoggedInDialog()
     {
-    //present Info dialog
+        //present Info dialog
         var parameters = new DialogParameters
         {
             { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"].ToString() },
@@ -510,17 +526,17 @@
             Snackbar.Add("Save LearningWorld canceled", Severity.Warning);
         }
     }
-    
+
     private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
 
     private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
-    
+
     private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
 
     private string icon = help;
 
-        const string help = 
-    @"<?xml version=""1.0"" encoding=""UTF-8""?>
+    const string help =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
         <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
             <defs>
                 <style>

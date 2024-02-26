@@ -1,0 +1,31 @@
+@using Shared
+<MudDialog>
+    <DialogContent>
+        Replace, Copy or Cancel
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Overwrite">Overwrite</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Copy">Copy</MudButton>
+        <MudButton Color="Color.Success" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+
+    private void Overwrite()
+    {
+        MudDialog!.Close(DialogResult.Ok(OverwriteLmsWorldDialogResult.Overwrite));
+    }
+
+    private void Copy()
+    {
+        MudDialog!.Close(DialogResult.Ok(OverwriteLmsWorldDialogResult.Copy));
+    }
+
+    private void Cancel()
+    {
+        MudDialog!.Close(DialogResult.Cancel());
+    }
+
+}
