@@ -150,6 +150,13 @@
                                 </MudTd>
                             </RowTemplate>
                         </TableSelect>
+                        @if (FormModel.LearningContent is FileContentViewModel { Type: "h5p" } fc)
+                        {
+                            <div class="flex flex-col">
+                                <MudText>Is primitive?</MudText>
+                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)"/>
+                            </div>
+                        }
                     }
                 </Collapsable>
             </div>

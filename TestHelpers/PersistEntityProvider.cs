@@ -58,9 +58,9 @@ public static class PersistEntityProvider
         return new LinkContentPe(name ?? "a name", link ?? "a link");
     }
 
-    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null)
+    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null, bool primitiveH5p = false)
     {
-        return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath");
+        return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath", primitiveH5p);
     }
 
     public static TopicPe GetTopic(string? name = null)

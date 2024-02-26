@@ -18,6 +18,7 @@ using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -270,6 +271,34 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
         Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
+    }
+
+    [Test]
+    public void H5PContentSelected_ShowsPrimitiveCheckbox()
+    {
+        var content = new []
+        {
+            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        WorldPresenter.GetAllContent().Returns(content);
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        
+        
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentViewModel>>();
+        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
+        
+        Assert.That(FormModel.LearningContent, Is.EqualTo(content.First()));
+        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentViewModel>());
+        Assert.That(content.First().PrimitiveH5P, Is.EqualTo(false));
+        
+        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        
+        checkbox.Find("input").Change(true);
+        
+        Assert.That(content.First().PrimitiveH5P, Is.EqualTo(true));
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
 
     [Test]
