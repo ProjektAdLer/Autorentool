@@ -11,6 +11,7 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Dialogues
+@using Presentation.Components.Dialogues
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@(!AdaptivityElementMode ? Localizer["EditElementForm.Header.Text"] : Localizer["EditAdaptivityElementForm.Header.Text"])</h2>
@@ -146,8 +147,17 @@
                         @if (FormModel.LearningContent is FileContentViewModel { Type: "h5p" } fc)
                         {
                             <div class="flex flex-col">
-                                <MudText>Is primitive?</MudText>
-                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)"/>
+                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                                    @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
+                                    <MudTooltip>
+                                        <ChildContent>
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue" OnClick="ShowH5PInfoDialog"/>
+                                        </ChildContent>
+                                        <TooltipContent>
+                                            @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
+                                        </TooltipContent>
+                                    </MudTooltip>
+                                </MudCheckBox>
                             </div>
                         }
                 </Collapsable>
@@ -324,4 +334,12 @@
         StateHasChanged();
     }
 
+    private async Task ShowH5PInfoDialog()
+    {
+        var dialogParams = new DialogParameters()
+        {
+            {nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value},
+        };
+        await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
 }

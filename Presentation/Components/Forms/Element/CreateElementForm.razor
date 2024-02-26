@@ -12,6 +12,7 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Adaptivity.Dialogues
+@using Presentation.Components.Dialogues
 
 
 
@@ -153,8 +154,17 @@
                         @if (FormModel.LearningContent is FileContentViewModel { Type: "h5p" } fc)
                         {
                             <div class="flex flex-col">
-                                <MudText>Is primitive?</MudText>
-                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)"/>
+                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                                    @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
+                                    <MudTooltip>
+                                        <ChildContent>
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue" OnClick="ShowH5PInfoDialog"/>
+                                        </ChildContent>
+                                        <TooltipContent>
+                                            @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
+                                        </TooltipContent>
+                                    </MudTooltip>
+                                </MudCheckBox>
                             </div>
                         }
                     }
@@ -331,4 +341,12 @@
         }
     }
 
+    private async Task ShowH5PInfoDialog()
+    {
+        var dialogParams = new DialogParameters()
+        {
+            {nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value},
+        };
+        await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
 }
