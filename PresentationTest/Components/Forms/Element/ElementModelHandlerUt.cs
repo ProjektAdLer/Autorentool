@@ -33,8 +33,7 @@ public class ElementModelHandlerUt
         var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", Theme.Campus);
         var expectedModels = new[]
         {
-            ElementModel.l_random, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice,
-            ElementModel.a_npc_defaultnpc
+            ElementModel.a_npc_alerobot
         };
 
         Assert.That(elementModels, Is.EquivalentTo(expectedModels));
@@ -86,6 +85,7 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Image))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Video))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
+            .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Story))
             .ToList();
         var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();

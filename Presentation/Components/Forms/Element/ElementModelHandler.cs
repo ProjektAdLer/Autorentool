@@ -1,4 +1,4 @@
-using Presentation.PresentationLogic.LearningContent;
+﻿using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -206,6 +206,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_comicshelfsmall_1;
                 yield return ElementModel.l_video_vrdesk_1;
                 yield return ElementModel.a_npc_sheriffjustice;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.Campus:
                 yield return ElementModel.l_h5p_blackboard_2;
@@ -218,6 +219,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
                 yield return ElementModel.a_npc_dozentlukas;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
@@ -231,6 +233,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_bookshelf_2;
                 yield return ElementModel.l_video_television_1;
                 yield return ElementModel.a_npc_defaultnpc;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);

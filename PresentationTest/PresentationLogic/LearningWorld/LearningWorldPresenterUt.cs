@@ -1217,7 +1217,7 @@ public class LearningWorldPresenterUt
         var mediator = Substitute.For<IMediator>();
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
 
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningElement(element);

@@ -43,6 +43,11 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
+        ElementModelHandler.GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<Theme?>())
+            .Returns(new[]
+            {
+                ElementModel.l_random
+            });
         PresentationLogic = Substitute.For<IPresentationLogic>();
         var localizer = Substitute.For<IStringLocalizer<ElementModelGridSelect>>();
         Context.Services.AddSingleton(WorldPresenter);
