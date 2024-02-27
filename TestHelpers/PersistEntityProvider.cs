@@ -22,7 +22,7 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, "LSPg" + append, 4,
-            Theme.Campus,
+            Theme.CampusAschaffenburg,
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX, positionY, inBoundObjects, outBoundObjects, assignedTopic);
     }

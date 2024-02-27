@@ -28,10 +28,12 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements, floorPlan: FloorPlanEnum.R_20X20_6L);
+        var learningSpaceLayout =
+            EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
+                floorPlan: FloorPlanEnum.R_20X20_6L);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.CampusAschaffenburg,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         Assert.Multiple(() =>
@@ -72,7 +74,7 @@ public class LearningSpaceUt
         var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.CampusAschaffenburg,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
@@ -160,7 +162,7 @@ public class LearningSpaceUt
             EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
                 floorPlan: FloorPlanEnum.R_20X20_6L);
 
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.CampusAschaffenburg,
             learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();

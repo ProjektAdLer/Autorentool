@@ -32,7 +32,7 @@ public class SpaceCommandFactoryUt
         var positionX = 1.5;
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
-        var theme = Theme.Campus;
+        var theme = Theme.CampusAschaffenburg;
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
@@ -110,7 +110,7 @@ public class SpaceCommandFactoryUt
         var goals = "Updated goals";
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
-        var theme = Theme.Campus;
+        var theme = Theme.CampusAschaffenburg;
         Action<ILearningSpace> mappingAction = _ => { };
 
         // Act

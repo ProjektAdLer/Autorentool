@@ -21,7 +21,7 @@ public class EditLearningSpaceUt
         var goals = "learning";
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
-        var theme = Theme.Campus;
+        var theme = Theme.CampusAschaffenburg;
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -63,7 +63,7 @@ public class EditLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
-        var theme = Theme.Campus;
+        var theme = Theme.CampusAschaffenburg;
         var topic = new BusinessLogic.Entities.Topic("abc");
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;
@@ -90,7 +90,7 @@ public class EditLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
-        var theme = Theme.Campus;
+        var theme = Theme.CampusAschaffenburg;
         var topic = new BusinessLogic.Entities.Topic("abc");
         var actionWasInvoked = false;
         Action<ILearningSpace> mappingAction = _ => actionWasInvoked = true;

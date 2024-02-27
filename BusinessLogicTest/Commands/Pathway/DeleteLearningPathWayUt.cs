@@ -16,19 +16,19 @@ public class DeleteLearningPathWayUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("z", "w", "v", 5, Theme.Campus)
+        var space1 = new LearningSpace("z", "w", "v", 5, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", "p", 3, Theme.Campus)
+        var space2 = new LearningSpace("l", "o", "p", 3, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space3 = new LearningSpace("l", "o", "p", 3, Theme.Campus)
+        var space3 = new LearningSpace("l", "o", "p", 3, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space4 = new LearningSpace("l", "o", "p", 3, Theme.Campus)
+        var space4 = new LearningSpace("l", "o", "p", 3, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
@@ -74,8 +74,8 @@ public class DeleteLearningPathWayUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", "v", 5, Theme.Campus);
-        var space2 = new LearningSpace("l", "o", "p", 3, Theme.Campus);
+        var space1 = new LearningSpace("z", "w", "v", 5, Theme.CampusAschaffenburg);
+        var space2 = new LearningSpace("l", "o", "p", 3, Theme.CampusAschaffenburg);
         var pathWay = new LearningPathway(space1, space2);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -100,11 +100,11 @@ public class DeleteLearningPathWayUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("z", "w", "v", 5, Theme.Campus)
+        var space1 = new LearningSpace("z", "w", "v", 5, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", "p", 3, Theme.Campus)
+        var space2 = new LearningSpace("l", "o", "p", 3, Theme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };

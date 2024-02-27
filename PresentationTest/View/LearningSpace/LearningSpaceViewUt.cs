@@ -108,13 +108,13 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("p.space-theme");
         elementName.MarkupMatches(
-            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.Campus</p>");
+            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.CampusAschaffenburg</p>");
     }
 
     [Test]
     public void Render_NoLearningObjectSelected_DoesNotRenderLearningObjectSection()
     {
-        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
+        _learningSpacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?)null);
         Assert.That(_learningSpacePresenter.LearningSpaceVm, Is.Null);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();

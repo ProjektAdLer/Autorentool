@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
-using Presentation.PresentationLogic.LearningContent;
+﻿using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -9,6 +8,9 @@ namespace Presentation.Components.Forms.Element;
 
 public class ElementModelHandler : IElementModelHandler
 {
+    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
+        { ElementModel.a_npc_alerobot };
+
     //If you add a new ElementModel, you have to add it to the following methods:
     //  - GetIconForElementModel: Add the path to the icon for the new ElementModel
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
@@ -24,7 +26,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => ContentTypeEnum.H5P
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.CampusAschaffenburg);
 
         if (adaptivityElementMode)
         {
@@ -32,13 +34,10 @@ public class ElementModelHandler : IElementModelHandler
         }
         else
         {
-            var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+            var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
             return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
         }
     }
-    
-    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_alerobot };
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -89,10 +88,12 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
-            ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
+            ElementModel.a_npc_sheriffjustice =>
+                "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
-            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, "Icon not found for ElementModel")
+            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
+                "Icon not found for ElementModel")
         };
     }
 
@@ -185,7 +186,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_vrdesk_1;
                 yield return ElementModel.a_npc_sheriffjustice;
                 break;
-            case Theme.Campus:
+            case Theme.CampusAschaffenburg:
+            case Theme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;

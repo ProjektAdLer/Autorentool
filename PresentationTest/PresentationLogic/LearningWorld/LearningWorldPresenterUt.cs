@@ -335,7 +335,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(),
@@ -351,7 +351,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
 
         errorService.Received().SetError("Operation failed", "No learning world selected");
     }
@@ -365,12 +365,13 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus));
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc",
+            Theme.CampusAschaffenburg));
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
 
-        var space = new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+        var space = new LearningSpaceViewModel("aa", "bb", "cc", Theme.CampusAschaffenburg, 0,
             null, 0, 85);
         systemUnderTest.LearningWorldVm.LearningSpaces.Add(space);
 
@@ -378,8 +379,9 @@ public class LearningWorldPresenterUt
         space.PositionX = 15;
         space.PositionY = 100;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc",
+            Theme.CampusAschaffenburg, 0,
             null, 0, 185));
 
         systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
@@ -391,8 +393,9 @@ public class LearningWorldPresenterUt
         condition.PositionX = 15;
         condition.PositionY = 280;
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc",
+            Theme.CampusAschaffenburg, 0,
             null, 0, 335));
 
         systemUnderTest.CreatePathWayCondition(ConditionEnum.And);
@@ -403,8 +406,9 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm.PathWayConditions.Add(
             new PathWayConditionViewModel(ConditionEnum.And, false, 0, 475));
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc", Theme.Campus, 0,
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.CampusAschaffenburg);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", "cc",
+            Theme.CampusAschaffenburg, 0,
             null, 0, 530));
 
         systemUnderTest.CreatePathWayCondition(ConditionEnum.And);

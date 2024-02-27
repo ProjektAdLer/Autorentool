@@ -27,7 +27,7 @@ public class LearningSpacePresenterUt
         var mockErrorService = Substitute.For<IErrorService>();
         var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        systemUnderTest.EditLearningSpace("a", "d", "e", 5, Theme.Campus, null);
+        systemUnderTest.EditLearningSpace("a", "d", "e", 5, Theme.CampusAschaffenburg, null);
 
         mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
@@ -41,9 +41,9 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space", "d", "e", 5, Theme.Campus, topic);
+        systemUnderTest.EditLearningSpace("space", "d", "e", 5, Theme.CampusAschaffenburg, topic);
 
-        presentationLogic.Received().EditLearningSpace(space, "space", "d", "e", 5, Theme.Campus, topic);
+        presentationLogic.Received().EditLearningSpace(space, "space", "d", "e", 5, Theme.CampusAschaffenburg, topic);
     }
 
     [Test]

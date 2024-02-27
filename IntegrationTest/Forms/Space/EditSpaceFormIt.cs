@@ -133,14 +133,14 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
-        mudSelect.Find("input").Change(Theme.Campus);
+        mudSelect.Find("input").Change(Theme.CampusAschaffenburg);
 
         systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)),
             TimeSpan.FromSeconds(2));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
-        Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
+        Assert.That(FormModel.Theme, Is.EqualTo(Theme.CampusAschaffenburg));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
@@ -170,7 +170,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
-        mudSelect.Find("input").Change(Theme.Campus);
+        mudSelect.Find("input").Change(Theme.CampusAschaffenburg);
 
         Assert.Multiple(() =>
         {
@@ -178,14 +178,14 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(300, 10));
             Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(300, 10));
             Assert.That(() => FormModel.RequiredPoints, Is.EqualTo(123).After(300, 10));
-            Assert.That(() => FormModel.Theme, Is.EqualTo(Theme.Campus).After(300, 10));
+            Assert.That(() => FormModel.Theme, Is.EqualTo(Theme.CampusAschaffenburg).After(300, 10));
         });
 
         Mapper.ClearReceivedCalls();
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, Expected, 123, Theme.Campus);
+        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, Expected, 123, Theme.CampusAschaffenburg);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
@@ -199,10 +199,10 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
                     string str => str == Expected,
                     int i => i == 123,
                     //TODO: once we have more themes, change to a different theme and test that
-                    Theme t => t == Theme.Campus,
+                    Theme t => t == Theme.CampusAschaffenburg,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
             }
         );
     }
