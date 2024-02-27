@@ -40,7 +40,7 @@ public class CreateStoryElementInSlot : ICreateStoryElementInSlot
     internal int SlotIndex { get; }
     internal LearningElement LearningElement { get; }
     internal Action<LearningSpace> MappingAction { get; }
-    private ILogger<CreateStoryElementInSlot> Logger { get; }
+    internal ILogger<CreateStoryElementInSlot> Logger { get; }
     public string Name => nameof(CreateStoryElementInSlot);
     public void Execute()
     {

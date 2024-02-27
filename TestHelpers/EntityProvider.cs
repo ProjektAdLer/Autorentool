@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
 
@@ -81,6 +82,12 @@ public static class EntityProvider
     {
         return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
             { UnsavedChanges = unsavedChanges };
+    }
+
+    public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null, bool unsavedChanges = false)
+    {
+        storyText ??= new List<string> { "a story" };
+        return new StoryContent(name, unsavedChanges, storyText);
     }
 
     public static Topic GetTopic(string append = "")

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Element;
 
-class DeleteStoryElementInSpace : IDeleteStoryElementInSpace
+public class DeleteStoryElementInSpace : IDeleteStoryElementInSpace
 {
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
@@ -20,7 +20,7 @@ class DeleteStoryElementInSpace : IDeleteStoryElementInSpace
     internal LearningElement LearningElement { get; }
     internal LearningSpace ParentSpace { get; }
     internal Action<LearningSpace> MappingAction { get; }
-    private ILogger<DeleteStoryElementInSpace> Logger { get; }
+    internal ILogger<DeleteStoryElementInSpace> Logger { get; }
     public string Name => nameof(DeleteStoryElementInSpace);
 
     public void Execute()
