@@ -1,7 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
+
 namespace BusinessLogic.Entities.LearningContent.Story;
 
 public class StoryContent : IStoryContent
 {
+    [UsedImplicitly]
+    [ExcludeFromCodeCoverage(Justification = "Used by automapper, all properties are set after constructor, inaccessible to user code")]
     private StoryContent()
     {
         Name = "";
