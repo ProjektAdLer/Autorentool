@@ -166,11 +166,11 @@
                 break;
             case ElementMode.Story:
                 <div class="px-4">
-                    <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
+                    <Collapsable Title="@Localizer["EditStoryElementForm.Fields.Collapsable.Story.Title"]" @bind-Collapsed="_collapsedStory">
                         <PseudoFormFieldGrouping
                             For="() => FormModel.LearningContent"
                             @ref="_pseudoGroupStoryContent">
-                            <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
+                            <p class="text-xs pl-6">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
                             @if (StoryContentModel != null)
                             {
                                 @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
@@ -180,7 +180,7 @@
                                         <div class="flex flex-row">
                                             <MudIconButton Icon="@Icons.Material.Outlined.Delete"
                                                            OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"/>
-                                            <MudTextField T="string" Label="@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]"
+                                            <MudTextField T="string" Label="@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]"
                                                           Variant="Variant.Outlined" Lines="5"
                                                           @bind-Value="@(StoryContentModel.StoryText[x])"
                                                           DebounceInterval="DebounceInterval"/>
@@ -207,7 +207,7 @@
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                     <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                             For="@(() => FormModel.ElementModel)"
-                                            Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                            Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
                                             Elements="GetElementModels()">
                     </ElementModelGridSelect>
                 </div>

@@ -104,4 +104,13 @@
     <data name="EditElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
         <value>Edit tasks of the adaptivity element</value>
     </data>
+    <data name="EditStoryElementForm.Header.Text" xml:space="preserve">
+        <value>Edit story element</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Story</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
+        <value>Story of this story element</value>
+    </data>
 </root>

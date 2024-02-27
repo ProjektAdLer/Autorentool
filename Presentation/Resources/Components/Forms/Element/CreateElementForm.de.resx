@@ -113,4 +113,13 @@
     <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
         <value>Darstellung in der 3D-Lernumgebung</value>
     </data>
+    <data name="CreateStoryElementForm.Header.Text" xml:space="preserve">
+        <value>Storyelement erstellen</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Story</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
+        <value>Story zu diesem Storyelement</value>
+    </data>
 </root>
