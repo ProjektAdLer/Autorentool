@@ -3,21 +3,21 @@
 public class D40X3715LViewModel : IFloorPlanViewModel
 {
     private const string Icon =
-        @"<svg id=""uuid-2e36254b-03e2-4734-b7d6-fc81a62b6bd1"" data-name=""D-Form_right"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
-            <polygon points=""1731.73 1429.08 1731.73 390.74 1235.31 89.38 47 89.38 47 1714 1238.46 1714 1731.73 1429.08"" style=""fill: #cfd8e5; stroke: #2e3a4d; stroke-miterlimit: 10; stroke-width: 51px;""/>
+        @"<svg id=""uuid-41ede887-6940-4fde-86c7-69a190ccce42"" data-name=""D-Form_nobg"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+            <polygon points=""1841 1399.5 1841 627.5 1354.1 271 36.5 271 36.5 1748 1356.54 1748 1841 1399.5"" style=""fill: #cfd8e5; stroke: #2e3a4d; stroke-miterlimit: 10; stroke-width: 51px;""/>
             <g>
-                <rect x=""1668.77"" y=""734.24"" width=""114.56"" height=""368.26"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
-                <path d=""M1757.82,759.74v317.26h-63.56v-317.26h63.56M1808.82,708.74h-165.56v419.26h165.56v-419.26h0Z"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
+                <rect x=""1816.5"" y=""920.5"" width=""45"" height=""209"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
+                <polygon points=""1887 895 1791 895 1791 1155 1887 1155 1887 895 1887 895"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
             </g>
             <g>
-                <rect x=""317.92"" y=""1657.88"" width=""368.26"" height=""114.56"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
-                <path d=""M660.67,1683.38v63.56h-317.26v-63.56h317.26M711.67,1632.38h-419.26v165.56h419.26v-165.56h0Z"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
+                <rect x=""438.5"" y=""1726.5"" width=""209"" height=""45"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
+                <polygon points=""673 1701 413 1701 413 1797 673 1797 673 1701 673 1701"" style=""fill: #2e3a4d; stroke-width: 0px;""/>
             </g>
-                <path d=""M589.12,1959.17l-103.61-103.61-103.61,103.61s206.23-.98,207.22,0Z"" style=""fill: #2e3a4d; fill-rule: evenodd; stroke: #2e3a4d; stroke-linecap: round; stroke-linejoin: round; stroke-width: 19px;""/>
-                <path d=""M1875.39,1038.34l103.61-103.61-103.61-103.61s.98,206.23,0,207.22Z"" style=""fill: #2e3a4d; fill-rule: evenodd; stroke: #2e3a4d; stroke-linecap: round; stroke-linejoin: round; stroke-width: 19px;""/>
+            <path d=""M617.33,1895.71l-72.82-72.82-72.82,72.82s144.95-.69,145.64,0Z"" style=""fill: #2e3a4d; fill-rule: evenodd; stroke: #2e3a4d; stroke-linecap: round; stroke-linejoin: round; stroke-width: 19px;""/>
+            <path d=""M1915.67,1086.54l72.82-72.82-72.82-72.82s.69,144.95,0,145.64Z"" style=""fill: #2e3a4d; fill-rule: evenodd; stroke: #2e3a4d; stroke-linecap: round; stroke-linejoin: round; stroke-width: 19px;""/>
             <g>
-                <path d=""M645.15,1280.81h-139.09v-536.87l-166.04,51.27v-112.14l290.2-103.95h14.92v701.69Z"" style=""fill: #172d4d; stroke: #172d4d; stroke-miterlimit: 10;""/>
-                <path d=""M893.48,936.22l40.43-356.14h392.71v115.99h-278.65l-17.33,150.64c33.04-17.64,68.17-26.47,105.4-26.47,66.73,0,119.03,20.69,156.89,62.08,37.86,41.39,56.79,99.31,56.79,173.74,0,45.24-9.55,85.75-28.64,121.52-19.09,35.78-46.44,63.53-82.06,83.26-35.61,19.73-77.65,29.6-126.09,29.6-42.35,0-81.66-8.59-117.91-25.75-36.26-17.16-64.9-41.31-85.91-72.43-21.02-31.12-32.17-66.57-33.45-106.36h137.64c2.89,29.2,13.07,51.9,30.56,68.1,17.48,16.21,40.34,24.3,68.58,24.3,31.44,0,55.66-11.31,72.67-33.93,17-22.62,25.51-54.62,25.51-96.01s-9.79-70.27-29.36-91.44c-19.57-21.18-47.33-31.76-83.26-31.76-33.05,0-59.84,8.66-80.37,25.99l-13.48,12.51-110.69-27.43Z"" style=""fill: #172d4d; stroke: #172d4d; stroke-miterlimit: 10;""/>
+                <path d=""M768.78,1328.25h-119.95v-462.99l-143.19,44.21v-96.7l250.27-89.65h12.87v605.13Z"" style=""fill: #172d4d; stroke-width: 0px;""/>
+                <path d=""M982.94,1031.08l34.86-307.13h338.67v100.02h-240.31l-14.94,129.91c28.49-15.21,58.79-22.83,90.89-22.83,57.55,0,102.65,17.85,135.3,53.54,32.65,35.69,48.97,85.64,48.97,149.83,0,39.01-8.24,73.95-24.7,104.8-16.46,30.86-40.05,54.79-70.76,71.8-30.71,17.02-66.96,25.53-108.74,25.53-36.52,0-70.42-7.41-101.68-22.21-31.27-14.8-55.97-35.62-74.09-62.46-18.12-26.83-27.74-57.41-28.84-91.72h118.7c2.49,25.18,11.27,44.76,26.35,58.73,15.08,13.97,34.79,20.96,59.14,20.96,27.11,0,48-9.75,62.67-29.26,14.66-19.51,22-47.11,22-82.8s-8.44-60.6-25.32-78.86c-16.88-18.26-40.82-27.39-71.8-27.39-28.5,0-51.61,7.47-69.31,22.41l-11.62,10.79-95.46-23.66Z"" style=""fill: #172d4d; stroke-width: 0px;""/>
             </g>
         </svg>";
 
@@ -35,21 +35,21 @@ public class D40X3715LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 0, Y = 0 },
-        new() { X = 6, Y = 0 },
-        new() { X = 12, Y = 0 },
-        new() { X = 17, Y = 0 },
-        new() { X = 24, Y = 6 },
-        new() { X = 28, Y = 12 },
-        new() { X = 28, Y = 20 },
-        new() { X = 24, Y = 26 },
-        new() { X = 17, Y = 29 },
-        new() { X = 12, Y = 29 },
-        new() { X = 0, Y = 29 },
-        new() { X = 0, Y = 24 },
-        new() { X = 0, Y = 17 },
-        new() { X = 0, Y = 12 },
-        new() { X = 0, Y = 5 }
+        new() { X = 4, Y = 5 },
+        new() { X = 10, Y = 5 },
+        new() { X = 16, Y = 5 },
+        new() { X = 21, Y = 5 },
+        new() { X = 27, Y = 9 },
+        new() { X = 31, Y = 15 },
+        new() { X = 31, Y = 24 },
+        new() { X = 27, Y = 30 },
+        new() { X = 20, Y = 33 },
+        new() { X = 15, Y = 33 },
+        new() { X = 4, Y = 33 },
+        new() { X = 4, Y = 29 },
+        new() { X = 4, Y = 22 },
+        new() { X = 4, Y = 17 },
+        new() { X = 4, Y = 10 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
