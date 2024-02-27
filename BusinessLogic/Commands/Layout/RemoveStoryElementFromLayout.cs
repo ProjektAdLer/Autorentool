@@ -23,7 +23,7 @@ public class RemoveStoryElementFromLayout : IRemovedStoryElementFromLayout
     internal ILearningSpace LearningSpace { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningWorld> MappingAction { get; }
-    private ILogger<RemoveStoryElementFromLayout> Logger { get; }
+    internal ILogger<RemoveStoryElementFromLayout> Logger { get; }
     public string Name => nameof(RemoveStoryElementFromLayout);
     public void Execute()
     {

@@ -22,7 +22,7 @@ public class PlaceStoryElementInLayoutFromLayout : IPlaceStoryElementInLayoutFro
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningSpace> MappingAction { get; }
-    private ILogger<PlaceStoryElementInLayoutFromLayout> Logger { get; }
+    internal ILogger<PlaceStoryElementInLayoutFromLayout> Logger { get; }
     public string Name => nameof(PlaceStoryElementInLayoutFromLayout);
     public void Execute()
     {

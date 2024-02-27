@@ -27,7 +27,7 @@ public class PlaceStoryElementInLayoutFromUnplaced : IPlaceStoryElementInLayoutF
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningWorld> MappingAction { get; }
-    private ILogger<PlaceStoryElementInLayoutFromUnplaced> Logger { get; }
+    internal ILogger<PlaceStoryElementInLayoutFromUnplaced> Logger { get; }
     public string Name => nameof(PlaceStoryElementInLayoutFromUnplaced);
 
     public void Execute()
