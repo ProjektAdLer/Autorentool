@@ -1,0 +1,65 @@
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using Shared
+<MudDialog>
+    <DialogContent>
+        Replace, Copy or Cancel
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Replace">@Localizer["ReplaceCopyLmsWorldDialog.ReplaceButtonText"]</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Copy">@Localizer["ReplaceCopyLmsWorldDialog.CopyButtonText"]</MudButton>
+        <MudButton Color="Color.Success" OnClick="Cancel">@Localizer["ReplaceCopyLmsWorldDialog.CancelButtonText"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    IDialogService DialogService { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<ReplaceCopyLmsWorldDialog> Localizer { get; set; }
+
+    private async void Replace()
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+        };
+        var parameters = new DialogParameters
+        {
+            { "SubmitButtonText", "Submit" },
+            { "SubmitButtonColor", Color.Success },
+            {
+                "DialogText",
+                "Bist du dir wirklich wirklich sicher?"
+            },
+        };
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Title", parameters,
+            options);
+        var result = await dialog.Result;
+
+        if (result.Data is bool && (bool)result.Data)
+        {
+            MudDialog!.Close(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
+        }
+        else
+        {
+            MudDialog!.Close(DialogResult.Cancel());
+        }
+    }
+
+    private void Copy()
+    {
+        MudDialog!.Close(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Copy));
+    }
+
+    private void Cancel()
+    {
+        MudDialog!.Close(DialogResult.Cancel());
+    }
+
+}

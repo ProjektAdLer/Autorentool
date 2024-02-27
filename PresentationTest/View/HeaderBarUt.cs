@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,6 +20,7 @@ using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Culture;
 using Presentation.Components.Dialogues;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
@@ -131,7 +133,8 @@ public class HeaderBarUt
         var systemUnderTest = GetRenderedComponent();
 
         var element = systemUnderTest.FindAll("div p")[1];
-        element.MarkupMatches(@"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
+        element.MarkupMatches(
+            @"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
     }
 
     [Test]
@@ -145,6 +148,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
         _dialogService
@@ -334,6 +338,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
             .Throws(new OperationCanceledException());
@@ -362,6 +367,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
             .Throws(new GeneratorException());

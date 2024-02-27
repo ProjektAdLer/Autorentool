@@ -79,6 +79,16 @@
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
     <Compile Remove="PresentationLogic\LearningContent\LearningContentViewModel.cs" />
+    <Compile Update="Resources\Components\Dialogues\OverwriteLmsWorldDialog.de.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OverwriteLmsWorldDialog.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Components\Dialogues\OverwriteLmsWorldDialog.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OverwriteLmsWorldDialog.en.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.en.resx">
@@ -194,6 +204,14 @@
     <EmbeddedResource Update="Resources\View\LearningPathWay\ConditionToggleSwitch.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConditionToggleSwitch.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\ReplaceCopyLmsWorldDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OverwriteLmsWorldDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Dialogues\ReplaceCopyLmsWorldDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OverwriteLmsWorldDialog.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
