@@ -3,12 +3,12 @@
 @using Shared
 <MudDialog>
     <DialogContent>
-        Replace, Copy or Cancel
+        @((MarkupString)Localizer["ReplaceCopyLmsWorldDialog.DialogContent", LmsWorldName].ToString())
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="Replace">@Localizer["ReplaceCopyLmsWorldDialog.ReplaceButtonText"]</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Copy">@Localizer["ReplaceCopyLmsWorldDialog.CopyButtonText"]</MudButton>
-        <MudButton Color="Color.Success" OnClick="Cancel">@Localizer["ReplaceCopyLmsWorldDialog.CancelButtonText"]</MudButton>
+        <MudButton Color="Color.Info" OnClick="Replace">@Localizer["ReplaceCopyLmsWorldDialog.ReplaceButtonText"]</MudButton>
+        <MudButton Color="Color.Warning" OnClick="Copy">@Localizer["ReplaceCopyLmsWorldDialog.CopyButtonText"]</MudButton>
+        <MudButton Color="Color.Dark" OnClick="Cancel">@Localizer["ReplaceCopyLmsWorldDialog.CancelButtonText"]</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -21,6 +21,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ReplaceCopyLmsWorldDialog> Localizer { get; set; }
 
+    [Parameter] public string LmsWorldName { get; set; } = string.Empty;
+
     private async void Replace()
     {
         var options = new DialogOptions
@@ -31,24 +33,16 @@
         };
         var parameters = new DialogParameters
         {
-            { "SubmitButtonText", "Submit" },
-            { "SubmitButtonColor", Color.Success },
-            {
-                "DialogText",
-                "Bist du dir wirklich wirklich sicher?"
-            },
+            { "DialogText", Localizer["ReplaceCopyLmsWorldDialog.ConfirmationDialogText"].ToString() },
+            { "SubmitButtonText", Localizer["ReplaceCopyLmsWorldDialog.ConfirmationDialogSubmitButtonText"].ToString() }
         };
-        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Title", parameters,
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ReplaceCopyLmsWorldDialog.ConfirmationDialogTitle"].ToString(), parameters,
             options);
         var result = await dialog.Result;
 
         if (result.Data is bool && (bool)result.Data)
         {
             MudDialog!.Close(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
-        }
-        else
-        {
-            MudDialog!.Close(DialogResult.Cancel());
         }
     }
 
