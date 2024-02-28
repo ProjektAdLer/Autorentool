@@ -41,7 +41,7 @@
         <value>Thema: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
-        <value>Ziele: </value>
+        <value>Lernziele: </value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
         <value>Ersetze Lernelement</value>
@@ -60,5 +60,17 @@
     </data>
     <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
         <value>Pkt.</value>
+    </data>
+    <data name="LearningSpace.SpaceGoals.Overview" xml:space="preserve">
+        <value>Lernziele dieses Lernraums</value>
+    </data>
+    <data name="LearningSpace.LearningOutcomesOverview.Title" xml:space="preserve">
+        <value>Lernziel-Übersicht</value>
+    </data>
+    <data name="LearningSpace.LearningOutcomesOverview.Text.Part1" xml:space="preserve">
+        <value>Lernziele zum Lernraum</value>
+    </data>
+    <data name="LearningSpaceView.NoOutcome" xml:space="preserve">
+        <value>Zu diesem Lernraum existieren aktuell noch keine Lernziele.</value>
     </data>
 </root>

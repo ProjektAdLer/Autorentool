@@ -34,16 +34,16 @@
         <value>Language</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning world.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning world.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Create learning world</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
         <value>Link to evaluation</value>
@@ -52,10 +52,13 @@
         <value>Learning world created</value>
     </data>
     <data name="CreateWorldForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="CreateWorldForm.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Enrolment key</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Title" xml:space="preserve">
         <value>Enrolment method</value>

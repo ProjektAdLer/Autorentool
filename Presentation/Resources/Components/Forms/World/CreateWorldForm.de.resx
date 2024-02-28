@@ -37,16 +37,16 @@
         <value>Link zur Evaluation</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung</value>
+        <value>Formulieren Sie hier eine Beschreibung für Ihre Lernwelt.</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diese Lernwelt.</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Lernwelt erstellen</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Lernziele</value>
     </data>
     <data name="CreateWorldForm.SnackbarMessage" xml:space="preserve">
         <value>Lernwelt erstellt</value>
@@ -62,5 +62,8 @@
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>Ein Einschreibeschlüssel erlaubt den Lernwelt-Zugriff nur für diejenigen Nutzer/innen, die den Einschreibeschlüssel kennen. &lt;br&gt; &lt;br&gt; Wenn das Feld leer bleibt, können sich alle Nutzer/innen in die Lernwelt einschreiben. &lt;br&gt; &lt;br&gt; Wenn ein Einschreibeschlüssel angegeben ist, müssen alle Nutzer/innen notwendigerweise bei der Lernwelteinschreibung den Einschreibeschlüssel eingeben. Beachten Sie, dass Nutzer/innen den Einschreibeschlüssel nur einmal bei der Lernwelteinschreibung eingeben müssen und danach dauerhaft eingeschriebene Lernweltteilnehmer/innen sind.</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Beschreibung</value>
     </data>
 </root>

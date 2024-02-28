@@ -63,13 +63,13 @@
         <value>3D representation of learning element</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning element.</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning element.</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
         <value>External learning material</value>
@@ -96,13 +96,16 @@
         <value>Choose a external learning material (file or link)*</value>
     </data>
     <data name="EditElementForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="EditElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
         <value>3D representation icon</value>
     </data>
     <data name="EditElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
         <value>Edit tasks of the adaptivity element</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
         <value>Is H5P element primitive?</value>

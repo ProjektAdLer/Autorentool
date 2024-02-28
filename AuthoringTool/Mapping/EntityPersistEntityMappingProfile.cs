@@ -8,6 +8,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
 using PersistEntities;
 using PersistEntities.LearningContent;
@@ -15,6 +16,7 @@ using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Story;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 
 namespace AuthoringTool.Mapping;
 
@@ -35,6 +37,7 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
         CreateAdaptivityMap();
+        CreateLearningOutcomeMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -42,6 +45,29 @@ public class EntityPersistEntityMappingProfile : Profile
         cfg.AddProfile(new EntityPersistEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
     };
+
+    private void CreateLearningOutcomeMap()
+    {
+        CreateMap<ManualLearningOutcomePe, ManualLearningOutcome>().ReverseMap();
+        CreateMap<StructuredLearningOutcomePe, StructuredLearningOutcome>()
+            .ReverseMap();
+
+        CreateMap<ManualLearningOutcomePe, ILearningOutcome>().As<ManualLearningOutcome>();
+        CreateMap<StructuredLearningOutcomePe, ILearningOutcome>().As<StructuredLearningOutcome>();
+
+        CreateMap<ManualLearningOutcome, ILearningOutcomePe>().As<ManualLearningOutcomePe>();
+        CreateMap<StructuredLearningOutcome, ILearningOutcomePe>().As<StructuredLearningOutcomePe>();
+
+        CreateMap<ILearningOutcomePe, ILearningOutcome>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
+
+        CreateMap<LearningOutcomeCollectionPe, LearningOutcomeCollection>()
+            .ForMember(x => x.InternalUnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ReverseMap();
+    }
 
     private void CreateTopicMap()
     {
@@ -199,10 +225,13 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+#pragma warning disable
+            .ForMember(x => x.Goals /* obsolete */, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+#pragma warning disable
             .AfterMap((_, d) =>
             {
                 foreach (var element in d.ContainedLearningElements)

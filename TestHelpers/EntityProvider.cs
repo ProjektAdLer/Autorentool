@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using System.Globalization;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -6,9 +7,11 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -29,9 +32,30 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", "e", 4, Theme.Campus,
+        return new LearningSpace("a", "d", 4, Theme.Campus, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+    }
+
+    public static LearningOutcomeCollection GetLearningOutcomeCollection(ILearningOutcome? outcome = null,
+        bool unsavedChanges = false)
+    {
+        return new LearningOutcomeCollection()
+        {
+            LearningOutcomes = GetLearningOutcomes(outcome),
+            UnsavedChanges = unsavedChanges
+        };
+    }
+
+    public static List<ILearningOutcome> GetLearningOutcomes(ILearningOutcome? outcome = null)
+    {
+        return new List<ILearningOutcome>()
+        {
+            new ManualLearningOutcome("ManualOutcome"),
+            new StructuredLearningOutcome(TaxonomyLevel.Level1, "What", "Whereby", "WhatFor", "VerbOfVisibility",
+                CultureInfo.CurrentCulture),
+            outcome ?? new ManualLearningOutcome("ManualOutcome2")
+        };
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,

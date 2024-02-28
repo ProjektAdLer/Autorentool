@@ -129,6 +129,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -163,6 +164,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -241,6 +243,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
 
         ConfigureValidatorAllMembers();
 

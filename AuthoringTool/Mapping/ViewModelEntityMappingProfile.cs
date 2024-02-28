@@ -9,6 +9,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -23,6 +24,7 @@ using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
@@ -48,6 +50,7 @@ public class ViewModelEntityMappingProfile : Profile
         CreateTopicMap();
         CreateAdaptivityMap();
         CreateApiResponseMap();
+        CreateLearningOutcomeMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -55,6 +58,29 @@ public class ViewModelEntityMappingProfile : Profile
         cfg.AddProfile(new ViewModelEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
     };
+
+
+    private void CreateLearningOutcomeMap()
+    {
+        CreateMap<ManualLearningOutcome, ManualLearningOutcomeViewModel>().ReverseMap();
+        CreateMap<StructuredLearningOutcome, StructuredLearningOutcomeViewModel>()
+            .ReverseMap();
+
+        CreateMap<ManualLearningOutcome, ILearningOutcomeViewModel>().As<ManualLearningOutcomeViewModel>();
+        CreateMap<StructuredLearningOutcome, ILearningOutcomeViewModel>().As<StructuredLearningOutcomeViewModel>();
+
+        CreateMap<ManualLearningOutcomeViewModel, ILearningOutcome>().As<ManualLearningOutcome>();
+        CreateMap<StructuredLearningOutcomeViewModel, ILearningOutcome>().As<StructuredLearningOutcome>();
+
+        CreateMap<ILearningOutcome, ILearningOutcomeViewModel>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
+
+        CreateMap<LearningOutcomeCollection, LearningOutcomeCollectionViewModel>()
+            .ReverseMap()
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
+    }
 
     private void CreateTopicMap()
     {

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
 using NUnit.Framework;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
@@ -122,6 +119,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -155,6 +153,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
 
         ChangeFields(systemUnderTest, popover);
 
@@ -275,7 +274,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Context.Services.AddSingleton(dialogServiceMock);
 
         var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
-
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
 

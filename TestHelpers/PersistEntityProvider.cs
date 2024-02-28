@@ -1,11 +1,14 @@
+using System.Globalization;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Story;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -22,10 +25,30 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? inBoundObjects = null,
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
-        return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, "LSPg" + append, 4,
-            Theme.Campus,
+        return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
+            Theme.Campus, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
-            positionX, positionY, inBoundObjects, outBoundObjects, assignedTopic);
+            positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
+            outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);
+    }
+
+    public static LearningOutcomeCollectionPe GetLearningOutcomeCollection(
+        List<ILearningOutcomePe>? learningOutcomes = null)
+    {
+        return new LearningOutcomeCollectionPe
+        {
+            LearningOutcomes = learningOutcomes ?? new List<ILearningOutcomePe>()
+        };
+    }
+
+    public static List<ILearningOutcomePe> GetLearningOutcomes()
+    {
+        return new List<ILearningOutcomePe>()
+        {
+            new ManualLearningOutcomePe("Outcome"),
+            new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "what", "whereby", "whatFor", "verbOfVisibility",
+                CultureInfo.CurrentCulture)
+        };
     }
 
     public static LearningSpaceLayoutPe GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,

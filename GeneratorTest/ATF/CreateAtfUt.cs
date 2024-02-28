@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.Globalization;
+using System.IO.Abstractions.TestingHelpers;
 using Generator.ATF;
 using Generator.ATF.AdaptivityElement;
 using Microsoft.Extensions.Logging;
@@ -9,8 +10,10 @@ using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 using TestHelpers;
 
 namespace GeneratorTest.ATF;
@@ -255,9 +258,18 @@ public class CreateAtfUt
 
         var ele8 = PersistEntityProvider.GetLearningElement(name: "ele8", content: adaptivityContent2);
 
-        var space1 = new LearningSpacePe("a", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
+        var manualLearningOutcome = new ManualLearningOutcomePe("Outcome");
+        var structuredLearningOutcome1 = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "whatDe", "wherebyDe",
+            "whatForDe", "verbOfVisibilityDe", new CultureInfo("de-DE"));
+        var structuredLearningOutcome2 = new StructuredLearningOutcomePe(TaxonomyLevel.Level2, "whatEn", "wherebyEn",
+            "whatForEn",
+            "verbOfVisibilityEn", new CultureInfo("en-DE"));
+
+        var space1 = new LearningSpacePe("a", "ff", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
+                { structuredLearningOutcome1 }),
+            positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic1)
         {
             LearningSpaceLayout =
             {
@@ -286,9 +298,9 @@ public class CreateAtfUt
                 }
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
+        var space2 = new LearningSpacePe("b", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), null)
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: null)
         {
             LearningSpaceLayout =
             {
@@ -314,9 +326,9 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space3 = new LearningSpacePe("c", "ff", "ff", 5, Theme.Campus,
+        var space3 = new LearningSpacePe("c", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic2)
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2)
         {
             LearningSpaceLayout =
             {
@@ -334,11 +346,13 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.L_32X31_10L
             }
         };
-        var space4 = new LearningSpacePe("d", "ff", "ff", 5, Theme.Campus,
+        var space4 = new LearningSpacePe("d", "ff", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
+                { structuredLearningOutcome2, manualLearningOutcome }),
             PersistEntityProvider.GetLearningSpaceLayout(learningElements: new Dictionary<int, ILearningElementPe>(),
                 floorPlan:
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2);
 
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0,
             new List<IObjectInPathWayPe>());
@@ -413,6 +427,12 @@ public class CreateAtfUt
                 Is.EqualTo("1"));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].RequiredSpacesToEnter,
                 Is.EqualTo("(3)^(2)"));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceGoals[0],
+                Is.EqualTo(structuredLearningOutcome1.GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceGoals[0],
+                Is.EqualTo(structuredLearningOutcome2.GetOutcome()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceGoals[1],
+                Is.EqualTo(manualLearningOutcome.GetOutcome()));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(9));
@@ -753,7 +773,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: content1);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -810,7 +830,7 @@ public class CreateAtfUt
         const string enrolmentKey = "1234";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -862,7 +882,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.Campus, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {

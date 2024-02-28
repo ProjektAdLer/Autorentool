@@ -67,13 +67,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.EditLearningSpace"/>
-    public void EditLearningSpace(string name, string description, string goals,
-        int requiredPoints, Theme theme, ITopicViewModel? topic)
+    public void EditLearningSpace(string name, string description, int requiredPoints, Theme theme,
+        ITopicViewModel? topic)
     {
         if (!CheckLearningSpaceNotNull("EditLearningSpace"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description, goals,
+        _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description,
             requiredPoints, theme, topic);
     }
 

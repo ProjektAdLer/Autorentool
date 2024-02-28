@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -19,6 +20,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -30,6 +32,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
+using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +52,7 @@ using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -56,6 +60,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.LearningOutcomes;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.API;
@@ -94,6 +99,7 @@ public class PresentationLogicUt
         var mockPathwayCommandFactory = Substitute.For<IPathwayCommandFactory>();
         var mockSpaceCommandFactory = Substitute.For<ISpaceCommandFactory>();
         var mockTopicCommandFactory = Substitute.For<ITopicCommandFactory>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
         var mockWorldCommandFactory = Substitute.For<IWorldCommandFactory>();
         var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
 
@@ -102,7 +108,8 @@ public class PresentationLogicUt
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
             mockHybridSupportWrapper, mockShellWrapper, mockQuestionCommandFactory, mockTaskCommandFactory,
             mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory,
-            mockSpaceCommandFactory, mockTopicCommandFactory, mockWorldCommandFactory, mockBatchCommandFactory);
+            mockSpaceCommandFactory, mockTopicCommandFactory, mockLearningOutcomeCommandFactory,
+            mockWorldCommandFactory, mockBatchCommandFactory);
         Assert.Multiple(() =>
         {
             //Assert
@@ -120,6 +127,7 @@ public class PresentationLogicUt
             Assert.That(systemUnderTest.PathwayCommandFactory, Is.EqualTo(mockPathwayCommandFactory));
             Assert.That(systemUnderTest.SpaceCommandFactory, Is.EqualTo(mockSpaceCommandFactory));
             Assert.That(systemUnderTest.TopicCommandFactory, Is.EqualTo(mockTopicCommandFactory));
+            Assert.That(systemUnderTest.LearningOutcomeCommandFactory, Is.EqualTo(mockLearningOutcomeCommandFactory));
             Assert.That(systemUnderTest.WorldCommandFactory, Is.EqualTo(mockWorldCommandFactory));
         });
     }
@@ -387,15 +395,19 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = EntityProvider.GetLearningWorld();
         var topicEntity = EntityProvider.GetTopic();
+        var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
         mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
             .Returns(topicEntity);
+        mockMapper.Map<LearningOutcomeCollection>(Arg.Any<LearningOutcomeCollectionViewModel>())
+            .Returns(learningOutcomeCollection);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockSpaceVm = ViewModelProvider.GetLearningSpace();
         Substitute.For<ILogger<SpaceCommandFactory>>();
         learningWorldVm.LearningSpaces.Add(mockSpaceVm);
-        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", "z", 5, Theme.Campus,
+        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", learningOutcomeCollection, 5,
+                Theme.Campus,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
         mockCommand.NewSpace.Id.Returns(mockSpaceVm.Id);
@@ -403,7 +415,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", 5, Theme.Campus, 6, 7, topicVm);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", ViewModelProvider.GetLearningOutcomeCollection(),
+            5, Theme.Campus, 6, 7, topicVm);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -420,14 +433,14 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
-        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", "z", 5, Theme.Campus, null,
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.Campus, null,
                 Arg.Any<Action<ILearningSpace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", "z", 5, Theme.Campus, null);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.Campus, null);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -1335,15 +1348,15 @@ public class PresentationLogicUt
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockDeleteTopicCommand);
         mockSpaceCommandFactory
-            .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand1);
         mockSpaceCommandFactory
-            .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand2);
         mockSpaceCommandFactory
-            .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand3);
         mockBatchCommandFactory
@@ -1365,15 +1378,15 @@ public class PresentationLogicUt
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>());
         mockSpaceCommandFactory
             .Received()
-            .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
-            .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
-            .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockBatchCommandFactory
             .Received()
@@ -2665,6 +2678,220 @@ public class PresentationLogicUt
     }
 
     [Test]
+    public void AddStructuredLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+        var taxonomyLevel = TaxonomyLevel.Level1;
+        var what = "what";
+        var verbOfVisibility = "verbOfVisibility";
+        var whereby = "whereby";
+        var whatFor = "whatFor";
+        var cultureInfo = new CultureInfo("de-DE");
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            taxonomyLevel, what, verbOfVisibility, whereby, whatFor, cultureInfo,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.AddStructuredLearningOutcome(mockLearningOutcomeCollectionViewModel, taxonomyLevel, what,
+            verbOfVisibility, whereby, whatFor, cultureInfo);
+
+        mockMapper.Received().Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel);
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void AddManualLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+        var manualLearningOutcomeText = "manualLearningOutcomeText";
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            manualLearningOutcomeText,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.AddManualLearningOutcome(mockLearningOutcomeCollectionViewModel, manualLearningOutcomeText);
+
+        mockMapper.Received().Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel);
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void EditStructuredLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+        var mockDeleteCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockAddCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what",
+            "whereby", "whatFor", "verbOfVisibility", new CultureInfo("de-DE"));
+        var mockLearningOutcomeEntity = new StructuredLearningOutcome(TaxonomyLevel.Level1, "what",
+            "whereby", "whatFor", "verbOfVisibility", new CultureInfo("de-DE"));
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<StructuredLearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor", new CultureInfo("de-DE"),
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockAddCommand);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity, Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockDeleteCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.EditStructuredLearningOutcome(mockLearningOutcomeCollectionViewModel,
+            mockLearningOutcomeViewModel, TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor",
+            new CultureInfo("de-DE"));
+
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity, Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockLearningOutcomeCommandFactory.Received().GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            TaxonomyLevel.Level1, "what", "verbOfVisibility", "whereby", "whatFor", new CultureInfo("de-DE"),
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
+    }
+
+    [Test]
+    public void EditManualLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+        var mockDeleteCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockAddCommand = Substitute.For<IAddLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new ManualLearningOutcomeViewModel("manualLearningOutcomeText");
+        var mockLearningOutcomeEntity = new ManualLearningOutcome("manualLearningOutcomeText");
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<ManualLearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            "manualLearningOutcomeText",
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockAddCommand);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockDeleteCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.EditManualLearningOutcome(mockLearningOutcomeCollectionViewModel, mockLearningOutcomeViewModel,
+            "manualLearningOutcomeText");
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity, mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockLearningOutcomeCommandFactory.Received().GetAddLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            "manualLearningOutcomeText", Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
+            i.SequenceEqual(new IUndoCommand[]
+                { mockDeleteCommand, mockAddCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
+    }
+
+    [Test]
+    public void DeleteLearningOutcome_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningOutcomeCommandFactory = Substitute.For<ILearningOutcomeCommandFactory>();
+        var mockCommand = Substitute.For<IDeleteLearningOutcome>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLearningOutcomeViewModel = new ManualLearningOutcomeViewModel("manualLearningOutcomeText");
+        var mockLearningOutcomeEntity = new ManualLearningOutcome("manualLearningOutcomeText");
+        var mockLearningOutcomeCollectionViewModel = ViewModelProvider.GetLearningOutcomeCollection();
+        var mockLearningOutcomeCollectionEntity = EntityProvider.GetLearningOutcomeCollection();
+
+        mockMapper
+            .Map<ILearningOutcome>(mockLearningOutcomeViewModel)
+            .Returns(mockLearningOutcomeEntity);
+
+        mockMapper
+            .Map<LearningOutcomeCollection>(mockLearningOutcomeCollectionViewModel)
+            .Returns(mockLearningOutcomeCollectionEntity);
+
+        mockLearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(mockLearningOutcomeCollectionEntity,
+            mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>()).Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory);
+
+        systemUnderTest.DeleteLearningOutcome(mockLearningOutcomeCollectionViewModel, mockLearningOutcomeViewModel);
+
+        mockLearningOutcomeCommandFactory.Received().GetDeleteLearningOutcomeCommand(
+            mockLearningOutcomeCollectionEntity, mockLearningOutcomeEntity,
+            Arg.Any<Action<LearningOutcomeCollection>>());
+
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
     public void IsLmsConnected_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2786,6 +3013,7 @@ public class PresentationLogicUt
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
+        ILearningOutcomeCommandFactory? learningOutcomeCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null,
         IAdaptivityRuleCommandFactory? adaptivityRuleCommandFactory = null,
@@ -2811,6 +3039,7 @@ public class PresentationLogicUt
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
+        learningOutcomeCommandFactory ??= Substitute.For<ILearningOutcomeCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
         adaptivityRuleCommandFactory ??= Substitute.For<IAdaptivityRuleCommandFactory>();
@@ -2819,7 +3048,9 @@ public class PresentationLogicUt
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
             questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
-            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, worldCommandFactory,
+            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory,
+            learningOutcomeCommandFactory,
+            worldCommandFactory,
             batchCommandFactory, adaptivityRuleCommandFactory, adaptivityActionCommandFactory, fileSystem);
     }
 }
