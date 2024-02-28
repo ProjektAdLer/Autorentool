@@ -42,11 +42,11 @@ public class R20X308LViewModel : IFloorPlanViewModel
         new() { X = 14, Y = 19 },
         new() { X = 6, Y = 19 }
     };
-    
+
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 3, Y = 12},
-        new() {X = 18, Y = 26}
+        new() { X = 2, Y = 11 },
+        new() { X = 26, Y = 23 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()

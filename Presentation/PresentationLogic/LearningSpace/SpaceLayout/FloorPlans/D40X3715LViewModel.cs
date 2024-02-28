@@ -52,6 +52,12 @@ public class D40X3715LViewModel : IFloorPlanViewModel
         new() { X = 4, Y = 10 }
     };
 
+    public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
+    {
+        new() { X = 9, Y = 34 },
+        new() { X = 33, Y = 18 }
+    };
+
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
         (new Point { X = 5, Y = 32 }, new Point { X = 10, Y = 32 }),

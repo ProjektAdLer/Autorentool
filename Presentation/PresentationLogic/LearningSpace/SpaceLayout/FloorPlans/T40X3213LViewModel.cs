@@ -53,10 +53,16 @@ public class T40X3213LViewModel : IFloorPlanViewModel
         new() { X = 11, Y = 22 }
     };
 
+    public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
+    {
+        new() { X = 2, Y = 9 },
+        new() { X = 33, Y = 17 }
+    };
+
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 32, Y = 13 }, new Point { X = 32, Y = 18 }),
-        (new Point { X = 0, Y = 5 }, new Point { X = 0, Y = 10 })
+        (new Point { X = 0, Y = 5 }, new Point { X = 0, Y = 10 }),
+        (new Point { X = 32, Y = 13 }, new Point { X = 32, Y = 18 })
     };
 
     public string GetIcon => Icon;
