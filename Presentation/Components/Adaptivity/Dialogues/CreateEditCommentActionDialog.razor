@@ -5,13 +5,13 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
 @using Shared.Adaptivity
-<div class="relative w-[800px] h-[230px] flex flex-col mx-4">
+<div class="relative max-w-full h-[300px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm">@Localizer["Comment.Text"]</MudText>
-    <div class="border-adlerdarkblue border-4 rounded-lg m-2">
-        <MudForm @ref="_form" Class="bg-white border-t-2 border-adlergrey-100">
-            <div class="p-2 mb-4">
+    <div class="border-adlerdarkblue border-4 rounded-lg m-2 bg-adlerbgbright">
+        <MudForm @ref="_form" Class="bg-adlerbgbright border-t-2 border-adlergrey-100">
+            <div class="p-2 mb-4 bg-adlerbgbright">
                 <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Comment.Label.Text"]</MudText>
-                <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+                <div class="border-4 border-adlergrey-100 bg-white rounded-md m-1.5">
                     <MudTextField Variant="Variant.Outlined"
                                   Class="shadow-none m-0" 
                                   T="string"
@@ -24,13 +24,14 @@
             </div>
         </MudForm>
     </div>
+    <div class="flex justify-end items-center mt-2">
+        <MudButton Class="btn-standard sticky" 
+                   @onclick="SubmitAsync">
+            @Localizer["Button.Submit.Text"]
+        </MudButton>
+    </div>
 </div>
-<div class="flex justify-end items-center">
-    <MudButton Class="btn-standard sticky m-6" 
-               @onclick="SubmitAsync">
-               @Localizer["Button.Submit.Text"]
-    </MudButton>
-</div>
+
 
 @code {
 

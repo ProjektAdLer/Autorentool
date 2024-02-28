@@ -25,13 +25,13 @@
         <value>General</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning world.</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning world.</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
         <value>Name*</value>
@@ -49,10 +49,13 @@
         <value>Link to evaluation</value>
     </data>
     <data name="EditWorldForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text" xml:space="preserve">
         <value>Enrolment key</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
     </data>
     <data name="EditWorldForm.EnrolmentKey.Title" xml:space="preserve">
         <value>Enrolment method</value>

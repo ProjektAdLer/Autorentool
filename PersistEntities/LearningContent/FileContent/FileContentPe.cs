@@ -1,14 +1,16 @@
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
 namespace PersistEntities.LearningContent;
 
 public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
 {
-    public FileContentPe(string name, string type, string filepath)
+    public FileContentPe(string name, string type, string filepath, bool primitiveH5P = false)
     {
         Name = name;
         Type = type;
         Filepath = filepath;
+        PrimitiveH5P = primitiveH5P;
     }
 
     /// <summary>
@@ -20,6 +22,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Name = "";
         Type = "";
         Filepath = "";
+        PrimitiveH5P = false;
     }
 
     public bool Equals(FileContentPe? other)
@@ -29,7 +32,8 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         return Type == other.Type && Filepath == other.Filepath && Name == other.Name;
     }
 
-    public string Type { get; set; }
-    public string Filepath { get; set; }
-    public string Name { get; set; }
+    [DataMember] public string Type { get; set; }
+    [DataMember] public string Filepath { get; set; }
+    [DataMember] public string Name { get; set; }
+    [DataMember] public bool PrimitiveH5P { get; set; }
 }

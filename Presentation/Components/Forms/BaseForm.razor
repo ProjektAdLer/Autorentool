@@ -58,16 +58,15 @@
 
     [Parameter] public RenderFragment? HeaderButtons { get; set; }
 
+    
+
     [Parameter, EditorRequired] public RenderFragment? FooterButtons { get; set; }
 
     [Parameter] public Func<object, string, Task<IEnumerable<string>>>? CustomValidatorFunc { get; set; }
 
     internal string? SubmitErrorMessage { get; set; }
 
-    private MudForm? _form;
-
-
-    public async Task FocusField(MudTextField<string> focusField)
+    private MudForm? _form; public async Task FocusField(MudTextField<string> focusField)
     {
         if (focusField != null)
         {
@@ -93,23 +92,22 @@
         FormDataContainer.FormModel = new TForm();
     }
 
-    public async Task SubmitAsync()
+    public async Task<bool> SubmitAsync()
     {
         if (_form is null) throw new InvalidOperationException("_form is null by @ref");
         await _form.Validate();
-        if (_form.IsValid)
+        if (!_form.IsValid) return false;
+        try
         {
-            try
-            {
-                await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
-                Snackbar.Add(SnackbarMessage);
-                Reset();
-            }
-            catch (Exception e)
-            {
-                SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
-            }
+            await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
+            Snackbar.Add(SnackbarMessage);
+            Reset();
         }
+        catch (Exception e)
+        {
+            SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
+        }
+        return true;
     }
 
 

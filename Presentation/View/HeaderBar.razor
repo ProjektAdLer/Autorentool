@@ -37,10 +37,10 @@
             }
         </div>
         <div class="flex">
-            <MudIconButton Class="p-1 undo-button" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
+            <MudIconButton Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
                            Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
             </MudIconButton>
-            <MudIconButton Class="p-1 redo-button" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo"
+            <MudIconButton Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo"
                            Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
@@ -93,7 +93,7 @@
     {
         <div class="flex justify-center items-center gap-2 cursor-default">
             <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld">
-            <p class="font-bold text-base 2xl:text-lg truncate hover:text-clip opacity-80 text-adlerdarkblue-800"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
+            <p class="font-bold text-base 2xl:text-lg truncate w-56 xl:w-72 2xl:w-full opacity-80 text-adlerdarkblue-800" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
 
@@ -117,7 +117,8 @@
         }
 
         <CultureSelector/>
-
+<MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
+        
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
             <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
@@ -144,6 +145,7 @@
         {
             <CloseAppButton/>
         }
+
     </div>
 </header>
 
@@ -509,6 +511,66 @@
     }
 
     private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
+
+    private void ShowLearningOutcomesOverview()
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false,
+            FullWidth = true,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        var parameters = new DialogParameters
+        {
+            {
+                nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
+            }
+        };
+        DialogService.Show<LearningOutcomesWorldOverview>("", parameters, options);
+    }
+
+    private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
+
+    const string learningOutcomeIconActivated =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+                <circle cx=""1004.73"" cy=""1004.77"" r=""892.6"" style=""fill: none; stroke: #2e3a4d; stroke-miterlimit: 10; stroke-width: 200px;""/>
+                    <circle cx=""1007.35"" cy=""1003.55"" r=""526.15"" style=""fill: none; stroke: #2e3a4d; stroke-miterlimit: 10; stroke-width: 200px;""/>
+                        <line x1=""991.71"" y1=""-15.05"" x2=""991.71"" y2=""801.04"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                            <line x1=""1225.61"" y1=""1013.66"" x2=""2043.43"" y2=""1013.66"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                <circle cx=""1000.71"" cy=""984.34"" r=""243.06"" style=""fill: #172d4d; stroke-width: 0px;""/>
+                                    <line x1=""1016.48"" y1=""986.81"" x2=""1714.73"" y2=""288.56"" style=""fill: none; stroke: #e9f2fa; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 172px;""/>
+                                        <line x1=""1015.48"" y1=""986.81"" x2=""1713.73"" y2=""288.56"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 120px;""/>
+                                            <g>
+                                                <rect x=""1562.75"" y=""219.03"" width=""214.35"" height=""214.35"" transform=""translate(1257.75 1977.01) rotate(-87.03)"" style=""fill: #172d4d; stroke-width: 0px;""/>
+                                                    <polyline points=""1771.4 438.78 1782.49 224.72 1996.55 235.81"" style=""fill: #172d4d; stroke-width: 0px;""/>
+                                                        <polyline points=""1793.58 10.66 1782.49 224.72 1568.43 213.63"" style=""fill: #172d4d; stroke-width: 0px;""/>
+                                                            </g>
+                                                                <line x1=""0"" y1=""1005.85"" x2=""817.09"" y2=""1005.85"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                                                    <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                                                        </svg>";
+
+    const string learningOutcomeIconDeactivated =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+                <circle cx=""1004.73"" cy=""1004.77"" r=""892.6"" style=""fill: none; stroke: rgb(179,179,179); stroke-miterlimit: 10; stroke-width: 200px;""/>
+                    <circle cx=""1007.35"" cy=""1003.55"" r=""526.15"" style=""fill: none; stroke: rgb(179,179,179); stroke-miterlimit: 10; stroke-width: 200px;""/>
+                        <line x1=""991.71"" y1=""-15.05"" x2=""991.71"" y2=""801.04"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                            <line x1=""1225.61"" y1=""1013.66"" x2=""2043.43"" y2=""1013.66"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                <circle cx=""1000.71"" cy=""984.34"" r=""243.06"" style=""fill: rgb(179,179,179); stroke-width: 0px;""/>
+                                    <line x1=""1016.48"" y1=""986.81"" x2=""1714.73"" y2=""288.56"" style=""fill: none; stroke: #e9f2fa; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 172px;""/>
+                                        <line x1=""1015.48"" y1=""986.81"" x2=""1713.73"" y2=""288.56"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 120px;""/>
+                                            <g>
+                                                <rect x=""1562.75"" y=""219.03"" width=""214.35"" height=""214.35"" transform=""translate(1257.75 1977.01) rotate(-87.03)"" style=""fill: rgb(179,179,179); stroke-width: 0px;""/>
+                                                    <polyline points=""1771.4 438.78 1782.49 224.72 1996.55 235.81"" style=""fill: rgb(179,179,179); stroke-width: 0px;""/>
+                                                        <polyline points=""1793.58 10.66 1782.49 224.72 1568.43 213.63"" style=""fill: rgb(179,179,179); stroke-width: 0px;""/>
+                                                            </g>
+                                                                <line x1=""0"" y1=""1005.85"" x2=""817.09"" y2=""1005.85"" style=""fill: none; stroke:rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                                                    <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
+                                                                        </svg>";
 
     private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
 

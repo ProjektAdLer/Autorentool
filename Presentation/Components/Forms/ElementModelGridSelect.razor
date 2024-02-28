@@ -2,20 +2,20 @@
 @using Presentation.Components.Forms.Element
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using MudBlazor.Utilities
 @inherits MudBaseInput<ElementModel>
 
 <div class="grid grid-cols-4 2xl:grid-cols-5 2500p:grid-cols-7">
     @foreach (var elementModel in Elements)
     {
-        var classString = elementModel == Value ? "bg-adlerblue-600" : "hover:bg-adlergrey-100";
         <MudListItem Value="@(elementModel)"
-                     Class="@classString"
-                     OnClick="() => OnItemClick(elementModel)">
+                     Class="@BuildListItemCss(elementModel)"
+                     OnClick="async () => await OnItemClick(elementModel)">
             <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
                     <img class="inset-0 w-full drop-shadow-xl p-0"
-                             src="@ElementModelHandler.GetIconForElementModel(elementModel)"
-                             alt="@Localizer["ElementModelGridSelect.3DRepresentation.Alt"]"/>
+                         src="@ElementModelHandler.GetIconForElementModel(elementModel)"
+                         alt="@Localizer["ElementModelGridSelect.3DRepresentation.Alt"]"/>
                 </ChildContent>
 
                 <TooltipContent>
@@ -42,9 +42,19 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<ElementModelGridSelect> Localizer { get; set; }
 
-    private void OnItemClick(ElementModel elementModel)
+    private string BuildListItemCss(ElementModel elementModel)
     {
-        SetValueAsync(elementModel);
+        var isSelected = elementModel == Value;
+        return new CssBuilder()
+            .AddClass("bg-adlerblue-600", isSelected)
+            .AddClass("hover:bg-adlergrey-100", !isSelected)
+            .Build();
+    }
+
+    private async Task OnItemClick(ElementModel elementModel)
+    {
+        await SetValueAsync(elementModel);
+        await InvokeAsync(StateHasChanged);
     }
 
 }

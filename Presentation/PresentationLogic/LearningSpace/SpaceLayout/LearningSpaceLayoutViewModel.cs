@@ -15,14 +15,16 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     {
         FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(FloorPlanEnum.R_20X30_8L);
         _floorPlanName = FloorPlanEnum.R_20X30_8L;
-        _learningElements = new Dictionary<int, ILearningElementViewModel>();
+        LearningElements = new Dictionary<int, ILearningElementViewModel>();
+        StoryElements = new Dictionary<int, ILearningElementViewModel>();
     }
     
     internal LearningSpaceLayoutViewModel(FloorPlanEnum floorPlanName)
     {
         FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(floorPlanName);
         _floorPlanName = floorPlanName;
-        _learningElements = new Dictionary<int, ILearningElementViewModel>();
+        LearningElements = new Dictionary<int, ILearningElementViewModel>();
+        StoryElements = new Dictionary<int, ILearningElementViewModel>();
     }
 
     public IFloorPlanViewModel FloorPlanViewModel { get; private set; }
@@ -37,34 +39,30 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
         }
     }
 
-    public IDictionary<int, ILearningElementViewModel> LearningElements
-    {
-        get => _learningElements;
-        set => _learningElements = value;
-    }
+    public IDictionary<int, ILearningElementViewModel> LearningElements { get; set; }
+    public IDictionary<int, ILearningElementViewModel> StoryElements { get; set; }
 
     public int Capacity => FloorPlanViewModel.Capacity;
     public int Count => ContainedLearningElements.Count();
 
     public IEnumerable<int> UsedIndices =>
-        _learningElements.Keys;
+        LearningElements.Keys;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
-        _learningElements.Values;
+        LearningElements.Values;
 
-    private IDictionary<int, ILearningElementViewModel> _learningElements;
     private FloorPlanEnum _floorPlanName;
 
     public void ChangeFloorPlan(FloorPlanEnum floorPlanName)
     {
-        _learningElements = AdaptLearningElementsToNewFloorPlan(_learningElements, _floorPlanName, floorPlanName);
+        LearningElements = AdaptLearningElementsToNewFloorPlan(LearningElements, _floorPlanName, floorPlanName);
         FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(floorPlanName);
         _floorPlanName = floorPlanName;
     }
 
     public ILearningElementViewModel GetElement(int index)
     {
-        return _learningElements[index];
+        return LearningElements[index];
     }
 
     public void PutElement(int index, ILearningElementViewModel element)
@@ -72,17 +70,25 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index), index,
                 $"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
-        _learningElements[index] = element;
+        LearningElements[index] = element;
+    }
+
+    public void PutStoryElement(int index, ILearningElementViewModel element)
+    {
+        if (index < 0)
+            throw new ArgumentOutOfRangeException(nameof(index), index,
+                $"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
+        StoryElements[index] = element;
     }
 
     public void RemoveElement(int index)
     {
         if (!LearningElements.ContainsKey(index))
             throw new ArgumentException("There was no element at the given index", nameof(index));
-        _learningElements.Remove(index);
+        LearningElements.Remove(index);
     }
     
-    public void ClearAllElements() => _learningElements.Clear();
+    public void ClearAllElements() => LearningElements.Clear();
 
     private IDictionary<int, ILearningElementViewModel> AdaptLearningElementsToNewFloorPlan(
         IDictionary<int, ILearningElementViewModel> learningElements, FloorPlanEnum oldFloorPlanName, FloorPlanEnum newFloorPlanName)

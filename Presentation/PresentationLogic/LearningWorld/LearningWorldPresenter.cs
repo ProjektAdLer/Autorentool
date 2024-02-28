@@ -1,15 +1,21 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using AutoMapper;
 using BusinessLogic.Validation;
 using Presentation.Components;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -28,13 +34,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private readonly IMapper _mapper;
 
     private ILearningWorldViewModel? _learningWorldVm;
 
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<LearningWorldPresenter> logger, IMediator mediator,
-        ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
+        ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService,
+        IMapper mapper)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
@@ -45,6 +53,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         //first-time update in case a learning world was selected before we were instantiated 
         LearningWorldVm = selectedViewModelsProvider.LearningWorld;
         _errorService = errorService;
+        _mapper = mapper;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.LearningWorldVm"/>
@@ -261,7 +270,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
-    public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
+    public void CreateLearningSpace(string name, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
+        int requiredPoints,
         Theme theme, TopicViewModel? topic = null)
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
@@ -270,7 +281,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         var positionY = GetNextAvailableYPosition(25);
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, goals,
+        _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomeCollectionVm,
             requiredPoints, theme, 0, positionY, topic);
     }
 
@@ -343,6 +354,26 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _mediator.RequestOpenSpaceDialog();
+    }
+
+    public void CreateUnplacedLearningElementFromFormModel(LearningElementFormModel model)
+    {
+        CreateUnplacedLearningElement(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
+    }
+
+    public void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent,
+        ILearningElementViewModel elementToEdit,
+        LearningElementFormModel model)
+    {
+        //map content except when it is an adaptivity content, as this is not editable in the normal form
+        //in that case just take existing content in the element
+        var content = elementToEdit.LearningContent is IAdaptivityContentViewModel && model.LearningContent == null
+            ? elementToEdit.LearningContent
+            : _mapper.Map<ILearningContentViewModel>(model.LearningContent);
+        //unpack model and call edit
+        EditLearningElement(parent, elementToEdit, model.Name, model.Description, model.Goals, model.Difficulty,
+            model.ElementModel, model.Workload, model.Points, content);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.DeleteLearningSpace"/>
@@ -523,15 +554,21 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         }
 
+        _mediator.CloseAllLeftSide();
+
+        switch (learningElement.LearningContent)
+        {
+            case AdaptivityContentViewModel:
+                _mediator.RequestOpenAdaptivityElementDialog();
+                break;
+            case StoryContentViewModel:
+                _mediator.RequestOpenStoryElementDialog();
+                break;
+            case FileContentViewModel or LinkContentViewModel:
+                _mediator.RequestOpenElementDialog();
+                break;
+        }
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
-        if (learningElement.LearningContent is AdaptivityContentViewModel)
-        {
-            _mediator.RequestOpenAdaptivityElementDialog();
-        }
-        else
-        {
-            _mediator.RequestOpenElementDialog();
-        }
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningElement"/>

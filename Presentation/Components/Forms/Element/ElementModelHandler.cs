@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
-using Presentation.PresentationLogic.LearningContent;
+﻿using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
@@ -7,35 +6,45 @@ using Shared;
 
 namespace Presentation.Components.Forms.Element;
 
+public enum ElementModelContentType {Any, File, Link, Adaptivity, Story}
+
 public class ElementModelHandler : IElementModelHandler
 {
     //If you add a new ElementModel, you have to add it to the following methods:
     //  - GetIconForElementModel: Add the path to the icon for the new ElementModel
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
-    public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null,
-        Theme? theme = null, bool adaptivityElementMode = false)
+    public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
+        Theme? theme = null)
     {
-        var type = learningContentViewModel switch
+        var type = contentType switch
         {
-            IFileContentViewModel fileContentViewModel => ContentTypeHelper.GetContentType(fileContentViewModel.Type),
-            ILinkContentViewModel => ContentTypeEnum.Video,
-            IAdaptivityContentViewModel => ContentTypeEnum.Adaptivity,
-            _ => ContentTypeEnum.H5P
+            ElementModelContentType.Any => ContentTypeEnum.Text,
+            ElementModelContentType.File => ContentTypeHelper.GetContentType(fileType),
+            ElementModelContentType.Link => ContentTypeEnum.Video,
+            ElementModelContentType.Adaptivity => ContentTypeEnum.Adaptivity,
+            ElementModelContentType.Story => ContentTypeEnum.Story,
+            _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
         IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
 
-        if (adaptivityElementMode)
+        switch (type)
         {
-            return AdaptivityModels.OrderBy(m => m, comparer);
-        }
-        else
-        {
-            var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
-            return elementModels.Except(AdaptivityModels).OrderBy(m => m, comparer);
+            case ContentTypeEnum.Story:
+                return NpcModels.OrderBy(m => m, comparer);
+            case ContentTypeEnum.Adaptivity:
+                return AdaptivityModels;
+            default:
+            {
+                var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+                return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
+            }
         }
     }
+
+    internal static readonly IEnumerable<ElementModel> NpcModels = new[]
+        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
     
     internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
         { ElementModel.a_npc_alerobot };
@@ -96,6 +105,11 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
+    public ElementModel GetElementModelRandom()
+    {
+        return ElementModel.l_random;
+    }
+    
     public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
         return modelType switch
@@ -162,6 +176,14 @@ public class ElementModelHandler : IElementModelHandler
             case ContentTypeEnum.Adaptivity:
                 yield return ElementModel.a_npc_alerobot;
                 break;
+            case ContentTypeEnum.Story:
+                //campus
+                yield return ElementModel.a_npc_dozentlukas;
+                //arcade
+                yield return ElementModel.a_npc_sheriffjustice;
+                //suburb
+                yield return ElementModel.a_npc_defaultnpc;
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
         }
@@ -184,6 +206,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_comicshelfsmall_1;
                 yield return ElementModel.l_video_vrdesk_1;
                 yield return ElementModel.a_npc_sheriffjustice;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.Campus:
                 yield return ElementModel.l_h5p_blackboard_2;
@@ -196,6 +219,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
                 yield return ElementModel.a_npc_dozentlukas;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
@@ -209,6 +233,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_bookshelf_2;
                 yield return ElementModel.l_video_television_1;
                 yield return ElementModel.a_npc_defaultnpc;
+                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);

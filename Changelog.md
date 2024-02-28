@@ -14,6 +14,20 @@
 - New list of previously uploaded learning worlds that appears after logging in to the LMS.
 - Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend.
 - Authors can now assign an enrolment key for their learning world.
+- Learning outcomes can now be created for learning spaces using an input form.
+- A new button in the header bar shows an overview of all learning outcomes in the selected world.
+
+#### Story elements
+- You can now create story elements: Story elements are a new type of learning element that can be used to create a story in the learning world.
+- They can only contain text blocks as content.
+- They can only be placed in thew new story slots in learning spaces.
+- There is one story slot at the entrance and one at the exit of each learning space.
+- The story element at the entrance of a space will be triggered when the user first enters the space, and the story element at the exit will be triggered when the user leaves the space.
+- Story elements are represented in the 3D world as NPCs that the user can interact with.
+- Story elements cannot grant points or be required to complete a space.
+- Story elements cannot have a difficulty, estimated workload or goals (learning outcomes).
+- The content of a story element cannot be created in advance (just like the adaptivity element and unlike normal learning elements).
+- As such, the content of story elements will not be listed in the external learning material overview.
 
 ### Changed
 

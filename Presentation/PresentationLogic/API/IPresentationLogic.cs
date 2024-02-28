@@ -1,6 +1,9 @@
-﻿using System.IO.Abstractions;
+﻿using System.Globalization;
+using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
+using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -12,6 +15,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -19,6 +23,7 @@ using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
+using Shared.LearningOutcomes;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -145,14 +150,16 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">The Learning World view model in which to create the Learning Space.</param>
     /// <param name="name">The name of the Learning Space.</param>
     /// <param name="description">The description of the Learning Space.</param>
-    /// <param name="goals">The goals of the Learning Space.</param>
+    /// <param name="learningOutcomeCollectionVm">The learning outcomes of the Learning Space.</param>
     /// <param name="requiredPoints">The points required to access the Learning Space.</param>
     /// <param name="theme">The theme of the Learning Space.</param>
     /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints,
+        Theme theme,
+        double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
     /// <summary>
@@ -161,12 +168,11 @@ public interface IPresentationLogic
     /// <param name="learningSpaceVm">The Learning Space view model to edit.</param>
     /// <param name="name">The new name of the Learning Space.</param>
     /// <param name="description">The new description of the Learning Space.</param>
-    /// <param name="goals">The new goals of the Learning Space.</param>
     /// <param name="requiredPoints">The new points required to access the Learning Space.</param>
     /// <param name="theme">The new theme of the Learning Space.</param>
     /// <param name="topicVm">The new topic associated with the Learning Space. Can be null.</param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
+        string description, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.
@@ -308,6 +314,11 @@ public interface IPresentationLogic
         int workload, int points,
         double positionX = 0D, double positionY = 0D);
 
+    void CreateStoryElementInSlot(ILearningSpaceViewModel learningSpaceVm, int slotIndex, string name,
+        ILearningContentViewModel learningContent, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        double positionX = 0, double positionY = 0);
+
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.
     /// </summary>
@@ -336,12 +347,31 @@ public interface IPresentationLogic
         ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
 
     /// <summary>
+    /// Moves the given story element from unplaced elements to the given slot index in the given learning space.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space to place the learning element in.</param>
+    /// <param name="learningElementVm">Learning element to place.</param>
+    /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
+    void DragStoryElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
+
+    /// <summary>
     /// Moves the given learning element from the learning space to unplaced elements in the learning world.
     /// </summary>
     /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
     /// <param name="learningSpaceVm">Learning space from which the element should be removed.</param>
     /// <param name="learningElementVm">Learning element to remove.</param>
     void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm);
+
+    /// <summary>
+    /// Moves the given story element from the learning space to unplaced elements in the learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space from which the element should be removed.</param>
+    /// <param name="learningElementVm">Learning element to remove.</param>
+    void DragStoryElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
         ILearningElementViewModel learningElementVm);
 
     /// <summary>
@@ -357,12 +387,26 @@ public interface IPresentationLogic
         int newSlotIndex);
 
     /// <summary>
+    /// Switches the slot of a Story Element within a Learning Space.
+    /// </summary>
+    /// <param name="learningSpaceVm">The Learning Space view model in which the Learning Element resides.</param>
+    /// <param name="learningElementVm">The Learning Element view model to switch the slot of.</param>
+    /// <param name="newSlotIndex">The new slot index to place the Learning Element at.</param>
+    /// <remarks>
+    /// If the active slot in the Learning Space is the new slot index, it will be set to -1.
+    /// </remarks>
+    void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
+        int newSlotIndex);
+
+    /// <summary>
     /// Deletes the given learning element in the given learning space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="learningElementVm">Element to delete.</param>
     void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm);
+
+    void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm);
 
     /// <summary>
     /// Deletes the given learning element in the given learning world.
@@ -416,7 +460,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="adaptivityContentVm">The Adaptivity Content to create the Task in.</param>
     /// <param name="name">The name of the Task.</param>
-    void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name);
+    void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name);
 
     /// <summary>
     /// Edits a given Adaptivity Task
@@ -432,7 +476,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="adaptivityContentVm">The Adaptivity Content to delete the Task from.</param>
     /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
-    void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+    void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm);
 
 
@@ -503,6 +547,14 @@ public interface IPresentationLogic
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentViewModel or LinkContentViewModel.</exception>
     Task ShowLearningContentAsync(ILearningContentViewModel content);
+
+    /// <summary>
+    /// Asynchronously shows the content of a Learning Content view model.
+    /// </summary>
+    /// <param name="content">The Learning Content view model to display. It must be either a FileContentFormModel or a LinkContentViewModel.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the Learning Content is not of type FileContentFormModel or LinkContentViewModel.</exception>
+    Task ShowLearningContentAsync(ILearningContentFormModel content);
 
     /// <summary>
     /// Saves a link associated with a LinkContentViewModel.
@@ -602,6 +654,72 @@ public interface IPresentationLogic
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
     IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
     void DeleteLearningWorldByPath(string savePath);
+
+    /// <summary>
+    /// Adds a structured learning outcome to the specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model to which the new learning outcome will be added.</param>
+    /// <param name="taxonomyLevel">The taxonomy level of the learning outcome.</param>
+    /// <param name="what">A description of the learning outcome.</param>
+    /// <param name="verbOfVisibility">The verb indicating the visibility or action associated with the learning outcome.</param>
+    /// <param name="whereby">The method or process by which the learning outcome can be achieved.</param>
+    /// <param name="whatFor">The purpose or reason for the learning outcome.</param>
+    /// <param name="language">The culture info specifying the language in which the learning outcome is described.</param>
+    void AddStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language);
+
+    /// <summary>
+    /// Adds a manual learning outcome to the specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model to which the new learning outcome will be added.</param>
+    /// <param name="manualLearningOutcomeText">The text of the manual learning outcome.</param>
+    void AddManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        string manualLearningOutcomeText);
+
+
+    /// <summary>
+    /// Edits an existing structured learning outcome within a specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model containing the learning outcome to be edited.</param>
+    /// <param name="learningOutcome">The learning outcome view model to be edited.</param>
+    /// <param name="taxonomyLevel">The new taxonomy level for the edited learning outcome.</param>
+    /// <param name="what">The new description of the learning outcome.</param>
+    /// <param name="verbOfVisibility">The new verb indicating the visibility or action associated with the learning outcome.</param>
+    /// <param name="whereby">The new method or process by which the learning outcome can be achieved.</param>
+    /// <param name="whatFor">The new purpose or reason for the learning outcome.</param>
+    /// <param name="language">The culture info specifying the language in which the learning outcome is described.</param>
+    /// <remarks>
+    /// This method performs an edit operation by first deleting the existing learning outcome and then adding
+    /// a new learning outcome with the updated details. It achieves this through a batch command that
+    /// executes both delete and add operations atomically to ensure data consistency.
+    /// </remarks>
+    void EditStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        StructuredLearningOutcomeViewModel learningOutcome, TaxonomyLevel taxonomyLevel,
+        string what, string verbOfVisibility, string whereby, string whatFor, CultureInfo language);
+
+    /// <summary>
+    /// Edits an existing manual learning outcome within a specified learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model containing the manual learning outcome to be edited.</param>
+    /// <param name="learningOutcome">The manual learning outcome view model to be edited.</param>
+    /// <param name="manualLearningOutcomeText">The new text for the edited manual learning outcome.</param>
+    /// <remarks>
+    /// This method updates a manual learning outcome by first deleting the existing outcome and then adding a new outcome
+    /// with the updated text. The operations are encapsulated in a batch command to ensure that the changes are
+    /// applied atomically, maintaining the integrity of the learning outcomes collection. The position of the updated
+    /// learning outcome within the collection is preserved.
+    /// </remarks>
+    void EditManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ManualLearningOutcomeViewModel learningOutcome, string manualLearningOutcomeText);
+
+    /// <summary>
+    /// Deletes a specified learning outcome from a learning outcomes collection.
+    /// </summary>
+    /// <param name="learningOutcomes">The learning outcomes collection view model from which the learning outcome will be deleted.</param>
+    /// <param name="learningOutcome">The learning outcome view model to be deleted.</param>
+    void DeleteLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ILearningOutcomeViewModel learningOutcome);
 
     #region BackendAccess
 

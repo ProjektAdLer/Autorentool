@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -14,7 +15,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 {
     public const string fileEnding = "asf";
     private string _description;
-    private string _goals;
 
     private string _name;
     private double _positionX;
@@ -32,7 +32,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Id = Guid.Empty;
         Name = "";
         Description = "";
-        Goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         RequiredPoints = 0;
         LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
@@ -46,17 +46,17 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">A description of the learning space and its contents.</param>
-    /// <param name="goals">A description of the goals this learning space is supposed to achieve.</param>
     /// <param name="theme">The theme of the learning space.</param>
     /// <param name="requiredPoints">Points required to complete the learning space.</param>
+    /// <param name="learningOutcomes">The learning outcomes of the learning space.</param>
     /// <param name="layoutViewModel">Layout of the learning space</param>
     /// <param name="positionX">x-position of the learning space in the workspace.</param>
     /// <param name="positionY">y-position of the learning space in the workspace.</param>
     /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
-    public LearningSpaceViewModel(string name, string description, string goals, Theme theme,
-        int requiredPoints = 0,
+    public LearningSpaceViewModel(string name, string description, Theme theme,
+        int requiredPoints = 0, LearningOutcomeCollectionViewModel? learningOutcomes = null,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
         ICollection<IObjectInPathWayViewModel>? outBoundObjects = null,
@@ -66,7 +66,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
-        Goals = goals;
+        LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollectionViewModel();
         Theme = theme;
         RequiredPoints = requiredPoints;
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
@@ -81,6 +81,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public TopicViewModel? AssignedTopic { get; set; }
+    public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     public int Workload => ContainedLearningElements.Sum(element => element.Workload);
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
@@ -100,12 +101,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         set => SetField(ref _description, value);
     }
 
-    public string Goals
-    {
-        get => _goals;
-        set => SetField(ref _goals, value);
-    }
-
     public int RequiredPoints
     {
         get => _requiredPoints;
@@ -121,7 +116,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public bool UnsavedChanges
     {
         get => InternalUnsavedChanges ||
-               ContainedLearningElements.Any(element => element.UnsavedChanges);
+               ContainedLearningElements.Any(element => element.UnsavedChanges) ||
+               LearningOutcomeCollection.UnsavedChanges;
         set => InternalUnsavedChanges = value;
     }
 
@@ -166,12 +162,11 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public event PropertyChangedEventHandler? PropertyChanged;
     public string FileEnding => fileEnding;
 
-    [MemberNotNull(nameof(_name), nameof(_description), nameof(_goals))]
+    [MemberNotNull(nameof(_name), nameof(_description))]
     private void InitializeFields()
     {
         _name = "";
         _description = "";
-        _goals = "";
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
