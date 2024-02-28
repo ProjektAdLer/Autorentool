@@ -7,4 +7,5 @@ public interface ILearningSpaceLayoutPe
     FloorPlanEnum FloorPlanName { get; set; }
     IDictionary<int, ILearningElementPe> LearningElements { get; set; }
     IEnumerable<ILearningElementPe> ContainedLearningElements { get; }
+    IDictionary<int, ILearningElementPe> StoryElements { get; set; }
 }

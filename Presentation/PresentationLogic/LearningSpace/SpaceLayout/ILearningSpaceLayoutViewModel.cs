@@ -31,6 +31,9 @@ public interface ILearningSpaceLayoutViewModel
     /// List of currently held <see cref="ILearningElementViewModel"/>.
     /// </summary>
     IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
+
+    IDictionary<int, ILearningElementViewModel> StoryElements { get; set; }
+
     /// <summary>
     /// Gets the element at the specified index.
     /// </summary>
@@ -43,6 +46,12 @@ public interface ILearningSpaceLayoutViewModel
     /// <param name="index">The index of where to put the element.</param>
     /// <param name="element">The element to put at the index.</param>
     void PutElement(int index, ILearningElementViewModel element);
+    /// <summary>
+    /// Put the story element into the layout at the specified index.
+    /// </summary>
+    /// <param name="index">The index of where to put the element.</param>
+    /// <param name="element">The element to put at the index.</param>
+    void PutStoryElement(int index, ILearningElementViewModel element);
     /// <summary>
     /// Remove any element from the specified index.
     /// </summary>
@@ -57,4 +66,5 @@ public interface ILearningSpaceLayoutViewModel
     /// </summary>
     /// <param name="floorPlanName">Name of the new floor plan</param>
     void ChangeFloorPlan(FloorPlanEnum floorPlanName);
+
 }

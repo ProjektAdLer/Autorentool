@@ -22,6 +22,13 @@
       <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Resources" />
+      <EmbeddedResource Update="Resources\Validation\Validators\StoryContentValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>StoryContentValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\StoryContentValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>StoryContentValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>

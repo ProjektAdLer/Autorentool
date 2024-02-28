@@ -9,6 +9,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -18,6 +19,7 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -68,7 +70,9 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.LearningElements, opt => opt.Ignore())
-            .AfterMap(MapSpaceLayoutElements);
+            .ForMember(x => x.StoryElements, opt => opt.Ignore())
+            .AfterMap(MapSpaceLayoutElements)
+            .AfterMap(MapSpaceLayoutStoryElements);
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
@@ -107,10 +111,44 @@ public class ViewModelEntityMappingProfile : Profile
             .Union(destination.LearningElements)
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
+    
+    private static void MapSpaceLayoutStoryElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination,
+        ResolutionContext ctx)
+    {
+        //gather view models for all elements that are in source but not in destination
+        var sourceNewElementsViewModels = source.StoryElements
+            .Where(x => !SameIdAtSameIndexStory(destination, x))
+            .Select(tup =>
+                new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
+                    ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
+
+        //remove all elements from destination that are not in source
+        foreach (var (key, _) in destination.StoryElements.Where(x =>
+                     !source.StoryElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id)))
+        {
+            destination.StoryElements.Remove(key);
+        }
+
+        //map all elements that are in source and destination already into the respective destination element
+        foreach (var (key, value) in destination.StoryElements)
+        {
+            var entity = source.StoryElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(entity.Value, value);
+        }
+
+        destination.StoryElements = sourceNewElementsViewModels
+            .Union(destination.StoryElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
 
     private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
         KeyValuePair<int, ILearningElement> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+    
+    private static bool SameIdAtSameIndexStory(ILearningSpaceLayoutViewModel destination,
+        KeyValuePair<int, ILearningElement> kvp) =>
+        destination.StoryElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CreateLearningContentMap()
     {
@@ -118,14 +156,20 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap();
         CreateMap<LinkContent, LinkContentViewModel>()
             .ReverseMap();
+        CreateMap<StoryContent, StoryContentViewModel>()
+            .ReverseMap();
         CreateMap<FileContent, ILearningContentViewModel>()
             .As<FileContentViewModel>();
         CreateMap<LinkContent, ILearningContentViewModel>()
             .As<LinkContentViewModel>();
+        CreateMap<StoryContent, ILearningContentViewModel>()
+            .As<StoryContentViewModel>();
         CreateMap<FileContentViewModel, ILearningContent>()
             .As<FileContent>();
         CreateMap<LinkContentViewModel, ILearningContent>()
             .As<LinkContent>();
+        CreateMap<StoryContentViewModel, ILearningContent>()
+            .As<StoryContent>();
         CreateMap<ILearningContent, ILearningContentViewModel>()
             .IncludeAllDerived()
             .ReverseMap()
@@ -246,9 +290,15 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((_, d) =>
             {
+                //set mapped parent object for learning element
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+                //analogous for story
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             })
             .ReverseMap()
@@ -261,6 +311,11 @@ public class ViewModelEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             });
         CreateMap<ILearningSpaceViewModel, LearningSpace>()
@@ -276,6 +331,11 @@ public class ViewModelEntityMappingProfile : Profile
                 {
                     element.Parent = d;
                 }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
+                }
             });
         CreateMap<ILearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
@@ -290,6 +350,11 @@ public class ViewModelEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+
+                foreach (var (_, se) in d.LearningSpaceLayout.StoryElements)
+                {
+                    se.Parent = d;
                 }
             });
     }

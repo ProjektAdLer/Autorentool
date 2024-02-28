@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -52,7 +53,7 @@ public class LearningSpacePresenterUt
         var space = ViewModelProvider.GetLearningSpace();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
 
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
@@ -61,7 +62,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.ClickedLearningElement(element);
 
         mediator.Received().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
         selectedViewModelsProvider.Received().SetLearningElement(element, null);
     }
 
@@ -80,7 +81,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.ClickedLearningElement(adaptivityElement);
 
         mediator.Received().RequestOpenAdaptivityElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
         selectedViewModelsProvider.Received().SetLearningElement(adaptivityElement, null);
     }
 
@@ -88,7 +89,7 @@ public class LearningSpacePresenterUt
     public void ClickedLearningElement_CallsErrorServiceWhenSpaceIsNull()
     {
         var mockErrorService = Substitute.For<IErrorService>();
-        var element = ViewModelProvider.GetLearningElement();
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
 
         var systemUnderTest =
             CreatePresenterForTesting(errorService: mockErrorService);
@@ -111,10 +112,10 @@ public class LearningSpacePresenterUt
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.DidNotReceive().RequestOpenElementDialog();
-        selectedViewModelsProvider.DidNotReceive().SetActiveSlotInSpace(1, null);
+        selectedViewModelsProvider.DidNotReceive().SetActiveElementSlotInSpace(1, null);
     }
 
     [Test]
@@ -124,16 +125,16 @@ public class LearningSpacePresenterUt
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
 
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
 
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.DidNotReceive().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
     }
 
     [Test]
@@ -147,17 +148,17 @@ public class LearningSpacePresenterUt
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.ClickOnSlot(1);
+        systemUnderTest.ClickOnElementSlot(1);
 
         mediator.Received().RequestOpenElementDialog();
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(1, null);
     }
 
     [Test]
     public void CreateLearningElementInSlot_SpaceVmIsNull_SetsError()
     {
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var mockErrorService = Substitute.For<IErrorService>();
         var name = "name";
@@ -184,7 +185,7 @@ public class LearningSpacePresenterUt
     {
         var space = ViewModelProvider.GetLearningSpace();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        selectedViewModelsProvider.ActiveSlotInSpace.Returns(1);
+        selectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var name = "name";
         var content = new FileContentViewModel("abc", "def", "ghi");
@@ -205,7 +206,7 @@ public class LearningSpacePresenterUt
 
         presentationLogic.Received().CreateLearningElementInSlot(space, 1, name, content, description, goals,
             difficulty, elementModel, workload, points);
-        selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
+        selectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, null);
     }
 
     [Test]
@@ -477,14 +478,15 @@ public class LearningSpacePresenterUt
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         IMediator? mediator = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
-        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null)
+        ILogger<LearningSpacePresenter>? logger = null, IErrorService? errorService = null, IMapper? mapper = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         logger ??= new NullLogger<LearningSpacePresenter>();
         mediator ??= Substitute.For<IMediator>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         errorService ??= Substitute.For<IErrorService>();
+        mapper ??= Substitute.For<IMapper>();
         return new LearningSpacePresenter(presentationLogic, mediator, selectedViewModelsProvider, logger,
-            errorService);
+            errorService, mapper);
     }
 }

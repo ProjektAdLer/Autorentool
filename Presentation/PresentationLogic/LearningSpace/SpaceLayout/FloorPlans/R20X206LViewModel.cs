@@ -40,6 +40,12 @@ public class R20X206LViewModel : IFloorPlanViewModel
         new() { X = 26, Y = 22 },
         new() { X = 10, Y = 22 }
     };
+    
+    public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
+    {
+        new() {X = 3, Y = 12},
+        new() {X = 18, Y = 26}
+    };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
