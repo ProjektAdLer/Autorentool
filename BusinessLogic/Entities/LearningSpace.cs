@@ -44,6 +44,7 @@ public class LearningSpace : ILearningSpace
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
                               ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(),
+                                  new Dictionary<int, ILearningElement>(),
                                   FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();

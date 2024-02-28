@@ -366,7 +366,7 @@ public class PersistenceCt
                     0,
                     element
                 }
-            }, FloorPlanEnum.R_20X30_8L));
+            }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
         var space2 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
@@ -375,7 +375,7 @@ public class PersistenceCt
                     0,
                     element
                 }
-            }, FloorPlanEnum.R_20X30_8L));
+            }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
         var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
             { space1, space2 });
 
@@ -405,7 +405,7 @@ public class PersistenceCt
                     0,
                     element1
                 }
-            }, FloorPlanEnum.R_20X30_8L));
+            }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
         var space2 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
@@ -414,7 +414,7 @@ public class PersistenceCt
                     0,
                     element2
                 }
-            }, FloorPlanEnum.R_20X30_8L));
+            }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
         var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
             { space1, space2 });
 
@@ -443,7 +443,7 @@ public class PersistenceCt
                     0,
                     element
                 }
-            }, FloorPlanEnum.R_20X30_8L));
+            }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
         var world = PersistEntityProvider.GetLearningWorld(learningSpaces: new List<LearningSpacePe>
             { space1 });
 

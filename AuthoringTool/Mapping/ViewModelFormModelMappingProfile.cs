@@ -2,9 +2,12 @@ using AutoMapper;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -33,13 +36,50 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         CreateMap<LinkContentViewModel, LinkContentFormModel>()
             .ReverseMap();
-        CreateMap<AdaptivityContentViewModel, AdaptivityContentFormModel>();
+        CreateMap<AdaptivityContentViewModel, AdaptivityContentFormModel>()
+            .ReverseMap();
+        CreateMap<FileContentViewModel, FileContentFormModel>()
+            .ReverseMap();
+        CreateMap<StoryContentViewModel, StoryContentFormModel>()
+            .ReverseMap();
+        
+        CreateMap<ILearningContentViewModel, ILearningContentFormModel>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
+        
+        CreateMap<LinkContentViewModel, ILearningContentFormModel>()
+            .As<LinkContentFormModel>();
+        CreateMap<FileContentViewModel, ILearningContentFormModel>()
+            .As<FileContentFormModel>();
+        CreateMap<AdaptivityContentViewModel, ILearningContentFormModel>()
+            .As<AdaptivityContentFormModel>();
+        CreateMap<StoryContentViewModel, ILearningContentFormModel>()
+            .As<StoryContentFormModel>();
+        
+        CreateMap<LinkContentFormModel, ILearningContentViewModel>()
+            .As<LinkContentViewModel>();
+        CreateMap<FileContentFormModel, ILearningContentViewModel>()
+            .As<FileContentViewModel>();
+        CreateMap<AdaptivityContentFormModel, ILearningContentViewModel>()
+            .As<AdaptivityContentViewModel>();
+        CreateMap<StoryContentFormModel, ILearningContentViewModel>()
+            .As<StoryContentViewModel>();
     }
 
     private void CreateElementMap()
     {
         CreateMap<LearningElementViewModel, LearningElementFormModel>()
+            .ForMember(x => x.LearningContent, opt => opt.Ignore())
+            .AfterMap(MapContent)
             .ReverseMap();
+        return;
+
+        void MapContent(LearningElementViewModel source, LearningElementFormModel dest, ResolutionContext ctx)
+        {
+            dest.LearningContent =
+                ctx.Mapper.Map<ILearningContentFormModel>(source.LearningContent);
+        }
     }
 
     private void CreateSpaceMap()

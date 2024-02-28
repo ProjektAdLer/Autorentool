@@ -20,6 +20,16 @@ public static class FormModelProvider
         return new LearningElementFormModel();
     }
 
+    public static ILearningContentFormModel GetFileContent()
+    {
+        return new FileContentFormModel();
+    }
+
+    public static FileContentFormModel GetFileContent(string name, string type, string filepath)
+    {
+        return new FileContentFormModel(name, type, filepath);
+    }
+
     public static LinkContentFormModel GetLinkContent()
     {
         return new LinkContentFormModel();

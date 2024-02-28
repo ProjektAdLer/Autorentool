@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using MudBlazor;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -20,6 +21,11 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// Gets a value indicating whether the dialog for replacing a learning element is currently open.
     /// </summary>
     bool ReplaceLearningElementDialogOpen { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the dialog for replacing a story element is currently open.
+    /// </summary>
+    bool ReplaceStoryElementDialogOpen { get; }
 
     /// <summary>
     /// Edits an existing learning space with the specified properties.
@@ -80,6 +86,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// </summary>
     /// <param name="learningElementViewModel">The learning element to be deleted.</param>
     void DeleteLearningElement(ILearningElementViewModel learningElementViewModel);
+    void DeleteStoryElement(ILearningElementViewModel learningElementViewModel);
 
     /// <summary>
     /// Sets the selected learning element and asynchronously displays its content.
@@ -101,18 +108,34 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// <param name="slotId">The slot ID where the learning element is located.</param>
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
         int slotId);
+    
+    /// <summary>
+    /// Opens the dialog for replacing a story element, initializing the necessary data.
+    /// </summary>
+    /// <param name="learningWorldVm">The learning world view model that contains the element to be replaced.</param>
+    /// <param name="dropItem">The learning element view model to replace.</param>
+    /// <param name="slotId">The slot ID where the learning element is located.</param>
+    void OpenReplaceStoryElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId);
 
     /// <summary>
     /// Handles the closing of the replace learning element dialog, updating the state accordingly.
     /// </summary>
     /// <param name="closeResult">The result of the dialog close operation, indicating whether the operation was canceled or confirmed.</param>
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
+    void OnReplaceStoryElementDialogClose(DialogResult closeResult);
 
     /// <summary>
-    /// Handles a click event on a specific slot within the learning space layout.
+    /// Handles a click event on a specific element slot within the learning space layout.
     /// </summary>
-    /// <param name="i">The index of the clicked slot.</param>
-    void ClickOnSlot(int i);
+    /// <param name="i">The index of the clicked element slot.</param>
+    void ClickOnElementSlot(int i);
+
+    /// <summary>
+    /// Handles a click event on a specific story slot within the learning space layout.
+    /// </summary>
+    /// <param name="i">The index of the clicked story slot.</param>
+    void ClickOnStorySlot(int i);
 
     /// <summary>
     /// Creates a new learning element in the specified slot of the learning space layout.
@@ -127,4 +150,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// <param name="points">The points associated with the learning element.</param>
     void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent, string description,
         string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
+
+    void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model);
+    void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model);
 }

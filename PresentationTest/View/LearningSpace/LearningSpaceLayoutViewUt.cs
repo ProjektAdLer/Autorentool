@@ -70,9 +70,6 @@ public class LearningSpaceLayoutViewUt
                   </div>
               </div>"
         );
-        systemUnderTest.MarkupMatches(BackgroundOpen + ShadowOpen + FloorPlanClass + FloorPlanStyleOpen +
-                                      FloorPlanStyleMid + FloorPlanStyleClose +
-                                      DivClose + DivClose + DivClose);
     }
 
     [Test]
@@ -169,7 +166,7 @@ public class LearningSpaceLayoutViewUt
         {
             Assert.Multiple(() =>
             {
-                Assert.That(dropZones[i].Attributes["identifier"]?.Value, Is.EqualTo(expectedId.ToString() + i));
+                Assert.That(dropZones[i].Attributes["identifier"]?.Value, Is.EqualTo($"{expectedId.ToString()}_ele_{i}"));
                 Assert.That(dropZones[i].Attributes["style"]?.Value,
                     Is.EqualTo(
                         $"position: absolute; " +

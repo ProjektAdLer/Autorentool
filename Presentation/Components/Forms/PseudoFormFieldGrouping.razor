@@ -1,0 +1,15 @@
+@typeparam T
+@using System.Diagnostics.CodeAnalysis
+@inherits MudBaseInput<T>
+
+<div class="flex flex-col">
+    @ChildContent
+    @if (Error)
+    {
+        <MudText Class="text-formerror">@ErrorText</MudText>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired, AllowNull] public RenderFragment ChildContent { get; set; }
+}

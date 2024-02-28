@@ -60,9 +60,15 @@
         <value>Lernwelt Baumansicht-Icon</value>
     </data>
     <data name="SideBarContent.AdaptivityLearningElementMetadata.Alt" xml:space="preserve">
-        <value>Adaptivitätslernelement-Metadaten-Icon</value>
+        <value>Adaptivitätselement-Metadaten-Icon</value>
     </data>
     <data name="SideBarContent.AdaptivityLearningElementMetadata.Title" xml:space="preserve">
-        <value>Angaben zu Andaptivitätslernelementen</value>
+        <value>Angaben zu Adaptivitätselementen</value>
+    </data>
+    <data name="SideBarContent.StoryLearningElementMetadata.Title" xml:space="preserve">
+        <value>Angaben zu Storyelementen</value>
+    </data>
+    <data name="SideBarContent.StoryLearningElementMetadata.Alt" xml:space="preserve">
+        <value>Storyelement-Metadaten-Icon</value>
     </data>
 </root>

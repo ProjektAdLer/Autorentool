@@ -52,16 +52,25 @@
                             @if (IsLearningSpaceExpanded(learningSpace))
                             {
                                 <div>
+                                    @if(learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(0, out var entranceElement))
+                                    {
+                                        <LearningWorldTreeViewItem @key="entranceElement" LearningElement="@entranceElement"
+                                                                   IsSelected="@IsLearningElementSelected(entranceElement)"
+                                                                   OnSelect="@(ele => OnLearningElementClicked(ele))"/>
+                                    }
                                     @foreach (var learningElement in learningSpace.ContainedLearningElements)
                                     {
-                                        <div @onclick="@(e => SelectLearningElement(learningElement))"
-                                             class="@GetElementDivCss(learningElement)">
-                                            <div class="flex flex-row gap-2 items-center p-2 ml-14">
-                                                <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon(learningElement)"></MudIcon>
-                                                <p class="break-words">@learningElement.Name</p>
-                                            </div>
-                                        </div>
+                                        <LearningWorldTreeViewItem @key="learningElement" LearningElement="@learningElement"
+                                                                   IsSelected="@IsLearningElementSelected(learningElement)"
+                                                                   OnSelect="@(ele => OnLearningElementClicked(ele))"/>
                                     }
+                                    @if(learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(1, out var exitElement))
+                                    {
+                                        <LearningWorldTreeViewItem @key="exitElement" LearningElement="@exitElement"
+                                                                   IsSelected="@IsLearningElementSelected(exitElement)"
+                                                                   OnSelect="@(ele => OnLearningElementClicked(ele))"/>
+                                    }
+
                                 </div>
                             }
                         </div>
@@ -115,39 +124,12 @@
         }
     }
 
-    private string GetElementIcon(ILearningElementViewModel element)
-    {
-        return element.LearningContent switch
-        {
-            ILinkContentViewModel => CustomIcons.VideoElementIcon,
-            IFileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" or "jpeg" } => CustomIcons.ImageElementIcon,
-            IFileContentViewModel
-            {
-                Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
-                "js" or "php" or "html" or "css"
-            } => CustomIcons.TextElementIcon,
-            IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
-            IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
-            IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
-            _ => ""
-        };
-    }
-
     private string GetSpaceDivCss(ILearningSpaceViewModel space)
     {
         var isLearningSpaceSelected = IsLearningSpaceSelected(space);
         return new CssBuilder("text-sm 2xl:text-base select-none")
             .AddClass("text-adlerblue-600", isLearningSpaceSelected)
             .AddClass("text-adlergrey-600", !isLearningSpaceSelected)
-            .ToString();
-    }
-
-    private string GetElementDivCss(ILearningElementViewModel ele)
-    {
-        var isLearningElementSelected = IsLearningElementSelected(ele);
-        return new CssBuilder("text-sm 2xl:text-base select-none")
-            .AddClass("text-adlerblue-600", isLearningElementSelected)
-            .AddClass("text-adlergrey-600", !isLearningElementSelected)
             .ToString();
     }
     
@@ -210,7 +192,7 @@
     }
 
 
-    private void OnElementClicked(ILearningElementViewModel element)
+    private void OnLearningElementClicked(ILearningElementViewModel element)
     {
         LearningWorldP.SetSelectedLearningElement(element);
     }

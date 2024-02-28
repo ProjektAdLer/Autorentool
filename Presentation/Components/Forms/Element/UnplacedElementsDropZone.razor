@@ -4,7 +4,9 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Commands
 @using Presentation.PresentationLogic.LearningElement
+@using Shared.Command
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
     <p class="cursor-default text-xs h-1/4 2xl:text-sm text-center mx-1 py-2 flex-auto basis-1/5 text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
@@ -32,16 +34,50 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    
+    [Inject, AllowNull]
+    public IOnUndoRedo UndoRedoSource { get; set; }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+        WorldPresenter.OnCommandUndoRedoOrExecute += OnUndoOrRedoOrExecute;
+        if (SelectedViewModelsProvider.LearningWorld != null) 
+            SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+    }
+
+    private async void OnUndoOrRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
+    {
+        var commandName = e.CommandName;
+        if(commandName.StartsWith("CreateLearningElement") ||
+           commandName.StartsWith("LoadLearningElement") ||
+           commandName.StartsWith("PlaceLearningElement") ||
+           commandName.StartsWith("PlaceStoryElement"))
+            await InvokeStateHasChanged();
     }
 
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        await InvokeAsync(StateHasChanged);
+        await InvokeStateHasChanged();
+    }
+
+    private Task InvokeStateHasChanged()
+    {
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        WorldPresenter.OnCommandUndoRedoOrExecute -= OnUndoOrRedoOrExecute;
+        if (SelectedViewModelsProvider.LearningWorld != null)
+            SelectedViewModelsProvider.PropertyChanged -= SelectedViewModelsProviderOnPropertyChanged;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
     }
 
 }

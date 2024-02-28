@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
 using Shared.Extensions;
@@ -262,15 +263,40 @@ public class CreateAtf : ICreateAtf
                 index++;
             }
 
+            var spaceStoryJson = GetSpaceStoryJson(space);
+
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
-                space.Name, _listLearningSpaceElements,
-                space.RequiredPoints, space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
-                space.Description, spaceGoals, _booleanAlgebraRequirements));
+                space.Name, _listLearningSpaceElements, space.RequiredPoints,
+                space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
+                spaceStoryJson, space.Description, spaceGoals,
+                _booleanAlgebraRequirements));
 
             learningSpaceId++;
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
+    }
+
+    private ISpaceStoryJson GetSpaceStoryJson(LearningSpacePe space)
+    {
+        var storyElements = space.LearningSpaceLayout.StoryElements;
+
+        StoryElementJson? introStoryJson = null;
+        StoryElementJson? outroStoryJson = null;
+
+        if (storyElements.TryGetValue(0, out var introStory))
+        {
+            introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
+                introStory.ElementModel.ToString());
+        }
+
+        if (storyElements.TryGetValue(1, out var outroStory))
+        {
+            outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
+                outroStory.ElementModel.ToString());
+        }
+
+        return new SpaceStoryJson(introStoryJson, outroStoryJson);
     }
 
     /// <summary>
@@ -480,7 +506,7 @@ public class CreateAtf : ICreateAtf
         {
             { } type when FileContentIsTextType(type) => "text",
             { } type when FileContentIsImageType(type) => "image",
-            "h5p" => "h5p",
+            "h5p" => fileContent.PrimitiveH5P ? "primitiveH5P" : "h5p",
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
                 $"The given LearningContent Type of file {fileContent.Name} is not supported")

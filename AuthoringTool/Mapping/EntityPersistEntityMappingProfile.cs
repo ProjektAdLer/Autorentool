@@ -9,10 +9,12 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
+using BusinessLogic.Entities.LearningContent.Story;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Story;
 using PersistEntities.LearningContent.Trigger;
 using PersistEntities.LearningOutcome;
 
@@ -171,14 +173,23 @@ public class EntityPersistEntityMappingProfile : Profile
             .ReverseMap();
         CreateMap<LinkContent, LinkContentPe>()
             .ReverseMap();
+        CreateMap<StoryContent, StoryContentPe>()
+            .ReverseMap();
+        
         CreateMap<FileContent, ILearningContentPe>()
             .As<FileContentPe>();
         CreateMap<LinkContent, ILearningContentPe>()
             .As<LinkContentPe>();
+        CreateMap<StoryContent, ILearningContentPe>()
+            .As<StoryContentPe>();
+        
         CreateMap<FileContentPe, ILearningContent>()
             .As<FileContent>();
         CreateMap<LinkContentPe, ILearningContent>()
             .As<LinkContent>();
+        CreateMap<StoryContentPe, ILearningContent>()
+            .As<StoryContent>();
+        
         CreateMap<ILearningContent, ILearningContentPe>()
             .IncludeAllDerived()
             .ReverseMap()

@@ -4,6 +4,8 @@
 @inherits MudBaseInput<T>
 @using Microsoft.Extensions.Localization
 @using Shared.Localization
+@using System.ComponentModel
+@using Shared.Observer
 
 <style type="text/css">  
    .mud-table-toolbar {
@@ -59,6 +61,9 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment<T> RowTemplate { get; set; }
 
+    [Parameter]
+    public EventCallback<PropertyChangingWithValueEventArgs<T>> OnPropertyChangingWithValue { get; set; }
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizerFactory LocalizerFactory { get; set; }
 
@@ -69,32 +74,40 @@
     private string? _searchString;
 
     private string TableClasses => CssBuilder.Empty().AddClass("border-2 border-formerror rounded-lg shadow-lg", () => Error).Build();
+    
+    
 
-    private void RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
+    private async Task RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
     {
         if (tableRowClickEventArgs.Item != null && tableRowClickEventArgs.Item.Equals(Value))
         {
-            DeselectRow();
+            await DeselectRowAsync();
         }
         else
         {
-            SelectRow(tableRowClickEventArgs);
+            await SelectRowAsync(tableRowClickEventArgs);
         }
     }
 
-    private void DeselectRow()
+    private async Task DeselectRowAsync()
     {
     // we have to suppress the nullability warning here as we specifically want to set the value to null
     // if T is a reference type, but the compiler believes that the type T is not nullable
     // The behaviour is basically set to null if T is a reference type, otherwise set to default(T),
     // that way, enums and structs are also supported
-        SetValueAsync(default!);
+        await BeginSetValueAsync(default!);
     }
 
-    private void SelectRow(TableRowClickEventArgs<T> tableRowClickEventArgs)
+    private async Task SelectRowAsync(TableRowClickEventArgs<T> tableRowClickEventArgs)
     {
-        SetValueAsync(tableRowClickEventArgs.Item);
-        InvokeAsync(StateHasChanged);
+        await BeginSetValueAsync(tableRowClickEventArgs.Item);
+    }
+
+    private async Task BeginSetValueAsync(T value)
+    {
+        await OnPropertyChangingWithValueAsync(new PropertyChangingWithValueEventArgs<T>(nameof(Value), Value, value));
+        await SetValueAsync(value);
+        await InvokeAsync(StateHasChanged);
     }
 
     private string SelectedRowClassFunc(T element, int rowNumber)
@@ -110,6 +123,11 @@
     private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
     {
         return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
+    }
+
+    protected virtual async Task OnPropertyChangingWithValueAsync(PropertyChangingWithValueEventArgs<T> e)
+    {
+        await OnPropertyChangingWithValue.InvokeAsync(e);
     }
 
 }

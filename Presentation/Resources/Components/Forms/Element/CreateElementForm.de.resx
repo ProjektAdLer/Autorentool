@@ -116,4 +116,51 @@
     <data name="CreateElementForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Beschreibung</value>
     </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
+        <value>Ist H5P-Element primitiv?</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
+        <value>H5P-Dateien sind ein Containerformat zum Bauen multimedialer Lerninhalte. Mit ihnen lassen sich eine Vielzahl von Arten von Lerninhalten basteln, beispielsweise Quizzes, Wörtersuch-Spiele oder Begriffssammlungen.
+
+Da sich so viele verschiedene Arten von Inhalten mit H5P-Dateien erstellen lassen, ist im Autorentool eine Klassifizierung dieser notwendig: 
+
+&lt;ul class="list-disc list-inside"&gt;
+	&lt;li&gt;Handelt es sich um ein Element, welches sich (korrekt oder inkorrekt) abschließen lässt, wie beispielsweise ein Quiz oder Video, so sollten sie dieses Kontrollkästchen nicht anhaken.&lt;/li&gt;
+	&lt;li&gt;Handelt es sich jedoch um ein Element, welches sich nicht abschließen lässt, wie beispielsweise eine Begriffssammlung, so sollten sie dieses Kontrollkästchen anhaken, damit Studierende dieses Element dennoch durch bloßes Öffnen abschließen und Punkte für die Bearbeitung erhalten können.&lt;/li&gt;
+&lt;/ul&gt;
+Falls Sie sich nicht sicher sind, in welche Kategorie eine H5P-Datei gehört, dann ist es besser, diesen Haken zu setzen. Dadurch können Studierende den Inhalt bearbeiten und trotzdem definitiv immer Ihre Welt weiterspielen.
+
+Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation des Autorentools.
+</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text" xml:space="preserve">
+        <value>Für mehr Informationen klicken</value>
+    </data>
+    <data name="CreateStoryElementForm.Header.Text" xml:space="preserve">
+        <value>Storyelement erstellen</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Story</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
+        <value>Story zu diesem Storyelement</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.StoryTitle" xml:space="preserve">
+        <value>Titel des Storyelements</value>
+    </data>
+    <data name="CreateElementForm.Story.Tooltip" xml:space="preserve">
+        <value>Den Text, den Sie innerhalb eines Textblocks für Ihre Story formulieren, wird den Studierenden in der späteren 3D-Lernumgebung auf einer Slide dargestellt. &lt;br&gt; &lt;br&gt; Fügen Sie einen weiteren Textblock mit neuem Inhalt zu Ihrer Story hinzu, wird dieser Textblock in der 3D-Lernumgebung in einer nachfolgenden Slide angezeigt. &lt;br&gt; &lt;br&gt; Verwenden Sie also z.B. drei Textblöcke innerhalb eines Storyelements, wird der darin enthaltene Text den Studierenden in der 3D-Lernumgebung in drei aufeinanderfolgenden Slides angezeigt.</value>
+    </data>
+    <data name="CreateElementForm.AddStoryText" xml:space="preserve">
+        <value>Neuen Textblock hinzufügen</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory" xml:space="preserve">
+        <value>Textblock löschen</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.Story.AddStory" xml:space="preserve">
+        <value>Neuen Textblock hinzufügen</value>
+    </data>
+    <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
+        <value>Slide </value>
+    </data>
 </root>

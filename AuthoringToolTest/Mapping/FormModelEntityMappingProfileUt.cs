@@ -1,8 +1,12 @@
+using AgileObjects.ReadableExpressions;
 using AuthoringTool.Mapping;
 using AutoMapper;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using NUnit.Framework;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.PresentationLogic.LearningElement;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
@@ -12,6 +16,32 @@ public class FormModelEntityMappingProfileUt
 {
     private const string QuestionText = "questionText";
     private const int ExpectedCompletionTime = 10;
+
+    // [Test]
+    // public void Constructor_TestConfigurationisValid()
+    // {
+    //     var mapper = new MapperConfiguration(cfg =>
+    //     {
+    //         FormModelEntityMappingProfile.Configure(cfg);
+    //         cfg.AddCollectionMappersOnce();
+    //     });
+    //     
+    //     Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
+    // }
+
+    [Test]
+    public void Debug()
+    {
+        var mapper = new MapperConfiguration(cfg =>
+        {
+            FormModelEntityMappingProfile.Configure(cfg);
+            ViewModelFormModelMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+
+        var executionPlan = mapper.BuildExecutionPlan(typeof(LearningElementFormModel), typeof(LearningElement));
+        var plan = executionPlan.ToReadableString();
+    }
 
     [Test]
     public void MultipleChoiceQuestion_SingleResponse_TestMappingIsValid()

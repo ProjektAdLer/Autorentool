@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -104,6 +105,11 @@ public static class ViewModelProvider
     public static FileContentViewModel GetFileContent(string? name = null, string? type = null, string? filepath = null)
     {
         return new FileContentViewModel(name ?? "FCVMn a name", type ?? "FCVMt a type", filepath ?? "FCVMf a filepath");
+    }
+
+    public static StoryContentViewModel GetStoryContent()
+    {
+        return new StoryContentViewModel("a story name", new List<string> { "a story", "another story" });
     }
 
     public static TopicViewModel GetTopic()
