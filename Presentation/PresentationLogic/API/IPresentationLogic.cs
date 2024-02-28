@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -459,7 +460,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="adaptivityContentVm">The Adaptivity Content to create the Task in.</param>
     /// <param name="name">The name of the Task.</param>
-    void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name);
+    void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name);
 
     /// <summary>
     /// Edits a given Adaptivity Task
@@ -475,7 +476,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="adaptivityContentVm">The Adaptivity Content to delete the Task from.</param>
     /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
-    void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+    void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm);
 
 

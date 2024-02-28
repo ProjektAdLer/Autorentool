@@ -148,7 +148,7 @@
     internal IFormDataContainer<AdaptivityContentFormModel, AdaptivityContent> FormDataContainer { get; set; }
 
     [Parameter, EditorRequired]
-    public IAdaptivityContentViewModel MyContent { get; set; } = null!;
+    public AdaptivityContentFormModel MyContent { get; set; } = null!;
 
     [Parameter]
     public int DebounceInterval { get; set; } = 300;

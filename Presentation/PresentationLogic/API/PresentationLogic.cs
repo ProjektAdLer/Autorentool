@@ -25,6 +25,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -979,7 +980,7 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
-    public void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name)
+    public void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
         var command = TaskCommandFactory.GetCreateCommand(contentEntity, name,
@@ -998,7 +999,7 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
-    public void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+    public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
