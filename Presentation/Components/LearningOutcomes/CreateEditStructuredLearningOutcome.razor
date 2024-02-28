@@ -190,18 +190,10 @@
     <div class="flex flex-row justify-between">
 
         <div class="flex items-end">
-            @if (Culture.Name == "de-DE")
-            {
                 <button class="h-8 m-2 hover:bg-adlergrey-100 hover:rounded">
-                    <a class="mx-2 text-xs text-adlergrey-300" target="_blank" href="CustomIcons/Beispiel-Lernziel_de.png">@Localizer["CreateEditStructuredLearningOutcome.Example"]</a>
+                    <a class="mx-2 text-xs text-adlergrey-300" target="_blank" href="@getLearningOutcomeExampleImage()">@Localizer["CreateEditStructuredLearningOutcome.Example"]</a>
                 </button>
-            }
-            else
-            {
-                <button class="h-8 m-2 hover:bg-adlergrey-100 hover:rounded">
-                    <a class="mx-2 text-xs text-adlergrey-300" target="_blank" href="CustomIcons/Beispiel-Lernziel_en.png">@Localizer["CreateEditStructuredLearningOutcome.Example"]</a>
-                </button>
-            }
+
         </div>
 
         <MudButton Class="flex items-center btn-standard sticky m-6"
@@ -230,6 +222,19 @@
 
     private string WhatForText => Culture.Name == "de-DE" ? "um..." : "to...";
 
+    private string getLearningOutcomeExampleImage()
+    {
+        @switch (CultureInfo.CurrentCulture.Name)
+        {
+            case "de-DE":
+                return (Culture.Name == "de-DE" ? "/CustomIcons/Beispiel-Lernziel_AT-de_LO-de.png" : "/CustomIcons/Beispiel-Lernziel_AT-de_LO-en.png");
+
+            case "en-DE":
+                return (Culture.Name == "en-DE" ? "/CustomIcons/Beispiel-Lernziel_AT-en_LO-en.png" : "/CustomIcons/Beispiel-Lernziel_AT-en_LO-de.png");
+        }
+        return "";
+    }
+    
     [Parameter]
     public CultureInfo Culture
     {
