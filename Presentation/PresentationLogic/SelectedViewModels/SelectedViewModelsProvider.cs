@@ -15,7 +15,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
-    private int _activeSlotInSpace = -1;
+    private int _activeElementSlotInSpace = -1;
+    private int _activeStorySlotInSpace;
     private ILearningContentViewModel? _learningContent;
     private ILearningElementViewModel? _learningElement;
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
@@ -56,18 +57,35 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         private set => SetField(ref _learningContent, value);
     }
 
-    public int ActiveSlotInSpace
+    public int ActiveElementSlotInSpace
     {
-        get => _activeSlotInSpace;
-        private set => SetField(ref _activeSlotInSpace, value);
+        get => _activeElementSlotInSpace;
+        private set => SetField(ref _activeElementSlotInSpace, value);
     }
 
-    public void SetActiveSlotInSpace(int slot, ICommand? command)
+    public int ActiveStorySlotInSpace
+    {
+        get => _activeStorySlotInSpace;
+        private set => SetField(ref _activeStorySlotInSpace, value);
+    }
+
+    public void SetActiveElementSlotInSpace(int slot, ICommand? command)
     {
         if (command is not null)
-            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveSlotInSpace, s => ActiveSlotInSpace = s));
-        ActiveSlotInSpace = slot;
+            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveElementSlotInSpace, s => ActiveElementSlotInSpace = s));
+        ActiveElementSlotInSpace = slot;
+        ActiveStorySlotInSpace = -1;
         Logger.LogTrace("ActiveSlotInSpace set to {Slot}", slot);
+        _redoStack.Clear();
+    }
+
+    public void SetActiveStorySlotInSpace(int slot, ICommand? command)
+    {
+        if (command is not null)
+            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveStorySlotInSpace, s => ActiveStorySlotInSpace = s));
+        ActiveStorySlotInSpace = slot;
+        ActiveElementSlotInSpace = -1;
+        Logger.LogTrace("ActiveStorySlotInSpace set to {Slot}", slot);
         _redoStack.Clear();
     }
 
@@ -78,7 +96,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                 new SelectedLearningWorldViewModelStackEntry(command, LearningWorld, lw => LearningWorld = lw));
         LearningWorld = learningWorld;
         Logger.LogTrace("LearningWorld set to {LearningWorld} with id {Id}", learningWorld?.Name, learningWorld?.Id);
-        SetActiveSlotInSpace(-1, command);
+        SetActiveElementSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -109,7 +127,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                 break;
         }
 
-        SetActiveSlotInSpace(-1, command);
+        SetActiveElementSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -121,7 +139,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         LearningElement = learningElement;
         Logger.LogTrace("LearningElement set to {LearningElement} with id {Id}", learningElement?.Name,
             learningElement?.Id);
-        SetActiveSlotInSpace(-1, command);
+        SetActiveElementSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -153,8 +171,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                     el.Command, LearningElement, le => LearningElement = le),
                 SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
                     ce.Command, LearningContent, lc => LearningContent = lc),
-                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace,
-                    s => ActiveSlotInSpace = s),
+                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveElementSlotInSpace,
+                    s => ActiveElementSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();
@@ -178,8 +196,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                     el.Command, LearningElement, le => LearningElement = le),
                 SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
                     ce.Command, LearningContent, lc => LearningContent = lc),
-                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace,
-                    s => ActiveSlotInSpace = s),
+                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveElementSlotInSpace,
+                    s => ActiveElementSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();

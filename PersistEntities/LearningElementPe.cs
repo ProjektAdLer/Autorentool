@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Story;
 using Shared;
 
 namespace PersistEntities;
@@ -9,6 +10,7 @@ namespace PersistEntities;
 [KnownType(typeof(FileContentPe))]
 [KnownType(typeof(LinkContentPe))]
 [KnownType(typeof(AdaptivityContentPe))]
+[KnownType(typeof(StoryContentPe))]
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe learningContent,

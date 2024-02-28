@@ -8,11 +8,12 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningContent.Story
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
         <MudCard title="@LearningElement.Name" Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start items-start">
-                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[80px] 2500p:h-[80px] p-0">
+                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[80px] p-0">
                     
                     <div class="absolute flex justify-center -top-3 2xl:-top-4">
                         <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-8 2xl:h-8 -top-5 flex rounded-lg p-1 element-icon"/>
@@ -110,6 +111,7 @@
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
+            IStoryContentViewModel => CustomIcons.StoryElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }

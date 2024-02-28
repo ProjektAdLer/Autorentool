@@ -1,5 +1,13 @@
-﻿using MudBlazor;
+﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
+using MudBlazor;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -25,7 +33,11 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
     {
         var list = Enumerable.Empty<ILearningElementViewModel>();
         if (SpaceP.LearningSpaceVm != null)
+        {
             list = list.Union(SpaceP.LearningSpaceVm.ContainedLearningElements);
+            list = list.Union(SpaceP.LearningSpaceVm.LearningSpaceLayout.StoryElements.Values);
+        }
+
         if (WorldP.LearningWorldVm != null)
             list = list.Union(WorldP.LearningWorldVm.UnplacedLearningElements);
         return list;
@@ -47,75 +59,139 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
     {
         if (item.Parent != null)
         {
-            return
-                item.Parent.Id.ToString() +
-                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key
-                == dropzoneIdentifier;
+            switch (item.LearningContent)
+            {
+                case IFileContentViewModel or ILinkContentViewModel or IAdaptivityContentViewModel:
+                    return CheckInElementDropZone();
+                case IStoryContentViewModel: return CheckInStoryDropZone();
+            }
         }
 
         if (dropzoneIdentifier != "unplacedElements") return false;
         return WorldP.LearningWorldVm != null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
+
+        bool CheckInElementDropZone() => CheckInDropZone("ele", item.Parent.LearningSpaceLayout.LearningElements);
+        bool CheckInStoryDropZone() => CheckInDropZone("story", item.Parent.LearningSpaceLayout.StoryElements);
+
+        bool CheckInDropZone(string dropzoneType, IDictionary<int, ILearningElementViewModel> dict) =>
+            $"{item.Parent.Id.ToString()}_{dropzoneType}_{dict.First(kvP => kvP.Value.Equals(item)).Key}" ==
+            dropzoneIdentifier;
     }
 
     private void DragItemToUnplaced(MudItemDropInfo<ILearningElementViewModel> dropItem)
     {
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
         var element = dropItem.Item;
-        
+
         if (element is null)
             throw new ApplicationException("Received null element from MudItemDropInfo");
-        if (element.Parent is null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(element))
-            return; //we can simply return because the item is already in unplaced elements, where it's trying to be placed
-        
+        switch (element.Parent)
+        {
+            case null when WorldP.LearningWorldVm.UnplacedLearningElements.Contains(element):
+                return; //we can simply return because the item is already in unplaced elements, where it's trying to be placed
+            case null:
+                throw new ApplicationException("DragDropItem has no parent");
+        }
+
+        if (element.Parent != SpaceP.LearningSpaceVm)
+            throw new ApplicationException("DragDropItem's parent is not the selected space");
+
         //at this point selected space can't be null, because the element is in a space
         if (SpaceP.LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        if (element.Parent is null ||
-            !element.Parent.ContainedLearningElements.Contains(element) ||
-            element.Parent != SpaceP.LearningSpaceVm)
+        switch (dropItem.Item!.LearningContent)
         {
-            //if we got here, the element is neither in unplaced elements nor in the selected space
-            throw new ApplicationException("DragDropItem is neither in unplaced elements nor in a learning space");
+            case IStoryContentViewModel when !element.Parent.LearningSpaceLayout.StoryElements.Values.Contains(element):
+            case IFileContentViewModel or ILinkContentViewModel or IAdaptivityContentViewModel
+                when !element.Parent.LearningSpaceLayout.LearningElements.Values.Contains(element):
+                throw new InvalidOperationException("Space does not contain element");
+            case IStoryContentViewModel:
+                PresentationL.DragStoryElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm, element);
+                break;
+            case IFileContentViewModel or ILinkContentViewModel or IAdaptivityContentViewModel:
+                PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                    element);
+                break;
+            default:
+            {
+                throw new InvalidOperationException("LearningContent type is not recognized");
+            }
         }
-
-        PresentationL.DragLearningElementToUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
-            element);
     }
 
     private void DragItemToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem)
     {
         if (dropItem.Item == null) return;
         if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-        var oldSlot = -1;
-        if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
-        {
-            oldSlot = dropItem.Item.Parent.LearningSpaceLayout.LearningElements
-                .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;
-        }
 
-        var spaceId = dropItem.DropzoneIdentifier.Substring(0, Guid.Empty.ToString().Length);
+        var split = dropItem.DropzoneIdentifier.Split("_");
+        var spaceId = split[0];
         var spaceVm = WorldP.LearningWorldVm.LearningSpaces.FirstOrDefault(x => x.Id.ToString() == spaceId);
         if (spaceVm == null) throw new ApplicationException("The space to drop to is not in the world");
         if (spaceVm != SpaceP.LearningSpaceVm)
             throw new ApplicationException("The space to drop to is not the currently selected space");
-        var slotId = int.Parse(dropItem.DropzoneIdentifier.Substring(Guid.Empty.ToString().Length));
+        var dropzoneType = split[1];
+        var slotId = int.Parse(split[2]);
 
-        if (oldSlot >= 0)
+        switch (dropzoneType)
         {
-            PresentationL.SwitchLearningElementSlot(SpaceP.LearningSpaceVm, dropItem.Item, slotId);
+            case "ele":
+                DragLearningElmeentToLayoutSlot(dropItem, slotId);
+                break;
+            case "story":
+                DragStoryElementToLayoutSlot(dropItem, slotId);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(dropItem), dropItem.DropzoneIdentifier,
+                    "DropzoneIdentifier is not recognized");
+        }
+    }
+
+    private void DragLearningElmeentToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem, int slotId)
+    {
+        var oldSlot = dropItem.Item!.Parent?.LearningSpaceLayout.LearningElements
+            .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;
+        if (oldSlot is not null)
+        {
+            PresentationL.SwitchLearningElementSlot(SpaceP.LearningSpaceVm!, dropItem.Item, slotId);
         }
         else
         {
-            if (!WorldP.LearningWorldVm.UnplacedLearningElements.Contains(dropItem.Item))
+            if (!WorldP.LearningWorldVm!.UnplacedLearningElements.Contains(dropItem.Item))
                 throw new ApplicationException("DragDropItem should be in unplaced elements");
 
-            if (SpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(slotId))
+            if (SpaceP.LearningSpaceVm!.LearningSpaceLayout.LearningElements.ContainsKey(slotId))
             {
                 SpaceP.OpenReplaceLearningElementDialog(WorldP.LearningWorldVm, dropItem.Item, slotId);
             }
             else
             {
                 PresentationL.DragLearningElementFromUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                    dropItem.Item, slotId);
+            }
+        }
+    }
+
+    private void DragStoryElementToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem, int slotId)
+    {
+        var oldSlot = dropItem.Item!.Parent?.LearningSpaceLayout.StoryElements
+            .First(kvp => kvp.Value.Equals(dropItem.Item)).Key;
+        if (oldSlot is not null)
+        {
+            PresentationL.SwitchStoryElementSlot(SpaceP.LearningSpaceVm!, dropItem.Item, slotId);
+        }
+        else
+        {
+            if (!WorldP.LearningWorldVm!.UnplacedLearningElements.Contains(dropItem.Item))
+                throw new ApplicationException("DragDropItem should be in unplaced elements");
+
+            if (SpaceP.LearningSpaceVm!.LearningSpaceLayout.StoryElements.ContainsKey(slotId))
+            {
+                SpaceP.OpenReplaceStoryElementDialog(WorldP.LearningWorldVm, dropItem.Item, slotId);
+            }
+            else
+            {
+                PresentationL.DragStoryElementFromUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
                     dropItem.Item, slotId);
             }
         }

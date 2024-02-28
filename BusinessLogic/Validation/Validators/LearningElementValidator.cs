@@ -1,5 +1,6 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;
@@ -12,7 +13,7 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
 {
     private readonly ILearningElementNamesProvider _learningElementNamesProvider;
 
-    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<ILearningContent> learningContentValidator)
+    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<ILearningContent> learningContentValidator, IValidator<StoryContent> storyContentValidator)
     {
         _learningElementNamesProvider = learningElementNamesProvider;
         RuleFor(x => x.Name)
@@ -22,7 +23,11 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
             .Must((element, name) => IsUniqueName(element.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.LearningContent)
-            .SetValidator(learningContentValidator)
+            //.SetValidator(learningContentValidator)
+            .SetInheritanceValidator(v =>
+            {
+                v.Add(storyContentValidator);
+            })
             .NotEmpty();
     }
 

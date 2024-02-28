@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
 
@@ -34,14 +35,18 @@ public static class EntityProvider
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
-        IDictionary<int, ILearningElement>? learningElements = null)
+        IDictionary<int, ILearningElement>? learningElements = null,
+        IDictionary<int, ILearningElement>? storyElements = null)
     {
-        return new LearningSpaceLayout(learningElements ?? new Dictionary<int, ILearningElement>(), floorPlan);
+        learningElements ??= new Dictionary<int, ILearningElement>();
+        storyElements ??= new Dictionary<int, ILearningElement>();
+        return new LearningSpaceLayout(learningElements, storyElements, floorPlan);
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
         return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
+            new Dictionary<int, ILearningElement>(),
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -77,6 +82,12 @@ public static class EntityProvider
     {
         return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
             { UnsavedChanges = unsavedChanges };
+    }
+
+    public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null, bool unsavedChanges = false)
+    {
+        storyText ??= new List<string> { "a story" };
+        return new StoryContent(name, unsavedChanges, storyText);
     }
 
     public static Topic GetTopic(string append = "")
