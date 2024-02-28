@@ -25,6 +25,6 @@
         <value>Story-Textblöcke dürfen maximal 550 Zeichen lang sein.</value>
     </data>
     <data name="StoryContentValidator.StoryTextNoBlocks.ErrorMessage" xml:space="preserve">
-        <value>Story-Elemente müssen mindestens einen nichtleeren Textblock enthalten.</value>
+        <value>Das Storyelement muss mindestens einen Textblock enthalten.</value>
     </data>
 </root>

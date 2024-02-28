@@ -25,6 +25,6 @@
         <value>Story text blocks may only be 550 digits long at maximum.</value>
     </data>
     <data name="StoryContentValidator.StoryTextNoBlocks.ErrorMessage" xml:space="preserve">
-        <value>Story elements must contain at elast one non-empty text block.</value>
+        <value>The story element must contain at elast one non-empty text block.</value>
     </data>
 </root>
