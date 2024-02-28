@@ -293,23 +293,28 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
         };
         WorldPresenter.GetAllContent().Returns(content);
+        var contentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
         
         
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentViewModel>>();
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
         tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
         
-        Assert.That(FormModel.LearningContent, Is.EqualTo(content.First()));
-        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentViewModel>());
-        Assert.That(content.First().PrimitiveH5P, Is.EqualTo(false));
+        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
+        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
         
         var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
         Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
         
         checkbox.Find("input").Change(true);
         
-        Assert.That(content.First().PrimitiveH5P, Is.EqualTo(true));
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
         Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
 
