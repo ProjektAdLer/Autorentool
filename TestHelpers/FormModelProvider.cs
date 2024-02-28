@@ -1,3 +1,4 @@
+using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 
@@ -33,6 +34,11 @@ public static class FormModelProvider
     public static LinkContentFormModel GetLinkContent()
     {
         return new LinkContentFormModel();
+    }
+
+    public static AdaptivityContentFormModel GetAdaptivityContent()
+    {
+        return new AdaptivityContentFormModel();
     }
 
     public static MultipleChoiceQuestionFormModel GetMultipleChoiceQuestion()

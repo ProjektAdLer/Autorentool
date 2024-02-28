@@ -2159,12 +2159,12 @@ public class PresentationLogicUt
         var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
         var mockCommand = Substitute.For<ICreateAdaptivityTask>();
         var mockMapper = Substitute.For<IMapper>();
-        var mockAdaptivityContentViewModel = ViewModelProvider.GetAdaptivityContent();
+        var mockAdaptivityContentFormModel = FormModelProvider.GetAdaptivityContent();
         var mockAdaptivityContentEntity = EntityProvider.GetAdaptivityContent();
         const string name = "name";
         Substitute.For<ILogger<TaskCommandFactory>>();
         mockMapper
-            .Map<AdaptivityContent>(mockAdaptivityContentViewModel)
+            .Map<AdaptivityContent>(mockAdaptivityContentFormModel)
             .Returns(mockAdaptivityContentEntity);
         mockTaskCommandFactory
             .GetCreateCommand(mockAdaptivityContentEntity, name,
@@ -2175,9 +2175,9 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
                 taskCommandFactory: mockTaskCommandFactory);
 
-        systemUnderTest.CreateAdaptivityTask(mockAdaptivityContentViewModel, name);
+        systemUnderTest.CreateAdaptivityTask(mockAdaptivityContentFormModel, name);
 
-        mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentViewModel);
+        mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -2218,13 +2218,13 @@ public class PresentationLogicUt
         var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
         var mockCommand = Substitute.For<IDeleteAdaptivityTask>();
         var mockMapper = Substitute.For<IMapper>();
-        var mockAdaptivityContentViewModel = ViewModelProvider.GetAdaptivityContent();
+        var mockAdaptivityContentFormModel = FormModelProvider.GetAdaptivityContent();
         var mockAdaptivityContentEntity = EntityProvider.GetAdaptivityContent();
         var mockAdaptivityTaskViewModel = ViewModelProvider.GetAdaptivityTask();
         var mockAdaptivityTaskEntity = EntityProvider.GetAdaptivityTask();
         Substitute.For<ILogger<TaskCommandFactory>>();
         mockMapper
-            .Map<AdaptivityContent>(mockAdaptivityContentViewModel)
+            .Map<AdaptivityContent>(mockAdaptivityContentFormModel)
             .Returns(mockAdaptivityContentEntity);
         mockMapper
             .Map<AdaptivityTask>(mockAdaptivityTaskViewModel)
@@ -2238,9 +2238,9 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
                 taskCommandFactory: mockTaskCommandFactory);
 
-        systemUnderTest.DeleteAdaptivityTask(mockAdaptivityContentViewModel, mockAdaptivityTaskViewModel);
+        systemUnderTest.DeleteAdaptivityTask(mockAdaptivityContentFormModel, mockAdaptivityTaskViewModel);
 
-        mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentViewModel);
+        mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentFormModel);
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }

@@ -16,6 +16,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Shared.Adaptivity;
+using TestHelpers;
 
 namespace IntegrationTest.Components.Adaptivity.Dialogues;
 
@@ -30,9 +31,9 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         FormDataContainer = Substitute.For<IFormDataContainer<AdaptivityContentFormModel, AdaptivityContent>>();
         FormDataContainer.FormModel.Returns(new AdaptivityContentFormModel());
         Context.Services.AddSingleton(FormDataContainer);
-        AdaptivityContent = Substitute.For<IAdaptivityContentViewModel>();
+        AdaptivityContent = FormModelProvider.GetAdaptivityContent();
         Tasks = new List<IAdaptivityTaskViewModel>();
-        AdaptivityContent.Tasks.Returns(Tasks);
+        AdaptivityContent.Tasks= Tasks;
         Mapper = Substitute.For<IMapper>();
         Mapper.When(x => x.Map(Arg.Any<IAdaptivityContentViewModel>(), Arg.Any<AdaptivityContentFormModel>())).Do(y =>
         {
@@ -57,7 +58,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     private IDialogReference Dialog { get; set; } = null!;
-    private IAdaptivityContentViewModel AdaptivityContent { get; set; } = null!;
+    private AdaptivityContentFormModel AdaptivityContent { get; set; } = null!;
     private List<IAdaptivityTaskViewModel> Tasks { get; set; } = null!;
     private IPresentationLogic PresentationLogic { get; set; } = null!;
     private IMapper Mapper { get; set; } = null!;
