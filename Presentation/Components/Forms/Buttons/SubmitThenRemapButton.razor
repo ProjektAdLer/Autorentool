@@ -15,8 +15,9 @@
     private async Task SubmitThenRemapAsync()
     {
         if (Form is null) throw new InvalidOperationException("Form CascadingParameter is null");
-        await Form.SubmitAsync();
-        await RemapAction.InvokeAsync();
+        var validationPassed = await Form.SubmitAsync();
+        if(validationPassed)
+            await RemapAction.InvokeAsync();
     }
 
 }

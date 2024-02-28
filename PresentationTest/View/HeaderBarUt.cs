@@ -139,7 +139,7 @@ public class HeaderBarUt
     public void ExportButton_Clicked_LMSConnected_PositiveDialogResponse_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", "d", Theme.CampusAschaffenburg, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
@@ -184,8 +184,8 @@ public class HeaderBarUt
     public void ExportButton_Clicked_WorldSpaceHasNoElementsAndInsufficientPoints_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space1 = new LearningSpaceViewModel("a", "f", "d", Theme.CampusAschaffenburg, 2);
-        var space2 = new LearningSpaceViewModel("ah", "fi", "dh", Theme.CampusAschaffenburg, 3);
+        var space1 = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 2);
+        var space2 = new LearningSpaceViewModel("ah", "fi", Theme.CampusAschaffenburg, 3);
         var element1 = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space1.LearningSpaceLayout.LearningElements.Add(0, element1);
@@ -328,7 +328,7 @@ public class HeaderBarUt
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", "d", Theme.CampusAschaffenburg, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
@@ -356,7 +356,7 @@ public class HeaderBarUt
     public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", "d", Theme.CampusAschaffenburg, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);

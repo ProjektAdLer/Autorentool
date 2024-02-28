@@ -13,6 +13,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -93,7 +94,9 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.CampusAschaffenburg, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
+            Theme.CampusAschaffenburg,
+            2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
         var spaceVm = worldVm.LearningSpaces.First();
@@ -152,7 +155,9 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.CampusAschaffenburg, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
+            Theme.CampusAschaffenburg,
+            2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
@@ -213,6 +218,7 @@ public class CachingMapperIt
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
+        ILearningOutcomeCommandFactory? learningOutcomeCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null,
         IAdaptivityRuleCommandFactory? adaptivityRuleCommandFactory = null,
@@ -236,6 +242,7 @@ public class CachingMapperIt
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
+        learningOutcomeCommandFactory ??= Substitute.For<ILearningOutcomeCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
         adaptivityRuleCommandFactory ??= Substitute.For<IAdaptivityRuleCommandFactory>();
@@ -245,7 +252,8 @@ public class CachingMapperIt
         return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
             serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory,
+            spaceCommandFactory, topicCommandFactory, learningOutcomeCommandFactory, worldCommandFactory,
+            batchCommandFactory,
             adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
             fileSystem);
     }

@@ -2,11 +2,16 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using AutoMapper;
 using MudBlazor;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
@@ -20,18 +25,21 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public sealed class LearningSpacePresenter : ILearningSpacePresenter
 {
     private readonly IErrorService _errorService;
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData? _replaceLearningElementData;
+    private ReplaceLearningElementData? _replaceStoryElementData;
     private bool _replaceLearningElementDialogOpen;
+    private bool _replaceStoryElementDialogOpen;
 
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, IMediator mediator,
         ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger,
-        IErrorService errorService)
+        IErrorService errorService, IMapper mapper)
     {
         Logger = logger;
         _presentationLogic = presentationLogic;
@@ -39,6 +47,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         _selectedViewModelsProvider = selectedViewModelsProvider;
         _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
         _errorService = errorService;
+        _mapper = mapper;
     }
 
     private ILogger<LearningSpacePresenter> Logger { get; }
@@ -58,13 +67,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.EditLearningSpace"/>
-    public void EditLearningSpace(string name, string description, string goals,
-        int requiredPoints, Theme theme, ITopicViewModel? topic)
+    public void EditLearningSpace(string name, string description, int requiredPoints, Theme theme,
+        ITopicViewModel? topic)
     {
         if (!CheckLearningSpaceNotNull("EditLearningSpace"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description, goals,
+        _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description,
             requiredPoints, theme, topic);
     }
 
@@ -73,6 +82,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     {
         get => _replaceLearningElementDialogOpen;
         private set => SetField(ref _replaceLearningElementDialogOpen, value);
+    }
+
+    /// <inheritdoc cref="ILearningSpacePresenter.ReplaceStoryElementDialogOpen"/>
+    public bool ReplaceStoryElementDialogOpen
+    {
+        get => _replaceStoryElementDialogOpen;
+        private set => SetField(ref _replaceStoryElementDialogOpen, value);
     }
 
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
@@ -95,7 +111,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm!, _selectedViewModelsProvider.LearningWorld,
             floorPlanName);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -138,6 +154,15 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         ReplaceLearningElementDialogOpen = true;
     }
 
+    [MemberNotNull(nameof(_replaceStoryElementData))]
+    public void OpenReplaceStoryElementDialog(ILearningWorldViewModel learningWorldVm,
+        ILearningElementViewModel dropItem,
+        int slotId)
+    {
+        _replaceStoryElementData = new ReplaceLearningElementData(learningWorldVm, dropItem, slotId);
+        ReplaceStoryElementDialogOpen = true;
+    }
+
     /// <inheritdoc cref="ILearningSpacePresenter.OnReplaceLearningElementDialogClose"/>
     public void OnReplaceLearningElementDialogClose(DialogResult closeResult)
     {
@@ -153,20 +178,46 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
-    /// <inheritdoc cref="ILearningSpacePresenter.ClickOnSlot"/>
-    public void ClickOnSlot(int i)
+    public void OnReplaceStoryElementDialogClose(DialogResult closeResult)
+    {
+        ReplaceStoryElementDialogOpen = false;
+        if (!CheckLearningSpaceNotNull("OnReplaceStoryElementDialogClose"))
+            return;
+
+        if (closeResult.Canceled) return;
+
+        _presentationLogic.DragStoryElementFromUnplaced(_replaceStoryElementData!.LearningWorldVm, LearningSpaceVm!,
+            _replaceStoryElementData.DropItem, _replaceStoryElementData.SlotId);
+    }
+
+    /// <inheritdoc cref="ILearningSpacePresenter.ClickOnElementSlot"/>
+    public void ClickOnElementSlot(int i)
     {
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
             return;
-        if (_selectedViewModelsProvider.ActiveSlotInSpace == i)
+        if (_selectedViewModelsProvider.ActiveElementSlotInSpace == i)
         {
-            _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+            _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
             return;
         }
 
         SetSelectedLearningElement(null);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(i, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(i, null);
         _mediator.RequestOpenElementDialog();
+    }
+
+    public void ClickOnStorySlot(int i)
+    {
+        if (LearningSpaceVm?.LearningSpaceLayout.StoryElements.ContainsKey(i) ?? false) return;
+        if (_selectedViewModelsProvider.ActiveStorySlotInSpace == i)
+        {
+            _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
+            return;
+        }
+        
+        SetSelectedLearningElement(null);
+        _selectedViewModelsProvider.SetActiveStorySlotInSpace(i, null);
+        _mediator.RequestOpenStoryElementDialog();
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.CreateLearningElementInSlot"/>
@@ -177,25 +228,56 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveSlotInSpace,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveElementSlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
+    }
+    
+    public void CreateStoryElementInSlot(string name, ILearningContentViewModel learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
+        int workload, int points)
+    {
+        if (!CheckLearningSpaceNotNull("CreateStoryElementInSlot"))
+            return;
+        //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
+        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveStorySlotInSpace,
+            name, learningContent, description,
+            goals, difficulty, elementModel, workload, points);
+        _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
+    }
+
+    public void CreateLearningElementInSlotFromFormModel(LearningElementFormModel model)
+    {
+        CreateLearningElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
+    }
+    
+    public void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model)
+    {
+        CreateStoryElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
+            model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ClickedLearningElement"/>
     public void ClickedLearningElement(ILearningElementViewModel learningElementViewModel)
     {
-        if (learningElementViewModel.LearningContent is AdaptivityContentViewModel)
+        switch (learningElementViewModel.LearningContent)
         {
-            _mediator.RequestOpenAdaptivityElementDialog();
-        }
-        else
-        {
-            _mediator.RequestOpenElementDialog();
+            case IAdaptivityContentViewModel:
+                _mediator.RequestOpenAdaptivityElementDialog();
+                break;
+            case IStoryContentViewModel:
+                _mediator.RequestOpenStoryElementDialog();
+                break;
+            case IFileContentViewModel or ILinkContentViewModel:
+                _mediator.RequestOpenElementDialog();
+                break;
+            case null:
+                throw new ApplicationException("Element has no content");
         }
 
-        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
+        _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
         SetSelectedLearningElement(learningElementViewModel);
     }
 
@@ -233,6 +315,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
         _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm!, learningElementViewModel);
+    }
+
+    public void DeleteStoryElement(ILearningElementViewModel learningElementViewModel)
+    {
+        if (!CheckLearningSpaceNotNull(nameof(DeleteStoryElement)))
+            return;
+        _presentationLogic.DeleteStoryElementInSpace(LearningSpaceVm!, learningElementViewModel);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ShowElementContent"/>

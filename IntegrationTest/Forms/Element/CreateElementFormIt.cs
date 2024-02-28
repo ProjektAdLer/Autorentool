@@ -18,6 +18,7 @@ using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -37,12 +38,17 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         LearningContentViewModels = new ILearningContentViewModel[]
-            {ViewModelProvider.GetFileContent(), ViewModelProvider.GetLinkContent()};
+            { ViewModelProvider.GetFileContent(), ViewModelProvider.GetLinkContent() };
         WorldPresenter.GetAllContent().Returns(LearningContentViewModels);
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?) null);
+        SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
+        ElementModelHandler.GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<Theme?>())
+            .Returns(new[]
+            {
+                ElementModel.l_random
+            });
         PresentationLogic = Substitute.For<IPresentationLogic>();
         var localizer = Substitute.For<IStringLocalizer<ElementModelGridSelect>>();
         Context.Services.AddSingleton(WorldPresenter);
@@ -52,7 +58,16 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(localizer);
         Context.ComponentFactories.AddStub<NoContentWarning>();
+
+        LearningContentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent(),
+            FormModelProvider.GetLinkContent()
+        };
+        Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
+        Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
     }
+
 
     private const string Expected = "test";
 
@@ -80,7 +95,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
         GetRenderedComponent();
 
-        Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels.First()));
+        Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels.First()));
         SelectedViewModelsProvider.Received(1).SetLearningContent(null, null);
     }
 
@@ -88,15 +103,15 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_AdaptivityElementModeTrue_SetsContentInFormModel()
     {
         Assert.That(FormModel.LearningContent, Is.Null);
-        GetFormWithPopoverProvider(adaptivityElementMode: true);
+        GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
-        Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentViewModel>());
+        Assert.That(FormModel.LearningContent, Is.TypeOf<AdaptivityContentFormModel>());
     }
 
     [Test]
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         Assert.That(() => collapsables.Single(collapsable =>
@@ -114,6 +129,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -148,6 +164,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -183,14 +200,12 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         WorldPresenter.ClearReceivedCalls();
         SpacePresenter.ClearReceivedCalls();
 
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(-1);
+        SelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(-1);
         submitButton.Find("button").Click();
         systemUnderTest.WaitForAssertion(() =>
-            WorldPresenter.Received().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0], Expected,
-                Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123));
+            WorldPresenter.Received().CreateUnplacedLearningElementFromFormModel(FormModel));
         systemUnderTest.WaitForAssertion(() =>
-            SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
-                Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123));
+            SpacePresenter.DidNotReceive().CreateLearningElementInSlotFromFormModel(FormModel));
         Assert.That(callbackCalledCount, Is.EqualTo(1));
 
         ChangeFields(systemUnderTest, popover);
@@ -200,8 +215,10 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
         WorldPresenter.ClearReceivedCalls();
         SpacePresenter.ClearReceivedCalls();
+        //form resets formmodel after submit so we need to catch the newest reference
+        FormModel = FormDataContainer.FormModel;
 
-        SelectedViewModelsProvider.ActiveSlotInSpace.Returns(0);
+        SelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(0);
         submitButton.Find("button").Click();
         submitButton.WaitForAssertion(() =>
                 WorldPresenter.DidNotReceive().CreateUnplacedLearningElement(Expected, LearningContentViewModels[0],
@@ -209,8 +226,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
                     Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
             TimeSpan.FromSeconds(2));
         submitButton.WaitForAssertion(() =>
-                SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0], Expected,
-                    Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
+                SpacePresenter.Received().CreateLearningElementInSlotFromFormModel(FormModel),
             TimeSpan.FromSeconds(2));
         Assert.That(callbackCalledCount, Is.EqualTo(2));
     }
@@ -227,6 +243,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
 
         ConfigureValidatorAllMembers();
 
@@ -254,8 +271,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         systemUnderTest.WaitForAssertion(
-            () => SpacePresenter.Received().CreateLearningElementInSlot(Expected, LearningContentViewModels[0],
-                Expected, Expected, LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123),
+            () => SpacePresenter.Received().CreateLearningElementInSlotFromFormModel(FormModel),
             TimeSpan.FromSeconds(2));
         Assert.That(callbackCalled, Is.True);
     }
@@ -273,12 +289,45 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    public void H5PContentSelected_ShowsPrimitiveCheckbox()
+    {
+        var content = new []
+        {
+            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        WorldPresenter.GetAllContent().Returns(content);
+        var contentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        
+        
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
+        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
+        
+        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
+        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
+        
+        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        
+        checkbox.Find("input").Change(true);
+        
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
+    }
+
+    [Test]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
         var dialogServiceMock = Substitute.For<IDialogService>();
         Context.Services.AddSingleton(dialogServiceMock);
 
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
@@ -299,7 +348,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         Assert.That(FormModel.Workload, Is.EqualTo(123));
         Assert.That(FormModel.Points, Is.EqualTo(123));
         systemUnderTest.WaitForAssertion(
-            () => Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels[0])),
+            () => Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels[0])),
             TimeSpan.FromSeconds(2));
     }
 
@@ -308,7 +357,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentViewModel>>();
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
         mudTextFields[3].Find("textarea").Change(Expected);
@@ -333,28 +382,28 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
                     int i => i == 123,
                     LearningElementDifficultyEnum difficulty => difficulty == LearningElementDifficultyEnum.Hard,
                     ElementModel model => model == ElementModel.l_random,
-                    ILearningContentViewModel => true,
+                    ILearningContentFormModel => true,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
             }
         );
     }
 
     private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.RenderComponent<CreateElementForm>(p =>
         {
             p.Add(c => c.OnSubmitted, onSubmitted.Value);
             p.Add(c => c.DebounceInterval, 0);
-            p.Add(c => c.AdaptivityElementMode, adaptivityElementMode);
+            p.Add(c => c.ElementMode, elementMode);
         });
     }
 
     private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         onSubmitted ??= EventCallback.Empty;
         return Context.Render(builder =>
@@ -364,7 +413,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             builder.OpenComponent<CreateElementForm>(1);
             builder.AddAttribute(2, nameof(CreateElementForm.OnSubmitted), onSubmitted);
             builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
-            builder.AddAttribute(4, nameof(CreateElementForm.AdaptivityElementMode), adaptivityElementMode);
+            builder.AddAttribute(4, nameof(CreateElementForm.ElementMode), elementMode);
             builder.CloseComponent();
         });
     }
@@ -376,5 +425,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     private IElementModelHandler ElementModelHandler { get; set; }
     private IPresentationLogic PresentationLogic { get; set; }
     private ILearningContentViewModel[] LearningContentViewModels { get; set; }
+    private ILearningContentFormModel[] LearningContentFormModels { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

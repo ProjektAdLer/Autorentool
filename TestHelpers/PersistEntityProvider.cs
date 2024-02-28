@@ -1,10 +1,14 @@
+using System.Globalization;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
 using PersistEntities.LearningContent.Question;
+using PersistEntities.LearningContent.Story;
 using PersistEntities.LearningContent.Trigger;
+using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -21,16 +25,38 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? inBoundObjects = null,
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
-        return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, "LSPg" + append, 4,
-            Theme.CampusAschaffenburg,
+        return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
+            Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
-            positionX, positionY, inBoundObjects, outBoundObjects, assignedTopic);
+            positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
+            outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);
+    }
+
+    public static LearningOutcomeCollectionPe GetLearningOutcomeCollection(
+        List<ILearningOutcomePe>? learningOutcomes = null)
+    {
+        return new LearningOutcomeCollectionPe
+        {
+            LearningOutcomes = learningOutcomes ?? new List<ILearningOutcomePe>()
+        };
+    }
+
+    public static List<ILearningOutcomePe> GetLearningOutcomes()
+    {
+        return new List<ILearningOutcomePe>()
+        {
+            new ManualLearningOutcomePe("Outcome"),
+            new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "what", "whereby", "whatFor", "verbOfVisibility",
+                CultureInfo.CurrentCulture)
+        };
     }
 
     public static LearningSpaceLayoutPe GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
-        Dictionary<int, ILearningElementPe>? learningElements = null)
+        Dictionary<int, ILearningElementPe>? learningElements = null,
+        Dictionary<int, ILearningElementPe>? storyElements = null)
     {
-        return new LearningSpaceLayoutPe(learningElements ?? new Dictionary<int, ILearningElementPe>(), floorPlan);
+        return new LearningSpaceLayoutPe(learningElements ?? new Dictionary<int, ILearningElementPe>(),
+            storyElements ?? new Dictionary<int, ILearningElementPe>(), floorPlan);
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
@@ -58,9 +84,16 @@ public static class PersistEntityProvider
         return new LinkContentPe(name ?? "a name", link ?? "a link");
     }
 
-    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null)
+    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null, bool primitiveH5p = false)
     {
-        return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath");
+        return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath", primitiveH5p);
+    }
+
+    public static StoryContentPe GetStoryContent(string? name = null, bool unsavedChanges = false,
+        List<string>? story = null)
+    {
+        return new StoryContentPe(name ?? "a name", unsavedChanges,
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" });
     }
 
     public static TopicPe GetTopic(string? name = null)

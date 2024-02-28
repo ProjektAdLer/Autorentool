@@ -4,35 +4,26 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.Story
+@implements IDisposable
+@implements IAsyncDisposable
 <MudCard Class="overflow-auto w-full max-h-[128rem]">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
-        if (ContentType == typeof(IAdaptivityContentViewModel))
-        {
-            <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="true"/>
-        }
-        else
-        {
-            <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" AdaptivityElementMode="false"/>
-        }
+        <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" ElementMode="ElementMode"/>
     }
     else
     {
-        @if (SelectedViewModelsProvider.LearningElement.LearningContent is AdaptivityContentViewModel)
-        {
-            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew" AdaptivityElementMode="true"/>
-        }
-        else
-        {
-            <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew" AdaptivityElementMode="false"/>
-        }
+        <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew" ElementMode="ElementMode"/>
     }
 
 </MudCard>
 
 
 @code {
+    private bool _eventHandlersRegistered;
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ILearningWorldPresenter WorldPresenter { get; set; }
@@ -49,7 +40,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<ElementFormContainer> Localizer { get; set; }
 
-    [Parameter, EditorRequired] public Type ContentType { get; set; } = null!;
+    [Parameter, EditorRequired] public ElementMode ElementMode { get; set; }
 
     private void InvokeMasterLayoutStateHasChanged()
     {
@@ -59,18 +50,33 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+        if (SelectedViewModelsProvider.LearningWorld == null || _eventHandlersRegistered) return;
+        SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
+        _eventHandlersRegistered = true;
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         if (!firstRender) return;
-        if (SelectedViewModelsProvider.LearningElement == null
-            || ((ContentType != typeof(IAdaptivityContentViewModel) || SelectedViewModelsProvider.LearningElement.LearningContent is IAdaptivityContentViewModel)
-                && (ContentType == typeof(IAdaptivityContentViewModel) || SelectedViewModelsProvider.LearningElement.LearningContent is not AdaptivityContentViewModel))) return;
+        //skip setting element to null if it already is null or the passed ElementMode is correct for the currently selected element 
+        if (SelectedViewModelsProvider.LearningElement?.LearningContent == null || IsCorrectContentTypeForSelectedElement()) return;
         SelectedViewModelsProvider.SetLearningElement(null, null);
         InvokeMasterLayoutStateHasChanged();
+    }
+
+    /// <summary>
+    /// Evaluates whether the passed <see cref="ElementMode"/> is correct for the currently selected <see cref="LearningElement"/>.
+    /// </summary>
+    private bool IsCorrectContentTypeForSelectedElement()
+    {
+        return ElementMode switch
+        {
+            ElementMode.Normal => SelectedViewModelsProvider.LearningElement!.LearningContent is not IAdaptivityContentViewModel and not IStoryContentViewModel,
+            ElementMode.Adaptivity => SelectedViewModelsProvider.LearningElement!.LearningContent is IAdaptivityContentViewModel,
+            ElementMode.Story => SelectedViewModelsProvider.LearningElement!.LearningContent is IStoryContentViewModel,
+            _ => throw new ArgumentOutOfRangeException(nameof(ElementMode))
+        };
     }
 
     private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -85,6 +91,18 @@
         Mediator.OverwriteElementEdit = true;
         SelectedViewModelsProvider.SetLearningElement(null, null);
         InvokeMasterLayoutStateHasChanged();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        if (!_eventHandlersRegistered) return;
+        SelectedViewModelsProvider.PropertyChanged -= SelectedViewModelsProviderOnPropertyChanged;
     }
 
 }

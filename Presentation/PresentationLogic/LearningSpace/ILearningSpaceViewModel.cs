@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -17,6 +18,6 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     Theme Theme { get; set; }
     new string Name { get; set; }
     string Description { get; set; }
-    string Goals { get; set; }
+    LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     bool InternalUnsavedChanges { get; }
 }

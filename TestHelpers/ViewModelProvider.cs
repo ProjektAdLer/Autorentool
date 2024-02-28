@@ -1,4 +1,5 @@
-﻿using Presentation.PresentationLogic;
+﻿using System.Globalization;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
@@ -7,14 +8,17 @@ using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -33,9 +37,29 @@ public static class ViewModelProvider
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.CampusAschaffenburg, 4,
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.CampusAschaffenburg, 4, GetLearningOutcomeCollection(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
+    }
+
+    public static LearningOutcomeCollectionViewModel GetLearningOutcomeCollection()
+    {
+        return new LearningOutcomeCollectionViewModel()
+        {
+            LearningOutcomes = GetLearningOutcomes(),
+            UnsavedChanges = false
+        };
+    }
+
+    public static List<ILearningOutcomeViewModel> GetLearningOutcomes()
+    {
+        return new List<ILearningOutcomeViewModel>()
+        {
+            new ManualLearningOutcomeViewModel("Outcome"),
+            new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what", "whereby", "whatFor",
+                "VerbOfVisibility",
+                CultureInfo.CurrentCulture)
+        };
     }
 
     public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(
@@ -81,6 +105,11 @@ public static class ViewModelProvider
     public static FileContentViewModel GetFileContent(string? name = null, string? type = null, string? filepath = null)
     {
         return new FileContentViewModel(name ?? "FCVMn a name", type ?? "FCVMt a type", filepath ?? "FCVMf a filepath");
+    }
+
+    public static StoryContentViewModel GetStoryContent()
+    {
+        return new StoryContentViewModel("a story name", new List<string> { "a story", "another story" });
     }
 
     public static TopicViewModel GetTopic()

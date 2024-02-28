@@ -52,7 +52,7 @@ public class LoadLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var space = new LearningSpace("a", "d", "e", 3, Theme.CampusAschaffenburg);
+        var space = new LearningSpace("a", "d", 3, Theme.CampusAschaffenburg);
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 

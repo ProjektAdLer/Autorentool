@@ -6,9 +6,12 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.DropZone;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.DropZone;
 
@@ -36,7 +39,7 @@ public class LearningElementDropZoneHelperUt
         // Arrange
         var element1 = Substitute.For<ILearningElementViewModel>();
         var element2 = Substitute.For<ILearningElementViewModel>();
-        var spaceElements = new List<ILearningElementViewModel> {element1, element2};
+        var spaceElements = new List<ILearningElementViewModel> { element1, element2 };
 
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         var mockSpace = Substitute.For<ILearningSpaceViewModel>();
@@ -57,7 +60,7 @@ public class LearningElementDropZoneHelperUt
         // Arrange
         var element1 = Substitute.For<ILearningElementViewModel>();
         var element2 = Substitute.For<ILearningElementViewModel>();
-        var learningElements = new List<ILearningElementViewModel> {element1, element2};
+        var learningElements = new List<ILearningElementViewModel> { element1, element2 };
 
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
@@ -80,8 +83,8 @@ public class LearningElementDropZoneHelperUt
         var element2 = Substitute.For<ILearningElementViewModel>();
         var element3 = Substitute.For<ILearningElementViewModel>();
         var element4 = Substitute.For<ILearningElementViewModel>();
-        var spaceElements = new List<ILearningElementViewModel> {element1, element2};
-        var worldElements = new List<ILearningElementViewModel> {element3, element4};
+        var spaceElements = new List<ILearningElementViewModel> { element1, element2 };
+        var worldElements = new List<ILearningElementViewModel> { element3, element4 };
 
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         var mockSpace = Substitute.For<ILearningSpaceViewModel>();
@@ -116,12 +119,12 @@ public class LearningElementDropZoneHelperUt
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(Substitute.For<ILearningElementViewModel>(),
             "unplacedElements", 0);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
-        spacePresenter.LearningSpaceVm.Returns((ILearningSpaceViewModel?) null);
+        spacePresenter.LearningSpaceVm.Returns((ILearningSpaceViewModel?)null);
         var systemUnderTest = CreateDropZoneHelperForTesting(spacePresenter: spacePresenter);
 
         // Act
         // Assert
-        Assert.Throws(Is.TypeOf<ApplicationException>().And.Message.EqualTo("LearningSpaceVm is null"),
+        Assert.Throws(Is.TypeOf<ApplicationException>().And.Message.EqualTo("DragDropItem's parent is not the selected space"),
             () => systemUnderTest.ItemUpdated(dropItem));
     }
 
@@ -132,7 +135,7 @@ public class LearningElementDropZoneHelperUt
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(Substitute.For<ILearningElementViewModel>(),
             "unplacedElements", 0);
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
-        worldPresenter.LearningWorldVm.Returns((ILearningWorldViewModel?) null);
+        worldPresenter.LearningWorldVm.Returns((ILearningWorldViewModel?)null);
         var systemUnderTest = CreateDropZoneHelperForTesting(worldPresenter: worldPresenter);
 
         // Act
@@ -149,8 +152,11 @@ public class LearningElementDropZoneHelperUt
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, "unplacedElements", 0);
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
         var mockSpace = Substitute.For<ILearningSpaceViewModel>();
-        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
+        mockSpace.LearningSpaceLayout.LearningElements
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { 1, mockElement } });
         mockElement.Parent.Returns(mockSpace);
+        mockElement.LearningContent.Returns(Substitute.For<IFileContentViewModel>());
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
@@ -171,10 +177,10 @@ public class LearningElementDropZoneHelperUt
     {
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, "unplacedElements", 0);
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
-        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
@@ -195,7 +201,7 @@ public class LearningElementDropZoneHelperUt
     {
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, "unplacedElements", 0);
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
         mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel>());
@@ -210,7 +216,7 @@ public class LearningElementDropZoneHelperUt
         // Assert
         Assert.Throws(
             Is.TypeOf<ApplicationException>().And.Message
-                .EqualTo("DragDropItem is neither in unplaced elements nor in a learning space"),
+                .EqualTo("DragDropItem has no parent"),
             () => systemUnderTest.ItemUpdated(dropItem));
     }
 
@@ -227,7 +233,7 @@ public class LearningElementDropZoneHelperUt
         var dropItem = new MudItemDropInfo<ILearningElementViewModel>(Substitute.For<ILearningElementViewModel>(),
             spaceId.ToString() + newSlotId, 0);
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
-        worldPresenter.LearningWorldVm.Returns((ILearningWorldViewModel?) null);
+        worldPresenter.LearningWorldVm.Returns((ILearningWorldViewModel?)null);
         var systemUnderTest = CreateDropZoneHelperForTesting(worldPresenter: worldPresenter);
 
         // Act
@@ -247,9 +253,9 @@ public class LearningElementDropZoneHelperUt
         const int oldSlotId = 1;
         const int newSlotId = 2;
         mockSpace.Id.Returns(spaceId);
-        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{oldSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { oldSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
@@ -279,17 +285,17 @@ public class LearningElementDropZoneHelperUt
         const int oldSlotId = 1;
         const int newSlotId = 2;
         mockSpace.Id.Returns(spaceId);
-        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{oldSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { oldSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
-        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> {mockSpace});
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(Substitute.For<ILearningSpaceViewModel>());
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, spaceId.ToString() + newSlotId, 0);
+        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -312,17 +318,17 @@ public class LearningElementDropZoneHelperUt
         const int oldSlotId = 1;
         const int newSlotId = 2;
         mockSpace.Id.Returns(spaceId);
-        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{oldSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { oldSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
-        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> {mockSpace});
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, spaceId.ToString() + newSlotId, 0);
+        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -346,15 +352,16 @@ public class LearningElementDropZoneHelperUt
         mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
         mockSpace.LearningSpaceLayout.LearningElements
             .Returns(new Dictionary<int, ILearningElementViewModel>());
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
-        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> {mockSpace});
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockElement.LearningContent.Returns(Substitute.For<IFileContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
         mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel>());
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, spaceId.ToString() + newSlotId, 0);
+        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -377,18 +384,19 @@ public class LearningElementDropZoneHelperUt
         var spaceId = Guid.NewGuid();
         const int newSlotId = 2;
         mockSpace.Id.Returns(spaceId);
-        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> {mockExistingElement});
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockExistingElement });
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{newSlotId, mockExistingElement}});
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
-        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> {mockSpace});
-        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { newSlotId, mockExistingElement } });
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockElement.LearningContent.Returns(Substitute.For<IFileContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, spaceId.ToString() + newSlotId, 0);
+        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -412,15 +420,16 @@ public class LearningElementDropZoneHelperUt
         mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
         mockSpace.LearningSpaceLayout.LearningElements
             .Returns(new Dictionary<int, ILearningElementViewModel>());
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
-        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> {mockSpace});
-        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockElement.LearningContent.Returns(Substitute.For<IFileContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, spaceId.ToString() + newSlotId, 0);
+        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -448,12 +457,13 @@ public class LearningElementDropZoneHelperUt
         mockSpace.Id.Returns(spaceId);
         mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{newSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { newSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
+        mockElement.LearningContent = ViewModelProvider.GetFileContent();
         var systemUnderTest = CreateDropZoneHelperForTesting();
 
         // Act
-        var result = systemUnderTest.IsItemInDropZone(mockElement, spaceId.ToString() + newSlotId);
+        var result = systemUnderTest.IsItemInDropZone(mockElement, $"{spaceId.ToString()}_ele_{newSlotId}");
 
         // Assert
         Assert.That(result, Is.True);
@@ -471,7 +481,7 @@ public class LearningElementDropZoneHelperUt
         mockSpace.Id.Returns(spaceId);
         mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{elementSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { elementSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
         var systemUnderTest = CreateDropZoneHelperForTesting();
 
@@ -494,7 +504,7 @@ public class LearningElementDropZoneHelperUt
         mockSpace.Id.Returns(spaceId);
         mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
         mockSpace.LearningSpaceLayout.LearningElements
-            .Returns(new Dictionary<int, ILearningElementViewModel> {{elementSlotId, mockElement}});
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { elementSlotId, mockElement } });
         mockElement.Parent.Returns(mockSpace);
         var systemUnderTest = CreateDropZoneHelperForTesting();
 
@@ -511,7 +521,7 @@ public class LearningElementDropZoneHelperUt
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
         const int newSlotId = 2;
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var systemUnderTest = CreateDropZoneHelperForTesting();
 
         // Act
@@ -527,7 +537,7 @@ public class LearningElementDropZoneHelperUt
     {
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var systemUnderTest = CreateDropZoneHelperForTesting();
 
         // Act
@@ -543,7 +553,7 @@ public class LearningElementDropZoneHelperUt
     {
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
         mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel>());
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
@@ -563,9 +573,9 @@ public class LearningElementDropZoneHelperUt
     {
         // Arrange
         var mockElement = Substitute.For<ILearningElementViewModel>();
-        mockElement.Parent.Returns((ILearningSpaceViewModel?) null);
+        mockElement.Parent.Returns((ILearningSpaceViewModel?)null);
         var mockWorld = Substitute.For<ILearningWorldViewModel>();
-        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> {mockElement});
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockElement });
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         worldPresenter.LearningWorldVm.Returns(mockWorld);
         var systemUnderTest = CreateDropZoneHelperForTesting(worldPresenter: worldPresenter);
@@ -578,6 +588,9 @@ public class LearningElementDropZoneHelperUt
     }
 
     #endregion
+
+    private string GetDropzoneIdentifier(ILearningSpaceViewModel space, int id, bool story = false) =>
+        $"{space.Id.ToString()}_{(story ? "story" : "ele")}_{id}";
 
 
     private LearningElementDropZoneHelper CreateDropZoneHelperForTesting(IPresentationLogic? presentationLogic = null,

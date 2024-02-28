@@ -12,6 +12,7 @@ using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.Space;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
@@ -60,7 +61,6 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
-        Assert.That(FormModel.Goals, Is.EqualTo(""));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(0));
         Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -72,14 +72,12 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.CampusAschaffenburg);
 
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.Theme, Is.EqualTo(Theme.CampusAschaffenburg));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -119,7 +117,8 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
 
         var submitButton = systemUnderTest.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
-        WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
@@ -131,7 +130,8 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Assert.That(mudForm.Instance.IsValid, Is.True);
 
         submitButton.Find("button").Click();
-        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 
@@ -150,13 +150,15 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
         input.KeyUp(Key.Enter);
-        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
-        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(), Arg.Any<string>(),
+        WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
+            Arg.Any<LearningOutcomeCollectionViewModel>(),
             Arg.Any<int>(), Arg.Any<Theme>());
     }
 

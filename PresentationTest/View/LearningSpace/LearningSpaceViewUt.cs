@@ -24,6 +24,7 @@ public class LearningSpaceViewUt
         _ctx = new TestContext();
         _ctx.Services.AddMudServices();
         _ctx.JSInterop.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
+        _ctx.JSInterop.SetupVoid("mudPopover.initialize", _ => true);
         _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _mediator = Substitute.For<ISelectedViewModelsProvider>();

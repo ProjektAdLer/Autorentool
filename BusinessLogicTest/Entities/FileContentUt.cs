@@ -20,6 +20,7 @@ public class FileContentUt
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Type, Is.EqualTo(type));
             Assert.That(systemUnderTest.Filepath, Is.EqualTo(content));
+            Assert.That(systemUnderTest.PrimitiveH5P, Is.EqualTo(false));
         });
     }
 }
