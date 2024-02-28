@@ -45,13 +45,13 @@
         <value>Thema</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Lernziele</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Beschreibung</value>
+        <value>Formulieren Sie hier eine Beschreibung für Ihren Lernraum.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diesen Lernraum.</value>
     </data>
     <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm ist null</value>
@@ -70,5 +70,11 @@
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
         <value>Fahren Sie mit der Maus über die Grundrisse, um diese vergrößert anzeigen zu lassen und zusätzlich die spätere Raumansicht in der 3D-Lernumgebung anzuschauen. </value>
+    </data>
+    <data name="EditSpaceForm.Goals.Button" xml:space="preserve">
+        <value>Lernziel-Formulierung</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Beschreibung</value>
     </data>
 </root>

@@ -232,14 +232,20 @@ public class PersistenceCt
         );
         Assert.Multiple(() =>
         {
-            Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[0]));
             Assert.That(restoredWorld.LearningSpaces[0].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
             Assert.That(restoredWorld.LearningSpaces[1].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
-            Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
-            Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
-            Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
-            Assert.That(restoredWorld.LearningSpaces[1].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[1]));
-            Assert.That(restoredWorld.PathWayConditions[1].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
+            Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[0]));
+            Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[1]));
+            Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[0]));
+            Assert.That(restoredWorld.LearningSpaces[1].OutBoundObjects,
+                Does.Contain(restoredWorld.PathWayConditions[1]));
+            Assert.That(restoredWorld.PathWayConditions[1].InBoundObjects,
+                Does.Contain(restoredWorld.LearningSpaces[1]));
 
             Assert.That(restoredWorld.LearningPathways[0].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[0]));
             Assert.That(restoredWorld.LearningPathways[0].TargetObject, Is.EqualTo(restoredWorld.PathWayConditions[0]));
@@ -284,7 +290,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus)
+        var space = new LearningSpacePe("Name", "Description", 5, Theme.Campus)
         {
             LearningSpaceLayout =
             {
@@ -352,7 +358,8 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
@@ -360,7 +367,8 @@ public class PersistenceCt
                     element
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
@@ -389,7 +397,8 @@ public class PersistenceCt
         var content = PersistEntityProvider.GetFileContent();
         var element1 = PersistEntityProvider.GetLearningElement(content: content);
         var element2 = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
@@ -397,7 +406,8 @@ public class PersistenceCt
                     element1
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
@@ -425,7 +435,8 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
+        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.Campus,
+            PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
                 {
@@ -444,7 +455,9 @@ public class PersistenceCt
 
         var actual = systemUnderTest.LoadFromDisk("foobar.txt");
 
-        var actualContent = actual.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().LearningContent as IAdaptivityContentPe;
+        var actualContent =
+            actual.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().LearningContent as
+                IAdaptivityContentPe;
         var actualQuestion = actualContent.Tasks.First().Questions.First() as MultipleChoiceSingleResponseQuestionPe;
         Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoice));
         Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoices.First()));

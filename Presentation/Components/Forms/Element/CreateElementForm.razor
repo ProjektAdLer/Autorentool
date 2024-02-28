@@ -17,6 +17,8 @@
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.PresentationLogic.LearningContent.Story
 @using Size = MudBlazor.Size
+@using Presentation.Components.Dialogues
+
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">
@@ -148,20 +150,36 @@
                                     </MudTd>
                                     <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
                                         @if (context is FileContentFormModel fileContentContext)
-                                        {
-                                            @fileContentContext.Type
-                                        }
-                                        else
-                                        {
-                                            <span>Link</span>
-                                        }
-                                    </MudTd>
-                                </RowTemplate>
-                            </TableSelect>
+                                    {
+                                        @fileContentContext.Type
+                                    }
+                                    else
+                                    {
+                                        <span>Link</span>
+                                    }
+                                </MudTd>
+                            </RowTemplate>
+                        </TableSelect>
+                        @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
+                        {
+                            <div class="flex flex-col">
+                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                                    @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
+                                    <MudTooltip>
+                                        <ChildContent>
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue" OnClick="ShowH5PInfoDialog"/>
+                                        </ChildContent>
+                                        <TooltipContent>
+                                            @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
+                                        </TooltipContent>
+                                    </MudTooltip>
+                                </MudCheckBox>
+                            </div>
                         }
-                    </Collapsable>
-                </div>
-                break;
+                    }
+                </Collapsable>
+            </div>
+        break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
                     <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]        @bind-Collapsed="_collapsedTasks">
@@ -250,13 +268,6 @@
                 <Collapsable
                     Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]     @bind-Collapsed="_collapsedGoals">
                     <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                        <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                                      For="@(() => FormModel.Description)"
-                                      Lines="3"
-                                      Variant="Variant.Outlined"
-                                      DebounceInterval="DebounceInterval"
-                                      Class="pb-4 mt-0"/>
                         <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                         <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                       For="@(() => FormModel.Goals)"
@@ -264,10 +275,23 @@
                                       Variant="Variant.Outlined"
                                       DebounceInterval="DebounceInterval"
                                       Class="pb-2 mt-0"/>
-                    </div>
-                </Collapsable>
-            </div>
-        }
+                </div>
+            </Collapsable>
+        </div>
+        
+        <div class="px-4">
+                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.Description.Title"] @bind-Collapsed="_collapsedDescription">
+                        <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
+                            <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+                            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                          For="@(() => FormModel.Description)"
+                                          Lines="3"
+                                          Variant="Variant.Outlined"
+                                          DebounceInterval="DebounceInterval"
+                                          Class="pb-4 mt-0"/>
+                        </div>
+                    </Collapsable>
+                </div>}
     </Fields>
     
     <FooterButtons>
@@ -320,6 +344,7 @@
     private bool _collapsedStory = false;
     private bool _collapsedElementModel = true;
     private bool _collapsedGoals = true;
+    private bool _collapsedDescription = true;
 
     private PseudoFormFieldGrouping<ILearningContentFormModel?>? _pseudoGroupStoryContent;
 
@@ -440,4 +465,12 @@
     }
 
 
+    private async Task ShowH5PInfoDialog()
+    {
+        var dialogParams = new DialogParameters()
+        {
+            {nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value},
+        };
+        await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
 }

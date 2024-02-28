@@ -18,6 +18,7 @@ using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
@@ -128,6 +129,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -162,6 +164,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -240,6 +243,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
 
         ConfigureValidatorAllMembers();
 
@@ -282,6 +286,39 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
         Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
+    }
+
+    [Test]
+    public void H5PContentSelected_ShowsPrimitiveCheckbox()
+    {
+        var content = new []
+        {
+            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        WorldPresenter.GetAllContent().Returns(content);
+        var contentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        
+        
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
+        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
+        
+        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
+        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
+        
+        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        
+        checkbox.Find("input").Change(true);
+        
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
 
     [Test]

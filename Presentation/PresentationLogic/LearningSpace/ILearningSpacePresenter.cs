@@ -32,11 +32,11 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">The description of the learning space.</param>
-    /// <param name="goals">The goals of the learning space.</param>
     /// <param name="requiredPoints">The required points for the learning space.</param>
     /// <param name="theme">The theme of the learning space.</param>
     /// <param name="topic">The topic of the learning space, which may be null.</param>
-    void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme,
+    void EditLearningSpace(string name, string description, int requiredPoints,
+        Theme theme,
         ITopicViewModel? topic = null);
 
     /// <summary>

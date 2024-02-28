@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using BusinessLogic.Entities.LearningOutcome;
+using JetBrains.Annotations;
 using Shared;
 
 namespace BusinessLogic.Entities;
@@ -14,7 +15,7 @@ public class LearningSpace : ILearningSpace
         Id = Guid.NewGuid();
         Name = "";
         Description = "";
-        Goals = "";
+        LearningOutcomeCollection = new LearningOutcomeCollection();
         RequiredPoints = 0;
         UnsavedChanges = false;
         //null warning override okay here as automapper must set this value after construction - n.stich
@@ -27,7 +28,8 @@ public class LearningSpace : ILearningSpace
     }
 
     public LearningSpace(string name, string description,
-        string goals, int requiredPoints, Theme theme, LearningSpaceLayout? learningSpaceLayout = null,
+        int requiredPoints, Theme theme, LearningOutcomeCollection? learningOutcomes = null,
+        LearningSpaceLayout? learningSpaceLayout = null,
         double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null,
         List<IObjectInPathWay>? outBoundSpaces = null,
@@ -36,7 +38,7 @@ public class LearningSpace : ILearningSpace
         Id = Guid.NewGuid();
         Name = name;
         Description = description;
-        Goals = goals;
+        LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollection();
         RequiredPoints = requiredPoints;
         Theme = theme;
         UnsavedChanges = true;
@@ -55,7 +57,6 @@ public class LearningSpace : ILearningSpace
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public string Goals { get; set; }
     public int RequiredPoints { get; set; }
 
     public Theme Theme { get; set; }
@@ -63,7 +64,8 @@ public class LearningSpace : ILearningSpace
     public bool UnsavedChanges
     {
         get => InternalUnsavedChanges ||
-               ContainedLearningElements.Any(element => element.UnsavedChanges);
+               ContainedLearningElements.Any(element => element.UnsavedChanges) ||
+               LearningOutcomeCollection.UnsavedChanges;
         set => InternalUnsavedChanges = value;
     }
 
@@ -71,6 +73,7 @@ public class LearningSpace : ILearningSpace
     public List<IObjectInPathWay> InBoundObjects { get; set; }
     public List<IObjectInPathWay> OutBoundObjects { get; set; }
     public Topic? AssignedTopic { get; set; }
+    public LearningOutcomeCollection LearningOutcomeCollection { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
@@ -80,7 +83,8 @@ public class LearningSpace : ILearningSpace
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, LearningSpaceLayout,
+        return new LearningSpaceMemento(Name, Description, LearningOutcomeCollection, RequiredPoints, Theme,
+            LearningSpaceLayout,
             InBoundObjects,
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
@@ -94,7 +98,7 @@ public class LearningSpace : ILearningSpace
 
         Name = learningSpaceMemento.Name;
         Description = learningSpaceMemento.Description;
-        Goals = learningSpaceMemento.Goals;
+        LearningOutcomeCollection = learningSpaceMemento.LearningOutcomeCollection;
         RequiredPoints = learningSpaceMemento.RequiredPoints;
         Theme = learningSpaceMemento.Theme;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
@@ -109,14 +113,15 @@ public class LearningSpace : ILearningSpace
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            string goals, int requiredPoints, Theme theme, ILearningSpaceLayout learningSpaceLayout,
+            LearningOutcomeCollection learningOutcomeCollection, int requiredPoints, Theme theme,
+            ILearningSpaceLayout learningSpaceLayout,
             List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX, double positionY,
             bool unsavedChanges)
         {
             Name = name;
             Description = description;
-            Goals = goals;
+            LearningOutcomeCollection = learningOutcomeCollection;
             RequiredPoints = requiredPoints;
             Theme = theme;
             LearningSpaceLayout = learningSpaceLayout;
@@ -130,7 +135,7 @@ public class LearningSpace : ILearningSpace
 
         internal string Name { get; }
         internal string Description { get; }
-        internal string Goals { get; }
+        internal LearningOutcomeCollection LearningOutcomeCollection { get; }
         internal int RequiredPoints { get; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future

@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
@@ -36,13 +37,14 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">The description of the learning space.</param>
-    /// <param name="goals">The goals of the learning space.</param>
+    /// <param name="learningOutcomeCollectionVm">The learning outcomes of the learning space.</param>
     /// <param name="requiredPoints">The required points for the learning space.</param>
     /// <param name="theme">The theme of the learning space.</param>
+    /// <param name="topic">The topic of the learning space (optional).</param>
     /// <param name="positionX">The X position of the learning space (default is 0).</param>
     /// <param name="positionY">The Y position of the learning space (default is 0).</param>
-    /// <param name="topic">The topic of the learning space (optional).</param>
-    void CreateLearningSpace(string name, string description, string goals,
+    void CreateLearningSpace(string name, string description,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
         int requiredPoints, Theme theme, TopicViewModel? topic = null);
 
     /// <summary>

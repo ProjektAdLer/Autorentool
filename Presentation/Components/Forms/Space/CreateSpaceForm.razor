@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
 @using Presentation.Components.Forms.Models
+@using Presentation.Components.LearningOutcomes
 @using BusinessLogic.Entities
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
@@ -17,7 +18,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]       @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]    @bind-Collapsed="_collapsedGeneral">
                 <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -30,7 +31,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]       @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]    @bind-Collapsed="_collapsedConditions">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -47,7 +48,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]       @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]    @bind-Collapsed="_collapsedTheme">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -65,7 +66,18 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]  @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]    @bind-Collapsed="_collapsedGoals">
+                <div class="w-4/4 px-4 flex flex-col">
+                    <MudText Class="cursor-default text-justify" Typo="Typo.caption">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                    <div class="flex justify-center">
+                        <MudButton Class="w-72 btn-standard" OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
+                    </div>
+                </div>
+            </Collapsable>
+        </div>
+
+        <div class="px-4">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]    @bind-Collapsed="_collapsedDescription">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -76,18 +88,10 @@
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"
                                   Class="pb-4 mt-0"/>
-                    <MudText Typo="Typo.caption">
-                        @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]
-                    </MudText>
-                    <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                                  For="@(() => FormModel.Goals)"
-                                  Lines="3"
-                                  Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-2 mt-0"/>
                 </div>
             </Collapsable>
         </div>
+
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -106,6 +110,9 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
 
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IDialogService DialogService { get; set; }
+
     [Parameter] public int DebounceInterval { get; set; } = 300;
 
 
@@ -117,6 +124,7 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
+    private bool _collapsedDescription = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
@@ -134,7 +142,7 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, model.RequiredPoints, model.Theme);
+            model.LearningOutcomeCollection, model.RequiredPoints, model.Theme);
     }
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)
@@ -143,6 +151,24 @@
         {
             await _form.SubmitAsync();
         }
+    }
+
+    private async void OpenLearningOutcomesOverview()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters
+        {
+            { nameof(LearningOutcomesSpaceOverview.LearningOutcomeCollection), FormDataContainer.FormModel.LearningOutcomeCollection }
+        };
+        var dialog = await DialogService.ShowAsync<LearningOutcomesSpaceOverview>("", parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
     }
 
 }

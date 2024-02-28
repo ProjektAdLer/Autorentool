@@ -144,4 +144,7 @@
     <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
         <value>Tutorial</value>
     </data>
+    <data name="LearningOutcomes.Overview" xml:space="preserve">
+        <value>Learning outcomes of this learning world</value>
+    </data>
 </root>

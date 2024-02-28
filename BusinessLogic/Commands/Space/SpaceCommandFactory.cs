@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;
 using Shared;
 
@@ -15,10 +16,12 @@ public class SpaceCommandFactory : ISpaceCommandFactory
     private ILoggerFactory LoggerFactory { get; }
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
-        string goals,
+        LearningOutcomeCollection learningOutcomeCollection,
         int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction) =>
-        new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, positionX, positionY,
+        new CreateLearningSpace(learningWorld, name, description, learningOutcomeCollection, requiredPoints, theme,
+            positionX,
+            positionY,
             topic, mappingAction, LoggerFactory.CreateLogger<CreateLearningSpace>());
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, LearningSpace learningSpace,
@@ -32,9 +35,8 @@ public class SpaceCommandFactory : ISpaceCommandFactory
             LoggerFactory.CreateLogger<DeleteLearningSpace>());
 
     public IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name, string description,
-        string goals,
         int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction) =>
-        new EditLearningSpace(learningSpace, name, description, goals, requiredPoints, theme, topic, mappingAction,
+        new EditLearningSpace(learningSpace, name, description, requiredPoints, theme, topic, mappingAction,
             LoggerFactory.CreateLogger<EditLearningSpace>());
 
     public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,

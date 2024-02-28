@@ -252,12 +252,23 @@ public class CreateAtf : ICreateAtf
 
             AssignTopicToSpace(space, learningSpaceId);
 
+            string[] spaceGoals;
+
+            spaceGoals = new string[space.LearningOutcomeCollection.LearningOutcomes.Count];
+            var index = 0;
+
+            foreach (var learningOutcome in space.LearningOutcomeCollection.LearningOutcomes)
+            {
+                spaceGoals[index] = learningOutcome.GetOutcome();
+                index++;
+            }
+
             var spaceStoryJson = GetSpaceStoryJson(space);
 
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
                 space.Name, _listLearningSpaceElements, space.RequiredPoints,
                 space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
-                spaceStoryJson, space.Description, space.Goals.Split("\n"),
+                spaceStoryJson, space.Description, spaceGoals,
                 _booleanAlgebraRequirements));
 
             learningSpaceId++;
@@ -495,7 +506,7 @@ public class CreateAtf : ICreateAtf
         {
             { } type when FileContentIsTextType(type) => "text",
             { } type when FileContentIsImageType(type) => "image",
-            "h5p" => "h5p",
+            "h5p" => fileContent.PrimitiveH5P ? "primitiveH5P" : "h5p",
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
                 $"The given LearningContent Type of file {fileContent.Name} is not supported")

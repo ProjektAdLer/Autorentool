@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="LearningOutcomesSpaceOverview.Title" xml:space="preserve">
+        <value>Lernziel-Formulierung</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Text" xml:space="preserve">
+        <value>Sie können Ihr(e) Lernziel(e) für diesen Lernraum selbst formulieren oder die integrierte Eingabeunterstützung zur Formulierung verwenden.</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Button.Structured" xml:space="preserve">
+        <value>Eingabeunterstützung</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Button.Manual" xml:space="preserve">
+        <value>Lernziel selbst formulieren</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Overview.Subtitle" xml:space="preserve">
+        <value>Übersicht der erstellten Lernziele</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Button.Edit" xml:space="preserve">
+        <value>Lernziel bearbeiten</value>
+    </data>
+    <data name="LearningOutcomesSpaceOverview.Button.Delete" xml:space="preserve">
+        <value>Lernziel löschen</value>
+    </data>
+</root>
