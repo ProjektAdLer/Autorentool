@@ -57,4 +57,10 @@
     <data name="UnplacedElementsDropZone.Type.H5P" xml:space="preserve">
         <value>H5P</value>
     </data>
+    <data name="UnplacedElementsDropZone.Type.Story" xml:space="preserve">
+        <value>Story element</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
+        <value>Story element</value>
+    </data>
 </root>

@@ -2,25 +2,25 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
 @using Shared
+@using Shared.Command
 @using Microsoft.Extensions.Localization
+@using BusinessLogic.Commands
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using BusinessLogic.Commands
 @using Presentation.PresentationLogic.LearningElement
-@using Shared.Command
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningContent.Story
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
-
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
-    
+
     <div class="grid grid-cols-2 w-full py-1 gap-4 2xl:gap-0">
-        
+
         <div class="grid grid-rows-2 items-center justify-start gap-2 p-1">
             <p class="cursor-default text-xs 2xl:text-sm text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
             <div class="grid grid-cols-2">
                 <MudText Class="cursor-default text-xs 2xl:text-sm text-adlergrey-500">@Localizer["UnplacedElementsDropZone.Filter.Text"]</MudText>
-                    
+
                 <div class="grid grid-cols-3 justify-items-start gap-2">
                     <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
                         <ActivatorContent>
@@ -43,6 +43,11 @@
                                 OnClick="() => ToggleElementTypeFilter(typeof(AdaptivityContentViewModel))" AutoClose="false">
                                 @Localizer["UnplacedElementsDropZone.Filter.AdaptivityElement"]
                             </MudMenuItem>
+                            <MudMenuItem
+                                Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(StoryContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                OnClick="() => ToggleElementTypeFilter(typeof(StoryContentViewModel))" AutoClose="false">
+                                @Localizer["UnplacedElementsDropZone.Filter.StoryElement"]
+                            </MudMenuItem>
 
                         </ChildContent>
                     </MudMenu>
@@ -62,7 +67,7 @@
                                 <MudMenuItem
                                     Class="px-2 text-xs" IconColor="@(_typeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
                                     OnClick="() => ToggleTypeFilter(type)" AutoClose="false">
-                                @Localizer[$"UnplacedElementsDropZone.Type.{type}"]
+                                    @Localizer[$"UnplacedElementsDropZone.Type.{type}"]
                                 </MudMenuItem>
                             }
                         </ChildContent>
@@ -88,21 +93,21 @@
                             }
                         </ChildContent>
                     </MudMenu>
-                    
+
                 </div>
             </div>
         </div>
-        
+
         <div class="grid justify-items-end px-2">
             <MudTextField @bind-Value="SearchString" Immediate="true" Style="font-size: 14px;" Placeholder="Suche" Adornment="Adornment.Start"
                           IconSize="Size.Small" AdornmentIcon="@Icons.Material.Outlined.Search" Clearable="true"/>
         </div>
     </div>
-    
-<MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+
+    <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
                  Class="overflow-y-auto overflow-x-hidden flex-wrap rounded-lg flex-auto basis-4/5 border-2 border-solid p-2 mb-2 gap-4 bg-white flex flex-row justify-center w-full">
         <ItemRenderer>
-            @if (ShowAfterFilter(@context))
+            @if (ShowAfterFilters(@context))
             {
                 <DragDropLearningElement
                     LearningElement="@context"
@@ -120,21 +125,17 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ILearningWorldPresenter WorldPresenter { get; set; }
 
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     private IStringLocalizer<UnplacedElementsDropZone> Localizer { get; set; }
 
-
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
-    
-    [Inject, AllowNull]
-    public IOnUndoRedo UndoRedoSource { get; set; }
+
+    [Inject, AllowNull] public IOnUndoRedo UndoRedoSource { get; set; }
+
 
     internal string? SearchString { get; set; }
     private List<LearningElementDifficultyEnum> _difficultyFilter = new();
-    private List<Theme> _themeFilter = new();
     private List<ContentTypeEnum> _typeFilter = new();
     private List<Type> _elementTypeFilter = new();
 
@@ -142,17 +143,17 @@
     {
         base.OnParametersSet();
         WorldPresenter.OnCommandUndoRedoOrExecute += OnUndoOrRedoOrExecute;
-        if (SelectedViewModelsProvider.LearningWorld != null) 
+        if (SelectedViewModelsProvider.LearningWorld != null)
             SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
     }
 
     private async void OnUndoOrRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
     {
         var commandName = e.CommandName;
-        if(commandName.StartsWith("CreateLearningElement") ||
-           commandName.StartsWith("LoadLearningElement") ||
-           commandName.StartsWith("PlaceLearningElement") ||
-           commandName.StartsWith("PlaceStoryElement"))
+        if (commandName.StartsWith("CreateLearningElement") ||
+            commandName.StartsWith("LoadLearningElement") ||
+            commandName.StartsWith("PlaceLearningElement") ||
+            commandName.StartsWith("PlaceStoryElement"))
             await InvokeStateHasChanged();
     }
 
@@ -179,61 +180,80 @@
         return ValueTask.CompletedTask;
     }
 
-    private bool ShowAfterFilter(ILearningElementViewModel element)
+    private bool ShowAfterFilters(ILearningElementViewModel element)
+    {
+        if (!ShowAfterSearchStringFilter(element)) return false;
+
+        if (!ShowAfterDifficultyFilter(element)) return false;
+
+        if (!ShowAfterContentTypeFilter(element)) return false;
+
+        if (!ShowAfterElementTypeFilter(element)) return false;
+
+        return true;
+    }
+
+    private bool ShowAfterSearchStringFilter(ILearningElementViewModel element)
     {
         if (SearchString != null && !element.Name.Contains(SearchString))
         {
             return false;
         }
 
+        return true;
+    }
+
+    private bool ShowAfterDifficultyFilter(ILearningElementViewModel element)
+    {
         if (_difficultyFilter.Count != 0 && !_difficultyFilter.Contains(element.Difficulty))
         {
             return false;
         }
 
+        return true;
+    }
+
+    private bool ShowAfterContentTypeFilter(ILearningElementViewModel element)
+    {
         if (_elementTypeFilter.Count != 0 && !_elementTypeFilter.Contains(element.LearningContent.GetType()))
         {
             return false;
         }
 
-        if (_typeFilter.Count != 0)
+        return true;
+    }
+
+    private bool ShowAfterElementTypeFilter(ILearningElementViewModel element)
+    {
+        if (_typeFilter.Count == 0) return true;
+
+        if (element.LearningContent.GetType() == typeof(FileContentViewModel))
         {
-            if (element.LearningContent.GetType() == typeof(FileContentViewModel))
+            if (!_typeFilter.Contains(ContentTypeHelper.GetContentType(((FileContentViewModel)element.LearningContent).Type)))
             {
-                if (!_typeFilter.Contains(ContentTypeHelper.GetContentType(((FileContentViewModel)element.LearningContent).Type)))
-                {
-                    return false;
-                }
-            }
-            else if (element.LearningContent.GetType() == typeof(LinkContentViewModel))
-            {
-                if (!_typeFilter.Contains(ContentTypeEnum.Video))
-                {
-                    return false;
-                }
-            }
-            else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel))
-            {
-                if (!_typeFilter.Contains(ContentTypeEnum.Adaptivity))
-                {
-                    return false;
-                }
+                return false;
             }
         }
-
-        if (_themeFilter.Count != 0 && element.ElementModel != ElementModel.l_random)
+        else if (element.LearningContent.GetType() == typeof(LinkContentViewModel))
         {
-            var foundElementModelInThemes = false;
-            foreach (var theme in _themeFilter)
+            if (!_typeFilter.Contains(ContentTypeEnum.Video))
             {
-                if (ElementModelHandler.GetElementModelsForTheme(theme).Contains(element.ElementModel))
-                {
-                    foundElementModelInThemes = true;
-                    break;
-                }
+                return false;
             }
-
-            if (!foundElementModelInThemes) return false;
+        }
+        else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel))
+        {
+            if (!_typeFilter.Contains(ContentTypeEnum.Adaptivity))
+            {
+                return false;
+            }
+        }
+        else if (element.LearningContent.GetType() == typeof(StoryContentViewModel))
+        {
+            if (!_typeFilter.Contains(ContentTypeEnum.Story))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -273,23 +293,6 @@
         }
     }
 
-    private void ResetThemeFilter()
-    {
-        _themeFilter.Clear();
-    }
-
-    private void ToggleThemeFilter(Theme theme)
-    {
-        if (_themeFilter.Contains(theme))
-        {
-            _themeFilter.Remove(theme);
-        }
-        else
-        {
-            _themeFilter.Add(theme);
-        }
-    }
-
     private void ResetTypeFilter()
     {
         _typeFilter.Clear();
@@ -308,16 +311,16 @@
     }
 
     private string elementsIcon = elements;
-    
-    const string elements = 
+
+    const string elements =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-d85349f9-9c23-477b-a0d6-c38ff7f36789"" data-name=""1-Element"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
   <path d=""M1450.45,1125.6h-646.65v439.97h758.91v271.43H467V203.08h1093.47v273.21h-756.67v388.52h646.65v260.79Z"" style=""fill: #575757; stroke-width: 0px;""/>
 </svg>";
 
     private string typeIcon = types;
-    
-    const string types = 
+
+    const string types =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-275ad285-95dd-43ff-9093-4f7abe675612"" data-name=""2-Typ_V2"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 2000 2000"">
   <defs>
@@ -348,10 +351,10 @@
     </g>
   </g>
 </svg>";
-    
+
     private string difficultyIcon = difficulty;
-    
-    const string difficulty = 
+
+    const string difficulty =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-a8486736-dfcf-4006-8de7-6917980e5230"" data-name=""3-Schwierigkeit"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 1978.87 1978.87"">
   <g>
@@ -362,6 +365,6 @@
   <polygon points=""1463.51 25.37 1583.57 394.87 1972.09 394.87 1657.77 623.24 1777.83 992.75 1463.51 764.38 1149.19 992.75 1269.25 623.24 954.93 394.87 1343.45 394.87 1463.51 25.37"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
   <polygon points=""515.13 80.37 395.13 448.87 26.91 568.51 395.13 688.87 515.66 1058.26 636.13 688.87 1004.41 569.51 636.13 448.87 515.13 80.37"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
 </svg>";
-    
+
 
 }
