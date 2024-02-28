@@ -11,6 +11,7 @@ public class LearningSpaceJson : ILearningSpaceJson
     [JsonConstructor]
     public LearningSpaceJson(int spaceId, string spaceUuid, string spaceName,
         List<int?> spaceSlotContents, int requiredPointsToComplete, string spaceTemplate, string spaceTemplateStyle,
+        ISpaceStoryJson? spaceStory = null,
         string? spaceDescription = null, string[]? spaceGoals = null, string? requiredSpacesToEnter = null)
     {
         SpaceId = spaceId;
@@ -23,9 +24,12 @@ public class LearningSpaceJson : ILearningSpaceJson
         RequiredSpacesToEnter = requiredSpacesToEnter;
         SpaceTemplate = spaceTemplate;
         SpaceTemplateStyle = spaceTemplateStyle;
+        SpaceStory = spaceStory ?? new SpaceStoryJson(null, null);
     }
 
     public string[] SpaceGoals { get; set; }
+
+    public ISpaceStoryJson SpaceStory { get; set; }
 
     //A Name for the Learning Space
     public string SpaceName { get; set; }

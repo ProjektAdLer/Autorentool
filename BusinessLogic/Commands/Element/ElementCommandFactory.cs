@@ -23,6 +23,13 @@ public class ElementCommandFactory : IElementCommandFactory
             difficulty, elementModel, workload, points, positionX, positionY, mappingAction,
             LoggerFactory.CreateLogger<CreateLearningElementInSlot>());
 
+    public ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
+        string name,
+        ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<LearningSpace> action) =>
+        new CreateStoryElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description, goals,
+            difficulty, elementModel, workload, points, positionX, positionY, action, LoggerFactory.CreateLogger<CreateStoryElementInSlot>());
+
     public ICreateLearningElementInSlot GetCreateInSlotCommand(LearningSpace parentSpace, int slotIndex,
         LearningElement learningElement, Action<LearningSpace> mappingAction) =>
         new CreateLearningElementInSlot(parentSpace, slotIndex, learningElement, mappingAction,
@@ -40,6 +47,11 @@ public class ElementCommandFactory : IElementCommandFactory
         LearningSpace parentSpace, Action<LearningSpace> mappingAction) =>
         new DeleteLearningElementInSpace(learningElement, parentSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInSpace>());
+
+    public IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
+        Action<LearningSpace> mappingAction) =>
+        new DeleteStoryElementInSpace(learningElement, parentSpace, mappingAction,
+            LoggerFactory.CreateLogger<DeleteStoryElementInSpace>());
 
     public IDeleteLearningElementInWorld GetDeleteInWorldCommand(LearningElement learningElement,
         LearningWorld parentWorld, Action<LearningWorld> mappingAction) =>

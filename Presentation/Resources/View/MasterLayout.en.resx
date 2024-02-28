@@ -52,9 +52,15 @@
         <value>learning world overview</value>
     </data>
     <data name="SideBarContent.AdaptivityLearningElementMetadata.Alt" xml:space="preserve">
-        <value>Adaptivity learning element metadata icon</value>
+        <value>Adaptivity element metadata icon</value>
     </data>
     <data name="SideBarContent.AdaptivityLearningElementMetadata.Title" xml:space="preserve">
-        <value>Adaptivity learning element details</value>
+        <value>Adaptivity element details</value>
+    </data>
+    <data name="SideBarContent.StoryLearningElementMetadata.Title" xml:space="preserve">
+        <value>Story element details</value>
+    </data>
+    <data name="SideBarContent.StoryLearningElementMetadata.Alt" xml:space="preserve">
+        <value>Story element metadata icon</value>
     </data>
 </root>

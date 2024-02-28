@@ -131,7 +131,9 @@ public class CreateAtfUt
                 mockElement5
             }
         };
-        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnum.R_20X30_8L);
+        var mockLearningSpaceLayout3 = PersistEntityProvider.GetLearningSpaceLayout(
+            learningElements: mockLearningElements3,
+            floorPlan: FloorPlanEnum.R_20X30_8L);
 
         var mockSpace1 =
             PersistEntityProvider.GetLearningSpace(name: "Space1", learningSpaceLayout: mockLearningSpaceLayout1);
@@ -201,6 +203,9 @@ public class CreateAtfUt
         var content7 = PersistEntityProvider.GetFileContent(name: "primitive", type: "h5p",
             filepath: "/foo/bar.txt", primitiveH5p: true);
         var adaptivityContent1 = PersistEntityProvider.GetAdaptivityContent();
+        var introStoryContent = PersistEntityProvider.GetStoryContent();
+        var outroStoryContent =
+            PersistEntityProvider.GetStoryContent(story: new List<string>() { "Outro", "Story", "Text" });
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "ele1", content: content1);
         var ele2 = PersistEntityProvider.GetLearningElement(name: "ele2", content: content2);
@@ -208,6 +213,8 @@ public class CreateAtfUt
         var ele4 = PersistEntityProvider.GetLearningElement(name: "ele4", content: content4);
         var ele5 = PersistEntityProvider.GetLearningElement(name: "ele5", content: content5);
         var ele6 = PersistEntityProvider.GetLearningElement(name: "ele6", content: adaptivityContent1);
+        var introEle = PersistEntityProvider.GetLearningElement(name: "StoryEle1", content: introStoryContent);
+        var outroEle = PersistEntityProvider.GetLearningElement(name: "StoryEle2", content: outroStoryContent);
         var ele7 = PersistEntityProvider.GetLearningElement(name: "primitive", content: content7);
         var topic1 = PersistEntityProvider.GetTopic(name: "topic1");
         var topic2 = PersistEntityProvider.GetTopic(name: "topic2");
@@ -265,7 +272,18 @@ public class CreateAtfUt
                         ele2
                     }
                 },
-                FloorPlanName = FloorPlanEnum.R_20X20_6L
+                FloorPlanName = FloorPlanEnum.R_20X20_6L,
+                StoryElements = new Dictionary<int, ILearningElementPe>
+                {
+                    {
+                        0,
+                        introEle
+                    },
+                    {
+                        1,
+                        outroEle
+                    }
+                }
             }
         };
         var space2 = new LearningSpacePe("b", "ff", "ff", 5, Theme.Campus,
@@ -317,7 +335,8 @@ public class CreateAtfUt
             }
         };
         var space4 = new LearningSpacePe("d", "ff", "ff", 5, Theme.Campus,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
+            PersistEntityProvider.GetLearningSpaceLayout(learningElements: new Dictionary<int, ILearningElementPe>(),
+                floorPlan:
                 FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
 
@@ -397,6 +416,17 @@ public class CreateAtfUt
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(9));
+
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory, Is.Not.Null);
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory?.StoryTexts,
+                Is.EqualTo(introStoryContent.StoryText.ToArray()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory?.ElementModel,
+                Is.EqualTo(ElementModel.l_h5p_slotmachine_1.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory, Is.Not.Null);
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory?.StoryTexts,
+                Is.EqualTo(outroStoryContent.StoryText.ToArray()));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory?.ElementModel,
+                Is.EqualTo(ElementModel.l_h5p_slotmachine_1.ToString()));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementName, Is.EqualTo(ele1.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementId, Is.EqualTo(1));

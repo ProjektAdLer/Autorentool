@@ -135,4 +135,25 @@ For more information on H5P files, please read the user documentation of the aut
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text" xml:space="preserve">
         <value>Click for more information</value>
     </data>
+    <data name="EditStoryElementForm.Header.Text" xml:space="preserve">
+        <value>Edit story element</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Story</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
+        <value>Story of this story element</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
+        <value>Slide</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.DeleteStory" xml:space="preserve">
+        <value>Delete text block</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.AddStory" xml:space="preserve">
+        <value>Add new text block</value>
+    </data>
+    <data name="EditElementForm.Story.Tooltip" xml:space="preserve">
+        <value>The text that you formulate within a text block for your story is displayed to the students on a slide in the subsequent 3D learning environment. &lt;br&gt; &lt;br&gt; If you add another text block with new content to your story, this text block will be displayed in a subsequent slide in the 3D learning environment. &lt;br&gt; &lt;br&gt; For example, if you use three text blocks within a story element, the text contained therein will be displayed to the students in the 3D learning environment in three consecutive slides.</value>
+    </data>
 </root>

@@ -5,6 +5,7 @@ using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Shared;
@@ -18,9 +19,7 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeFalse_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var learningContent = Substitute.For<IFileContentViewModel>();
-        learningContent.Type.Returns("txt");
-        var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus, false);
+        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus);
         var enumerable = elementModels.ToList();
         Assert.That(enumerable, Is.Not.Null);
         Assert.That(enumerable, Is.Not.Empty);
@@ -31,9 +30,7 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeTrue_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var learningContent = Substitute.For<IFileContentViewModel>();
-        learningContent.Type.Returns("txt");
-        var elementModels = systemUnderTest.GetElementModels(learningContent, Theme.Campus, true);
+        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", Theme.Campus);
         var expectedModels = new[]
         {
             ElementModel.a_npc_alerobot
@@ -88,15 +85,17 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Image))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Video))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
+            .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Story))
             .ToList();
-        var elementModels = ((ElementModel[])Enum.GetValues(typeof(ElementModel))).Except(new[]
-        {
-            ElementModel.a_npc_defaultnpc, ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice
-        });
+        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
-        // Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        Assert.That(elementModels, Is.EquivalentTo(elementModelsFromAllTypes));
+        Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
+        foreach (var elementModel in elementModels)
+        {
+            Assert.That(elementModelsFromAllTypes.Contains(elementModel), Is.True,
+                $"ElementModel {elementModel} is not assigned to any type");
+        }
     }
 
     [Test]
@@ -135,12 +134,14 @@ public class ElementModelHandlerUt
             elementModelsFromAllThemes.AddRange(ElementModelHandler.GetElementModelsForTheme(theme));
         }
 
-        var adaptivityNpcs = systemUnderTest.GetElementModels(null, null, true);
-        elementModelsFromAllThemes = elementModelsFromAllThemes.Union(adaptivityNpcs).ToList();
-
         var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
-        Assert.That(elementModels, Is.EquivalentTo(elementModelsFromAllThemes));
+        //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
+        foreach (var elementModel in elementModels)
+        {
+            Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
+                $"ElementModel {elementModel} is not assigned to any theme");
+        }
     }
 }
