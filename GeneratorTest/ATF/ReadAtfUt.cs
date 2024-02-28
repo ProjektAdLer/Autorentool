@@ -60,12 +60,15 @@ public class ReadAtfUt
                 })
             }));
 
+        var learningElementJson6 =
+            new LearningElementJson(6, "", "element6", "primitiveH5p", "primitiveH5P", "h5p", 1, 6, "");
+
         var baseElementJson = new BaseLearningElementJson(6, "", "element6", "", "h5p", "h5p");
 
         var learningElementList = new List<IElementJson>
         {
             learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4,
-            learningElementJson5, baseElementJson
+            learningElementJson5, learningElementJson6, baseElementJson
         };
 
         var learningWorldJson = new LearningWorldJson("world", "",
@@ -99,7 +102,7 @@ public class ReadAtfUt
             Assert.That(getLearningWorldJson.Elements, Has.Count.EqualTo(learningElementList.Count));
             Assert.That(getLearningWorldJson.Spaces, Has.Count.EqualTo(learningSpacesList.Count));
             Assert.That(resourceList, Has.Count.EqualTo(1));
-            Assert.That(getH5PElementsList, Has.Count.EqualTo(2));
+            Assert.That(getH5PElementsList, Has.Count.EqualTo(3));
 
             //Elements + World Description & Goals (As they are created as Labels in Moodle)
             Assert.That(elementsOrderedList, Has.Count.EqualTo(7));
@@ -110,7 +113,7 @@ public class ReadAtfUt
             Assert.That(getWorldAttributes.ElementFileType, Is.EqualTo("label"));
             Assert.That(getWorldAttributes.Url, Is.EqualTo(""));
             Assert.That(getWorldAttributes.ElementCategory, Is.EqualTo("World Attributes"));
-            Assert.That(getWorldAttributes.ElementId, Is.EqualTo(7));
+            Assert.That(getWorldAttributes.ElementId, Is.EqualTo(8));
             Assert.That(getWorldAttributes.ElementUUID, Is.EqualTo(""));
             Assert.That(getWorldAttributes.ElementModel, Is.EqualTo(""));
 

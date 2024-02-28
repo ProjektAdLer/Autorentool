@@ -127,6 +127,8 @@ module.exports = {
         "bg-adlergrey-100",
         "bg-adlergrey-300",
         "ml-1",
-        "mr-1"
+        "mr-1",
+        "list-disc",
+        "list-inside"
     ]
 }

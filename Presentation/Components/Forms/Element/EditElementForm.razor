@@ -13,6 +13,7 @@
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.PresentationLogic.LearningContent.Story
 @using Shared.Observer
+@using Presentation.Components.Dialogues
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@(GetHeaderText())</h2>
@@ -145,13 +146,29 @@
                                         default:
                                             <span>???</span>
                                             break;
-                                    }
-                                </MudTd>
-                            </RowTemplate>
-                        </TableSelect>
-                    </Collapsable>
-                </div>
-                break;
+                                }
+                            </MudTd>
+                        </RowTemplate>
+                    </TableSelect>
+                        @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
+                        {
+                            <div class="flex flex-col">
+                                <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                                    @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
+                                    <MudTooltip>
+                                        <ChildContent>
+                                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue" OnClick="ShowH5PInfoDialog"/>
+                                        </ChildContent>
+                                        <TooltipContent>
+                                            @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
+                                        </TooltipContent>
+                                    </MudTooltip>
+                                </MudCheckBox>
+                            </div>
+                        }
+                </Collapsable>
+            </div>
+        break;
             case ElementMode.Adaptivity:
                 <div class="px-4">
                     <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]     @bind-Collapsed="_collapsedTasks">
@@ -433,4 +450,12 @@
         }
     }
 
+    private async Task ShowH5PInfoDialog()
+    {
+        var dialogParams = new DialogParameters()
+        {
+            {nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value},
+        };
+        await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
 }

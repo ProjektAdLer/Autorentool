@@ -200,6 +200,8 @@ public class CreateAtfUt
             filepath: "/foo/foo.txt");
         var content6 = PersistEntityProvider.GetFileContent(name: "Stadtteile AB", type: "pdf",
             filepath: "/foo/foo.txt");
+        var content7 = PersistEntityProvider.GetFileContent(name: "primitive", type: "h5p",
+            filepath: "/foo/bar.txt", primitiveH5p: true);
         var adaptivityContent1 = PersistEntityProvider.GetAdaptivityContent();
         var introStoryContent = PersistEntityProvider.GetStoryContent();
         var outroStoryContent =
@@ -213,6 +215,7 @@ public class CreateAtfUt
         var ele6 = PersistEntityProvider.GetLearningElement(name: "ele6", content: adaptivityContent1);
         var introEle = PersistEntityProvider.GetLearningElement(name: "StoryEle1", content: introStoryContent);
         var outroEle = PersistEntityProvider.GetLearningElement(name: "StoryEle2", content: outroStoryContent);
+        var ele7 = PersistEntityProvider.GetLearningElement(name: "primitive", content: content7);
         var topic1 = PersistEntityProvider.GetTopic(name: "topic1");
         var topic2 = PersistEntityProvider.GetTopic(name: "topic2");
 
@@ -250,7 +253,7 @@ public class CreateAtfUt
         var adaptivityContent2 = new AdaptivityContentPe("Abschlussquiz zur Stadt Aschaffenburg",
             new List<IAdaptivityTaskPe> { task1, task2 });
 
-        var ele7 = PersistEntityProvider.GetLearningElement(name: "ele7", content: adaptivityContent2);
+        var ele8 = PersistEntityProvider.GetLearningElement(name: "ele8", content: adaptivityContent2);
 
         var space1 = new LearningSpacePe("a", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
@@ -302,6 +305,10 @@ public class CreateAtfUt
                     {
                         5,
                         ele6
+                    },
+                    {
+                        7,
+                        ele7
                     }
                 },
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
@@ -321,7 +328,7 @@ public class CreateAtfUt
                     },
                     {
                         5,
-                        ele7
+                        ele8
                     }
                 },
                 FloorPlanName = FloorPlanEnum.L_32X31_10L
@@ -366,7 +373,8 @@ public class CreateAtfUt
             ((FileContentPe)ele2.LearningContent, ele2.Name),
             ((FileContentPe)ele5.LearningContent, ele5.Name),
             (content6, content6.Name),
-            ((FileContentPe)ele4.LearningContent, ele4.Name)
+            ((FileContentPe)ele4.LearningContent, ele4.Name),
+            (content7, content7.Name)
         };
 
         //Act
@@ -407,7 +415,7 @@ public class CreateAtfUt
                 Is.EqualTo("(3)^(2)"));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
             Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(enrolmentKey));
-            Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(8));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(9));
 
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory, Is.Not.Null);
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory?.StoryTexts,
@@ -469,19 +477,19 @@ public class CreateAtfUt
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
             //AdaptivityElement with ContentReferenceAction
-            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementName, Is.EqualTo(ele7.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementName, Is.EqualTo(ele8.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementId, Is.EqualTo(4));
-            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementUUID, Is.EqualTo(ele7.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementUUID, Is.EqualTo(ele8.Id.ToString()));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementFileType, Is.EqualTo("adaptivity"));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementCategory, Is.EqualTo("adaptivity"));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementMaxScore,
-                Is.EqualTo(ele7.Points));
+                Is.EqualTo(ele8.Points));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementDescription,
-                Is.EqualTo(ele7.Description));
+                Is.EqualTo(ele8.Description));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementGoals,
-                Is.EqualTo(ele7.Goals.Split("\n")));
+                Is.EqualTo(ele8.Goals.Split("\n")));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementModel,
-                Is.EqualTo(ele7.ElementModel.ToString()));
+                Is.EqualTo(ele8.ElementModel.ToString()));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
@@ -702,6 +710,22 @@ public class CreateAtfUt
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementModel,
                 Is.EqualTo(ele6.ElementModel.ToString()));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).LearningSpaceParentId,
+                Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
+            
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementName, Is.EqualTo(ele7.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementId, Is.EqualTo(9));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementUUID, Is.EqualTo(ele7.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementFileType, Is.EqualTo("h5p"));
+            Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementCategory, Is.EqualTo("primitiveH5P"));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementMaxScore,
+                Is.EqualTo(ele7.Points));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementDescription,
+                Is.EqualTo(ele7.Description));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementGoals,
+                Is.EqualTo(ele7.Goals.Split("\n")));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementModel,
+                Is.EqualTo(ele7.ElementModel.ToString()));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
