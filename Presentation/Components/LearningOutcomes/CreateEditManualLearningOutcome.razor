@@ -1,9 +1,10 @@
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
 @using System.Diagnostics.CodeAnalysis
-@using Microsoft.Extensions.Localization
-
-<p class="cursor-default text-lg ml-7">@Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span></p>
+<p class="cursor-default text-lg ml-7">
+    @Localizer["CreateEditManualLearningOutcome.Title.Part1"]<span class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditManualLearningOutcome.Title.Part2"]</span>
+</p>
 
 <div class="relative max-w-full h-[300px] flex flex-col m-4">
     <MudText Class="cursor-default px-3 text-sm">@Localizer["CreateEditManualLearningOutcome.Text"]</MudText>
@@ -27,7 +28,7 @@
     <div class="flex justify-end items-center mt-2">
         <MudButton Class="btn-standard sticky"
                    @onclick="SubmitAsync">
-            @Localizer["CreateEditManualLearningOutcome.Button.Create"]
+            @(CurrentManualLearningOutcome == null ? Localizer["CreateEditManualLearningOutcome.Button.Create"] : Localizer["CreateEditManualLearningOutcome.Button.Edit"])
         </MudButton>
     </div>
 </div>
@@ -40,7 +41,7 @@
     [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
 
     [Parameter] public ManualLearningOutcomeViewModel? CurrentManualLearningOutcome { get; set; }
-    
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<CreateEditManualLearningOutcome> Localizer { get; set; }
 

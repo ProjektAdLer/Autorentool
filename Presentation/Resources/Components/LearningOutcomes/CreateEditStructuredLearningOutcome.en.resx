@@ -123,4 +123,7 @@
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Evaluate" xml:space="preserve">
         <value>Make judgments based on criteria or standards</value>
     </data>
+    <data name="CreateEditStructuredLearningOutcome.Button.Edit" xml:space="preserve">
+        <value>Update</value>
+    </data>
 </root>

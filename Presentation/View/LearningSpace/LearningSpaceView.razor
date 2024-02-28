@@ -5,8 +5,6 @@
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using BusinessLogic.Entities
-@using BusinessLogic.Entities.LearningOutcome
 @using Presentation.Components.Dialogues
 @implements IDisposable
 
@@ -25,7 +23,7 @@
                 <img class="w-6 2xl:w-8 opacity-50" src="CustomIcons/Space/space-icon_bright.png" alt="learningspace">
                 <p class="text-sm 2xl:text-lg opacity-80 text-adlerdarkblue-800 font-bold truncate 2xl:whitespace-normal 2xl:break-words" title="@LearningSpaceP.LearningSpaceVm.Name">@LearningSpaceP.LearningSpaceVm.Name</p>
             </div>
- 
+
             <section class="p-1 flex justify-end items-center">
                 <div class="flex flex-col justify-start">
                     <p class="text-sm 2xl:text-base text-adlerblue-600 space-theme">
@@ -42,19 +40,21 @@
                     <div class="flex flex-row items-center gap-1">
                         <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
                         <MudIconButton OnClick="@ToggleOpen"
-                                       Icon="@learningOutcomeIcon"
+                                       Icon="@LearningOutcomeIcon"
                                        Title="@Localizer["LearningSpace.SpaceGoals.Overview"]"
                                        Class="h-4 w-4 2xl:h-5 2xl:w-5 opacity-70">
                         </MudIconButton>
-                        
+
                         <MudPopover AnchorOrigin="Origin.BottomLeft" Fixed="true" Open="@_isOpen" Class="bg-white rounded drop-shadow-xl h-fit w-[550px] text-adlergrey-800 text-justify p-4">
                             <div class="flex flex-col">
                                 <div class="flex flex-row justify-between items-center">
                                     <p class="pl-1 cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningSpace.LearningOutcomesOverview.Title"]</p>
                                     <MudIconButton Class="w-8 h-8" OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.Close"></MudIconButton>
                                 </div>
-                                <p class="pl-1 pb-2 cursor-default">@Localizer["LearningSpace.LearningOutcomesOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningSpaceP.LearningSpaceVm?.Name</span></p>
-                                
+                                <p class="pl-1 pb-2 cursor-default">
+                                    @Localizer["LearningSpace.LearningOutcomesOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningSpaceP.LearningSpaceVm?.Name</span>
+                                </p>
+
                                 <div class="h-[150px] overflow-y-scroll bg-adlerbgbright rounded border border-adlergrey-200 p-2">
 
                                     @if (LearningSpaceP.LearningSpaceVm?.LearningOutcomeCollection.LearningOutcomes.Count == 0)
@@ -66,7 +66,6 @@
 
                                     @if (LearningSpaceP?.LearningSpaceVm != null)
                                     {
-
                                         foreach (var outcome in LearningSpaceP.LearningSpaceVm.LearningOutcomeCollection.LearningOutcomes)
                                         {
                                             <MudText>
@@ -82,7 +81,7 @@
                             </div>
                         </MudPopover>
                     </div>
-                    
+
                     @ChildContent
                 </div>
             </section>
@@ -105,19 +104,14 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
-    
-    public bool _isOpen;
 
-    public void ToggleOpen()
+    private bool _isOpen;
+
+    private void ToggleOpen()
     {
-        if (_isOpen)
-            _isOpen = false;
-        else
-        {
-            _isOpen = true;
-        }
+        _isOpen = !_isOpen;
     }
-    
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
@@ -174,9 +168,9 @@
         LearningSpaceP.PropertyChanged -= PropertyChanged;
     }
 
-    private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
+    private string LearningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? LearningOutcomeIconDeactivated : LearningOutcomeIconActivated;
 
-    const string learningOutcomeIconActivated =
+    const string LearningOutcomeIconActivated =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
             <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
                 <circle cx=""1004.73"" cy=""1004.77"" r=""892.6"" style=""fill: none; stroke: #2e3a4d; stroke-miterlimit: 10; stroke-width: 200px;""/>
@@ -195,7 +189,7 @@
                                                                     <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                         </svg>";
 
-    const string learningOutcomeIconDeactivated =
+    const string LearningOutcomeIconDeactivated =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
             <svg id=""uuid-347490b4-1d53-493d-bc86-b0ca80e39b63"" data-name=""R-LearningOutcome"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
                 <circle cx=""1004.73"" cy=""1004.77"" r=""892.6"" style=""fill: none; stroke: rgb(179,179,179); stroke-miterlimit: 10; stroke-width: 200px;""/>
@@ -213,5 +207,5 @@
                                                                 <line x1=""0"" y1=""1005.85"" x2=""817.09"" y2=""1005.85"" style=""fill: none; stroke:rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                     <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                         </svg>";
-    
+
 }

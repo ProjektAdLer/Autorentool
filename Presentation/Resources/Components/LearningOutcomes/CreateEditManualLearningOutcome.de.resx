@@ -39,4 +39,7 @@
     <data name="CreateEditManualLearningOutcome.RequiredError" xml:space="preserve">
         <value>Formulieren Sie ein Lernziel</value>
     </data>
+    <data name="CreateEditManualLearningOutcome.Button.Edit" xml:space="preserve">
+        <value>Aktualisieren</value>
+    </data>
 </root>
