@@ -1,8 +1,9 @@
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 
 namespace Presentation.Components.Adaptivity.Dialogues;
 
-public class AdaptivityContentFormModel
+public class AdaptivityContentFormModel : ILearningContentFormModel
 {
     public AdaptivityContentFormModel()
     {

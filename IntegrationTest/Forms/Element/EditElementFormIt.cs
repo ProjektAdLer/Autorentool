@@ -47,13 +47,27 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Context.Services.AddSingleton(ElementModelHandler);
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(localizer);
+
+        LearningContentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent(),
+            FormModelProvider.GetLinkContent()
+        };
+        ElementVm = ViewModelProvider.GetLearningElement(content: LearningContentViewModels[0]);
+        FormModel.LearningContent = LearningContentFormModels[1];
+        Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
+        Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
     }
+
+    public LearningElementViewModel ElementVm { get; set; }
+
 
     public ILearningWorldPresenter WorldPresenter { get; set; }
     public ILearningSpacePresenter SpacePresenter { get; set; }
     public IElementModelHandler ElementModelHandler { get; set; }
     public IPresentationLogic PresentationLogic { get; set; }
     public ILearningContentViewModel[] LearningContentViewModels { get; set; }
+    public ILearningContentFormModel[] LearningContentFormModels { get; set; }
 
     private const string Expected = "test";
 
@@ -89,7 +103,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Test]
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         Assert.That(() => collapsables.Single(collapsable =>
@@ -118,7 +132,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(FormModel.ElementModel, Is.EqualTo(ElementModel.l_random));
         Assert.That(FormModel.Workload, Is.EqualTo(0));
         Assert.That(FormModel.Points, Is.EqualTo(1));
-        Assert.That(FormModel.LearningContent, Is.EqualTo(null));
+        Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels[1]));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
@@ -133,8 +147,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Retry(3)]
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
-        var vm = ViewModelProvider.GetLearningElement();
-        var systemUnderTest = GetFormWithPopoverProvider(vm);
+        var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
@@ -150,10 +163,9 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        Assert.That(() => WorldPresenter.Received(2).EditLearningElement(vm.Parent, vm, Expected, Expected, Expected,
-                LearningElementDifficultyEnum.Hard, ElementModel.l_random, 123, 123, LearningContentViewModels[0]),
+        Assert.That(() => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+        Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
@@ -168,7 +180,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(FormModel.Workload, Is.EqualTo(123));
         Assert.That(FormModel.Points, Is.EqualTo(123));
         systemUnderTest.WaitForAssertion(
-            () => Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentViewModels[0])),
+            () => Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels[0])),
             TimeSpan.FromSeconds(2));
     }
 
@@ -177,7 +189,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentViewModel>>();
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
         mudTextFields[3].Find("textarea").Change(Expected);
@@ -186,7 +198,8 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         mudSelect.Find("div.mud-input-control").Click();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
-        tableSelect.FindAll("tbody tr")[0].Click();
+        var tableRows = tableSelect.FindAll("tbody tr");
+        tableRows[0].Click();
     }
 
     private void ConfigureValidatorAllMembers()
@@ -201,7 +214,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
                     int i => i == 123,
                     LearningElementDifficultyEnum difficulty => difficulty == LearningElementDifficultyEnum.Hard,
                     ElementModel model => model == ElementModel.l_random,
-                    ILearningContentViewModel => true,
+                    ILearningContentFormModel => true,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
@@ -220,15 +233,15 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         WorldPresenter.Received(1).ShowSelectedElementContentAsync(vm);
     }
-    
+
     [Test]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
-         var dialogServiceMock = Substitute.For<IDialogService>();
-         Context.Services.AddSingleton(dialogServiceMock);
-        
-        var systemUnderTest = GetFormWithPopoverProvider(adaptivityElementMode: true);
-        
+        var dialogServiceMock = Substitute.For<IDialogService>();
+        Context.Services.AddSingleton(dialogServiceMock);
+
+        var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
+
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
 
@@ -238,7 +251,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
     private IRenderedComponent<EditElementForm> GetRenderedComponent(ILearningElementViewModel? vm = null,
         EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null,
-        bool adaptivityElementMode = false)
+        ElementMode elementMode = ElementMode.Normal)
     {
         vm ??= ViewModelProvider.GetLearningElement();
         onNewClicked ??= EventCallback.Empty;
@@ -248,16 +261,15 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             p.Add(c => c.ElementToEdit, vm);
             p.Add(c => c.OnNewButtonClicked, onNewClicked.Value);
             p.Add(c => c.DebounceInterval, 0);
-            p.Add(c => c.AdaptivityElementMode, adaptivityElementMode);
+            p.Add(c => c.ElementMode, elementMode);
             p.AddCascadingValue("TriggerMasterLayoutStateHasChanged", masterLayoutStateHasChanged);
         });
     }
 
-    private IRenderedFragment GetFormWithPopoverProvider(ILearningElementViewModel? vm = null,
-        EventCallback? onNewClicked = null, Action? masterLayoutStateHasChanged = null, int debounceInterval = 0,
-        bool adaptivityElementMode = false)
+    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onNewClicked = null,
+        Action? masterLayoutStateHasChanged = null, int debounceInterval = 0,
+        ElementMode elementMode = ElementMode.Normal)
     {
-        vm ??= ViewModelProvider.GetLearningElement();
         onNewClicked ??= EventCallback.Empty;
         masterLayoutStateHasChanged ??= () => { };
         RenderFragment innerFrag = builder =>
@@ -265,10 +277,10 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             builder.OpenComponent<MudPopoverProvider>(0);
             builder.CloseComponent();
             builder.OpenComponent<EditElementForm>(1);
-            builder.AddAttribute(2, nameof(EditElementForm.ElementToEdit), vm);
+            builder.AddAttribute(2, nameof(EditElementForm.ElementToEdit), ElementVm);
             builder.AddAttribute(3, nameof(EditElementForm.DebounceInterval), debounceInterval);
             builder.AddAttribute(4, nameof(EditElementForm.OnNewButtonClicked), onNewClicked.Value);
-            builder.AddAttribute(5, nameof(EditElementForm.AdaptivityElementMode), adaptivityElementMode);
+            builder.AddAttribute(5, nameof(EditElementForm.ElementMode), elementMode);
             builder.CloseComponent();
         };
         return Context.Render(builder =>

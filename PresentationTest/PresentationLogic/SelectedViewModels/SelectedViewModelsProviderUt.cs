@@ -24,21 +24,21 @@ public class SelectedViewModelsProviderUt
         var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "h", "i", "g");
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
-        systemUnderTest.SetActiveSlotInSpace(1, null);
+        systemUnderTest.SetActiveElementSlotInSpace(1, null);
 
         systemUnderTest.SetLearningWorld(learningWorld, mockCommand);
 
         Assert.That(systemUnderTest.LearningWorld, Is.EqualTo(learningWorld));
 
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningWorld, Is.Null);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnRedo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningWorld, Is.EqualTo(learningWorld));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
     }
 
     [Test]
@@ -50,19 +50,19 @@ public class SelectedViewModelsProviderUt
         var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
-        systemUnderTest.SetActiveSlotInSpace(1, null);
+        systemUnderTest.SetActiveElementSlotInSpace(1, null);
         systemUnderTest.SetLearningObjectInPathWay(learningObjectInPathWay, mockCommand);
 
         Assert.That(systemUnderTest.LearningObjectInPathWay, Is.EqualTo(learningObjectInPathWay));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningObjectInPathWay, Is.Null);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnRedo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningObjectInPathWay, Is.EqualTo(learningObjectInPathWay));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
     }
 
     [Test]
@@ -74,19 +74,19 @@ public class SelectedViewModelsProviderUt
         var learningElement = ViewModelProvider.GetLearningElement();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
-        systemUnderTest.SetActiveSlotInSpace(1, null);
+        systemUnderTest.SetActiveElementSlotInSpace(1, null);
         systemUnderTest.SetLearningElement(learningElement, mockCommand);
 
         Assert.That(systemUnderTest.LearningElement, Is.EqualTo(learningElement));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningElement, Is.Null);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnRedo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningElement, Is.EqualTo(learningElement));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
     }
 
     [Test]
@@ -98,19 +98,19 @@ public class SelectedViewModelsProviderUt
         var content = ViewModelProvider.GetFileContent();
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
-        systemUnderTest.SetActiveSlotInSpace(1, null);
+        systemUnderTest.SetActiveElementSlotInSpace(1, null);
         systemUnderTest.SetLearningContent(content, mockCommand);
 
         Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningContent, Is.Null);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnRedo += Raise.Event<Action<ICommand>>(mockCommand);
         Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
     }
 
     [Test]
@@ -121,14 +121,14 @@ public class SelectedViewModelsProviderUt
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
-        systemUnderTest.SetActiveSlotInSpace(1, mockCommand);
+        systemUnderTest.SetActiveElementSlotInSpace(1, mockCommand);
 
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
 
         onUndoRedo.OnUndo += Raise.Event<Action<ICommand>>(mockCommand);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(-1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(-1));
 
         onUndoRedo.OnRedo += Raise.Event<Action<ICommand>>(mockCommand);
-        Assert.That(systemUnderTest.ActiveSlotInSpace, Is.EqualTo(1));
+        Assert.That(systemUnderTest.ActiveElementSlotInSpace, Is.EqualTo(1));
     }
 }

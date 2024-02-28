@@ -18,6 +18,11 @@ public interface IElementCommandFactory
         ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction);
 
+    ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
+        string name,
+        ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<LearningSpace> action);
+
     /// <summary>
     /// Creates a command to create a learning element in a slot.
     /// </summary>
@@ -36,6 +41,9 @@ public interface IElementCommandFactory
     /// Creates a command to delete a learning element from a space.
     /// </summary>
     IDeleteLearningElementInSpace GetDeleteInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
+        Action<LearningSpace> mappingAction);
+
+    IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
         Action<LearningSpace> mappingAction);
 
     /// <summary>
@@ -73,4 +81,5 @@ public interface IElementCommandFactory
     /// Creates a command to save a learning element to a file.
     /// </summary>
     ISaveLearningElement GetSaveCommand(IBusinessLogic businessLogic, LearningElement learningElement, string filepath);
+
 }

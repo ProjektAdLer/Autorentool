@@ -157,11 +157,21 @@ public class CachingMapper : ICachingMapper
                 .Where(kvP =>
                     learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).ContainedLearningElements
                         .All(l => kvP.Value.Id != l.Id));
+            var newStoryElementsInSpaceEntity = learningSpaceEntity.LearningSpaceLayout.StoryElements
+                .Where(kvP =>
+                    learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout
+                        .StoryElements.All(l => kvP.Value.Id != l.Value.Id));
             //for all elements in entity that are not in view model, check cache and insert to view model
             foreach (var e in newLearningElementsInSpaceEntity.Where(e => _cache.ContainsKey(e.Value.Id)))
             {
                 learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout
                     .PutElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
+            }
+
+            foreach (var e in newStoryElementsInSpaceEntity.Where(e => _cache.ContainsKey(e.Value.Id)))
+            {
+                learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout
+                    .PutStoryElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
             }
         }
 

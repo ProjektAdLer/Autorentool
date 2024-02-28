@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using BusinessLogic.Validation;
 using Presentation.Components;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
@@ -189,4 +190,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// Initiates the editing of the selected learning space associated with the current learning world.
     /// </summary>
     void EditSelectedLearningSpace();
+
+    void CreateUnplacedLearningElementFromFormModel(LearningElementFormModel model);
+    void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent, ILearningElementViewModel elementToEdit, LearningElementFormModel model);
 }
