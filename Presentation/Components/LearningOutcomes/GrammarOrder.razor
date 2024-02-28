@@ -1,0 +1,23 @@
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+@switch (Culture.Name)
+{
+    case "de-DE":
+        @WhatContent
+        @VerbContent
+        break;
+    case "en-DE":
+        @VerbContent
+        @WhatContent
+        break;
+}
+
+@code {
+
+    [Parameter, AllowNull, EditorRequired] public RenderFragment WhatContent { get; set; }
+
+    [Parameter, AllowNull, EditorRequired] public RenderFragment VerbContent { get; set; }
+
+    [Parameter, AllowNull, EditorRequired] public CultureInfo Culture { get; set; }
+
+}

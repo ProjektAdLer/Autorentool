@@ -63,13 +63,13 @@
         <value>3D representation of learning element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning element.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning element.</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Points</value>
@@ -90,7 +90,7 @@
         <value>Choose a external learning material (file or link)*</value>
     </data>
     <data name="CreateElementForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="CreateElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
         <value>3D representation icon</value>
@@ -100,6 +100,40 @@
     </data>
     <data name="CreateElementForm.Fields.Collapse.3DRepresentation.Title" xml:space="preserve">
         <value>Representation in the 3D learning environment</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
+        <value>Is H5P element primitive?</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
+        <value>H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.
+
+
+
+As so many different types of content can be created with H5P files, it is necessary to classify them in the authoring tool: 
+
+
+&lt;ul class="list-disc list-inside"&gt;&lt;li&gt;
+If it is an element that can be completed (correctly or incorrectly), such as a quiz or video, you should not check this box.&lt;/li&gt;
+
+
+&lt;li&gt;
+However, if it is an item that cannot be completed, such as a collection of terms, you should check this box so that students can still complete this item by simply opening it and receive points for editing.
+&lt;/li&gt;&lt;/ul&gt;
+
+
+If you are not sure which category an H5P file belongs in, then it is better to check this box. This will allow students to edit the content and still definitely keep playing your world.
+
+
+
+For more information on H5P files, please read the user documentation of the authoring tool.
+
+</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text" xml:space="preserve">
+        <value>Click for more information</value>
     </data>
     <data name="CreateStoryElementForm.Header.Text" xml:space="preserve">
         <value>Create story element</value>

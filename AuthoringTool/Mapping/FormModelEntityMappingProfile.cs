@@ -34,7 +34,8 @@ public class FormModelEntityMappingProfile : Profile
     {
         CreateMap<LinkContentFormModel, LinkContent>();
         CreateMap<FileContentFormModel, FileContent>();
-        CreateMap<AdaptivityContentFormModel, AdaptivityContent>();
+        CreateMap<AdaptivityContentFormModel, AdaptivityContent>()
+            .ReverseMap();
         CreateMap<StoryContentFormModel, StoryContent>();
         
         CreateMap<ILearningContentFormModel, ILearningContent>()

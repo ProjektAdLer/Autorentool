@@ -71,6 +71,8 @@ public class SaveLearningWorld : ISaveLearningWorld
             {
                 ResetElementUnsavedChangesState(element);
             }
+
+            space.LearningOutcomeCollection.UnsavedChanges = false;
         }
 
         foreach (var condition in LearningWorld.PathWayConditions)

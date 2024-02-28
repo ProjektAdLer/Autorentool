@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using BusinessLogic.Entities.LearningOutcome;
+using Shared;
 
 namespace BusinessLogic.Entities;
 
@@ -7,7 +8,7 @@ public interface ILearningSpace : IObjectInPathWay
     //Guid Id { get; }
     string Name { get; set; }
     string Description { get; set; }
-    string Goals { get; set; }
+    LearningOutcomeCollection LearningOutcomeCollection { get; }
     int RequiredPoints { get; set; }
 
     Theme Theme { get; set; }

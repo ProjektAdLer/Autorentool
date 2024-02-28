@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
-using NSubstitute.ClearExtensions;
 using NUnit.Framework;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
@@ -19,6 +16,7 @@ using Presentation.Components.Forms.Element;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -121,6 +119,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         //await systemUnderTest.InvokeAsync(() => systemUnderTest);
 
         ConfigureValidatorAllMembers();
@@ -154,6 +153,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
 
         ChangeFields(systemUnderTest, popover);
 
@@ -166,6 +166,39 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(() => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
         Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+    }
+
+    [Test]
+    public void H5PContentSelected_ShowsPrimitiveCheckbox()
+    {
+        var content = new []
+        {
+            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        WorldPresenter.GetAllContent().Returns(content);
+        var contentFormModels = new[]
+        {
+            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
+        };
+        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
+        var systemUnderTest = GetFormWithPopoverProvider();
+        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        
+        
+        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
+        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
+        
+        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
+        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
+        
+        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
+        
+        checkbox.Find("input").Change(true);
+        
+        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
+        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
@@ -241,7 +274,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Context.Services.AddSingleton(dialogServiceMock);
 
         var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
-
         var button = systemUnderTest.FindComponentWithMarkup<MudButton>("add-tasks");
         button.Find("button").Click();
 

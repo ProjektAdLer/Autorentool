@@ -113,12 +113,12 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
 
         ConfigureValidatorAllMembersTestOr123OrCampus();
 
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
-        Assert.That(FormModel.Goals, Is.EqualTo(""));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(0));
         Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -130,7 +130,6 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
@@ -138,7 +137,6 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)),
             TimeSpan.FromSeconds(2));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
@@ -160,6 +158,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
@@ -167,7 +166,6 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudStringInputs[2].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(Theme.Campus);
@@ -176,7 +174,6 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         {
             Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(300, 10));
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(300, 10));
-            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(300, 10));
             Assert.That(() => FormModel.RequiredPoints, Is.EqualTo(123).After(300, 10));
             Assert.That(() => FormModel.Theme, Is.EqualTo(Theme.Campus).After(300, 10));
         });
@@ -185,7 +182,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, Expected, 123, Theme.Campus);
+        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, 123, Theme.Campus);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
 
@@ -202,7 +199,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
                     Theme t => t == Theme.Campus,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                return valid ? Enumerable.Empty<string>() : new[] {"Must be test or 123"};
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
             }
         );
     }
