@@ -27,7 +27,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.Campus);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.CampusAschaffenburg);
 
         switch (type)
         {
@@ -37,7 +37,7 @@ public class ElementModelHandler : IElementModelHandler
                 return AdaptivityModels;
             default:
             {
-                var elementModels = (ElementModel[]) Enum.GetValues(typeof(ElementModel));
+                var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
                 return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
             }
         }
@@ -98,10 +98,12 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
-            ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
+            ElementModel.a_npc_sheriffjustice =>
+                "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
-            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel, "Icon not found for ElementModel")
+            _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
+                "Icon not found for ElementModel")
         };
     }
 
@@ -208,7 +210,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.a_npc_sheriffjustice;
                 yield return ElementModel.a_npc_alerobot;
                 break;
-            case Theme.Campus:
+            case Theme.CampusAschaffenburg:
+            case Theme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;

@@ -33,7 +33,7 @@ public class ChangeLearningSpaceLayoutUt
             { 6, element7 },
             { 7, element8 },
         }, new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L);
-        var space = new LearningSpace("", "", 0, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(), layout)
+        var space = new LearningSpace("", "", 0, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(), layout)
         {
             UnsavedChanges = false
         };
@@ -96,7 +96,7 @@ public class ChangeLearningSpaceLayoutUt
             { 6, element7 },
             { 7, element8 },
         }, new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L);
-        var space = new LearningSpace("", "", 0, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(), layout)
+        var space = new LearningSpace("", "", 0, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(), layout)
         {
             UnsavedChanges = false
         };

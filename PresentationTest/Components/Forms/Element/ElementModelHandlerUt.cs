@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;
-using Presentation.Components.Forms.Models;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningContent.FileContent;
 using Shared;
 
 namespace PresentationTest.Components.Forms.Element;
@@ -19,7 +15,8 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeFalse_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.Campus);
+        var elementModels =
+            systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", Theme.CampusAschaffenburg);
         var enumerable = elementModels.ToList();
         Assert.That(enumerable, Is.Not.Null);
         Assert.That(enumerable, Is.Not.Empty);
@@ -30,7 +27,8 @@ public class ElementModelHandlerUt
     public void GetElementModels_TypeTextThemeCampus_AdaptivityModeTrue_ReturnsTextElementModels()
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", Theme.Campus);
+        var elementModels =
+            systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", Theme.CampusAschaffenburg);
         var expectedModels = new[]
         {
             ElementModel.a_npc_alerobot
@@ -99,16 +97,13 @@ public class ElementModelHandlerUt
     }
 
     [Test]
-    public void GetElementModelsForTheme_ContainsCaseForEachTheme()
+    public void GetElementModelsForTheme_ContainsCaseForEachTheme([Values] Theme theme)
     {
         var systemUnderTest = new ElementModelHandler();
-        var themes = (Theme[])Enum.GetValues(typeof(Theme));
-        foreach (var theme in themes)
-        {
-            Assert.DoesNotThrow(() =>
-                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                ElementModelHandler.GetElementModelsForTheme(theme).ToList());
-        }
+
+        Assert.DoesNotThrow(() =>
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            ElementModelHandler.GetElementModelsForTheme(theme).ToList());
     }
 
     [Test]

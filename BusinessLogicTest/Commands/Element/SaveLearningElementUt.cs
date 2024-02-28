@@ -16,7 +16,7 @@ public class SaveLearningElementUt
     public void Execute_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var parent = new LearningSpace("a", "d", 4, Theme.Campus);
+        var parent = new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg);
         var element = EntityProvider.GetLearningElement(parent: parent);
         const string filepath = "c:\\temp\\test";
 

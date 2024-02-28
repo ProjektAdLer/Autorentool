@@ -37,7 +37,7 @@ public static class ViewModelProvider
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.Campus, 4, GetLearningOutcomeCollection(),
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.CampusAschaffenburg, 4, GetLearningOutcomeCollection(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }

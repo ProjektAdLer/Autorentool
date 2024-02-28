@@ -17,7 +17,7 @@ public class PathWayConditionViewModelUt
         var positionY = 30;
         var condition = ConditionEnum.And;
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
-        var outBoundSpace = new LearningSpaceViewModel("a", "b", Theme.Campus, 3);
+        var outBoundSpace = new LearningSpaceViewModel("a", "b", Theme.CampusAschaffenburg, 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
         var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
 
