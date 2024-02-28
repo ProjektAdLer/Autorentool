@@ -42,6 +42,6 @@ public interface ILayoutCommandFactory
     IRemoveLearningElementFromLayout GetRemoveLearningElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction);
 
-    IRemovedStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+    IRemoveStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction);
 }

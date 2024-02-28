@@ -26,7 +26,7 @@ public class ElementCommandFactory : IElementCommandFactory
     public ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
         string name,
         ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<object> action) =>
+        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<LearningSpace> action) =>
         new CreateStoryElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description, goals,
             difficulty, elementModel, workload, points, positionX, positionY, action, LoggerFactory.CreateLogger<CreateStoryElementInSlot>());
 

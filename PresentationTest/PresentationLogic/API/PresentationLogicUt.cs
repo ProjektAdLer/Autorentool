@@ -622,6 +622,46 @@ public class PresentationLogicUt
     }
 
     [Test]
+    public void CreateStoryElementInSlot_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
+        var mockCommand = Substitute.For<ICreateStoryElementInSlot>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningContentViewModel = ViewModelProvider.GetStoryContent();
+        var learningElementVm =
+            ViewModelProvider.GetLearningElement(parent: learningSpaceVm, content: learningContentViewModel);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningContent = EntityProvider.GetStoryContent();
+        var learningElementEntity =
+            EntityProvider.GetLearningElement(parent: learningSpaceEntity, content: learningContent);
+        Substitute.For<ILogger<ElementCommandFactory>>();
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+        mockMapper.Map<ILearningContent>(learningContentViewModel).Returns(learningContent);
+        mockElementCommandFactory
+            .GetCreateStoryInSlotCommand(learningSpaceEntity, 0, "name", learningContent, "description", "goals",
+                LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 0, 0,
+                Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
+            .Returns(mockCommand);
+        mockBusinessLogic
+            .When(bl => bl.ExecuteCommand(mockCommand))
+            .Do(_ => learningSpaceVm.LearningSpaceLayout.StoryElements.Add(0, learningElementVm));
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            elementCommandFactory: mockElementCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+
+        systemUnderTest.CreateStoryElementInSlot(learningSpaceVm, 0, "name", learningContentViewModel, "description",
+            "goals", LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 0, 0);
+        
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
     public void EditLearningElement_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -657,7 +697,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void DragLearningElementFromUnplaced_CallsBusinessLogic()
+    public void PlaceLearningElementFromUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
@@ -693,6 +733,56 @@ public class PresentationLogicUt
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void PlaceStoryElementFromUnplaced_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
+        var mockCommand = Substitute.For<IPlaceStoryElementInLayoutFromUnplaced>();
+        var learningWorldVm = ViewModelProvider.GetLearningWorld();
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetStoryContent());
+        var learningWorldEntity = EntityProvider.GetLearningWorld();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementEntity = EntityProvider.GetLearningElement(content: EntityProvider.GetStoryContent());
+        Substitute.For<ILogger<LayoutCommandFactory>>();
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm)
+            .Returns(learningWorldEntity);
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm)
+            .Returns(learningSpaceEntity);
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
+            .Returns(learningElementEntity);
+        mockLayoutCommandFactory
+            .GetPlaceStoryElementFromUnplacedCommand(learningWorldEntity, learningSpaceEntity, learningElementEntity, 1,
+                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+
+        systemUnderTest.DragStoryElementFromUnplaced(learningWorldVm, learningSpaceVm, learningElementVm, 1);
+
+        mockBusinessLogic
+            .Received()
+            .ExecuteCommand(mockCommand);
+
+        mockBusinessLogic.ClearReceivedCalls();
+        mockSelectedViewModelsProvider.ActiveStorySlotInSpace.Returns(1);
+
+        systemUnderTest.DragStoryElementFromUnplaced(learningWorldVm, learningSpaceVm, learningElementVm, 1);
+
+        mockBusinessLogic
+            .Received()
+            .ExecuteCommand(mockCommand);
+
+        mockSelectedViewModelsProvider.Received().SetActiveStorySlotInSpace(-1, mockCommand);
     }
 
     [Test]
@@ -735,7 +825,46 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void SwitchLearningElementInSlot_CallsBusinessLogic()
+    public void DragStoryElementToUnplaced_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
+        var mockCommand = Substitute.For<IRemoveStoryElementFromLayout>();
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetStoryContent());
+        var learningWorldVm = ViewModelProvider.GetLearningWorld();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementEntity = EntityProvider.GetLearningElement(content: EntityProvider.GetStoryContent());
+        var learningWorldEntity = EntityProvider.GetLearningWorld();
+        Substitute.For<ILogger<LayoutCommandFactory>>();
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm)
+            .Returns(learningWorldEntity);
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm)
+            .Returns(learningSpaceEntity);
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
+            .Returns(learningElementEntity);
+        mockLayoutCommandFactory
+            .GetRemoveStoryElementCommand(learningWorldEntity, learningSpaceEntity,
+                learningElementEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+            .Returns(mockCommand);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+        
+        systemUnderTest.DragStoryElementToUnplaced(learningWorldVm, learningSpaceVm, learningElementVm);
+        
+        mockBusinessLogic
+            .Received()
+            .ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void SwitchLearningElementSlot_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
@@ -766,6 +895,51 @@ public class PresentationLogicUt
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void SwitchStoryElementSlot_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
+        var mockCommand = Substitute.For<IPlaceStoryElementInLayoutFromLayout>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementEntity = EntityProvider.GetLearningElement();
+        Substitute.For<ILogger<LayoutCommandFactory>>();
+
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm)
+            .Returns(learningSpaceEntity);
+        mockMapper
+            .Map<BusinessLogic.Entities.LearningElement>(learningElementVm)
+            .Returns(learningElementEntity);
+        mockLayoutCommandFactory
+            .GetPlaceStoryElementFromLayoutCommand(learningSpaceEntity, learningElementEntity, 4,
+                Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
+
+        systemUnderTest.SwitchStoryElementSlot(learningSpaceVm, learningElementVm, 4);
+
+        mockBusinessLogic
+            .Received()
+            .ExecuteCommand(mockCommand);
+
+        mockBusinessLogic.ClearReceivedCalls();
+        mockSelectedViewModelsProvider.ActiveStorySlotInSpace.Returns(4);
+
+        systemUnderTest.SwitchStoryElementSlot(learningSpaceVm, learningElementVm, 4);
+
+        mockBusinessLogic
+            .Received()
+            .ExecuteCommand(mockCommand);
+        mockSelectedViewModelsProvider.Received().SetActiveStorySlotInSpace(-1, mockCommand);
     }
 
     [Test]
@@ -818,6 +992,34 @@ public class PresentationLogicUt
 
         systemUnderTest.DeleteLearningElementInSpace(learningSpaceVm, learningElementVm);
 
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    public void DeleteStoryElementInSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
+        var mockCommand = Substitute.For<IDeleteStoryElementInSpace>();
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetStoryContent());
+        var mockMapper = Substitute.For<IMapper>();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementEntity = EntityProvider.GetLearningElement(content: EntityProvider.GetStoryContent());
+        Substitute.For<ILogger<ElementCommandFactory>>();
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+        mockElementCommandFactory.GetDeleteStoryInSpaceCommand(learningElementEntity, learningSpaceEntity,
+                Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
+            .Returns(mockCommand);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            elementCommandFactory: mockElementCommandFactory);
+        
+        systemUnderTest.DeleteStoryElementInSpace(learningSpaceVm, learningElementVm);
+        
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 

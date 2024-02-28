@@ -46,7 +46,7 @@ public class LayoutCommandFactory : ILayoutCommandFactory
         new RemoveLearningElementFromLayout(learningWorld, learningSpace, learningElement, mappingAction,
             LoggerFactory.CreateLogger<RemoveLearningElementFromLayout>());
 
-    public IRemovedStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
+    public IRemoveStoryElementFromLayout GetRemoveStoryElementCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         ILearningElement learningElement, Action<LearningWorld> mappingAction)
     {
         return new RemoveStoryElementFromLayout(learningWorld, learningSpace, learningElement, mappingAction,

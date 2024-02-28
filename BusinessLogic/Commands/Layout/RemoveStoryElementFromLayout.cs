@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessLogic.Commands.Layout;
 
-public class RemoveStoryElementFromLayout : IRemovedStoryElementFromLayout
+public class RemoveStoryElementFromLayout : IRemoveStoryElementFromLayout
 {
     private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
