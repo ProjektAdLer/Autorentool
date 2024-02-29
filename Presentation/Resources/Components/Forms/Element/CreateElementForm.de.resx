@@ -163,4 +163,7 @@ Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
         <value>Slide </value>
     </data>
+    <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Storyelement erstellt</value>
+    </data>
 </root>
