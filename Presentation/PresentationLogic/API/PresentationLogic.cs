@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
@@ -9,6 +10,7 @@ using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.LearningOutcomes;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
@@ -21,7 +23,10 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
+using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -34,6 +39,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
@@ -41,6 +47,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.LearningOutcomes;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -69,6 +76,7 @@ public class PresentationLogic : IPresentationLogic
         IPathwayCommandFactory pathwayCommandFactory,
         ISpaceCommandFactory spaceCommandFactory,
         ITopicCommandFactory topicCommandFactory,
+        ILearningOutcomeCommandFactory learningOutcomeCommandFactory,
         IWorldCommandFactory worldCommandFactory,
         IBatchCommandFactory batchCommandFactory,
         IAdaptivityRuleCommandFactory adaptivityRuleCommandFactory,
@@ -92,6 +100,7 @@ public class PresentationLogic : IPresentationLogic
         PathwayCommandFactory = pathwayCommandFactory;
         SpaceCommandFactory = spaceCommandFactory;
         TopicCommandFactory = topicCommandFactory;
+        LearningOutcomeCommandFactory = learningOutcomeCommandFactory;
         WorldCommandFactory = worldCommandFactory;
         BatchCommandFactory = batchCommandFactory;
         AdaptivityRuleCommandFactory = adaptivityRuleCommandFactory;
@@ -118,6 +127,7 @@ public class PresentationLogic : IPresentationLogic
     public IPathwayCommandFactory PathwayCommandFactory { get; }
     public ISpaceCommandFactory SpaceCommandFactory { get; }
     public ITopicCommandFactory TopicCommandFactory { get; }
+    public ILearningOutcomeCommandFactory LearningOutcomeCommandFactory { get; }
     public IWorldCommandFactory WorldCommandFactory { get; }
     public IBatchCommandFactory BatchCommandFactory { get; }
     public IAdaptivityRuleCommandFactory AdaptivityRuleCommandFactory { get; }
@@ -256,13 +266,17 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
-        string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints, Theme theme,
+        double positionX,
+        double positionY,
         ITopicViewModel? topicVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
+        var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
-        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, goals, requiredPoints, theme,
+        var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, learningOutcomeCollection,
+            requiredPoints, theme,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -273,12 +287,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm)
+        string description, int requiredPoints, Theme theme,
+        ITopicViewModel? topicVm)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
+        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, requiredPoints, theme,
             topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         if (!command.AnyChanges())
@@ -432,7 +447,7 @@ public class PresentationLogic : IPresentationLogic
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
                 .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
-                    t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
+                    t.spaceEntity.Description, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
                     space => CMapper.Map(space, t.spaceVm)))
                 .Cast<IUndoCommand>()
@@ -475,6 +490,92 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.AddStructuredLearningOutcome"/>
+    public void AddStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+
+        var command = LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            taxonomyLevel, what, verbOfVisibility, whereby, whatFor, language,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.AddManualLearningOutcome"/>
+    public void AddManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        string manualLearningOutcomeText)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+
+        var command = LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            manualLearningOutcomeText,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditStructuredLearningOutcome"/>
+    public void EditStructuredLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        StructuredLearningOutcomeViewModel learningOutcome,
+        TaxonomyLevel taxonomyLevel, string what, string verbOfVisibility, string whereby,
+        string whatFor, CultureInfo language)
+    {
+        var index = learningOutcomes.LearningOutcomes.IndexOf(learningOutcome);
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<StructuredLearningOutcome>(learningOutcome);
+
+        var listOfCommands = new List<IUndoCommand>
+        {
+            LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                learningOutcomeEntity,
+                collection => Mapper.Map(collection, learningOutcomes)),
+            LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity, taxonomyLevel,
+                what, verbOfVisibility, whereby, whatFor, language,
+                collection => Mapper.Map(collection, learningOutcomes), index)
+        };
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditManualLearningOutcome"/>
+    public void EditManualLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ManualLearningOutcomeViewModel learningOutcome, string manualLearningOutcomeText)
+    {
+        var index = learningOutcomes.LearningOutcomes.IndexOf(learningOutcome);
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<ManualLearningOutcome>(learningOutcome);
+
+        var listOfCommands = new List<IUndoCommand>
+        {
+            LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                learningOutcomeEntity,
+                collection => Mapper.Map(collection, learningOutcomes)),
+            LearningOutcomeCommandFactory.GetAddLearningOutcomeCommand(learningOutcomeCollectionEntity,
+                manualLearningOutcomeText,
+                collection => Mapper.Map(collection, learningOutcomes), index)
+        };
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningOutcome"/>
+    public void DeleteLearningOutcome(LearningOutcomeCollectionViewModel learningOutcomes,
+        ILearningOutcomeViewModel learningOutcome)
+    {
+        var learningOutcomeCollectionEntity = Mapper.Map<LearningOutcomeCollection>(learningOutcomes);
+        var learningOutcomeEntity = Mapper.Map<ILearningOutcome>(learningOutcome);
+
+        var command = LearningOutcomeCommandFactory.GetDeleteLearningOutcomeCommand(learningOutcomeCollectionEntity,
+            learningOutcomeEntity,
+            collection => Mapper.Map(collection, learningOutcomes));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
@@ -540,6 +641,25 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningElement(newElement, command);
     }
 
+    public void CreateStoryElementInSlot(ILearningSpaceViewModel learningSpaceVm, int slotIndex, string name,
+        ILearningContentViewModel learningContent, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        double positionX = 0, double positionY = 0)
+    {
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var contentEntity = Mapper.Map<ILearningContent>(learningContent);
+
+        var command = ElementCommandFactory.GetCreateStoryInSlotCommand(parentSpaceEntity, slotIndex, name,
+            contentEntity,
+            description, goals, difficulty, elementModel, workload, points, positionX, positionY,
+            parent => CMapper.Map(parent, learningSpaceVm));
+
+        BusinessLogic.ExecuteCommand(command);
+
+        var newElement = learningSpaceVm.LearningSpaceLayout.StoryElements[slotIndex];
+        SelectedViewModelsProvider.SetLearningElement(newElement, command);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
     public void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm, ILearningElementViewModel learningElementVm,
         string name, string description, string goals, LearningElementDifficultyEnum difficulty,
@@ -571,14 +691,35 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = LayoutCommandFactory.GetPlaceFromUnplacedCommand(worldEntity, spaceEntity, elementEntity,
+        var command = LayoutCommandFactory.GetPlaceLearningElementFromUnplacedCommand(worldEntity, spaceEntity,
+            elementEntity,
             newSlotIndex,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
-        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveElementSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
+            SelectedViewModelsProvider.SetActiveElementSlotInSpace(-1, command);
+        }
+    }
+
+    public void DragStoryElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = LayoutCommandFactory.GetPlaceStoryElementFromUnplacedCommand(worldEntity, spaceEntity,
+            elementEntity,
+            newSlotIndex,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+
+        if (SelectedViewModelsProvider.ActiveStorySlotInSpace == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveStorySlotInSpace(-1, command);
         }
     }
 
@@ -590,7 +731,20 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = LayoutCommandFactory.GetRemoveCommand(worldEntity, spaceEntity, elementEntity,
+        var command = LayoutCommandFactory.GetRemoveLearningElementCommand(worldEntity, spaceEntity, elementEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void DragStoryElementToUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = LayoutCommandFactory.GetRemoveStoryElementCommand(worldEntity, spaceEntity, elementEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -602,13 +756,32 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = LayoutCommandFactory.GetPlaceFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
+        var command = LayoutCommandFactory.GetPlaceLearningElementFromLayoutCommand(spaceEntity, elementEntity,
+            newSlotIndex,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
 
-        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveElementSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
+            SelectedViewModelsProvider.SetActiveElementSlotInSpace(-1, command);
+        }
+    }
+
+    public void SwitchStoryElementSlot(ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm,
+        int newSlotIndex)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = LayoutCommandFactory.GetPlaceStoryElementFromLayoutCommand(spaceEntity, elementEntity,
+            newSlotIndex,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+
+        if (SelectedViewModelsProvider.ActiveStorySlotInSpace == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveStorySlotInSpace(-1, command);
         }
     }
 
@@ -635,6 +808,18 @@ public class PresentationLogic : IPresentationLogic
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
 
+        SelectedViewModelsProvider.SetLearningElement(null, command);
+    }
+
+    public void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        
+        var command = ElementCommandFactory.GetDeleteStoryInSpaceCommand(elementEntity, parentSpaceEntity,
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+        
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
 
@@ -702,8 +887,8 @@ public class PresentationLogic : IPresentationLogic
         var error =
             await (content switch
             {
-                FileContentViewModel fileContentVm => ShellWrapper.OpenPathAsync(fileContentVm.Filepath),
-                LinkContentViewModel linkContentVm => ShellWrapper.OpenExternalAsync(linkContentVm.Link),
+                FileContentViewModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
+                LinkContentViewModel linkContentVm => ShowLinkContent(linkContentVm.Link),
                 _ => throw new ArgumentOutOfRangeException(nameof(content),
                     "LearningContent is not of type FileContentViewModel or LinkContentViewModel")
             });
@@ -714,6 +899,28 @@ public class PresentationLogic : IPresentationLogic
             throw new IOException("Could not open file in OS viewer" + error);
         }
     }
+
+    public async Task ShowLearningContentAsync(ILearningContentFormModel content)
+    {
+        ElectronCheck();
+        var error =
+            await (content switch
+            {
+                FileContentFormModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
+                LinkContentFormModel linkContentVm => ShowLinkContent(linkContentVm.Link),
+                _ => throw new ArgumentOutOfRangeException(nameof(content),
+                    "LearningContent is not of type FileContentFormModel or LinkContentFormModel")
+            });
+
+        if (error != "")
+        {
+            Logger.LogError("Could not open file in OS viewer: {Error}", error);
+            throw new IOException("Could not open file in OS viewer" + error);
+        }
+    }
+
+    private Task<string> ShowFileContent(string filePath) => ShellWrapper.OpenPathAsync(filePath);
+    private Task<string> ShowLinkContent(string link) => ShellWrapper.OpenExternalAsync(link);
 
     /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
     public IEnumerable<ILearningContentViewModel> GetAllContent() =>
@@ -773,7 +980,7 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
-    public void CreateAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm, string name)
+    public void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
         var command = TaskCommandFactory.GetCreateCommand(contentEntity, name,
@@ -792,7 +999,7 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
-    public void DeleteAdaptivityTask(IAdaptivityContentViewModel adaptivityContentVm,
+    public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
@@ -1143,6 +1350,7 @@ public class PresentationLogic : IPresentationLogic
             FileSystem.File.Delete(filepath);
         }
     }
+
 
     /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
     public async Task DeleteLmsWorld(LmsWorldViewModel worldVm)

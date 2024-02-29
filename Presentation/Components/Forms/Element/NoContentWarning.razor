@@ -4,7 +4,7 @@
 @using MudBlazor.Utilities
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.LearningContent
-@inherits MudBaseInput<ILearningContentViewModel>
+@inherits MudBaseInput<Presentation.Components.Forms.Models.ILearningContentFormModel>
 <div class="flex flex-col justify-center items-center min-h-12 w-72">
     <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesView">
         <MudText Class="@TextCssClass.Build()">@Localizer["NoContentWarning.Text"]</MudText>

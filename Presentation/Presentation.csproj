@@ -213,5 +213,37 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OverwriteLmsWorldDialog.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\CreateEditManualLearningOutcome.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditManualLearningOutcome.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\CreateEditManualLearningOutcome.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditManualLearningOutcome.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\CreateEditStructuredLearningOutcome.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditStructuredLearningOutcome.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\CreateEditStructuredLearningOutcome.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditStructuredLearningOutcome.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesSpaceOverview.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesOverview.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesSpaceOverview.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesOverview.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomesWorldOverview.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesWorldOverview.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomesWorldOverview.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

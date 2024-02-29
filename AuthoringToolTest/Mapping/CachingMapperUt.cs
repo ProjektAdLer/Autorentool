@@ -119,7 +119,6 @@ public class CachingMapperUt
             Assert.That(worldViewModel.LearningSpaces.First().Id, Is.EqualTo(spaceEntity.Id));
             Assert.That(worldViewModel.LearningSpaces.First().Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(worldViewModel.LearningSpaces.First().Description, Is.EqualTo(spaceEntity.Description));
-            Assert.That(worldViewModel.LearningSpaces.First().Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(worldViewModel.LearningSpaces.First().RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
             Assert.That(worldViewModel.LearningSpaces.First().Theme, Is.EqualTo(spaceEntity.Theme));
         });
@@ -299,7 +298,6 @@ public class CachingMapperUt
             Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5].Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
-            Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
             Assert.That(spaceViewModel.Theme, Is.EqualTo(spaceEntity.Theme));
         });
@@ -317,7 +315,6 @@ public class CachingMapperUt
             Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7].Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
-            Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
         });
     }

@@ -1,4 +1,4 @@
-﻿using Presentation.PresentationLogic.LearningContent;
+﻿using Presentation.Components.Forms.Models;
 using Shared;
 
 namespace Presentation.Components.Forms.Element;
@@ -7,6 +7,8 @@ public interface IElementModelHandler
 {
     string GetIconForElementModel(ElementModel elementModel);
 
-    IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null,
-        Theme? theme = null, bool adaptivityElementMode = false);
+    IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
+        Theme? theme = null);
+
+    ElementModel GetElementModelRandom();
 }

@@ -85,6 +85,48 @@ public class ElementCommandFactoryUt
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }
+    
+    [Test]
+    public void GetCreateStoryInSlotCommand_WithLearningSpaceAndParameters_ReturnsCreateStoryElementInSlotCommand()
+    {
+        // Arrange
+        var parentSpace = EntityProvider.GetLearningSpace();
+        var slotIndex = 1;
+        var name = "Element";
+        var learningContent = EntityProvider.GetLinkContent();
+        var description = "Description";
+        var goals = "Goals";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
+        var workload = 10;
+        var points = 100;
+        var positionX = 0.5;
+        var positionY = 0.5;
+        Action<object> mappingAction = _ => { };
+
+        // Act
+        var result = _factory.GetCreateStoryInSlotCommand(parentSpace, slotIndex, name, learningContent, description, goals,
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<CreateStoryElementInSlot>());
+        var resultCasted = result as CreateStoryElementInSlot;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.ParentSpace, Is.EqualTo(parentSpace));
+            Assert.That(resultCasted.SlotIndex, Is.EqualTo(slotIndex));
+            Assert.That(resultCasted.LearningElement.Name, Is.EqualTo(name));
+            Assert.That(resultCasted.LearningElement.LearningContent, Is.EqualTo(learningContent));
+            Assert.That(resultCasted.LearningElement.Description, Is.EqualTo(description));
+            Assert.That(resultCasted.LearningElement.Goals, Is.EqualTo(goals));
+            Assert.That(resultCasted.LearningElement.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(resultCasted.LearningElement.Workload, Is.EqualTo(workload));
+            Assert.That(resultCasted.LearningElement.Points, Is.EqualTo(points));
+            Assert.That(resultCasted.LearningElement.PositionX, Is.EqualTo(positionX));
+            Assert.That(resultCasted.LearningElement.PositionY, Is.EqualTo(positionY));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+        });
+    }
 
     [Test]
     public void GetCreateUnplacedCommand_WithLearningWorldAndParameters_ReturnsCreateUnplacedLearningElementCommand()
@@ -140,6 +182,25 @@ public class ElementCommandFactoryUt
         // Assert
         Assert.That(result, Is.InstanceOf<DeleteLearningElementInSpace>());
         var resultCasted = result as DeleteLearningElementInSpace;
+        Assert.That(resultCasted!.LearningElement, Is.EqualTo(learningElement));
+        Assert.That(resultCasted.ParentSpace, Is.EqualTo(parentSpace));
+        Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+    }
+    
+    [Test]
+    public void GetDeleteStoryInSpaceCommand_WithLearningElementAndLearningSpace_ReturnsDeleteStoryElementInSpaceCommand()
+    {
+        // Arrange
+        var learningElement = EntityProvider.GetLearningElement();
+        var parentSpace = EntityProvider.GetLearningSpace();
+        Action<LearningSpace> mappingAction = _ => { };
+
+        // Act
+        var result = _factory.GetDeleteStoryInSpaceCommand(learningElement, parentSpace, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<DeleteStoryElementInSpace>());
+        var resultCasted = result as DeleteStoryElementInSpace;
         Assert.That(resultCasted!.LearningElement, Is.EqualTo(learningElement));
         Assert.That(resultCasted.ParentSpace, Is.EqualTo(parentSpace));
         Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));

@@ -147,4 +147,7 @@
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>
     </data>
+    <data name="LearningOutcomes.Overview" xml:space="preserve">
+        <value>Lernziele dieser Lernwelt</value>
+    </data>
 </root>

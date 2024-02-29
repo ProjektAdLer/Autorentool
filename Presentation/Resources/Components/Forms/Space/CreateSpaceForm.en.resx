@@ -21,10 +21,10 @@
         <value>New</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning space.</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
         <value>Theme</value>
@@ -39,7 +39,7 @@
         <value>General</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning space.</value>
     </data>
     <data name="CreateSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
@@ -54,6 +54,12 @@
         <value>Theme of learning space</value>
     </data>
     <data name="CreateSpaceForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
+    </data>
+    <data name="CreateSpaceForm.Goals.Button" xml:space="preserve">
+        <value>Learning outcome formulation</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
     </data>
 </root>

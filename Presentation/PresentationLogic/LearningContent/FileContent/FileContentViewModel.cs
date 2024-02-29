@@ -10,6 +10,7 @@ public class FileContentViewModel : IFileContentViewModel
         Type = type;
         Filepath = filepath;
         UnsavedChanges = true;
+        PrimitiveH5P = false;
     }
     
     /// <summary>
@@ -22,12 +23,14 @@ public class FileContentViewModel : IFileContentViewModel
         Type = "";
         Filepath = "";
         UnsavedChanges = false;
+        PrimitiveH5P = false;
     }
     
     public string Name { get; init; }
     public bool UnsavedChanges { get; set; }
     public string Type { get; init; }
     public string Filepath { get; init; }
+    public bool PrimitiveH5P { get; set; }
 
     protected bool Equals(FileContentViewModel other) => Name == other.Name && Type == other.Type && Filepath == other.Filepath;
 

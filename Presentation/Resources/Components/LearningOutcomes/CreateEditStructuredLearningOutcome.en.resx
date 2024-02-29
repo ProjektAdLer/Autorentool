@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CreateEditStructuredLearningOutcome.Title.Part1" xml:space="preserve">
+        <value>Learning outcome formulation: </value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Title.Part2" xml:space="preserve">
+        <value>Input support</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Info.Text" xml:space="preserve">
+        <value>In the context of competency-based higher education and the associated shift in perspective from "teaching to learning", learning objectives have also come into focus. Learning objectives are also the most precise description of the desired learning outcomes. Learning outcomes describe what students should know and be able to do at the end of a learning section and what attitudes are expected of them. They are recorded in writing and communicated in a situational manner. The what-whereby-what-for-structure and taxonomy of learning objectives (e.g. according to Anderson/Krathwohl) are helpful in this context, to select appropriate verbs for formulating learning outcomes on the basis of different levels of competence.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Button.Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.NotSpecified" xml:space="preserve">
+        <value>Not specified</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel" xml:space="preserve">
+        <value>Taxonomy level</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
+        <value>The formulation of a learning outcome focuses on the description of corresponding abilities, skills or competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable verb of visibility in the further processing steps of the learning outcome formulation.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
+        <value>You are able to...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility" xml:space="preserve">
+        <value>Verb of visibility*</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Info" xml:space="preserve">
+        <value>The learning outcome describes desired behavioral dispositions and which abilities, skills or competencies the students will have developed at the end of the learning process. It therefore describes actions that are formulated with the help of verbs of external visibility. These represent an action on or with an external object. Verbs such as "understand" or "recognize" are therefore not suitable. The verbs of external visibility can be assigned to a taxonomy level.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Placeholder" xml:space="preserve">
+        <value>Formulate or select</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.RequiredError" xml:space="preserve">
+        <value>Specification of the verb is necessary</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.What.RequiredError" xml:space="preserve">
+        <value>Specification of "What" is necessary</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.What.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.What" xml:space="preserve">
+        <value>What? (Topic)*</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.What.Info" xml:space="preserve">
+        <value>The "What" states which learning content (content-related topic) is to be addressed as part of the students' competence acquisition. In the following steps, this is further formulated into a corresponding ability, skill or competence with the help of a taxonomy level and a verb of visibility.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Whereby.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Whereby.Text" xml:space="preserve">
+        <value>by...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Whereby" xml:space="preserve">
+        <value>Whereby?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Whereby.Info" xml:space="preserve">
+        <value>The "with what" describes the theoretical or practical tools students use to carry out their actions. These are, for example, formulas, models, plans, concepts, tools, etc., which are taught during the course and whose application is practiced. The use and linking of these tools forms the basis for competent action. A helpful question when formulating this is: "How do students achieve the ability, skill or competence?".</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.WhatFor.Placeholder" xml:space="preserve">
+        <value>Text field</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.WhatFor.Text" xml:space="preserve">
+        <value>to...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.WhatFor.Info" xml:space="preserve">
+        <value>The "What for" provides an outlook on the purpose for which the learning unit was designed. The focus is not on the exam. Rather, the "What for" illustrates the students' options for action once they have mastered what they have learned. The action or situation of the "what for" often takes place in a more complex environment and under more difficult conditions than in the learning situation. Helpful questions when formulating this are: "For what (concrete and/or long-term) purpose should the competencies be acquired?" and/or "What do students need the acquired skills, abilities or competencies for after the course?".</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.WhatFor" xml:space="preserve">
+        <value>What for?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Text" xml:space="preserve">
+        <value>First, think about the taxonomy level at which you want to formulate your learning outcome.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Preview" xml:space="preserve">
+        <value>Preview of the formulated learning outcome:</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Reset" xml:space="preserve">
+        <value>Reset entries</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Required" xml:space="preserve">
+        <value>* Required</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Remember" xml:space="preserve">
+        <value>Accessing relevant knowledge in long-term memory</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Example" xml:space="preserve">
+        <value>Example of a learning outcome formulation</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Create" xml:space="preserve">
+        <value>Assemble elements into a coherent structure or pattern</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Understand" xml:space="preserve">
+        <value>Assign meaning to information (oral, written or graphic) in the learning unit</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Apply" xml:space="preserve">
+        <value>Apply a course of action or a method in a specific situation</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Analyse" xml:space="preserve">
+        <value>Break down learning content into its elements and determine their connection to an overarching structure or purpose</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Evaluate" xml:space="preserve">
+        <value>Make judgments based on criteria or standards</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Button.Edit" xml:space="preserve">
+        <value>Update</value>
+    </data>
+</root>

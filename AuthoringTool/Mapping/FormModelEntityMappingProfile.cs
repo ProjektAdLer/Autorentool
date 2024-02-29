@@ -1,8 +1,11 @@
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
@@ -30,7 +33,22 @@ public class FormModelEntityMappingProfile : Profile
     private void CreateContentMap()
     {
         CreateMap<LinkContentFormModel, LinkContent>();
-        CreateMap<AdaptivityContentFormModel, AdaptivityContent>();
+        CreateMap<FileContentFormModel, FileContent>();
+        CreateMap<AdaptivityContentFormModel, AdaptivityContent>()
+            .ReverseMap();
+        CreateMap<StoryContentFormModel, StoryContent>();
+        
+        CreateMap<ILearningContentFormModel, ILearningContent>()
+            .IncludeAllDerived();
+        
+        CreateMap<LinkContentFormModel, ILearningContent>()
+            .As<LinkContent>();
+        CreateMap<FileContentFormModel, ILearningContent>()
+            .As<FileContent>();
+        CreateMap<AdaptivityContentFormModel, ILearningContent>()
+            .As<AdaptivityContent>();
+        CreateMap<StoryContentFormModel, ILearningContent>()
+            .As<StoryContent>();
     }
 
     private void CreateElementMap()

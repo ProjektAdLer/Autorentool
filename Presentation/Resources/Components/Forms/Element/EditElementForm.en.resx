@@ -63,13 +63,13 @@
         <value>3D representation of learning element</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
+        <value>Learning outcomes</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Description</value>
+        <value>Formulate a description for your learning element.</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Goals</value>
+        <value>Formulate your learning outcome(s) for this learning element.</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
         <value>External learning material</value>
@@ -96,12 +96,70 @@
         <value>Choose a external learning material (file or link)*</value>
     </data>
     <data name="EditElementForm.Text" xml:space="preserve">
-        <value>* Required information</value>
+        <value>* Required</value>
     </data>
     <data name="EditElement.Fields.Collapsable.3DRepresentation.Alt" xml:space="preserve">
         <value>3D representation icon</value>
     </data>
     <data name="EditElementForm.AdaptivityContent.Dialog.Title" xml:space="preserve">
         <value>Edit tasks of the adaptivity element</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Description.Title" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
+        <value>Is H5P element primitive?</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
+        <value>H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.
+
+
+
+As so many different types of content can be created with H5P files, it is necessary to classify them in the authoring tool: 
+
+
+&lt;ul class="list-disc list-inside"&gt;&lt;li&gt;
+If it is an element that can be completed (correctly or incorrectly), such as a quiz or video, you should not check this box.&lt;/li&gt;
+
+
+&lt;li&gt;
+However, if it is an item that cannot be completed, such as a collection of terms, you should check this box so that students can still complete this item by simply opening it and receive points for editing.
+&lt;/li&gt;&lt;/ul&gt;
+
+
+If you are not sure which category an H5P file belongs in, then it is better to check this box. This will allow students to edit the content and still definitely keep playing your world.
+
+
+
+For more information on H5P files, please read the user documentation of the authoring tool.
+
+</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text" xml:space="preserve">
+        <value>Click for more information</value>
+    </data>
+    <data name="EditStoryElementForm.Header.Text" xml:space="preserve">
+        <value>Edit story element</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Story</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
+        <value>Story of this story element</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
+        <value>Slide</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.DeleteStory" xml:space="preserve">
+        <value>Delete text block</value>
+    </data>
+    <data name="EditStoryElementForm.Fields.Collapsable.Story.AddStory" xml:space="preserve">
+        <value>Add new text block</value>
+    </data>
+    <data name="EditElementForm.Story.Tooltip" xml:space="preserve">
+        <value>The text that you formulate within a text block for your story is displayed to the students on a slide in the subsequent 3D learning environment. &lt;br&gt; &lt;br&gt; If you add another text block with new content to your story, this text block will be displayed in a subsequent slide in the 3D learning environment. &lt;br&gt; &lt;br&gt; For example, if you use three text blocks within a story element, the text contained therein will be displayed to the students in the 3D learning environment in three consecutive slides.</value>
+    </data>
+    <data name="EditStoryElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Story element updated</value>
     </data>
 </root>

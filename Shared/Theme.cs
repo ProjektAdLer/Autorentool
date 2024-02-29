@@ -1,6 +1,12 @@
+using System.Runtime.Serialization;
+
 namespace Shared;
 
+[DataContract]
 public enum Theme
 {
-    Campus, Suburb, Arcade
+    [EnumMember(Value = "Campus")] CampusAschaffenburg,
+    [EnumMember] CampusKempten,
+    [EnumMember] Suburb,
+    [EnumMember] Arcade
 }

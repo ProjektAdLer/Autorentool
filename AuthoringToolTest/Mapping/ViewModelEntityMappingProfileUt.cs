@@ -131,10 +131,10 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
             positionX: PositionX,
             positionY: PositionY);
-        var destination = new LearningSpaceViewModel("", "", "", Theme.Campus);
+        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -143,7 +143,6 @@ public class ViewModelEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Description = NewDescription;
-        destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementViewModel>();
         destination.PositionX = NewPositionX;
@@ -159,11 +158,13 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
+                FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpaceViewModel("", "", "", Theme.Campus);
+        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -173,7 +174,6 @@ public class ViewModelEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Description = NewDescription;
-        destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementViewModel>
         {
@@ -228,7 +228,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
             positionX: PositionX,
             positionY: PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "");
@@ -253,7 +253,7 @@ public class ViewModelEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>
         {
-            new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, NewRequiredPoints,
+            new LearningSpaceViewModel(NewName, NewDescription, Theme.CampusAschaffenburg, NewRequiredPoints,
                 positionX: NewPositionX, positionY: NewPositionY)
         };
 
@@ -376,7 +376,8 @@ public class ViewModelEntityMappingProfileUt
             new LearningElementViewModel("el1", new FileContentViewModel("foo", "bar", Filepath),
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
 
-        var space = new LearningSpaceViewModel("space", Description, Goals, Theme.Campus, RequiredPoints,
+        var space = new LearningSpaceViewModel("space", Description, Theme.CampusAschaffenburg, RequiredPoints,
+                ViewModelProvider.GetLearningOutcomeCollection(),
                 new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L)
                 {
                     LearningElements = new Dictionary<int, ILearningElementViewModel>
@@ -616,8 +617,10 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
+        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
+                FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
         space.LearningSpaceLayout.LearningElements[0] = element;
@@ -626,8 +629,8 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
-        var space = new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus,
-            NewRequiredPoints,
+        var space = new LearningSpaceViewModel(NewName, NewDescription, Theme.CampusAschaffenburg,
+            NewRequiredPoints, ViewModelProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L), positionX: NewPositionX,
             positionY: NewPositionY);
         var element = GetTestableElementViewModelWithParent(space);
@@ -707,7 +710,6 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
-                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
@@ -719,7 +721,6 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
-                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));

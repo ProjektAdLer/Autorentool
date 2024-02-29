@@ -49,7 +49,8 @@ public class CreatePathWayConditionUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, positionX: 200, positionY: 200);
+        var previousSpace =
+            new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, positionX: 200, positionY: 200);
         var previousPathWay = new LearningPathway(previousCondition, previousSpace);
         previousCondition.OutBoundObjects.Add(previousSpace);
         previousSpace.InBoundObjects.Add(previousCondition);
@@ -123,7 +124,8 @@ public class CreatePathWayConditionUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, positionX: 200, positionY: 200);
+        var previousSpace =
+            new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, positionX: 200, positionY: 200);
         previousCondition.OutBoundObjects.Add(previousSpace);
         previousSpace.InBoundObjects.Add(previousCondition);
         world.PathWayConditions.Add(previousCondition);
@@ -148,7 +150,8 @@ public class CreatePathWayConditionUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var previousCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var previousSpace = new LearningSpace("a", "d", "e", 5, Theme.Campus, positionX: 200, positionY: 200);
+        var previousSpace =
+            new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, positionX: 200, positionY: 200);
         var previousPathWay = new LearningPathway(previousCondition, previousSpace);
         world.PathWayConditions.Add(previousCondition);
         world.LearningSpaces.Add(previousSpace);

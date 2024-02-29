@@ -11,6 +11,9 @@ public static class JsonTypes
     public const string TopicType = "Topic";
     public const string LearningSpaceType = "LearningSpace";
 
+    public const string SpaceStoryType = "SimpleSpaceStory";
+    public const string StoryElementType = "SimpleSpaceStoryElement";
+
     public const string LearningElementType = "LearningElement";
     public const string BaseLearningElementType = "BaseLearningElement";
     public const string AdaptivityElementType = "AdaptivityElement";

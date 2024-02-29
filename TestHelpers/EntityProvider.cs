@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using System.Globalization;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
@@ -6,8 +7,11 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningOutcome;
+using BusinessLogic.Entities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
+using Shared.LearningOutcomes;
 
 namespace TestHelpers;
 
@@ -28,20 +32,45 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", "e", 4, Theme.Campus,
+        return new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
 
-    public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
-        IDictionary<int, ILearningElement>? learningElements = null)
+    public static LearningOutcomeCollection GetLearningOutcomeCollection(ILearningOutcome? outcome = null,
+        bool unsavedChanges = false)
     {
-        return new LearningSpaceLayout(learningElements ?? new Dictionary<int, ILearningElement>(), floorPlan);
+        return new LearningOutcomeCollection()
+        {
+            LearningOutcomes = GetLearningOutcomes(outcome),
+            UnsavedChanges = unsavedChanges
+        };
+    }
+
+    public static List<ILearningOutcome> GetLearningOutcomes(ILearningOutcome? outcome = null)
+    {
+        return new List<ILearningOutcome>()
+        {
+            new ManualLearningOutcome("ManualOutcome"),
+            new StructuredLearningOutcome(TaxonomyLevel.Level1, "What", "Whereby", "WhatFor", "VerbOfVisibility",
+                CultureInfo.CurrentCulture),
+            outcome ?? new ManualLearningOutcome("ManualOutcome2")
+        };
+    }
+
+    public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
+        IDictionary<int, ILearningElement>? learningElements = null,
+        IDictionary<int, ILearningElement>? storyElements = null)
+    {
+        learningElements ??= new Dictionary<int, ILearningElement>();
+        storyElements ??= new Dictionary<int, ILearningElement>();
+        return new LearningSpaceLayout(learningElements, storyElements, floorPlan);
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
     {
         return new LearningSpaceLayout(new Dictionary<int, ILearningElement> { { 1, GetLearningElement() } },
+            new Dictionary<int, ILearningElement>(),
             FloorPlanEnum.R_20X20_6L);
     }
 
@@ -77,6 +106,12 @@ public static class EntityProvider
     {
         return new FileContent("a name" + append, "a type" + append, "a filepath" + append)
             { UnsavedChanges = unsavedChanges };
+    }
+
+    public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null, bool unsavedChanges = false)
+    {
+        storyText ??= new List<string> { "a story" };
+        return new StoryContent(name, unsavedChanges, storyText);
     }
 
     public static Topic GetTopic(string append = "")
