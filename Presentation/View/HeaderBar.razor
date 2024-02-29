@@ -92,9 +92,9 @@
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
-        <div class="flex justify-center items-center gap-2 cursor-default">
-            <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld">
-            <p class="font-bold text-base 2xl:text-lg truncate w-56 xl:w-72 2xl:w-full opacity-80 text-adlerdarkblue-800" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
+        <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
+            <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>
+            <p class="font-bold text-base 2xl:text-lg truncate opacity-80 text-adlerdarkblue-800" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
 
