@@ -17,8 +17,9 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(),
-            positionX: newPositionX, positionY: newPositionY)
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+            positionX: newPositionX,
+            positionY: newPositionY)
         {
             UnsavedChanges = false
         };
@@ -90,8 +91,9 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(),
-            positionX: newPositionX, positionY: newPositionY);
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+            positionX: newPositionX,
+            positionY: newPositionY);
         var actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
@@ -113,8 +115,9 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.Campus, EntityProvider.GetLearningOutcomeCollection(),
-            positionX: newPositionX, positionY: newPositionY)
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+            positionX: newPositionX,
+            positionY: newPositionY)
         {
             UnsavedChanges = false
         };

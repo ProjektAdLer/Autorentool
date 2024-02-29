@@ -20,4 +20,49 @@
     <data name="UnplacedElementsDropZone.Title" xml:space="preserve">
         <value>Alle unplatzierten Elemente</value>
     </data>
+    <data name="UnplacedElementsDropZone.Filter.Theme" xml:space="preserve">
+        <value>Thema des Lernraums</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.Type" xml:space="preserve">
+        <value>Typ des Elements</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.Element" xml:space="preserve">
+        <value>Art des Elements</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.Difficulty" xml:space="preserve">
+        <value>Schwierigkeit des Elements</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.Text" xml:space="preserve">
+        <value>Filtern nach:</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.All" xml:space="preserve">
+        <value>Alle</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.LearningElement" xml:space="preserve">
+        <value>Lernelement</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivitätselement</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.Video" xml:space="preserve">
+        <value>Video</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.Text" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.Image" xml:space="preserve">
+        <value>Bild</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.Adaptivity" xml:space="preserve">
+        <value>Adaptivitätselement</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.H5P" xml:space="preserve">
+        <value>H5P</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Type.Story" xml:space="preserve">
+        <value>Storyelement</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
+        <value>Storyelement</value>
+    </data>
 </root>

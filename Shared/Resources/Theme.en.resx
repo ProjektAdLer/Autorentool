@@ -21,7 +21,10 @@
     <data name="Enum.Theme.Arcade" xml:space="preserve">
         <value>Arcade</value>
     </data>
-    <data name="Enum.Theme.Campus" xml:space="preserve">
-        <value>Campus</value>
+    <data name="Enum.Theme.CampusAschaffenburg" xml:space="preserve">
+        <value>Campus Aschaffenburg</value>
+    </data>
+    <data name="Enum.Theme.CampusKempten" xml:space="preserve">
+        <value>Campus Kempten</value>
     </data>
 </root>

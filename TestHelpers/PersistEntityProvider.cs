@@ -26,7 +26,7 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
-            Theme.Campus, GetLearningOutcomeCollection(),
+            Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
             outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);

@@ -108,30 +108,29 @@
         <value>Description</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
-        <value>Is H5P element primitive?</value>
+        <value>Is the H5P element primitive?</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
-        <value>H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.
+        <value>&lt;p class="py-1 text-sm 2xl:text-base"&gt;H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.&lt;/p&gt;
 
-
-
+&lt;p class="py-1 text-sm 2xl:text-base"&gt;
 As so many different types of content can be created with H5P files, it is necessary to classify them in the authoring tool: 
+&lt;/p&gt;
+
+&lt;ul class="py-2 mx-4 list-disc list-outside text-sm 2xl:text-base"&gt;&lt;li class="py-1"&gt;
+If it is a H5P element that can be completed (correctly or incorrectly), such as a quiz or video, you should not check this box.&lt;/li&gt;
 
 
-&lt;ul class="list-disc list-inside"&gt;&lt;li&gt;
-If it is an element that can be completed (correctly or incorrectly), such as a quiz or video, you should not check this box.&lt;/li&gt;
-
-
-&lt;li&gt;
-However, if it is an item that cannot be completed, such as a collection of terms, you should check this box so that students can still complete this item by simply opening it and receive points for editing.
+&lt;li class="py-1"&gt;
+However, if it is a H5P element that cannot be completed, such as a collection of terms, you should check this box so that students can still complete this item by simply opening it and receive points for editing.
 &lt;/li&gt;&lt;/ul&gt;
 
+&lt;p class="py-1 text-sm 2xl:text-base"&gt;
+If you are not sure which category an H5P file belongs in, then it is better to check this box. This will allow students to edit the content and still definitely keep playing your world.&lt;/p&gt;
 
-If you are not sure which category an H5P file belongs in, then it is better to check this box. This will allow students to edit the content and still definitely keep playing your world.
 
-
-
-For more information on H5P files, please read the user documentation of the authoring tool.
+&lt;p class="py-1 text-sm 2xl:text-base"&gt;
+For more information on H5P files, please read the user documentation of the authoring tool.&lt;/p&gt;
 
 </value>
     </data>
@@ -158,5 +157,8 @@ For more information on H5P files, please read the user documentation of the aut
     </data>
     <data name="EditElementForm.Story.Tooltip" xml:space="preserve">
         <value>The text that you formulate within a text block for your story is displayed to the students on a slide in the subsequent 3D learning environment. &lt;br&gt; &lt;br&gt; If you add another text block with new content to your story, this text block will be displayed in a subsequent slide in the 3D learning environment. &lt;br&gt; &lt;br&gt; For example, if you use three text blocks within a story element, the text contained therein will be displayed to the students in the 3D learning environment in three consecutive slides.</value>
+    </data>
+    <data name="EditStoryElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Story element updated</value>
     </data>
 </root>
