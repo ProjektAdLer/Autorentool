@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,6 +20,7 @@ using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Culture;
 using Presentation.Components.Dialogues;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
@@ -131,20 +133,22 @@ public class HeaderBarUt
         var systemUnderTest = GetRenderedComponent();
 
         var element = systemUnderTest.FindAll("div p")[1];
-        element.MarkupMatches(@"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
+        element.MarkupMatches(
+            @"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
     }
 
     [Test]
     public void ExportButton_Clicked_LMSConnected_PositiveDialogResponse_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", Theme.Campus, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
         _dialogService
@@ -183,8 +187,8 @@ public class HeaderBarUt
     public void ExportButton_Clicked_WorldSpaceHasNoElementsAndInsufficientPoints_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space1 = new LearningSpaceViewModel("a", "f", Theme.Campus, 2);
-        var space2 = new LearningSpaceViewModel("ah", "fi", Theme.Campus, 3);
+        var space1 = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 2);
+        var space2 = new LearningSpaceViewModel("ah", "fi", Theme.CampusAschaffenburg, 3);
         var element1 = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space1.LearningSpaceLayout.LearningElements.Add(0, element1);
@@ -327,13 +331,14 @@ public class HeaderBarUt
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", Theme.Campus, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
             .Throws(new OperationCanceledException());
@@ -355,13 +360,14 @@ public class HeaderBarUt
     public void ExportButton_Clicked_ConstructBackupThrowsGeneratorException_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
-        var space = new LearningSpaceViewModel("a", "f", Theme.Campus, 1);
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
         var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
             ElementModel.l_h5p_blackboard_1, points: 1);
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
             .Throws(new GeneratorException());
@@ -436,6 +442,116 @@ public class HeaderBarUt
         _presentationLogic.DidNotReceive().ConstructAndUploadBackupAsync(Arg.Any<ILearningWorldViewModel>(),
             Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
         _snackbar.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<Severity>());
+    }
+
+    [Test]
+    public void ExportButton_Clicked_ExistingWorld_Replace_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
+        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_blackboard_1, points: 1);
+        space.LearningSpaceLayout.LearningElements.Add(0, element);
+        world.LearningSpaces.Add(space);
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.IsLmsConnected().Returns(true);
+        var lmsWorldList = new List<LmsWorldViewModel>
+            { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
+        _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
+        var genericCancellationConfirmationDialogReference = Substitute.For<IDialogReference>();
+        genericCancellationConfirmationDialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(genericCancellationConfirmationDialogReference);
+
+        var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
+        replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
+        _dialogService
+            .ShowAsync<ReplaceCopyLmsWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(replaceCopyLmsWorldDialogReference);
+        var systemUnderTest = GetRenderedComponent();
+
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
+        _presentationLogic.Received().DeleteLmsWorld(lmsWorldList.First());
+        _presentationLogic.Received()
+            .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
+        _snackbar.Received().Add("Export.SnackBar.Message", Arg.Any<Severity>());
+    }
+
+    [Test]
+    public void ExportButton_Clicked_ExistingWorld_Copy_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
+        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_blackboard_1, points: 1);
+        space.LearningSpaceLayout.LearningElements.Add(0, element);
+        world.LearningSpaces.Add(space);
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.IsLmsConnected().Returns(true);
+        var lmsWorldList = new List<LmsWorldViewModel>
+            { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
+        _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
+        var genericCancellationConfirmationDialogReference = Substitute.For<IDialogReference>();
+        genericCancellationConfirmationDialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(genericCancellationConfirmationDialogReference);
+
+        var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
+        replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Copy));
+        _dialogService
+            .ShowAsync<ReplaceCopyLmsWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(replaceCopyLmsWorldDialogReference);
+        var systemUnderTest = GetRenderedComponent();
+
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
+        _presentationLogic.DidNotReceive().DeleteLmsWorld(lmsWorldList.First());
+        _presentationLogic.Received()
+            .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
+        _snackbar.Received().Add("Export.SnackBar.Message", Arg.Any<Severity>());
+    }
+
+    [Test]
+    public void ExportButton_Clicked_ExistingWorld_CancelReplaceCopyDialog_Aborts()
+    {
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h", "i");
+        var space = new LearningSpaceViewModel("a", "f", Theme.CampusAschaffenburg, 1);
+        var element = new LearningElementViewModel("a", null!, "s", "e", LearningElementDifficultyEnum.Easy,
+            ElementModel.l_h5p_blackboard_1, points: 1);
+        space.LearningSpaceLayout.LearningElements.Add(0, element);
+        world.LearningSpaces.Add(space);
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.IsLmsConnected().Returns(true);
+        var lmsWorldList = new List<LmsWorldViewModel>
+            { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
+        _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
+        var genericCancellationConfirmationDialogReference = Substitute.For<IDialogReference>();
+        genericCancellationConfirmationDialogReference.Result.Returns(DialogResult.Ok(true));
+        _dialogService
+            .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(genericCancellationConfirmationDialogReference);
+
+        var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
+        replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Cancel());
+        _dialogService
+            .ShowAsync<ReplaceCopyLmsWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
+                Arg.Any<DialogOptions>())
+            .Returns(replaceCopyLmsWorldDialogReference);
+        var systemUnderTest = GetRenderedComponent();
+
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
+        _presentationLogic.DidNotReceive().DeleteLmsWorld(lmsWorldList.First());
+        _presentationLogic.DidNotReceive()
+            .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
     }
 
     [Test]

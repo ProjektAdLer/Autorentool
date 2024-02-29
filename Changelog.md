@@ -13,9 +13,12 @@
   - You can now import learning worlds from .zip archives.
 - New list of previously uploaded learning worlds that appears after logging in to the LMS.
 - Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend.
+- Before a learning world is uploaded, the system now checks whether a learning world with the same name already exists on the backend. If there is a duplicate, the author can decide whether to replace the learning world or create a copy.
 - Authors can now assign an enrolment key for their learning world.
 - Learning outcomes can now be created for learning spaces using an input form.
 - A new button in the header bar shows an overview of all learning outcomes in the selected world.
+- Multiple learning content files can be imported at once as a .zip archive.
+- Add two floor plans (T-shape and D-shape) with more space for learning elements.
 
 #### Story elements
 - You can now create story elements: Story elements are a new type of learning element that can be used to create a story in the learning world.
@@ -46,6 +49,8 @@
     - Creating a new learning element inside a learning space (by clicking the "+" button on an empty slow) now also shows the learning element in blue in the tree view.
   - The container for the unplaced learning elements is now in the bottom center below the space view.
   - Separate sidebar panel for different types of learning elements
+  - The tab key can be used in the forms on the left-hand side. Categories can be opened with Space or Enter.
+  - Replaced Campus Theme with Campus Aschaffenburg and Campus Kempten.
 
 ### Deprecated
 

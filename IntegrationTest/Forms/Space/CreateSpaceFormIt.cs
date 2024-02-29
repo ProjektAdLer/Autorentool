@@ -74,12 +74,12 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         mudStringInputs[1].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
-        mudSelect.Find("input").Change(Theme.Campus);
+        mudSelect.Find("input").Change(Theme.CampusAschaffenburg);
 
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
-        Assert.That(FormModel.Theme, Is.EqualTo(Theme.Campus));
+        Assert.That(FormModel.Theme, Is.EqualTo(Theme.CampusAschaffenburg));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
@@ -184,7 +184,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
                     string str => str == Expected,
                     int i => i == 123,
                     //TODO: once we have more themes, change to a different theme and test that
-                    Theme t => t == Theme.Campus,
+                    Theme t => t == Theme.CampusAschaffenburg,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };
