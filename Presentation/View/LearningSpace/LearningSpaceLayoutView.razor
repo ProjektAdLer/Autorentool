@@ -44,7 +44,7 @@
                 var x = i;
                 var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                             Class="@GetSlotStyleString(-1)"
+                             Class="@GetStorySlotStyleString(x)"
                              style="@GetStorySlotPositionString(x)"
                              @onclick="() => ClickOnStorySlot(x)"
                              CanDrop="vm => vm.LearningContent is StoryContentViewModel"
@@ -158,11 +158,13 @@
         return slotPositionString.ToString();
     }
 
-    private string GetSlotStyleString(int position)
-    {
-        if (LearningSpaceP.LearningSpaceVm == null) return "";
+    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace);
 
-        var activeSlotIsPos = SelectedViewModelsProvider.ActiveElementSlotInSpace == position;
+    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace);
+
+    private string GetSlotStyleStringInternal(int position, int selectedPos)
+    {
+        var activeSlotIsPos = selectedPos == position;
         var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
             .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
             .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
