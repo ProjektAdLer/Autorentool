@@ -13,6 +13,7 @@
   - You can now import learning worlds from .zip archives.
 - New list of previously uploaded learning worlds that appears after logging in to the LMS.
 - Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend.
+- Before a learning world is uploaded, the system now checks whether a learning world with the same name already exists on the backend. If there is a duplicate, the author can decide whether to replace the learning world or create a copy.
 - Authors can now assign an enrolment key for their learning world.
 - Learning outcomes can now be created for learning spaces using an input form.
 - A new button in the header bar shows an overview of all learning outcomes in the selected world.
