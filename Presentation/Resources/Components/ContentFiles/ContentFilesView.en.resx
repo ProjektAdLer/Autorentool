@@ -49,7 +49,7 @@
         <value>Delete</value>
     </data>
     <data name="TaskDelete.DialogService.Title" xml:space="preserve">
-        <value>Delete content</value>
+        <value>Delete external learning material</value>
     </data>
     <data name="Content.MudTh.Name" xml:space="preserve">
         <value>Name</value>
@@ -71,5 +71,17 @@
     </data>
     <data name="Content.MudTd.Preview" xml:space="preserve">
         <value>Preview file/link</value>
+    </data>
+    <data name="Dialog.DeleteSelected.DialogText" xml:space="preserve">
+        <value>Do you really want to delete the following content entries? If you delete content which an learning element inside a learning world is using, you won't be able to generate that learning world anymore until you add it back!</value>
+    </data>
+    <data name="Content.Select.Text" xml:space="preserve">
+        <value>Select:</value>
+    </data>
+    <data name="Content.Select.Option.All" xml:space="preserve">
+        <value>All</value>
+    </data>
+    <data name="Content.Select.Option.AllUnused" xml:space="preserve">
+        <value>All unused learning material</value>
     </data>
 </root>

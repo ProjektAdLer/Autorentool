@@ -30,4 +30,19 @@
     <data name="Dialog.Text2" xml:space="preserve">
         <value>Diese Datei wird momentan in den folgenden Lernelementen verwendet:</value>
     </data>
+    <data name="Dialog.Header.World" xml:space="preserve">
+        <value>Lernwelt</value>
+    </data>
+    <data name="Dialog.Header.Element" xml:space="preserve">
+        <value>Lernelement</value>
+    </data>
+    <data name="Dialog.Header.Content" xml:space="preserve">
+        <value>Lernmaterial</value>
+    </data>
+    <data name="Dialog.Button.DeleteUnused.Text" xml:space="preserve">
+        <value>Nicht verwendetes Lernmaterial löschen</value>
+    </data>
+    <data name="Dialog.Button.DeleteAll.Text" xml:space="preserve">
+        <value>Alles löschen</value>
+    </data>
 </root>

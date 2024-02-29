@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -57,7 +58,7 @@
         <value>Löschen</value>
     </data>
     <data name="TaskDelete.DialogService.Title" xml:space="preserve">
-        <value>Inhalt löschen</value>
+        <value>Externes Lernmaterial löschen</value>
     </data>
     <data name="Content.MudTh.Name" xml:space="preserve">
         <value>Name</value>
@@ -79,5 +80,17 @@
     </data>
     <data name="Content.MudTd.Preview" xml:space="preserve">
         <value>Datei/Link als Vorschau anzeigen lassen</value>
+    </data>
+    <data name="Dialog.DeleteSelected.DialogText" xml:space="preserve">
+        <value>Möchten Sie die folgenden Einträge löschen? Wenn Sie eine Datei/Link löschen, welche in der Lernwelt verwendet wird, dann können Sie diese Lernwelt nicht mehr generieren, bis Sie die Datei/den Link wieder hinzufügen!</value>
+    </data>
+    <data name="Content.Select.Text" xml:space="preserve">
+        <value>Auswählen:</value>
+    </data>
+    <data name="Content.Select.Option.All" xml:space="preserve">
+        <value>Alle</value>
+    </data>
+    <data name="Content.Select.Option.AllUnused" xml:space="preserve">
+        <value>Nicht verwendetes Lernmaterial</value>
     </data>
 </root>

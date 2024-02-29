@@ -1,0 +1,34 @@
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningWorld
+@using System.Diagnostics.CodeAnalysis
+<div class="max-w-[20rem] px-2">
+    <MudText Class="cursor-default text-sm p-1">@Localizer["UsedContentFilesDialog.Text.ContentIsUsed"]</MudText>
+    <MudSimpleTable Dense="true" Bordered="true" FixedHeader="true" Class="cursor-default text-sm bg-adlerbgbright m-0 p-2 shadow-none">
+    <thead>
+        <th>@Localizer["UsedContentFilesDialog.TableHeader.World"]</th>
+        <th>@Localizer["UsedContentFilesDialog.TableHeader.Element"]</th>
+    </thead>
+
+        <tbody>
+        @foreach (var entry in Usages)
+        {
+            <tr>
+                <td DataLabel="@Localizer["UsedContentFilesDialog.Table.Subtitle.World"]">@entry.Item1.Name</td>
+                <td DataLabel="@Localizer["UsedContentFilesDialog.Table.Subtitle.Element"]">@entry.Item2.Name</td>
+            </tr>
+        }
+        </tbody>
+    </MudSimpleTable>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<UsedContentFilesDialog> Localizer { get; set; }
+
+    [Parameter, EditorRequired] public ILearningContentViewModel LearningContent { get; set; } = null!;
+
+    [Parameter, EditorRequired] public IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> Usages { get; set; } = null!;
+}

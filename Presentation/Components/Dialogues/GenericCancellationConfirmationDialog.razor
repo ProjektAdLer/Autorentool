@@ -2,13 +2,13 @@
 @using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
-        @if (ChildContent != null)
-        {
-            @ChildContent
-        }
         @if (DialogText != "")
         {
             <MudText>@((MarkupString)DialogText)</MudText>
+        }
+        @if (ChildContent != null)
+        {
+            @ChildContent
         }
     </DialogContent>
     <DialogActions>
@@ -19,11 +19,9 @@
 
 @code {
 
-    [Inject, AllowNull]
-    private IStringLocalizer<GenericCancellationConfirmationDialog> Localizer { get; set; }
+    [Inject, AllowNull] private IStringLocalizer<GenericCancellationConfirmationDialog> Localizer { get; set; }
 
-    [CascadingParameter]
-    public MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
 
     /// <summary>
     /// The text to display in the dialog.
@@ -41,11 +39,9 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    [Parameter]
-    public string? SubmitButtonText { get; set; }
+    [Parameter] public string? SubmitButtonText { get; set; }
 
-    [Parameter]
-    public Color SubmitButtonColor { get; set; } = Color.Warning;
+    [Parameter] public Color SubmitButtonColor { get; set; } = Color.Warning;
 
     private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
     private void Cancel() => MudDialog?.Cancel();

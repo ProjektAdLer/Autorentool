@@ -30,4 +30,19 @@
     <data name="Dialog.Text1" xml:space="preserve">
         <value>Are you really sure you want to delete &lt;b&gt;{0}&lt;/b&gt;?</value>
     </data>
+    <data name="Dialog.Header.World" xml:space="preserve">
+        <value>Learning world</value>
+    </data>
+    <data name="Dialog.Header.Element" xml:space="preserve">
+        <value>Learning element</value>
+    </data>
+    <data name="Dialog.Header.Content" xml:space="preserve">
+        <value>Learning material</value>
+    </data>
+    <data name="Dialog.Button.DeleteUnused.Text" xml:space="preserve">
+        <value>Delete unused learning material</value>
+    </data>
+    <data name="Dialog.Button.DeleteAll.Text" xml:space="preserve">
+        <value>Delete all</value>
+    </data>
 </root>

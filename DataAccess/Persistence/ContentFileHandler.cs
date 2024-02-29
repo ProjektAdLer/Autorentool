@@ -43,27 +43,6 @@ public class ContentFileHandler : IContentFileHandler
         return LoadContentAsyncInternal(filepath, duplicatePath, hash);
     }
 
-    private ILearningContentPe LoadContentAsyncInternal(string filepath, string? duplicatePath, byte[] hash)
-    {
-        if (duplicatePath == null)
-            _logger.LogDebug("{File} not found in {ContentFilesFolderPath}, copying file", filepath,
-                ContentFilesFolderPath);
-        else
-        {
-            _logger.LogDebug("{File} found at {DuplicateFilePath}, not copying", filepath, duplicatePath);
-            throw new HashExistsException(Path.GetFileName(duplicatePath), duplicatePath);
-        }
-
-        var finalPath = duplicatePath ?? CopyFileToContentFilesFolder(filepath);
-
-        var fileType = Path.GetExtension(finalPath).Trim('.').ToLower();
-        var fileName = Path.GetFileName(finalPath);
-        _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
-        if (duplicatePath == null)
-            SaveHashForFileAsync(finalPath, hash);
-        return new FileContentPe(fileName, fileType, finalPath);
-    }
-
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.Stream)"/>
     public async Task<ILearningContentPe> LoadContentAsync(string name, Stream stream)
     {
@@ -131,6 +110,27 @@ public class ContentFileHandler : IContentFileHandler
         }
     }
 
+    private ILearningContentPe LoadContentAsyncInternal(string filepath, string? duplicatePath, byte[] hash)
+    {
+        if (duplicatePath == null)
+            _logger.LogDebug("{File} not found in {ContentFilesFolderPath}, copying file", filepath,
+                ContentFilesFolderPath);
+        else
+        {
+            _logger.LogDebug("{File} found at {DuplicateFilePath}, not copying", filepath, duplicatePath);
+            throw new HashExistsException(Path.GetFileName(duplicatePath), duplicatePath);
+        }
+
+        var finalPath = duplicatePath ?? CopyFileToContentFilesFolder(filepath);
+
+        var fileType = Path.GetExtension(finalPath).Trim('.').ToLower();
+        var fileName = Path.GetFileName(finalPath);
+        _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
+        if (duplicatePath == null)
+            SaveHashForFileAsync(finalPath, hash);
+        return new FileContentPe(fileName, fileType, finalPath);
+    }
+
     private void AssertContentFilesFolderExists()
     {
         if (_fileSystem.Directory.Exists(ContentFilesFolderPath)) return;
@@ -185,6 +185,11 @@ public class ContentFileHandler : IContentFileHandler
         return new FileContentPe(fileName, fileType, filePath);
     }
 
+    /// <summary>
+    /// Removes a file and the associated hash file.
+    /// </summary>
+    /// <param name="fileContent">The learning content whose file and the associated hash file are to be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="fileContent"/> wasn't found.</exception>
     private void RemoveFileContent(FileContentPe fileContent)
     {
         var files = _fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).ToList();

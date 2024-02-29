@@ -5,7 +5,6 @@ using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
-using Shared;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
@@ -78,6 +77,13 @@ public interface IBusinessLogic
     void RemoveContent(ILearningContent content);
 
     /// <summary>
+    /// Deletes the files referenced by the given content objects.
+    /// </summary>
+    /// <param name="contents">The contents whos files shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents" /> weren't found.</exception>
+    void RemoveMultipleContents(IEnumerable<ILearningContent> contents);
+
+    /// <summary>
     ///     Adds the given <see cref="LinkContent" /> to the link file.
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
@@ -105,6 +111,11 @@ public interface IBusinessLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorld world);
 
+    Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile);
+    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
+    IFileInfo GetFileInfoForPath(string savePath);
+    void DeleteFileByPath(string savePath);
+
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
@@ -116,9 +127,4 @@ public interface IBusinessLogic
         CancellationToken? cancellationToken = null);
 
     #endregion
-
-    Task ExportLearningWorldToArchiveAsync(LearningWorld world, string pathToFile);
-    Task<LearningWorld> ImportLearningWorldFromArchiveAsync(string pathToFile);
-    IFileInfo GetFileInfoForPath(string savePath);
-    void DeleteFileByPath(string savePath);
 }

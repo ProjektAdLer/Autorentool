@@ -10,8 +10,8 @@
         </MudText>
         <MudTable Items="WorldElementInUseTuples">
             <HeaderContent>
-                <MudTh>World</MudTh>
-                <MudTh>Element</MudTh>
+                <MudTh Class="pl-4">@Localizer["Dialog.Header.World"]</MudTh>
+                <MudTh Class="pl-4">@Localizer["Dialog.Header.Element"]</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="World">@context.Item1.Name</MudTd>

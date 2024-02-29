@@ -494,6 +494,13 @@ public interface IPresentationLogic
     public void RemoveContent(ILearningContentViewModel content);
 
     /// <summary>
+    /// Deletes the files referenced by the given content objects.
+    /// </summary>
+    /// <param name="contents">The contents whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents"/> weren't found.</exception>
+    public void RemoveMultipleContents(IEnumerable<ILearningContentViewModel> contents);
+
+    /// <summary>
     /// Loads a Learning World view model into the authoring tool workspace.
     /// </summary>
     /// <param name="authoringToolWorkspaceVm">The authoring tool workspace view model to load into.</param>
