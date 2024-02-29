@@ -126,7 +126,7 @@
     public ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
-    private IStringLocalizer<UnplacedElementsDropZone> Localizer { get; set; }
+    internal IStringLocalizer<UnplacedElementsDropZone> Localizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
