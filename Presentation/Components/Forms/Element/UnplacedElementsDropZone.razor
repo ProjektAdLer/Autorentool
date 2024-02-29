@@ -57,16 +57,16 @@
                         </ActivatorContent>
                         <ChildContent>
                             <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_typeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ResetTypeFilter()" AutoClose="false">
+                                Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                OnClick="() => ResetContentTypeFilter()" AutoClose="false">
                                 @Localizer["UnplacedElementsDropZone.Filter.All"]
                             </MudMenuItem>
                             <MudDivider Class="p-0"></MudDivider>
                             @foreach (ContentTypeEnum type in Enum.GetValues(typeof(ContentTypeEnum)))
                             {
                                 <MudMenuItem
-                                    Class="px-2 text-xs" IconColor="@(_typeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                    OnClick="() => ToggleTypeFilter(type)" AutoClose="false">
+                                    Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ToggleContentTypeFilter(type)" AutoClose="false">
                                     @Localizer[$"UnplacedElementsDropZone.Type.{type}"]
                                 </MudMenuItem>
                             }
@@ -99,7 +99,7 @@
         </div>
 
         <div class="grid justify-items-end px-2">
-            <MudTextField @bind-Value="SearchString" Immediate="true" Style="font-size: 14px;" Placeholder="Suche" Adornment="Adornment.Start"
+            <MudTextField @bind-Value="SearchString" Immediate="true" Style="font-size: 14px;" Placeholder="@Localizer["UnplacedElementsDropZone.SearchBar.PlaceHolder"]" Adornment="Adornment.Start"
                           IconSize="Size.Small" AdornmentIcon="@Icons.Material.Outlined.Search" Clearable="true"/>
         </div>
     </div>
@@ -136,7 +136,7 @@
 
     internal string? SearchString { get; set; }
     private List<LearningElementDifficultyEnum> _difficultyFilter = new();
-    private List<ContentTypeEnum> _typeFilter = new();
+    private List<ContentTypeEnum> _contentTypeFilter = new();
     private List<Type> _elementTypeFilter = new();
 
     protected override void OnParametersSet()
@@ -186,9 +186,9 @@
 
         if (!ShowAfterDifficultyFilter(element)) return false;
 
-        if (!ShowAfterContentTypeFilter(element)) return false;
-
         if (!ShowAfterElementTypeFilter(element)) return false;
+
+        if (!ShowAfterContentTypeFilter(element)) return false;
 
         return true;
     }
@@ -213,7 +213,7 @@
         return true;
     }
 
-    private bool ShowAfterContentTypeFilter(ILearningElementViewModel element)
+    private bool ShowAfterElementTypeFilter(ILearningElementViewModel element)
     {
         if (_elementTypeFilter.Count != 0 && !_elementTypeFilter.Contains(element.LearningContent.GetType()))
         {
@@ -223,34 +223,34 @@
         return true;
     }
 
-    private bool ShowAfterElementTypeFilter(ILearningElementViewModel element)
+    private bool ShowAfterContentTypeFilter(ILearningElementViewModel element)
     {
-        if (_typeFilter.Count == 0) return true;
+        if (_contentTypeFilter.Count == 0) return true;
 
         if (element.LearningContent.GetType() == typeof(FileContentViewModel))
         {
-            if (!_typeFilter.Contains(ContentTypeHelper.GetContentType(((FileContentViewModel)element.LearningContent).Type)))
+            if (!_contentTypeFilter.Contains(ContentTypeHelper.GetContentType(((FileContentViewModel)element.LearningContent).Type)))
             {
                 return false;
             }
         }
         else if (element.LearningContent.GetType() == typeof(LinkContentViewModel))
         {
-            if (!_typeFilter.Contains(ContentTypeEnum.Video))
+            if (!_contentTypeFilter.Contains(ContentTypeEnum.Video))
             {
                 return false;
             }
         }
         else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel))
         {
-            if (!_typeFilter.Contains(ContentTypeEnum.Adaptivity))
+            if (!_contentTypeFilter.Contains(ContentTypeEnum.Adaptivity))
             {
                 return false;
             }
         }
         else if (element.LearningContent.GetType() == typeof(StoryContentViewModel))
         {
-            if (!_typeFilter.Contains(ContentTypeEnum.Story))
+            if (!_contentTypeFilter.Contains(ContentTypeEnum.Story))
             {
                 return false;
             }
@@ -293,20 +293,20 @@
         }
     }
 
-    private void ResetTypeFilter()
+    private void ResetContentTypeFilter()
     {
-        _typeFilter.Clear();
+        _contentTypeFilter.Clear();
     }
 
-    private void ToggleTypeFilter(ContentTypeEnum type)
+    private void ToggleContentTypeFilter(ContentTypeEnum type)
     {
-        if (_typeFilter.Contains(type))
+        if (_contentTypeFilter.Contains(type))
         {
-            _typeFilter.Remove(type);
+            _contentTypeFilter.Remove(type);
         }
         else
         {
-            _typeFilter.Add(type);
+            _contentTypeFilter.Add(type);
         }
     }
 
