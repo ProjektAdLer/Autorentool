@@ -165,4 +165,29 @@ Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Storyelement erstellt</value>
     </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearningElement" xml:space="preserve">
+        <value>&lt;span style="color:rgb(69,160,229)"&gt;&lt;b&gt;Lernelemente&lt;/b&gt;&lt;/span&gt;&lt;br&gt; 
+Mithilfe von Lernelementen kann externes Lernmaterial wie H5Ps, Videos, Bilder oder Texte in einen Lernraum bereitgestellt werden.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationAdaptivityElement" xml:space="preserve">
+        <value>&lt;span style="color: rgb(69,160,229)"&gt;&lt;b&gt;Adaptivitätselemente&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+Mithilfe von Adaptivitätselementen können Multiple- und Single-Choice-Fragen mit unterschiedlichen Schwierigkeitsgraden in einem Lernraum bereitgestellt werden.
+</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationStoryElement" xml:space="preserve">
+        <value>&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;span style="color: rgb(69,160,229)"&gt;&lt;b&gt;Storyelemente&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+Mithilfe von Storyelementen kann eine Geschichte rund um Ihre Lernwelt erzählt werden.&lt;br&gt;&lt;br&gt;
+Innerhalb eines Lernraums können insgesamt zwei Storyelemente erstellt werden, je ein Storyelement für das Betreten und Verlassen eines Lernraums. &lt;br&gt;&lt;br&gt;
+Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- und Ausgangstüren zu finden.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart1" xml:space="preserve">
+        <value>Erstellte Lernelemente und Adaptivitätselemente können innerhalb von einem Grundriss des Lernraums in verschiedenen Slots positioniert werden.
+</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart2" xml:space="preserve">
+        <value>Je nach gewählter Form des Grundrisses unterscheidet sich die Anzahl der Slots, die innerhalb des Grundrisses für das Platzieren von Lernelementen und Adaptivitätselementen zur Verfügung stehen.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.Image.Alt" xml:space="preserve">
+        <value>Beispielbild für Slots in einem Lernraum-Grundriss</value>
+    </data>
 </root>

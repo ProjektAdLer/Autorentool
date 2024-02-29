@@ -12,6 +12,7 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 @using System.Drawing
+@using System.Globalization
 @using AutoMapper
 @using BusinessLogic.Entities.LearningContent.Story
 @using Presentation.Components.Adaptivity.Dialogues
@@ -26,7 +27,34 @@
         </h2>
     </div>
 </header>
-<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateElementForm.Text"]</MudText>
+
+<div class="flex justify-between items-start p-2">
+    <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["CreateElementForm.Text"]</MudText>
+    
+    <MudTooltip Placement="Placement.Bottom" Delay="150" Duration="250" Arrow="true" Class="w-[700px] p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="Erklärung">
+        <ChildContent>
+            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-blacktrans-300 hover:text-adlerdarkblue"></MudIcon>
+        </ChildContent>
+        <TooltipContent>
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-row gap-4">
+                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearningElement"].ToString())</p>
+                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationAdaptivityElement"].ToString())</p>
+                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart1"].ToString())</p>
+                    </div>
+                
+                    <img src="/CustomIcons/PositionFloorPlan.png" alt="@Localizer["CreateElementForm.Tooltip.Image.Alt"]"/>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart2"].ToString())</p>
+                    <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationStoryElement"].ToString())</p>
+                </div>
+            </div>
+        </TooltipContent>
+    </MudTooltip>
+</div>
+
 
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement" @ref="_form"
           OnValidSubmit="OnValidSubmit"
@@ -333,8 +361,7 @@
     [Parameter] public int DebounceInterval { get; set; } = 300;
 
     [Parameter] public ElementMode ElementMode { get; set; }
-
-
+    
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
     private StoryContentFormModel? StoryContentModel => (StoryContentFormModel?)FormDataContainer.FormModel.LearningContent;
 

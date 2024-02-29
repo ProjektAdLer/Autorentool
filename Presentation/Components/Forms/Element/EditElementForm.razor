@@ -20,7 +20,34 @@
     </div>
 </header>
 
-<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
+<div class="flex justify-between items-start p-2">
+    <MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
+
+    <MudTooltip Placement="Placement.Bottom" Delay="150" Duration="250" Arrow="true" Class="w-[700px] p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="Erklärung">
+        <ChildContent>
+            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-blacktrans-300 hover:text-adlerdarkblue"></MudIcon>
+        </ChildContent>
+        <TooltipContent>
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-row gap-4">
+                        <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearningElement"].ToString())</p>
+                        <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationAdaptivityElement"].ToString())</p>
+                        <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart1"].ToString())</p>
+                    </div>
+                
+                    <img src="/CustomIcons/PositionFloorPlan.png" alt="@Localizer["EditElementForm.Tooltip.Image.Alt"]"/>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart2"].ToString())</p>
+                    <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationStoryElement"].ToString())</p>
+                </div>
+            </div>
+        </TooltipContent>
+    </MudTooltip>
+</div>
+
+
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement" @ref="_form"
           OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
           SnackbarMessage="@GetSnackbarMessage()"

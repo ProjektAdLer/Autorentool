@@ -164,4 +164,27 @@ For more information on H5P files, please read the user documentation of the aut
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Story element created</value>
     </data>
+    <data name="CreateElementForm.Tooltip.ExplanationAdaptivityElement" xml:space="preserve">
+        <value>&lt;span style="color:rgb(69,160,229)"&gt;&lt;b&gt;Adaptivity elements&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+With the help of adaptivity elements, multiple and single-choice questions with different levels of difficulty can be provided in a learning space.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearningElement" xml:space="preserve">
+        <value>&lt;span style="color: rgb(69,160,229)"&gt;&lt;b&gt;Learning elements&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+Learning elements can be used to provide external learning material such as H5Ps, videos, images or texts in a learning space.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart1" xml:space="preserve">
+        <value>Created learning elements and adaptivity elements can be positioned in different slots within a floor plan of the learning space.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart2" xml:space="preserve">
+        <value>Depending on the selected shape of the floor plan, the number of slots available within the floor plan for the placement of learning elements and adaptivity elements differs.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.ExplanationStoryElement" xml:space="preserve">
+        <value>&lt;br&gt;&lt;br&gt;&lt;span style="color: rgb(69,160,229)"&gt;&lt;b&gt;Story elements&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+Story elements can be used to tell a story about your learning world. &lt;br&gt;&lt;br&gt;
+A total of two-story elements can be created within a learning space, one story element each for entering and leaving a learning space. &lt;br&gt;&lt;br&gt;
+The corresponding slots can be found in each floor plan at the position of the entrance and exit doors.</value>
+    </data>
+    <data name="CreateElementForm.Tooltip.Image.Alt" xml:space="preserve">
+        <value>Example image for slots in a learning space floor plan</value>
+    </data>
 </root>
