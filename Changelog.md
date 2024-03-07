@@ -19,6 +19,8 @@
 - A new button in the header bar shows an overview of all learning outcomes in the selected world.
 - Multiple learning content files can be imported at once as a .zip archive.
 - Add two floor plans (T-shape and D-shape) with more space for learning elements.
+- Add filter and search for unplaced learning elements.
+- Possibility to delete several learning contents at once.
 
 #### Story elements
 - You can now create story elements: Story elements are a new type of learning element that can be used to create a story in the learning world.
@@ -51,6 +53,7 @@
   - Separate sidebar panel for different types of learning elements
   - The tab key can be used in the forms on the left-hand side. Categories can be opened with Space or Enter.
   - Replaced Campus Theme with Campus Aschaffenburg and Campus Kempten.
+  - The buttons for deleting, creating learning elements and previewing learning content in the learning content view are now located in a hover menu.
 
 ### Deprecated
 
