@@ -37,6 +37,7 @@
 - Add two floor plans (T-shape and D-shape) with more space for learning elements.
 - Add filter and search for unplaced learning elements.
 - Possibility to delete several learning contents at once.
+  
 
 #### Story elements
 - You can now create story elements: Story elements are a new type of learning element that can be used to create a story in the learning world.
@@ -70,6 +71,27 @@
   - The tab key can be used in the forms on the left-hand side. Categories can be opened with Space or Enter.
   - Replaced Campus Theme with Campus Aschaffenburg and Campus Kempten.
   - The buttons for deleting, creating learning elements and previewing learning content in the learning content view are now located in a hover menu.
+  - Headerbar extended by a help button containing the following functions:
+    - User manual (displayed).
+    - Tutorial (displayed).
+    - Give feedback (General feedback).
+    - Report technical error.
+    - About AdLer (redirection to the AdLer page).
+  - New styling of the LMSLoginDialog with deletion of Moodle courses.
+  - New styling of the listed learning worlds in the learning world menu.
+  - Addition of info icons (e.g. login dialog, my learning worlds dialog, reference to learning elements or references, enrolment method).
+  - New icons in a more uniform design for more internal consistency.
+  - New styling of the learning path area for more internal consistency.
+  - Styling of the input support.
+  - Styling of the enrolment method.
+  - New styling of the floor plans.
+  - New arrangement of properties for learning spaces in the middle window.
+    New styling of the element cards.
+  - New arrangement of points and workload for learning and adaptivity elements.
+  - New arrangement of the "Objectives" category in "Learning objectives" and "Description".
+  - More responsive design.
+  - Styling of the list of added learning material (all deletion process).
+  - Styling of the filter function for unplaced elements.
 
 ### Removed
 
