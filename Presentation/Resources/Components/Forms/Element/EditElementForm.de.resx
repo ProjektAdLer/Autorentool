@@ -75,10 +75,10 @@
         <value>Lernziele</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Beschreibung für Ihr Lernelement.</value>
+        <value>Formulieren Sie hier eine Beschreibung.</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für dieses Lernelement.</value>
+        <value>Formulieren Sie hier Ihr(e) Lernziel(e).</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
         <value>Externes Lernmaterial</value>

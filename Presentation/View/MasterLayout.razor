@@ -56,6 +56,18 @@
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
+                            IsActive="Mediator.StoryElementDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleStoryElementDialog">
+                            <SidebarContent>
+                                <div class="w-10 p-1 my-1.5" title="@Localizer["SideBarContent.StoryLearningElementMetadata.Title"]">
+                                    <img class="w-full" src="CustomIcons/LeftSidebar/storyelement-icon_adlerdarkblue.png" alt="@Localizer["SideBarContent.StoryLearningElementMetadata.Alt"]">
+                                </div>
+                            </SidebarContent>
+                            <MainContent>
+                                <ElementFormContainer ElementMode="ElementMode.Story"/>
+                            </MainContent>
+                        </SidebarItem>
+                        <SidebarItem
                             IsActive="Mediator.ElementDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
@@ -77,18 +89,6 @@
                             </SidebarContent>
                             <MainContent>
                                 <ElementFormContainer ElementMode="ElementMode.Adaptivity"/>
-                            </MainContent>
-                        </SidebarItem>
-                        <SidebarItem
-                            IsActive="Mediator.StoryElementDialogOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleStoryElementDialog">
-                            <SidebarContent>
-                                <div class="w-10 p-1 my-1.5" title="@Localizer["SideBarContent.StoryLearningElementMetadata.Title"]">
-                                    <img class="w-full" src="CustomIcons/LeftSidebar/storyelement-icon_adlerdarkblue.png" alt="@Localizer["SideBarContent.StoryLearningElementMetadata.Alt"]">
-                                </div>
-                            </SidebarContent>
-                            <MainContent>
-                                <ElementFormContainer ElementMode="ElementMode.Story"/>
                             </MainContent>
                         </SidebarItem>
                         <SidebarItem
