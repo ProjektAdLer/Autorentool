@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -134,7 +135,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public IEnumerable<ILearningElementViewModel> AllLearningElements =>
         LearningSpaces
             .SelectMany(space => space.ContainedLearningElements)
-            .Concat(UnplacedLearningElements);
+            .Concat(UnplacedLearningElements.Where(ele => ele.LearningContent is not StoryContentViewModel));
+
+    public IEnumerable<ILearningElementViewModel> AllStoryElements =>
+        LearningSpaces
+            .SelectMany(space => space.LearningSpaceLayout.StoryElements.Values)
+            .Concat(UnplacedLearningElements.Where(ele => ele.LearningContent is StoryContentViewModel));
 
     public ICollection<TopicViewModel> Topics
     {
