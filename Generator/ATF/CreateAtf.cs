@@ -443,6 +443,8 @@ public class CreateAtf : ICreateAtf
             FloorPlanEnum.R_20X20_6L => 5,
             FloorPlanEnum.R_20X30_8L => 7,
             FloorPlanEnum.L_32X31_10L => 9,
+            FloorPlanEnum.T_40X32_13L => 12,
+            FloorPlanEnum.D_40X37_15L => 14,
             _ => throw new ArgumentOutOfRangeException(nameof(space.LearningSpaceLayout.FloorPlanName),
                 $"The FloorPlanName {space.LearningSpaceLayout.FloorPlanName} of space {space.Name} is not supported")
         };

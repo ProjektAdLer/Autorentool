@@ -14,6 +14,7 @@
 ### Removed
 
 ### Fixed
+- Fixed a bug where the new 13- and 15-slot floor plans could not be processed in the generator
 
 ### Security
 

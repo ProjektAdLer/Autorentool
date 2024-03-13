@@ -21,6 +21,9 @@ namespace GeneratorTest.ATF;
 [TestFixture]
 public class CreateAtfUt
 {
+    private static IEnumerable<FloorPlanEnum> FloorPlanEnumValues =>
+        Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>();
+
     [Test]
     public void GenerateAndExportLearningWorldJson_DefineLogicalExpression_RequirementDefined()
     {
@@ -731,7 +734,7 @@ public class CreateAtfUt
                 Is.EqualTo(ele6.ElementModel.ToString()));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
-            
+
             Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementName, Is.EqualTo(ele7.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementId, Is.EqualTo(9));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[8].ElementUUID, Is.EqualTo(ele7.Id.ToString()));
@@ -854,12 +857,54 @@ public class CreateAtfUt
             systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
             Assert.Fail("FloorPlanName Exception was not thrown");
         }
-        catch (Exception e)
+        catch (ArgumentOutOfRangeException e)
         {
             //Assert
             Assert.That(e.Message,
                 Is.EqualTo("The FloorPlanName 999 of space ff is not supported (Parameter 'FloorPlanName')"));
         }
+    }
+
+    [Test]
+    [TestCaseSource(nameof(FloorPlanEnumValues))]
+    public void GenerateAndExportLearningWorldJson_SupportedFloorPlanName_NoExceptionThrown(FloorPlanEnum floorPlan)
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
+        var mockLogger = Substitute.For<ILogger<CreateAtf>>();
+
+        const string name = "space1";
+        const string shortname = "s1";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
+        const string evaluationLink = "https://www.projekt-alder.eu";
+        const string enrolmentKey = "1234";
+        const string savePath = "C:\\Users\\Ben\\Desktop\\test";
+
+        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(),
+            outBoundObjects: new List<IObjectInPathWayPe>())
+        {
+            LearningSpaceLayout =
+            {
+                FloorPlanName = floorPlan // ungültiger FloorPlanName
+            }
+        };
+
+        var learningSpaces = new List<LearningSpacePe> { space1 };
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+            enrolmentKey,
+            savePath,
+            learningSpaces);
+
+        var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
+
+        //Act
+
+        Assert.DoesNotThrow(() => systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld));
     }
 
     [Test]
