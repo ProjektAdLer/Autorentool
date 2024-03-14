@@ -61,7 +61,7 @@ public static class ZipExtensions
         var files = fs.Directory.GetFiles(source, "*", SearchOption.AllDirectories);
         foreach (var file in files)
         {
-            var relativePath = file.Replace(source, "");
+            var relativePath = Path.GetRelativePath(source, file);
             var entry = archive.CreateEntry(relativePath);
             await using var entryStream = entry.Open();
             await using var fileStream = fs.File.OpenRead(file);
