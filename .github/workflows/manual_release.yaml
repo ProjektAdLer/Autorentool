@@ -185,6 +185,6 @@ jobs:
       - name: Save Build folder
         uses: actions/upload-artifact@v3
         with:
-          name: authoringtool-linux
+          name: authoringtool-linux-arm64
           path: ./AuthoringTool/bin/Desktop_Publish/
           if-no-files-found: error
