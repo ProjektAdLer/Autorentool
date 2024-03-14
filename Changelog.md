@@ -8,6 +8,7 @@
 ### Added
 
 ### Changed
+- Updated header bar and desktop app icon
 
 ### Deprecated
 
