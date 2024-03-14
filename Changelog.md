@@ -16,6 +16,7 @@
 
 ### Fixed
 - Fixed a bug where the new 13- and 15-slot floor plans could not be processed in the generator
+- Fixed a bug where it was impossible to export and import learning worlds correctly
 
 ### Security
 
