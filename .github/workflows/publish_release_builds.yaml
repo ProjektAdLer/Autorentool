@@ -34,24 +34,6 @@ jobs:
 
       - name: Run automated unit and integration tests
         run: dotnet test 
-  
-  discord-notification:
-    needs: [test, publish-osx, publish-windows, publish-linux]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Prepare release body (description)
-        id: prep_body
-        run: |
-          echo "${{ github.event.release.body }}" > changes.md
-
-      - name: Discord notification
-        uses: appleboy/discord-action@master
-        with:
-          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
-          username: GitHub Releases
-          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
-          file: changes.md
 
   publish-osx:
     needs: test
@@ -254,3 +236,92 @@ jobs:
           file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.gz
           asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.gz
           tag: ${{ github.ref }}
+          
+  publish-linux-arm64:
+    needs: test
+    name: Publish for Linux ARM64
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          
+      - name: Install Snapcraft
+        uses: samuelmeuli/action-snapcraft@v2
+        
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.304'
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            Linux-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+
+      - name: Install npm dependencies
+        working-directory: ./AuthoringTool
+        run: npm install
+
+      - name: Run Tailwind build
+        working-directory: ./AuthoringTool
+        run: npm run tailwind-build
+
+      - name: Build AuthoringTool binary
+        working-directory: ./AuthoringTool
+        run: dotnet electronize build /target custom "linux-arm64;linux" /electron-arch arm64
+
+      - name: Save Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: authoringtool-linux-arm64
+          path: ./AuthoringTool/bin/Desktop_Publish/
+
+      - name: Pack linux-unpacked into gzipped tarball
+        working-directory: ./AuthoringTool/bin/Desktop_Publish
+        run: tar -cavf ${{ github.ref_name }}-linux-arm64-unpacked.tar.gz ./linux-arm64-unpacked
+
+      - name: Upload linux appimage to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}-arm64.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-arm64.AppImage
+          tag: ${{ github.ref }}
+
+      - name: Upload linux-unpacked tar to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.gz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.gz
+          tag: ${{ github.ref }}
+  
+  discord-notification:
+    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Prepare release body (description)
+        id: prep_body
+        run: |
+          echo "${{ github.event.release.body }}" > changes.md
+
+      - name: Discord notification
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
+          username: GitHub Releases
+          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
+          file: changes.md
