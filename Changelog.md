@@ -8,6 +8,23 @@
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+</details>
+
+## [2.1.1] - 2024-03-15
+
+### Added
+- Added build for linux-arm64
+
+### Changed
 - Updated header bar and desktop app icon
 
 ### Deprecated
@@ -19,8 +36,6 @@
 - Fixed a bug where it was impossible to export and import learning worlds correctly
 
 ### Security
-
-</details>
 
 ## [2.1.0] - 2024-03-07
 
