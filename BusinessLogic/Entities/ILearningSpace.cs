@@ -8,8 +8,8 @@ public interface ILearningSpace : IObjectInPathWay
     string Name { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    public int Points => ContainedLearningElements.Sum(element => element.Points);
     int RequiredPoints { get; set; }
-
     Theme Theme { get; set; }
 
     //bool UnsavedChanges { get; set; }

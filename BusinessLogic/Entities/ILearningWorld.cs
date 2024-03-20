@@ -19,4 +19,8 @@ public interface ILearningWorld
     string Name { get; set; }
     bool InternalUnsavedChanges { get; }
     string EvaluationLink { get; set; }
+    public IEnumerable<ILearningElement> AllLearningElements =>
+        LearningSpaces
+            .SelectMany(space => space.ContainedLearningElements)
+            .Concat(UnplacedLearningElements);
 }
