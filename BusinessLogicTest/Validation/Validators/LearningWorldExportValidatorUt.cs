@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Validation.Validators;
+using FluentValidation.Results;
 using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NSubstitute.Core;
@@ -27,6 +28,12 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
         {
             return ci.Arg<string>() + " " + string.Join(" ", ci.Arg<object[]>().Select(obj => obj.ToString()));
         }
+        private static void AssertResultAndCheckErrorMessage(ValidationResult result, string errorMessage)
+        {
+            Assert.IsFalse(result.IsValid);
+            var errorMessageFound = result.Errors.Any(error => error.ErrorMessage.Equals(errorMessage));
+            Assert.IsTrue(errorMessageFound);
+        }
 
         [Test]
         public void Validate_WorldHasNoLearningSpaces_ErrorMessageOutput()
@@ -34,11 +41,9 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             var world = EntityProvider.GetLearningWorld();
 
             var result = _validator.Validate(world);
-
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound = result.Errors.Any(error =>
-                error.ErrorMessage.Equals($"<li> {_stringLocalizer["ErrorString.Missing.LearningSpace.Message"]} </li>"));
-            Assert.IsTrue(errorMessageFound);
+            var errorMessage = $"<li> {_stringLocalizer["ErrorString.Missing.LearningSpace.Message"]} </li>";
+            
+            AssertResultAndCheckErrorMessage(result, errorMessage);
         }
 
         [Test]
@@ -47,12 +52,9 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             var world = EntityProvider.GetLearningWorldWithSpace();
             var space = world.LearningSpaces.First();
             
-             var result = _validator.Validate(world);
-            
-             Assert.IsFalse(result.IsValid);
-             var errorMessageFound = result.Errors.Any(error => error.ErrorMessage.Equals(
-                 $"<li> {_stringLocalizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>"));
-             Assert.IsTrue(errorMessageFound);
+            var result = _validator.Validate(world);
+            var errorMessage = $"<li> {_stringLocalizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
 
         }
 
@@ -67,12 +69,11 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             adaptivityContent.Tasks.Clear();
 
             var result = _validator.Validate(world);
-            
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound = result.Errors.Any(error => error.ErrorMessage.Equals(
-                $"<li> {_stringLocalizer["ErrorString.NoTasks.Message", element.Name]} </li>"));
-            Assert.IsTrue(errorMessageFound);
-        }   
+            var errorMessage = $"<li> {_stringLocalizer["ErrorString.NoTasks.Message", element.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
+        }
+
+        
 
         [Test]
         public void Validate_LearningSpaceHasInsufficientPoints_ErrorMessageOutput()
@@ -85,11 +86,8 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             world.LearningSpaces.Add(space);
 
             var result = _validator.Validate(world);
-            
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound = result.Errors.Any(error => error.ErrorMessage.Equals(
-                $"<li> {_stringLocalizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>"));
-            Assert.IsTrue(errorMessageFound);
+            var errorMessage = $"<li> {_stringLocalizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
         }
 
         [Test]
@@ -104,11 +102,9 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             element.LearningContent = adaptivityContent;
 
             var result = _validator.Validate(world);
-            
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound = result.Errors.Any(error => error.ErrorMessage.Equals(
-                $"<li> {_stringLocalizer["ErrorString.TaskReferencesNonexistantElement.Message", element.Name]} </li>"));
-            Assert.IsTrue(errorMessageFound);
+            var errorMessage =
+                $"<li> {_stringLocalizer["ErrorString.TaskReferencesNonexistantElement.Message", element.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
         }
 
         [Test]
@@ -125,11 +121,9 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             element.LearningContent = adaptivityContent;
 
             var result = _validator.Validate(world);
-            
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound=result.Errors.Any(error => error.ErrorMessage.Equals(
-                $"<li> {_stringLocalizer["ErrorString.TaskReferencesUnplacedElement.Message", element.Name]} </li>"));
-            Assert.IsTrue(errorMessageFound);
+            var errorMessage =
+                $"<li> {_stringLocalizer["ErrorString.TaskReferencesUnplacedElement.Message", element.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
         }
 
         [Test]
@@ -151,11 +145,9 @@ namespace BusinessLogicTest.Validation.Validators.CustomValidators
             element.LearningContent = adaptivityContent;
 
             var result = _validator.Validate(world);
-            
-            Assert.IsFalse(result.IsValid);
-            var errorMessageFound=result.Errors.Any(error => error.ErrorMessage.Equals(
-                $"<li> {_stringLocalizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", element.Name, laterSpace.Name, laterElement.Name]} </li>"));
-            Assert.IsTrue(errorMessageFound);
+            var errorMessage =
+                $"<li> {_stringLocalizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", element.Name, laterSpace.Name, laterElement.Name]} </li>";
+            AssertResultAndCheckErrorMessage(result, errorMessage);
         }
 
         [Test]
