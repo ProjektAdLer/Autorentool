@@ -20,8 +20,16 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.7.1" />
       <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.16" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Resources" />
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldExportValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningWorldExportValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldExportValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningWorldExportValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>
