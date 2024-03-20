@@ -10,6 +10,7 @@
 @using System.Text
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
+@using BusinessLogic.Validation.Validators
 @using Presentation.Components.Culture
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -293,50 +294,82 @@
 
     private bool IsLearningWorldValid(ILearningWorldViewModel world)
     {
-        var errorString = new StringBuilder();
-        errorString.Append("<ul>");
+         var errorString = new StringBuilder();
+         errorString.Append("<ul>");
+        
+        ValidateLearningSpaces(world, errorString);
 
-        if (world.LearningSpaces.Count == 0)
+        ValidateAdaptivityContent(world, errorString);
+       
+        if (HasNoErrors(errorString)) return true;
+    
+        LogAndSetErrors(errorString);
+        return false;
+    }
+
+    
+
+    private bool HasNoErrors(StringBuilder errorString)
+    {
+        if(errorString.Length=="<ul>".Length)
+        return true;
+        return false;
+    }
+
+    private void LogAndSetErrors(StringBuilder errorString)
+    {
+        errorString.Append("</ul>");
+
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
+    }
+
+    private void ValidateAdaptivityContent(ILearningWorldViewModel world, StringBuilder errorString)
+    {
+        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
+            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+        {
+            if (adaptivityContent.Tasks.Count <= 0)//NoTasksError
+
+                errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
+            if (TaskReferencesNonexistantElement(adaptivityContent, world))//TaskReferencesNonexistantElementError
+                errorString.AppendLine(
+                    $"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
+            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))//TaskReferencesUnplacedElementinWorldError
+                errorString.AppendLine(
+                    $"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
+            var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
+            foreach (var referenceTuple in invalidSpaceReferences)//TaskReferencesElementInSpaceAfterOwnSpaceError
+            {
+                errorString.AppendLine(
+                    $"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space.Name, referenceTuple.Element.Name]} </li>");
+            }
+        }
+    }
+
+    private void ValidateLearningSpaces(ILearningWorldViewModel world, StringBuilder errorString)
+    {
+        if (world.LearningSpaces.Count == 0)//NoLearningSpacesInWorldError
         {
             errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
         }
 
         foreach (var space in world.LearningSpaces)
         {
-            if (!space.ContainedLearningElements.Any())
+            if (!space.ContainedLearningElements.Any())//NoLearningElementinLearningSpaceError
             {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
+                errorString.AppendLine(
+                    $"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
             }
-            if (space.Points < space.RequiredPoints)
+
+            if (space.Points < space.RequiredPoints)//LearningSpaceHasInsufficientPointsError
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
             }
         }
-
-        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
-            .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-            .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
-        {
-            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
-            if (TaskReferencesNonexistantElement(adaptivityContent, world))
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
-            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
-            var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
-            foreach (var referenceTuple in invalidSpaceReferences)
-            {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space.Name, referenceTuple.Element.Name]} </li>");
-            }
-        }
-
-        if (errorString.Length == "<ul>".Length) return true;
-
-        errorString.Append("</ul>");
-
-        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
-        return false;
     }
+
 
     private bool TaskReferencesNonexistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
     {
@@ -344,7 +377,7 @@
         return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
     }
 
-    private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
+    public static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
         task => task.Questions
             .Any(question => question.Rules
                 .Any(rule => rule.Action is ElementReferenceActionViewModel eravm &&
@@ -381,7 +414,7 @@
         return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
     }
 
-    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
+    public static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
     {
         return adaptivityContent.Tasks
             .SelectMany(task => task.Questions
