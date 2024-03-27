@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="bunit" Version="1.23.9" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
         <PackageReference Include="NSubstitute" Version="5.1.0" />
         <PackageReference Include="NUnit" Version="4.0.1" />
         <PackageReference Include="NUnit.Analyzers" Version="3.10.0">
