@@ -39,7 +39,7 @@
         <value>OnCloseWorld must be set.</value>
     </data>
     <data name="LearningWorldCard.Button.Close.Text" xml:space="preserve">
-        <value>Lernwelt schließen</value>
+        <value>Lernwelt löschen</value>
     </data>
     <data name="LearningWorldCard.Button.Open.Title" xml:space="preserve">
         <value>Lernwelt öffnen</value>
