@@ -13,20 +13,18 @@ namespace BusinessLogic.Validation.Validators
         public LearningWorldExportValidator(IStringLocalizer<LearningWorldExportValidator> localizer)
         {
             _localizer = localizer;
-            RuleFor(world => world)
-                .Must(HaveLearningSpace())
-                .WithMessage(world => $"<li> {_localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
+            RuleForLearningWorldMustHaveLearningSpace();
 
-            RuleForEach<ILearningSpace>(world => world.LearningSpaces)
-                .Must(HaveLearningElement())
-                .WithMessage((world, space) =>
-                    $"<li> {_localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>")
-                .Must(HaveSufficientPoints())
-                .WithMessage((world, space) =>
-                    $"<li> {_localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
+            RuleForEachLearningSpaceMustHaveLearningElementAndSufficientPoints();
+            
+            RuleForAdaptivityContentMustHaveTasksAndValidReferences();
 
+        }
 
-            RuleFor(world => ListofWorldAndAdaptivityContentPairings(world))
+        private IRuleBuilderOptions<ILearningWorld, IEnumerable<(ILearningWorld world, ILearningElement element)>> 
+            RuleForAdaptivityContentMustHaveTasksAndValidReferences()
+        {
+            return RuleFor(world => ListofWorldAndAdaptivityContentPairings(world))
                 .ForEach(tuple =>
                 {
                     tuple.Must(AdaptivityContentHasTask())
@@ -44,7 +42,25 @@ namespace BusinessLogic.Validation.Validators
                         NoElementMustReferenceElementInSpaceAfterOwnSpace(tupleWorldElement, context)
                     );
                 });
+        }
 
+        private IRuleBuilderOptions<ILearningWorld, ILearningSpace> 
+            RuleForEachLearningSpaceMustHaveLearningElementAndSufficientPoints()
+        {
+            return RuleForEach<ILearningSpace>(world => world.LearningSpaces)
+                .Must(HaveLearningElement())
+                .WithMessage((world, space) =>
+                    $"<li> {_localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>")
+                .Must(HaveSufficientPoints())
+                .WithMessage((world, space) =>
+                    $"<li> {_localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
+        }
+
+        private IRuleBuilderOptions<ILearningWorld, ILearningWorld> RuleForLearningWorldMustHaveLearningSpace()
+        {
+            return RuleFor(world => world)
+                .Must(HaveLearningSpace())
+                .WithMessage(world => $"<li> {_localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
         }
 
         private void NoElementMustReferenceElementInSpaceAfterOwnSpace(
