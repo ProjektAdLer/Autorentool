@@ -42,7 +42,7 @@
         <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diese Lernwelt.</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Authors.Text" xml:space="preserve">
-        <value>Autoren:innen</value>
+        <value>Autorinnen und Autoren</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Text" xml:space="preserve">
         <value>Sprache</value>
