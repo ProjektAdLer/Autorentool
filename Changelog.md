@@ -19,6 +19,17 @@
 
 </details>
 
+## [2.1.2] - 2024-04-11
+
+### Changed
+- Changed a typo in the German version of the Create World dialog.
+- Changed an inconsistency of wording where the action of deleting a learning world was incorrectly referred to as closing it instead.
+
+### Fixed
+- Fixed a bug where the program would crash if you try to delete learning content which is currently opened in a program that holds a lock on the file. (#504)
+- Fixed a bug where deleting a learning world would incorrectly be undoable (#506)
+
+
 ## [2.1.1] - 2024-03-15
 
 ### Added
