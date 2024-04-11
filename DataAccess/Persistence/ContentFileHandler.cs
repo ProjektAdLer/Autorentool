@@ -190,6 +190,7 @@ public class ContentFileHandler : IContentFileHandler
     /// </summary>
     /// <param name="fileContent">The learning content whose file and the associated hash file are to be deleted.</param>
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="fileContent"/> wasn't found.</exception>
+    /// <exception cref="IOException">The file is in use and cannot be deleted.</exception>
     private void RemoveFileContent(FileContentPe fileContent)
     {
         var files = _fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).ToList();

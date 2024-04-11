@@ -273,6 +273,10 @@
         {
             ErrorService.SetError("Error deleting content", e.Message);
         }
+        catch (IOException e)
+        {
+            ErrorService.SetError("Error deleting content: File in use", e.Message);
+        }
     }
 
     private async Task DeleteSelected()
