@@ -1,10 +1,11 @@
+using System.ComponentModel;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace Presentation.PresentationLogic.LearningElement;
 
-public interface ILearningElementViewModel : IDisplayableLearningObject
+public interface ILearningElementViewModel : IDisplayableLearningObject, INotifyPropertyChanged
 {
     Guid Id { get; }
     new string Name { get; set; }

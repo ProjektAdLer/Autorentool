@@ -1,27 +1,27 @@
-﻿@using Presentation.PresentationLogic.SelectedViewModels
-@using Shared
-@using Presentation.PresentationLogic.LearningElement
+﻿@using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
-@using MudBlazor.Extensions
 @using Presentation.Components
-@using Presentation.Components.Forms.Element
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningContent.Story
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared
+@implements IDisposable
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
         <MudCard title="@LearningElement.Name" Outlined="true" Class="@GetElementStyleString()">
             <section class="flex flex-col justify-start items-start">
                 <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
-                    
+
                     <div class="absolute flex justify-center -top-3 2xl:-top-4">
                         <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-7 2xl:h-7 -top-5 flex rounded-lg p-1 element-icon"/>
                     </div>
-                    
+
                     <div class="flex flex-col items-center">
-                        
-                        
+
+
                         <div class="flex justify-center items-center">
 
                             <MudListItem Class="truncate w-20 h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 1080p:text-sm font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none p-0 mt-0.5" Text="@LearningElement.Name"></MudListItem>
@@ -61,20 +61,15 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel LearningElement { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
 
-    [Parameter]
-    public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+    [Parameter] public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -83,6 +78,13 @@
         {
             throw new ArgumentNullException(nameof(LearningElement));
         }
+
+        LearningElement.PropertyChanged += LearningElementOnPropertyChanged;
+    }
+
+    private async void LearningElementOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        await InvokeAsync(StateHasChanged);
     }
 
     private static string GetDifficultyIcon(LearningElementDifficultyEnum difficulty)
@@ -94,9 +96,9 @@
             LearningElementDifficultyEnum.Hard => CustomIcons.DifficultyPolygonHard,
             LearningElementDifficultyEnum.None => CustomIcons.DifficultyPolygonNone,
             _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
-            };
+        };
     }
-    
+
     private string GetElementIcon()
     {
         return LearningElement.LearningContent switch
@@ -106,19 +108,24 @@
             IFileContentViewModel
             {
                 Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
-                    "js" or "php" or "html" or "css"
-                } => CustomIcons.TextElementIcon,
+                "js" or "php" or "html" or "css"
+            } => CustomIcons.TextElementIcon,
             IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             IAdaptivityContentViewModel => CustomIcons.AdaptivityElementIcon,
             IStoryContentViewModel => CustomIcons.StoryElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
-            };
+        };
     }
 
     private string GetElementStyleString()
     {
         return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerblue-300 bg-adlerblue-100 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300";
+    }
+
+    public void Dispose()
+    {
+        LearningElement.PropertyChanged -= LearningElementOnPropertyChanged;
     }
 
 }
