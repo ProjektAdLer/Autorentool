@@ -198,6 +198,14 @@ public class DataAccess : IDataAccess
         //save world to savedworlds folder
         var newSavePath =
             FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
+        
+        //we must update the save path in the world entity because it still holds the save path from the archive,
+        //which is in turn the save path on the previous machine. this *could* lead to an exception being thrown,
+        //if the current user on the new machine is not the exact same username as the user on the previous machine.
+        //this problem resolves itself when the application is restarted, as the loaded world contains the correct save path,
+        //but for the world that is loaded in the current session, we must update the save path.
+        world.SavePath = newSavePath;
+        
         //parse save path back into name
         if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
 
