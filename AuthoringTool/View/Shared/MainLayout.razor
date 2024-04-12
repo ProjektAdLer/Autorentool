@@ -1,8 +1,9 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@using global::Shared
 @inherits LayoutComponentBase
 
-<PageTitle>@Localizer["PageTitle"]</PageTitle>
+<PageTitle>@($"{Localizer["PageTitle"]} v{Constants.ApplicationVersion}")</PageTitle>
 
 <MudThemeProvider/>
 <MudDialogProvider/>

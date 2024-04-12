@@ -21,9 +21,6 @@
     <data name="AuthoringTool.Text" xml:space="preserve">
         <value>Authoring tool</value>
     </data>
-    <data name="AuthoringTool.Version" xml:space="preserve">
-        <value>v2.1.2</value>
-    </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
         <value>Publish learning world</value>
     </data>
