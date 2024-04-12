@@ -19,6 +19,12 @@
 
 </details>
 
+## [2.1.3] - 2024-04-12
+
+### Fixed
+- Fixed a bug where you could not save a learning world after importing it before closing the program once and reopening it. (#511)
+- Fixed a bug where the first field of a dialog would keep being focused after you made a change in the dialog. (#505)
+
 ## [2.1.2] - 2024-04-11
 
 ### Changed
