@@ -134,7 +134,7 @@ public class HeaderBarUt
 
         var element = systemUnderTest.FindAll("div p")[1];
         element.MarkupMatches(
-            @"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v3</h1>");
+            @$"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName v{Constants.ApplicationVersion}</h1>");
     }
 
     [Test]
