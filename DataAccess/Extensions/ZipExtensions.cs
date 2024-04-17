@@ -22,7 +22,7 @@ public static class ZipExtensions
         var zipStream = fs.File.OpenWrite(archivePath);
         return new ZipArchive(zipStream, ZipArchiveMode.Create);
     }
-    
+
     /// <summary>
     /// Extracts the contents of a <see cref="ZipArchive"/> to a given directory on the filesystem <paramref name="fs"/>.
     /// </summary>
@@ -38,7 +38,15 @@ public static class ZipExtensions
 
         foreach (var entry in archive.Entries)
         {
-            var path = Path.Combine(destination, entry.FullName);
+            var entryFullName = Path.DirectorySeparatorChar switch
+            {
+                //adjust paths for unpacking on unix when packed on windows
+                '/' => entry.FullName.Replace("\\", "/"),
+                //adjust paths for unpacking on windows when packed on unix
+                '\\' => entry.FullName.Replace("/", "\\"),
+                _ => entry.FullName
+            };
+            var path = Path.Combine(destination, entryFullName);
             var directoryName = Path.GetDirectoryName(path);
             if (directoryName != null) fs.Directory.CreateDirectory(directoryName);
             if (fs.File.Exists(path)) fs.File.Delete(path);
@@ -48,7 +56,7 @@ public static class ZipExtensions
             sourceStream.CopyTo(destStream);
         }
     }
-    
+
     /// <summary>
     /// Creates a zip archive from a given directory on the filesystem <paramref name="fs"/>.
     /// </summary>

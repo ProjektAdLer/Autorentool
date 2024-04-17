@@ -14,6 +14,7 @@
 ### Removed
 
 ### Fixed
+- Fixed a bug where you could not import a world zip file created on Windows into the Authoring tool on macOS. (#515) 
 
 ### Security
 
