@@ -39,6 +39,11 @@
         "filter": [ "**/*" ]
       },
       "**/*"
-    ]
+    ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
