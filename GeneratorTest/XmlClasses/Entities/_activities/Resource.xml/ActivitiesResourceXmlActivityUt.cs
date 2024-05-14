@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Resource.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Resource.xml;
 
@@ -34,7 +35,7 @@ public class ActivitiesResourceXmlActivityUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         var activityName = "resource";
         var moduleId = "1";
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",

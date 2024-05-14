@@ -4,6 +4,7 @@ using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Inforef.xml;
 
@@ -40,7 +41,7 @@ public class ActivitiesInforefXmlInforefUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "h5pactivity_1000"));
 
         var list = new List<ActivitiesInforefXmlFile>

@@ -12,6 +12,7 @@ using Generator.XmlClasses.Entities.Files.xml;
 using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.XmlFileFactories;
 
@@ -58,7 +59,7 @@ public class XmlResourceFactoryUt
         var mockReadAtf = Substitute.For<IReadAtf>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
 
         var learningEvl = 4;
 
@@ -242,7 +243,7 @@ public class XmlResourceFactoryUt
         systemUnderTest.CreateActivityFolder("1");
 
         //Assert
-        Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "activities", "resource_" + "1")),
+        Assert.That(mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities", "resource_" + "1")),
             Is.True);
     }
 }

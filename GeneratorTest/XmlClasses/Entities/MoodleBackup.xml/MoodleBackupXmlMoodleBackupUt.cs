@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities.MoodleBackup.xml;
 
@@ -51,7 +52,7 @@ public class MoodleBackupXmlMoodleBackupUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
 
         //Arrange

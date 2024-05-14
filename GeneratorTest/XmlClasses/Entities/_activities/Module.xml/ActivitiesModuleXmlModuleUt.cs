@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Module.xml;
 
@@ -49,7 +50,7 @@ public class ActivitiesModuleXmlModuleUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "h5pactivity_2"));
         
         var systemUnderTest = new ActivitiesModuleXmlModule();

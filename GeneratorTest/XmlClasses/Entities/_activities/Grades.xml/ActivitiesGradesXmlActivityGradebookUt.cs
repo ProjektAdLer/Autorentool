@@ -3,6 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Grades.xml;
 
@@ -32,8 +33,8 @@ public class ActivitiesGradesXmlActivityGradebookUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_2"));
+        var curWorkDir = ApplicationPaths.BackupFolder;
+        mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_2"));
         
         var gradeitem = new ActivitiesGradesXmlGradeItem();
         var gradeitems = new ActivitiesGradesXmlGradeItems();
@@ -47,7 +48,7 @@ public class ActivitiesGradesXmlActivityGradebookUt
         gradeActivityGradebook.Serialize("h5pactivity", "2");
         
         //Assert
-        var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_2", "grades.xml");
+        var path = Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_2", "grades.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
     

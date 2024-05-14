@@ -3,6 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Label.xml;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Label.xml;
 
@@ -36,7 +37,7 @@ public class ActivitiesLabelXmlActivityUt
     {
         // Arrange
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "label_1000"));
         
 

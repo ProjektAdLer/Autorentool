@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._sections.Section.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._sections;
 
@@ -37,7 +38,7 @@ public class SectionsSectionXmlSectionUt
         //Arrange 
         var mockFileSystem = new MockFileSystem();
 
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1"));
         
         var systemUnderTest = new SectionsSectionXmlSection();

@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Questions.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities.Questions.xml;
 
@@ -14,7 +15,7 @@ public class QuestionsXmlQuestionsCategoriesUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
         
         var systemUnderTest = new QuestionsXmlQuestionsCategories();

@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._course.Roles.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._course.Roles.xml;
 
@@ -31,7 +32,7 @@ public class CourseRoleXmlRolesUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
         
         var systemUnderTest = new CourseRolesXmlRoles();

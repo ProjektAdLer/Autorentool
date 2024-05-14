@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.GradeHistory.xml;
 
@@ -27,8 +28,8 @@ public class ActivitiesGradeHistoryXmlUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
         
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        mockFileSystem.AddDirectory(Path.Combine(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1"));
+        var curWorkDir = ApplicationPaths.BackupFolder;
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_1"));
         var systemUnderTest = new ActivitiesGradeHistoryXmlGradeHistory();
         
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
@@ -37,7 +38,7 @@ public class ActivitiesGradeHistoryXmlUt
         systemUnderTest.Serialize("h5pactivity", "1");
         
         //Assert
-        var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1", "grade_history.xml");
+        var path = Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_1", "grade_history.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
     

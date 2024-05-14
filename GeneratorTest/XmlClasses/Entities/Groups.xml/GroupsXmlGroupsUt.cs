@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Groups.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities.Groups.xml;
 
@@ -30,7 +31,7 @@ public class GroupsXmlUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
         
         var groupingsList = new GroupsXmlGroupingsList();

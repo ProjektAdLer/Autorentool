@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._course.Enrolments.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._course.Enrolments.xml;
 
@@ -37,7 +38,7 @@ public class CourseEnrolmentsXmlEnrolmentsUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
         
         var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();

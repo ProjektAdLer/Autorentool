@@ -5,6 +5,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.WorldExport;
 
@@ -17,16 +18,16 @@ public class BackupFileGeneratorUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var systemUnderTest = new BackupFileGenerator(mockFileSystem);
-        var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var fullDirPath = mockFileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport");
 
         //Act
         systemUnderTest.CreateBackupFolders();
 
 
         //Assert
-        var directoryNames = mockFileSystem.Directory.GetDirectories(currWorkDir);
-        Assert.That(directoryNames, Contains.Item(fullDirPath));
+        // var directoryNames = mockFileSystem.Directory.GetDirectories(currWorkDir);
+        // Assert.That(directoryNames, Contains.Item(fullDirPath));
+        Assert.That(mockFileSystem.FileExists(fullDirPath));
 
         mockFileSystem.Directory.SetCurrentDirectory(fullDirPath);
         var directoryNamesOneLevelDeeper =
@@ -64,12 +65,12 @@ public class BackupFileGeneratorUt
         var mockFileSystem = new MockFileSystem();
         var systemUnderTest = new BackupFileGenerator(mockFileSystem);
         systemUnderTest.CreateBackupFolders();
-        var fullPathFile = mockFileSystem.Path.Join(mockFileSystem.Path.GetFullPath("XMLFilesForExport"), "course.xml");
+        var fullDirPath = mockFileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport");
+        var fullPathFile = mockFileSystem.Path.Join(fullDirPath, "course.xml");
         mockFileSystem.AddFile(fullPathFile, "encoding=UTF-8");
         var tempDir = systemUnderTest.GetTempDir();
 
         //Act
-        var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
         systemUnderTest.DirectoryCopy(fullDirPath, tempDir);
 
         //Assert
@@ -110,7 +111,7 @@ public class BackupFileGeneratorUt
     [Test]
     public void BackupFileGenerator_WriteBackupFile_FilesCreated_AndTempDirectoryDeleted()
     {
-        var curDirectory = Directory.GetCurrentDirectory();
+        var curDirectory = ApplicationPaths.BackupFolder;
         try
         {
             //Arrange

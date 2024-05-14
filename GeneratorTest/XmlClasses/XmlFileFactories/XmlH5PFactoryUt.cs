@@ -12,6 +12,7 @@ using Generator.XmlClasses.Entities.Files.xml;
 using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.XmlFileFactories;
 
@@ -62,7 +63,7 @@ public class XmlH5PFactoryUt
         var mockFile = new FilesXmlFile();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var mockFiles = Substitute.For<IFilesXmlFiles>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
 
         var h5PElement1 = new LearningElementJson(1, "", "element1", "", "h5p", "h5p", 1, 2, "");
 
@@ -302,7 +303,7 @@ public class XmlH5PFactoryUt
         systemUnderTest.CreateActivityFolder("1");
 
         //Assert
-        Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "activities", "h5pactivity_" + "1")),
+        Assert.That(mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities", "h5pactivity_" + "1")),
             Is.True);
     }
 

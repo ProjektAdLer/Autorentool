@@ -2,6 +2,7 @@
 using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Lesson.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses.Entities._activities.Lesson.xml;
 
@@ -42,7 +43,7 @@ public class ActivitiesLessonXmlActivityUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         var activityName = "lesson";
         var moduleId = "1";
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",

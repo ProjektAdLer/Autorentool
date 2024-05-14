@@ -5,6 +5,7 @@ using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using Generator.XmlClasses.Entities._sections.Section.xml;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses;
 
@@ -39,7 +40,7 @@ public class XmlSectionFactoryUt
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
         mockSection.PluginLocalAdlerSection = Substitute.For<SectionsSectionXmlPluginLocalAdlerSection>();
         mockSection.PluginLocalAdlerSection.AdlerSection = Substitute.For<SectionsSectionXmlAdlerSection>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
 
         var mockContent = new List<int?>();
         mockContent.Add(1);

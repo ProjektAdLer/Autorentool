@@ -2,6 +2,7 @@
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities.Files.xml;
 using NUnit.Framework;
+using Shared.Configuration;
 
 namespace GeneratorTest.XmlClasses;
 
@@ -66,7 +67,7 @@ public class XmlFileManagerUt
     {
         // Arrange
         var mockFileSystem = new MockFileSystem();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         var txtPath = mockFileSystem.Path.Join(currWorkDir, "test.txt");
         var dirPath = mockFileSystem.Path.Join(currWorkDir, "XMLFilesForExport", "files", "08");
         mockFileSystem.AddFile(txtPath, new MockFileData("Hello World"));

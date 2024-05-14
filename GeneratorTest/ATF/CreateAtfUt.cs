@@ -13,6 +13,7 @@ using PersistEntities.LearningContent.Trigger;
 using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
+using Shared.Configuration;
 using Shared.LearningOutcomes;
 using TestHelpers;
 
@@ -180,9 +181,6 @@ public class CreateAtfUt
         var mockFileSystem = new MockFileSystem();
         mockFileSystem.AddFile("/foo/bar.txt", new MockFileData("barbaz"));
         mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport"));
-        mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\LearningWorld.xml", new MockFileData(""));
         var mockLogger = Substitute.For<ILogger<CreateAtf>>();
 
         const string name = "asdf";
@@ -398,7 +396,7 @@ public class CreateAtfUt
         systemUnderTest.GenerateAndExportLearningWorldJson(learningWorld);
 
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "ATF_Document.json");
+        var pathXmlFile = Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "ATF_Document.json");
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Uuid, Is.Not.Null);
