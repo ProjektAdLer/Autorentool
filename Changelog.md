@@ -14,11 +14,32 @@
 ### Removed
 
 ### Fixed
-- Fixed a bug where you could not import a world zip file created on Windows into the Authoring tool on macOS. (#515) 
 
 ### Security
 
 </details>
+
+## [2.1.4] - 2024-05-14
+
+### Added
+
+### Changed
+- Installer on Windows is now not one-click anymore, meaning the wizard instead of just installing the app now guides you
+  through the installation process.
+- Made it possible to select during installation whether you want to install the app for all users (C:\ProgramFiles) or
+  just the current user (AppData\Local) on Windows.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- Fixed a bug where you could not import a world zip file created on Windows into the Authoring tool on macOS. (#515)
+- Fixed a bug where it was impossible to export and upload a learning world if your windows user didn't have
+  administrator privileges. (#514)
+
+### Security
+
 
 ## [2.1.3] - 2024-04-12
 
