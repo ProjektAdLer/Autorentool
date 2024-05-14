@@ -7,6 +7,7 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using Generator.XmlClasses.Entities._activities.Url.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
@@ -187,7 +188,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     /// <param name="moduleId"></param>
     public void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "url_" + moduleId));
     }

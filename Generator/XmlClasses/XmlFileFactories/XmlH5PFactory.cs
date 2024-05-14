@@ -8,6 +8,7 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using Generator.XmlClasses.Entities.Files.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
@@ -16,7 +17,7 @@ namespace Generator.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory : IXmlH5PFactory
 {
-    private readonly string _currWorkDir;
+    private readonly string _workDir;
 
     private readonly IFileSystem _fileSystem;
     private readonly string _hardcodedPath = "XMLFilesForExport";
@@ -88,7 +89,7 @@ public class XmlH5PFactory : IXmlH5PFactory
 
         ReadAtf = readAtf;
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-        _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        _workDir = ApplicationPaths.BackupFolder;
     }
 
     public IFilesXmlFiles FilesXmlFiles { get; }
@@ -151,9 +152,9 @@ public class XmlH5PFactory : IXmlH5PFactory
                     break;
             }
 
-            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_workDir, _hardcodedPath,
                 h5PElement.ElementName + "." + h5PElement.ElementFileType));
-            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_workDir, _hardcodedPath,
                     h5PElement.ElementName + "." + h5PElement.ElementFileType),
                 FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), H5PElementUuid);
@@ -296,7 +297,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// <param name="moduleId"></param>
     public void CreateActivityFolder(string? moduleId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "h5pactivity_" + moduleId));
     }

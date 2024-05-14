@@ -8,12 +8,13 @@ using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Resource.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using Generator.XmlClasses.Entities.Files.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
 public class XmlResourceFactory : IXmlResourceFactory
 {
-    private readonly string _currWorkDir;
+    private readonly string _workDir;
     private readonly IFileSystem _fileSystem;
     private readonly string _hardcodedPath = "XMLFilesForExport";
     public readonly string CurrentTime;
@@ -53,7 +54,7 @@ public class XmlResourceFactory : IXmlResourceFactory
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem ?? new FileSystem();
-        _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        _workDir = ApplicationPaths.BackupFolder;
 
         FileManager = xmlFileManager ?? new XmlFileManager();
         FilesXmlFilesList = new List<FilesXmlFile>();
@@ -130,9 +131,9 @@ public class XmlResourceFactory : IXmlResourceFactory
                     break;
             }
 
-            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_workDir, _hardcodedPath,
                 resource.ElementName + "." + resource.ElementFileType));
-            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_workDir, _hardcodedPath,
                 resource.ElementName + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
             var mimeType = resource.ElementFileType switch
@@ -275,7 +276,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     /// <param name="moduleId"></param>
     public void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "resource_" + moduleId));
     }

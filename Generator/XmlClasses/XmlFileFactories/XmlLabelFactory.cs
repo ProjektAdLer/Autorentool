@@ -6,6 +6,7 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Label.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
@@ -156,7 +157,7 @@ public class XmlLabelFactory : IXmlLabelFactory
     /// <param name="moduleId"></param>
     private void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "label_" + moduleId));
     }

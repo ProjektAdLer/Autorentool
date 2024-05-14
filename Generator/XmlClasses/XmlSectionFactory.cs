@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using Generator.ATF;
 using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using Generator.XmlClasses.Entities._sections.Section.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses;
 
@@ -123,7 +124,7 @@ public class XmlSectionFactory : IXmlSectionFactory
     /// <param name="sectionId"></param>
     private void CreateSectionsFolder(string sectionId)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir =  ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections",
             "section_" + sectionId));
     }

@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Security.Cryptography;
 using Generator.XmlClasses.Entities.Files.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses;
 
@@ -62,7 +63,7 @@ public class XmlFileManager : IXmlFileManager
     /// <param name="hashCheckSum"></param>
     public void CreateFolderAndFiles(string filepath, string hashCheckSum)
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir =  ApplicationPaths.BackupFolder;
         var hashFolderName = hashCheckSum.Substring(0, 2);
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
 

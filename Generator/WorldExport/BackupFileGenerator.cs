@@ -3,6 +3,7 @@ using Generator.ATF;
 using Generator.XmlClasses;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
+using Shared.Configuration;
 
 namespace Generator.WorldExport;
 
@@ -26,7 +27,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     ///<inheritdoc cref="IBackupFileGenerator.CreateBackupFolders"/>
     public void CreateBackupFolders()
     {
-        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir = ApplicationPaths.BackupFolder;
         var xmlFilesBasePath = Path.Join(currWorkDir, "XMLFilesForExport");
         if (_fileSystem.Directory.Exists(xmlFilesBasePath)) return;
         _fileSystem.Directory.CreateDirectory(xmlFilesBasePath);
@@ -52,7 +53,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         {
             //copy template from current workdir
             tempDir = GetTempDir();
-            DirectoryCopy("XMLFilesForExport", tempDir);
+            DirectoryCopy(Path.Combine(ApplicationPaths.BackupFolder,"XMLFilesForExport"), tempDir);
 
             //construct tarball 
             const string tarName = "EmptyWorld.mbz";

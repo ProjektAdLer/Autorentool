@@ -5,6 +5,7 @@ using BusinessLogic.Entities;
 using Generator.ATF;
 using Generator.WorldExport;
 using PersistEntities;
+using Shared.Configuration;
 
 namespace Generator.API;
 
@@ -34,6 +35,8 @@ public class WorldGenerator : IWorldGenerator
     {
         try
         {
+            if (!_fileSystem.Directory.Exists(ApplicationPaths.BackupFolder))
+                _fileSystem.Directory.CreateDirectory(ApplicationPaths.BackupFolder);
             var atfPath = CreateAtf.GenerateAndExportLearningWorldJson(Mapper.Map<LearningWorldPe>(learningWorld));
             ReadAtf.ReadLearningWorld(atfPath);
             BackupFile.WriteXmlFiles((ReadAtf as ReadAtf)!);
@@ -41,8 +44,8 @@ public class WorldGenerator : IWorldGenerator
         }
         finally
         {
-            if (_fileSystem.Directory.Exists("XMLFilesForExport"))
-                _fileSystem.Directory.Delete("XMLFilesForExport", true);
+            if (_fileSystem.Directory.Exists(ApplicationPaths.BackupFolder))
+                _fileSystem.Directory.Delete(ApplicationPaths.BackupFolder, true);
         }
     }
 

@@ -12,4 +12,5 @@ public static class ApplicationPaths
     public static string SavedWorldsFolder => Path.Combine(RootAppDataFolder, "SavedWorlds");
     public static string LogsFolder => Path.Combine(RootAppDataFolder, "Logs");
     public static string TempFolder => RootTempFolder;
+    public static string BackupFolder => Path.Combine(RootTempFolder, "Backup");
 }

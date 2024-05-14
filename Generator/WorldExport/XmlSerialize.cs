@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Xml;
 using System.Xml.Serialization;
+using Shared.Configuration;
 
 namespace Generator.WorldExport;
 
@@ -27,7 +28,7 @@ public class XmlSerialize
     /// <param name="xmlname"></param>
     public void Serialize(object xml, string xmlname)
     {
-        var curWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        var curWorkDir =  ApplicationPaths.BackupFolder;
         var path = Path.Join(curWorkDir, "XMLFilesForExport", xmlname);
 
         var settings = new XmlWriterSettings

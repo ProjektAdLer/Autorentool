@@ -8,6 +8,7 @@ using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
+using Shared.Configuration;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
@@ -187,7 +188,7 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 
     private void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir = FileSystem.Directory.GetCurrentDirectory();
+        var currWorkDir =  ApplicationPaths.BackupFolder;
         FileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "adleradaptivity_" + moduleId));
     }

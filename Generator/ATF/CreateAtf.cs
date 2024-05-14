@@ -12,6 +12,7 @@ using PersistEntities.LearningContent.Question;
 using PersistEntities.LearningContent.Story;
 using Shared;
 using Shared.Adaptivity;
+using Shared.Configuration;
 using Shared.Extensions;
 
 namespace Generator.ATF;
@@ -775,9 +776,9 @@ public class CreateAtf : ICreateAtf
     /// </summary>
     private void SetupDirectoryStructure()
     {
-        var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
-        _xmlFilesForExportPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport");
-        _atfPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "ATF_Document.json");
+        var workDir =  ApplicationPaths.BackupFolder;
+        _xmlFilesForExportPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport");
+        _atfPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport", "ATF_Document.json");
 
         if (_fileSystem.Directory.Exists(_xmlFilesForExportPath))
         {
@@ -801,7 +802,7 @@ public class CreateAtf : ICreateAtf
             try
             {
                 _fileSystem.File.Copy(fileContent.Filepath,
-                    _fileSystem.Path.Join("XMLFilesForExport", $"{name}.{fileContent.Type}"));
+                    _fileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", $"{name}.{fileContent.Type}"));
                 Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", fileContent.Filepath);
             }
             catch (FileNotFoundException)
