@@ -30,7 +30,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '6.0.422'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -47,7 +47,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      dotNetVersion: net8.0
+      dotNetVersion: net6.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
     strategy:
@@ -71,7 +71,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '6.0.422'
       
       # build only the specific test project we are testing   
       - name: Build test project
