@@ -84,7 +84,7 @@ jobs:
       - name: Evaluate coverage file path in pwsh
         shell: pwsh
         run: |
-          $coverageFile = ResolvePath ${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml | Select -ExpandProperty Path
+          $coverageFile = Resolve-Path ${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml | Select -ExpandProperty Path
           echo "CoverageFile=$coverageFile"
           echo "COVERAGE_FILE=$coverageFile" >> $env:GITHUB_ENV
       
