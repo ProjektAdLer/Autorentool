@@ -81,13 +81,21 @@ jobs:
       - name: Run ${{ matrix.test_project }} tests
         run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 
+      - name: Evaluate coverage file path in pwsh
+        shell: pwsh
+        run: |
+          $coverageFile = ResolvePath ${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml | Select -ExpandProperty Path
+          echo "CoverageFile=$coverageFile"
+          echo "COVERAGE_FILE=$coverageFile" >> $env:GITHUB_ENV
+      
+      
       # submit result from parallel to coveralls
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@v2.3.0
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
-          file: ${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml
+          file: $env:COVERAGE_FILE
 
   finish:
     needs: build
