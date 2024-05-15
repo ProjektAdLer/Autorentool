@@ -87,7 +87,7 @@ jobs:
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
-          file: ${{ matrix.test_project }}/TestResults/*/coverage.cobertura.xml
+          file: ${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml
 
   finish:
     needs: build
