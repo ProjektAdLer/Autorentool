@@ -6,12 +6,14 @@ namespace BusinessLogic.Commands.World;
 
 public class WorldCommandFactory : IWorldCommandFactory
 {
-    public WorldCommandFactory(ILoggerFactory loggerFactory)
+    public WorldCommandFactory(ILoggerFactory loggerFactory, IUnsavedChangesResetHelper unsavedChangesResetHelper)
     {
         LoggerFactory = loggerFactory;
+        UnsavedChangesResetHelper = unsavedChangesResetHelper;
     }
 
     private ILoggerFactory LoggerFactory { get; }
+    public IUnsavedChangesResetHelper UnsavedChangesResetHelper { get; }
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
         string shortname, string authors, string language, string description, string goals,
@@ -52,5 +54,5 @@ public class WorldCommandFactory : IWorldCommandFactory
     public ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld,
         string filepath, Action<LearningWorld> mappingAction) =>
         new SaveLearningWorld(businessLogic, learningWorld, filepath, mappingAction,
-            LoggerFactory.CreateLogger<SaveLearningWorld>());
+            LoggerFactory.CreateLogger<SaveLearningWorld>(), UnsavedChangesResetHelper);
 }

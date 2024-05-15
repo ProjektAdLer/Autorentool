@@ -14,7 +14,7 @@ public class WorldCommandFactoryUt
     [SetUp]
     public void SetUp()
     {
-        _factory = new WorldCommandFactory(new NullLoggerFactory());
+        _factory = new WorldCommandFactory(new NullLoggerFactory(), Substitute.For<IUnsavedChangesResetHelper>());
     }
 
     private IWorldCommandFactory _factory = null!;

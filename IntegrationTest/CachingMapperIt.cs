@@ -47,7 +47,8 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()));
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
+                Substitute.For<IUnsavedChangesResetHelper>()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
@@ -83,7 +84,8 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
+                Substitute.For<IUnsavedChangesResetHelper>()),
             spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()));
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -143,7 +145,8 @@ public class CachingMapperIt
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, cachingLogger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper,
-            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory()),
+            worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
+                Substitute.For<IUnsavedChangesResetHelper>()),
             spaceCommandFactory: new SpaceCommandFactory(new NullLoggerFactory()),
             elementCommandFactory: new ElementCommandFactory(new NullLoggerFactory()));
 

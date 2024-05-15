@@ -192,7 +192,8 @@ public class StartupUt
         typeof(MultipleChoiceQuestionValidator), typeof(MultipleChoiceMultipleResponseQuestionValidator),
         typeof(MultipleChoiceSingleResponseQuestionValidator), typeof(ChoiceValidator),
         typeof(AdaptivityContentValidator),
-        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider), typeof(ILearningElementNamesProvider)
+        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider), typeof(ILearningElementNamesProvider),
+        typeof(IUnsavedChangesResetHelper)
     };
 
     [Test]

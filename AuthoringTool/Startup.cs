@@ -279,6 +279,7 @@ public class Startup
         services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
         services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
         services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
+        services.AddSingleton<IUnsavedChangesResetHelper, UnsavedChangesResetHelper>();
         services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
         services.AddSingleton<IAdaptivityRuleCommandFactory, AdaptivityRuleCommandFactory>();
         services.AddSingleton<IAdaptivityActionCommandFactory, AdaptivityActionCommandFactory>();
