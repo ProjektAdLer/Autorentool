@@ -9,20 +9,21 @@ namespace DataAccessTest.Extensions;
 [TestFixture]
 public class ZipExtensionsUt
 {
-    private IFileSystem _fileSystem;
-
     [SetUp]
     public void Setup()
     {
-        _fileSystem = ResourceHelper.PrepareFileSystemWithResources();
     }
 
+    private IFileSystem _fileSystem;
+
     [Test]
-    public void ExtractToDirectory_ExtractsProperlyIntoMockFs()
+    [Platform(Exclude = "Linux, Unix, MacOSX")]
+    public void ExtractToDirectory_ExtractsProperlyIntoMockFs_Windows()
     {
+        _fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
         using var zipStream = _fileSystem.File.OpenRead("C:\\zips\\import_test.zip");
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        
+
         zipArchive.ExtractToDirectory(_fileSystem, "C:\\somerandomdir");
         Assert.Multiple(() =>
         {
@@ -34,6 +35,28 @@ public class ZipExtensionsUt
             Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\adler_logo.png"));
             Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\adler_logo.png.hash"));
             Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\.linkstore"));
+        });
+    }
+
+    [Test]
+    [Platform(Include = "Linux, Unix, MacOSX")]
+    public void ExtractToDirectory_ExtractsProperlyIntoMockFs_Unix()
+    {
+        _fileSystem = ResourceHelper.PrepareUnixFileSystemWithResources();
+        using var zipStream = _fileSystem.File.OpenRead("/zips/import_test.zip");
+        var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        zipArchive.ExtractToDirectory(_fileSystem, "/somerandomdir");
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fileSystem.Directory.Exists("/somerandomdir"));
+            Assert.That(_fileSystem.Directory.Exists("/somerandomdir/Content"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/world.awf"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/Content/regex.txt"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/Content/regex.txt.hash"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/Content/adler_logo.png"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/Content/adler_logo.png.hash"));
+            Assert.That(_fileSystem.File.Exists("/somerandomdir/Content/.linkstore"));
         });
     }
 }

@@ -254,7 +254,7 @@ public class DataAccessUt
     [Test]
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
-        var fileSystem = ResourceHelper.PrepareFileSystemWithResources();
+        var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
         xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
