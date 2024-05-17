@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities.LearningContent;
+using TestHelpers;
 
 namespace DataAccessTest.Persistence;
 
@@ -307,6 +308,97 @@ public class ContentFileHandlerUt
             Is.TypeOf<ArgumentException>()
                 .And.Message.EqualTo("Path cannot be null or whitespace. (Parameter 'filepath')"),
             async () => await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync(""));
+    }
+
+    [Test]
+    public void SaveLink_FileExistsButLinkDoesntExistYet_WritesIntoFile()
+    {
+        var fileSystem = new MockFileSystem();
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var linkFilePath = fileSystem.Path.Combine(ContentFilesFolderPath, ".linkstore");
+        fileSystem.AddFile(linkFilePath, "");
+        var randomLink = PersistEntityProvider.GetLinkContent("somerandmname", "somerandomurl");
+        xmlFileHandlerLink.LoadFromDisk(linkFilePath).Returns(new List<LinkContentPe>{randomLink});
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+
+        var link = PersistEntityProvider.GetLinkContent();
+        
+        systemUnderTest.SaveLink(link);
+     
+        xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => li.Contains(link) && li.Count == 2), linkFilePath);
+    }
+
+    [Test]
+    public void SaveLink_FileDoesNotExist_WritesIntoFile()
+    {
+        var fileSystem = new MockFileSystem();
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var linkFilePath = fileSystem.Path.Combine(ContentFilesFolderPath, ".linkstore");
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+
+        var link = PersistEntityProvider.GetLinkContent();
+        
+        systemUnderTest.SaveLink(link);
+     
+        xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => li.Contains(link) && li.Count == 1), linkFilePath);
+    }
+
+    [Test]
+    public void SaveLink_FileExistsAndLinkExists_DoesNothing()
+    {
+        var fileSystem = new MockFileSystem();
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var linkFilePath = fileSystem.Path.Combine(ContentFilesFolderPath, ".linkstore");
+        fileSystem.AddFile(linkFilePath, "");
+        var link = PersistEntityProvider.GetLinkContent();
+        xmlFileHandlerLink.LoadFromDisk(linkFilePath).Returns(new List<LinkContentPe> {link});
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+
+        
+        systemUnderTest.SaveLink(link);
+        
+        xmlFileHandlerLink.DidNotReceive().SaveToDisk(Arg.Any<List<LinkContentPe>>(), Arg.Any<string>());
+    }
+
+    [Test]
+    public void SaveLink_FileExistsAndLinkWithSameNameExists_OverwritesName()
+    {
+        var fileSystem = new MockFileSystem();
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var linkFilePath = fileSystem.Path.Combine(ContentFilesFolderPath, ".linkstore");
+        fileSystem.AddFile(linkFilePath, "");
+        var link = PersistEntityProvider.GetLinkContent();
+        var oldLinkName = link.Name;
+        var dupLink = PersistEntityProvider.GetLinkContent(link: "differentlink");
+        xmlFileHandlerLink.LoadFromDisk(linkFilePath).Returns(new List<LinkContentPe> {dupLink});
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+
+        
+        systemUnderTest.SaveLink(link);
+        
+        xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => li.Contains(link) && li.Count == 2), linkFilePath);
+        Assert.That(link.Name, Is.EqualTo(oldLinkName + " (1)"));
+    }
+
+    [Test]
+    public void SaveLinks_SavesAllLinks()
+    {
+        var fileSystem = new MockFileSystem();
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var linkFilePath = fileSystem.Path.Combine(ContentFilesFolderPath, ".linkstore");
+        var links = new List<LinkContentPe>
+        {
+            PersistEntityProvider.GetLinkContent(),
+            PersistEntityProvider.GetLinkContent(link: "foobar"),
+            PersistEntityProvider.GetLinkContent(name: "barbouruas", link:"onemorelink")
+        };
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+        
+        systemUnderTest.SaveLinks(links);
+        
+        xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => li.Count == 3 && li.SequenceEqual(links)), linkFilePath);
+        
     }
 
     private ContentFileHandler CreateTestableContentFileHandler(ILogger<ContentFileHandler>? logger = null,

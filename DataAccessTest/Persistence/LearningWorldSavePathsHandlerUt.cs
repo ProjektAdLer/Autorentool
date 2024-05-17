@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using Shared.Configuration;
 
 namespace DataAccessTest.Persistence;
 
@@ -19,8 +20,28 @@ public class LearningWorldSavePathsHandlerUt
 
         var systemUnderTest = CreateTestableLearningWorldSavePathsHandler(logger, fileSystem);
 
-        Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
-        Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
+            Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
+        });
+    }
+    
+    [Test]
+    public void GetSavedLearningWorldPaths_ReturnsAllWorldFiles()
+    {
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            {ApplicationPaths.SavedWorldsFolder + "/world1.awf", new MockFileData("world1")},
+            {ApplicationPaths.SavedWorldsFolder + "/world2.awf", new MockFileData("world2")},
+            {ApplicationPaths.SavedWorldsFolder + "/world3.txt", new MockFileData("world3")},
+        });
+        var systemUnderTest = CreateTestableLearningWorldSavePathsHandler(fileSystem: fileSystem);
+
+        var result = systemUnderTest.GetSavedLearningWorldPaths();
+
+        Assert.That(result.Count(), Is.EqualTo(2));
+        Assert.That(result, Has.All.Matches<IFileInfo>(file => file.Name.EndsWith(FileEndings.WorldFileEndingWithDot)));
     }
 
 

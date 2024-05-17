@@ -70,18 +70,26 @@ public class ContentFileHandler : IContentFileHandler
     public void SaveLink(LinkContentPe linkContent)
     {
         var links = GetAllLinks();
-        if (links.Contains(linkContent)) return;
-        if (links.Any(l => l.Name == linkContent.Name)) linkContent.Name += " (1)";
-        links.Add(linkContent);
-        OverwriteLinksFile(links);
+        if(AddLinkInternal(linkContent, links))
+            OverwriteLinksFile(links);
     }
 
     public void SaveLinks(IEnumerable<LinkContentPe> links)
     {
         var existingLinks = GetAllLinks();
         var newLinks = links.Where(l => !existingLinks.Contains(l));
-        var linksToSave = existingLinks.Union(newLinks);
-        OverwriteLinksFile(linksToSave.ToList());
+        foreach (var link in newLinks)
+            AddLinkInternal(link, existingLinks);
+        // var linksToSave = existingLinks.Union(newLinks);
+        OverwriteLinksFile(existingLinks);
+    }
+
+    private static bool AddLinkInternal(LinkContentPe linkContent, ICollection<LinkContentPe> links)
+    {
+        if (links.Contains(linkContent)) return false;
+        while (links.Any(l => l.Name == linkContent.Name)) linkContent.Name += " (1)";
+        links.Add(linkContent);
+        return true;
     }
 
     /// <inheritdoc cref="IContentFileHandler.GetAllContent"/>

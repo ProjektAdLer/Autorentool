@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Extensions;
@@ -357,6 +358,100 @@ public class DataAccessUt
             Assert.That(world.Length, Is.EqualTo(2));
             Assert.That(worldData, Is.EqualTo(expectedWorldData));
         });
+    }
+
+    [Test]
+    public void GetAllContent_CallsContentFileHandlerAndMapper()
+    {
+        var contentFileHandler = Substitute.For<IContentFileHandler>();
+        var content = new List<ILearningContentPe>()
+            { PersistEntityProvider.GetFileContent(), PersistEntityProvider.GetLinkContent() };
+        var contentEntities = new List<ILearningContent>()
+            { EntityProvider.GetFileContent(), EntityProvider.GetLinkContent() };
+        var mapper = Substitute.For<IMapper>();
+        contentFileHandler.GetAllContent().Returns(content);
+        mapper.Map<ILearningContent>(content[0]).Returns(contentEntities[0]);
+        mapper.Map<ILearningContent>(content[1]).Returns(contentEntities[1]);
+        
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
+        
+        var retval = systemUnderTest.GetAllContent();
+        
+        Assert.That(retval, Is.EquivalentTo(contentEntities));
+        contentFileHandler.Received().GetAllContent();
+        mapper.Received().Map<ILearningContent>(content[0]);
+        mapper.Received().Map<ILearningContent>(content[1]);
+        
+    }
+    
+    [Test]
+    public void RemoveContent_CallsContentFileHandlerAndMapper()
+    {
+        var contentFileHandler = Substitute.For<IContentFileHandler>();
+        var mapper = Substitute.For<IMapper>();
+        var content = EntityProvider.GetFileContent();
+        var contentPe = PersistEntityProvider.GetFileContent();
+        mapper.Map<ILearningContentPe>(content).Returns(contentPe);
+        
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
+        
+        systemUnderTest.RemoveContent(content);
+        
+        contentFileHandler.Received().RemoveContent(contentPe);
+        mapper.Received().Map<ILearningContentPe>(content);
+    }
+
+    [Test]
+    public void SaveLink_CallsContentFileHandlerAndMapper()
+    {
+        var contentFileHandler = Substitute.For<IContentFileHandler>();
+        var mapper = Substitute.For<IMapper>();
+        var link = EntityProvider.GetLinkContent();
+        var linkPe = PersistEntityProvider.GetLinkContent();
+        mapper.Map<LinkContentPe>(link).Returns(linkPe);
+        
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
+        
+        systemUnderTest.SaveLink(link);
+        
+        contentFileHandler.Received().SaveLink(linkPe);
+        mapper.Received().Map<LinkContentPe>(link);
+    }
+
+    [Test]
+    public void GetContentFilesFolderPath_CallsContentFileHandler()
+    {
+        var contentFileHandler = Substitute.For<IContentFileHandler>();
+        contentFileHandler.ContentFilesFolderPath.Returns("foobarbaz");
+        
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler);
+        
+        Assert.That(systemUnderTest.GetContentFilesFolderPath(), Is.EqualTo("foobarbaz"));
+    }
+
+    [Test]
+    public void GetFileInfoForPath_CallsFileSystem()
+    {
+        var filesystem = Substitute.For<IFileSystem>();
+        var fileInfo = Substitute.For<IFileInfo>();
+        filesystem.FileInfo.New("foo").Returns(fileInfo);
+        var systemUnderTest = CreateTestableDataAccess(fileSystem: filesystem);
+        
+        var actualFileInfo = systemUnderTest.GetFileInfoForPath("foo");
+        
+        Assert.That(actualFileInfo, Is.EqualTo(fileInfo));
+        filesystem.FileInfo.Received().New("foo");
+    }
+
+    [Test]
+    public void DeleteFileByPath_CallsFileSystem()
+    {
+        var filesystem = Substitute.For<IFileSystem>();
+        var systemUnderTest = CreateTestableDataAccess(fileSystem: filesystem);
+        
+        systemUnderTest.DeleteFileByPath("foo");
+        
+        filesystem.File.Received().Delete("foo");
     }
 
     private class FindSuitableNewSavePathTestCases : IEnumerable

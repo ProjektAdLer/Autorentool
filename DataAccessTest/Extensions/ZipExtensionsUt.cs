@@ -22,9 +22,18 @@ public class ZipExtensionsUt
     {
         using var zipStream = _fileSystem.File.OpenRead("C:\\zips\\import_test.zip");
         var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-
-        _fileSystem.CreateDisposableDirectory(out var dir);
         
-        zipArchive.ExtractToDirectory(_fileSystem, dir.FullName);
+        zipArchive.ExtractToDirectory(_fileSystem, "C:\\somerandomdir");
+        Assert.Multiple(() =>
+        {
+            Assert.That(_fileSystem.Directory.Exists("C:\\somerandomdir"));
+            Assert.That(_fileSystem.Directory.Exists("C:\\somerandomdir\\Content"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\world.awf"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\regex.txt"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\regex.txt.hash"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\adler_logo.png"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\adler_logo.png.hash"));
+            Assert.That(_fileSystem.File.Exists("C:\\somerandomdir\\Content\\.linkstore"));
+        });
     }
 }
