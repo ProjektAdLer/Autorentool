@@ -19,6 +19,7 @@ public class ContentFileHandlerUt
         "AdLerAuthoring", "ContentFiles");
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadContentAsync_WithFilepath_NoDuplicateFile_CopiesFileCreatesHashFileAndReturnsCorrectObject()
     {
         const string filepath = "foobar.png";
@@ -43,6 +44,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadContentAsync_WithFilepath_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
     {
         const string filepath = "foobar.png";
@@ -65,6 +67,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task
         LoadContentAsync_WithFilepath_DuplicateFileNameWithDifferentContent_CopiesAndReturnsCorrectObject()
     {
@@ -95,6 +98,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public void LoadContentAsync_WithFilepath_EmptyFile_ThrowsException()
     {
         const string filepath = "foobar.png";
@@ -116,6 +120,7 @@ public class ContentFileHandlerUt
 
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadContentAsync_WithStream_NoDuplicateFile_CopiesFileAndReturnsCorrectObject()
     {
         var fileSystem = new MockFileSystem();
@@ -138,6 +143,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadContentAsync_WithStream_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
     {
         var fileSystem = new MockFileSystem();
@@ -160,6 +166,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public void LoadContentAsync_WithStream_EmptyStream_ThrowsException()
     {
         var fileSystem = new MockFileSystem();
@@ -194,6 +201,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadContentAsync_WithByteArray_NoDuplicateFile_CopiesFileAndReturnsCorrectObject()
     {
         const string filepath = "foobar.png";
@@ -219,6 +227,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_SameContentDifferentName_ReturnsPath()
     {
         var fileSystem = new MockFileSystem();
@@ -236,6 +245,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_DifferentLength_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
@@ -253,6 +263,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_DifferentContent_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
@@ -270,6 +281,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_NoFilesInContentFolder_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
@@ -283,6 +295,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_HashButNoRealFile_SilentlyDeletesHashFile_ThenReturnsNull()
     {
         var fileSystem = new MockFileSystem();
@@ -302,6 +315,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task GetFilePathOfExistingCopyAndHashAsync_RealFileButNoHash_SilentlyCreatesHashFile_ThenReturnsPath()
     {
         var fileSystem = new MockFileSystem();
@@ -321,6 +335,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public void GetFilePathOfExistingCopyAndHashAsync_EmptyOrNullFilePath_ThrowsArgumentException()
     {
         var systemUnderTest = CreateTestableContentFileHandler();
@@ -336,6 +351,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_FileExistsButLinkDoesntExistYet_WritesIntoFile()
     {
         var fileSystem = new MockFileSystem();
@@ -354,6 +370,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_FileDoesNotExist_WritesIntoFile()
     {
         var fileSystem = new MockFileSystem();
@@ -369,6 +386,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_FileExistsAndLinkExists_DoesNothing()
     {
         var fileSystem = new MockFileSystem();
@@ -386,6 +404,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_FileExistsAndLinkWithSameNameExists_OverwritesName()
     {
         var fileSystem = new MockFileSystem();
@@ -406,6 +425,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLinks_SavesAllLinks()
     {
         var fileSystem = new MockFileSystem();
@@ -427,6 +447,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0048,AWA0049]
     public void GetAllContent_ReturnsAllContentFilesInContentFilesFolder()
     {
         var fileSystem = new MockFileSystem();
@@ -447,6 +468,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037,AWA0043]
     public void RemoveContent_FileContent_DeletesFileFromContentFilesFolder()
     {
         var fileSystem = new MockFileSystem();
@@ -460,6 +482,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037,AWA0043]
     public void RemoveContent_LinkContent_DeletesLinkFromLinkstore()
     {
         var fileSystem = new MockFileSystem();
