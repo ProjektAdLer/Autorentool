@@ -194,6 +194,31 @@ public class ContentFileHandlerUt
     }
 
     [Test]
+    public async Task LoadContentAsync_WithByteArray_NoDuplicateFile_CopiesFileAndReturnsCorrectObject()
+    {
+        const string filepath = "foobar.png";
+        var fileSystem = new MockFileSystem();
+        var byteArray = new byte[] { 0x42, 0x24, 0x53, 0x54 };
+        fileSystem.AddFile(filepath, new MockFileData(byteArray));
+        using var sha256 = SHA256.Create();
+        var hash = sha256.ComputeHash(byteArray);
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+        
+        var objActual = await systemUnderTest.LoadContentAsync(filepath, hash);
+        
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe)objActual;
+        Assert.Multiple(() =>
+        {
+            Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar.png")));
+            Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.True);
+        });
+    }
+
+    [Test]
     public async Task GetFilePathOfExistingCopyAndHashAsync_SameContentDifferentName_ReturnsPath()
     {
         var fileSystem = new MockFileSystem();
@@ -399,6 +424,55 @@ public class ContentFileHandlerUt
         
         xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => li.Count == 3 && li.SequenceEqual(links)), linkFilePath);
         
+    }
+
+    [Test]
+    public void GetAllContent_ReturnsAllContentFilesInContentFilesFolder()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "a.txt"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "b.txt"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "c.txt"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "c.txt.hash"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, ".foobar"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+        
+        var actual = systemUnderTest.GetAllContent().ToList();
+        
+        Assert.That(actual, Has.Count.EqualTo(3));
+        Assert.That(actual, Has.Exactly(1).Matches<FileContentPe>(f => f.Name == "a.txt"));
+        Assert.That(actual, Has.Exactly(1).Matches<FileContentPe>(f => f.Name == "b.txt"));
+        Assert.That(actual, Has.Exactly(1).Matches<FileContentPe>(f => f.Name == "c.txt"));
+    }
+
+    [Test]
+    public void RemoveContent_FileContent_DeletesFileFromContentFilesFolder()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, "a.txt"), new MockFileData(new byte[] { 0x42, 0x24, 0x53, 0x54 }));
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+        
+        systemUnderTest.RemoveContent(new FileContentPe("a.txt", "png", Path.Join(ContentFilesFolderPath, "a.txt")));
+        
+        Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "a.txt")), Is.False);
+    }
+
+    [Test]
+    public void RemoveContent_LinkContent_DeletesLinkFromLinkstore()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(Path.Join(ContentFilesFolderPath, ".linkstore"), "");
+        var xmlFileHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        var link = PersistEntityProvider.GetLinkContent();
+        xmlFileHandlerLink.LoadFromDisk(Arg.Any<string>()).Returns(new List<LinkContentPe> {link});
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem, xmlFileHandler: xmlFileHandlerLink);
+        
+        systemUnderTest.RemoveContent(link);
+        
+        xmlFileHandlerLink.Received().SaveToDisk(Arg.Is<List<LinkContentPe>>(li => !li.Contains(link)), Arg.Any<string>());
     }
 
     private ContentFileHandler CreateTestableContentFileHandler(ILogger<ContentFileHandler>? logger = null,
