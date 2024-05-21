@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using Shared;
 using Shared.Configuration;
 
 namespace DataAccess.Persistence;

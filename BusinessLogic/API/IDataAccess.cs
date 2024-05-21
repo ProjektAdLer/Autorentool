@@ -3,7 +3,6 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
-using Shared;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;

@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using System.Xml.Serialization;
 using Microsoft.Extensions.Logging;
 using Shared;
 using Shared.Configuration;

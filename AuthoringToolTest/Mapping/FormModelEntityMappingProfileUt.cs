@@ -6,7 +6,6 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using NUnit.Framework;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
-using Presentation.PresentationLogic.LearningElement;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;

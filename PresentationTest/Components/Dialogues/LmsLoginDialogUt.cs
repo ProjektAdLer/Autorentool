@@ -1,17 +1,4 @@
-using Bunit;
-using Bunit.TestDoubles;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using MudBlazor;
-using MudBlazor.Services;
-using NSubstitute;
 using NUnit.Framework;
-using Presentation.Components.Dialogues;
-using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Shared.Configuration;
-using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.Dialogues;
 

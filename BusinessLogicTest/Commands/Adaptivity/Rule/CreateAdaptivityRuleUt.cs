@@ -2,13 +2,11 @@ using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
 using TestHelpers;
-using NullLogger = Microsoft.Extensions.Logging.Abstractions.NullLogger;
 
 namespace BusinessLogicTest.Commands.Adaptivity.Rule;
 

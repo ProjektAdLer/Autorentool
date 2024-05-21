@@ -9,12 +9,10 @@ using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Extensions;
 using DataAccess.Persistence;
 using DataAccessTest.Resources;
-using JetBrains.Annotations;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
-using Shared;
 using Shared.Configuration;
 using TestHelpers;
 

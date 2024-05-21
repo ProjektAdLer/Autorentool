@@ -15,7 +15,6 @@ using Presentation.PresentationLogic.MyLearningWorlds;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Presentation.View.MyLearningWorlds;
-using Shared;
 using TestHelpers;
 
 namespace IntegrationTest.View.MyLearningWorlds;

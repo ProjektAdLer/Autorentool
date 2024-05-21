@@ -8,7 +8,6 @@ using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
 using DataAccess.Extensions;
 using DataAccess.Persistence;
-using ICSharpCode.SharpZipLib.Zip;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using Shared.Configuration;

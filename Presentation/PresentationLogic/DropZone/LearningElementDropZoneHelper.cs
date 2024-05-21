@@ -1,8 +1,4 @@
-﻿using BusinessLogic.Entities.LearningContent.Adaptivity;
-using BusinessLogic.Entities.LearningContent.FileContent;
-using BusinessLogic.Entities.LearningContent.LinkContent;
-using BusinessLogic.Entities.LearningContent.Story;
-using MudBlazor;
+﻿using MudBlazor;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.FileContent;

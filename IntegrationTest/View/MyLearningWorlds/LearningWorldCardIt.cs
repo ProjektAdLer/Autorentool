@@ -1,7 +1,5 @@
-using System;
 using System.IO.Abstractions;
 using Bunit;
-using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NSubstitute;
@@ -9,7 +7,6 @@ using NUnit.Framework;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.View.MyLearningWorlds;
 using PresentationTest;
-using Shared;
 
 namespace IntegrationTest.View.MyLearningWorlds;
 

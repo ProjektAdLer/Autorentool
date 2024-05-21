@@ -6,7 +6,6 @@ using System.Reflection;
 using AuthoringTool;
 using AutoMapper;
 using BusinessLogic.API;
-using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
