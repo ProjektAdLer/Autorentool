@@ -868,6 +868,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task Login_WritesTokenToConfiguration()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -891,6 +892,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task Login_CallsBackendAccess()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -913,6 +915,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task Login_IfLoginSuccess_CallsBackendForUserInformation() //This is not a unit test
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -969,6 +972,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO23]
     public async Task GetLmsWorldList_CallsBackendAccess()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -985,6 +989,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO23]
     public void GetLmsWorldList_BackendThrowsHttpRequestException_ErrorManagerCalled()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -1008,6 +1013,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteLmsWorld_CallsBackendAccess()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -1026,6 +1032,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteLmsWorld_ResultIsFalse_ErrorManagerCalled()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
@@ -1046,6 +1053,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteLmsWorld_BackendThrowsHttpRequestException_ErrorManagerCalled()
     {
         var backendAccess = Substitute.For<IBackendAccess>();

@@ -46,6 +46,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndClickLoginButton_CallsPresentationLogic()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -65,6 +66,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndClickLoginButton_UrlDoesNotIncludeProtocol_ShowsErrorMessage()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -86,6 +88,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task
         EnterDetailsAndClickLoginButton_PresentationThrowsBackendInvalidLoginException_ExceptionIsHandled()
     {
@@ -108,6 +111,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task ClickLoginButton_PresentationThrowsBackendInvalidUrlException_ExceptionIsHandled()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -129,6 +133,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task ClickLoginButton_PresentationThrowsBackendApiUnreachableException_ExceptionIsHandled()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -150,6 +155,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task ClickLoginButton_PresentationThrowsUnknownException_ExceptionIsHandled()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -167,6 +173,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21, AHO25]
     public async Task IsLmsConnectedTrue_ShowsConnectedDialog()
     {
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -184,6 +191,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO25]
     public async Task IsLmsConnectedTrue_LogoutButtonClicked_CallsLogout()
     {
         Context.ComponentFactories.AddStub<MudList>();

@@ -133,6 +133,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task ConstructBackup_CallsDialogManagerAndBusinessLogic()
     {
         //Arrange
@@ -2929,6 +2930,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21, AHO25]
     public void IsLmsConnected_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2941,6 +2943,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21, AHO25]
     public void IsLmsConnected_ReturnsTask()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2955,6 +2958,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO25]
     public void LoginName_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2967,6 +2971,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public void Login_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2981,6 +2986,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public void Login_ReturnsTask()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2997,6 +3003,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO25]
     public void Logout_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3009,6 +3016,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO23]
     public async Task GetLmsWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3021,6 +3029,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteLmsWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
