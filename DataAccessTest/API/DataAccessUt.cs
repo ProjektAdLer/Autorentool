@@ -55,6 +55,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public void SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
     {
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -69,6 +70,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldFromFile_CallsFileSaveHandlerWorld()
     {
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -80,6 +82,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldFromStream_CallsFileSaveHandlerWorld()
     {
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -330,7 +333,7 @@ public class DataAccessUt
 
         var expectedZip = ZipExtensions.GetZipArchive(filesystem, "C:\\export_test.zip");
         Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
-        
+
         var png = expectedZip.Entries[1];
         using var pngMemStream = new MemoryStream();
         png.Open().CopyTo(pngMemStream);
@@ -343,7 +346,7 @@ public class DataAccessUt
         using var worldMemStream = new MemoryStream();
         world.Open().CopyTo(worldMemStream);
         var worldData = worldMemStream.ToArray();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(png.Name, Is.EqualTo("adler_logo.png"));
@@ -370,18 +373,17 @@ public class DataAccessUt
         contentFileHandler.GetAllContent().Returns(content);
         mapper.Map<ILearningContent>(content[0]).Returns(contentEntities[0]);
         mapper.Map<ILearningContent>(content[1]).Returns(contentEntities[1]);
-        
+
         var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
-        
+
         var retval = systemUnderTest.GetAllContent();
-        
+
         Assert.That(retval, Is.EquivalentTo(contentEntities));
         contentFileHandler.Received().GetAllContent();
         mapper.Received().Map<ILearningContent>(content[0]);
         mapper.Received().Map<ILearningContent>(content[1]);
-        
     }
-    
+
     [Test]
     public void RemoveContent_CallsContentFileHandlerAndMapper()
     {
@@ -390,11 +392,11 @@ public class DataAccessUt
         var content = EntityProvider.GetFileContent();
         var contentPe = PersistEntityProvider.GetFileContent();
         mapper.Map<ILearningContentPe>(content).Returns(contentPe);
-        
+
         var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
-        
+
         systemUnderTest.RemoveContent(content);
-        
+
         contentFileHandler.Received().RemoveContent(contentPe);
         mapper.Received().Map<ILearningContentPe>(content);
     }
@@ -407,11 +409,11 @@ public class DataAccessUt
         var link = EntityProvider.GetLinkContent();
         var linkPe = PersistEntityProvider.GetLinkContent();
         mapper.Map<LinkContentPe>(link).Returns(linkPe);
-        
+
         var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler, mapper: mapper);
-        
+
         systemUnderTest.SaveLink(link);
-        
+
         contentFileHandler.Received().SaveLink(linkPe);
         mapper.Received().Map<LinkContentPe>(link);
     }
@@ -421,9 +423,9 @@ public class DataAccessUt
     {
         var contentFileHandler = Substitute.For<IContentFileHandler>();
         contentFileHandler.ContentFilesFolderPath.Returns("foobarbaz");
-        
+
         var systemUnderTest = CreateTestableDataAccess(contentHandler: contentFileHandler);
-        
+
         Assert.That(systemUnderTest.GetContentFilesFolderPath(), Is.EqualTo("foobarbaz"));
     }
 
@@ -434,9 +436,9 @@ public class DataAccessUt
         var fileInfo = Substitute.For<IFileInfo>();
         filesystem.FileInfo.New("foo").Returns(fileInfo);
         var systemUnderTest = CreateTestableDataAccess(fileSystem: filesystem);
-        
+
         var actualFileInfo = systemUnderTest.GetFileInfoForPath("foo");
-        
+
         Assert.That(actualFileInfo, Is.EqualTo(fileInfo));
         filesystem.FileInfo.Received().New("foo");
     }
@@ -446,9 +448,9 @@ public class DataAccessUt
     {
         var filesystem = Substitute.For<IFileSystem>();
         var systemUnderTest = CreateTestableDataAccess(fileSystem: filesystem);
-        
+
         systemUnderTest.DeleteFileByPath("foo");
-        
+
         filesystem.File.Received().Delete("foo");
     }
 

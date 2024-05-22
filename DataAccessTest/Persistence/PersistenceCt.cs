@@ -22,6 +22,7 @@ public class PersistenceCt
     private const string FilePath = "awesomefile.txt";
 
     [Test]
+    // ANF-ID: [ASE2, ASE6]
     public void Persistence_SaveAndLoadWorld_Stream_ObjectsAreEquivalent()
     {
         var world = PersistEntityProvider.GetLearningWorld();
@@ -167,6 +168,7 @@ public class PersistenceCt
     }
 
     [Test]
+    // ANF-ID: [ASE2, AWA0022, AHO66]
     public void Persistence_SaveAndLoadWorld_File_ObjectsAreEquivalent()
     {
         var world = PersistEntityProvider.GetLearningWorld();
@@ -354,6 +356,7 @@ public class PersistenceCt
     }
 
     [Test]
+    // ANF-ID: [ASE2, AWA0022, AWA0019]
     public void SaveAndLoadWorld_WithExactSameElementInTwoSpaces_ElementIsEqualObject()
     {
         var content = PersistEntityProvider.GetFileContent();
@@ -392,6 +395,7 @@ public class PersistenceCt
     }
 
     [Test]
+    // ANF-ID: [ASE2, AWA0018]
     public void SaveAndLoadWorld_WithTwoEquivalentElementsInTwoSpaces_ElementIsNotEqualObject()
     {
         var content = PersistEntityProvider.GetFileContent();
@@ -431,6 +435,7 @@ public class PersistenceCt
     }
 
     [Test]
+    // ANF-ID: [ASE2, AWA0019]
     public void SaveAndLoadWorld_WithAdaptivityContentElement_RestoresCorrectly()
     {
         var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
