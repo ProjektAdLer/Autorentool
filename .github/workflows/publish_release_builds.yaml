@@ -46,7 +46,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -102,7 +102,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.304'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -172,7 +172,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -252,7 +252,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
