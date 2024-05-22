@@ -19,6 +19,12 @@
 
 </details>
 
+## [2.1.5] - 2024-05-22
+
+### Fixed
+- Fixed a bug where upload of a learning world would be cancelled after 10 seconds, which would make it practically
+impossible to upload bigger learning worlds or upload worlds on a slow internet connection.
+
 ## [2.1.4] - 2024-05-14
 
 ### Added
