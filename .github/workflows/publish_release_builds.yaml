@@ -47,8 +47,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            '8.0.100'
-            '6.0.x'
+            8.0.100
+            6.0.416
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
