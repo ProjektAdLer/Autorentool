@@ -13,6 +13,7 @@ namespace GeneratorTest.WorldExport;
 public class BackupFileGeneratorUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_CreateBackupFolders_EveryFolderCreated()
     {
         //Arrange
@@ -42,6 +43,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_GetTempDir_TemporaryDirectoryCreatedAndReturned()
     {
         //Arrange
@@ -59,6 +61,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_DirectoryCopy_TargetDirectoryCopied()
     {
         //Arrange
@@ -87,6 +90,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_WriteXmlFiles_GetFactoriesReceived()
     {
         //Arrange 
@@ -109,6 +113,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_WriteBackupFile_FilesCreated_AndTempDirectoryDeleted()
     {
         var curDirectory = ApplicationPaths.BackupFolder;
@@ -164,6 +169,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void BackupFileGenerator_GetTempDir_ReturnsTempDirectory()
     {
         //Arrange
@@ -182,6 +188,7 @@ public class BackupFileGeneratorUt
     /// This is a regression test for https://github.com/ProjektAdLer/Autorentool/issues/253
     /// </summary>
     [Test]
+    // ANF-ID: [GHO11]
     public void WriteBackupFile_MbzFileAlreadyExists_OverwritesFile()
     {
         //we can't mock the filesystem here unfortunately because sharpziplib which we use for creating the tar file
@@ -224,6 +231,7 @@ public class BackupFileGeneratorUt
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public void ExtractAtfFromBackup_ThrowsException_WhenBackupFileDoesNotExist()
     {
         //Arrange

@@ -16,30 +16,29 @@ public class ActivitiesGradeHistoryXmlUt
 
         //Act
         var systemUnderTest = new ActivitiesGradeHistoryXmlGradeHistory();
-        
+
         //Assert
         Assert.That(systemUnderTest.GradeGrades, Is.EqualTo(""));
-        
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesGradeHistoryXmlGradeHistory_Serialize_XmlFileWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        
+
         var curWorkDir = ApplicationPaths.BackupFolder;
-        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_1"));
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport", "activities", "h5pactivity_1"));
         var systemUnderTest = new ActivitiesGradeHistoryXmlGradeHistory();
-        
+
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
 
         //Act 
         systemUnderTest.Serialize("h5pactivity", "1");
-        
+
         //Assert
-        var path = Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_1", "grade_history.xml");
+        var path = Path.Join(curWorkDir, "XMLFilesForExport", "activities", "h5pactivity_1", "grade_history.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
-    
 }

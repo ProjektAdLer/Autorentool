@@ -9,7 +9,6 @@ namespace GeneratorTest.XmlClasses.Entities.Gradebook.xml;
 [TestFixture]
 public class GradebookXmlUt
 {
-    
     [Test]
     public void GradebookXmlGradebook_StandardConstructor_AllParametersSet()
     {
@@ -20,7 +19,7 @@ public class GradebookXmlUt
         var gradesettings = new GradebookXmlGradeSettings();
         var gradecategorys = new GradebookXmlGradeCategories();
         var gradeitems = new GradebookXmlGradeItems();
-        
+
         gradeitems.GradeItem = gradeitem;
         gradesettings.GradeSetting = gradesetting;
         gradecategorys.GradeCategory = gradecategory;
@@ -41,22 +40,23 @@ public class GradebookXmlUt
             Assert.That(systemUnderTest.GradeSettings, Is.EqualTo(gradesettings));
         });
     }
-    
+
     [Test]
+    // ANF-ID: [GHO11]
     public void GradebookXmlGradebook_Serialize_XmlFileWritten()
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
-        
+
         var gradecategory = new GradebookXmlGradeCategory();
         var gradeitem = new GradebookXmlGradeItem();
         var gradesetting = new GradebookXmlGradeSetting();
         var gradesettings = new GradebookXmlGradeSettings();
         var gradecategorys = new GradebookXmlGradeCategories();
         var gradeitems = new GradebookXmlGradeItems();
-        
+
         gradeitems.GradeItem = gradeitem;
         gradesettings.GradeSetting = gradesetting;
         gradecategorys.GradeCategory = gradecategory;
@@ -65,14 +65,13 @@ public class GradebookXmlUt
         systemUnderTest.GradeItems = gradeitems;
         systemUnderTest.GradeSettings = gradesettings;
         systemUnderTest.GradeCategories = gradecategorys;
-        
+
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         systemUnderTest.Serialize();
-        
+
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "gradebook.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-    
 }

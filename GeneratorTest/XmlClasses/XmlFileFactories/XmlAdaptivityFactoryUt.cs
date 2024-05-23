@@ -52,6 +52,7 @@ public class XmlAdaptivityFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateXmlAdaptivityFactory_SetsParametersAndSerializes()
     {
         var mockReadAtf = Substitute.For<IReadAtf>();

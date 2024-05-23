@@ -66,6 +66,7 @@ public class XmlLabelFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlLabelFactory_CreateLabelFactory_ListSetMethodCalled()
     {
         // Arrange
@@ -109,6 +110,7 @@ public class XmlLabelFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlLabelFactory_CreateLabelFactory_AllPropertiesSetAndSerialized()
     {
         // Arrange

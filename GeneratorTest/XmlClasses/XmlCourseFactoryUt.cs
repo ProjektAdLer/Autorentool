@@ -14,6 +14,7 @@ namespace GeneratorTest.XmlClasses;
 public class XmlCourseFactoryUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlCourseFactory_Constructor_AllPropertiesSet()
     {
         // Arrange
@@ -41,6 +42,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlCourseFactory_CreateXmlCourseFactory_AllMethodsCalled()
     {
         //Arrange
@@ -90,6 +92,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateCourseCourseXml_CourseCategoryCourseCourse_AndSerializes()
     {
         //Arrange 
@@ -132,6 +135,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateCourseEnrolmentsXml_SetsEnrolManualGuestSelfEnrolsEnrolments_AndSerializes()
     {
         //Arrange 
@@ -183,6 +187,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateCourseInforefXml_SetsInforefRoleRolerefInforef_AndSerializes()
     {
         //Arrange 
@@ -209,6 +214,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateCourseRolesXml_SetsCourseRoles_AndSerializes()
     {
         //Arrange 
@@ -227,6 +233,7 @@ public class XmlCourseFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateCourseCompletiondefault_SetsCourseCompletiondefault_AndSerializes()
     {
         //Arrange 

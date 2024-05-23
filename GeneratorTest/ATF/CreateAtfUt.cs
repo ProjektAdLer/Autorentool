@@ -26,6 +26,7 @@ public class CreateAtfUt
         Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>();
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_DefineLogicalExpression_RequirementDefined()
     {
         //Arrange
@@ -94,6 +95,7 @@ public class CreateAtfUt
 
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
     {
         //Arrange
@@ -175,6 +177,7 @@ public class CreateAtfUt
     }
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_WriteLearningWorld_ATFDocumentWritten()
     {
         //Arrange
@@ -753,6 +756,7 @@ public class CreateAtfUt
     }
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_WriteLearningWorld_UnsupportedTypeExceptionThrown()
     {
         //Arrange
@@ -814,6 +818,7 @@ public class CreateAtfUt
     }
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_UnsupportedFloorPlanNameExceptionThrown()
     {
         //Arrange
@@ -865,6 +870,7 @@ public class CreateAtfUt
 
     [Test]
     [TestCaseSource(nameof(FloorPlanEnumValues))]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_SupportedFloorPlanName_NoExceptionThrown(FloorPlanEnum floorPlan)
     {
         //Arrange
@@ -906,6 +912,7 @@ public class CreateAtfUt
     }
 
     [Test]
+    // ANF-ID: [GHO01, GHO02]
     public void GenerateAndExportLearningWorldJson_InvalidLearningContentTypeExceptionThrown()
     {
         //Arrange

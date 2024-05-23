@@ -39,6 +39,7 @@ public class ActivitiesLessonXmlActivityUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesLessonXmlActivity_Serialize_XmlFileWritten()
     {
         //Arrange 

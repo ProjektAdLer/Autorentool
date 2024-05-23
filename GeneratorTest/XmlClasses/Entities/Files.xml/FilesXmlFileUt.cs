@@ -7,13 +7,14 @@ namespace GeneratorTest.XmlClasses.Entities.Files.xml;
 public class FilesXmlFileUt
 {
     [Test]
+    // ANF-ID: [AHO22]
     public void FilesXmlFile_SetParameters_ObjectsAreEqual()
     {
         //Arrange
 
         //Act
         var filesFile = new FilesXmlFile();
-        
+
         //Assert
         Assert.Multiple(() =>
         {

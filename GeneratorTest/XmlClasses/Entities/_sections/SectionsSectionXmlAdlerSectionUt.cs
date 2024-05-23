@@ -4,10 +4,10 @@ using NUnit.Framework;
 namespace GeneratorTest.XmlClasses.Entities._sections;
 
 [TestFixture]
-
 public class SectionsSectionXmlAdlerSectionUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void SetParameters_ObjectsAreEqual()
     {
         //Arrange
@@ -16,9 +16,6 @@ public class SectionsSectionXmlAdlerSectionUt
         var systemUnderTest = new SectionsSectionXmlAdlerSection();
 
         //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.RequiredPointsToComplete, Is.EqualTo("0"));
-        });
+        Assert.Multiple(() => { Assert.That(systemUnderTest.RequiredPointsToComplete, Is.EqualTo("0")); });
     }
 }

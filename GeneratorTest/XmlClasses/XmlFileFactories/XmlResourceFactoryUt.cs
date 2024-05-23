@@ -53,6 +53,7 @@ public class XmlResourceFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlResourceFactory_CreateFileFactory_FileListCreated()
     {
         // Arrange
@@ -119,6 +120,7 @@ public class XmlResourceFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void FileSetParametersFilesXml_SetFileXmlEntity_AndAddToFilesList()
     {
         // Arrange
@@ -157,6 +159,7 @@ public class XmlResourceFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void
         FileSetParametersActivity_CreateActivityFolder_SetsGradesResourceRolesModuleGradeHistoryInforef_AndSerializes()
     {
@@ -231,6 +234,7 @@ public class XmlResourceFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateActivityFolder_ActivityFolderCreated()
     {
         // Arrange
@@ -243,7 +247,9 @@ public class XmlResourceFactoryUt
         systemUnderTest.CreateActivityFolder("1");
 
         //Assert
-        Assert.That(mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities", "resource_" + "1")),
+        Assert.That(
+            mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities",
+                "resource_" + "1")),
             Is.True);
     }
 }

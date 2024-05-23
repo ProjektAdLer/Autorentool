@@ -12,6 +12,7 @@ namespace GeneratorTest.XmlClasses;
 public class XmlEntityManagerUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlEntityManager_GetFactories_AllFactoriesInitialisedAndCreateMethodCalled()
     {
         // Arrange

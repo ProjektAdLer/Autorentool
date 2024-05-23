@@ -48,6 +48,7 @@ public class MoodleBackupXmlMoodleBackupUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void MoodleBackupXmlMoodleBackup_Serialize_XmlFileWritten()
     {
         //Arrange 

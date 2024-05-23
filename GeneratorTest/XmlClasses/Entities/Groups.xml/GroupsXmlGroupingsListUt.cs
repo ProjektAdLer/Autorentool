@@ -7,15 +7,15 @@ namespace GeneratorTest.XmlClasses.Entities.Groups.xml;
 public class GroupsXmlGroupingsListUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void GroupsXmlGroupingsList_StandardConstructor_AllParametersSet()
     {
         //Arrange
-       
+
         //Act
         var systemUnderTest = new GroupsXmlGroupingsList();
-        
+
         //Assert
         Assert.That(systemUnderTest.Groupings, Is.EqualTo(""));
-
     }
 }

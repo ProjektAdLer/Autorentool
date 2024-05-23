@@ -31,6 +31,7 @@ public class XmlSectionFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlSectionFactory_CreateSectionFactory_SectionFoldersCreatedAndInforefSectionSerialized()
     {
         // Arrange

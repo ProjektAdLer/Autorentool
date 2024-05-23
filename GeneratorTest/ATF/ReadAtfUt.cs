@@ -11,6 +11,7 @@ namespace GeneratorTest.ATF;
 public class ReadAtfUt
 {
     [Test]
+    // ANF-ID: [GHO03]
     public void ReadATF_ReadLearningWorld_ATFDocumentRead()
     {
         //Arrange
@@ -132,6 +133,7 @@ public class ReadAtfUt
     }
 
     [Test]
+    // ANF-ID: [GHO03]
     public void ReadATF_ReadLearningWorld_ATFDocumentReadWithEmptyWorldDescriptionAndGoals()
     {
         //Arrange

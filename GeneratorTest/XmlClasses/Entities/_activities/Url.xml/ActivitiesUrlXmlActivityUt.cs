@@ -15,7 +15,7 @@ public class ActivitiesUrlXmlActivityUt
     {
         // Arrange
         var mockUrl = Substitute.For<ActivitiesUrlXmlUrl>();
-        
+
         // Act
         var systemUnderTest = new ActivitiesUrlXmlActivity();
         systemUnderTest.Url = mockUrl;
@@ -28,27 +28,26 @@ public class ActivitiesUrlXmlActivityUt
             Assert.That(systemUnderTest.Moduleid, Is.EqualTo(""));
             Assert.That(systemUnderTest.Modulename, Is.EqualTo("url"));
             Assert.That(systemUnderTest.Contextid, Is.EqualTo(""));
-            
         });
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesUrlXmlActivity_Serialize_XmlFileWritten()
     {
         // Arrange
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = ApplicationPaths.BackupFolder;
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "url_2"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "url_2"));
 
         var systemUnderTest = new ActivitiesUrlXmlActivity();
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        
+
         // Act
         systemUnderTest.Serialize("url", "2");
-        
+
         // Assert
-        var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "url_2", "url.xml");
+        var path = Path.Join(currWorkDir, "XMLFilesForExport", "activities", "url_2", "url.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
-    
 }

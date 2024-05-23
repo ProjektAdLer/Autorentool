@@ -37,6 +37,7 @@ public class ActivitiesInforefXmlInforefUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesInforefXmlInforef_Serialize_XmlFileWritten()
     {
         //Arrange

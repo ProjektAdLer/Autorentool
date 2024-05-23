@@ -9,20 +9,20 @@ namespace GeneratorTest.XmlClasses.Entities.Files.xml;
 [TestFixture]
 public class FilesXmlFilesUt
 {
-   
     [Test]
+    // ANF-ID: [GHO11]
     public void FilesXmlFiles_SetParameters_ObjectsAreEqual()
     {
         //Arrange
         var filesFiles = new FilesXmlFiles();
-        
+
         var file1 = new FilesXmlFile();
         var file2 = new FilesXmlFile();
 
         var list = new List<FilesXmlFile>
         {
             file1,
-            file2 
+            file2
         };
 
         //Act
@@ -33,34 +33,33 @@ public class FilesXmlFilesUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void FilesXmlFiles_Serialize_XmlFileWritten()
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
-        
+
         //Arrange
         var filesFiles = new FilesXmlFiles();
-    
+
         var file1 = new FilesXmlFile();
         var file2 = new FilesXmlFile();
 
         var list = new List<FilesXmlFile>
         {
             file1,
-            file2 
+            file2
         };
         filesFiles.File = (list);
-        
+
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         filesFiles.Serialize();
-        
+
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "files.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-    
-    
 }

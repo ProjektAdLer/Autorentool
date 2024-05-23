@@ -10,6 +10,7 @@ namespace GeneratorTest.XmlClasses.Entities._sections;
 public class SectionsSectionXmlSectionUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void SectionsSectionXmlSection_SetParameters_ObjectsAreEqual()
     {
         //Arrange
@@ -33,6 +34,7 @@ public class SectionsSectionXmlSectionUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void SectionsSectionXmlSection_Serialize_XmlFileWritten()
     {
         //Arrange 
@@ -40,17 +42,16 @@ public class SectionsSectionXmlSectionUt
 
         var curWorkDir = ApplicationPaths.BackupFolder;
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1"));
-        
+
         var systemUnderTest = new SectionsSectionXmlSection();
 
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
 
         //Act
         systemUnderTest.Serialize("", "1");
-        
+
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1", "section.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-    
 }

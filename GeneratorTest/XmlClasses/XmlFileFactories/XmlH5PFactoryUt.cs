@@ -54,6 +54,7 @@ public class XmlH5PFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlH5PFactory_CreateH5PFileFactory_AddFilesToFileList()
     {
         // Arrange
@@ -103,6 +104,7 @@ public class XmlH5PFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void H5PSetParametersFilesXml_SetsFile2Times_AndAddsToFileList()
     {
         var mockReadAtf = Substitute.For<IReadAtf>();
@@ -155,6 +157,7 @@ public class XmlH5PFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void H5PSetParametersActivity_SetsGradesH5pActivityRolesModuleGradehistoryInforef_AndSerializes()
     {
         // Arrange
@@ -290,6 +293,7 @@ public class XmlH5PFactoryUt
     }*/
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateActivityFolder_ActivityFolderCreated()
     {
         // Arrange
@@ -303,7 +307,9 @@ public class XmlH5PFactoryUt
         systemUnderTest.CreateActivityFolder("1");
 
         //Assert
-        Assert.That(mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities", "h5pactivity_" + "1")),
+        Assert.That(
+            mockFileSystem.Directory.Exists(Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", "activities",
+                "h5pactivity_" + "1")),
             Is.True);
     }
 

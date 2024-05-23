@@ -10,7 +10,6 @@ namespace GeneratorTest.XmlClasses.Entities._activities.Grades.xml;
 [TestFixture]
 public class ActivitiesGradesXmlActivityGradebookUt
 {
-    
     [Test]
     public void ActivitiesGradesXmlActivityGradebook_StandardConstructor_AllParametersSet()
     {
@@ -29,27 +28,27 @@ public class ActivitiesGradesXmlActivityGradebookUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesGradesXmlActivityGradebook_Serialize_XmlFileWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var curWorkDir = ApplicationPaths.BackupFolder;
-        mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_2"));
-        
+        mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport", "activities", "h5pactivity_2"));
+
         var gradeitem = new ActivitiesGradesXmlGradeItem();
         var gradeitems = new ActivitiesGradesXmlGradeItems();
         gradeitems.GradeItem = gradeitem;
-        
+
         var gradeActivityGradebook = new ActivitiesGradesXmlActivityGradebook();
         gradeActivityGradebook.GradeItems = gradeitems;
-        
+
         //Act 
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         gradeActivityGradebook.Serialize("h5pactivity", "2");
-        
+
         //Assert
-        var path = Path.Join(curWorkDir, "XMLFilesForExport","activities", "h5pactivity_2", "grades.xml");
+        var path = Path.Join(curWorkDir, "XMLFilesForExport", "activities", "h5pactivity_2", "grades.xml");
         Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
-    
 }

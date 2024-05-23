@@ -7,6 +7,7 @@ namespace GeneratorTest.XmlClasses.Entities._sections;
 public class SectionsSectionXmlPluginLocalAdlerSectionUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void SetParameters_ObjectsAreEqual()
     {
         //Arrange

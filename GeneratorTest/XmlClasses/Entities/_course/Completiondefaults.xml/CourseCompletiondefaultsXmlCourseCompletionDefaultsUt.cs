@@ -10,22 +10,22 @@ namespace GeneratorTest.XmlClasses.Entities._course.Completiondefaults.xml;
 public class CourseCompletiondefaultsXmlCourseCompletionDefaults
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void CourseCompletiondefaultsXmlCourseCompletionDefaults_Serialize_XmlFileWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var curWorkDir = ApplicationPaths.BackupFolder;
-        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
-        
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport", "course"));
+
         var courseCompletiondefault = new CourseCompletiondefaultXmlCourseCompletionDefaults();
-        
+
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         courseCompletiondefault.Serialize();
-        
+
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "course", "completiondefaults.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-    
 }

@@ -21,36 +21,35 @@ public class ActivitiesLabelXmlActivityUt
         systemUnderTest.Label = mockLabel;
 
         // Assert
-        Assert.Multiple(()=>
+        Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Label, Is.EqualTo(mockLabel));
             Assert.That(systemUnderTest.Id, Is.EqualTo(""));
             Assert.That(systemUnderTest.ModuleId, Is.EqualTo(""));
             Assert.That(systemUnderTest.ModuleName, Is.EqualTo("label"));
             Assert.That(systemUnderTest.ContextId, Is.EqualTo(""));
-
         });
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void ActivitiesLabelXmlActivity_Serialize_XmlFileWritten()
     {
         // Arrange
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = ApplicationPaths.BackupFolder;
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "label_1000"));
-        
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_1000"));
+
 
         var systemUnderTest = new ActivitiesLabelXmlActivity();
-        
+
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         systemUnderTest.Serialize("label", "1000");
-        
-        //Assert
-        var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "label_1000", "label.xml");
-        Assert.That(mockFileSystem.FileExists(path), Is.True);
 
+        //Assert
+        var path = Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_1000", "label.xml");
+        Assert.That(mockFileSystem.FileExists(path), Is.True);
     }
 }

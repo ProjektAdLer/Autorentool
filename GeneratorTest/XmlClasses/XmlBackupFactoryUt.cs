@@ -18,6 +18,7 @@ namespace GeneratorTest.XmlClasses;
 public class XmlBackupFactoryUt
 {
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlBackupFactory_CreateXmlBackupFactory_AllMethodsCalled()
     {
         // Arrange
@@ -118,6 +119,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void XmlBackupFactory_Constructor_AllPropertiesSet()
     {
         var mockContextId = 12345;
@@ -184,6 +186,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateGradebookXml_GradeItemsGradeCategoriesGradeSettingGradeSettingsGradebook_AndSerialized()
     {
         //Arrange
@@ -249,6 +252,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateGroupsXml_SetsGroupsGroupingsList_AndSerialized()
     {
         //Arrange
@@ -287,6 +291,7 @@ public class XmlBackupFactoryUt
 
 
     [Test]
+    // ANF-ID: [GHO11]
     public void
         CreateMoodleBackupXml_SetsDetailDetailsSettingSettingsContentsInformationMoodleBackupActivitiesSectionsCourse_AndSerialized()
     {
@@ -416,6 +421,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateOutcomesXml_Serializes()
     {
         //Arrange
@@ -449,6 +455,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateQuestionsXml_Serializes()
     {
         //Arrange
@@ -912,6 +919,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateRolesXml_SetsRoleInRoleDefinition_AndSerializes()
     {
         //Arrange
@@ -949,6 +957,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
+    // ANF-ID: [GHO11]
     public void CreateScalesXml_Serializes()
     {
         //Arrange
