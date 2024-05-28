@@ -59,7 +59,7 @@
 <Fields>
 <div class="px-4">
     <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"] 
-                                                                           @bind-Collapsed="_collapsedGeneral">
+                                                                    @bind-Collapsed="_collapsedGeneral">
         <div class="rounded-lg w-4/4 px-2 2xl:px-4">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
@@ -143,7 +143,7 @@
     case ElementMode.Normal:
         <div class="px-4">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] 
-                                                                           @bind-Collapsed="_collapsedContent">
+                                                                                                    @bind-Collapsed="_collapsedContent">
                 <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                 <TableSelect
                     T="ILearningContentFormModel"
@@ -191,7 +191,8 @@
                 @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                 {
                     <div class="flex flex-col">
-                        <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                        @* PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool. *@
+                        <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)" Disabled="true">
                             @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
                             <MudTooltip>
                                 <ChildContent>
@@ -212,7 +213,7 @@
     case ElementMode.Adaptivity:
         <div class="px-4">
             <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] 
-                                                                           @bind-Collapsed="_collapsedTasks">
+                                                                                                    @bind-Collapsed="_collapsedTasks">
                 <p class="text-xs pl-6">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                 <div class="flex flex-col items-center justify-center">
                     <MudButton Class="w-44 2xl:w-3/5 btn-standard add-tasks" OnClick="OpenAdaptivityContentDialog">
@@ -289,7 +290,7 @@
 
 <div class="px-4">
     <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] 
-                                                                           @bind-Collapsed="_collapsedElementModel">
+                                                                    @bind-Collapsed="_collapsedElementModel">
         <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
             <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                     For="@(() => FormModel.ElementModel)"
@@ -322,7 +323,7 @@
 
     <div class="px-4">
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Description.Title"] 
-                                                                           @bind-Collapsed="_collapsedDescription">
+                                                                                    @bind-Collapsed="_collapsedDescription">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudText
                     Typo="Typo.caption">

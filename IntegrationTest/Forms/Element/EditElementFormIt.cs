@@ -162,15 +162,19 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        Assert.That(() => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
+        Assert.That(
+            () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
         Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
     }
 
     [Test]
+    [Ignore(
+        "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
+        Until = "2024-06-18")]
     public void H5PContentSelected_ShowsPrimitiveCheckbox()
     {
-        var content = new []
+        var content = new[]
         {
             ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
         };
@@ -182,20 +186,20 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
-        
-        
+
+
         var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
         tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
-        
+
         Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
         Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
         Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
-        
+
         var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
         Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
-        
+
         checkbox.Find("input").Change(true);
-        
+
         Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
         Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
