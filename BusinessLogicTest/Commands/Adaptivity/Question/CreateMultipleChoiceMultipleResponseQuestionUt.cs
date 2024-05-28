@@ -23,8 +23,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -67,6 +67,39 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
     }
 
     [Test]
+    public void Execute_SetsMinimumRequiredDifficultyWhenFirstQuestionIsAdded()
+    {
+        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), null, "TestTask");
+        var difficulty = QuestionDifficulty.Medium;
+        var questionText = "Sample Question";
+        var choices = new List<Choice> { new Choice("Option 1"), new Choice("Option 2") };
+        var correctChoices = new List<Choice> { choices[0] };
+        var expectedCompletionTime = 5;
+        var actionWasInvoked = false;
+        Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new CreateMultipleChoiceMultipleResponseQuestion(adaptivityTask, difficulty, questionText,
+            choices, correctChoices, expectedCompletionTime, mappingAction,
+            new NullLogger<CreateMultipleChoiceMultipleResponseQuestion>());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Questions, Is.Empty);
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.Null);
+            Assert.That(actionWasInvoked, Is.False);
+        });
+
+        command.Execute();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(1));
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty, Is.EqualTo(difficulty));
+            Assert.That(actionWasInvoked, Is.True);
+        });
+    }
+
+    [Test]
     public void Undo_UndoesCreateMultipleChoiceMultipleResponseQuestion()
     {
         // Arrange
@@ -78,8 +111,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -124,8 +157,8 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;

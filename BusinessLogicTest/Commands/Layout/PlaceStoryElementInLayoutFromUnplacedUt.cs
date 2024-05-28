@@ -29,7 +29,7 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
             Assert.That(sut.Logger, Is.EqualTo(logger));
         });
     }
-    
+
     [Test]
     public void Execute_StoryElementPlacedInLayoutAndRemovedFromUnplacedLearningElements()
     {
@@ -57,9 +57,9 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
         var mappingAction = Substitute.For<Action<LearningWorld>>();
         var logger = Substitute.For<ILogger<PlaceStoryElementInLayoutFromUnplaced>>();
         var sut = GetSystemUnderTest(world, space, element, 0, mappingAction, logger);
-        
+
         sut.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(space.LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
@@ -87,7 +87,55 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
             Assert.That(world.UnplacedLearningElements.ElementAt(0), Is.EqualTo(element));
         });
     }
-    
+
+    [Test]
+    public void Undo_MementoSpaceLayoutIsNull_ThrowsException()
+    {
+        var (world, space, element) = GetPreparedWorldForTest();
+        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        var logger = Substitute.For<ILogger<PlaceStoryElementInLayoutFromUnplaced>>();
+        var systemUnderTest = GetSystemUnderTest(world, space, element, 0, mappingAction, logger);
+
+        var ex = Assert.Throws<InvalidOperationException>(() => systemUnderTest.Undo());
+        Assert.That(ex!.Message, Is.EqualTo("MementoWorld is null"));
+    }
+
+    [Test]
+    public void Undo_MementoSpaceIsNull_ThrowsException()
+    {
+        var (world, space, element) = GetPreparedWorldForTest();
+        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        var logger = Substitute.For<ILogger<PlaceStoryElementInLayoutFromUnplaced>>();
+        var systemUnderTest = GetSystemUnderTest(world, space, element, 0, mappingAction, logger);
+
+        // Manually setting MementoWorld to bypass the first check
+        var mementoWorld = world.GetMemento();
+        systemUnderTest.MementoWorld = mementoWorld;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => systemUnderTest.Undo());
+        Assert.That(ex!.Message, Is.EqualTo("MementoSpace is null"));
+    }
+
+    [Test]
+    public void Undo_MementoWorldIsNull_ThrowsException()
+    {
+        var (world, space, element) = GetPreparedWorldForTest();
+        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        var logger = Substitute.For<ILogger<PlaceStoryElementInLayoutFromUnplaced>>();
+        var systemUnderTest = GetSystemUnderTest(world, space, element, 0, mappingAction, logger);
+
+        // Manually setting MementoWorld and MementoSpace to bypass the first and second checks
+        var mementoWorld = world.GetMemento();
+        var mementoSpace = space.GetMemento();
+
+        systemUnderTest.MementoWorld = mementoWorld;
+        systemUnderTest.MementoSpace = mementoSpace;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => systemUnderTest.Undo());
+        Assert.That(ex!.Message, Is.EqualTo("_mementoSpaceLayout is null"));
+    }
+
+
     [Test]
     public void RedoAfterUndoAfterExecute_SameStateAsAfterExecute()
     {
@@ -117,6 +165,7 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
         world.UnplacedLearningElements.Add(element);
         return (world, space, element);
     }
+
     private PlaceStoryElementInLayoutFromUnplaced GetSystemUnderTest(LearningWorld world, LearningSpace space,
         ILearningElement element, int slotIndex, Action<LearningWorld> mappingAction,
         ILogger<PlaceStoryElementInLayoutFromUnplaced> logger)

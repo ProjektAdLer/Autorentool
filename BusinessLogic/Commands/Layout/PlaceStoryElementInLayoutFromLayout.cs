@@ -5,28 +5,31 @@ namespace BusinessLogic.Commands.Layout;
 
 public class PlaceStoryElementInLayoutFromLayout : IPlaceStoryElementInLayoutFromLayout
 {
-    private IMemento? _mementoLayout;
     private IMemento? _mementoSpace;
+    internal IMemento? MementoLayout;
 
     public PlaceStoryElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement,
         int newSlotIndex, Action<LearningSpace> mappingAction,
         ILogger<PlaceStoryElementInLayoutFromLayout> logger)
     {
         ParentSpace = parentSpace;
-        LearningElement = ParentSpace.LearningSpaceLayout.StoryElements.First(x => x.Value.Id == learningElement.Id).Value;
+        LearningElement = ParentSpace.LearningSpaceLayout.StoryElements.First(x => x.Value.Id == learningElement.Id)
+            .Value;
         NewSlotIndex = newSlotIndex;
         MappingAction = mappingAction;
         Logger = logger;
     }
+
     internal LearningSpace ParentSpace { get; }
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningSpace> MappingAction { get; }
     internal ILogger<PlaceStoryElementInLayoutFromLayout> Logger { get; }
     public string Name => nameof(PlaceStoryElementInLayoutFromLayout);
+
     public void Execute()
     {
-        _mementoLayout = ParentSpace.LearningSpaceLayout.GetMemento();
+        MementoLayout = ParentSpace.LearningSpaceLayout.GetMemento();
         _mementoSpace = ParentSpace.GetMemento();
 
         ParentSpace.UnsavedChanges = true;
@@ -50,9 +53,9 @@ public class PlaceStoryElementInLayoutFromLayout : IPlaceStoryElementInLayoutFro
 
     public void Undo()
     {
-        if (_mementoLayout == null)
+        if (MementoLayout == null)
         {
-            throw new InvalidOperationException("_mementoLayout is null");
+            throw new InvalidOperationException("MementoLayout is null");
         }
 
         if (_mementoSpace == null)
@@ -60,7 +63,7 @@ public class PlaceStoryElementInLayoutFromLayout : IPlaceStoryElementInLayoutFro
             throw new InvalidOperationException("_mementoSpace is null");
         }
 
-        ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoLayout);
+        ParentSpace.LearningSpaceLayout.RestoreMemento(MementoLayout);
         ParentSpace.RestoreMemento(_mementoSpace);
 
         Logger.LogTrace(

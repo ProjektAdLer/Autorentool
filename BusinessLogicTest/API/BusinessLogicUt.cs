@@ -49,6 +49,76 @@ public class BusinessLogicUt
     }
 
     [Test]
+    public void GetContentFilesFolderPath_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        systemUnderTest.GetContentFilesFolderPath();
+        dataAccess.Received().GetContentFilesFolderPath();
+    }
+
+    [Test]
+    public async Task ExportLearningWorldToArchiveAsync_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockFilePath = "foo";
+
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorld, mockFilePath);
+        await dataAccess.Received().ExportLearningWorldToArchiveAsync(mockWorld, mockFilePath);
+    }
+
+    [Test]
+    public async Task ImportLearningWorldFromArchiveAsync_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        var mockFilePath = "foo";
+
+        await systemUnderTest.ImportLearningWorldFromArchiveAsync(mockFilePath);
+        await dataAccess.Received().ImportLearningWorldFromArchiveAsync(mockFilePath);
+    }
+
+    [Test]
+    public void GetFileInfoForPath_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        var mockPath = "foo";
+
+        systemUnderTest.GetFileInfoForPath(mockPath);
+        dataAccess.Received().GetFileInfoForPath(mockPath);
+    }
+
+    [Test]
+    public void DeleteFileByPath_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        var mockPath = "foo";
+
+        systemUnderTest.DeleteFileByPath(mockPath);
+        dataAccess.Received().DeleteFileByPath(mockPath);
+    }
+
+    [Test]
+    public async Task IsLmsConnected_ReturnsFalse()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
+
+        var result = await systemUnderTest.IsLmsConnected();
+
+        Assert.That(result, Is.EqualTo(false));
+    }
+
+    [Test]
     public void RemoveContent_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -939,6 +1009,34 @@ public class BusinessLogicUt
     }
 
     [Test]
+    public Task Login_ThrowsBackendInvalidLoginException_Logout()
+    {
+        var mockBackendAccess = Substitute.For<IBackendAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: mockBackendAccess);
+
+        mockBackendAccess.When(x => x.GetUserTokenAsync(Arg.Any<string>(), Arg.Any<string>()))
+            .Do(_ => throw new BackendInvalidLoginException());
+
+        Assert.ThrowsAsync<BackendInvalidLoginException>(async () =>
+            await systemUnderTest.Login("user", "pw"));
+        return Task.CompletedTask;
+    }
+
+    [Test]
+    public Task Login_BackendInvalidUrlException_Logout()
+    {
+        var mockBackendAccess = Substitute.For<IBackendAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: mockBackendAccess);
+
+        mockBackendAccess.When(x => x.GetUserTokenAsync(Arg.Any<string>(), Arg.Any<string>()))
+            .Do(_ => throw new BackendInvalidUrlException());
+
+        Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await systemUnderTest.Login("user", "pw"));
+        return Task.CompletedTask;
+    }
+
+    [Test]
     public void UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
@@ -969,6 +1067,23 @@ public class BusinessLogicUt
 
         backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
+    }
+
+    [Test]
+    public void UploadLearningWorldToBackend_HttpRequestException_LogAndRethrow()
+    {
+        var mockBackendAccess = Substitute.For<IBackendAccess>();
+        var mockErrorManager = Substitute.For<IErrorManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: mockBackendAccess, errorManager: mockErrorManager);
+
+        mockBackendAccess.When(x => x.UploadLearningWorldAsync(Arg.Any<UserToken>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<IProgress<int>>()))
+            .Do(_ => throw new HttpRequestException());
+
+        Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await systemUnderTest.UploadLearningWorldToBackendAsync("path"));
+
+        mockErrorManager.Received().LogAndRethrowError(Arg.Any<HttpRequestException>());
     }
 
     [Test]

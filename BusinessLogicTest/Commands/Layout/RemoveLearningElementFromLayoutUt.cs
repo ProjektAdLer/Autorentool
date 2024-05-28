@@ -47,7 +47,7 @@ public class RemoveLearningElementFromLayoutUt
     }
 
     [Test]
-    public void Undo_MementoIsNull_ThrowsException()
+    public void Undo_MementoWorldIsNull_ThrowsException()
     {
         var world = EntityProvider.GetLearningWorld();
         var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
@@ -64,7 +64,63 @@ public class RemoveLearningElementFromLayoutUt
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
         {
-            Assert.That(ex!.Message, Is.EqualTo("_mementoWorld is null"));
+            Assert.That(ex!.Message, Is.EqualTo("MementoWorld is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
+    }
+
+    [Test]
+    public void Undo_MementoSpaceIsNull_ThrowsException()
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
+        world.LearningSpaces.Add(space);
+        var element = EntityProvider.GetLearningElement();
+        space.LearningSpaceLayout.LearningElements[2] = element;
+
+        var actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,
+            new NullLogger<RemoveLearningElementFromLayout>());
+
+        // Manually setting MementoWorld to bypass the first check
+        var mementoWorld = world.GetMemento();
+        command.MementoWorld = mementoWorld;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("MementoSpace is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
+    }
+
+    [Test]
+    public void Undo_MementoSpaceLayoutIsNull_ThrowsException()
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
+        world.LearningSpaces.Add(space);
+        var element = EntityProvider.GetLearningElement();
+        space.LearningSpaceLayout.LearningElements[2] = element;
+
+        var actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction,
+            new NullLogger<RemoveLearningElementFromLayout>());
+
+        // Manually setting MementoWorld and MementoSpace to bypass the first check
+        var mementoWorld = world.GetMemento();
+        command.MementoWorld = mementoWorld;
+        var mementoSpace = space.GetMemento();
+        command.MementoSpace = mementoSpace;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_mementoSpaceLayout is null"));
             Assert.That(actionWasInvoked, Is.False);
         });
     }

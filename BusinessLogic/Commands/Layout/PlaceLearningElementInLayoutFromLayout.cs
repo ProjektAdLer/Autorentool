@@ -8,8 +8,8 @@ namespace BusinessLogic.Commands.Layout;
 /// </summary>
 public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLayoutFromLayout
 {
-    private IMemento? _mementoLayout;
     private IMemento? _mementoSpace;
+    internal IMemento? MementoLayout;
 
     public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement,
         int newSlotIndex,
@@ -31,7 +31,7 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
 
     public void Execute()
     {
-        _mementoLayout = ParentSpace.LearningSpaceLayout.GetMemento();
+        MementoLayout = ParentSpace.LearningSpaceLayout.GetMemento();
         _mementoSpace = ParentSpace.GetMemento();
 
         ParentSpace.UnsavedChanges = true;
@@ -55,9 +55,9 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
 
     public void Undo()
     {
-        if (_mementoLayout == null)
+        if (MementoLayout == null)
         {
-            throw new InvalidOperationException("_mementoLayout is null");
+            throw new InvalidOperationException("MementoLayout is null");
         }
 
         if (_mementoSpace == null)
@@ -65,7 +65,7 @@ public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLay
             throw new InvalidOperationException("_mementoSpace is null");
         }
 
-        ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoLayout);
+        ParentSpace.LearningSpaceLayout.RestoreMemento(MementoLayout);
         ParentSpace.RestoreMemento(_mementoSpace);
 
         Logger.LogTrace(

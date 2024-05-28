@@ -1,4 +1,5 @@
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -22,10 +23,14 @@ public class UnsavedChangesResetHelperUt
         var learningSpace = EntityProvider.GetLearningSpace();
         var learningElement = EntityProvider.GetLearningElement();
         var adaptivityElement = EntityProvider.GetLearningElement(EntityProvider.GetAdaptivityContent());
+        ((AdaptivityContent)adaptivityElement.LearningContent).Tasks.First().Questions
+            .Add(EntityProvider.GetMultipleChoiceMultipleResponseQuestion());
         var storyElement = EntityProvider.GetLearningElement(content: EntityProvider.GetStoryContent());
         var unplacedElement = EntityProvider.GetLearningElement();
         var unplacedAdaptivityElement = EntityProvider.GetLearningElement(EntityProvider.GetAdaptivityContent());
         var unplacedStoryElement = EntityProvider.GetLearningElement(content: EntityProvider.GetStoryContent());
+        var pathwayCondition = EntityProvider.GetPathWayCondition();
+        var topic = EntityProvider.GetTopic();
         learningSpace.LearningSpaceLayout.LearningElements[0] = learningElement;
         learningSpace.LearningSpaceLayout.LearningElements[1] = adaptivityElement;
         learningSpace.LearningSpaceLayout.StoryElements[0] = storyElement;
@@ -33,6 +38,8 @@ public class UnsavedChangesResetHelperUt
         learningWorld.UnplacedLearningElements.Add(unplacedElement);
         learningWorld.UnplacedLearningElements.Add(unplacedAdaptivityElement);
         learningWorld.UnplacedLearningElements.Add(unplacedStoryElement);
+        learningWorld.PathWayConditions.Add(pathwayCondition);
+        learningWorld.Topics.Add(topic);
 
         learningWorld.UnsavedChanges = true;
         learningSpace.UnsavedChanges = true;
@@ -42,6 +49,8 @@ public class UnsavedChangesResetHelperUt
         unplacedElement.UnsavedChanges = true;
         unplacedAdaptivityElement.UnsavedChanges = true;
         unplacedStoryElement.UnsavedChanges = true;
+        pathwayCondition.UnsavedChanges = true;
+        topic.UnsavedChanges = true;
 
         // Act
         _unsavedChangesResetHelper.ResetWorldUnsavedChangesState(learningWorld);
@@ -58,6 +67,8 @@ public class UnsavedChangesResetHelperUt
             Assert.That(unplacedElement.UnsavedChanges, Is.False);
             Assert.That(unplacedAdaptivityElement.UnsavedChanges, Is.False);
             Assert.That(unplacedStoryElement.UnsavedChanges, Is.False);
+            Assert.That(pathwayCondition.UnsavedChanges, Is.False);
+            Assert.That(topic.UnsavedChanges, Is.False);
         });
     }
 }

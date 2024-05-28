@@ -7,9 +7,9 @@ namespace BusinessLogic.Commands.Layout;
 
 public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 {
-    private IMemento? _mementoSpace;
-    private IMemento? _mementoSpaceLayout;
     private IMemento? _mementoWorld;
+    internal IMemento? MementoSpace;
+    internal IMemento? MementoSpaceLayout;
 
     public ChangeLearningSpaceLayout(ILearningSpace learningSpace, LearningWorld learningWorld,
         FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction, ILogger<ChangeLearningSpaceLayout> logger)
@@ -30,8 +30,8 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 
     public void Execute()
     {
-        _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
-        _mementoSpace = LearningSpace.GetMemento();
+        MementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
+        MementoSpace = LearningSpace.GetMemento();
         _mementoWorld = LearningWorld.GetMemento();
 
         LearningSpace.UnsavedChanges = true;
@@ -74,14 +74,14 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 
     public void Undo()
     {
-        if (_mementoSpaceLayout == null)
+        if (MementoSpaceLayout == null)
         {
-            throw new InvalidOperationException("_mementoSpaceLayout is null");
+            throw new InvalidOperationException("MementoSpaceLayout is null");
         }
 
-        if (_mementoSpace == null)
+        if (MementoSpace == null)
         {
-            throw new InvalidOperationException("_mementoSpace is null");
+            throw new InvalidOperationException("MementoSpace is null");
         }
 
         if (_mementoWorld == null)
@@ -89,8 +89,8 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
             throw new InvalidOperationException("_mementoWorld is null");
         }
 
-        LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
-        LearningSpace.RestoreMemento(_mementoSpace);
+        LearningSpace.LearningSpaceLayout.RestoreMemento(MementoSpaceLayout);
+        LearningSpace.RestoreMemento(MementoSpace);
         LearningWorld.RestoreMemento(_mementoWorld);
 
         Logger.LogTrace(

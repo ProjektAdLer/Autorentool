@@ -54,7 +54,9 @@ public class LayoutCommandFactoryTests
         Action<LearningSpace> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetPlaceLearningElementFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
+        var result =
+            _factory.GetPlaceLearningElementFromLayoutCommand(parentSpace, learningElement, newSlotIndex,
+                mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<PlaceLearningElementInLayoutFromLayout>());
@@ -82,7 +84,8 @@ public class LayoutCommandFactoryTests
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetPlaceLearningElementFromUnplacedCommand(learningWorld, learningSpace, learningElement, newSlotIndex,
+        var result = _factory.GetPlaceLearningElementFromUnplacedCommand(learningWorld, learningSpace, learningElement,
+            newSlotIndex,
             mappingAction);
 
         // Assert
@@ -111,11 +114,98 @@ public class LayoutCommandFactoryTests
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetRemoveLearningElementCommand(learningWorld, learningSpace, learningElement, mappingAction);
+        var result =
+            _factory.GetRemoveLearningElementCommand(learningWorld, learningSpace, learningElement, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<RemoveLearningElementFromLayout>());
         var resultCasted = result as RemoveLearningElementFromLayout;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
+            Assert.That(resultCasted.LearningSpace, Is.EqualTo(learningSpace));
+            Assert.That(resultCasted.LearningElement, Is.EqualTo(learningElement));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+        });
+    }
+
+    [Test]
+    public void
+        GetPlaceStoryElementFromLayoutCommand_WithLearningSpaceAndLearningElement_ReturnsPlaceStoryElementInLayoutFromLayoutCommand()
+    {
+        // Arrange
+        var parentSpace = EntityProvider.GetLearningSpace();
+        var learningElement = EntityProvider.GetLearningElement();
+        parentSpace.LearningSpaceLayout.StoryElements.Add(0, learningElement);
+        var newSlotIndex = 1;
+        Action<LearningSpace> mappingAction = _ => { };
+
+        // Act
+        var result =
+            _factory.GetPlaceStoryElementFromLayoutCommand(parentSpace, learningElement, newSlotIndex, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<PlaceStoryElementInLayoutFromLayout>());
+        var resultCasted = result as PlaceStoryElementInLayoutFromLayout;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.ParentSpace, Is.EqualTo(parentSpace));
+            Assert.That(resultCasted.LearningElement, Is.EqualTo(learningElement));
+            Assert.That(resultCasted.NewSlotIndex, Is.EqualTo(newSlotIndex));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+        });
+    }
+
+
+    [Test]
+    public void
+        GetPlaceStoryElementFromUnplacedCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsPlaceStoryElementInLayoutFromUnplacedCommand()
+    {
+        // Arrange
+        var learningWorld = EntityProvider.GetLearningWorld();
+        var learningSpace = EntityProvider.GetLearningSpace();
+        learningWorld.LearningSpaces.Add(learningSpace);
+        var learningElement = EntityProvider.GetLearningElement();
+        learningWorld.UnplacedLearningElements.Add(learningElement);
+        var newSlotIndex = 1;
+        Action<LearningWorld> mappingAction = _ => { };
+
+        // Act
+        var result = _factory.GetPlaceStoryElementFromUnplacedCommand(learningWorld, learningSpace, learningElement,
+            newSlotIndex, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<PlaceStoryElementInLayoutFromUnplaced>());
+        var resultCasted = result as PlaceStoryElementInLayoutFromUnplaced;
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
+            Assert.That(resultCasted.LearningSpace, Is.EqualTo(learningSpace));
+            Assert.That(resultCasted.LearningElement, Is.EqualTo(learningElement));
+            Assert.That(resultCasted.NewSlotIndex, Is.EqualTo(newSlotIndex));
+            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
+        });
+    }
+
+    [Test]
+    public void
+        GetRemoveStoryElementCommand_WithLearningWorldAndLearningSpaceAndLearningElement_ReturnsRemoveStoryElementFromLayoutCommand()
+    {
+        // Arrange
+        var learningWorld = EntityProvider.GetLearningWorld();
+        var learningSpace = EntityProvider.GetLearningSpace();
+        learningWorld.LearningSpaces.Add(learningSpace);
+        var learningElement = EntityProvider.GetLearningElement();
+        learningSpace.LearningSpaceLayout.StoryElements.Add(0, learningElement);
+        Action<LearningWorld> mappingAction = _ => { };
+
+        // Act
+        var result =
+            _factory.GetRemoveStoryElementCommand(learningWorld, learningSpace, learningElement, mappingAction);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<RemoveStoryElementFromLayout>());
+        var resultCasted = result as RemoveStoryElementFromLayout;
         Assert.Multiple(() =>
         {
             Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));

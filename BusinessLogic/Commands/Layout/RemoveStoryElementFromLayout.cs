@@ -5,15 +5,18 @@ namespace BusinessLogic.Commands.Layout;
 
 public class RemoveStoryElementFromLayout : IRemoveStoryElementFromLayout
 {
-    private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
-    private IMemento? _mementoWorld;
+    internal IMemento? MementoSpace;
+    internal IMemento? MementoWorld;
 
-    public RemoveStoryElementFromLayout(LearningWorld learningWorld, LearningSpace learningSpace, ILearningElement learningElement, Action<LearningWorld> mappingAction, ILogger<RemoveStoryElementFromLayout> logger)
+    public RemoveStoryElementFromLayout(LearningWorld learningWorld, LearningSpace learningSpace,
+        ILearningElement learningElement, Action<LearningWorld> mappingAction,
+        ILogger<RemoveStoryElementFromLayout> logger)
     {
         LearningWorld = learningWorld;
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
-        LearningElement = LearningSpace.LearningSpaceLayout.StoryElements.First(x => x.Value.Id == learningElement.Id).Value;
+        LearningElement = LearningSpace.LearningSpaceLayout.StoryElements.First(x => x.Value.Id == learningElement.Id)
+            .Value;
         MappingAction = mappingAction;
         Logger = logger;
     }
@@ -25,10 +28,11 @@ public class RemoveStoryElementFromLayout : IRemoveStoryElementFromLayout
     internal Action<LearningWorld> MappingAction { get; }
     internal ILogger<RemoveStoryElementFromLayout> Logger { get; }
     public string Name => nameof(RemoveStoryElementFromLayout);
+
     public void Execute()
     {
-        _mementoWorld = LearningWorld.GetMemento();
-        _mementoSpace = LearningSpace.GetMemento();
+        MementoWorld = LearningWorld.GetMemento();
+        MementoSpace = LearningSpace.GetMemento();
         _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
 
         LearningSpace.UnsavedChanges = true;
@@ -53,14 +57,14 @@ public class RemoveStoryElementFromLayout : IRemoveStoryElementFromLayout
 
     public void Undo()
     {
-        if (_mementoWorld is null)
+        if (MementoWorld is null)
         {
-            throw new InvalidOperationException("_mementoWorld is null");
+            throw new InvalidOperationException("MementoWorld is null");
         }
 
-        if (_mementoSpace is null)
+        if (MementoSpace is null)
         {
-            throw new InvalidOperationException("_mementoSpace is null");
+            throw new InvalidOperationException("MementoSpace is null");
         }
 
         if (_mementoSpaceLayout is null)
@@ -68,8 +72,8 @@ public class RemoveStoryElementFromLayout : IRemoveStoryElementFromLayout
             throw new InvalidOperationException("_mementoSpaceLayout is null");
         }
 
-        LearningWorld.RestoreMemento(_mementoWorld);
-        LearningSpace.RestoreMemento(_mementoSpace);
+        LearningWorld.RestoreMemento(MementoWorld);
+        LearningSpace.RestoreMemento(MementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
         Logger.LogTrace(

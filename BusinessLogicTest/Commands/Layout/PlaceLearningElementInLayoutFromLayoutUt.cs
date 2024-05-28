@@ -79,7 +79,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     }
 
     [Test]
-    public void Undo_MementoIsNull_ThrowsException()
+    public void Undo_MementoLayoutIsNull_ThrowsException()
     {
         var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
         var element = EntityProvider.GetLearningElement(parent: parent);
@@ -94,7 +94,32 @@ public class PlaceLearningElementInLayoutFromLayoutUt
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
         {
-            Assert.That(ex!.Message, Is.EqualTo("_mementoLayout is null"));
+            Assert.That(ex!.Message, Is.EqualTo("MementoLayout is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
+    }
+
+    [Test]
+    public void Undo_MementoSpaceIsNull_ThrowsException()
+    {
+        var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
+        var element = EntityProvider.GetLearningElement(parent: parent);
+        parent.LearningSpaceLayout.LearningElements[0] = element;
+
+        var actionWasInvoked = false;
+        Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction,
+            new NullLogger<PlaceLearningElementInLayoutFromLayout>());
+
+        // Manually set MementoLayout to null
+        var mementoLayout = parent.LearningSpaceLayout.GetMemento();
+        command.MementoLayout = mementoLayout;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_mementoSpace is null"));
             Assert.That(actionWasInvoked, Is.False);
         });
     }
