@@ -253,6 +253,11 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             _logger.LogInformation("MBZ upload operation was cancelled");
             throw;
         }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to upload MBZ file");
+            throw;
+        }
         finally
         {
             ProgressReporter = null;
