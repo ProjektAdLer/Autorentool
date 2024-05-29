@@ -31,27 +31,31 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void Render_ShowFileNameTrue_ShowsFileNameFromFileInfo()
     {
         var world = Substitute.For<ILearningWorldViewModel>();
         world.SavePath = "/somepath/foo.bar";
-        
+
         var systemUnderTest = GetRenderedComponent(world, showFileName: true);
-        
+
         Assert.That(systemUnderTest.Find("div.file-name-display").TextContent, Is.EqualTo("foo.bar"));
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void Render_ShowFileNameTrue_NotYetSaved_ShowsSpecialMessage()
     {
         var world = Substitute.For<ILearningWorldViewModel>();
-        
+
         var systemUnderTest = GetRenderedComponent(world, showFileName: true);
-        
-        Assert.That(systemUnderTest.Find("div.file-name-display").TextContent, Is.EqualTo("LearningWorldCard.PathDisplayMessage.NotYetSaved"));
+
+        Assert.That(systemUnderTest.Find("div.file-name-display").TextContent,
+            Is.EqualTo("LearningWorldCard.PathDisplayMessage.NotYetSaved"));
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public void CloseButtonPressed_CallsOnCloseCallback()
     {
         var callbackCallCount = 0;
@@ -67,6 +71,7 @@ public class LearningWorldCardIt : MudBlazorTestFixture<LearningWorldCard>
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void OpenButtonPressed_CallsOnOpenCallback()
     {
         var callbackCallCount = 0;

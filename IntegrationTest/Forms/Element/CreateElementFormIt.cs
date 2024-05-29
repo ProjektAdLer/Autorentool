@@ -118,6 +118,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
@@ -151,6 +152,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public async Task SubmitButtonClicked_SubmitsIfFormValid()
     {
         var callbackCalledCount = 0;
@@ -230,6 +232,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public async Task EnterKeyPressed_SubmitsIfFormValid()
     {
         var callbackCalled = false;
@@ -276,6 +279,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
 
 
     [Test]
+    // ANF-ID: [AWA0002]
     public void NoContentAvailable_ShowsNoContentWarningInsteadOfTableSelect()
     {
         WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
@@ -290,6 +294,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Ignore(
         "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
         Until = "2024-06-18")]
+    // ANF-ID: [AWA0002]
     public void H5PContentSelected_ShowsPrimitiveCheckbox()
     {
         var content = new[]
@@ -323,6 +328,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     }
 
     [Test]
+    // ANF-ID: [AWA0003]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
         var dialogServiceMock = Substitute.For<IDialogService>();

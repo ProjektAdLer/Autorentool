@@ -92,6 +92,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task OnValidate_CallsCorrectValidator([Values] bool isSingleResponse)
     {
         var multipleResponseQuestion = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
@@ -141,6 +142,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task OnValidate_UnknownEntity_ThrowsException()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -159,6 +161,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task ChangeFieldValues_ChangesContainerValuesToAValidStateAndCallsValidation()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -196,6 +199,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public void AddAndRemoveChoiceButtonsClicked_AddsAndRemovesChoice()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -224,6 +228,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public void ChangeCorrectness_MultipleResponse_ChangesCorrectnessOfResponse()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -257,6 +262,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public void ChangeCorrectChoice_SingleResponse_ChangesTheCorrectChoice()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -289,6 +295,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public void ChangeIsSingleResponse_KeepsTheCorrectCorrectChoices()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -329,6 +336,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0004]
     public async Task CreatQuestionOnValidSubmit_CallsPresentationLogic([Values] bool isSingleResponse)
     {
         var task = Substitute.For<IAdaptivityTaskViewModel>();
@@ -439,6 +447,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     // ReSharper disable once CognitiveComplexity
     public async Task EditQuestionOnValidSubmit_CallsPresentationLogic([Values] bool wasSingleResponse,
         [Values] bool isSingleResponse)

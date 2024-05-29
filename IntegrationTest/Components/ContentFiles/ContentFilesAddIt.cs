@@ -51,6 +51,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task OnFilesChanged_ProperFileUploaded_FileProcessed()
     {
         // Arrange
@@ -60,13 +61,14 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Act
         await systemUnderTest.InvokeAsync(() =>
-            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));
+            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
         await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task OnFilesChanged_DuplicateFileUploaded_FileNotProcessedAndDialog()
     {
         // Arrange
@@ -78,7 +80,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Act
         await systemUnderTest.InvokeAsync(() =>
-            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));
+            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
         await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
@@ -87,6 +89,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task OnFilesChanged_ErrorFileUploaded_FileNotProcessedAndCallsErrorService()
     {
         // Arrange
@@ -98,7 +101,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Act
         await systemUnderTest.InvokeAsync(() =>
-            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));
+            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
         await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
@@ -106,6 +109,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     }
 
     [Test]
+    // ANF-ID: [AWA0047]
     public async Task OnFilesChanged_ZipFileUploaded_WithNoEntries_ShowsDialog()
     {
         // Arrange
@@ -115,7 +119,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Act
         await systemUnderTest.InvokeAsync(() =>
-            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));
+            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
         await _presentationLogic.DidNotReceive()
@@ -131,13 +135,14 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
     }
 
     [Test]
+    // ANF-ID: [AWA0047]
     public async Task OnFilesChanged_ZipFileUploaded_WithEntries_ShowsDialog()
     {
         // Arrange
         var systemUnderTest = GetRenderedComponent();
-        var browserFile = new MockZipBrowserFile("testFileName.zip", new List<string> {"testFileName.txt"},
-            new List<string> {"duplicateFileName.txt"}, new List<string> {"unsupportedFileName"},
-            new List<string> {"errorFileName.txt"});
+        var browserFile = new MockZipBrowserFile("testFileName.zip", new List<string> { "testFileName.txt" },
+            new List<string> { "duplicateFileName.txt" }, new List<string> { "unsupportedFileName" },
+            new List<string> { "errorFileName.txt" });
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
         _presentationLogic.When(x =>
                 x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("DUP_")), Arg.Any<Stream>()))
@@ -145,10 +150,10 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         _presentationLogic.When(x =>
                 x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("ERR_")), Arg.Any<Stream>()))
             .Throw(args => new IOException(args.ArgAt<string>(0)));
-        
+
         // Act
         await systemUnderTest.InvokeAsync(() =>
-            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] {browserFile})));
+            fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
         await _presentationLogic.Received(3)

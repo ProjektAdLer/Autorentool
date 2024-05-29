@@ -69,6 +69,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void SpacePresenterLearningSpace_PropertyChanged_RemapsIntoContainer()
     {
         var vm = ViewModelProvider.GetLearningSpace();
@@ -85,6 +86,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void ResetButton_Clicked_RemapsIntoContainer()
     {
         var vm = ViewModelProvider.GetLearningSpace();
@@ -101,6 +103,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var vm = ViewModelProvider.GetLearningSpace();
@@ -145,6 +148,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
     [Test]
     [Retry(3)]
+    // ANF-ID: [AWA0023]
     public async Task SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var vm = ViewModelProvider.GetLearningSpace();

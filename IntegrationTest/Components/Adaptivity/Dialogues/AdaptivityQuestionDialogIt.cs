@@ -49,6 +49,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task Render_InjectsDependenciesAndParameters()
     {
         await GetDialogAsync();
@@ -63,6 +64,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task RenderDialog_ShowsMultipleChoiceQuestionForm([Values] bool hasQuestionToEdit)
     {
         var question = Substitute.For<IMultipleChoiceQuestionViewModel>();
@@ -87,6 +89,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task RenderDialog_ShowsAdaptivityQuestionPreviewOfOtherQuestionsInTask([Values] bool hasOtherQuestions)
     {
         var questionEasy = Substitute.For<IAdaptivityQuestionViewModel>();
@@ -135,6 +138,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
     }
 
     [Test]
+    // ANF-ID: [AWA0004, AWA0008]
     public async Task RenderDialog_FormSubmitted_ClosesDialog()
     {
         await GetDialogAsync();

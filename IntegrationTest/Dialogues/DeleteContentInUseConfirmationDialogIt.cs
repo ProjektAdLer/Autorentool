@@ -14,7 +14,6 @@ namespace IntegrationTest.Dialogues;
 [TestFixture]
 public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<DeleteContentInUseConfirmationDialog>
 {
-
     [Test]
     public async Task Render_RendersCorrectly()
     {
@@ -44,12 +43,14 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
         var worldInner = tableRows.First().Children.First(element => element.Attributes["data-label"].Value == "World")
             .InnerHtml;
         Assert.That(worldInner, Is.EqualTo(world.Name));
-        var elementInner = tableRows.First().Children.First(element => element.Attributes["data-label"].Value == "Element")
+        var elementInner = tableRows.First().Children
+            .First(element => element.Attributes["data-label"].Value == "Element")
             .InnerHtml;
         Assert.That(elementInner, Is.EqualTo(element.Name));
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public async Task CancelButtonClicked_DialogResultCancelled()
     {
         var comp = GetDialogProvider();
@@ -65,6 +66,7 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public async Task OkButtonClicked_DialogResultNotCancelled_AndDataTrue()
     {
         var comp = GetDialogProvider();

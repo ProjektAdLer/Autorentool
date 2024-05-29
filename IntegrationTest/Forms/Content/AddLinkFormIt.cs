@@ -51,6 +51,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SubmitButtonClicked_Submits()
     {
         var vm = ViewModelProvider.GetLinkContent();
@@ -68,6 +69,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void EnterKeyPressed_Submits()
     {
         var vm = ViewModelProvider.GetLinkContent();
@@ -93,6 +95,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SubmitButtonClicked_SerializationException_ErrorServiceCalled()
     {
         var vm = ViewModelProvider.GetLinkContent();

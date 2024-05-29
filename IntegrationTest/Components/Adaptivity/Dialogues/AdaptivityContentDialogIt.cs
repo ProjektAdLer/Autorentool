@@ -33,7 +33,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
         Context.Services.AddSingleton(FormDataContainer);
         AdaptivityContent = FormModelProvider.GetAdaptivityContent();
         Tasks = new List<IAdaptivityTaskViewModel>();
-        AdaptivityContent.Tasks= Tasks;
+        AdaptivityContent.Tasks = Tasks;
         Mapper = Substitute.For<IMapper>();
         Mapper.When(x => x.Map(Arg.Any<IAdaptivityContentViewModel>(), Arg.Any<AdaptivityContentFormModel>())).Do(y =>
         {
@@ -78,6 +78,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     [Test]
+    // ANF-ID: [AWA0005]
     public async Task AddTaskButtonClicked_CallsPresentationLogicAndMapper()
     {
         await GetDialogAsync();
@@ -88,6 +89,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     [Test]
+    // ANF-ID: [AWA0007]
     public async Task DeleteTaskButtonClicked_CallsPresentationLogic()
     {
         await GetDialogAsync();
@@ -102,6 +104,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
 
     [Test]
     [Retry(3)]
+    // ANF-ID: [AWA0006]
     public async Task RenameTask_CallsPresentationLogic()
     {
         await GetDialogAsync();
@@ -125,6 +128,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     [Test]
+    // ANF-ID: [AWA0006]
     public async Task ChangeRequiredDifficulty_CallsPresentationLogic([Values] bool wasSelectedAsRequired)
     {
         var task = Substitute.For<IAdaptivityTaskViewModel>();
@@ -144,6 +148,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     }
 
     [Test]
+    // ANF-ID: [AWA0009]
     public async Task DeleteQuestionButtonClicked_CallsPresentationLogic()
     {
         var task = Substitute.For<IAdaptivityTaskViewModel>();

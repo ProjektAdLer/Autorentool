@@ -20,11 +20,6 @@ namespace IntegrationTest.VersionCompatibility;
 [TestFixture]
 public class VersionCompatibilityIt
 {
-    private MockFileSystem _fileSystem;
-    private IMapper _mapper;
-    private IDataAccess _dataAccess;
-    private ServiceProvider _serviceProvider;
-
     [SetUp]
     public void Setup()
     {
@@ -51,7 +46,13 @@ public class VersionCompatibilityIt
         _serviceProvider.Dispose();
     }
 
+    private MockFileSystem _fileSystem;
+    private IMapper _mapper;
+    private IDataAccess _dataAccess;
+    private ServiceProvider _serviceProvider;
+
     [Test]
+    // ANF-ID: [ASE2]
     public void Version_1_1_0_WorldFile_LoadsCorrectly()
     {
         var asmb = Assembly.GetExecutingAssembly();

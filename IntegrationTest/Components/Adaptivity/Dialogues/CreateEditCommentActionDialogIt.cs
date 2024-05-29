@@ -52,6 +52,7 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
     }
 
     [Test]
+    // ANF-ID: [AWA0031]
     public async Task NoExistingAction_TextSet_CallsCreateAdaptivityRule()
     {
         var textField = DialogProvider.FindComponent<MudTextField<string>>();
@@ -65,6 +66,7 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
     }
 
     [Test]
+    // ANF-ID: [AWA0032]
     public async Task ExistingAction_TextSet_CallsEditCommentAction()
     {
         ExistingAction = ViewModelProvider.GetCommentAction();
@@ -79,6 +81,7 @@ public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCo
     }
 
     [Test]
+    // ANF-ID: [AWA0032]
     public async Task ExistingAction_SameTextSet_DoesNotCallEditCommentAction()
     {
         ExistingAction = ViewModelProvider.GetCommentAction();

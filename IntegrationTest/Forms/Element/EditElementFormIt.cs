@@ -88,6 +88,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
     public void OnParametersSet_CallsMapper()
     {
         var vm = ViewModelProvider.GetLearningElement();
@@ -98,6 +99,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
+    // ANF-ID: [AWA0010]
     public void Initialize_AdaptivityElementModeTrue_RendersTaskCollapsibleInstead()
     {
         var systemUnderTest = GetFormWithPopoverProvider(elementMode: ElementMode.Adaptivity);
@@ -109,6 +111,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
     public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
@@ -143,6 +146,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
     [Test]
     [Retry(3)]
+    // ANF-ID: [AWA0015]
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
@@ -172,6 +176,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Ignore(
         "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
         Until = "2024-06-18")]
+    // ANF-ID: [AWA0015]
     public void H5PContentSelected_ShowsPrimitiveCheckbox()
     {
         var content = new[]

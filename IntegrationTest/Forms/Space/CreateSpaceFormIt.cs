@@ -45,6 +45,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public async Task ChangeFieldValues_ChangesContainerValuesAndCallsValidation()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -85,6 +86,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void ResetButtonClicked_ResetsForm()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -104,6 +106,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public async Task SubmitButtonClicked_SubmitsIfFormValid()
     {
         var systemUnderTest = GetRenderedComponent();
@@ -136,6 +139,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public async Task EnterKeyPressed_SubmitsIfFormValid()
     {
         var systemUnderTest = GetRenderedComponent();

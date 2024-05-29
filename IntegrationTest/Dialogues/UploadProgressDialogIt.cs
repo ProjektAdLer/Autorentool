@@ -13,6 +13,7 @@ namespace IntegrationTest.Dialogues;
 public class UploadProgressDialogIt : MudBlazorTestFixture<UploadProgressDialog>
 {
     [Test]
+    // ANF-ID: [AHO22]
     public async Task ProgressReports100_DialogCloses()
     {
         var provider = Context.RenderComponent<MudDialogProvider>();
@@ -23,7 +24,7 @@ public class UploadProgressDialogIt : MudBlazorTestFixture<UploadProgressDialog>
         SynchronizationContext.SetSynchronizationContext(synchronizationContext);
         var progress = new Progress<int>();
         var dialogParameters = new DialogParameters { { nameof(UploadProgressDialog.Progress), progress } };
-        
+
         var service = (DialogService)Context.Services.GetService<IDialogService>()!;
         IDialogReference? dialogReference = null;
         await provider.InvokeAsync(() =>

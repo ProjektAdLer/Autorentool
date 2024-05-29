@@ -43,6 +43,7 @@ public class ElementModelGridSelectIt : MudBlazorTestFixture<ElementModelGridSel
     private IElementModelHandler _elementModelHandler = null!;
 
     [Test]
+    // ANF-ID: [AWA0002, AWA0015, AWA0003, AWA0010, ASN0011, ASN0013]
     public void ClickingItemShouldChangeValue()
     {
         const ElementModel elementModelToSelect = ElementModel.l_h5p_slotmachine_1;

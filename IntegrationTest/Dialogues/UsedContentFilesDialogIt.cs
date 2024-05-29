@@ -26,6 +26,7 @@ public class UsedContentFilesDialogIt : MudDialogTestFixture<UsedContentFilesDia
     }
 
     [Test]
+    // ANF-ID: [ASN0028]
     public async Task DialogCreated_RendersCorrectly()
     {
         var content = Substitute.For<ILearningContentViewModel>();

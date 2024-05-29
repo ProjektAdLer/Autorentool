@@ -70,12 +70,13 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
-    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-06-01")]
+    // ANF-ID: [AWA0026]
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
         await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
-        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea").ChangeAsync(new ChangeEventArgs { Value = "foo" });
+        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
+            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
@@ -87,6 +88,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    // ANF-ID: [AWA0026]
     public async Task NoExistingAction_ElementSelected_CallsCreateAdaptivityRuleWithElementReferenceAction()
     {
         await DialogProvider.Find("div.mud-tab.tab-panel-element").ClickAsync(new MouseEventArgs());
@@ -102,7 +104,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
-    [Ignore("Broken as long as ContentReference is blocked", Until = "2024-06-01")]
+    // ANF-ID: [AWA0027]
     public async Task ExistingAction_ContentSelected_CallsUpdateContentReferenceAction()
     {
         var cravm = ViewModelProvider.GetContentReferenceAction();
@@ -111,7 +113,8 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         await GetDialogAsync();
 
         await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
-        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea").ChangeAsync(new ChangeEventArgs { Value = "foo" });
+        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
+            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
@@ -119,6 +122,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    // ANF-ID: [AWA0027]
     public async Task ExistingAction_ElementSelected_CallsUpdateElementReferenceAction()
     {
         var eravm = ViewModelProvider.GetElementReferenceAction();
@@ -135,6 +139,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    // ANF-ID: [AWA0027]
     public async Task ExistingAction_ElementSelected_NoChange_CallsNothing()
     {
         var cravm = ViewModelProvider.GetContentReferenceAction();
@@ -148,6 +153,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     }
 
     [Test]
+    // ANF-ID: [AWA0027]
     public async Task ExistingAction_ContentSelected_NoChange_CallsNothing()
     {
         var eravm = ViewModelProvider.GetElementReferenceAction();
