@@ -11,13 +11,14 @@ namespace PresentationTest.PresentationLogic.ElectronNET;
 public class ElectronShutdownManagerUt
 {
     [Test]
+    // ANF-ID: [ASN0025]
     public void ElectronShutdownManager_BeginShutdown_CallsBeforeThenOnShutdownHandlers()
     {
         var BeforeCallbackCalled = false;
         var OnCallbackCalled = false;
-        
+
         var systemUnderTest = CreateElectronShutdownManagerForTest();
-        systemUnderTest.BeforeShutdown += (_,_) =>
+        systemUnderTest.BeforeShutdown += (_, _) =>
         {
             if (OnCallbackCalled) Assert.Fail("OnShutdown callback called before BeforeShutdown callback");
             if (BeforeCallbackCalled) Assert.Fail("BeforeShutdown callback called twice");
@@ -33,7 +34,7 @@ public class ElectronShutdownManagerUt
         };
 
         systemUnderTest.RequestShutdownAsync();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(BeforeCallbackCalled, Is.True);

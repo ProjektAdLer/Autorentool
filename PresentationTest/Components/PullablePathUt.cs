@@ -52,6 +52,7 @@ public class PullablePathUt
     }
 
     [Test]
+    // ANF-ID: [AHO11]
     public void ClickAndMove_CallsWorldPresenter()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
@@ -76,6 +77,7 @@ public class PullablePathUt
     }
 
     [Test]
+    // ANF-ID: [AHO11]
     public void ClickAndNotMoved_X2AndY2Set()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();

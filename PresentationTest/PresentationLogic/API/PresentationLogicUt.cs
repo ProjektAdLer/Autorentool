@@ -200,6 +200,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void CanUndoCanRedo_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -218,6 +219,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void OnUndoRedoPerformed_SubscribesToBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -249,6 +251,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003]
     public void CallUndoCommand_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -260,6 +263,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0004]
     public void CallRedoCommand_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -271,6 +275,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE1]
     public void CreateLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -301,6 +306,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE3]
     public void EditLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -327,6 +333,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public void DeleteLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -386,6 +393,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void CreateLearningSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -423,6 +431,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void EditLearningSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -448,6 +457,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void ChangeLearningSpaceLayout_CallsMapperAndCommandFactory()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -505,6 +515,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0024]
     public void DeleteLearningSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -562,6 +573,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public void CreateUnplacedLearningElement_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -603,6 +615,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public void CreateLearningElementInSlot_CallsBusinessLogic_AndSetsElementInSelectedViewModelsProvider()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -637,6 +650,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0011]
     public void CreateStoryElementInSlot_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -678,6 +692,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
     public void EditLearningElement_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -713,6 +728,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0017]
     public void PlaceLearningElementFromUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -752,6 +768,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0019]
     public void PlaceStoryElementFromUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -802,6 +819,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0022]
     public void DragLearningElementToUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -841,6 +859,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0020]
     public void DragStoryElementToUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -880,6 +899,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0041]
     public void SwitchLearningElementSlot_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -914,6 +934,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0039]
     public void SwitchStoryElementSlot_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -984,6 +1005,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016]
     public void DeleteLearningElementInSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1012,6 +1034,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0015]
     public void DeleteStoryElementInSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1040,6 +1063,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016]
     public void DeleteLearningElementInWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1068,6 +1092,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO11]
     public void CreateLearningPathWay_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1101,6 +1126,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO13]
     public void DeleteLearningPathWay_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1138,6 +1164,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void CreatePathWayCondition_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1166,6 +1193,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void CreatePathWayConditionBetweenObjects_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1202,6 +1230,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO62]
     public void EditPathWayCondition_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1226,6 +1255,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO63]
     public void DeletePathWayCondition_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1737,6 +1767,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldFromPath_CallsBusinessLogic()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -1784,6 +1815,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void GetSavedLearningWorldPaths_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1796,6 +1828,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void GetSavedLearningWorldPaths_ReturnsResultFromBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2114,6 +2147,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036, AWA0047]
     public async Task PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2139,6 +2173,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036, AWA0047]
     public void PresentationLogic_LoadLearningContentViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2156,6 +2191,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0005]
     public void CreateAdaptivityTask_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2185,6 +2221,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0006]
     public void EditAdaptivityTask_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2215,6 +2252,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0007]
     public void DeleteAdaptivityTask_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2249,6 +2287,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0004]
     public void CreateMultipleChoiceSingleResponseQuestion_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2296,6 +2335,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0004]
     public void CreateMultipleChoiceMultipleResponseQuestion_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2343,6 +2383,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void EditMultipleChoiceSingleResponseQuestion_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2386,6 +2427,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void EditMultipleChoiceMultipleResponseQuestion_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2429,6 +2471,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void EditMultipleChoiceQuestionWithTypeChange_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2481,6 +2524,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0009]
     public void DeleteAdaptivityQuestion_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2514,6 +2558,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0026, AWA0031]
     public void CreateAdaptivityRule_WhenCalled_ShouldExecuteCreateCommand()
     {
         var mapper = Substitute.For<IMapper>();
@@ -2546,6 +2591,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0028, AWA0033]
     public void DeleteAdaptivityRule_WhenCalled_ShouldExecuteDeleteCommand()
     {
         var mapper = Substitute.For<IMapper>();
@@ -2575,6 +2621,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0032]
     public void EditCommentAction_WhenCalled_ShouldExecuteEditCommand()
     {
         var mapper = Substitute.For<IMapper>();
@@ -2601,6 +2648,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0027]
     public void EditElementReferenceAction_WhenCalled_ShouldExecuteEditCommand()
     {
         var mapper = Substitute.For<IMapper>();
@@ -2629,6 +2677,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0027]
     public void EditContentReferenceAction_WhenCalled_ShouldExecuteEditCommand()
     {
         var mapper = Substitute.For<IMapper>();
@@ -2660,6 +2709,7 @@ public class PresentationLogicUt
 
 
     [Test]
+    // ANF-ID: [AWA0038,, AWA0044]
     public async Task ShowLearningElementContentAsync_CallsShellWrapper()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -2681,6 +2731,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO01]
     public void AddStructuredLearningOutcome_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2715,6 +2766,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO02]
     public void AddManualLearningOutcome_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2743,6 +2795,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO03]
     public void EditStructuredLearningOutcome_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2803,6 +2856,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO04]
     public void EditManualLearningOutcome_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2859,6 +2913,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO05]
     public void DeleteLearningOutcome_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2895,6 +2950,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void RemoveContent_CallsMapperAndBusinessLogic()
     {
         var mockMapper = Substitute.For<IMapper>();
@@ -2912,6 +2968,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void RemoveMultipleContents_CallsMapperAndBusinessLogic()
     {
         var mockMapper = Substitute.For<IMapper>();

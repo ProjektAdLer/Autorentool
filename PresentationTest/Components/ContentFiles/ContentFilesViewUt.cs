@@ -283,6 +283,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void ClickDelete_FirstDialogCancelled_DoesNotShowSecondDialog()
     {
         var items = PresentationLogicSetItems();
@@ -434,6 +435,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void DeleteMultiple_SelectedNone_ButtonIsDisabled()
     {
         var items = PresentationLogicSetItems();
@@ -462,6 +464,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public async Task DeleteMultiple_CancelFirstDialog_CallsNothing()
     {
         var items = PresentationLogicSetItems();
@@ -503,6 +506,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public async Task DeleteMultiple_NoContentsInUse_ConfirmFirstDialog_CallsPresentationLogic()
     {
         var items = PresentationLogicSetItems();
@@ -529,6 +533,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public async Task DeleteMultiple_ContentsInUse_SelectAllAndClickDelete_ConfirmFirstDialog_ShowsConfirmationDialog()
     {
         var items = PresentationLogicSetItems().ToArray();
@@ -575,6 +580,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public async Task DeleteMultiple_ContentsInUse_ConfirmFirstDialog_DeleteAll()
     {
         var items = PresentationLogicSetItems().ToArray();
@@ -623,6 +629,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public async Task DeleteMultiple_ContentsInUse_ConfirmFirstDialog_DeleteUnused()
     {
         var items = PresentationLogicSetItems().ToArray();
@@ -672,6 +679,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void DeleteMultiple_ArgumentOutOfRangeException_CallsErrorService()
     {
         PresentationLogicSetItems();
@@ -695,6 +703,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void DeleteMultiple_FileNotFoundException_CallsErrorService()
     {
         PresentationLogicSetItems();
@@ -718,6 +727,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void DeleteMultiple_SerializationException_CallsErrorService()
     {
         PresentationLogicSetItems();
@@ -741,6 +751,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0048, AWA0049]
     public void EnterSearchString_FiltersCorrectly()
     {
         PresentationLogicSetItems();
@@ -756,6 +767,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [ASN0028]
     public void ShowFilepathSwitchPressed_ShowsFilepathOrLink()
     {
         var items = PresentationLogicSetItems();
@@ -781,6 +793,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public void ClickNewElementButton_CallsPresentationLogicAndMediator()
     {
         var items = PresentationLogicSetItems();
@@ -801,6 +814,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0038, AWA0044]
     public void ClickPreviewButton_CallsPresentationLogic()
     {
         var items = PresentationLogicSetItems();

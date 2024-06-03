@@ -29,6 +29,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE1]
     public void CreateLearningWorld_CallsCreateLearningWorldOnPresentationLogic()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -143,6 +144,7 @@ public class AuthoringToolWorkspacePresenterUt
 
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task SaveLearningWorldAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -157,6 +159,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task SaveLearningWorldAsync_SerializationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -174,6 +177,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task SaveLearningWorldAsync_InvalidOperationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -191,6 +195,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE6, ASN0025]
     public async Task OnBeforeShutdown_CallsDialogService_ForEveryUnsavedWorld_AndCallsSaveOnYesResponse()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
@@ -240,6 +245,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASN0025]
     public async Task OnBeforeShutdown_CallsDialogService_CancelsShutdownOnCancelReturnValue()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
@@ -272,6 +278,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASN0025]
     public async Task OnBeforeShutdown_CallsErrorService_WhenUnexpectedDialogResultTypeReturned()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();

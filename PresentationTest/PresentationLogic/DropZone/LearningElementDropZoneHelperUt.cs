@@ -17,8 +17,6 @@ namespace PresentationTest.PresentationLogic.DropZone;
 [TestFixture]
 public class LearningElementDropZoneHelperUt
 {
-    #region GetWorldAndSpaceElements
-
     [Test]
     public void GetWorldAndSpaceElements_WhenLearningSpaceVmAndLearningWorldVmNull_ReturnsEmptyList()
     {
@@ -75,6 +73,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
+    // ANF-ID: [ASN0017, ASN0022, AWA0041, ASN0018, ASN0021, AWA0040, ASN0019, ASN0020, AWA0039]
     public void GetWorldAndSpaceElements_WhenSpaceVmAndLearningWorldVmNotNull_ReturnsCombinedElements()
     {
         // Arrange
@@ -105,12 +104,6 @@ public class LearningElementDropZoneHelperUt
         Assert.That(result, Is.EqualTo(spaceElements.Concat(worldElements)));
     }
 
-    #endregion
-
-    #region ItemUpdated
-
-    #region DropzoneIdentifierIsUnplaced
-
     [Test]
     public void ItemUpdated_DropzoneIdentifierIsUnplacedAndLearningSpaceVmIsNull_ThrowsException()
     {
@@ -123,7 +116,8 @@ public class LearningElementDropZoneHelperUt
 
         // Act
         // Assert
-        Assert.Throws(Is.TypeOf<ApplicationException>().And.Message.EqualTo("DragDropItem's parent is not the selected space"),
+        Assert.Throws(
+            Is.TypeOf<ApplicationException>().And.Message.EqualTo("DragDropItem's parent is not the selected space"),
             () => systemUnderTest.ItemUpdated(dropItem));
     }
 
@@ -144,6 +138,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
+    // ANF-ID: [ASN0017, ASN0018, ASN0019]
     public void ItemUpdated_DropzoneIdentifierIsUnplacedAndDropItemIsInLearningSpace_CallsPresentationLogic()
     {
         // Arrange
@@ -219,10 +214,6 @@ public class LearningElementDropZoneHelperUt
             () => systemUnderTest.ItemUpdated(dropItem));
     }
 
-    #endregion
-
-    #region DropzoneIdentifierIsNotUnplaced
-
     [Test]
     public void ItemUpdated_DropzoneIdentifierIsNotUnplacedButLearningWorldVmIsNull_ThrowsException()
     {
@@ -294,7 +285,8 @@ public class LearningElementDropZoneHelperUt
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(Substitute.For<ILearningSpaceViewModel>());
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -307,6 +299,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
+    // ANF-ID: [AWA0041, AWA0040, AWA0039]
     public void ItemUpdated_DropItemIsInSpaceAndSpaceIsInWorldAndSpaceIsSelected_CallsPresentationLogic()
     {
         // Arrange
@@ -327,7 +320,8 @@ public class LearningElementDropZoneHelperUt
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -360,7 +354,8 @@ public class LearningElementDropZoneHelperUt
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -373,6 +368,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
+    // ANF-ID: [ASN0017, ASN0018, ASN0019]
     public void ItemUpdate_DropItemIsInWorldButThereIsAlreadyAnElementOnTheDraggedSlot_CallsSpacePresenter()
     {
         // Arrange
@@ -395,7 +391,8 @@ public class LearningElementDropZoneHelperUt
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -407,6 +404,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
+    // ANF-ID: [AWA0041, AWA0040, AWA0039]
     public void ItemUpdate_DropItemIsInWorldAndTheDraggedSlotIsFree_CallsPresentationLogic()
     {
         // Arrange
@@ -428,7 +426,8 @@ public class LearningElementDropZoneHelperUt
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         spacePresenter.LearningSpaceVm.Returns(mockSpace);
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var dropItem = new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockElement, GetDropzoneIdentifier(mockSpace, newSlotId), 0);
         var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
             worldPresenter: worldPresenter, spacePresenter: spacePresenter);
 
@@ -438,12 +437,6 @@ public class LearningElementDropZoneHelperUt
         // Assert
         presentationLogic.Received().DragLearningElementFromUnplaced(mockWorld, mockSpace, mockElement, newSlotId);
     }
-
-    #endregion
-
-    #endregion
-
-    #region IsItemInDropZone
 
     [Test]
     public void IsItemInDropZone_DropItemParentIsNotNullAndDropItemIsInCorrectSlot_ReturnsTrue()
@@ -585,8 +578,6 @@ public class LearningElementDropZoneHelperUt
         // Assert
         Assert.That(result, Is.True);
     }
-
-    #endregion
 
     private string GetDropzoneIdentifier(ILearningSpaceViewModel space, int id, bool story = false) =>
         $"{space.Id.ToString()}_{(story ? "story" : "ele")}_{id}";

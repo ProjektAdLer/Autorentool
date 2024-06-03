@@ -47,6 +47,7 @@ public class LmsLoginButtonUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public void OnClick_DialogService()
     {
         using (_context)
