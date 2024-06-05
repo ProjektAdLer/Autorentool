@@ -51,6 +51,7 @@ using Serilog.Settings.Configuration;
 using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
+using Shared.Networking;
 using Tailwind;
 using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
@@ -155,6 +156,7 @@ public class Startup
     {
         services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
+        services.AddSingleton<IPreflightHttpClient, PreflightHttpClient>();
     }
 
     internal static void ConfigureValidation(IServiceCollection services)

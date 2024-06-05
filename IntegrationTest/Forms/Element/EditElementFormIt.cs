@@ -175,7 +175,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Test]
     [Ignore(
         "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
-        Until = "2024-06-18")]
+        Until = "2024-12-31")]
     // ANF-ID: [AWA0015]
     public void H5PContentSelected_ShowsPrimitiveCheckbox()
     {
