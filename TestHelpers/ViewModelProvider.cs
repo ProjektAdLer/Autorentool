@@ -50,7 +50,7 @@ public static class ViewModelProvider
         manual
             ? new ManualLearningOutcomeViewModel("Outcome")
             : new StructuredLearningOutcomeViewModel(level, what, whereby, whatFor, verbOfVisibility, culture ??
-                CultureInfo.CurrentCulture);
+                new CultureInfo("de-DE"));
 
     public static LearningOutcomeCollectionViewModel GetLearningOutcomeCollection()
     {
