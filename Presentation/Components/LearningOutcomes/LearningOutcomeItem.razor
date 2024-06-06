@@ -1,0 +1,83 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+<div class="mx-2 p-4">
+    <ul class="list-disc list-outside">
+        <li class="marker:text-adlergrey cursor-default text-sm text-justify">@LearningOutcome.GetOutcome()</li>
+    </ul>
+    <div class="flex flex-row gap-2">
+        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Edit"]"/>
+        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Delete"]"/>
+    </div>
+</div>
+
+@code {
+    [Parameter, AllowNull, EditorRequired] public ILearningOutcomeViewModel LearningOutcome { get; set; }
+    [Parameter, AllowNull, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
+
+
+    [Inject, AllowNull] public IStringLocalizer<LearningOutcomeItem> Localizer { get; set; }
+    [Inject, AllowNull] public IDialogService DialogService { get; set; }
+    [Inject, AllowNull] public IPresentationLogic PresentationLogic { get; set; }
+
+    private async Task EditLearningOutcome(ILearningOutcomeViewModel learningOutcome)
+    {
+        switch (learningOutcome)
+        {
+            case ManualLearningOutcomeViewModel manualLearningOutcomeViewModel:
+                await EditManualLearningOutcome(manualLearningOutcomeViewModel);
+                break;
+            case StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel:
+                await EditStructuredLearningOutcome(structuredLearningOutcomeViewModel);
+                break;
+        }
+    }
+
+    private async Task EditStructuredLearningOutcome(StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection },
+            { nameof(CreateEditStructuredLearningOutcome.CurrentLearningOutcome), structuredLearningOutcomeViewModel }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task EditManualLearningOutcome(ManualLearningOutcomeViewModel manualLearningOutcomeViewModel)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection },
+            { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), manualLearningOutcomeViewModel }
+        };
+        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("", dialogParameters, options);
+        await dialogReference.Result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void DeleteLearningOutcome(ILearningOutcomeViewModel learningOutcome)
+    {
+        PresentationLogic.DeleteLearningOutcome(LearningOutcomeCollection, learningOutcome);
+        InvokeAsync(StateHasChanged);
+    }
+
+}

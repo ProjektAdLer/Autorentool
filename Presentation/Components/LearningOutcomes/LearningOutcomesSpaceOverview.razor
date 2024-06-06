@@ -1,5 +1,4 @@
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
-@using Presentation.PresentationLogic.API
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 <div class="pb-4">
@@ -9,28 +8,24 @@
     </div>
 
     <div class="flex flex-col justify-center items-center py-4">
-        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">@Localizer["LearningOutcomesSpaceOverview.Button.Structured"]</MudButton>
-        <MudButton Class="w-80 btn-standard" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">@Localizer["LearningOutcomesSpaceOverview.Button.Manual"]</MudButton>
+        <MudButton Class="w-80 btn-standard create-structured-outcome" Variant="Variant.Filled" OnClick="CreateStructuredLearningOutcome">
+            @Localizer["LearningOutcomesSpaceOverview.Button.Structured"]
+        </MudButton>
+        <MudButton Class="w-80 btn-standard create-manual-outcome" Variant="Variant.Filled" OnClick="CreateManualLearningOutcome">
+            @Localizer["LearningOutcomesSpaceOverview.Button.Manual"]
+        </MudButton>
     </div>
 
     @if (LearningOutcomeCollection.LearningOutcomes.Count > 0)
     {
-        <div class="h-[320px]">
+        <div class="h-[320px] outcomes">
             <MudDivider DividerType="DividerType.Middle"></MudDivider>
             <p class="cursor-default text-sm mx-6 py-4 font-bold">@Localizer["LearningOutcomesSpaceOverview.Overview.Subtitle"]</p>
 
-            <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6 bg-adlerbgbright">
+            <div class="h-[260px] max-w-full overflow-y-scroll border-2 border-adlergrey-100 rounded mx-6 bg-adlerbgbright outcomes-inner">
                 @foreach (var learningOutcome in LearningOutcomeCollection.LearningOutcomes)
                 {
-                    <div class="mx-2 p-4">
-                        <ul class="list-disc list-outside">
-                            <li class="marker:text-adlergrey cursor-default text-sm text-justify">@learningOutcome.GetOutcome()</li>
-                        </ul>
-                        <div class="flex flex-row gap-2">
-                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Edit"]"/>
-                            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(learningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomesSpaceOverview.Button.Delete"]"/>
-                        </div>
-                    </div>
+                    <LearningOutcomeItem LearningOutcome="learningOutcome" LearningOutcomeCollection="LearningOutcomeCollection" />
                 }
             </div>
         </div>
@@ -39,8 +34,6 @@
 
 @code {
     [Parameter, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; } = null!;
-
-    [Inject, AllowNull] private IPresentationLogic PresentationLogic { get; set; }
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
@@ -83,65 +76,6 @@
         var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("", dialogParameters, options);
         await dialogReference.Result;
         await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task EditLearningOutcome(ILearningOutcomeViewModel learningOutcome)
-    {
-        switch (learningOutcome)
-        {
-            case ManualLearningOutcomeViewModel manualLearningOutcomeViewModel:
-                await EditManualLearningOutcome(manualLearningOutcomeViewModel);
-                break;
-            case StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel:
-                await EditStructuredLearningOutcome(structuredLearningOutcomeViewModel);
-                break;
-        }
-    }
-
-    private async Task EditStructuredLearningOutcome(StructuredLearningOutcomeViewModel structuredLearningOutcomeViewModel)
-    {
-        var options = new DialogOptions
-        {
-            DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
-            CloseButton = true,
-        };
-
-        var dialogParameters = new DialogParameters
-        {
-            { nameof(CreateEditStructuredLearningOutcome.LearningOutcomes), LearningOutcomeCollection },
-            { nameof(CreateEditStructuredLearningOutcome.CurrentLearningOutcome), structuredLearningOutcomeViewModel }
-        };
-        var dialogReference = await DialogService.ShowAsync<CreateEditStructuredLearningOutcome>("", dialogParameters, options);
-        await dialogReference.Result;
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task EditManualLearningOutcome(ManualLearningOutcomeViewModel manualLearningOutcomeViewModel)
-    {
-        var options = new DialogOptions
-        {
-            DisableBackdropClick = false,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
-            CloseButton = true,
-        };
-
-        var dialogParameters = new DialogParameters
-        {
-            { nameof(CreateEditManualLearningOutcome.LearningOutcomeCollection), LearningOutcomeCollection },
-            { nameof(CreateEditManualLearningOutcome.CurrentManualLearningOutcome), manualLearningOutcomeViewModel }
-        };
-        var dialogReference = await DialogService.ShowAsync<CreateEditManualLearningOutcome>("", dialogParameters, options);
-        await dialogReference.Result;
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private void DeleteLearningOutcome(ILearningOutcomeViewModel learningOutcome)
-    {
-        PresentationLogic.DeleteLearningOutcome(LearningOutcomeCollection, learningOutcome);
-        InvokeAsync(StateHasChanged);
     }
 
 }
