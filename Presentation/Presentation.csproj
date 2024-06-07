@@ -245,5 +245,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomeItem.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomeItem.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomeItem.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningOutcomeItem.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
