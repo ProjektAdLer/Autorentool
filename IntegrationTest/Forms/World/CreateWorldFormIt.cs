@@ -68,14 +68,17 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
 
         ConfigureValidatorAllMembersTest();
 
-        Assert.That(FormModel.Name, Is.EqualTo(""));
-        Assert.That(FormModel.Shortname, Is.EqualTo(""));
-        Assert.That(FormModel.Authors, Is.EqualTo(""));
-        Assert.That(FormModel.Language, Is.EqualTo(""));
-        Assert.That(FormModel.Description, Is.EqualTo(""));
-        Assert.That(FormModel.Goals, Is.EqualTo(""));
-        Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
-        Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
+        Assert.Multiple(() =>
+        {
+            Assert.That(FormModel.Name, Is.EqualTo(""));
+            Assert.That(FormModel.Shortname, Is.EqualTo(""));
+            Assert.That(FormModel.Authors, Is.EqualTo(""));
+            Assert.That(FormModel.Language, Is.EqualTo(""));
+            Assert.That(FormModel.Description, Is.EqualTo(""));
+            Assert.That(FormModel.Goals, Is.EqualTo(""));
+            Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
+            Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
+        });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
@@ -84,23 +87,32 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         foreach (var mudInput in mudInputs.Take(6))
         {
             var input = mudInput.Find("input");
-            input.Change(Expected);
+            await input.ChangeAsync(new ChangeEventArgs
+            {
+                Value = Expected
+            });
         }
 
         foreach (var mudInput in mudInputs.Skip(6))
         {
             var input = mudInput.Find("textarea");
-            input.Change(Expected);
+            await input.ChangeAsync(new ChangeEventArgs
+            {
+                Value = Expected
+            });
         }
 
-        Assert.That(FormModel.Name, Is.EqualTo(Expected));
-        Assert.That(FormModel.Shortname, Is.EqualTo(Expected));
-        Assert.That(FormModel.Authors, Is.EqualTo(Expected));
-        Assert.That(FormModel.Language, Is.EqualTo(Expected));
-        Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.Goals, Is.EqualTo(Expected));
-        Assert.That(FormModel.EvaluationLink, Is.EqualTo(Expected));
-        Assert.That(FormModel.EnrolmentKey, Is.EqualTo(Expected));
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.Shortname, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.Authors, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.Language, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+        });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
