@@ -8,7 +8,13 @@
         {
             <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
         }
-        <p class="cursor-pointer text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
+        @if (Title is not null)
+        {
+            <p class="cursor-pointer text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
+        } else if (TitleContent is not null)
+        {
+            @TitleContent
+        }
     </div>
 
     @if (!Collapsed)
@@ -30,8 +36,9 @@
     [Parameter] public EventCallback<bool> CollapsedChanged { get; set; }
 
     [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? TitleContent { get; set; }
 
-    public void Toggle()
+    private void Toggle()
     {
         Collapsed = !Collapsed;
         CollapsedChanged.InvokeAsync(Collapsed);

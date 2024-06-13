@@ -1,14 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
-using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using TestHelpers;
 using TestContext = Bunit.TestContext;

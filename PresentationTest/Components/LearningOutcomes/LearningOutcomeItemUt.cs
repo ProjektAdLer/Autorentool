@@ -51,7 +51,8 @@ public class LearningOutcomeItemUt
         Assert.That(renderedComponentInstance.LearningOutcome, Is.EqualTo(outcome));
         var li = sut.Find("li");
         li.MarkupMatches(
-            $@"<li class=""marker:text-adlergrey cursor-default text-sm text-justify"">{outcome.GetOutcome()}</li>");
+            $@"<li class=""marker:text-adlergrey cursor-default text-sm text-justify"">{outcome.GetOutcome()}</li>"
+        );
     }
 
     [Test]
@@ -94,22 +95,37 @@ public class LearningOutcomeItemUt
         var collection = new LearningOutcomeCollectionViewModel();
         var outcome = ViewModelProvider.GetLearningOutcome();
         collection.LearningOutcomes.Add(outcome);
-        
+
         var sut = GetRenderedComponent(collection, outcome);
-        
+
         sut.FindComponents<MudIconButton>()[1].Find("button").Click();
-        
+
         _presentationLogic.Received().DeleteLearningOutcome(collection, outcome);
+    }
+    
+    [Test]
+    public void DisplayButtonsProperty_WorksAsExpected([Values] bool displayButtons)
+    {
+        var collection = new LearningOutcomeCollectionViewModel();
+        var outcome = ViewModelProvider.GetLearningOutcome();
+        collection.LearningOutcomes.Add(outcome);
+
+        var sut = GetRenderedComponent(collection, outcome, displayButtons);
+
+        var buttons = sut.FindComponents<MudIconButton>();
+        var expected = displayButtons ? 2 : 0;
+        Assert.That(buttons, Has.Count.EqualTo(expected));
     }
 
 
     private IRenderedComponent<LearningOutcomeItem> GetRenderedComponent(LearningOutcomeCollectionViewModel collection,
-        ILearningOutcomeViewModel outcome)
+        ILearningOutcomeViewModel outcome, bool? displayButtons = null)
     {
         return _context.RenderComponent<LearningOutcomeItem>(pBuilder =>
         {
             pBuilder.Add(p => p.LearningOutcomeCollection, collection);
             pBuilder.Add(p => p.LearningOutcome, outcome);
+            if(displayButtons is not null) pBuilder.Add(p => p.DisplayButtons, displayButtons.Value);
         });
     }
 }

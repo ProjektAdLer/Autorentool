@@ -1,0 +1,70 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using Microsoft.Extensions.Localization
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components.Forms
+
+<div class="px-4 pb-6">
+    <div class="flex flex-col px-1">
+        <p class="cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningOutcomesWorldOverview.Title"]</p>
+    </div>
+
+    @if (!IsAnyOutcomeInWorld())
+    {
+        <div class="flex justify-center items-center p-4 bg-adlerbgbright border border-adlergrey-100 rounded">
+            <p class="opacity-80 cursor-default pl-1 text-base font-bold text-adlertextgrey no-outcomes">@Localizer["LearningOutcomesWorldOverview.NoOutcome"]</p>
+        </div>
+    }
+
+    else
+    {
+        <p class="pl-1 pb-2 cursor-default">
+            @Localizer["LearningOutcomesWorldOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningWorld.Name</span>
+        </p>
+        <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
+            @foreach (var learningSpace in LearningWorld.LearningSpaces)
+            {
+                <Collapsable Collapsed="true">
+                    <ChildContent>
+                        <div class="pl-16">
+                            @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)
+                            {
+                                <LearningOutcomeItem
+                                    LearningOutcomeCollection="learningSpace.LearningOutcomeCollection"
+                                    LearningOutcome="outcome" DisplayButtons="false"/>
+                            }
+                        </div>
+                    </ChildContent>
+                    <TitleContent>
+                        <div class="flex flex-row gap-2 items-center">
+                            <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
+                            <p class="cursor-default break-words font-bold text-adlertextgrey">@learningSpace.Name</p>
+                        </div>
+                    </TitleContent>
+                </Collapsable>
+            }
+        </div>
+    }
+
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<LearningOutcomesWorldOverview> Localizer { get; set; }
+
+    [Parameter, EditorRequired] public ILearningWorldViewModel LearningWorld { get; set; } = null!;
+
+    private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
+    private bool IsAnyOutcomeInWorld()
+    {
+        return LearningWorld.LearningSpaces.Any(x => x.LearningOutcomeCollection.LearningOutcomes.Count() > 0);
+    }
+
+}

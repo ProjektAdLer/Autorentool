@@ -6,15 +6,19 @@
     <ul class="list-disc list-outside">
         <li class="marker:text-adlergrey cursor-default text-sm text-justify">@LearningOutcome.GetOutcome()</li>
     </ul>
-    <div class="flex flex-row gap-2">
-        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomeItem.Button.Edit"]"/>
-        <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomeItem.Button.Delete"]"/>
-    </div>
+    @if(DisplayButtons) 
+    {
+        <div class="flex flex-row gap-2">
+            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomeItem.Button.Edit"]"/>
+            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomeItem.Button.Delete"]"/>
+        </div>
+    }
 </div>
 
 @code {
     [Parameter, AllowNull, EditorRequired] public ILearningOutcomeViewModel LearningOutcome { get; set; }
     [Parameter, AllowNull, EditorRequired] public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
+    [Parameter] public bool DisplayButtons { get; set; } = true;
 
 
     [Inject, AllowNull] public IStringLocalizer<LearningOutcomeItem> Localizer { get; set; }
