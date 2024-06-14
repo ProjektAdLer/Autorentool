@@ -20,6 +20,7 @@ public class QuestionCommandFactoryUt
     private QuestionCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AWA0004]
     public void GetCreateMultipleChoiceSingleResponseQuestionCommand_ReturnsCreateMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
@@ -27,7 +28,7 @@ public class QuestionCommandFactoryUt
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var correctChoice = new Choice("Choice1");
-        var choices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 10;
         Action<AdaptivityTask> mappingAction = _ => { };
 
@@ -51,6 +52,7 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0004]
     public void
         GetCreateMultipleChoiceMultipleResponseQuestionCommand_ReturnsCreateMultipleChoiceMultipleResponseQuestion()
     {
@@ -59,8 +61,8 @@ public class QuestionCommandFactoryUt
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choice = new Choice("Choice1");
-        var choices = new List<Choice>() {choice};
-        var correctChoices = new List<Choice>() {choice};
+        var choices = new List<Choice>() { choice };
+        var correctChoices = new List<Choice>() { choice };
         var expectedCompletionTime = 10;
         Action<AdaptivityTask> mappingAction = _ => { };
 
@@ -84,11 +86,12 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void GetEditMultipleChoiceSingleResponseQuestionCommand_ReturnsEditMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
         var oldCorrectChoice = new Choice("OldCorrectChoice");
-        var question = new MultipleChoiceSingleResponseQuestion(10, new List<Choice>() {oldCorrectChoice},
+        var question = new MultipleChoiceSingleResponseQuestion(10, new List<Choice>() { oldCorrectChoice },
             "OldQuestionText", oldCorrectChoice, QuestionDifficulty.Easy, new List<IAdaptivityRule>());
         var questionText = "NewQuestionText";
         var choices = new List<Choice>();
@@ -115,6 +118,7 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void GetEditMultipleChoiceMultipleResponseQuestionCommand_ReturnsEditMultipleChoiceMultipleResponseQuestion()
     {
         // Arrange
@@ -145,6 +149,7 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void
         GetEditMultipleChoiceQuestionWithTypeChangeCommand_MultipleResponseToSingleResponse_ReturnsEditMultipleChoiceQuestionWithTypeChange()
     {
@@ -155,8 +160,8 @@ public class QuestionCommandFactoryUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
-        var correctChoices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
+        var correctChoices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 20;
         Action<AdaptivityTask> mappingAction = _ => { };
 
@@ -183,6 +188,7 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void
         GetEditMultipleChoiceQuestionWithTypeChangeCommand_SingleResponseToMultipleResponse_ReturnsEditMultipleChoiceQuestionWithTypeChange()
     {
@@ -193,8 +199,8 @@ public class QuestionCommandFactoryUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
-        var correctChoices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
+        var correctChoices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 20;
         Action<AdaptivityTask> mappingAction = _ => { };
 
@@ -222,12 +228,13 @@ public class QuestionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0009]
     public void GetDeleteCommand_ReturnsDeleteAdaptivityQuestion()
     {
         // Arrange
         var question = new MultipleChoiceMultipleResponseQuestion(10, new List<Choice>(), new List<Choice>(),
             new List<IAdaptivityRule>(), "OldQuestionText", QuestionDifficulty.Easy);
-        var task = new AdaptivityTask(new List<IAdaptivityQuestion>() {question}, QuestionDifficulty.Easy, "Task1");
+        var task = new AdaptivityTask(new List<IAdaptivityQuestion>() { question }, QuestionDifficulty.Easy, "Task1");
         Action<AdaptivityTask> mappingAction = _ => { };
 
         // Act

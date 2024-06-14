@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Layout;
 public class RemoveLearningElementFromLayoutUt
 {
     [Test]
+    // ANF-ID: [ASN0022, AWA0023, ASN0021]
     public void DragLearningElementFromSlotToUnplaced_Execute_MovesLearningElementToUnplaced()
     {
         var world = EntityProvider.GetLearningWorld();

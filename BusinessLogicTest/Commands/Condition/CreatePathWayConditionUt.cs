@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Condition;
 public class CreatePathWayConditionUt
 {
     [Test]
+    // ANF-ID: [AHO61]
     public void Execute_CreatesPathWayCondition()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
@@ -45,6 +46,7 @@ public class CreatePathWayConditionUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void Execute_CreatesPathWayConditionBetweenGivenObjects()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
@@ -120,6 +122,7 @@ public class CreatePathWayConditionUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void Execute_PreviousPathWayIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
@@ -146,6 +149,7 @@ public class CreatePathWayConditionUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void Execute_PreviousInBoundObjectIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");

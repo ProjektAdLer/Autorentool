@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class EditMultipleChoiceQuestionWithTypeChangeUt
 {
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_MultipleResponseToSingleResponse_DeletesOldQuestionAndCreateSingleResponseQuestion()
     {
         // Arrange
@@ -23,8 +24,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
-        var correctChoices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
+        var correctChoices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -63,6 +64,7 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_SingleResponseToMultipleResponse_DeletesOldQuestionAndCreateMultipleResponseQuestion()
     {
         // Arrange
@@ -76,8 +78,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, choice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, choice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -117,6 +119,7 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_InvalidParameters_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -125,8 +128,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         task.Questions.Add(oldQuestion);
         var isSingleResponse = true;
         var text = "NewQuestionText";
-        var choices = new List<Choice>() {new Choice("Choice1"), new Choice("Choice2")};
-        var correctChoices = new List<Choice>() {new Choice("CorrectChoice1"), new Choice("CorrectChoice2")};
+        var choices = new List<Choice>() { new Choice("Choice1"), new Choice("Choice2") };
+        var correctChoices = new List<Choice>() { new Choice("CorrectChoice1"), new Choice("CorrectChoice2") };
         var expectedCompletionTime = 10;
         Action<AdaptivityTask> mappingAction = _ => { };
 
@@ -143,6 +146,7 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
     }
 
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_QuestionDoesNotExistInTask_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -151,8 +155,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var questionsCount = task.Questions.Count;
         var isSingleResponse = false;
         var text = "NewQuestionText";
-        var choices = new List<Choice>() {new Choice("Choice1"), new Choice("Choice2")};
-        var correctChoices = new List<Choice>() {new Choice("CorrectChoice1"), new Choice("CorrectChoice2")};
+        var choices = new List<Choice>() { new Choice("Choice1"), new Choice("Choice2") };
+        var correctChoices = new List<Choice>() { new Choice("CorrectChoice1"), new Choice("CorrectChoice2") };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -197,8 +201,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
-        var correctChoices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
+        var correctChoices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -259,8 +263,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, choice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, choice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -320,8 +324,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
-        var correctChoices = new List<Choice>() {correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
+        var correctChoices = new List<Choice>() { correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -383,8 +387,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, choice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, choice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -437,8 +441,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         task.Questions.Add(oldQuestion);
         var isSingleResponse = false;
         var text = "NewQuestionText";
-        var choices = new List<Choice>() {new Choice("Choice1"), new Choice("Choice2")};
-        var correctChoices = new List<Choice>() {new Choice("CorrectChoice1"), new Choice("CorrectChoice2")};
+        var choices = new List<Choice>() { new Choice("Choice1"), new Choice("Choice2") };
+        var correctChoices = new List<Choice>() { new Choice("CorrectChoice1"), new Choice("CorrectChoice2") };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -465,8 +469,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         task.Questions.Add(oldQuestion);
         var isSingleResponse = true;
         var text = "NewQuestionText";
-        var choices = new List<Choice>() {new Choice("Choice1"), new Choice("Choice2")};
-        var correctChoices = new List<Choice>() {new Choice("CorrectChoice1"), new Choice("CorrectChoice2")};
+        var choices = new List<Choice>() { new Choice("Choice1"), new Choice("Choice2") };
+        var correctChoices = new List<Choice>() { new Choice("CorrectChoice1"), new Choice("CorrectChoice2") };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;

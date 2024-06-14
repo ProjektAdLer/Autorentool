@@ -31,6 +31,7 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
     }
 
     [Test]
+    // ANF-ID: [ASN0019, AWA0023]
     public void Execute_StoryElementPlacedInLayoutAndRemovedFromUnplacedLearningElements()
     {
         var (world, space, element) = GetPreparedWorldForTest();
@@ -49,6 +50,7 @@ public class PlaceStoryElementInLayoutFromUnplacedUt
     }
 
     [Test]
+    // ANF-ID: [ASN0019, AWA0023]
     public void Execute_ElementAtSlotAlready_ReplacesElement()
     {
         var (world, space, element) = GetPreparedWorldForTest();

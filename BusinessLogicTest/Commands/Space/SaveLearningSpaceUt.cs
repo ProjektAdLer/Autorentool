@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Space;
 public class SaveLearningSpaceUt
 {
     [Test]
+    // ANF-ID: [AWA0025]
     public void Execute_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

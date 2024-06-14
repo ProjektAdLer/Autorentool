@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.LearningOutcomes;
 public class AddLearningOutcomeUt
 {
     [Test]
+    // ANF-ID: [AHO01, AHO02]
     public void Execute_AddsLearningOutcome_WithoutIndex()
     {
         // Arrange
@@ -54,6 +55,7 @@ public class AddLearningOutcomeUt
     }
 
     [Test]
+    // ANF-ID: [AHO01, AHO02, AHO03, AHO04]
     public void Execute_AddsLearningOutcome_WithIndex()
     {
         // Arrange

@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Element;
 public class DeleteLearningElementInWorldUt
 {
     [Test]
+    // ANF-ID: [AWA0016, AWA0011]
     public void Execute_Undo_Redo_DeletesLearningElement()
     {
         var world = EntityProvider.GetLearningWorld(unsavedChanges: false);

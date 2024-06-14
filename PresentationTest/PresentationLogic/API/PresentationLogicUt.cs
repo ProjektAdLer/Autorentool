@@ -728,7 +728,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    // ANF-ID: [ASN0017]
+    // ANF-ID: [ASN0017, ASN0018]
     public void PlaceLearningElementFromUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -819,7 +819,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    // ANF-ID: [ASN0022]
+    // ANF-ID: [ASN0022, ASN0018, ASN0021]
     public void DragLearningElementToUnplaced_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -899,7 +899,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    // ANF-ID: [AWA0041]
+    // ANF-ID: [AWA0041, AWA0040]
     public void SwitchLearningElementSlot_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

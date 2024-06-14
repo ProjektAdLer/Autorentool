@@ -19,6 +19,7 @@ public class TaskCommandFactoryUt
     private TaskCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AWA0005]
     public void GetCreateCommand_ReturnsCreateAdaptivityTask()
     {
         // Arrange
@@ -41,6 +42,7 @@ public class TaskCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0006]
     public void GetEditCommand_ReturnsEditAdaptivityTask()
     {
         // Arrange
@@ -65,6 +67,7 @@ public class TaskCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0007]
     public void GetDeleteCommand_ReturnsDeleteAdaptivityTask()
     {
         // Arrange

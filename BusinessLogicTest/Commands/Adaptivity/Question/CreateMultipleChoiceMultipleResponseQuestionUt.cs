@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class CreateMultipleChoiceMultipleResponseQuestionUt
 {
     [Test]
+    // ANF-ID: [AWA0004]
     public void Execute_CreatesMultipleChoiceMultipleResponseQuestion()
     {
         // Arrange
@@ -67,6 +68,7 @@ public class CreateMultipleChoiceMultipleResponseQuestionUt
     }
 
     [Test]
+    // ANF-ID: [AWA0004]
     public void Execute_SetsMinimumRequiredDifficultyWhenFirstQuestionIsAdded()
     {
         var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), null, "TestTask");

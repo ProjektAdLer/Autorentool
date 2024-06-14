@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Condition;
 public class DeletePathWayConditionUt
 {
     [Test]
+    // ANF-ID: [AHO63]
     public void Execute_DeletesLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");

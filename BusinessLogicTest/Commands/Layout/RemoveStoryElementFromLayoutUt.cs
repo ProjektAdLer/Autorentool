@@ -30,6 +30,7 @@ public class RemoveStoryElementFromLayoutUt
     }
 
     [Test]
+    // ANF-ID: [ASN0020, AWA0023]
     public void Execute_StoryElementRemovedFromLayoutAndAddedToUnplacedLearningElements()
     {
         var (world, space, element) = GetPreparedWorldForTest();

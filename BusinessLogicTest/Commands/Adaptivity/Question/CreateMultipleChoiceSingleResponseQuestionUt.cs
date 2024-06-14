@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class CreateMultipleChoiceSingleResponseQuestionUt
 {
     [Test]
+    // ANF-ID: [AWA0004]
     public void Execute_CreatesMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
@@ -22,7 +23,7 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -73,7 +74,7 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -117,7 +118,7 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;

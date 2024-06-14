@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class DeleteAdaptivityQuestionUt
 {
     [Test]
+    // ANF-ID: [AWA0009]
     public void Execute_DeletesAdaptivityQuestion()
     {
         // Arrange
@@ -46,6 +47,7 @@ public class DeleteAdaptivityQuestionUt
     }
 
     [Test]
+    // ANF-ID: [AWA0009]
     public void Execute_UpdatesMinimumRequiredDifficultyAfterDeletion()
     {
         var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>() { }, null, "taskname");

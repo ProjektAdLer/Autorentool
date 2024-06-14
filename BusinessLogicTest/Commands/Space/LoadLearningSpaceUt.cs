@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Space;
 public class LoadLearningSpaceUt
 {
     [Test]
+    // ANF-ID: [AWA0022]
     public void Execute_LoadsLearningSpace()
     {
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");

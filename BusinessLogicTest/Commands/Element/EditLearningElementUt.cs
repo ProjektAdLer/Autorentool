@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Element;
 public class EditLearningElementUt
 {
     [Test]
+    // ANF-ID: [AWA0015, AWA0010]
     public void Execute_EditsLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();

@@ -30,6 +30,7 @@ public class PlaceStoryElementInLayoutFromLayoutUt
     }
 
     [Test]
+    // ANF-ID: [AWA0039, AWA0023]
     public void Execute_StoryElementPlacedInLayoutAndReplacedElementMovedToUnplacedLearningElements()
     {
         var (space, element) = GetPreparedSpaceForTest();
@@ -47,6 +48,7 @@ public class PlaceStoryElementInLayoutFromLayoutUt
     }
 
     [Test]
+    // ANF-ID: [AWA0039, AWA0023]
     public void Execute_ElementAtSlotAlready_SwapsElements()
     {
         var (space, element) = GetPreparedSpaceForTest();
