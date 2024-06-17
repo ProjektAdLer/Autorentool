@@ -27,7 +27,7 @@
     </HeaderButtons>
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"]      @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-2 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -39,7 +39,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"]      @bind-Collapsed="_collapsedConditions">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -55,7 +55,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]      @bind-Collapsed="_collapsedFloorplan">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] InitiallyCollapsed="false">
                 @*<MudText Typo="Typo.caption">
                                 @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
             </MudText>*@
@@ -66,7 +66,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"]      @bind-Collapsed="_collapsedTheme">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"]     @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-4">
                     <MudText Class="cursor-default text-justify" Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                     <div class="flex justify-center">
@@ -94,7 +94,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Description.Title"]     @bind-Collapsed="_collapsedDescription">
+            <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -147,12 +147,6 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
-    private bool _collapsedGeneral = false;
-    private bool _collapsedConditions = true;
-    private bool _collapsedFloorplan = false;
-    private bool _collapsedTheme = true;
-    private bool _collapsedGoals = true;
-    private bool _collapsedDescription = true;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;

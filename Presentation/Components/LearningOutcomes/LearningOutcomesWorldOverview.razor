@@ -23,7 +23,17 @@
         <div class="max-h-[500px] overflow-y-scroll py-2 bg-adlerbgbright rounded border border-adlergrey-200">
             @foreach (var learningSpace in LearningWorld.LearningSpaces)
             {
-                <Collapsable Collapsed="true">
+                <Collapsable InitiallyCollapsed="true">
+                    <TogglerContent>
+                        @if (context)
+                        {
+                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                        }
+                        else
+                        {
+                        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                        }
+                    </TogglerContent>
                     <ChildContent>
                         <div class="pl-16">
                             @foreach (var outcome in learningSpace.LearningOutcomeCollection.LearningOutcomes)

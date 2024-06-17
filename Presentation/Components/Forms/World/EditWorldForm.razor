@@ -17,8 +17,7 @@
           SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer" @ref="_form">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"] 
-                                                  @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -46,7 +45,7 @@
         </div>
 
         <div class="px-4">
-            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" @bind-Collapsed="_collapsedEnrolmentKey">
+            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                       <div class="flex flex-row items-center gap-1 py-2">
                            <MudText Class="font-bold text-sm pl-1">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</MudText>
@@ -63,8 +62,7 @@
         </div>    
         
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] 
-                                                                                              @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
@@ -78,8 +76,7 @@
         </div>
         
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Description.Title"]
-                                                       @bind-Collapsed="_collapsedDescription">
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -125,11 +122,6 @@
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
-
-    private bool _collapsedGeneral = false;
-    private bool _collapsedEnrolmentKey = true;
-    private bool _collapsedGoals = true;
-    private bool _collapsedDescription = true;
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
