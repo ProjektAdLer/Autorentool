@@ -22,7 +22,6 @@
 @using Presentation.Components
 @using System.Text
 @using System.Runtime.Serialization
-@using Presentation.Components.LearningOutcomes
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
@@ -47,7 +46,7 @@
             </MudIconButton>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 test">
             <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
                            Icon="@Icons.Material.Filled.Archive"
                            Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
@@ -88,7 +87,7 @@
     {
         <div class="flex justify-center items-center gap-2 cursor-default">
             <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
-            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] v@(Constants.ApplicationVersion)</p>
+            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</p>
         </div>
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
