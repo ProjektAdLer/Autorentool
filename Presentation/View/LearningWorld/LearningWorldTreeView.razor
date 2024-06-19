@@ -3,12 +3,14 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.Components.Forms
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using MudBlazor.Utilities
+@using Shared.Extensions
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -30,26 +32,21 @@
             <div class="cursor-pointer flex flex-col justify-start">
                 @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
-                    foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+                    foreach (var learningSpace in GetLearningSpacesInOrder(LearningWorldP.LearningWorldVm.LearningSpaces))
                     {
-                        <div>
-                            <div class="flex flex-row items-center">
-                                <span @onclick="() => ToggleLearningSpace(learningSpace)">
-                                    <MudIconButton Class="p-2" Size="Size.Small"
-                                                   OnClick="() => ToggleLearningSpace(learningSpace)"
-                                                   Icon="@(GetSpaceToggleIcon(learningSpace))"/>
-                                </span>
+                        <Collapsable VerticalMargin="my-1" @ref="Collapsables[learningSpace]"
+                                     InitiallyCollapsed="!IsLearningSpaceSelected(learningSpace)">
+                            <TitleContentAfterToggler>
                                 <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
                                     <div class="flex flex-row gap-2 items-center">
                                         <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
                                         <p class="break-words">@learningSpace.Name</p>
                                     </div>
                                 </span>
-                            </div>
-                            @if (IsLearningSpaceExpanded(learningSpace))
-                            {
+                            </TitleContentAfterToggler>
+                            <ChildContent>
                                 <div>
-                                    @if(learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(0, out var entranceElement))
+                                    @if (learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(0, out var entranceElement))
                                     {
                                         <LearningWorldTreeViewItem @key="entranceElement" LearningElement="@entranceElement"
                                                                    IsSelected="@IsLearningElementSelected(entranceElement)"
@@ -61,7 +58,7 @@
                                                                    IsSelected="@IsLearningElementSelected(learningElement)"
                                                                    OnSelect="@(ele => OnLearningElementClicked(ele))"/>
                                     }
-                                    @if(learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(1, out var exitElement))
+                                    @if (learningSpace.LearningSpaceLayout.StoryElements.TryGetValue(1, out var exitElement))
                                     {
                                         <LearningWorldTreeViewItem @key="exitElement" LearningElement="@exitElement"
                                                                    IsSelected="@IsLearningElementSelected(exitElement)"
@@ -69,8 +66,18 @@
                                     }
 
                                 </div>
-                            }
-                        </div>
+                            </ChildContent>
+                            <TogglerContent>
+                                @if (context)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                                }
+                            </TogglerContent>
+                        </Collapsable>
                     }
                 }
             </div>
@@ -98,8 +105,7 @@
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
     private Color Color { get; set; } = Color.Info;
-
-    private IDictionary<ILearningSpaceViewModel, bool> ExpandedLearningSpaces { get; set; } = new Dictionary<ILearningSpaceViewModel, bool>();
+    private Dictionary<ILearningSpaceViewModel, Collapsable> Collapsables { get; set; } = new();
 
     protected override void OnParametersSet()
     {
@@ -108,17 +114,6 @@
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
-        UpdateExpandedLearningSpaces();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        if (!firstRender) return;
-        if (SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel learningSpace)
-        {
-            ToggleLearningSpace(learningSpace);
-        }
     }
 
     private string GetSpaceDivCss(ILearningSpaceViewModel space)
@@ -128,11 +123,6 @@
             .AddClass("text-adlerblue-600", isLearningSpaceSelected)
             .AddClass("text-adlergrey-600", !isLearningSpaceSelected)
             .ToString();
-    }
-    
-    private string GetSpaceToggleIcon(ILearningSpaceViewModel space)
-    {
-        return IsLearningSpaceExpanded(space) ? Icons.Material.Filled.KeyboardArrowDown : Icons.Material.Filled.KeyboardArrowRight;
     }
 
 
@@ -151,38 +141,42 @@
     private List<ILearningSpaceViewModel> GetLearningSpacesInOrder(IEnumerable<IObjectInPathWayViewModel> objectInPathWayViewModels)
     {
         var objectInPathWayList = objectInPathWayViewModels.ToList();
-        var startObjects = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is LearningSpaceViewModel && x.OutBoundObjects.Count > 0).ToList();
+        var startObjects = objectInPathWayList
+            .OfType<ILearningSpaceViewModel>()
+            .Where(x =>
+                x.InBoundObjects.Count == 0 &&
+                x.OutBoundObjects.Count > 0)
+            .OrderBy(space => space.Name)
+            .ToList();
 
         var visited = new HashSet<IObjectInPathWayViewModel>();
         var pathOrder = new List<ILearningSpaceViewModel>();
-        var queue = new Queue<IObjectInPathWayViewModel>();
-
-        foreach (var startObject in startObjects)
-        {
-            queue.Enqueue(startObject);
-        }
+        var queue = new Queue<IObjectInPathWayViewModel>(startObjects);
 
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
 
-            if (visited.Contains(current))
+            if (!visited.Add(current))
                 continue;
-
-            visited.Add(current);
 
             if (current is ILearningSpaceViewModel learningSpace)
             {
                 pathOrder.Add(learningSpace);
             }
 
-            foreach (var nextObject in current.OutBoundObjects.OrderBy(o => o is LearningSpaceViewModel lsvm ? lsvm.Name : string.Empty))
-            {
-                queue.Enqueue(nextObject);
-            }
+            // We must visit all objects in pathway, even if they are not learning spaces, but we order learning spaces
+            // by name into the queue
+            queue.EnqueueRange(current.OutBoundObjects
+                .OrderBy(o => o is LearningSpaceViewModel lsvm ? lsvm.Name : string.Empty)
+                .Except(visited)
+            );
         }
 
-        var spacesWithOutPaths = objectInPathWayList.Where(x => x.InBoundObjects.Count == 0 && x is ILearningSpaceViewModel && x.OutBoundObjects.Count == 0).Cast<ILearningSpaceViewModel>().ToList();
+        var spacesWithOutPaths = objectInPathWayList
+            .OfType<ILearningSpaceViewModel>()
+            .Where(x => x.InBoundObjects.Count == 0 && x.OutBoundObjects.Count == 0)
+            .ToList();
 
         pathOrder.AddRange(spacesWithOutPaths);
         return pathOrder;
@@ -202,15 +196,6 @@
     private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
-    }
-
-    private void UpdateExpandedLearningSpaces()
-    {
-        ExpandedLearningSpaces.Clear();
-        foreach (var learningSpace in LearningWorldP.LearningWorldVm!.LearningSpaces)
-        {
-            ExpandedLearningSpaces.Add(learningSpace, false);
-        }
     }
 
     private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
@@ -239,23 +224,15 @@
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         TriggerStateHasChanged();
-        if (args.PropertyName != nameof(SelectedViewModelsProvider.LearningElement)) return;
-        if (SelectedViewModelsProvider.LearningElement?.Parent != null && !IsLearningSpaceExpanded(SelectedViewModelsProvider.LearningElement.Parent))
-            ToggleLearningSpace(SelectedViewModelsProvider.LearningElement.Parent);
-    }
-
-    private void ToggleLearningSpace(ILearningSpaceViewModel learningSpace)
-    {
-        ExpandedLearningSpaces[learningSpace] = !ExpandedLearningSpaces[learningSpace];
-        TriggerStateHasChanged();
-    }
-
-    private bool IsLearningSpaceExpanded(ILearningSpaceViewModel learningSpace)
-    {
-        if (ExpandedLearningSpaces.ContainsKey(learningSpace) == false)
-            UpdateExpandedLearningSpaces();
-
-        return ExpandedLearningSpaces[learningSpace];
+        if (args.PropertyName switch
+            {
+                nameof(SelectedViewModelsProvider.LearningElement) => SelectedViewModelsProvider.LearningElement?.Parent,
+                nameof(SelectedViewModelsProvider.LearningObjectInPathWay) => SelectedViewModelsProvider.LearningObjectInPathWay,
+                _ => null
+            } is ILearningSpaceViewModel space)
+        {
+            UncollapseSpace(space);
+        }
     }
 
     private Task SelectLearningElement(ILearningElementViewModel learningElement)
@@ -279,12 +256,16 @@
 
     private Task SelectLearningSpace(ILearningSpaceViewModel learningSpace)
     {
-        ExpandedLearningSpaces[learningSpace] = true;
         Mediator.RequestOpenSpaceDialog();
         if (SelectedViewModelsProvider.LearningElement != null && SelectedViewModelsProvider.LearningElement.Parent != learningSpace)
             SelectedViewModelsProvider.SetLearningElement(null, null);
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpace, null);
         return Task.CompletedTask;
+    }
+
+    private void UncollapseSpace(ILearningSpaceViewModel learningSpace)
+    {
+        Collapsables[learningSpace].Uncollapse();
     }
 
 }
