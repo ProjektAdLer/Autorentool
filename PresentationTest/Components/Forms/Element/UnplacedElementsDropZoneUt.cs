@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using BusinessLogic.Commands;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -13,14 +15,12 @@ using NUnit.Framework;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
-using Presentation.PresentationLogic.LearningContent.FileContent;
-using Presentation.PresentationLogic.LearningContent.LinkContent;
-using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningElement;
 using Shared;
+using TestHelpers;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.Forms.Element;
@@ -203,19 +203,309 @@ public class UnplacedElementsDropZoneUt
         Assert.That(searchBar.Instance.Placeholder, Is.EqualTo("UnplacedElementsDropZone.SearchBar.PlaceHolder"));
     }
 
+    [Test]
+    [TestCase("")]
+    [TestCase("1")]
+    [TestCase("xyz")]
+    public async Task Filter_SearchText_ShowFilteredItems(string searchString)
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var searchBar = systemUnderTest.FindComponentOrFail<MudTextField<string>>();
+
+        await systemUnderTest.InvokeAsync(async () => { await searchBar.Instance.SetText(searchString); });
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+
+
+        var expectedItems = items.Where(x => x.Name.Contains(searchString)).ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(expectedItems.Count));
+        foreach (var element in expectedItems)
+        {
+            Assert.That(dragDropLearningElements.Select(x => x.Instance.Parameters["LearningElement"]),
+                Contains.Item(element));
+        }
+    }
+
+    [Test]
+    [TestCase(new[] { "All" }, 11)]
+    [TestCase(new[] { "StoryElement" }, 2)]
+    [TestCase(new[] { "AdaptivityElement" }, 2)]
+    [TestCase(new[] { "LearningElement" }, 7)]
+    [TestCase(new[] { "StoryElement", "AdaptivityElement" }, 4)]
+    [TestCase(new[] { "StoryElement", "LearningElement" }, 9)]
+    [TestCase(new[] { "AdaptivityElement", "LearningElement" }, 9)]
+    [TestCase(new[] { "StoryElement", "AdaptivityElement", "LearningElement" }, 11)]
+    public async Task Filter_ElementType_ShowFilteredItems(string[] elementTypes, int expectedCount)
+    {
+        // Arrange
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var elementTypeFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[0].Instance
+                .Parameters["ChildContent"]);
+
+        // Act
+        foreach (var elementType in elementTypes)
+        {
+            var currentOnClick = (EventCallback<MouseEventArgs>)(elementTypeFilterChildContent
+                .FindComponents<Stub<MudMenuItem>>().First(item =>
+                    _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                        .Contains(elementType))).Instance.Parameters["OnClick"];
+            await systemUnderTest.InvokeAsync(() => currentOnClick.InvokeAsync());
+        }
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+
+        // Assert
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public async Task Filter_ElementType_AddAndRemoveFilters()
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var elementTypeFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[0].Instance
+                .Parameters["ChildContent"]);
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+
+        var storyElementOnClick = (EventCallback<MouseEventArgs>)(elementTypeFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("StoryElement"))).Instance.Parameters["OnClick"];
+        var learningElementOnClick = (EventCallback<MouseEventArgs>)(elementTypeFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("LearningElement"))).Instance.Parameters["OnClick"];
+
+        // Add StoryElement filter
+        await systemUnderTest.InvokeAsync(() => storyElementOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(2));
+
+        // Add LearningElement filter
+        await systemUnderTest.InvokeAsync(() => learningElementOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(9));
+
+        // Remove StoryElement filter
+        await systemUnderTest.InvokeAsync(() => storyElementOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(7));
+
+        // Remove LearningElement filter
+        await systemUnderTest.InvokeAsync(() => learningElementOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+    }
+
+    [Test]
+    [TestCase(new[] { "All" }, 11)]
+    [TestCase(new[] { "Text" }, 2)]
+    [TestCase(new[] { "Image" }, 2)]
+    [TestCase(new[] { "Video" }, 2)]
+    [TestCase(new[] { "H5P" }, 1)]
+    [TestCase(new[] { "Adaptivity" }, 2)]
+    [TestCase(new[] { "Story" }, 2)]
+    [TestCase(new[] { "Text", "Image" }, 4)]
+    [TestCase(new[] { "Image", "Video", "H5P" }, 5)]
+    [TestCase(new[] { "Adaptivity", "Story" }, 4)]
+    [TestCase(new[] { "Text", "Image", "Video", "H5P" }, 7)]
+    [TestCase(new[] { "Text", "Image", "Video", "H5P", "Adaptivity", "Story" }, 11)]
+    public async Task Filter_ContentType_ShowFilteredItems(string[] contentTypes, int expectedCount)
+    {
+        // Arrange
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var contentTypeFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[1].Instance
+                .Parameters["ChildContent"]);
+
+        // Act
+        foreach (var contentType in contentTypes)
+        {
+            var currentOnClick = (EventCallback<MouseEventArgs>)(contentTypeFilterChildContent
+                .FindComponents<Stub<MudMenuItem>>().First(item =>
+                    _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                        .Contains(contentType))).Instance.Parameters["OnClick"];
+            await systemUnderTest.InvokeAsync(() => currentOnClick.InvokeAsync());
+        }
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+
+        // Assert
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public async Task Filter_ContentType_AddAndRemoveFilters()
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var contentTypeFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[1].Instance
+                .Parameters["ChildContent"]);
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+
+        var textOnClick = (EventCallback<MouseEventArgs>)(contentTypeFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("Text"))).Instance.Parameters["OnClick"];
+        var imageOnClick = (EventCallback<MouseEventArgs>)(contentTypeFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("Image"))).Instance.Parameters["OnClick"];
+
+        // Add Text filter
+        await systemUnderTest.InvokeAsync(() => textOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(2));
+
+        // Add Image filter
+        await systemUnderTest.InvokeAsync(() => imageOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(4));
+
+        // Remove Text filter
+        await systemUnderTest.InvokeAsync(() => textOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(2));
+
+        // Remove Image filter
+        await systemUnderTest.InvokeAsync(() => imageOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+    }
+
+    [Test]
+    [TestCase(new[] { "All" }, 11)]
+    [TestCase(new[] { "None" }, 2)]
+    [TestCase(new[] { "Easy" }, 4)]
+    [TestCase(new[] { "Medium" }, 3)]
+    [TestCase(new[] { "Hard" }, 2)]
+    [TestCase(new[] { "Easy", "Medium", "Hard" }, 9)]
+    public async Task Filter_Difficulty_ShowFilteredItems(string[] contentTypes,
+        int expectedCount)
+    {
+        // Arrange
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var difficultyFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[2].Instance
+                .Parameters["ChildContent"]);
+
+        // Act
+        foreach (var difficulty in contentTypes)
+        {
+            var currentOnClick = (EventCallback<MouseEventArgs>)(difficultyFilterChildContent
+                .FindComponents<Stub<MudMenuItem>>().First(item =>
+                    _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                        .Contains(difficulty))).Instance.Parameters["OnClick"];
+            await systemUnderTest.InvokeAsync(() => currentOnClick.InvokeAsync());
+        }
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+
+        // Assert
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public async Task Filter_Difficulty_AddAndRemoveFilters()
+    {
+        var items = GetTestItems();
+        var systemUnderTest = GetRenderedComponent(items: items);
+
+        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
+        var difficultyFilterChildContent =
+            _testContext.Render((RenderFragment)filterDropDowns[2].Instance
+                .Parameters["ChildContent"]);
+
+        var mudDropZone = systemUnderTest.FindComponentOrFail<MudDropZone<ILearningElementViewModel>>();
+        var dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+
+        var easyOnClick = (EventCallback<MouseEventArgs>)(difficultyFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("Easy"))).Instance.Parameters["OnClick"];
+        var mediumOnClick = (EventCallback<MouseEventArgs>)(difficultyFilterChildContent
+            .FindComponents<Stub<MudMenuItem>>().First(item =>
+                _testContext.Render((RenderFragment)item.Instance.Parameters["ChildContent"]).Markup
+                    .Contains("Medium"))).Instance.Parameters["OnClick"];
+
+        // Add Easy filter
+        await systemUnderTest.InvokeAsync(() => easyOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(4));
+
+        // Add Medium filter
+        await systemUnderTest.InvokeAsync(() => mediumOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(7));
+
+        // Remove Easy filter
+        await systemUnderTest.InvokeAsync(() => easyOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(3));
+
+        // Remove Medium filter
+        await systemUnderTest.InvokeAsync(() => mediumOnClick.InvokeAsync());
+
+        dragDropLearningElements = mudDropZone.FindComponents<Stub<DragDropLearningElement>>().ToList();
+        Assert.That(dragDropLearningElements, Has.Count.EqualTo(11));
+    }
+
 
     private static ILearningElementViewModel CreateSubstituteForLearningElement(string name,
-        ILearningContentViewModel learningContent, string? fileType = null)
+        ILearningContentViewModel learningContent,
+        LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.None)
     {
         var item = Substitute.For<ILearningElementViewModel>();
         item.Name.Returns(name);
         item.LearningContent = learningContent;
-        item.Difficulty = LearningElementDifficultyEnum.None;
-
-        if (fileType != null && learningContent is IFileContentViewModel fileContent)
-        {
-            fileContent.Type.Returns(fileType);
-        }
+        item.Difficulty = difficulty;
 
         return item;
     }
@@ -224,14 +514,26 @@ public class UnplacedElementsDropZoneUt
     {
         return new List<ILearningElementViewModel>
         {
-            CreateSubstituteForLearningElement("storyItem1", Substitute.For<IStoryContentViewModel>()),
-            CreateSubstituteForLearningElement("storyItem2", Substitute.For<IStoryContentViewModel>()),
-            CreateSubstituteForLearningElement("adaptivityItem1", Substitute.For<IAdaptivityContentViewModel>()),
-            CreateSubstituteForLearningElement("adaptivityItem2", Substitute.For<IAdaptivityContentViewModel>()),
-            CreateSubstituteForLearningElement("linkItem1", Substitute.For<ILinkContentViewModel>()),
-            CreateSubstituteForLearningElement("linkItem2", Substitute.For<ILinkContentViewModel>()),
-            CreateSubstituteForLearningElement("item4", Substitute.For<IFileContentViewModel>(), "txt"),
-            CreateSubstituteForLearningElement("item5", Substitute.For<IFileContentViewModel>(), "pdf")
+            CreateSubstituteForLearningElement("storyItem1", ViewModelProvider.GetStoryContent(),
+                LearningElementDifficultyEnum.Easy),
+            CreateSubstituteForLearningElement("storyItem2", ViewModelProvider.GetStoryContent(),
+                LearningElementDifficultyEnum.Easy),
+            CreateSubstituteForLearningElement("adaptivityItem1", ViewModelProvider.GetAdaptivityContent(),
+                LearningElementDifficultyEnum.Medium),
+            CreateSubstituteForLearningElement("adaptivityItem2", ViewModelProvider.GetAdaptivityContent()),
+            CreateSubstituteForLearningElement("linkItem1", ViewModelProvider.GetLinkContent(),
+                LearningElementDifficultyEnum.Easy),
+            CreateSubstituteForLearningElement("linkItem2", ViewModelProvider.GetLinkContent(),
+                LearningElementDifficultyEnum.Medium),
+            CreateSubstituteForLearningElement("item4", ViewModelProvider.GetFileContent(type: "txt"),
+                LearningElementDifficultyEnum.Hard),
+            CreateSubstituteForLearningElement("item5", ViewModelProvider.GetFileContent(type: "pdf")),
+            CreateSubstituteForLearningElement("item6", ViewModelProvider.GetFileContent(type: "jpg"),
+                LearningElementDifficultyEnum.Easy),
+            CreateSubstituteForLearningElement("item7", ViewModelProvider.GetFileContent(type: "bmp"),
+                LearningElementDifficultyEnum.Medium),
+            CreateSubstituteForLearningElement("item8", ViewModelProvider.GetFileContent(type: "h5p"),
+                LearningElementDifficultyEnum.Hard)
         };
     }
 
