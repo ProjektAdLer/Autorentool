@@ -165,6 +165,8 @@ public class LearningWorldTreeViewUt
         World.LearningSpaces.Add(vm1);
         World.LearningSpaces.Add(vm2);
         World.LearningPathWays.Add(new LearningPathwayViewModel(vm1, vm2));
+        vm1.OutBoundObjects.Add(vm2);
+        vm2.InBoundObjects.Add(vm1);
         SelectedViewModelsProvider.LearningObjectInPathWay.Returns(vm1);
         SelectedViewModelsProvider.LearningElement.Returns(Ele1);
         LearningWorldPresenterOverview.LearningWorldVm.Returns(World);

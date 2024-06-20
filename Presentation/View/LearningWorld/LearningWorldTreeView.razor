@@ -10,7 +10,9 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using MudBlazor.Utilities
+@using Shared.Command
 @using Shared.Extensions
+@implements IDisposable
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
@@ -110,10 +112,24 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
-        LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
-        LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+        LearningWorldP.OnCommandUndoRedoOrExecute += OnCommandUndoRedoOrExecute;
+    }
+
+    public void Dispose()
+    {
+        SelectedViewModelsProvider.PropertyChanged -= OnSelectedViewModelsProviderPropertyChanged;
+        LearningWorldP.OnCommandUndoRedoOrExecute -= OnCommandUndoRedoOrExecute;
+    }
+
+    private async Task InvokeStateHasChanged()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
+    {
+        await InvokeStateHasChanged();
     }
 
     private string GetSpaceDivCss(ILearningSpaceViewModel space)
@@ -188,37 +204,9 @@
         LearningWorldP.SetSelectedLearningElement(element);
     }
 
-    private void OnSpaceClicked(ILearningSpaceViewModel space)
-    {
-        LearningWorldP.SetSelectedLearningSpace(space);
-    }
-
     private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
-    }
-
-    private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        TriggerStateHasChanged();
-    }
-
-    private void OnLearningWorldPresenterPropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
-        {
-            LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
-        }
-
-        TriggerStateHasChanged();
-    }
-
-    private void OnLearningWorldPresenterPropertyChanging(object? sender, PropertyChangingEventArgs args)
-    {
-        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
-        {
-            LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
-        }
     }
 
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs args)
@@ -233,15 +221,6 @@
         {
             UncollapseSpace(space);
         }
-    }
-
-    private Task SelectLearningElement(ILearningElementViewModel learningElement)
-    {
-        if (SelectedViewModelsProvider.LearningObjectInPathWay != learningElement.Parent)
-            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
-        SelectedViewModelsProvider.SetLearningElement(learningElement, null);
-        Mediator.RequestOpenElementDialog();
-        return Task.CompletedTask;
     }
 
     private bool IsLearningElementSelected(ILearningElementViewModel learningElement)
