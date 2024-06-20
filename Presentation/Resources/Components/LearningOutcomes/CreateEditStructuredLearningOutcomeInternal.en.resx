@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="CreateEditStructuredLearningOutcomeInternal.Intro" xml:space="preserve">
+        <value>You will be able to...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.Whereby.Text" xml:space="preserve">
+        <value>by...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.WhatFor.Text" xml:space="preserve">
+        <value>to...</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.LearningOutcomeExampleImagePathDE" xml:space="preserve">
+        <value>/CustomIcons/Beispiel-Lernziel_AT-de_LO-en.png</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.LearningOutcomeExampleImagePathEN" xml:space="preserve">
+        <value>/CustomIcons/Beispiel-Lernziel_AT-en_LO-en.png</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.Result" xml:space="preserve">
+        <value>You will be able to {0} {1} &lt;br&gt; by {2}&lt;br&gt; to {3}. </value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.2" xml:space="preserve">
+        <value>Whereby?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.3" xml:space="preserve">
+        <value>What for?</value>
+    </data>
+</root>
