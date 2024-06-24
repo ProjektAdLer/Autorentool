@@ -10,7 +10,11 @@
 @using System.Text
 @using Presentation.Components.Dialogues
 @using System.Runtime.Serialization
+@using AutoMapper
+@using BusinessLogic.Commands.World
+@using BusinessLogic.Entities
 @using BusinessLogic.Validation.Validators
+@using FluentValidation.Results
 @using Presentation.Components.Culture
 @using Presentation.Components
 @using Presentation.PresentationLogic
@@ -54,7 +58,7 @@
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
-                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</Button>
+                <button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</button>
             </div>
             <div class="flex justify-center items-center pb-6 pt-1">
                 <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title=@Localizer["MudPopover.Feedback.Final.Hover"] class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
@@ -145,6 +149,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
+    
+    [Inject, AllowNull]
+    private IStringLocalizer<LearningWorldExportValidator> LearningWorldExportValidatorLocalizer { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
@@ -294,15 +301,18 @@
 
     private bool IsLearningWorldValid(ILearningWorldViewModel world)
     {
-         var errorString = new StringBuilder();
-         errorString.Append("<ul>");
+        var result = PresentationLogic.ValidateLearningWorldForExport(world, LearningWorldExportValidatorLocalizer);
         
-        ValidateLearningSpaces(world, errorString);
-
-        ValidateAdaptivityContent(world, errorString);
-       
+        var errorString = new StringBuilder();
+        
+        errorString.Append("<ul>");
+        foreach (var validationError in result.Errors)
+        {
+            errorString.AppendLine(validationError.ErrorMessage);
+        }
+      // ValidateLearningSpaces(world, errorString);
+      // ValidateAdaptivityContent(world, errorString);
         if (HasNoErrors(errorString)) return true;
-    
         LogAndSetErrors(errorString);
         return false;
     }
@@ -311,9 +321,11 @@
 
     private bool HasNoErrors(StringBuilder errorString)
     {
+        
         if(errorString.Length=="<ul>".Length)
         return true;
         return false;
+        
     }
 
     private void LogAndSetErrors(StringBuilder errorString)

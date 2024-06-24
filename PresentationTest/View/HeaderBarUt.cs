@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bunit;
 using Bunit.Rendering;
 using Bunit.TestDoubles;
+using BusinessLogic.Validation.Validators;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -55,6 +56,10 @@ public class HeaderBarUt
         _stringLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         _stringLocalizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
             new LocalizedString(ci.Arg<string>(), FormatStringLocalizerValue(ci)));
+        _stringLocalizerValidator = Substitute.For<IStringLocalizer<LearningWorldExportValidator>>();
+        _stringLocalizerValidator[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        _stringLocalizerValidator[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
+            new LocalizedString(ci.Arg<string>(), FormatStringLocalizerValue(ci)));
         _snackbar = Substitute.For<ISnackbar>();
         _dialogService = Substitute.For<IDialogService>();
         _errorService = Substitute.For<IErrorService>();
@@ -67,6 +72,8 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_logger);
+        _testContext.Services.AddSingleton(_stringLocalizerValidator);
+
     }
 
     [TearDown]
@@ -86,6 +93,7 @@ public class HeaderBarUt
     private IDialogService _dialogService;
     private IErrorService _errorService;
     private ILogger _logger;
+    private IStringLocalizer<LearningWorldExportValidator> _stringLocalizerValidator;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private static string FormatStringLocalizerValue(CallInfo ci)
@@ -153,6 +161,8 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
         _presentationLogic.IsLmsConnected().Returns(true);
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
@@ -174,16 +184,24 @@ public class HeaderBarUt
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
 
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        button.Click();
 
+        mockValidationResult.IsValid.Returns(false);
         var mockStringBuilder = new StringBuilder();
         mockStringBuilder.Append("<ul><li>");
         mockStringBuilder.AppendLine(" ErrorString.Missing.LearningSpace.Message </li>");
         mockStringBuilder.Append("</ul>");
-
+        var mockString = mockStringBuilder.ToString();
+        var validationError = Substitute.For<FluentValidation.Results.ValidationFailure>();
+        validationError.ErrorMessage.Returns(mockString);
+        mockValidationResult.Errors.First().Returns(validationError);
+        
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
 
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -357,6 +375,17 @@ public class HeaderBarUt
         button.Click();
 
         _snackbar.Received().Add(Arg.Is<string>(s => s == "ExportCanceled.Snackbar.Message"), Arg.Any<Severity>());
+    }
+
+    [Test]
+    public void ExportButton_Clicked_ValidationCalled()
+    {
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d", "h");
+        var systemUnderTest = GetRenderedComponent();
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
+        _presentationLogic.Received().ValidateLearningWorldForExport(world, _stringLocalizerValidator);
     }
 
     [Test]

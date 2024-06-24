@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
@@ -20,7 +21,10 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Validation.Validators;
 using ElectronWrapper;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Localization;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -161,6 +165,13 @@ public class PresentationLogic : IPresentationLogic
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, worldEntity,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
+    }
+    public  FluentValidation.Results.ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel viewModelWorld,
+        IStringLocalizer<LearningWorldExportValidator> validatorLocalizer)
+    {
+        var entityWorld = Mapper.Map<ILearningWorld>(viewModelWorld);
+        var result= BusinessLogic.ValidateLearningWorldForExport(entityWorld,validatorLocalizer);
+        return result;
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
@@ -950,6 +961,8 @@ public class PresentationLogic : IPresentationLogic
             entity => CMapper.Map(entity, action));
         BusinessLogic.ExecuteCommand(command);
     }
+
+    
 
     /// <summary>
     /// Gets Save Filepath for saving.

@@ -1,5 +1,9 @@
-﻿using BusinessLogic.API;
+﻿using System.ComponentModel.DataAnnotations;
+using BusinessLogic.API;
+using BusinessLogic.Entities;
 using BusinessLogic.ErrorManagement.DataAccess;
+using BusinessLogic.Validation.Validators;
+using Microsoft.Extensions.Localization;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -62,6 +66,7 @@ public interface IPresentationLogic
     void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         ILearningWorldViewModel learningWorldVm);
 
+    FluentValidation.Results.ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel viewModelWorld,IStringLocalizer<LearningWorldExportValidator> validatorLocalizer);
     /// <summary>
     /// Creates a new learning world in the authoring tool workspace with the corresponding command.
     /// </summary>

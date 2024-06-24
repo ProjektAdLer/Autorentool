@@ -3,6 +3,9 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
+using BusinessLogic.Validation.Validators;
+using FluentValidation.Results;
+using Microsoft.Extensions.Localization;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -103,4 +106,6 @@ public interface IBusinessLogic
         CancellationToken? cancellationToken = null);
 
     #endregion
+
+    ValidationResult ValidateLearningWorldForExport(ILearningWorld entityWorld, IStringLocalizer<LearningWorldExportValidator> validator);
 }

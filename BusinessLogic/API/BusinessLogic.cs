@@ -6,6 +6,9 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using BusinessLogic.Validation.Validators;
+using FluentValidation.Results;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Shared;
 using Shared.Command;
@@ -328,6 +331,12 @@ public class BusinessLogic : IBusinessLogic
     public string GetContentFilesFolderPath()
     {
         return DataAccess.GetContentFilesFolderPath();
+    }
+
+    public ValidationResult ValidateLearningWorldForExport(ILearningWorld entityWorld, IStringLocalizer<LearningWorldExportValidator> validatorLocalizer)
+    {
+        var validator = new LearningWorldExportValidator(validatorLocalizer);
+        return validator.Validate(entityWorld);
     }
 
     #region BackendAccess
