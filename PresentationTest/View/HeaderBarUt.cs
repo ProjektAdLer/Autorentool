@@ -192,13 +192,11 @@ public class HeaderBarUt
 
         mockValidationResult.IsValid.Returns(false);
         var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.Append("<ul><li>");
-        mockStringBuilder.AppendLine(" ErrorString.Missing.LearningSpace.Message </li>");
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine("<li> ErrorString.Missing.LearningSpace.Message </li>");
         mockStringBuilder.Append("</ul>");
-        var mockString = mockStringBuilder.ToString();
-        var validationError = Substitute.For<FluentValidation.Results.ValidationFailure>();
-        validationError.ErrorMessage.Returns(mockString);
-        mockValidationResult.Errors.First().Returns(validationError);
+        var validationError = Substitute.For<FluentValidation.Results.ValidationFailure>("Learning Spaces","<li> ErrorString.Missing.LearningSpace.Message </li>");
+        mockValidationResult.Errors.Add(validationError);
         
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
@@ -218,17 +216,37 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
-
+        
+        mockValidationResult.IsValid.Returns(false);
+        var mockStringBuilder = new StringBuilder();
+        mockStringBuilder.Append("<ul>");
+        var mockStringInsufficientPoints1 = $"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringInsufficientPoints1);
+        var mockStringMissingLearningElements =
+            $"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringMissingLearningElements);
+        var mockStringInsufficientPoints2 = $"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringInsufficientPoints2);
+        mockStringBuilder.Append("</ul>");
+        var validationError1 = Substitute.For<FluentValidation.Results.ValidationFailure>("Insufficient Points",
+            mockStringInsufficientPoints1);
+        var validationError2 =
+            Substitute.For<FluentValidation.Results.ValidationFailure>("Missing Learning Elements",
+                mockStringMissingLearningElements);
+        var validationError3 = Substitute.For<FluentValidation.Results.ValidationFailure>("Insufficient Points",
+            mockStringInsufficientPoints2);
+        mockValidationResult.Errors.Add(validationError1);
+        mockValidationResult.Errors.Add(validationError2);
+        mockValidationResult.Errors.Add(validationError3);
+        
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
 
-        var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
-        mockStringBuilder.Append("</ul>");
+        
 
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -244,17 +262,26 @@ public class HeaderBarUt
         adaptivityContent.Tasks.Clear();
         
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
+        
+        var mockStringBuilder = new StringBuilder();
+                
+        mockStringBuilder.Append("<ul>");
+        var mockStringNoTasks = $"<li> ErrorString.NoTasks.Message {element.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringNoTasks);
+        mockStringBuilder.Append("</ul>");
+        var validationError =
+            Substitute.For<FluentValidation.Results.ValidationFailure>("Task References Unplaced Element",
+                mockStringNoTasks);
+        mockValidationResult.Errors.Add(validationError);
         
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
         
-        var mockStringBuilder = new StringBuilder();
         
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.NoTasks.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
         
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -271,17 +298,27 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
         
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
+        
+        var mockStringBuilder = new StringBuilder();
+                
+        mockStringBuilder.Append("<ul>");
+        var mockStringTaskReferencesNonexistantElement =
+            $"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringTaskReferencesNonexistantElement);
+        mockStringBuilder.Append("</ul>");
+        var validationError =
+            Substitute.For<FluentValidation.Results.ValidationFailure>("Task References Unplaced Element",
+                mockStringTaskReferencesNonexistantElement);
+        mockValidationResult.Errors.Add(validationError);
         
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
         
-        var mockStringBuilder = new StringBuilder();
         
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
         
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -300,17 +337,27 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
         
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
+        
+        var mockStringBuilder = new StringBuilder();
+                
+        mockStringBuilder.Append("<ul>");
+        var mockStringTaskReferencesUnplacedElement =
+            $"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringTaskReferencesUnplacedElement);
+        mockStringBuilder.Append("</ul>");
+        var validationError =
+            Substitute.For<FluentValidation.Results.ValidationFailure>("Unplaced Element",
+                mockStringTaskReferencesUnplacedElement);
+        mockValidationResult.Errors.Add(validationError);
         
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
         
-        var mockStringBuilder = new StringBuilder();
         
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
         
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -334,17 +381,27 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
         
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
+        _presentationLogic.IsLmsConnected().Returns(true);
         var systemUnderTest = GetRenderedComponent();
+        
+        var mockStringBuilder = new StringBuilder();
+                
+        mockStringBuilder.Append("<ul>");
+        var mockStringTaskReferencesElementInSpaceAfterOwnSpace =
+            $"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>";
+        mockStringBuilder.AppendLine(mockStringTaskReferencesElementInSpaceAfterOwnSpace);
+        mockStringBuilder.Append("</ul>");
+        var validationError =
+            Substitute.For<FluentValidation.Results.ValidationFailure>("Task References Unplaced Element",
+                mockStringTaskReferencesElementInSpaceAfterOwnSpace);
+        mockValidationResult.Errors.Add(validationError);
         
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
         
-        var mockStringBuilder = new StringBuilder();
         
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>");
-        mockStringBuilder.Append("</ul>");
         
         _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
@@ -359,6 +416,8 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
@@ -398,6 +457,8 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        var mockValidationResult = Substitute.For<FluentValidation.Results.ValidationResult>();
+        _presentationLogic.ValidateLearningWorldForExport(world,_stringLocalizerValidator).Returns(mockValidationResult);
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())

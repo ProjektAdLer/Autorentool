@@ -310,8 +310,6 @@
         {
             errorString.AppendLine(validationError.ErrorMessage);
         }
-      // ValidateLearningSpaces(world, errorString);
-      // ValidateAdaptivityContent(world, errorString);
         if (HasNoErrors(errorString)) return true;
         LogAndSetErrors(errorString);
         return false;
