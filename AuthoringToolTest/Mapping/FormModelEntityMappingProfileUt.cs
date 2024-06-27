@@ -1,10 +1,7 @@
-using AgileObjects.ReadableExpressions;
 using AuthoringTool.Mapping;
 using AutoMapper;
-using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using NUnit.Framework;
-using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using TestHelpers;
 
@@ -37,9 +34,6 @@ public class FormModelEntityMappingProfileUt
             ViewModelFormModelMappingProfile.Configure(cfg);
             cfg.AddCollectionMappersOnce();
         });
-
-        var executionPlan = mapper.BuildExecutionPlan(typeof(LearningElementFormModel), typeof(LearningElement));
-        var plan = executionPlan.ToReadableString();
     }
 
     [Test]
@@ -48,7 +42,7 @@ public class FormModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var questionFm = FormModelProvider.GetMultipleChoiceQuestion();
         var choices = new List<ChoiceViewModel>
-            {ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice()};
+            { ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice() };
         questionFm.IsSingleResponse = true;
         questionFm.Choices = choices;
         questionFm.CorrectChoices.Clear();
@@ -66,7 +60,7 @@ public class FormModelEntityMappingProfileUt
             Assert.That(questionEntity.Choices.Select(x => x.Id), Is.EquivalentTo(choices.Select(x => x.Id)));
             Assert.That(questionEntity.CorrectChoices.Select(x => x.Id),
                 Is.EquivalentTo(questionFm.CorrectChoices.Select(x => x.Id)));
-            Assert.That(((MultipleChoiceSingleResponseQuestion) questionEntity).CorrectChoice.Id,
+            Assert.That(((MultipleChoiceSingleResponseQuestion)questionEntity).CorrectChoice.Id,
                 Is.EqualTo(questionFm.CorrectChoices.First().Id));
         });
     }
@@ -77,7 +71,7 @@ public class FormModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var questionFm = FormModelProvider.GetMultipleChoiceQuestion();
         var choices = new List<ChoiceViewModel>
-            {ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice()};
+            { ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice() };
         questionFm.IsSingleResponse = false;
         questionFm.Choices = choices;
         questionFm.CorrectChoices.Clear();
