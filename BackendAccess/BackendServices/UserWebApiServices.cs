@@ -9,6 +9,7 @@ using BackendAccess.BackendEntities;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
+using Shared.Exceptions;
 using Shared.Networking;
 
 namespace BackendAccess.BackendServices;
@@ -21,19 +22,24 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     private readonly ProgressMessageHandler _progressMessageHandler;
 
     public UserWebApiServices(IApplicationConfiguration configuration, ProgressMessageHandler progressMessageHandler,
-        IHttpClientFactory httpClientFactory, ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
+        IHttpClientFactory httpClientFactory, ILogger<UserWebApiServices> logger, IFileSystem fileSystem,
+        IPreflightHttpClient preflightHttpClient)
     {
         Configuration = configuration;
+        PreflightHttpClient = preflightHttpClient;
         _client = httpClientFactory.CreateClient(progressMessageHandler);
         _client.Timeout = TimeSpan.FromSeconds(1800);
         _progressMessageHandler = progressMessageHandler;
         _logger = logger;
         _fileSystem = fileSystem;
+        PreflightDomain = "";
     }
 
     private IProgress<int>? ProgressReporter { get; set; }
+    private string PreflightDomain { get; set; }
 
     public IApplicationConfiguration Configuration { get; }
+    public IPreflightHttpClient PreflightHttpClient { get; }
 
     public void Dispose()
     {
@@ -136,9 +142,11 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// <inheritdoc cref="GetApiHealthcheck"/>
     public async Task<bool> GetApiHealthcheck()
     {
-        var uri = new Uri(GetApiBaseUrl(), "health");
         try
         {
+            if (PreflightDomain != Configuration[IApplicationConfiguration.BackendBaseUrl])
+                await DoHealthPreflightRequestAsync();
+            var uri = new Uri(GetApiBaseUrl(), "health");
             var response = await _client.GetAsync(uri);
             var responseMessage = await response.Content.ReadAsStringAsync();
             return responseMessage == "Healthy";
@@ -159,6 +167,30 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             _logger.LogError("Failed to get healthcheck due to timeout, {ExceptionMessage}", tCEx.Message);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Sends a request to the health endpoint of the backend to check 
+    /// </summary>
+    private async Task DoHealthPreflightRequestAsync()
+    {
+        var uriBuilder = new UriBuilder(GetApiBaseUrl())
+        {
+            Path = "/health"
+        };
+        //get /api/health
+        var healthResponse = await PreflightHttpClient.Client.GetAsync(uriBuilder.Uri);
+        //wenn 301 => url umbauen zu https
+        if (healthResponse.StatusCode == HttpStatusCode.MovedPermanently)
+        {
+            var responseHeaders = healthResponse.Headers;
+            var redirect = responseHeaders.Location;
+            if (redirect is null) 
+                throw new BackendException("Got 301 response from backend but no redirect URL");
+            var newUri = redirect.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
+            Configuration[IApplicationConfiguration.BackendBaseUrl] = newUri;
+        }
+        PreflightDomain = Configuration[IApplicationConfiguration.BackendBaseUrl];
     }
 
     /// <summary>

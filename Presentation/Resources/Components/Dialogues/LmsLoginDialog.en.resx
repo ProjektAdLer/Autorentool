@@ -88,7 +88,7 @@ You have the option of deleting these courses in this section.
 This deletion action also irrevocably removes the courses from Moodle.</value>
     </data>
     <data name="DialogContent.Field.Password.Required" xml:space="preserve">
-        <value>The URL, user name or password entered is invalid. Repeat the entry and try again.</value>
+        <value>A password is required</value>
     </data>
     <data name="DialogContent.LoggedIn.Info" xml:space="preserve">
         <value>In order to make the learning world you have created in the authoring tool available to your students as a 3D learning environment, you first need to login to the AdLer server.</value>
@@ -107,5 +107,11 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     </data>
     <data name="DialogContent.Delete.MoodleCourse" xml:space="preserve">
         <value>Delete moodle course</value>
+    </data>
+    <data name="DialogContent.Field.BackendUrl.Required" xml:space="preserve">
+        <value>A URL is required.</value>
+    </data>
+    <data name="DialogContent.Field.Username.Required" xml:space="preserve">
+        <value>A user name is required.</value>
     </data>
 </root>
