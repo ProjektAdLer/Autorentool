@@ -111,7 +111,7 @@
                         </div>
 
                         <MudTextField @bind-Value="_currentWhat"
-                                      DebounceInterval="1"
+                                      DebounceInterval="@DebounceInterval"
                                       Placeholder="@Localizer["CreateEditStructuredLearningOutcome.What.Placeholder"]"
                                       Required="true"
                                       RequiredError="@Localizer["CreateEditStructuredLearningOutcome.What.RequiredError"]"
@@ -136,7 +136,7 @@
                                          CoerceValue="true"
                                          SearchFunc="@SearchVerbOfVisibility"
                                          OnBlur="OnBlurVerbOfVisibility"
-                                         DebounceInterval="300"
+                                         DebounceInterval="@DebounceInterval"
                                          Required="true"
                                          RequiredError="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.RequiredError"]"/>
                     </div>
@@ -152,7 +152,7 @@
                 </div>
                 <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WherebyText</MudText>
                 <MudTextField @bind-Value="_currentWhereby"
-                              DebounceInterval="1"
+                              DebounceInterval="@DebounceInterval"
                               Placeholder="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Placeholder"]"
                               Lines="2">
                 </MudTextField>
@@ -167,7 +167,7 @@
                 </div>
                 <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WhatForText</MudText>
                 <MudTextField @bind-Value="_currentWhatFor"
-                              DebounceInterval="1"
+                              DebounceInterval="@DebounceInterval"
                               Placeholder="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Placeholder"]"
                               Lines="2">
                 </MudTextField>
@@ -218,6 +218,7 @@
     [Parameter] public StructuredLearningOutcomeViewModel? CurrentLearningOutcome { get; set; }
 
     [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomes { get; set; }
+    [Parameter] public int DebounceInterval { get; set; } = 300;
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<CreateEditStructuredLearningOutcome> Localizer { get; set; }
