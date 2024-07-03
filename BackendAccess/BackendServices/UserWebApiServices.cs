@@ -213,11 +213,11 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             throw new BackendInvalidUrlException("No URL set in configuration yet.");
         }
 
-        var uriBuilder = new UriBuilder(Configuration[IApplicationConfiguration.BackendBaseUrl]);
-        if (!Configuration[IApplicationConfiguration.BackendBaseUrl].EndsWith("/api/"))
-            uriBuilder.Path = "/api/";
         try
         {
+            var uriBuilder = new UriBuilder(Configuration[IApplicationConfiguration.BackendBaseUrl]);
+            if (!Configuration[IApplicationConfiguration.BackendBaseUrl].EndsWith("/api/"))
+                uriBuilder.Path = "/api/";
             return uriBuilder.Uri;
         }
         catch (UriFormatException e)

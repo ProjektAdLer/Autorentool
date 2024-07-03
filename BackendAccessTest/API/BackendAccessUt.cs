@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.Entities.BackendAccess;
+using BusinessLogic.ErrorManagement.BackendAccess;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -50,6 +51,19 @@ public class ApiAccessUt
 
     [Test]
     // ANF-ID: [AHO21]
+    public void BackendAccess_GetUserTokenAsync__ReturnsFalse_ThrowsException()
+    {
+        _userWebApiServices.GetApiHealthcheck().Returns(false);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<BackendApiUnreachableException>(async () =>
+            await systemUnderTest.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("API healthcheck failed, not reachable"));
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
     public async Task BackendAccess_GetUserInformationAsync_CallsMethod()
     {
         var token = new UserToken("testToken");
@@ -60,6 +74,20 @@ public class ApiAccessUt
 
         // Assert
         await _userWebApiServices.Received().GetUserInformationAsync(token.Token);
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
+    public void BackendAccess_GetUserInformationAsync_ReturnsFalse_ThrowsException()
+    {
+        var token = new UserToken("testToken");
+        _userWebApiServices.GetApiHealthcheck().Returns(false);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<BackendApiUnreachableException>(async () =>
+            await systemUnderTest.GetUserInformationAsync(token));
+        Assert.That(ex!.Message, Is.EqualTo("API healthcheck failed, not reachable"));
     }
 
     [Test]
