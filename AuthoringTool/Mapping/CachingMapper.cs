@@ -119,38 +119,112 @@ public class CachingMapper : ICachingMapper
         CacheAuthoringToolWorkspaceContent(authoringToolWorkspaceVm);
     }
 
+    /// <summary>
+    /// Maps the data from the learning world entity to the learning world view model,
+    /// including caching and updating of new topics, learning spaces, pathway conditions,
+    /// and unplaced learning elements.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity.</param>
+    /// <param name="learningWorldVm">The target learning world view model.</param>
     private void MapInternal(LearningWorld learningWorldEntity, ILearningWorldViewModel learningWorldVm)
     {
         learningWorldVm = Cache(learningWorldVm);
 
+        AddNewTopicsToLearningWorldVm(learningWorldEntity, learningWorldVm);
+        AddNewLearningSpacesToLearningWorldVm(learningWorldEntity, learningWorldVm);
+        AddNewPathWayConditionsToLearningWorldVm(learningWorldEntity, learningWorldVm);
+        AddNewUnplacedLearningElementsToLearningWorldVm(learningWorldEntity, learningWorldVm);
+        UpdateLearningSpacesInLearningWorldVm(learningWorldEntity, learningWorldVm);
+
+        _mapper.Map(learningWorldEntity, learningWorldVm);
+
+        CacheLearningWorldContent(learningWorldVm);
+
+        AssignTopicsToNewLearningSpacesInViewModel(learningWorldEntity, learningWorldVm);
+    }
+
+    /// <summary>
+    /// Adds new topics from the learning world entity to the learning world view model,
+    /// ensuring that only topics not already present in the view model are added and
+    /// checking the cache for existing topic view models.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing topics.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with new topics.</param>
+    private void AddNewTopicsToLearningWorldVm(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
         var newTopicsInEntity = learningWorldEntity.Topics
             .FindAll(p => learningWorldVm.Topics.All(l => p.Id != l.Id));
         foreach (var s in newTopicsInEntity.Where(s => _cache.ContainsKey(s.Id)))
         {
             learningWorldVm.Topics.Add(Get<TopicViewModel>(s.Id));
         }
+    }
 
+    /// <summary>
+    /// Adds new learning spaces from the learning world entity to the learning world view model,
+    /// ensuring that only learning spaces not already present in the view model are added and
+    /// checking the cache for existing learning space view models.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing learning spaces.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with new learning spaces.</param>
+    private void AddNewLearningSpacesToLearningWorldVm(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
         var newLearningSpacesInEntity = learningWorldEntity.LearningSpaces
             .FindAll(p => learningWorldVm.LearningSpaces.All(l => p.Id != l.Id));
         foreach (var s in newLearningSpacesInEntity.Where(s => _cache.ContainsKey(s.Id)))
         {
             learningWorldVm.LearningSpaces.Add(Get<LearningSpaceViewModel>(s.Id));
         }
+    }
 
+    /// <summary>
+    /// Adds new pathway conditions from the learning world entity to the learning world view model,
+    /// ensuring that only pathway conditions not already present in the view model are added and
+    /// checking the cache for existing pathway condition view models.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing pathway conditions.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with new pathway conditions.</param>
+    private void AddNewPathWayConditionsToLearningWorldVm(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
         var newPathWayConditionsInEntity = learningWorldEntity.PathWayConditions
             .FindAll(p => learningWorldVm.PathWayConditions.All(l => p.Id != l.Id));
         foreach (var s in newPathWayConditionsInEntity.Where(s => _cache.ContainsKey(s.Id)))
         {
             learningWorldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
         }
+    }
 
+    /// <summary>
+    /// Adds new unplaced learning elements from the learning world entity to the learning world view model,
+    /// ensuring that only unplaced learning elements not already present in the view model are added and
+    /// checking the cache for existing learning element view models.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing unplaced learning elements.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with new unplaced learning elements.</param>
+    private void AddNewUnplacedLearningElementsToLearningWorldVm(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
         var newUnplacedLearningElementsInEntity = learningWorldEntity.UnplacedLearningElements.ToList()
             .FindAll(p => learningWorldVm.UnplacedLearningElements.All(l => p.Id != l.Id));
         foreach (var s in newUnplacedLearningElementsInEntity.Where(s => _cache.ContainsKey(s.Id)))
         {
             learningWorldVm.UnplacedLearningElements.Add(Get<LearningElementViewModel>(s.Id));
         }
+    }
 
+    /// <summary>
+    /// Updates the learning spaces in the learning world view model based on the learning world entity,
+    /// adding new learning elements and story elements from the entity to the corresponding learning spaces
+    /// in the view model if they are not already present and checking the cache for existing view models.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing learning spaces.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with new elements in learning spaces.</param>
+    private void UpdateLearningSpacesInLearningWorldVm(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
         foreach (var learningSpaceEntity in learningWorldEntity.LearningSpaces)
         {
             var newLearningElementsInSpaceEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
@@ -174,12 +248,18 @@ public class CachingMapper : ICachingMapper
                     .PutStoryElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
             }
         }
+    }
 
-        _mapper.Map(learningWorldEntity, learningWorldVm);
-
-        CacheLearningWorldContent(learningWorldVm);
-
-        var newLearningSpacesInViewModel = from space in newLearningSpacesInEntity
+    /// <summary>
+    /// Assigns topics to newly added learning spaces in the learning world view model,
+    /// ensuring that the assigned topics are retrieved from the cache if they exist.
+    /// </summary>
+    /// <param name="learningWorldEntity">The source learning world entity containing learning spaces.</param>
+    /// <param name="learningWorldVm">The target learning world view model to update with assigned topics in learning spaces.</param>
+    private void AssignTopicsToNewLearningSpacesInViewModel(LearningWorld learningWorldEntity,
+        ILearningWorldViewModel learningWorldVm)
+    {
+        var newLearningSpacesInViewModel = from space in learningWorldEntity.LearningSpaces
             from spaceVm in learningWorldVm.LearningSpaces
             where space.Id == spaceVm.Id
             select spaceVm;
