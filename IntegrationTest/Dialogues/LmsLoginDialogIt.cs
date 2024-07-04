@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -8,6 +9,7 @@ using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using PresentationTest;
@@ -178,6 +180,8 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     {
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.LoginName.Returns("MySecretUsername");
+        _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
+        
         await OpenDialogAndGetDialogReferenceAsync();
 
         var loggedInPs = DialogProvider.FindAll("div.logged-in-container div p");
