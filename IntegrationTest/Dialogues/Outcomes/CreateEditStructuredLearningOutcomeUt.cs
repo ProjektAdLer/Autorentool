@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Presentation.Components.LearningOutcomes;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
+using PresentationTest;
 using Shared.LearningOutcomes;
 
 namespace IntegrationTest.Dialogues.Outcomes;
@@ -46,6 +47,7 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
         var dialogParameters = GetDialogParameters(Collection, Outcome);
 
         Dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: dialogParameters);
+        DialogProvider.Render();
     }
 
     [Test]
@@ -197,14 +199,15 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
         const string whatforstr = "What for";
         const string verb = "folgern";
 
-        var textFields = DialogProvider.FindComponents<MudTextField<string>>();
-        var whattf = textFields.FirstOrDefault(c =>
-            c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.What.Placeholder");
+        DialogProvider.Render();
+        var whattf = DialogProvider.FindComponentWithMarkup<MudTextField<string>>("textfield-what");
+        // var whattf = textFields.FirstOrDefault(c =>
+        //     c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.What.Placeholder");
 
-        if (whattf == null)
-        {
-            Assert.Fail("What text field not found");
-        }
+        // if (whattf == null)
+        // {
+        //     Assert.Fail("What text field not found");
+        // }
 
         var whatElement = whattf.Find("textarea");
         await whatElement.ChangeAsync(new ChangeEventArgs() { Value = whatstr });
@@ -219,26 +222,28 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
         await verbAutoComplete.InputAsync(new ChangeEventArgs() { Value = verb });
         await verbAutoComplete.KeyUpAsync(Key.Enter);
 
-        var wherebytf = textFields.FirstOrDefault(c =>
-            c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.Whereby.Placeholder");
+        var wherebytf = DialogProvider.FindComponentWithMarkup<MudTextField<string>>("textfield-whereby");
+        // var wherebytf = textFields.FirstOrDefault(c =>
+        //     c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.Whereby.Placeholder");
 
-        if (wherebytf == null)
-        {
-            Assert.Fail("Whereby text field not found");
-        }
+        // if (wherebytf == null)
+        // {
+        //     Assert.Fail("Whereby text field not found");
+        // }
 
         var wherebyElement = wherebytf.Find("textarea");
         await wherebyElement.ChangeAsync(new ChangeEventArgs() { Value = "Whereby" });
 
         Assert.That(() => wherebytf.Instance.Value, Is.EqualTo(wherebystr).After(3000, 200));
 
-        var whatfortf = textFields.FirstOrDefault(c =>
-            c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.WhatFor.Placeholder");
+        var whatfortf = DialogProvider.FindComponentWithMarkup<MudTextField<string>>("textfield-whatfor");
+        // var whatfortf = textFields.FirstOrDefault(c =>
+        //     c.Instance.Placeholder == "CreateEditStructuredLearningOutcome.WhatFor.Placeholder");
 
-        if (whatfortf == null)
-        {
-            Assert.Fail("What for text field not found");
-        }
+        // if (whatfortf == null)
+        // {
+        //     Assert.Fail("What for text field not found");
+        // }
 
         await whatfortf.Find("textarea").ChangeAsync(new ChangeEventArgs() { Value = whatforstr });
 
