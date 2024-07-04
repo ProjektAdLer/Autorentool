@@ -308,14 +308,24 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        Culture = CurrentLearningOutcome == null ? CultureInfo.CurrentCulture : CurrentLearningOutcome.Language;
+        Culture = GetFittingCulture();
 
-        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(CultureInfo.CurrentCulture);
+        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(Culture);
         _selectedTaxonomyLevel = CurrentLearningOutcome?.TaxonomyLevel ?? TaxonomyLevel.None;
         _currentWhat = CurrentLearningOutcome?.What ?? "";
         _currentVerbOfVisibility = CurrentLearningOutcome?.VerbOfVisibility ?? "";
         _currentWhereby = CurrentLearningOutcome?.Whereby ?? "";
         _currentWhatFor = CurrentLearningOutcome?.WhatFor ?? "";
+    }
+
+    private CultureInfo GetFittingCulture()
+    {
+        if (CurrentLearningOutcome is not null) return CurrentLearningOutcome.Language;
+        return CultureInfo.CurrentCulture.IetfLanguageTag switch
+        {
+            "de-DE" => new CultureInfo("de-DE"),
+            _ => new CultureInfo("en-DE")
+        };
     }
 
     private void OnCultureChange()
