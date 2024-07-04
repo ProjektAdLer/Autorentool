@@ -1,5 +1,8 @@
-﻿namespace BackendAccess.BackendEntities;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace BackendAccess.BackendEntities;
+
+[ExcludeFromCodeCoverage]
 public class UserInformationBE
 {
     public string LmsUserName { get; init; } = null!; //deserialization - n.stich
