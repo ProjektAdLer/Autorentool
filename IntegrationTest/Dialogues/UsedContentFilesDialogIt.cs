@@ -18,7 +18,12 @@ public class UsedContentFilesDialogIt : MudDialogTestFixture<UsedContentFilesDia
     [Test]
     public async Task DialogCreated_DependenciesInjected()
     {
-        await OpenDialogAndGetDialogReferenceAsync();
+        var dialogParameters = new DialogParameters
+        {
+            { "LearningContent", Substitute.For<ILearningContentViewModel>() },
+            { "Usages", new List<(ILearningWorldViewModel, ILearningElementViewModel)>() }
+        };
+        await OpenDialogAndGetDialogReferenceAsync(parameters: dialogParameters);
 
         var systemUnderTest = DialogProvider.FindComponentOrFail<UsedContentFilesDialog>();
 

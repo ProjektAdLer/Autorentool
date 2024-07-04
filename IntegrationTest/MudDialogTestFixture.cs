@@ -19,7 +19,7 @@ public class MudDialogTestFixture<T> : MudBlazorTestFixture<T> where T : Compone
         parameters ??= new DialogParameters();
         title ??= "title";
         await DialogProvider.InvokeAsync(() => reference = service.Show<T>(title, parameters, options));
-
+        DialogProvider.Render();
         return reference!;
     }
 }
