@@ -348,6 +348,11 @@ public class CachingMapper : ICachingMapper
         {
             CacheIfNotCached(elementVm);
         }
+
+        foreach (var storyElementVm in learningSpaceVm.LearningSpaceLayout.StoryElements.Values)
+        {
+            CacheIfNotCached(storyElementVm);
+        }
     }
 
     private void OnRemovedCommandsFromStacks(object sender,

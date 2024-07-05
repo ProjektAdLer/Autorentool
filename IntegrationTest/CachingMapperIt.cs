@@ -177,11 +177,23 @@ public class CachingMapperIt
 
         Assert.That(elementVm.Name, Is.EqualTo("l"));
 
+        systemUnderTest.CreateStoryElementInSlot(spaceVm, 0, "q",
+            ViewModelProvider.GetStoryContent(), "r", "s", LearningElementDifficultyEnum.Easy,
+            ElementModel.a_npc_defaultnpc, 2, 3);
+
+        Assert.That(spaceVm.LearningSpaceLayout.StoryElements.Count, Is.EqualTo(1));
+
+        var storyElementVm = spaceVm.LearningSpaceLayout.StoryElements.Values.First();
+
+        Assert.That(storyElementVm.Name, Is.EqualTo("q"));
+
         //Undo Redo CreateLearningElementCommand and ChangeLearningSpaceLayoutCommand and CreateLearningSpaceCommand and CreateLearningWorldCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
+        systemUnderTest.UndoCommand();
+        systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
@@ -204,6 +216,14 @@ public class CachingMapperIt
                 Is.EqualTo(1));
             Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.First(),
                 Is.EqualTo(elementVm));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningSpaceLayout.StoryElements.Count,
+                Is.EqualTo(1));
+            Assert.That(
+                workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningSpaceLayout.StoryElements.Values.First(),
+                Is.EqualTo(storyElementVm));
         });
     }
 

@@ -8,8 +8,8 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
-using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
+using BusinessLogic.Entities.LearningOutcome;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Action;
@@ -175,21 +175,21 @@ public class EntityPersistEntityMappingProfile : Profile
             .ReverseMap();
         CreateMap<StoryContent, StoryContentPe>()
             .ReverseMap();
-        
+
         CreateMap<FileContent, ILearningContentPe>()
             .As<FileContentPe>();
         CreateMap<LinkContent, ILearningContentPe>()
             .As<LinkContentPe>();
         CreateMap<StoryContent, ILearningContentPe>()
             .As<StoryContentPe>();
-        
+
         CreateMap<FileContentPe, ILearningContent>()
             .As<FileContent>();
         CreateMap<LinkContentPe, ILearningContent>()
             .As<LinkContent>();
         CreateMap<StoryContentPe, ILearningContent>()
             .As<StoryContent>();
-        
+
         CreateMap<ILearningContent, ILearningContentPe>()
             .IncludeAllDerived()
             .ReverseMap()
@@ -237,6 +237,11 @@ public class EntityPersistEntityMappingProfile : Profile
                 foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
+                }
+
+                foreach (var storyElement in d.LearningSpaceLayout.StoryElements.Values)
+                {
+                    storyElement.Parent = d;
                 }
             });
     }

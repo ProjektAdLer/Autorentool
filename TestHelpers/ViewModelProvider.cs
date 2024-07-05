@@ -87,6 +87,15 @@ public static class ViewModelProvider
             points: points);
     }
 
+    public static LearningElementViewModel GetStoryElement(string append = "",
+        ILearningContentViewModel? content = null, ILearningSpaceViewModel? parent = null, int workload = 1,
+        int points = 1)
+    {
+        return new LearningElementViewModel("LEVMn" + append, content ?? GetStoryContent(), "LEVMd" + append,
+            "LEVMg" + append, LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, parent: parent,
+            workload: workload, points: points);
+    }
+
     public static LearningElementViewModel GetAdaptivityElement(string append = "",
         IAdaptivityContentViewModel? content = null, ILearningSpaceViewModel? parent = null, int workload = 1,
         int points = 1)
