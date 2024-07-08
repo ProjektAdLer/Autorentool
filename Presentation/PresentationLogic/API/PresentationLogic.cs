@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO.Abstractions;
 using AutoMapper;
@@ -811,15 +812,16 @@ public class PresentationLogic : IPresentationLogic
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
 
-    public void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
+    public void DeleteStoryElementInSpace(ILearningSpaceViewModel parentSpaceVm,
+        ILearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        
+
         var command = ElementCommandFactory.GetDeleteStoryInSpaceCommand(elementEntity, parentSpaceEntity,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
 
@@ -918,9 +920,6 @@ public class PresentationLogic : IPresentationLogic
             throw new IOException("Could not open file in OS viewer" + error);
         }
     }
-
-    private Task<string> ShowFileContent(string filePath) => ShellWrapper.OpenPathAsync(filePath);
-    private Task<string> ShowLinkContent(string link) => ShellWrapper.OpenExternalAsync(link);
 
     /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
     public IEnumerable<ILearningContentViewModel> GetAllContent() =>
@@ -1207,6 +1206,9 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.DeleteFileByPath(savePath);
     }
 
+    private Task<string> ShowFileContent(string filePath) => ShellWrapper.OpenPathAsync(filePath);
+    private Task<string> ShowLinkContent(string link) => ShellWrapper.OpenExternalAsync(link);
+
     /// <summary>
     /// Gets Save Filepath for saving.
     /// </summary>
@@ -1365,6 +1367,7 @@ public class PresentationLogic : IPresentationLogic
 
 #if DEBUG
 
+    [ExcludeFromCodeCoverage]
     public void ConstructDebugBackup(ILearningWorldViewModel world)
     {
         var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(world);

@@ -40,6 +40,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -200,6 +201,34 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE6]
+    public void SaveLearningWorld_CallsBusinessLogic()
+    {
+        var mapper = Substitute.For<IMapper>();
+        var businessLogic = Substitute.For<IBusinessLogic>();
+        var worldCommandFactory = Substitute.For<IWorldCommandFactory>();
+        var command = Substitute.For<ISaveLearningWorld>();
+        var worldVm = ViewModelProvider.GetLearningWorld();
+        var worldEntity = EntityProvider.GetLearningWorld();
+
+        mapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(worldEntity);
+
+        worldCommandFactory
+            .GetSaveCommand(businessLogic, worldEntity, Arg.Any<string>(), Arg.Any<Action<ILearningWorld>>())
+            .Returns(command);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: businessLogic, mapper: mapper,
+            worldCommandFactory: worldCommandFactory);
+
+        systemUnderTest.SaveLearningWorld(worldVm);
+
+        worldCommandFactory.Received().GetSaveCommand(businessLogic, worldEntity, Arg.Any<string>(),
+            Arg.Any<Action<ILearningWorld>>());
+        businessLogic.Received().ExecuteCommand(command);
+    }
+
+    [Test]
     // ANF-ID: [ASN0005]
     public void CanUndoCanRedo_CallsBusinessLogic()
     {
@@ -333,6 +362,33 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE3]
+    public void EditLearningWorld_NoChangesInCommand_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockCommand = Substitute.For<IEditLearningWorld>();
+        mockCommand.AnyChanges().Returns(false);
+        var mockWorldCommandFactory = Substitute.For<IWorldCommandFactory>();
+        var worldVm = ViewModelProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        var worldEntity = EntityProvider.GetLearningWorld();
+        Substitute.For<ILogger<WorldCommandFactory>>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(worldEntity);
+        mockWorldCommandFactory
+            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f",
+                Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            worldCommandFactory: mockWorldCommandFactory);
+
+        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f");
+
+        mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
     // ANF-ID: [ASE4]
     public void DeleteLearningWorld_CallsBusinessLogic()
     {
@@ -454,6 +510,32 @@ public class PresentationLogicUt
         systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    // ANF-ID: [AWA0023]
+    public void EditLearningSpace_NoChangesInCommand_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockSpaceCommandFactory = Substitute.For<ISpaceCommandFactory>();
+        var mockCommand = Substitute.For<IEditLearningSpace>();
+        mockCommand.AnyChanges().Returns(false);
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var mockMapper = Substitute.For<IMapper>();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        Substitute.For<ILogger<SpaceCommandFactory>>();
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.CampusAschaffenburg, null,
+                Arg.Any<Action<ILearningSpace>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            spaceCommandFactory: mockSpaceCommandFactory);
+
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
+
+        mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }
 
     [Test]
@@ -728,6 +810,42 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
+    public void EditLearningElement_NoChangesInCommand_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
+        var mockCommand = Substitute.For<IEditLearningElement>();
+        mockCommand.AnyChanges().Returns(false);
+        var learningSpaceVm = ViewModelProvider.GetLearningSpace();
+        var learningElementVm = ViewModelProvider.GetLearningElement(parent: learningSpaceVm);
+        var learningContentVm = ViewModelProvider.GetFileContent();
+        var mockMapper = Substitute.For<IMapper>();
+        var learningSpaceEntity = EntityProvider.GetLearningSpace();
+        var learningElementEntity = EntityProvider.GetLearningElement(parent: learningSpaceEntity);
+        var learningContentEntity = EntityProvider.GetFileContent();
+        Substitute.For<ILogger<ElementCommandFactory>>();
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+        mockMapper.Map<ILearningContent>(Arg.Any<FileContentViewModel>())
+            .Returns(learningContentEntity);
+        mockElementCommandFactory.GetEditCommand(learningElementEntity, learningSpaceEntity, "a", "d", "e",
+                LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, learningContentEntity,
+                Arg.Any<Action<BusinessLogic.Entities.LearningElement>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            elementCommandFactory: mockElementCommandFactory);
+
+        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a", "d",
+            "e", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, learningContentVm);
+
+        mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
     // ANF-ID: [ASN0017, ASN0018]
     public void PlaceLearningElementFromUnplaced_CallsBusinessLogic()
     {
@@ -756,6 +874,7 @@ public class PresentationLogicUt
             .GetPlaceLearningElementFromUnplacedCommand(learningWorldEntity, learningSpaceEntity,
                 learningElementEntity, 1, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
+        mockSelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(1);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
@@ -765,6 +884,8 @@ public class PresentationLogicUt
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
+
+        mockSelectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, mockCommand);
     }
 
     [Test]
@@ -906,6 +1027,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
         var mockCommand = Substitute.For<IPlaceLearningElementInLayoutFromLayout>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
         var learningElementVm = ViewModelProvider.GetLearningElement();
         var learningSpaceEntity = EntityProvider.GetLearningSpace();
@@ -923,14 +1045,18 @@ public class PresentationLogicUt
                 Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
             .Returns(mockCommand);
 
+        mockSelectedViewModelsProvider.ActiveElementSlotInSpace.Returns(4);
+
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            layoutCommandFactory: mockLayoutCommandFactory);
+            layoutCommandFactory: mockLayoutCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.SwitchLearningElementSlot(learningSpaceVm, learningElementVm, 4);
 
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
+
+        mockSelectedViewModelsProvider.Received().SetActiveElementSlotInSpace(-1, mockCommand);
     }
 
     [Test]
@@ -2709,7 +2835,7 @@ public class PresentationLogicUt
 
 
     [Test]
-    // ANF-ID: [AWA0038,, AWA0044]
+    // ANF-ID: [AWA0038, AWA0044]
     public async Task ShowLearningElementContentAsync_CallsShellWrapper()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -2728,6 +2854,91 @@ public class PresentationLogicUt
         await systemUnderTest.ShowLearningElementContentAsync(mockLearningElement);
 
         await mockShellWrapper.Received().OpenPathAsync("pathpath");
+    }
+
+    [Test]
+    // ANF-ID: [AWA0038]
+    public void ShowLearningElementContentAsync_ContentTypeNotSupported_Throws()
+    {
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockContent = ViewModelProvider.GetAdaptivityContent();
+        var mockLearningElement = ViewModelProvider.GetLearningElement(content: mockContent);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(serviceProvider: mockServiceProvider,
+            hybridSupportWrapper: mockHybridSupport);
+
+        var ex = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            systemUnderTest.ShowLearningElementContentAsync(mockLearningElement));
+        Assert.That(ex.Message,
+            Is.EqualTo(
+                "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel (Parameter 'learningElementVm')"));
+    }
+
+    [Test]
+    // ANF-ID: [AWA0038]
+    public void ShowLearningContentAsync_CouldNotOpenFileInOS_ThrowsIOException()
+    {
+        var mockContent = ViewModelProvider.GetFileContent();
+        var mockShellWrapper = Substitute.For<IShellWrapper>();
+        mockShellWrapper.OpenPathAsync(Arg.Any<string>()).Returns("error");
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(serviceProvider: mockServiceProvider, shellWrapper: mockShellWrapper);
+
+        systemUnderTest.RunningElectron.Returns(true);
+
+        var ex = Assert.ThrowsAsync<IOException>(() => systemUnderTest.ShowLearningContentAsync(mockContent));
+        Assert.That(ex.Message, Is.EqualTo("Could not open file in OS viewererror"));
+    }
+
+    [Test]
+    // ANF-ID: [AWA0038]
+    public async Task ShowLearningContentAsync_FormModel_CallsShellWrapper()
+    {
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockShellWrapper = Substitute.For<IShellWrapper>();
+        mockShellWrapper.OpenPathAsync(Arg.Any<string>()).Returns("");
+        var mockContent = new FileContentFormModel();
+        mockContent.Filepath = "pathpath";
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(serviceProvider: mockServiceProvider,
+            hybridSupportWrapper: mockHybridSupport, shellWrapper: mockShellWrapper);
+
+        await systemUnderTest.ShowLearningContentAsync(mockContent);
+
+        await mockShellWrapper.Received().OpenPathAsync("pathpath");
+    }
+
+    [Test]
+    // ANF-ID: [AWA0038]
+    public void ShowLearningContentAsync_FormModel_CouldNotOpenFileInOS_ThrowsIOException()
+    {
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockShellWrapper = Substitute.For<IShellWrapper>();
+        mockShellWrapper.OpenPathAsync(Arg.Any<string>()).Returns("error");
+        var mockContent = new FileContentFormModel();
+        mockContent.Filepath = "pathpath";
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(serviceProvider: mockServiceProvider,
+            hybridSupportWrapper: mockHybridSupport, shellWrapper: mockShellWrapper);
+
+        var ex = Assert.ThrowsAsync<IOException>(() => systemUnderTest.ShowLearningContentAsync(mockContent));
+        Assert.That(ex.Message, Is.EqualTo("Could not open file in OS viewererror"));
     }
 
     [Test]
@@ -3100,6 +3311,175 @@ public class PresentationLogicUt
         await systemUnderTest.DeleteLmsWorld(mockWorldVm);
 
         await mockBusinessLogic.Received().DeleteLmsWorld(mockWorld);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0001]
+    public async Task ExportLearningWorldToArchive_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorldEntity = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        var pathToArchive = "pathToArchiveVar";
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Returns(pathToArchive);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(mockWorldEntity);
+        var serviceProvider = new ServiceCollection();
+        serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            serviceProvider: serviceProvider.BuildServiceProvider());
+        systemUnderTest.RunningElectron.Returns(true);
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
+        await mockBusinessLogic.Received().ExportLearningWorldToArchiveAsync(mockWorldEntity, pathToArchive);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0001]
+    public async Task ExportLearningWorldToArchive_UserCancels_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Throws(new OperationCanceledException("User cancelled"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+
+        await mockBusinessLogic.DidNotReceive()
+            .ExportLearningWorldToArchiveAsync(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
+    }
+
+    // ANF-ID: [ASN0002]
+    [Test]
+    public async Task ImportLearningWorldFromArchive_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldEntity = EntityProvider.GetLearningWorld();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockMapper = Substitute.For<IMapper>();
+        var pathToArchive = "pathToArchiveVar";
+        var mockViewModel = ViewModelProvider.GetLearningWorld();
+        mockDialogManager.ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Returns(pathToArchive);
+        mockBusinessLogic.ImportLearningWorldFromArchiveAsync(pathToArchive).Returns(mockWorldEntity);
+        mockMapper.Map<LearningWorldViewModel>(mockWorldEntity).Returns(mockViewModel);
+        var serviceProvider = new ServiceCollection();
+        serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            serviceProvider: serviceProvider.BuildServiceProvider(),
+            selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        var result = await systemUnderTest.ImportLearningWorldFromArchiveAsync();
+
+        Assert.That(mockViewModel, Is.EqualTo(result));
+        mockMapper.Received().Map<LearningWorldViewModel>(mockWorldEntity);
+        await mockBusinessLogic.Received().ImportLearningWorldFromArchiveAsync(pathToArchive);
+        selectedViewModelsProvider.Received().SetLearningWorld(mockViewModel, null);
+    }
+
+    // ANF-ID: [ASN0002]
+    [Test]
+    public async Task ImportLearningWorldFromArchive_UserCancels_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockDialogManager.ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Throws(new OperationCanceledException("User cancelled"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            serviceProvider: mockServiceProvider, selectedViewModelsProvider: selectedViewModelsProvider);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        var result = await systemUnderTest.ImportLearningWorldFromArchiveAsync();
+
+        Assert.That(result, Is.Null);
+        await mockBusinessLogic.DidNotReceive().ImportLearningWorldFromArchiveAsync(Arg.Any<string>());
+        selectedViewModelsProvider.DidNotReceive()
+            .SetLearningWorld(Arg.Any<LearningWorldViewModel>(), Arg.Any<ICommand>());
+    }
+
+    [Test]
+    public void GetFileInfoForLearningWorld_IsWhiteSpace_ReturnsNull()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        mockWorldVm.SavePath = "";
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var fileInfo = systemUnderTest.GetFileInfoForLearningWorld(mockWorldVm);
+
+        Assert.That(fileInfo, Is.Null);
+
+        mockBusinessLogic.DidNotReceive().GetFileInfoForPath(Arg.Any<string>());
+    }
+
+    [Test]
+    public void GetFileInfoForLearningWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        mockWorldVm.SavePath = "path";
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        systemUnderTest.GetFileInfoForLearningWorld(mockWorldVm);
+
+        mockBusinessLogic.Received().GetFileInfoForPath("path");
+    }
+
+    [Test]
+    public void DeleteLearningWorldByPath_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        mockWorldVm.SavePath = "path";
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        systemUnderTest.DeleteLearningWorldByPath(mockWorldVm.SavePath);
+
+        mockBusinessLogic.Received().DeleteFileByPath("path");
+    }
+
+    [Test]
+    public void OpenContentFilesFolder_CallsBusinessLogicAndShellWrapper()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockShellWrapper = Substitute.For<IShellWrapper>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            serviceProvider: mockServiceProvider, shellWrapper: mockShellWrapper);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        mockBusinessLogic.GetContentFilesFolderPath().Returns("Path");
+
+        systemUnderTest.OpenContentFilesFolder();
+
+        mockBusinessLogic.Received().GetContentFilesFolderPath();
+        mockShellWrapper.Received().OpenPathAsync("Path");
+    }
+
+    [Test]
+    public void SetSelectedLearningContentViewModel_CallsSelectedViewModelsProvider()
+    {
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockContentVm = ViewModelProvider.GetAdaptivityContent();
+        var systemUnderTest =
+            CreateTestablePresentationLogic(selectedViewModelsProvider: mockSelectedViewModelsProvider);
+
+        systemUnderTest.SetSelectedLearningContentViewModel(mockContentVm);
+
+        mockSelectedViewModelsProvider.Received().SetLearningContent(mockContentVm, null);
     }
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
