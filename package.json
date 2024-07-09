@@ -1,0 +1,19 @@
+{
+  "name": "Autorentool",
+  "type": "module",
+  "devDependencies": {
+    "@wdio/cli": "^8.39.1",
+    "@wdio/local-runner": "^8.39.1",
+    "@wdio/mocha-framework": "^8.39.0",
+    "@wdio/spec-reporter": "^8.39.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "wdio-electron-service": "^6.6.1"
+  },
+  "scripts": {
+    "wdio": "wdio run ./wdio.conf.ts"
+  },
+  "dependencies": {
+    "electron-chromedriver": "^29.4.3"
+  }
+}
