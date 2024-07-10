@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@implements IDisposable
 <MudCard Class="overflow-auto w-full">
     @if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
     {
@@ -51,4 +52,8 @@
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
     }
 
+public void Dispose()
+{
+SpacePresenter.PropertyChanged -= SpacePresenterOnPropertyChanged;
+}
 }
