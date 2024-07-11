@@ -13,6 +13,7 @@ using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using PresentationTest;
+using Shared;
 using Shared.Configuration;
 
 namespace IntegrationTest.Dialogues;
@@ -182,6 +183,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         _presentationLogic.LoginName.Returns("MySecretUsername");
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         
+        _applicationConfiguration[IApplicationConfiguration.BackendBaseUrl] = "http://foobar.com";
         await OpenDialogAndGetDialogReferenceAsync();
 
         var loggedInPs = DialogProvider.FindAll("div.logged-in-container div p");
@@ -190,7 +192,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         Assert.Multiple(() =>
         {
             Assert.That(loggedInPs[0].InnerHtml, Is.EqualTo("DialogContent.LoggedIn.Message"));
-            Assert.That(loggedInPs[1].InnerHtml, Is.EqualTo("MySecretUsername"));
+            Assert.That(loggedInPs[1].InnerHtml, Is.EqualTo("MySecretUsername (http://foobar.com)"));
         });
     }
 

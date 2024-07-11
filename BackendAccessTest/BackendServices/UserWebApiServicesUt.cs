@@ -16,7 +16,7 @@ using Shared.Networking;
 
 namespace BackendAccessTest.BackendServices;
 
-public class UserBackendServicesUt
+public class UserWebApiServicesUt
 {
     [Test]
     public void BackendAccess_Standard_AllPropertiesInitialized()
@@ -736,6 +736,13 @@ public class UserBackendServicesUt
 
         mockedHttp.VerifyNoOutstandingExpectation();
     }
+    
+    private static IPreflightHttpClient CreatePreflightHttpClient()
+    {
+        var mockHttpHandler = new MockHttpMessageHandler();
+        mockHttpHandler.When("/api/health").Respond(HttpStatusCode.OK);
+        return new PreflightHttpClient(new HttpClient(mockHttpHandler));
+    }
 
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
@@ -743,7 +750,8 @@ public class UserBackendServicesUt
         ProgressMessageHandler? progressMessageHandler = null,
         IHttpClientFactory? httpClientFactory = null,
         ILogger<UserWebApiServices>? logger = null,
-        IFileSystem? fileSystem = null
+        IFileSystem? fileSystem = null,
+        IPreflightHttpClient? preflightHttpClient = null
     )
     {
         if (configuration == null)
@@ -759,7 +767,8 @@ public class UserBackendServicesUt
         httpClientFactory ??= mockHttpClientFactory;
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
         fileSystem ??= Substitute.For<IFileSystem>();
+        preflightHttpClient ??= CreatePreflightHttpClient();
 
-        return new UserWebApiServices(configuration, progressMessageHandler, httpClientFactory, logger, fileSystem);
+        return new UserWebApiServices(configuration, progressMessageHandler, httpClientFactory, logger, fileSystem, preflightHttpClient);
     }
 }

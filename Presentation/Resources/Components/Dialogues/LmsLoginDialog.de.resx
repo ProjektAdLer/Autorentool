@@ -100,7 +100,7 @@ Sie haben in diesem Abschnitt die Möglichkeit, diese Kurse zu löschen.
 Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich aus Moodle entfernt.</value>
     </data>
     <data name="DialogContent.Field.Password.Required" xml:space="preserve">
-        <value>Die eingegebene URL, der Benutzername oder das Kennwort ist ungültig. Wiederholen Sie die Eingabe, und versuchen Sie es nochmal. </value>
+        <value>Es muss ein Passwort angegeben werden.</value>
     </data>
     <data name="DialogContent.LoggedIn.Info" xml:space="preserve">
         <value>Damit Sie Ihre im Autorentool erstellte Lernwelt Ihren Studierenden als 3D-Lernumgebung zur Verfügung stellen können, ist zunächst eine Anmeldung auf dem AdLer-Server notwendig.</value>
@@ -119,5 +119,11 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     </data>
     <data name="DialogContent.Delete.MoodleCourse" xml:space="preserve">
         <value>Moodle-Kurs löschen</value>
+    </data>
+    <data name="DialogContent.Field.BackendUrl.Required" xml:space="preserve">
+        <value>Es muss eine URL angegeben werden.</value>
+    </data>
+    <data name="DialogContent.Field.Username.Required" xml:space="preserve">
+        <value>Es muss ein Benutzername angegeben werden.</value>
     </data>
 </root>

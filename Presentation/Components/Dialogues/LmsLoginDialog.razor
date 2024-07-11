@@ -55,7 +55,7 @@
                             <div class="logged-in-container flex flex-col justify-center gap-2 py-2">
                                 <div class="flex flex-row gap-1 justify-center">
                                     <p class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
-                                    <p class="cursor-default text-sm text-adlerblue-700">@PresentationLogic.LoginName</p>
+                                    <p class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
                                 </div>
                                 <MudButton Class="btn-standard mx-36" title=@Localizer["DialogContent.Button.Logout.Title"]
                                            OnClick="Logout">
@@ -146,16 +146,16 @@
                         <div class="flex flex-col">
                             <MudForm>
                                 <div class="flex flex-col">
-                                    <MudTextField @bind-Value="_backendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
+                                    <MudTextField @bind-Value="BackendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
                                                   Required="true"
-                                                  RequiredError="@Localizer["DialogContent.Field.Password.Required"]"/>
+                                                  RequiredError="@Localizer["DialogContent.Field.BackendUrl.Required"]"/>
                                     @if (_errorInvalidUrlMessage != "")
                                     {
                                         <MudText Color="Color.Error" Typo="Typo.subtitle2">@_errorInvalidUrlMessage</MudText>
                                     }
-                                    <MudTextField @bind-Value="_username" Label=@Localizer["DialogContent.Field.Username"]
+                                    <MudTextField @bind-Value="Username" Label=@Localizer["DialogContent.Field.Username"]
                                                   Required="true"
-                                                  RequiredError="@Localizer["DialogContent.Field.Password.Required"]"/>
+                                                  RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
                                     <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
                                                   OnKeyPress="OnKeyPress"
                                                   InputType=@PasswordInputType Adornment="Adornment.End"
@@ -249,8 +249,19 @@
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
-    private string _backendUrl = "";
-    private string _username = "";
+    private string BackendUrl
+    {
+        get => Configuration[IApplicationConfiguration.BackendBaseUrl];
+        set => Configuration[IApplicationConfiguration.BackendBaseUrl] = value;
+    } 
+    
+    private string Username
+    {
+        get => Configuration[IApplicationConfiguration.BackendUsername];
+        set => Configuration[IApplicationConfiguration.BackendUsername] = value;
+    }
+    
+
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
     private bool _showErrorInvalidCredentials = false;
@@ -272,15 +283,21 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        _backendUrl = Configuration[IApplicationConfiguration.BackendBaseUrl];
         _errorInvalidUrlMessage = "";
-        _username = Configuration[IApplicationConfiguration.BackendUsername];
         _password = "";
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
         UpdateLmsIsConnected();
         MudDialog?.SetOptions(Options);
     }
+
+    /*
+    private void UpdateFromConfiguration()
+    {
+        _backendUrl = Configuration[IApplicationConfiguration.BackendBaseUrl];
+        _username = Configuration[IApplicationConfiguration.BackendUsername];
+    }
+    */
 
     private async void UpdateLmsIsConnected()
     {
@@ -313,15 +330,12 @@
     private async void SubmitForm()
     {
         //TODO: redo form as MudForm with proper validation
-        if (_backendUrl == "" || _username == "" || _password == "") return;
-        if (!_backendUrl.StartsWith("http://") && !_backendUrl.StartsWith("https://"))
+        if (BackendUrl == "" || Username == "" || _password == "") return;
+        if (!BackendUrl.StartsWith("http://") && !BackendUrl.StartsWith("https://"))
         {
             _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
             return;
         }
-
-        Configuration[IApplicationConfiguration.BackendBaseUrl] = _backendUrl;
-        Configuration[IApplicationConfiguration.BackendUsername] = _username;
         try
         {
             StartSpinner();
@@ -352,7 +366,7 @@
 
     private async Task LoginAsync()
     {
-        await PresentationLogic.Login(_username, _password);
+        await PresentationLogic.Login(Configuration[IApplicationConfiguration.BackendUsername], _password);
         _showErrorInvalidCredentials = false;
         _showErrorApiUnreachable = false;
         _showErrorTokenInvalid = false;
