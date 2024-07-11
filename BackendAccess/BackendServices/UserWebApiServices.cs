@@ -174,12 +174,9 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// </summary>
     private async Task DoHealthPreflightRequestAsync()
     {
-        var uriBuilder = new UriBuilder(GetApiBaseUrl())
-        {
-            Path = "/health"
-        };
+        var uri = new Uri(GetApiBaseUrl(), "health");
         //get /api/health
-        var healthResponse = await PreflightHttpClient.Client.GetAsync(uriBuilder.Uri);
+        var healthResponse = await PreflightHttpClient.Client.GetAsync(uri);
         //wenn 301 => url umbauen zu https
         if (healthResponse.StatusCode == HttpStatusCode.MovedPermanently)
         {

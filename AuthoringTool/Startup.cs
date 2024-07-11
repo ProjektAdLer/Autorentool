@@ -156,7 +156,7 @@ public class Startup
     {
         services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
-        services.AddSingleton<IPreflightHttpClient, PreflightHttpClient>();
+        services.AddSingleton<IPreflightHttpClient, PreflightHttpClient>(_ => new PreflightHttpClient());
     }
 
     internal static void ConfigureValidation(IServiceCollection services)
