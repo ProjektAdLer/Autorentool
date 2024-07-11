@@ -8,9 +8,12 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
+using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
@@ -372,7 +375,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
             Theme.CampusAschaffenburg);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", 
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb",
             Theme.CampusAschaffenburg));
 
         systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
@@ -388,7 +391,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
             Theme.CampusAschaffenburg);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", 
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb",
             Theme.CampusAschaffenburg, 0,
             null, positionX: 0, positionY: 185));
 
@@ -403,7 +406,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
             Theme.CampusAschaffenburg);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", 
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb",
             Theme.CampusAschaffenburg, 0,
             null, positionX: 0, positionY: 335));
 
@@ -415,8 +418,9 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm.PathWayConditions.Add(
             new PathWayConditionViewModel(ConditionEnum.And, false, 0, 475));
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5, Theme.CampusAschaffenburg);
-        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb", 
+        systemUnderTest.CreateLearningSpace("foo", "bar", ViewModelProvider.GetLearningOutcomeCollection(), 5,
+            Theme.CampusAschaffenburg);
+        systemUnderTest.LearningWorldVm.LearningSpaces.Add(new LearningSpaceViewModel("aa", "bb",
             Theme.CampusAschaffenburg, 0,
             ViewModelProvider.GetLearningOutcomeCollection(), null, 0, 530));
 
@@ -1227,13 +1231,15 @@ public class LearningWorldPresenterUt
         var world = ViewModelProvider.GetLearningWorld();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
+        var space = ViewModelProvider.GetLearningSpace();
         var systemUnderTest =
             CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
-        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent());
+        var element = ViewModelProvider.GetLearningElement(content: ViewModelProvider.GetFileContent(), parent: space);
 
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningElement(element);
         selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        selectedViewModelsProvider.Received(1).SetLearningObjectInPathWay(space, null);
         mediator.Received(1).RequestOpenElementDialog();
     }
 
@@ -1251,6 +1257,22 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetSelectedLearningElement(element);
         selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
         mediator.Received(1).RequestOpenAdaptivityElementDialog();
+    }
+
+    [Test]
+    public void SetSelectedLearningElement_SetsSelectedStoryElement()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest =
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
+        var element = ViewModelProvider.GetStoryElement();
+
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningElement(element);
+        selectedViewModelsProvider.Received(1).SetLearningElement(element, null);
+        mediator.Received(1).RequestOpenStoryElementDialog();
     }
 
     [Test]
@@ -1346,6 +1368,74 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().EditLearningElement(null, element, "a", "b", "c",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0, content);
     }
+
+    [Test]
+    public void EditLearningElementFromFormModel_CallsEditLearningElement_WithMappedContent()
+    {
+        // Arrange
+        var world = ViewModelProvider.GetLearningWorld();
+        var mapper = Substitute.For<IMapper>();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(mapper: mapper, presentationLogic: presentationLogic);
+        var content = ViewModelProvider.GetLinkContent();
+        var element = ViewModelProvider.GetLearningElement(content: content);
+        var model = new LearningElementFormModel()
+        {
+            Name = "Test Name",
+            Description = "Test Description",
+            Goals = "Test Goals",
+            Difficulty = LearningElementDifficultyEnum.Easy,
+            ElementModel = ElementModel.l_h5p_slotmachine_1,
+            Workload = 5,
+            Points = 10,
+            LearningContent = new LinkContentFormModel()
+        };
+        var mappedContent = Substitute.For<ILearningContentViewModel>();
+        mapper.Map<ILearningContentViewModel>(model.LearningContent).Returns(mappedContent);
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+
+        // Act
+        systemUnderTest.EditLearningElementFromFormModel(null, element, model);
+
+        // Assert
+        presentationLogic.Received().EditLearningElement(null, element, model.Name, model.Description, model.Goals,
+            model.Difficulty, model.ElementModel, model.Workload, model.Points, mappedContent);
+    }
+
+    [Test]
+    public void EditLearningElementFromFormModel_CallsEditLearningElement_WithExistingContentForAdaptivityContent()
+    {
+        // Arrange
+        var world = ViewModelProvider.GetLearningWorld();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var adaptivityContent = Substitute.For<IAdaptivityContentViewModel>();
+        var element = ViewModelProvider.GetLearningElement(content: adaptivityContent);
+        var model = new LearningElementFormModel
+        {
+            Name = "Test Name",
+            Description = "Test Description",
+            Goals = "Test Goals",
+            Difficulty = LearningElementDifficultyEnum.Easy,
+            ElementModel = ElementModel.l_h5p_slotmachine_1,
+            Workload = 5,
+            Points = 10,
+            LearningContent = null
+        };
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+
+        // Act
+        systemUnderTest.EditLearningElementFromFormModel(null, element, model);
+
+        // Assert
+        presentationLogic.Received().EditLearningElement(null, element, model.Name, model.Description, model.Goals,
+            model.Difficulty, model.ElementModel, model.Workload, model.Points, adaptivityContent);
+    }
+
 
     [Test]
     public async Task ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_CallsErrorService()
@@ -1516,6 +1606,36 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().CreateUnplacedLearningElement(world, "abc", content, "a", "b",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0);
     }
+
+    [Test]
+    public void CreateUnplacedLearningElementFromFormModel_CallsCreateUnplacedLearningElement()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        var mapper = Substitute.For<IMapper>();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(mapper: mapper, presentationLogic: presentationLogic);
+        var model = new LearningElementFormModel
+        {
+            Name = "Test Name",
+            Description = "Test Description",
+            Goals = "Test Goals",
+            Difficulty = LearningElementDifficultyEnum.Easy,
+            ElementModel = ElementModel.l_h5p_slotmachine_1,
+            Workload = 5,
+            Points = 10,
+            LearningContent = new LinkContentFormModel()
+        };
+        var mappedContent = Substitute.For<ILearningContentViewModel>();
+        mapper.Map<ILearningContentViewModel>(model.LearningContent).Returns(mappedContent);
+
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.CreateUnplacedLearningElementFromFormModel(model);
+
+        presentationLogic.Received().CreateUnplacedLearningElement(world, model.Name, mappedContent, model.Description,
+            model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
+    }
+
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,
