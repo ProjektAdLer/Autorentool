@@ -131,15 +131,18 @@ public class UserWebApiServicesUt
         var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("invalidUrl");
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        var mockHttpMessageHandler = new MockHttpMessageHandler();
         httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
-            .Returns(new HttpClient(new MockHttpMessageHandler()));
+            .Returns(new HttpClient(mockHttpMessageHandler));
+        
+        mockHttpMessageHandler.When("*").Throw(new HttpRequestException("Invalid URL", new SocketException()));
 
         var userWebApiServices =
             CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: httpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
-        Assert.That(ex!.Message, Is.EqualTo("There is no AdLer Backend at the given URL."));
+        Assert.That(ex!.Message, Is.EqualTo("The URL is not reachable. Either the URL does not exist or there is no internet connection."));
     }
 
     [Test]
