@@ -149,6 +149,15 @@ public class HeaderBarUt
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
+        var uploadResponseViewModel = new UploadResponseViewModel
+        {
+            WorldNameInLms = "worldName",
+            WorldLmsUrl = "worldLmsUrl",
+            World3DUrl = "world3DUrl"
+        };
+        _presentationLogic
+            .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
+            .Returns(uploadResponseViewModel);
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
         _dialogService
@@ -162,6 +171,11 @@ public class HeaderBarUt
         _presentationLogic.Received()
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
         _snackbar.Received().Add("Export.SnackBar.Message", Arg.Any<Severity>());
+        _dialogService.Received().Show<UploadSuccessfulDialog>(Arg.Any<string>(), Arg.Is<DialogParameters>(d =>
+                ReferenceEquals(d[nameof(UploadSuccessfulDialog.Url3D)], uploadResponseViewModel.World3DUrl) &&
+                ReferenceEquals(d[nameof(UploadSuccessfulDialog.UrlMoodle)], uploadResponseViewModel.WorldLmsUrl) &&
+                ReferenceEquals(d[nameof(UploadSuccessfulDialog.WorldName)], uploadResponseViewModel.WorldNameInLms)),
+            Arg.Any<DialogOptions>());
     }
 
     [Test]
