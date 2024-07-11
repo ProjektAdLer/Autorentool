@@ -20,6 +20,7 @@ public class LearningOutcomeCommandFactoryUt
     private LearningOutcomeCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AHO01, AHO03]
     public void GetAddLearningOutcomeCommand_StructuredLearningOutcome_ReturnsAddLearningOutcome()
     {
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
@@ -57,6 +58,7 @@ public class LearningOutcomeCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AHO02, AHO04]
     public void GetAddLearningOutcomeCommand_ManualLearningOutcome_ReturnsAddLearningOutcome()
     {
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
@@ -81,6 +83,7 @@ public class LearningOutcomeCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AHO03, AHO03, AHO05]
     public void GetDeleteLearningOutcomeCommand_ReturnsDeleteLearningOutcome()
     {
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();

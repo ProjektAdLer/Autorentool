@@ -7,12 +7,14 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.FileContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -38,6 +40,7 @@ public class ViewModelEntityMappingProfileUt
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
+    private static List<string> StoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
@@ -57,6 +60,7 @@ public class ViewModelEntityMappingProfileUt
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
+    private static List<string> NewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -189,6 +193,44 @@ public class ViewModelEntityMappingProfileUt
 
         TestSpace(source, true);
         Assert.That(source.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
+    }
+
+    [Test]
+    public void MapLearningSpaceAndLearningSpaceViewModel_WithStoryElement_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
+                FloorPlanEnum.R_20X30_8L),
+            positionX: PositionX, positionY: PositionY);
+        source.LearningSpaceLayout.StoryElements[0] = GetTestableStoryElementWithParent(source);
+        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
+
+        systemUnderTest.Map(source, destination);
+
+        TestSpace(destination, false);
+        Assert.That(destination.LearningSpaceLayout.StoryElements.Count(), Is.EqualTo(1));
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
+
+        destination.Name = NewName;
+        destination.Description = NewDescription;
+        destination.RequiredPoints = NewRequiredPoints;
+        destination.LearningSpaceLayout.StoryElements = new Dictionary<int, ILearningElementViewModel>
+        {
+            {
+                0,
+                GetTestableStoryElementViewModelWithParent(destination)
+            }
+        };
+        destination.PositionX = NewPositionX;
+        destination.PositionY = NewPositionY;
+
+        systemUnderTest.Map(destination, source);
+
+        TestSpace(source, true);
+        Assert.That(source.LearningSpaceLayout.StoryElements.Count(), Is.EqualTo(1));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
 
@@ -375,6 +417,9 @@ public class ViewModelEntityMappingProfileUt
         var elementVm1 =
             new LearningElementViewModel("el1", new FileContentViewModel("foo", "bar", Filepath),
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
+        var storyElementVm1 =
+            new LearningElementViewModel("sel1", new StoryContentViewModel("foo", StoryText), Description, Goals,
+                Difficulty, ElementModel.a_npc_defaultnpc);
 
         var space = new LearningSpaceViewModel("space", Description, Theme.CampusAschaffenburg, RequiredPoints,
                 ViewModelProvider.GetLearningOutcomeCollection(),
@@ -386,10 +431,18 @@ public class ViewModelEntityMappingProfileUt
                             0,
                             elementVm1
                         }
+                    },
+                    StoryElements = new Dictionary<int, ILearningElementViewModel>()
+                    {
+                        {
+                            0,
+                            storyElementVm1
+                        }
                     }
                 })
             ;
         elementVm1.Parent = space;
+        storyElementVm1.Parent = space;
 
         var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals,
             EvaluationLink, EnrolmentKey, SavePath,
@@ -401,7 +454,7 @@ public class ViewModelEntityMappingProfileUt
 
         var worldEntity = systemUnderTest.Map<LearningWorld>(worldVm);
         worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name = "foooooooooo";
-
+        worldEntity.LearningSpaces.First().LearningSpaceLayout.StoryElements.First().Value.Name = "baaaaaaaaar";
 
         //map back into viewmodel - with update syntax
         systemUnderTest.Map(worldEntity, worldVm);
@@ -413,10 +466,15 @@ public class ViewModelEntityMappingProfileUt
         {
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.Count(),
                 Is.EqualTo(1));
+            Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.StoryElements.Count, Is.EqualTo(1));
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name,
                 Is.EqualTo(
                     worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name));
+            Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.StoryElements.First().Value.Name, Is.EqualTo(
+                worldEntity.LearningSpaces.First().LearningSpaceLayout.StoryElements.First().Value.Name));
             Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
+            Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.StoryElements.First().Value,
+                Is.EqualTo(storyElementVm1));
         });
     }
 
@@ -595,9 +653,19 @@ public class ViewModelEntityMappingProfileUt
         return new FileContent(Name, Type, Filepath);
     }
 
+    private static StoryContent GetTestableStoryContent()
+    {
+        return new StoryContent(Name, false, StoryText);
+    }
+
     private static FileContentViewModel GetTestableNewContentViewModel()
     {
         return new FileContentViewModel(NewName, NewType, NewFilepath);
+    }
+
+    private static StoryContentViewModel GetTestableNewStoryContentViewModel()
+    {
+        return new StoryContentViewModel(NewName, NewStoryText);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -608,11 +676,23 @@ public class ViewModelEntityMappingProfileUt
             PositionY);
     }
 
+    private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)
+    {
+        return new LearningElement(Name, GetTestableStoryContent(), Description, Goals, Difficulty,
+            SelectedElementModel, parent, Workload, Points, PositionX, PositionY);
+    }
+
     private static LearningElementViewModel GetTestableElementViewModelWithParent(LearningSpaceViewModel parent)
     {
         return new LearningElementViewModel(NewName,
             GetTestableNewContentViewModel(), NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, parent,
             NewWorkload, NewPoints, NewPositionX, NewPositionY);
+    }
+
+    private static LearningElementViewModel GetTestableStoryElementViewModelWithParent(LearningSpaceViewModel parent)
+    {
+        return new LearningElementViewModel(NewName, GetTestableNewStoryContentViewModel(), NewDescription, NewGoals,
+            NewDifficulty, NewSelectedElementModel, parent, NewWorkload, NewPoints, NewPositionX, NewPositionY);
     }
 
     private static LearningSpace GetTestableSpace()
@@ -712,6 +792,7 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.StoryElements.Values, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -723,6 +804,7 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.StoryElements.Values, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -732,9 +814,10 @@ public class ViewModelEntityMappingProfileUt
 
     private static void TestElementsList(object worldLearningElements, object? parent, bool useNewFields)
     {
+        var type = worldLearningElements.GetType();
         switch (worldLearningElements)
         {
-            case List<ILearningElementViewModel> learningElements:
+            case ICollection<ILearningElementViewModel> learningElements:
                 Assert.Multiple(() =>
                 {
                     foreach (var learningElement in learningElements)
@@ -743,7 +826,7 @@ public class ViewModelEntityMappingProfileUt
                     }
                 });
                 break;
-            case List<LearningElement> learningElements:
+            case ICollection<ILearningElement> learningElements:
                 Assert.Multiple(() =>
                 {
                     foreach (var learningElement in learningElements)
@@ -752,6 +835,8 @@ public class ViewModelEntityMappingProfileUt
                     }
                 });
                 break;
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -810,6 +895,20 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
+                });
+                break;
+            case StoryContent content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                });
+                break;
+            case StoryContentViewModel content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
                 });
                 break;
             default:

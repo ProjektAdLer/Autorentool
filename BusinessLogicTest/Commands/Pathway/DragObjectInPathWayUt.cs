@@ -11,13 +11,15 @@ namespace BusinessLogicTest.Commands.Pathway;
 public class DragObjectInPathWayUt
 {
     [Test]
+    // ANF-ID: [AWA0023]
     public void Execute_DragsLearningSpace()
     {
         double oldPositionX = 1;
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)
         {
@@ -49,6 +51,7 @@ public class DragObjectInPathWayUt
     }
 
     [Test]
+    // ANF-ID: [AHO62]
     public void Execute_DragsPathWayCondition()
     {
         double oldPositionX = 1;
@@ -91,7 +94,8 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY);
         var actionWasInvoked = false;
@@ -115,7 +119,8 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)
         {

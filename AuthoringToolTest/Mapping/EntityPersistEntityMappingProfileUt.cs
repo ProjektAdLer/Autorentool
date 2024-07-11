@@ -2,10 +2,12 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.Story;
 using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using PersistEntities.LearningContent.Story;
 using Shared;
 using TestHelpers;
 
@@ -25,6 +27,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
+    private static List<string> StoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
@@ -44,6 +47,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
+    private static List<string> NewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -185,6 +189,45 @@ public class EntityPersistEntityMappingProfileUt
     }
 
     [Test]
+    public void MapLearningSpaceAndLearningSpacePersistEntity_WithStoryElement_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
+                FloorPlanEnum.R_20X30_8L),
+            positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
+            outBoundSpaces: new List<IObjectInPathWay>());
+        source.LearningSpaceLayout.StoryElements[0] = GetTestableStoryElementWithParent(source);
+        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+
+        systemUnderTest.Map(source, destination);
+
+        TestSpace(destination, false);
+        Assert.That(destination.LearningSpaceLayout.StoryElements.Count(), Is.EqualTo(1));
+
+        destination.Name = NewName;
+        destination.Description = NewDescription;
+        destination.RequiredPoints = NewRequiredPoints;
+        destination.LearningSpaceLayout.StoryElements = new Dictionary<int, ILearningElementPe>
+        {
+            {
+                0,
+                GetTestableStoryElementPersistEntity()
+            }
+        };
+        destination.PositionX = NewPositionX;
+        destination.PositionY = NewPositionY;
+        destination.InBoundObjects = new List<IObjectInPathWayPe>();
+        destination.OutBoundObjects = new List<IObjectInPathWayPe>();
+
+        systemUnderTest.Map(destination, source);
+
+        TestSpace(source, true);
+        Assert.That(source.LearningSpaceLayout.StoryElements.Count(), Is.EqualTo(1));
+    }
+
+    [Test]
     public void MapLearningWorldAndLearningWorldPersistEntity_WithoutLearningSpaces_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
@@ -222,7 +265,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
-            Difficulty, SelectedElementModel, null, Workload, Points));
+            Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -246,7 +289,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.UnplacedLearningElements = new List<ILearningElementPe>
         {
             new LearningElementPe(NewName, GetTestableNewContentPersistEntity(), NewDescription, NewGoals,
-                NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
+                NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints, NewPositionX, NewPositionY)
         };
 
         systemUnderTest.Map(destination, source);
@@ -302,6 +345,98 @@ public class EntityPersistEntityMappingProfileUt
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(source.LearningSpaces[0].ContainedLearningElements, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void MapLearningWorldAndLearningWorldViewModel_WithSpaces_ObjectsStayEqual()
+    {
+        var element1 =
+            new LearningElement(Name, new FileContent(Name, Type, Filepath), Description, Goals, Difficulty,
+                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+        var storyElement1 =
+            new LearningElement(Name, new StoryContent(Name, false, StoryText), Description, Goals, Difficulty,
+                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+
+        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>
+                {
+                    {
+                        0,
+                        element1
+                    }
+                },
+                new Dictionary<int, ILearningElement>()
+                {
+                    {
+                        0,
+                        storyElement1
+                    }
+                }, FloorPlanEnum.R_20X30_8L), PositionX, PositionY
+        );
+        element1.Parent = space;
+        storyElement1.Parent = space;
+
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            EvaluationLink, EnrolmentKey, SavePath, new List<ILearningSpace> { space });
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+
+        var systemUnderTest = CreateTestableMapper();
+
+        systemUnderTest.Map(source, destination);
+        TestWorld(destination, false);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.Count(),
+                Is.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
+        });
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.Authors = NewAuthors;
+        destination.Language = NewLanguage;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        destination.EvaluationLink = NewEvaluationLink;
+        destination.EnrolmentKey = NewEnrolmentKey;
+        destination.SavePath = NewSavePath;
+        destination.LearningSpaces = new List<LearningSpacePe>
+        {
+            new(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+                PersistEntityProvider.GetLearningOutcomeCollection(),
+                new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
+                    {
+                        {
+                            0,
+                            new LearningElementPe(NewName, new FileContentPe(NewName, NewType, NewFilepath),
+                                NewDescription, NewGoals,
+                                NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
+                        }
+                    },
+                    new Dictionary<int, ILearningElementPe>
+                    {
+                        {
+                            0,
+                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, NewStoryText),
+                                NewDescription, NewGoals,
+                                NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
+                        }
+                    }, FloorPlanEnum.R_20X30_8L), NewPositionX, NewPositionY)
+        };
+
+        systemUnderTest.Map(destination, source);
+
+        TestWorld(source, true);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces.First().ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(source.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
         });
     }
 
@@ -497,9 +632,19 @@ public class EntityPersistEntityMappingProfileUt
         return new FileContent(Name, Type, Filepath);
     }
 
+    private static StoryContent GetTestableStoryContent()
+    {
+        return new StoryContent(Name, false, StoryText);
+    }
+
     private static FileContentPe GetTestableNewContentPersistEntity()
     {
         return new FileContentPe(NewName, NewType, NewFilepath);
+    }
+
+    private static StoryContentPe GetTestableNewStoryContentPersistEntity()
+    {
+        return new StoryContentPe(NewName, false, NewStoryText);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -510,9 +655,25 @@ public class EntityPersistEntityMappingProfileUt
             PositionY);
     }
 
+    private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)
+    {
+        return new LearningElement(Name, GetTestableStoryContent(), Description, Goals, Difficulty,
+            SelectedElementModel,
+            parent, Workload,
+            Points, PositionX,
+            PositionY);
+    }
+
     private static LearningElementPe GetTestableElementPersistEntity()
     {
         return new LearningElementPe(NewName, GetTestableNewContentPersistEntity(),
+            NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints, NewPositionX,
+            NewPositionY);
+    }
+
+    private static LearningElementPe GetTestableStoryElementPersistEntity()
+    {
+        return new LearningElementPe(NewName, GetTestableNewStoryContentPersistEntity(),
             NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints, NewPositionX,
             NewPositionY);
     }
@@ -620,6 +781,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.ContainedLearningElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.StoryElements.Values, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -631,6 +793,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.LearningSpaceLayout.ContainedLearningElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.StoryElements.Values, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -642,7 +805,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         switch (worldLearningElements)
         {
-            case List<LearningElement> learningElements:
+            case ICollection<ILearningElement> learningElements:
                 Assert.Multiple(() =>
                 {
                     foreach (var learningElement in learningElements)
@@ -651,7 +814,7 @@ public class EntityPersistEntityMappingProfileUt
                     }
                 });
                 break;
-            case List<LearningElementPe> learningElements:
+            case ICollection<ILearningElementPe> learningElements:
                 Assert.Multiple(() =>
                 {
                     foreach (var learningElement in learningElements)
@@ -660,6 +823,8 @@ public class EntityPersistEntityMappingProfileUt
                     }
                 });
                 break;
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -721,6 +886,20 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
+                });
+                break;
+            case StoryContent content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                });
+                break;
+            case StoryContentPe content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
                 });
                 break;
             default:

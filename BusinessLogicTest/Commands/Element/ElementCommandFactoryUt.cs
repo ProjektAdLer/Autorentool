@@ -21,6 +21,7 @@ public class ElementCommandFactoryUt
     private ElementCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AWA0002, AWA0003]
     public void GetCreateInSlotCommand_WithLearningSpaceAndParameters_ReturnsCreateLearningElementInSlotCommand()
     {
         // Arrange
@@ -63,6 +64,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002, AWA0003]
     public void GetCreateInSlotCommand_WithLearningSpaceAndLearningElement_ReturnsCreateLearningElementInSlotCommand()
     {
         // Arrange
@@ -85,8 +87,9 @@ public class ElementCommandFactoryUt
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }
-    
+
     [Test]
+    // ANF-ID: [ASN0011]
     public void GetCreateStoryInSlotCommand_WithLearningSpaceAndParameters_ReturnsCreateStoryElementInSlotCommand()
     {
         // Arrange
@@ -105,7 +108,8 @@ public class ElementCommandFactoryUt
         Action<object> mappingAction = _ => { };
 
         // Act
-        var result = _factory.GetCreateStoryInSlotCommand(parentSpace, slotIndex, name, learningContent, description, goals,
+        var result = _factory.GetCreateStoryInSlotCommand(parentSpace, slotIndex, name, learningContent, description,
+            goals,
             difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
 
         // Assert
@@ -129,6 +133,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002, AWA0003]
     public void GetCreateUnplacedCommand_WithLearningWorldAndParameters_ReturnsCreateUnplacedLearningElementCommand()
     {
         // Arrange
@@ -169,6 +174,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016, AWA0011]
     public void GetDeleteInSpaceCommand_WithLearningElementAndLearningSpace_ReturnsDeleteLearningElementInSpaceCommand()
     {
         // Arrange
@@ -186,9 +192,11 @@ public class ElementCommandFactoryUt
         Assert.That(resultCasted.ParentSpace, Is.EqualTo(parentSpace));
         Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
     }
-    
+
     [Test]
-    public void GetDeleteStoryInSpaceCommand_WithLearningElementAndLearningSpace_ReturnsDeleteStoryElementInSpaceCommand()
+    // ANF-ID: [ASN0015]
+    public void
+        GetDeleteStoryInSpaceCommand_WithLearningElementAndLearningSpace_ReturnsDeleteStoryElementInSpaceCommand()
     {
         // Arrange
         var learningElement = EntityProvider.GetLearningElement();
@@ -207,6 +215,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016, AWA0011]
     public void GetDeleteInWorldCommand_WithLearningElementAndLearningWorld_ReturnsDeleteLearningElementInWorldCommand()
     {
         // Arrange
@@ -258,6 +267,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0015, AWA0010]
     public void GetEditCommand_WithLearningElementAndParameters_ReturnsEditLearningElementCommand()
     {
         // Arrange
@@ -296,6 +306,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0018, AWA0019]
     public void GetLoadCommand_WithLearningSpaceAndFilePath_ReturnsLoadLearningElementCommandUsingFilePath()
     {
         // Arrange
@@ -319,6 +330,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0018, AWA0019]
     public void GetLoadCommand_WithLearningSpaceAndStream_ReturnsLoadLearningElementCommandUsingStream()
     {
         // Arrange
@@ -347,6 +359,7 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0017, AWA0012]
     public void GetSaveCommand_WithBusinessLogicAndLearningElement_ReturnsSaveLearningElementCommand()
     {
         // Arrange

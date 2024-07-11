@@ -144,6 +144,30 @@ public class UserWebApiServicesUt
 
     [Test]
     // ANF-ID: [AHO21]
+    public void GetUserTokenAsync_InvalidUriFormat_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("htp://invalidUrl.com");
+
+        mockedHttp
+            .When("*")
+            .Throw(new UriFormatException());
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Invalid URL."));
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
     public void GetUserTokenAsync_InvalidUrlWithUnsupportedProtocolSet_ThrowsException()
     {
         var mockedHttp = new MockHttpMessageHandler();
@@ -224,6 +248,35 @@ public class UserWebApiServicesUt
 
     [Test]
     // ANF-ID: [AHO21]
+    public void GetUserTokenAsync_AnyOtherHttpRequestException_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var responseContent = JsonConvert.SerializeObject(new Dictionary<string, string>
+        {
+            { "detail", "Error Message" }
+        });
+        var response = new HttpResponseMessage(HttpStatusCode.Ambiguous);
+        response.StatusCode = HttpStatusCode.Ambiguous;
+
+        response.Content = new StringContent(responseContent);
+        mockedHttp
+            .When("*")
+            .Respond(_ => response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Error Message"));
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
     public async Task GetUserInformationAsync_ValidInput_Returns()
     {
         var mockedHttp = new MockHttpMessageHandler();
@@ -257,6 +310,51 @@ public class UserWebApiServicesUt
             Assert.That(result.UserId, Is.EqualTo(1));
             Assert.That(result.IsAdmin, Is.EqualTo(true));
         });
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
+    public void GetUserInformationAsync_InvalidToken_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var exception = new HttpRequestException("The provided token is invalid");
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        var ex = Assert.ThrowsAsync<BackendInvalidTokenException>(async () =>
+            await userWebApiServices.GetUserInformationAsync("token"));
+        Assert.That(ex!.Message, Is.EqualTo("The provided token is invalid"));
+        Assert.That(ex.InnerException, Is.EqualTo(exception));
+    }
+
+    [Test]
+    // ANF-ID: [AHO21]
+    public void GetUserInformationAsync_OtherHttpRequestException_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var exception = new HttpRequestException("Error Message");
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await userWebApiServices.GetUserInformationAsync("token"));
+        Assert.That(ex!.Message, Is.EqualTo("Error Message"));
     }
 
     [Test]
@@ -321,6 +419,60 @@ public class UserWebApiServicesUt
 
     [Test]
     // ANF-ID: [AHO22]
+    public void UploadLearningWorldAsync_OperationCanceledException_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var exception = new OperationCanceledException();
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var mockfileSystem = new MockFileSystem();
+        mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
+        mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, fileSystem: mockfileSystem);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<TaskCanceledException>(async () =>
+            await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+    }
+
+    [Test]
+    // ANF-ID: [AHO22]
+    public void UploadLearningWorldAsync_Exception_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var exception = new Exception();
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var mockfileSystem = new MockFileSystem();
+        mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
+        mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, fileSystem: mockfileSystem);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<Exception>(async () =>
+            await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+    }
+
+    [Test]
+    // ANF-ID: [AHO22]
     public void UploadLearningWorldAsync_InvalidATFPath_ThrowsArgumentException()
     {
         var mockfileSystem = new MockFileSystem();
@@ -359,6 +511,162 @@ public class UserWebApiServicesUt
         var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
         Assert.That(ex!.Message, Is.EqualTo("The backup path is not valid."));
+    }
+
+    [Test]
+    public async Task GetApiHealthcheck_Healthy_ReturnsTrue()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var response = new HttpResponseMessage(HttpStatusCode.OK);
+        response.Content = new StringContent("Healthy");
+
+        mockedHttp
+            .When("*")
+            .Respond(_ => response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        // Act
+        var result = await userWebApiServices.GetApiHealthcheck();
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public async Task GetApiHealthcheck_NotHealthy_ReturnsFalse()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var response = new HttpResponseMessage(HttpStatusCode.OK);
+        response.Content = new StringContent("Not Healthy");
+
+        mockedHttp
+            .When("*")
+            .Respond(_ => response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        // Act
+        var result = await userWebApiServices.GetApiHealthcheck();
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task GetApiHealthcheck_HttpRequestException_ReturnsFalse()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var exception = new HttpRequestException();
+
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+        var logger = Substitute.For<ILogger<UserWebApiServices>>();
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, logger: logger);
+
+        // Act
+        var result = await userWebApiServices.GetApiHealthcheck();
+
+        // Assert
+        Assert.That(result, Is.False);
+        logger.ReceivedWithAnyArgs().LogError(default);
+    }
+
+    [Test]
+    public async Task GetApiHealthcheck_InvalidOperationException_ReturnsFalse()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var exception = new InvalidOperationException();
+
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+        var logger = Substitute.For<ILogger<UserWebApiServices>>();
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, logger: logger);
+
+        // Act
+        var result = await userWebApiServices.GetApiHealthcheck();
+
+        // Assert
+        Assert.That(result, Is.False);
+        logger.ReceivedWithAnyArgs().LogError(default);
+    }
+
+    [Test]
+    public async Task GetApiHealthcheck_TaskCanceledException_ReturnsFalse()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var exception = new TaskCanceledException();
+
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+        var logger = Substitute.For<ILogger<UserWebApiServices>>();
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, logger: logger);
+
+        // Act
+        var result = await userWebApiServices.GetApiHealthcheck();
+
+        // Assert
+        Assert.That(result, Is.False);
+        logger.ReceivedWithAnyArgs().LogError(default);
+    }
+
+    [Test]
+    public void GetApiHealthCheck_GetApiBaseUrl_IsNullOrWhiteSpace_ThrowsException()
+    {
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("");
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetApiHealthcheck());
+        Assert.That(ex!.Message, Is.EqualTo("No URL set in configuration yet."));
+    }
+
+    [Test]
+    public void GetApiHealthCheck_GetApiBaseUrl_UriFormatException_ThrowsException()
+    {
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("htp://%%invalidUrl%%.com");
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
+
+        // Act & Assert
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetApiHealthcheck());
+        Assert.That(ex!.Message, Is.EqualTo("Invalid backend URL format"));
     }
 
     [Test]
@@ -453,7 +761,10 @@ public class UserWebApiServicesUt
         }
 
         progressMessageHandler ??= Substitute.For<ProgressMessageHandler>();
-        httpClientFactory ??= Substitute.For<IHttpClientFactory>();
+        var mockHttpClient = new HttpClient(new MockHttpMessageHandler());
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>()).Returns(mockHttpClient);
+        httpClientFactory ??= mockHttpClientFactory;
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
         fileSystem ??= Substitute.For<IFileSystem>();
         preflightHttpClient ??= CreatePreflightHttpClient();

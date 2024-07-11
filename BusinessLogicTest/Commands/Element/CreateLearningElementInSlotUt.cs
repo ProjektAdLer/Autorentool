@@ -13,6 +13,7 @@ namespace BusinessLogicTest.Commands.Element;
 public class CreateLearningElementInSlotUt
 {
     [Test]
+    // ANF-ID: [AWA0002, AWA0003]
     public void Execute_CreatesLearningElement()
     {
         var testParameter = new TestParameter();
@@ -52,6 +53,7 @@ public class CreateLearningElementInSlotUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002, AWA0003]
     public void CreateLearningElement_SetElementAsSelectedInParent()
     {
         var testParameter = new TestParameter();
@@ -184,7 +186,8 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "o", 0, Theme.CampusAschaffenburg, EntityProvider.GetLearningOutcomeCollection(),
+        SpaceParent = new LearningSpace("l", "o", 0, Theme.CampusAschaffenburg,
+            EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L))
         {

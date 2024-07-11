@@ -33,10 +33,4 @@
     <data name="LearningOutcomesSpaceOverview.Overview.Subtitle" xml:space="preserve">
         <value>Übersicht der erstellten Lernziele</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Edit" xml:space="preserve">
-        <value>Lernziel bearbeiten</value>
-    </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Delete" xml:space="preserve">
-        <value>Lernziel löschen</value>
-    </data>
 </root>

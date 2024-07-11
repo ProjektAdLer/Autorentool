@@ -1,17 +1,17 @@
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Commands
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningContent.Story
+@using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
 @using Shared
 @using Shared.Command
-@using Microsoft.Extensions.Localization
-@using BusinessLogic.Commands
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningContent.FileContent
-@using Presentation.PresentationLogic.LearningContent.LinkContent
-@using Presentation.PresentationLogic.LearningContent.Story
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 <div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
 
     <div class="grid grid-cols-2 w-full py-1 gap-4 2xl:gap-0">
@@ -74,7 +74,10 @@
                     </MudMenu>
                     <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
                         <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@difficultyIcon" Icon="@difficultyIcon" Class="p-0" Title="@Localizer["UnplacedElementsDropZone.Filter.Difficulty"]"></MudToggleIconButton>
+                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small"
+                                                 ToggledIcon="@_difficultyIcon" Icon="@_difficultyIcon" Class="p-0"
+                                                 Title="@Localizer["UnplacedElementsDropZone.Filter.Difficulty"]">
+                            </MudToggleIconButton>
                         </ActivatorContent>
                         <ChildContent>
                             <MudMenuItem
@@ -195,7 +198,7 @@
 
     private bool ShowAfterSearchStringFilter(ILearningElementViewModel element)
     {
-        if (SearchString != null && !element.Name.Contains(SearchString))
+        if (!string.IsNullOrEmpty(SearchString) && !element.Name.Contains(SearchString))
         {
             return false;
         }
@@ -234,26 +237,17 @@
                 return false;
             }
         }
-        else if (element.LearningContent.GetType() == typeof(LinkContentViewModel))
+        else if (element.LearningContent.GetType() == typeof(LinkContentViewModel) && !_contentTypeFilter.Contains(ContentTypeEnum.Video))
         {
-            if (!_contentTypeFilter.Contains(ContentTypeEnum.Video))
-            {
-                return false;
-            }
+            return false;
         }
-        else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel))
+        else if (element.LearningContent.GetType() == typeof(AdaptivityContentViewModel) && !_contentTypeFilter.Contains(ContentTypeEnum.Adaptivity))
         {
-            if (!_contentTypeFilter.Contains(ContentTypeEnum.Adaptivity))
-            {
-                return false;
-            }
+            return false;
         }
-        else if (element.LearningContent.GetType() == typeof(StoryContentViewModel))
+        else if (element.LearningContent.GetType() == typeof(StoryContentViewModel) && !_contentTypeFilter.Contains(ContentTypeEnum.Story))
         {
-            if (!_contentTypeFilter.Contains(ContentTypeEnum.Story))
-            {
-                return false;
-            }
+            return false;
         }
 
         return true;
@@ -352,9 +346,9 @@
   </g>
 </svg>";
 
-    private string difficultyIcon = difficulty;
+    private string _difficultyIcon = Difficulty;
 
-    const string difficulty =
+    const string Difficulty =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-a8486736-dfcf-4006-8de7-6917980e5230"" data-name=""3-Schwierigkeit"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 1978.87 1978.87"">
   <g>

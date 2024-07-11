@@ -1,8 +1,9 @@
-@using Presentation.PresentationLogic.LearningWorld
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Presentation.PresentationLogic.LearningWorld
+@implements IDisposable
 <MudCard Class="overflow-auto w-full">
-    @if (WorldPresenter.LearningWorldVm == null || _editOverwritten)
+    @if (WorldPresenter.LearningWorldVm == null)
     {
         <CreateWorldForm/>
     }
@@ -18,14 +19,6 @@
     public ILearningWorldPresenter WorldPresenter { get; set; }
 
 
-    private bool _editOverwritten = false;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        _editOverwritten = false;
-    }
-
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -35,14 +28,12 @@
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(WorldPresenter.LearningWorldVm)) return;
-        _editOverwritten = false;
         await InvokeAsync(StateHasChanged);
     }
 
-
-    private void OnForceNew()
+    public void Dispose()
     {
-        _editOverwritten = true;
+        WorldPresenter.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

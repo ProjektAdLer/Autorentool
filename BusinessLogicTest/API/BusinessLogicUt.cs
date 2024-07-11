@@ -59,6 +59,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchiveAsync_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -72,6 +73,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0002]
     public async Task ImportLearningWorldFromArchiveAsync_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -119,6 +121,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveContent_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -130,6 +133,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveContent_ArgumentOutOfRangeException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -144,6 +148,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveContent_FileNotFoundException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -158,6 +163,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveContent_SerializationException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -172,6 +178,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveMultipleContents_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -189,6 +196,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveMultipleContents_ArgumentOutOfRangeException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -207,6 +215,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveMultipleContents_FileNotFoundException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -225,6 +234,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveMultipleContents_SerializationException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -243,6 +253,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
@@ -254,6 +265,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_SerializationException_CallsErrorManager()
     {
         var errorManager = Substitute.For<IErrorManager>();
@@ -341,6 +353,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003, ASN0005]
     public void ExecuteCommand_InvokesOnUndoRedoPerformed()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -356,6 +369,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003, ASN0005]
     public void CanUndoCanRedo_CallsCommandStateManager()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -374,6 +388,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003]
     public void CallUndoCommand_CallsCommandStateManager()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -385,6 +400,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003]
     public void CallUndoCommand_InvokesOnUndoRedoPerformed()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -399,6 +415,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003]
     public void CallUndoCommand_UndoThrowsInvalidOperationException_ErrorManagerCalled()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -416,6 +433,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0003]
     public void CallUndoCommand_UndoThrowsArgumentOutOfRangeException_ErrorManagerCalled()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -433,6 +451,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void CallRedoCommand_CallsCommandStateManager()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -444,6 +463,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void CallRedoCommand_InvokesOnUndoRedoPerformed()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -458,6 +478,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void CallRedoCommand_RedoThrowsInvalidOperationException_ErrorManagerCalled()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -475,6 +496,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASN0005]
     public void CallRedoCommand_RedoThrowsApplicationException_ErrorManagerCalled()
     {
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
@@ -493,6 +515,7 @@ public class BusinessLogicUt
 
 
     [Test]
+    // ANF-ID: [ASE6]
     public void SaveLearningWorld_CallsDataAccess()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -506,6 +529,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public void SaveLearningWorld_SerializationException_CallsErrorManager()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -522,6 +546,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorld_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -536,6 +561,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -550,6 +576,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorld_SerializationException_CallsErrorManager()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -709,6 +736,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public void LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -721,6 +749,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadLearningContent_ReturnsLearningElement()
     {
         var learningContent = new FileContent("fa", "a", "");
@@ -884,6 +913,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -897,6 +927,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var learningContent = new FileContent("filename", "extension", "");
@@ -912,6 +943,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0036]
     public async Task LoadLearningContentFromStream_IOException_CallsErrorManager()
     {
         var stream = Substitute.For<MemoryStream>();
@@ -1009,6 +1041,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public Task Login_ThrowsBackendInvalidLoginException_Logout()
     {
         var mockBackendAccess = Substitute.For<IBackendAccess>();
@@ -1023,6 +1056,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public Task Login_BackendInvalidUrlException_Logout()
     {
         var mockBackendAccess = Substitute.For<IBackendAccess>();
@@ -1037,6 +1071,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO022]
     public void UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
@@ -1049,6 +1084,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO022]
     public void UploadLearningWorldToBackend_CallsBackendAccess()
     {
         const string filepath = "filepath";
@@ -1070,6 +1106,7 @@ public class BusinessLogicUt
     }
 
     [Test]
+    // ANF-ID: [AHO022]
     public void UploadLearningWorldToBackend_HttpRequestException_LogAndRethrow()
     {
         var mockBackendAccess = Substitute.For<IBackendAccess>();

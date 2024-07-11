@@ -1,17 +1,36 @@
-<div class="gap-2 my-4 @Style">
-    <div class="flex flex-row toggler" @onclick="@Toggle" tabindex="0" @onkeydown="@OnKeyDown">
-        @if (Collapsed)
-        {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
-        }
-        else
-        {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
-        }
-        <p class="cursor-pointer text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
+<div class="gap-2 @VerticalMargin @Style">
+    <div class="flex flex-row">
+        <div class="flex flex-row toggler" @onclick="@Toggle" tabindex="0" @onkeydown="@OnKeyDown">
+            @if (TogglerContent is not null)
+            {
+                @TogglerContent(_collapsed)
+            }
+            else
+            {
+                @if (_collapsed)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
+                }
+            }
+            @if (Title is not null)
+            {
+                <p class="select-none cursor-pointer text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
+            }
+            else if (TitleContent is not null)
+            {
+                @TitleContent
+            }
+        </div>
+        <div>
+            @TitleContentAfterToggler
+        </div>
     </div>
 
-    @if (!Collapsed)
+    @if (!_collapsed)
     {
         <div class="mt-0 inner">
             @ChildContent
@@ -20,21 +39,38 @@
 </div>
 
 @code {
+    private bool _collapsed;
+    private bool _initialized;
 
     [Parameter] public string? Style { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter] public bool Collapsed { get; set; }
-
-    [Parameter] public EventCallback<bool> CollapsedChanged { get; set; }
+    [Parameter]
+    public bool? InitiallyCollapsed { get; set; }
 
     [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? TitleContent { get; set; }
+    [Parameter] public RenderFragment? TitleContentAfterToggler { get; set; }
+    [Parameter] public RenderFragment<bool>? TogglerContent { get; set; }
+    [Parameter] public string VerticalMargin { get; set; } = "my-4";
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (_initialized) return;
+        _initialized = true;
+        _collapsed = InitiallyCollapsed ?? true;
+    }
 
     public void Toggle()
     {
-        Collapsed = !Collapsed;
-        CollapsedChanged.InvokeAsync(Collapsed);
+        _collapsed = !_collapsed;
+    }
+
+    public void Uncollapse()
+    {
+        _collapsed = false;
     }
 
 

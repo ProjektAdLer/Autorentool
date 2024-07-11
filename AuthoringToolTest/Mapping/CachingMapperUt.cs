@@ -206,6 +206,100 @@ public class CachingMapperUt
     }
 
     [Test]
+    public void MapLearningWorldEntityToViewModel_MapsElementsToViewModel()
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceEntity = EntityProvider.GetLearningSpace();
+        world.LearningSpaces.Add(spaceEntity);
+
+        var systemUnderTest = CreateTestableCachingMapper();
+
+        systemUnderTest.Map(world, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+
+        var elementEntity = EntityProvider.GetLearningElement();
+        var elementEntityUnplaced = EntityProvider.GetLearningElement(append: "Unplaced");
+        var storyElementEntity = EntityProvider.GetStoryElement();
+        var storyElementEntityUnplaced = EntityProvider.GetStoryElement(append: "Unplaced");
+        spaceEntity.LearningSpaceLayout.LearningElements[0] = elementEntity;
+        spaceEntity.LearningSpaceLayout.StoryElements[0] = storyElementEntity;
+        world.UnplacedLearningElements.Add(elementEntityUnplaced);
+        world.UnplacedLearningElements.Add(storyElementEntityUnplaced);
+
+
+        systemUnderTest.Map(world, worldViewModel);
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(2));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements,
+                Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements[0].Id,
+                Is.EqualTo(elementEntity.Id));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements[0].Id,
+                Is.EqualTo(storyElementEntity.Id));
+            Assert.That(worldViewModel.UnplacedLearningElements.First().Id, Is.EqualTo(elementEntityUnplaced.Id));
+            Assert.That(worldViewModel.UnplacedLearningElements.Last().Id, Is.EqualTo(storyElementEntityUnplaced.Id));
+        });
+    }
+
+    [Test]
+    public void MapLearningWorldEntityToViewModel_MapsElementsToViewModel_UsingCachedElementVms()
+    {
+        var world = EntityProvider.GetLearningWorld();
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceEntity = EntityProvider.GetLearningSpace();
+        world.LearningSpaces.Add(spaceEntity);
+
+        var systemUnderTest = CreateTestableCachingMapper();
+
+        systemUnderTest.Map(world, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+
+        var elementEntity = EntityProvider.GetLearningElement();
+        var elementEntityUnplaced = EntityProvider.GetLearningElement(append: "Unplaced");
+        var storyElementEntity = EntityProvider.GetStoryElement();
+        var storyElementEntityUnplaced = EntityProvider.GetStoryElement(append: "Unplaced");
+        spaceEntity.LearningSpaceLayout.LearningElements[0] = elementEntity;
+        spaceEntity.LearningSpaceLayout.StoryElements[0] = storyElementEntity;
+        world.UnplacedLearningElements.Add(elementEntityUnplaced);
+        world.UnplacedLearningElements.Add(storyElementEntityUnplaced);
+
+
+        systemUnderTest.Map(world, worldViewModel);
+
+        var elementViewModel = worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements[0];
+        var storyElementViewModel = worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements[0];
+        var elementViewModelUnplaced = worldViewModel.UnplacedLearningElements.First();
+        var storyElementViewModelUnplaced = worldViewModel.UnplacedLearningElements.Last();
+
+        worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements.Clear();
+        worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements.Clear();
+        worldViewModel.UnplacedLearningElements.Clear();
+
+        systemUnderTest.Map(world, worldViewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(2));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements,
+                Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements[0],
+                Is.EqualTo(elementViewModel));
+            Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements[0],
+                Is.EqualTo(storyElementViewModel));
+            Assert.That(worldViewModel.UnplacedLearningElements.First(), Is.EqualTo(elementViewModelUnplaced));
+            Assert.That(worldViewModel.UnplacedLearningElements.Last(), Is.EqualTo(storyElementViewModelUnplaced));
+        });
+    }
+
+    [Test]
     public void MapLearningWorldEntityToViewModel_MoveElementFromSpaceToUnplaced()
     {
         var worldViewModel = ViewModelProvider.GetLearningWorld();
@@ -242,6 +336,42 @@ public class CachingMapperUt
     }
 
     [Test]
+    public void MapLearningWorldEntityToViewModel_MoveStoryElementFromSpaceToUnplaced()
+    {
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceViewModel = ViewModelProvider.GetLearningSpace();
+        var storyElementViewModel = ViewModelProvider.GetStoryElement();
+        spaceViewModel.LearningSpaceLayout.StoryElements[0] = storyElementViewModel;
+        storyElementViewModel.Parent = spaceViewModel;
+        worldViewModel.LearningSpaces.Add(spaceViewModel);
+
+        var systemUnderTest = CreateTestableCachingMapper();
+
+        var worldEntity = EntityProvider.GetLearningWorld();
+
+        systemUnderTest.Map(worldViewModel, worldEntity);
+
+        var spaceEntity = worldEntity.LearningSpaces.First();
+        var storyElementEntity = spaceEntity.LearningSpaceLayout.StoryElements.First().Value;
+
+        systemUnderTest.Map(worldEntity, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(0));
+        Assert.That(storyElementViewModel.Id, Is.EqualTo(storyElementEntity.Id));
+
+        spaceEntity.LearningSpaceLayout.StoryElements.Remove(0);
+        storyElementEntity.Parent = null;
+        worldEntity.UnplacedLearningElements.Add(storyElementEntity);
+
+        systemUnderTest.Map(worldEntity, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.UnplacedLearningElements.First(), Is.EqualTo(storyElementViewModel));
+    }
+
+    [Test]
     public void MapLearningWorldEntityToViewModel_MoveElementFromUnplacedToSpace()
     {
         var worldViewModel = ViewModelProvider.GetLearningWorld();
@@ -275,6 +405,42 @@ public class CachingMapperUt
         Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(0));
         Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.LearningElements.First().Value,
             Is.EqualTo(elementViewModel));
+    }
+
+    [Test]
+    public void MapLearningWorldEntityToViewModel_MoveStoryElementFromUnplacedToSpace()
+    {
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceViewModel = ViewModelProvider.GetLearningSpace();
+        var storyElementViewModel = ViewModelProvider.GetStoryElement();
+        worldViewModel.UnplacedLearningElements.Add(storyElementViewModel);
+        worldViewModel.LearningSpaces.Add(spaceViewModel);
+
+        var systemUnderTest = CreateTestableCachingMapper();
+
+        var worldEntity = EntityProvider.GetLearningWorld();
+
+        systemUnderTest.Map(worldViewModel, worldEntity);
+
+        var spaceEntity = worldEntity.LearningSpaces.First();
+        var storyElementEntity = worldEntity.UnplacedLearningElements.First();
+
+        systemUnderTest.Map(worldEntity, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(1));
+        Assert.That(storyElementViewModel.Id, Is.EqualTo(storyElementEntity.Id));
+
+        worldEntity.UnplacedLearningElements.Remove(storyElementEntity);
+        spaceEntity.LearningSpaceLayout.StoryElements[0] = storyElementEntity;
+        storyElementEntity.Parent = spaceEntity;
+
+        systemUnderTest.Map(worldEntity, worldViewModel);
+
+        Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.UnplacedLearningElements, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.LearningSpaces.First().LearningSpaceLayout.StoryElements.First().Value,
+            Is.EqualTo(storyElementViewModel));
     }
 
     [Test]

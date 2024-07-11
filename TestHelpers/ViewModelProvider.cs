@@ -37,10 +37,20 @@ public static class ViewModelProvider
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.CampusAschaffenburg, 4, GetLearningOutcomeCollection(),
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", Theme.CampusAschaffenburg, 4,
+            GetLearningOutcomeCollection(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
+
+    public static ILearningOutcomeViewModel GetLearningOutcome(bool manual = false,
+        TaxonomyLevel level = TaxonomyLevel.Level1, string what = "what", string whereby = "whereby",
+        string whatFor = "whatFor", string verbOfVisibility = "VerbOfVisibility",
+        CultureInfo? culture = null) =>
+        manual
+            ? new ManualLearningOutcomeViewModel("Outcome")
+            : new StructuredLearningOutcomeViewModel(level, what, whereby, whatFor, verbOfVisibility, culture ??
+                new CultureInfo("de-DE"));
 
     public static LearningOutcomeCollectionViewModel GetLearningOutcomeCollection()
     {
@@ -75,6 +85,15 @@ public static class ViewModelProvider
         return new LearningElementViewModel("LEVMn" + append, content!, "LEVMd" + append, "LEVMg" + append,
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, parent: parent, workload: workload,
             points: points);
+    }
+
+    public static LearningElementViewModel GetStoryElement(string append = "",
+        ILearningContentViewModel? content = null, ILearningSpaceViewModel? parent = null, int workload = 1,
+        int points = 1)
+    {
+        return new LearningElementViewModel("LEVMn" + append, content ?? GetStoryContent(), "LEVMd" + append,
+            "LEVMg" + append, LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, parent: parent,
+            workload: workload, points: points);
     }
 
     public static LearningElementViewModel GetAdaptivityElement(string append = "",

@@ -9,6 +9,7 @@ namespace BusinessLogicTest.Commands.World;
 public class DeleteLearningWorldUt
 {
     [Test]
+    // ANF-ID: [ASE4]
     public void Execute_DeletesLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
@@ -35,6 +36,7 @@ public class DeleteLearningWorldUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public void Execute_DeletesLearningWorldAndSetsAnotherLearningWorldAsSelected()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());

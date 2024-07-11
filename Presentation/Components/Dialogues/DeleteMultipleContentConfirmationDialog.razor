@@ -1,12 +1,12 @@
+@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
-@using System.Diagnostics.CodeAnalysis
 <MudDialog>
     <DialogContent>
         <MudText Class="main-text">
-            @((MarkupString)Localizer["Dialog.Text1", "ContentName"].Value)<br/>
+            @((MarkupString)Localizer["Dialog.Text1"].Value)<br/>
             @Localizer["Dialog.Text2"]
         </MudText>
         <MudTable Items="ContentWorldElementInUseList">
@@ -32,7 +32,7 @@
 @code {
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
+    internal IStringLocalizer<DeleteMultipleContentConfirmationDialog> Localizer { get; set; }
 
     [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
 

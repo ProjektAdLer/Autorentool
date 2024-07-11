@@ -19,6 +19,7 @@ public class ConditionCommandFactoryUt
     private ConditionCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AHO61]
     public void GetCreateCommand_WithCoordinates_ReturnsCreatePathWayCondition()
     {
         // Arrange
@@ -47,6 +48,7 @@ public class ConditionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AHO61]
     public void GetCreateCommand_WithObjects_ReturnsCreatePathWayCondition()
     {
         // Arrange
@@ -76,6 +78,7 @@ public class ConditionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AHO63]
     public void GetDeleteCommand_ReturnsDeletePathWayCondition()
     {
         // Arrange
@@ -99,6 +102,7 @@ public class ConditionCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AHO62]
     public void GetEditCommand_ReturnsEditPathWayCondition()
     {
         // Arrange

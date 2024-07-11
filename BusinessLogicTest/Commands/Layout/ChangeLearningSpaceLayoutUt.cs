@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Layout;
 public class ChangeLearningSpaceLayoutUt
 {
     [Test]
+    // ANF-ID: [AWA0023]
     public void Execute_ChangesLayout_PutsExtraLearningElementsIntoWorld()
     {
         var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
@@ -75,6 +76,7 @@ public class ChangeLearningSpaceLayoutUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void Execute_ReindexesLearningElementsWhenNecessary()
     {
         var world = EntityProvider.GetLearningWorld(unsavedChanges: false);

@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Layout;
 public class PlaceLearningElementInLayoutFromLayoutUt
 {
     [Test]
+    // ANF-ID: [AWA0040, AWA0023]
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
@@ -43,6 +44,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     }
 
     [Test]
+    // ANF-ID: [AWA0040, AWA0023]
     public void MoveLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
         var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);

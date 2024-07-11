@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Task;
 public class CreateAdaptivityTaskUt
 {
     [Test]
+    // ANF-ID: [AWA0005]
     public void Execute_CreatesAdaptivityTask()
     {
         var adaptivityContent = EntityProvider.GetAdaptivityContent();

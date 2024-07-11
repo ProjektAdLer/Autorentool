@@ -14,9 +14,9 @@ namespace Generator.XmlClasses.XmlFileFactories;
 
 public class XmlResourceFactory : IXmlResourceFactory
 {
-    private readonly string _workDir;
     private readonly IFileSystem _fileSystem;
     private readonly string _hardcodedPath = "XMLFilesForExport";
+    private readonly string _workDir;
     public readonly string CurrentTime;
 
     public readonly IXmlFileManager FileManager;
@@ -173,7 +173,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = FileElementId,
-            Filename = FileElementName,
+            Filename = FileElementName + "." + FileElementType,
             Mimetype = mimeType,
             Source = FileElementName + "." + FileElementType,
             Filesize = filesize,

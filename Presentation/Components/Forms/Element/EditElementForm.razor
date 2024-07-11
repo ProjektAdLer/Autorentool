@@ -58,8 +58,7 @@
 </HeaderButtons>
 <Fields>
 <div class="px-4">
-    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"] 
-                                                                    @bind-Collapsed="_collapsedGeneral">
+    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
         <div class="rounded-lg w-4/4 px-2 2xl:px-4">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
@@ -142,8 +141,7 @@
 {
     case ElementMode.Normal:
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] 
-                                                                                                    @bind-Collapsed="_collapsedContent">
+            <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] InitiallyCollapsed="false">
                 <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                 <TableSelect
                     T="ILearningContentFormModel"
@@ -212,8 +210,7 @@
         break;
     case ElementMode.Adaptivity:
         <div class="px-4">
-            <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] 
-                                                                                                    @bind-Collapsed="_collapsedTasks">
+            <Collapsable Title=@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] InitiallyCollapsed="false">
                 <p class="text-xs pl-6">@Localizer["EditAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                 <div class="flex flex-col items-center justify-center">
                     <MudButton Class="w-44 2xl:w-3/5 btn-standard add-tasks" OnClick="OpenAdaptivityContentDialog">
@@ -225,8 +222,7 @@
         break;
     case ElementMode.Story:
         <div class="px-4">
-            <Collapsable Title="@Localizer["EditStoryElementForm.Fields.Collapsable.Story.Title"]"
-                         @bind-Collapsed="_collapsedStory">
+            <Collapsable Title="@Localizer["EditStoryElementForm.Fields.Collapsable.Story.Title"]" InitiallyCollapsed="false">
                 <PseudoFormFieldGrouping
                     For="() => FormModel.LearningContent"
                     @ref="_pseudoGroupStoryContent">
@@ -289,8 +285,7 @@
 }
 
 <div class="px-4">
-    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] 
-                                                                    @bind-Collapsed="_collapsedElementModel">
+    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
         <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
             <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                     For="@(() => FormModel.ElementModel)"
@@ -305,7 +300,7 @@
 {
     <div class="px-4">
         <Collapsable
-            Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"]  @bind-Collapsed="_collapsedGoals">
+            Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"]  InitiallyCollapsed="true">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudText
                     Typo="Typo.caption">
@@ -322,8 +317,7 @@
     </div>
 
     <div class="px-4">
-        <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Description.Title"] 
-                                                                                    @bind-Collapsed="_collapsedDescription">
+        <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudText
                     Typo="Typo.caption">
@@ -394,13 +388,6 @@
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
     private StoryContentFormModel? StoryContentModel => FormDataContainer.FormModel.LearningContent as StoryContentFormModel;
 
-    private bool _collapsedGeneral = false;
-    private bool _collapsedContent = false;
-    private bool _collapsedTasks = false;
-    private bool _collapsedStory = false;
-    private bool _collapsedElementModel = true;
-    private bool _collapsedGoals = true;
-    private bool _collapsedDescription = true;
     private PseudoFormFieldGrouping<ILearningContentFormModel?>? _pseudoGroupStoryContent;
 
     private BaseForm<LearningElementFormModel, LearningElement> _form = null!;

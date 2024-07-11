@@ -253,6 +253,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [ASN0002]
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
         var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
@@ -303,6 +304,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
     {
         var mapper = Substitute.For<IMapper>();
@@ -385,6 +387,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void RemoveContent_CallsContentFileHandlerAndMapper()
     {
         var contentFileHandler = Substitute.For<IContentFileHandler>();
@@ -402,6 +405,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [AWA0042]
     public void SaveLink_CallsContentFileHandlerAndMapper()
     {
         var contentFileHandler = Substitute.For<IContentFileHandler>();
@@ -444,6 +448,7 @@ public class DataAccessUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037]
     public void DeleteFileByPath_CallsFileSystem()
     {
         var filesystem = Substitute.For<IFileSystem>();

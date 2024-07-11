@@ -7,8 +7,8 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
-using BusinessLogic.Entities.LearningOutcome;
 using BusinessLogic.Entities.LearningContent.Story;
+using BusinessLogic.Entities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
@@ -84,6 +84,16 @@ public static class EntityProvider
             positionY: positionY) { UnsavedChanges = unsavedChanges };
     }
 
+    public static LearningElement GetStoryElement(bool unsavedChanges = false, ILearningContent? content = null,
+        string append = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1,
+        ILearningSpace? parent = null, double positionX = 0, double positionY = 0)
+    {
+        content ??= GetStoryContent("a" + append);
+        return new LearningElement("a" + append, content, "d" + append, "e" + append,
+            LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
+            positionY: positionY) { UnsavedChanges = unsavedChanges };
+    }
+
     public static PathWayCondition GetPathWayCondition()
     {
         return new PathWayCondition(ConditionEnum.And);
@@ -108,7 +118,8 @@ public static class EntityProvider
             { UnsavedChanges = unsavedChanges };
     }
 
-    public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null, bool unsavedChanges = false)
+    public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null,
+        bool unsavedChanges = false)
     {
         storyText ??= new List<string> { "a story" };
         return new StoryContent(name, unsavedChanges, storyText);

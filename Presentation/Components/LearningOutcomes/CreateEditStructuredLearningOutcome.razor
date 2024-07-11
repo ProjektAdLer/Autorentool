@@ -1,10 +1,10 @@
-@using Shared.LearningOutcomes
-@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
-@using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
+@using System.Resources
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
-@using System.Text.RegularExpressions
+@using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
+@using Shared.LearningOutcomes
 <div class="flex flex-row justify-between items-center gap-72 mb-3">
     <div class="flex flex-row gap-1">
         <p class="cursor-default text-lg ml-4">
@@ -95,7 +95,10 @@
                 </MudSelect>
             </div>
 
-            <MudText Class="ml-48 2xl:ml-52 cursor-default text-sm 2xl:text-base text-adlertextgrey">@introText</MudText>
+            <MudText
+                Class="ml-48 2xl:ml-52 cursor-default text-sm 2xl:text-base text-adlertextgrey">
+                @IntroText
+            </MudText>
 
             <GrammarOrder Culture="Culture">
                 <WhatContent>
@@ -108,7 +111,8 @@
                         </div>
 
                         <MudTextField @bind-Value="_currentWhat"
-                                      DebounceInterval="1"
+                                      Class="textfield-what"
+                                      DebounceInterval="@DebounceInterval"
                                       Placeholder="@Localizer["CreateEditStructuredLearningOutcome.What.Placeholder"]"
                                       Required="true"
                                       RequiredError="@Localizer["CreateEditStructuredLearningOutcome.What.RequiredError"]"
@@ -133,7 +137,7 @@
                                          CoerceValue="true"
                                          SearchFunc="@SearchVerbOfVisibility"
                                          OnBlur="OnBlurVerbOfVisibility"
-                                         DebounceInterval="300"
+                                         DebounceInterval="@DebounceInterval"
                                          Required="true"
                                          RequiredError="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.RequiredError"]"/>
                     </div>
@@ -149,7 +153,8 @@
                 </div>
                 <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WherebyText</MudText>
                 <MudTextField @bind-Value="_currentWhereby"
-                              DebounceInterval="1"
+                              Class="textfield-whereby"
+                              DebounceInterval="@DebounceInterval"
                               Placeholder="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Placeholder"]"
                               Lines="2">
                 </MudTextField>
@@ -164,7 +169,8 @@
                 </div>
                 <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WhatForText</MudText>
                 <MudTextField @bind-Value="_currentWhatFor"
-                              DebounceInterval="1"
+                              Class="textfield-whatfor"
+                              DebounceInterval="@DebounceInterval"
                               Placeholder="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Placeholder"]"
                               Lines="2">
                 </MudTextField>
@@ -191,7 +197,10 @@
 
         <div class="flex items-end">
             <button class="h-8 m-2 hover:bg-adlergrey-100 hover:rounded">
-                <a class="mx-2 text-xs text-adlergrey-300" target="_blank" href="@getLearningOutcomeExampleImage()">@Localizer["CreateEditStructuredLearningOutcome.Example"]</a>
+                <a class="mx-2 text-xs text-adlergrey-300" target="_blank"
+                   href="@GetLearningOutcomeExampleImagePath()">
+                    @Localizer["CreateEditStructuredLearningOutcome.Example"]
+                </a>
             </button>
 
         </div>
@@ -211,26 +220,37 @@
 
     [Parameter] public StructuredLearningOutcomeViewModel? CurrentLearningOutcome { get; set; }
 
+    [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomes { get; set; }
+    [Parameter] public int DebounceInterval { get; set; } = 300;
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<CreateEditStructuredLearningOutcome> Localizer { get; set; }
 
+    private static readonly ResourceManager InternalResourceManager = new("Presentation.Resources.Components.LearningOutcomes.CreateEditStructuredLearningOutcomeInternal", typeof(CreateEditStructuredLearningOutcome).Assembly);
+
     private CultureInfo _culture = null!;
 
-    private string introText => Culture.Name == "de-DE" ? "Sie können..." : "You will be able to...";
+    private string IntroText => GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.Intro");
 
-    private string WherebyText => Culture.Name == "de-DE" ? "indem Sie..." : "by...";
+    private string WherebyText => GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.Whereby.Text");
 
-    private string WhatForText => Culture.Name == "de-DE" ? "um..." : "to...";
+    private string WhatForText => GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.WhatFor.Text");
 
-    private string getLearningOutcomeExampleImage()
+    private string GetInternalLocalizerString(string key, params object[] args)
+    {
+        var localizedString = InternalResourceManager.GetString(key, _culture) ?? "String not found";
+        return args.Length > 0 ? string.Format(localizedString, args) : localizedString;
+    }
+
+    private string GetLearningOutcomeExampleImagePath()
     {
         @switch (CultureInfo.CurrentCulture.Name)
         {
             case "de-DE":
-                return (Culture.Name == "de-DE" ? "/CustomIcons/Beispiel-Lernziel_AT-de_LO-de.png" : "/CustomIcons/Beispiel-Lernziel_AT-de_LO-en.png");
+                return GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.LearningOutcomeExampleImagePathDE");
 
             case "en-DE":
-                return (Culture.Name == "en-DE" ? "/CustomIcons/Beispiel-Lernziel_AT-en_LO-en.png" : "/CustomIcons/Beispiel-Lernziel_AT-en_LO-de.png");
+                return GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.LearningOutcomeExampleImagePathEN");
         }
 
         return "";
@@ -270,61 +290,42 @@
 
     private MarkupString GetMarkDownFormattedOutcome()
     {
-        var formattedText = "";
-        switch (Culture)
-        {
-            case { Name: "de-DE" }:
-                formattedText = $"Sie können {FormatWithPlaceholder(_currentWhat, "[Was?]")} {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")}, \n indem Sie {FormatWithPlaceholder(_currentWhereby, "[Womit?]")},\n um {FormatWithPlaceholder(_currentWhatFor, "[Wozu?]")}.";
-                break;
-            case { Name: "en-DE" }:
-                formattedText = $"You will be able to {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")} {FormatWithPlaceholder(_currentWhat, "[What?]")} \n by {FormatWithPlaceholder(_currentWhereby, "[Whereby?]")}\n to {FormatWithPlaceholder(_currentWhatFor, "[What for?]")}.";
-                break;
-        }
+        var formattedText = GetInternalLocalizerString
+        ("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.Result",
+            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentWhat, "[Was?]") : FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]"),
+            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]") : FormatWithPlaceholder(_currentWhat, "[Was?]"),
+            FormatWithPlaceholder(_currentWhereby, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.2")),
+            FormatWithPlaceholder(_currentWhatFor, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.3")));
 
-        var html = MarkdownToHtml(formattedText);
-        return new MarkupString(html);
-    }
-
-    private string GetUnformattedOutcome()
-    {
-        switch (Culture)
-        {
-            case { Name: "de-DE" }:
-                return $"Sie können {_currentWhat} {_currentVerbOfVisibility} {FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]")}, \n indem Sie {_currentWhereby},\n um {_currentWhatFor}.";
-            case { Name: "en-DE" }:
-                return $"You will be able to {_currentVerbOfVisibility} {_currentWhat} \n by {_currentWhereby}\n to {_currentWhatFor}.";
-            default:
-                throw new ArgumentOutOfRangeException($"Culture {Culture.Name} not supported");
-        }
+        return new MarkupString(formattedText);
     }
 
     private static string FormatWithPlaceholder(string value, string placeholder = "[ ... ]")
     {
-        return string.IsNullOrWhiteSpace(value) ? $"*{placeholder}*" : $"**{value.Trim()}**";
+        return string.IsNullOrWhiteSpace(value) ? $"<i>{placeholder}</i>" : $"<b>{value.Trim()}</b>";
     }
-
-    private string MarkdownToHtml(string markdown)
-    {
-        markdown = Regex.Replace(markdown, @"\*\*(.*?)\*\*", "<b>$1</b>");
-        markdown = Regex.Replace(markdown, @"\*(.*?)\*", "<i>$1</i>");
-        markdown = markdown.Replace("\n", "<br>");
-
-        return markdown;
-    }
-
-    [Parameter, EditorRequired, AllowNull] public LearningOutcomeCollectionViewModel LearningOutcomes { get; set; }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        Culture = CurrentLearningOutcome == null ? CultureInfo.CurrentCulture : CurrentLearningOutcome.Language;
+        Culture = GetFittingCulture();
 
-        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(CultureInfo.CurrentCulture);
+        TaxonomyLevelNames = _learningOutcomesVerbManager.GetTaxonomyLevelNames(Culture);
         _selectedTaxonomyLevel = CurrentLearningOutcome?.TaxonomyLevel ?? TaxonomyLevel.None;
         _currentWhat = CurrentLearningOutcome?.What ?? "";
         _currentVerbOfVisibility = CurrentLearningOutcome?.VerbOfVisibility ?? "";
         _currentWhereby = CurrentLearningOutcome?.Whereby ?? "";
         _currentWhatFor = CurrentLearningOutcome?.WhatFor ?? "";
+    }
+
+    private CultureInfo GetFittingCulture()
+    {
+        if (CurrentLearningOutcome is not null) return CurrentLearningOutcome.Language;
+        return CultureInfo.CurrentCulture.IetfLanguageTag switch
+        {
+            "de-DE" => new CultureInfo("de-DE"),
+            _ => new CultureInfo("en-DE")
+        };
     }
 
     private void OnCultureChange()

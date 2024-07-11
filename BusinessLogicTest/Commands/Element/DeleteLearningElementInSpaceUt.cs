@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Element;
 public class DeleteLearningElementInSpaceUt
 {
     [Test]
+    // ANF-ID: [AWA0016, AWA0011]
     public void Execute_DeletesLearningElement()
     {
         var space = EntityProvider.GetLearningSpace(unsavedChanges: false);
@@ -40,6 +41,7 @@ public class DeleteLearningElementInSpaceUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016, AWA0011]
     public void Execute_DeletesLearningElementAndSetsAnotherElementSelectedLearningElement()
     {
         var space = EntityProvider.GetLearningSpace(unsavedChanges: false);

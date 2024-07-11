@@ -27,8 +27,9 @@ public class DeleteStoryElementInSpaceUt
             Assert.That(sut.Logger, Is.EqualTo(logger));
         });
     }
-    
+
     [Test]
+    // ANF-ID: [ASN0015]
     public void Execute_StoryElementRemovedFromLayout()
     {
         var (space, element) = GetEntitiesForTest();
@@ -38,12 +39,9 @@ public class DeleteStoryElementInSpaceUt
 
         sut.Execute();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(space.LearningSpaceLayout.StoryElements, Has.Count.Zero);
-        });
+        Assert.Multiple(() => { Assert.That(space.LearningSpaceLayout.StoryElements, Has.Count.Zero); });
     }
-    
+
     [Test]
     public void UndoAfterExecute_RestoresState()
     {
@@ -61,7 +59,7 @@ public class DeleteStoryElementInSpaceUt
             Assert.That(space.LearningSpaceLayout.StoryElements[0], Is.EqualTo(element));
         });
     }
-    
+
     [Test]
     public void RedoAfterUndoAfterExecute_SameStateAsAfterExecute()
     {
@@ -74,12 +72,9 @@ public class DeleteStoryElementInSpaceUt
         sut.Undo();
         sut.Redo();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(space.LearningSpaceLayout.StoryElements, Has.Count.Zero);
-        });
+        Assert.Multiple(() => { Assert.That(space.LearningSpaceLayout.StoryElements, Has.Count.Zero); });
     }
-    
+
     private static (LearningSpace space, LearningElement element) GetEntitiesForTest()
     {
         var space = EntityProvider.GetLearningSpace();
@@ -87,7 +82,7 @@ public class DeleteStoryElementInSpaceUt
         space.LearningSpaceLayout.StoryElements.Add(0, element);
         return (space, element);
     }
-    
+
     private DeleteStoryElementInSpace GetSystemUnderTest(LearningElement learningElement, LearningSpace parentSpace,
         Action<LearningSpace> mappingAction, ILogger<DeleteStoryElementInSpace> logger)
     {

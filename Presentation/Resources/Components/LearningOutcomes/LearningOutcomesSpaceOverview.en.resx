@@ -33,10 +33,4 @@
     <data name="LearningOutcomesSpaceOverview.Overview.Subtitle" xml:space="preserve">
         <value>Overview of the created learning outcomes</value>
     </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Edit" xml:space="preserve">
-        <value>Edit learning outcome</value>
-    </data>
-    <data name="LearningOutcomesSpaceOverview.Button.Delete" xml:space="preserve">
-        <value>Delete learning outcome</value>
-    </data>
 </root>

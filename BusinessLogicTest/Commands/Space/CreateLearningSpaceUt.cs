@@ -12,6 +12,7 @@ namespace BusinessLogicTest.Commands.Space;
 public class CreateLearningSpaceUt
 {
     [Test]
+    // ANF-ID: [AWA0001]
     public void Execute_CreatesLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
@@ -59,6 +60,7 @@ public class CreateLearningSpaceUt
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void Execute_AddsLearningSpaceAndSetAsSelectedLearningObject()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");

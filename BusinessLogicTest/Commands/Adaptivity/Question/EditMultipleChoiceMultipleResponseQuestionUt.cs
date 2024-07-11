@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class EditMultipleChoiceMultipleResponseQuestionUt
 {
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_EditsMultipleChoiceMultipleResponseQuestion()
     {
         // Arrange
@@ -19,8 +20,8 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -74,8 +75,8 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -131,8 +132,8 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
         var choice2 = new Choice("Choice2");
         var correctChoice1 = new Choice("CorrectChoice1");
         var correctChoice2 = new Choice("CorrectChoice2");
-        var choices = new List<Choice>() {choice1, correctChoice1, choice2, correctChoice2};
-        var correctChoices = new List<Choice>() {correctChoice1, correctChoice2};
+        var choices = new List<Choice>() { choice1, correctChoice1, choice2, correctChoice2 };
+        var correctChoices = new List<Choice>() { correctChoice1, correctChoice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -179,8 +180,8 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
     {
         var question = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
         var questionText = "NewQuestionText";
-        var choices = new List<Choice>() {new Choice("Choice1"), new Choice("Choice2")};
-        var correctChoices = new List<Choice>() {new Choice("CorrectChoice1"), new Choice("CorrectChoice2")};
+        var choices = new List<Choice>() { new Choice("Choice1"), new Choice("Choice2") };
+        var correctChoices = new List<Choice>() { new Choice("CorrectChoice1"), new Choice("CorrectChoice2") };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceMultipleResponseQuestion> mappingAction = _ => actionWasInvoked = true;

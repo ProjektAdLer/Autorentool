@@ -21,6 +21,7 @@ public class SpaceCommandFactoryUt
     private SpaceCommandFactory _factory = null!;
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void GetCreateCommand_WithLearningWorldAndParameters_ReturnsCreateLearningSpaceCommand()
     {
         // Arrange
@@ -59,6 +60,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void GetCreateCommand_WithLearningWorldAndLearningSpace_ReturnsCreateLearningSpaceCommand()
     {
         // Arrange
@@ -81,6 +83,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0024]
     public void GetDeleteCommand_WithLearningWorldAndLearningSpace_ReturnsDeleteLearningSpaceCommand()
     {
         // Arrange
@@ -103,6 +106,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void GetEditCommand_WithLearningSpaceAndParameters_ReturnsEditLearningSpaceCommand()
     {
         // Arrange
@@ -133,6 +137,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0022]
     public void GetLoadCommand_WithLearningWorldAndFilePath_ReturnsLoadLearningSpaceCommand()
     {
         // Arrange
@@ -157,6 +162,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0022]
     public void GetLoadCommand_WithLearningWorldAndStream_ReturnsLoadLearningSpaceCommand()
     {
         // Arrange
@@ -184,6 +190,7 @@ public class SpaceCommandFactoryUt
     }
 
     [Test]
+    // ANF-ID: [AWA0025]
     public void GetSaveCommand_WithBusinessLogicAndLearningSpace_ReturnsSaveLearningSpaceCommand()
     {
         // Arrange

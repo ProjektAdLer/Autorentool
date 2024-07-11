@@ -11,6 +11,7 @@ namespace BusinessLogicTest.Commands.Layout;
 public class PlaceLearningElementInLayoutFromUnplacedUt
 {
     [Test]
+    // ANF-ID: [ASN0017, ASN0018, AWA0023]
     public void DragLearningElementFromUnplacedToFree_Execute_MovesLearningElementToSlot()
     {
         var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
@@ -49,6 +50,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void DragLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
         var world = EntityProvider.GetLearningWorld(unsavedChanges: false);

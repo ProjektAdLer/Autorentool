@@ -16,7 +16,7 @@
           FormDataContainer="FormDataContainer">
     <Fields>
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateWorldForm.General.Text"]  @bind-Collapsed="_collapsedGeneral">
+            <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -49,7 +49,7 @@
         </div>
         
         <div class="px-4">
-            <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" @bind-Collapsed="_collapsedEnrolmentKey">
+            <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                 <div class="flex flex-row items-center gap-1 py-2">
                    <MudText Class="font-bold text-sm pl-1">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</MudText>
@@ -72,7 +72,7 @@
         </div>    
             
             <div class="px-4">
-            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
+            <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
@@ -86,7 +86,7 @@
         </div>
         
         <div class="px-4">
-            <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] @bind-Collapsed="_collapsedDescription">
+            <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
@@ -128,11 +128,6 @@
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
-
-    private bool _collapsedGeneral = false;
-    private bool _collapsedEnrolmentKey = true;
-    private bool _collapsedGoals = true;
-    private bool _collapsedDescription = true;
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;

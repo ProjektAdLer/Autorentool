@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Task;
 public class DeleteAdaptivityTaskUt
 {
     [Test]
+    // ANF-ID: [AWA0007]
     public void Execute_DeletesAdaptivityTask()
     {
         var adaptivityContent = EntityProvider.GetAdaptivityContent();

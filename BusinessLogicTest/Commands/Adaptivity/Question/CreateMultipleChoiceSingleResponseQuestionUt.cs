@@ -12,17 +12,24 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class CreateMultipleChoiceSingleResponseQuestionUt
 {
     [Test]
-    public void Execute_CreatesMultipleChoiceSingleResponseQuestion()
+    // ANF-ID: [AWA0004]
+    public void Execute_CreatesMultipleChoiceSingleResponseQuestion([Values] bool isFirstQuestion)
     {
         // Arrange
         var adaptivityTask = EntityProvider.GetAdaptivityTask();
+        if (isFirstQuestion)
+        {
+            adaptivityTask.Questions.Clear();
+            adaptivityTask.MinimumRequiredDifficulty = null;
+        }
+
         var questionsCount = adaptivityTask.Questions.Count;
         var difficulty = QuestionDifficulty.Medium;
         var questionText = "Question";
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -37,6 +44,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
             Assert.That(adaptivityTask.Questions, Has.Count.EqualTo(questionsCount));
             Assert.That(adaptivityTask.Questions, Does.Not.Contain(command.Question));
             Assert.That(actionWasInvoked, Is.False);
+            Assert.That(adaptivityTask.MinimumRequiredDifficulty,
+                isFirstQuestion ? Is.EqualTo(null) : Is.Not.EqualTo(difficulty));
         });
 
         // Act
@@ -60,6 +69,8 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
             Assert.That(createdQuestion.Choices.First(), Is.EqualTo(choice1));
             Assert.That(createdQuestion.CorrectChoice, Is.EqualTo(correctChoice));
         });
+        Assert.That(adaptivityTask.MinimumRequiredDifficulty,
+            isFirstQuestion ? Is.EqualTo(difficulty) : Is.Not.EqualTo(difficulty));
     }
 
     [Test]
@@ -73,7 +84,7 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;
@@ -117,7 +128,7 @@ public class CreateMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, choice2, correctChoice};
+        var choices = new List<Choice>() { choice1, choice2, correctChoice };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<AdaptivityTask> mappingAction = _ => actionWasInvoked = true;

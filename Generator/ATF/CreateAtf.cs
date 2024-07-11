@@ -360,43 +360,44 @@ public class CreateAtf : ICreateAtf
     private static List<LearningSpacePe> GetLearningSpacesInOrder(
         IEnumerable<IObjectInPathWayPe> objectInPathWayViewModels)
     {
+        
         var objectInPathWayList = objectInPathWayViewModels.ToList();
         var startObjects = objectInPathWayList
-            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count > 0).ToList();
+            .OfType<ILearningSpacePe>()
+            .Where(x =>
+                x.InBoundObjects.Count == 0 &&
+                x.OutBoundObjects.Count > 0)
+            .OrderBy(space => space.Name)
+            .ToList();
 
         var visited = new HashSet<IObjectInPathWayPe>();
         var pathOrder = new List<LearningSpacePe>();
-        var queue = new Queue<IObjectInPathWayPe>();
-
-        foreach (var startObject in startObjects)
-        {
-            queue.Enqueue(startObject);
-        }
+        var queue = new Queue<IObjectInPathWayPe>(startObjects);
 
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
 
-            if (visited.Contains(current))
+            if (!visited.Add(current))
                 continue;
-
-            visited.Add(current);
 
             if (current is LearningSpacePe learningSpace)
             {
                 pathOrder.Add(learningSpace);
             }
 
-            foreach (var nextObject in current.OutBoundObjects.OrderBy(o =>
-                         o is LearningSpacePe lsvm ? lsvm.Name : string.Empty))
-            {
-                queue.Enqueue(nextObject);
-            }
+            // We must visit all objects in pathway, even if they are not learning spaces, but we order learning spaces
+            // by name into the queue
+            queue.EnqueueRange(current.OutBoundObjects
+                .OrderBy(o => o is LearningSpacePe lsvm ? lsvm.Name : string.Empty)
+                .Except(visited)
+            );
         }
 
         var spacesWithOutPaths = objectInPathWayList
-            .Where(x => x.InBoundObjects.Count == 0 && x is LearningSpacePe && x.OutBoundObjects.Count == 0)
-            .Cast<LearningSpacePe>().ToList();
+            .OfType<LearningSpacePe>()
+            .Where(x => x.InBoundObjects.Count == 0 && x.OutBoundObjects.Count == 0)
+            .ToList();
 
         pathOrder.AddRange(spacesWithOutPaths);
         return pathOrder;

@@ -10,6 +10,7 @@ namespace BusinessLogicTest.Commands.Adaptivity.Question;
 public class EditMultipleChoiceSingleResponseQuestionUt
 {
     [Test]
+    // ANF-ID: [AWA0008]
     public void Execute_EditsMultipleChoiceSingleResponseQuestion()
     {
         // Arrange
@@ -18,7 +19,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, correctChoice, choice2};
+        var choices = new List<Choice>() { choice1, correctChoice, choice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -67,7 +68,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, correctChoice, choice2};
+        var choices = new List<Choice>() { choice1, correctChoice, choice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -118,7 +119,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, correctChoice, choice2};
+        var choices = new List<Choice>() { choice1, correctChoice, choice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
@@ -164,7 +165,7 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var choice1 = new Choice("Choice1");
         var choice2 = new Choice("Choice2");
         var correctChoice = new Choice("CorrectChoice");
-        var choices = new List<Choice>() {choice1, correctChoice, choice2};
+        var choices = new List<Choice>() { choice1, correctChoice, choice2 };
         var expectedCompletionTime = 10;
         var actionWasInvoked = false;
         Action<MultipleChoiceSingleResponseQuestion> mappingAction = _ => actionWasInvoked = true;
