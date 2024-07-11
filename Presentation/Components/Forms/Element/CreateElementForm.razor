@@ -376,8 +376,6 @@
 
     [Inject, AllowNull] internal IMapper Mapper { get; set; }
 
-    [Parameter] public EventCallback OnSubmitted { get; set; }
-
     [Parameter] public int DebounceInterval { get; set; } = 300;
 
     [Parameter] public ElementMode ElementMode { get; set; }
@@ -412,8 +410,6 @@
             SpacePresenter.CreateStoryElementInSlotFromFormModel(model);
         else
             WorldPresenter.CreateUnplacedLearningElementFromFormModel(model);
-
-        OnSubmitted.InvokeAsync();
     }
 
     protected override void OnInitialized()

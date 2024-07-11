@@ -11,7 +11,7 @@
 <MudCard Class="overflow-auto w-full max-h-[128rem]">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
-        <CreateElementForm OnSubmitted="InvokeMasterLayoutStateHasChanged" ElementMode="ElementMode"/>
+        <CreateElementForm ElementMode="ElementMode"/>
     }
     else
     {
@@ -33,18 +33,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public IMediator Mediator { get; set; }
 
-    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action? TriggerMasterLayoutStateHasChanged { get; set; }
-
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private IStringLocalizer<ElementFormContainer> Localizer { get; set; }
-
     [Parameter, EditorRequired] public ElementMode ElementMode { get; set; }
-
-    private void InvokeMasterLayoutStateHasChanged()
-    {
-        if (TriggerMasterLayoutStateHasChanged != null) InvokeAsync(TriggerMasterLayoutStateHasChanged);
-    }
 
     protected override void OnParametersSet()
     {
@@ -61,7 +50,6 @@
         //skip setting element to null if it already is null or the passed ElementMode is correct for the currently selected element 
         if (SelectedViewModelsProvider.LearningElement?.LearningContent == null || IsCorrectContentTypeForSelectedElement()) return;
         SelectedViewModelsProvider.SetLearningElement(null, null);
-        InvokeMasterLayoutStateHasChanged();
     }
 
     /// <summary>
@@ -89,7 +77,6 @@
     {
         Mediator.OverwriteElementEdit = true;
         SelectedViewModelsProvider.SetLearningElement(null, null);
-        InvokeMasterLayoutStateHasChanged();
     }
 
     public ValueTask DisposeAsync()

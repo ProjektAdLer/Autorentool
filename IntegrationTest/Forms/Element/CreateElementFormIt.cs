@@ -75,14 +75,13 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         var onSubmitted = EventCallback.Factory.Create(this, () => { });
 
-        var systemUnderTest = GetRenderedComponent(onSubmitted);
+        var systemUnderTest = GetRenderedComponent();
 
         Assert.That(systemUnderTest.Instance.WorldPresenter, Is.EqualTo(WorldPresenter));
         Assert.That(systemUnderTest.Instance.SpacePresenter, Is.EqualTo(SpacePresenter));
         Assert.That(systemUnderTest.Instance.SelectedViewModelsProvider, Is.EqualTo(SelectedViewModelsProvider));
         Assert.That(systemUnderTest.Instance.ElementModelHandler, Is.EqualTo(ElementModelHandler));
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
-        Assert.That(systemUnderTest.Instance.OnSubmitted, Is.EqualTo(onSubmitted));
         Assert.That(systemUnderTest.Instance.DebounceInterval, Is.EqualTo(0));
     }
 
@@ -155,9 +154,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     // ANF-ID: [AWA0002]
     public async Task SubmitButtonClicked_SubmitsIfFormValid()
     {
-        var callbackCalledCount = 0;
-        var callback = EventCallback.Factory.Create(this, () => callbackCalledCount++);
-        var systemUnderTest = GetFormWithPopoverProvider(callback);
+        var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
@@ -190,7 +187,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Arg.Any<string>(),
                 Arg.Any<ILearningContentViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<ElementModel>(), Arg.Any<int>(), Arg.Any<int>()));
-        Assert.That(callbackCalledCount, Is.EqualTo(0));
 
         ChangeFields(systemUnderTest, popover);
         AssertFieldsSet(systemUnderTest);
@@ -206,7 +202,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             WorldPresenter.Received().CreateUnplacedLearningElementFromFormModel(FormModel));
         systemUnderTest.WaitForAssertion(() =>
             SpacePresenter.DidNotReceive().CreateLearningElementInSlotFromFormModel(FormModel));
-        Assert.That(callbackCalledCount, Is.EqualTo(1));
 
         ChangeFields(systemUnderTest, popover);
         AssertFieldsSet(systemUnderTest);
@@ -228,16 +223,13 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         submitButton.WaitForAssertion(() =>
                 SpacePresenter.Received().CreateLearningElementInSlotFromFormModel(FormModel),
             TimeSpan.FromSeconds(2));
-        Assert.That(callbackCalledCount, Is.EqualTo(2));
     }
 
     [Test]
     // ANF-ID: [AWA0002]
     public async Task EnterKeyPressed_SubmitsIfFormValid()
     {
-        var callbackCalled = false;
-        var callback = EventCallback.Factory.Create(this, () => callbackCalled = true);
-        var systemUnderTest = GetFormWithPopoverProvider(callback);
+        var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
@@ -265,7 +257,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         SpacePresenter.DidNotReceive().CreateLearningElementInSlot(Arg.Any<string>(),
             Arg.Any<ILearningContentViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<ElementModel>(), Arg.Any<int>(), Arg.Any<int>());
-        Assert.That(callbackCalled, Is.False);
 
         ChangeFields(systemUnderTest, popover);
 
@@ -274,7 +265,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         systemUnderTest.WaitForAssertion(
             () => SpacePresenter.Received().CreateLearningElementInSlotFromFormModel(FormModel),
             TimeSpan.FromSeconds(2));
-        Assert.That(callbackCalled, Is.True);
     }
 
 
@@ -397,28 +387,22 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         );
     }
 
-    private IRenderedComponent<CreateElementForm> GetRenderedComponent(EventCallback? onSubmitted = null,
-        ElementMode elementMode = ElementMode.Normal)
+    private IRenderedComponent<CreateElementForm> GetRenderedComponent(ElementMode elementMode = ElementMode.Normal)
     {
-        onSubmitted ??= EventCallback.Empty;
         return Context.RenderComponent<CreateElementForm>(p =>
         {
-            p.Add(c => c.OnSubmitted, onSubmitted.Value);
             p.Add(c => c.DebounceInterval, 0);
             p.Add(c => c.ElementMode, elementMode);
         });
     }
 
-    private IRenderedFragment GetFormWithPopoverProvider(EventCallback? onSubmitted = null,
-        ElementMode elementMode = ElementMode.Normal)
+    private IRenderedFragment GetFormWithPopoverProvider(ElementMode elementMode = ElementMode.Normal)
     {
-        onSubmitted ??= EventCallback.Empty;
         return Context.Render(builder =>
         {
             builder.OpenComponent<MudPopoverProvider>(0);
             builder.CloseComponent();
             builder.OpenComponent<CreateElementForm>(1);
-            builder.AddAttribute(2, nameof(CreateElementForm.OnSubmitted), onSubmitted);
             builder.AddAttribute(3, nameof(CreateElementForm.DebounceInterval), 0);
             builder.AddAttribute(4, nameof(CreateElementForm.ElementMode), elementMode);
             builder.CloseComponent();

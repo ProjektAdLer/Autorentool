@@ -139,7 +139,7 @@ Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation
         <value>Für mehr Informationen klicken</value>
     </data>
     <data name="EditStoryElementForm.Header.Text" xml:space="preserve">
-        <value>Storyelement erstellen</value>
+        <value>Storyelement bearbeiten</value>
     </data>
     <data name="EditStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
         <value>Story</value>
