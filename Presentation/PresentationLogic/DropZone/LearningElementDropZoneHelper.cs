@@ -132,7 +132,7 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         switch (dropzoneType)
         {
             case "ele":
-                DragLearningElmeentToLayoutSlot(dropItem, slotId);
+                DragLearningElementToLayoutSlot(dropItem, slotId);
                 break;
             case "story":
                 DragStoryElementToLayoutSlot(dropItem, slotId);
@@ -143,7 +143,7 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         }
     }
 
-    private void DragLearningElmeentToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem, int slotId)
+    private void DragLearningElementToLayoutSlot(MudItemDropInfo<ILearningElementViewModel> dropItem, int slotId)
     {
         var oldSlot = dropItem.Item!.Parent?.LearningSpaceLayout.LearningElements
             .First(kvP => kvP.Value.Equals(dropItem.Item)).Key;

@@ -216,6 +216,50 @@ public class MediatorUt
     }
 
     [Test]
+    public void RequestToggleStoryElementDialog()
+    {
+        var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
+
+        mediator.RequestToggleStoryElementDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(mediator.WorldDialogOpen, Is.False);
+            Assert.That(mediator.SpaceDialogOpen, Is.False);
+            Assert.That(mediator.ElementDialogOpen, Is.False);
+            Assert.That(mediator.AdaptivityElementDialogOpen, Is.False);
+            Assert.That(mediator.ContentDialogOpen, Is.False);
+            Assert.That(mediator.StoryElementDialogOpen, Is.True);
+        });
+
+        mediator.RequestToggleStoryElementDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(mediator.WorldDialogOpen, Is.False);
+            Assert.That(mediator.SpaceDialogOpen, Is.False);
+            Assert.That(mediator.ElementDialogOpen, Is.False);
+            Assert.That(mediator.AdaptivityElementDialogOpen, Is.False);
+            Assert.That(mediator.ContentDialogOpen, Is.False);
+            Assert.That(mediator.StoryElementDialogOpen, Is.False);
+        });
+    }
+
+    [Test]
+    public void RequestOpenNewElementDialog()
+    {
+        var mediator = new Presentation.PresentationLogic.Mediator.Mediator();
+        mediator.RequestOpenNewElementDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(mediator.WorldDialogOpen, Is.False);
+            Assert.That(mediator.SpaceDialogOpen, Is.False);
+            Assert.That(mediator.ElementDialogOpen, Is.True);
+            Assert.That(mediator.AdaptivityElementDialogOpen, Is.False);
+            Assert.That(mediator.ContentDialogOpen, Is.False);
+            Assert.That(mediator.OverwriteElementEdit, Is.True);
+        });
+    }
+
+    [Test]
     public void RequestToggleContentDialog_TogglesBool()
     {
         var mediator = new Presentation.PresentationLogic.Mediator.Mediator();

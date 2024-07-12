@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -299,7 +300,147 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
-    // ANF-ID: [AWA0041, AWA0040, AWA0039]
+    // ANF-ID: [AWA0039]
+    public void ItemUpdated_DropStoryItemIsInSpaceAndSpaceIsInWorldAndSpaceIsSelected_CallsPresentationLogic()
+    {
+        var mockStoryElement = Substitute.For<ILearningElementViewModel>();
+        var mockWorld = Substitute.For<ILearningWorldViewModel>();
+        var mockSpace = Substitute.For<ILearningSpaceViewModel>();
+        var spaceId = Guid.NewGuid();
+        const int oldSlotId = 1;
+        const int newSlotId = 2;
+        mockSpace.Id.Returns(spaceId);
+        mockSpace.LearningSpaceLayout.StoryElements
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { oldSlotId, mockStoryElement } });
+        mockStoryElement.Parent.Returns(mockSpace);
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        worldPresenter.LearningWorldVm.Returns(mockWorld);
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns(mockSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockStoryElement,
+                GetDropzoneIdentifier(mockSpace, newSlotId, true), 0);
+        var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
+            worldPresenter: worldPresenter, spacePresenter: spacePresenter);
+
+        systemUnderTest.ItemUpdated(dropItem);
+
+        presentationLogic.Received().SwitchStoryElementSlot(mockSpace, mockStoryElement, newSlotId);
+    }
+
+    [Test]
+    public void ItemUpdate_DropStoryItemIsInWorldButUnplacedLearningElementsDoesNotContainIt_ThrowsException()
+    {
+        // Arrange
+        var mockStoryElement = Substitute.For<ILearningElementViewModel>();
+        var mockWorld = Substitute.For<ILearningWorldViewModel>();
+        var mockSpace = Substitute.For<ILearningSpaceViewModel>();
+        var spaceId = Guid.NewGuid();
+        const int newSlotId = 2;
+        mockSpace.Id.Returns(spaceId);
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
+        mockSpace.LearningSpaceLayout.StoryElements
+            .Returns(new Dictionary<int, ILearningElementViewModel>());
+        mockStoryElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockStoryElement.LearningContent.Returns(Substitute.For<IStoryContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel>());
+        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        worldPresenter.LearningWorldVm.Returns(mockWorld);
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns(mockSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockStoryElement,
+                GetDropzoneIdentifier(mockSpace, newSlotId, true), 0);
+        var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
+            worldPresenter: worldPresenter, spacePresenter: spacePresenter);
+
+        // Act
+        // Assert
+        Assert.Throws(
+            Is.TypeOf<ApplicationException>().And.Message
+                .EqualTo("DragDropItem should be in unplaced elements"),
+            () => systemUnderTest.ItemUpdated(dropItem));
+    }
+
+    [Test]
+    // ANF-ID: [AWA0039]
+    public void ItemUpdate_DropStoryItemIsInWorldButThereIsAlreadyAnElementOnTheDraggedSlot_CallsSpacePresenter()
+    {
+        // Arrange
+        var mockStoryElement = Substitute.For<ILearningElementViewModel>();
+        var mockExistingElement = Substitute.For<ILearningElementViewModel>();
+        var mockWorld = Substitute.For<ILearningWorldViewModel>();
+        var mockSpace = Substitute.For<ILearningSpaceViewModel>();
+        var spaceId = Guid.NewGuid();
+        const int newSlotId = 2;
+        mockSpace.Id.Returns(spaceId);
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel> { mockExistingElement });
+        mockSpace.LearningSpaceLayout.StoryElements
+            .Returns(new Dictionary<int, ILearningElementViewModel> { { newSlotId, mockExistingElement } });
+        mockStoryElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockStoryElement.LearningContent.Returns(Substitute.For<IStoryContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockStoryElement });
+        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        worldPresenter.LearningWorldVm.Returns(mockWorld);
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns(mockSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockStoryElement,
+                GetDropzoneIdentifier(mockSpace, newSlotId, true), 0);
+        var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
+            worldPresenter: worldPresenter, spacePresenter: spacePresenter);
+
+        // Act
+        systemUnderTest.ItemUpdated(dropItem);
+
+        // Assert
+        spacePresenter.Received().OpenReplaceStoryElementDialog(mockWorld, mockStoryElement, newSlotId);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0019]
+    public void ItemUpdate_DropStoryItemIsInWorldAndTheDraggedSlotIsFree_CallsPresentationLogic()
+    {
+        // Arrange
+        var mockStoryElement = Substitute.For<ILearningElementViewModel>();
+        var mockWorld = Substitute.For<ILearningWorldViewModel>();
+        var mockSpace = Substitute.For<ILearningSpaceViewModel>();
+        var spaceId = Guid.NewGuid();
+        const int newSlotId = 2;
+        mockSpace.Id.Returns(spaceId);
+        mockSpace.ContainedLearningElements.Returns(new List<ILearningElementViewModel>());
+        mockSpace.LearningSpaceLayout.StoryElements
+            .Returns(new Dictionary<int, ILearningElementViewModel>());
+        mockStoryElement.Parent.Returns((ILearningSpaceViewModel?)null);
+        mockStoryElement.LearningContent.Returns(Substitute.For<IStoryContentViewModel>());
+        mockWorld.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { mockSpace });
+        mockWorld.UnplacedLearningElements.Returns(new List<ILearningElementViewModel> { mockStoryElement });
+        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        worldPresenter.LearningWorldVm.Returns(mockWorld);
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns(mockSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dropItem =
+            new MudItemDropInfo<ILearningElementViewModel>(mockStoryElement,
+                GetDropzoneIdentifier(mockSpace, newSlotId, true), 0);
+        var systemUnderTest = CreateDropZoneHelperForTesting(presentationLogic: presentationLogic,
+            worldPresenter: worldPresenter, spacePresenter: spacePresenter);
+
+        // Act
+        systemUnderTest.ItemUpdated(dropItem);
+
+        // Assert
+        presentationLogic.Received().DragStoryElementFromUnplaced(mockWorld, mockSpace, mockStoryElement, newSlotId);
+    }
+
+    [Test]
+    // ANF-ID: [AWA0041, AWA0040]
     public void ItemUpdated_DropItemIsInSpaceAndSpaceIsInWorldAndSpaceIsSelected_CallsPresentationLogic()
     {
         // Arrange
@@ -404,7 +545,7 @@ public class LearningElementDropZoneHelperUt
     }
 
     [Test]
-    // ANF-ID: [AWA0041, AWA0040, AWA0039]
+    // ANF-ID: [AWA0041, AWA0040]
     public void ItemUpdate_DropItemIsInWorldAndTheDraggedSlotIsFree_CallsPresentationLogic()
     {
         // Arrange
