@@ -7,7 +7,7 @@
 <div class="grid grid-cols-5 gap-4 2xl:gap-5 justify-center items-center">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
-        <MudListItem OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
+        <MudListItem OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
                      Class="p-0">
             <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
@@ -67,7 +67,7 @@
             throw new ArgumentException(Localizer["ArgumentException.Message"]);
     }
 
-    private void OnFloorPlanButtonSelected(FloorPlanEnum floorPlan, MouseEventArgs args)
+    private void OnFloorPlanButtonSelected(FloorPlanEnum floorPlan)
     {
         if (LearningSpaceViewModel.LearningSpaceLayout.FloorPlanName != floorPlan)
         {
