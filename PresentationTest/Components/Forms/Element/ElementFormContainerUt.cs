@@ -67,6 +67,15 @@ public class ElementFormContainerUt
     }
     
     [Test]
+    public async Task DisposeAsync_UnregistersFromSelectedViewModelsProviderEvent()
+    {
+        var sut = GetRenderedComponent();
+        await sut.Instance.DisposeAsync();
+        
+        SelectedVmProvider.Received().PropertyChanged -= Arg.Any<PropertyChangedEventHandler>();
+    }
+    
+    [Test]
     public void Render_ElementNull_ShowsCreate([Values] ElementMode mode)
     {
         SelectedVmProvider.LearningWorld.Returns(ViewModelProvider.GetLearningWorld());
@@ -153,6 +162,22 @@ public class ElementFormContainerUt
             Assert.That(Mediator.OverwriteElementEdit, Is.True);
         });
         SelectedVmProvider.Received().SetLearningElement(null, null);
+    }
+
+    [Test]
+    public void SelectedViewModelsProviderOnPropertyChanged_ResetsMediatorOverwriteElementEdit()
+    {
+        SelectedVmProvider.LearningWorld.Returns(ViewModelProvider.GetLearningWorld());
+        SelectedVmProvider.LearningElement.Returns(ViewModelProvider.GetLearningElement());
+
+        var sut = GetRenderedComponent();
+        
+        Mediator.OverwriteElementEdit = true;
+        
+        SelectedVmProvider.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(
+            SelectedVmProvider, new PropertyChangedEventArgs(nameof(SelectedVmProvider.LearningElement)));
+        
+        Assert.That(Mediator.OverwriteElementEdit, Is.False);
     }
     
     private IRenderedComponent<ElementFormContainer> GetRenderedComponent(ElementMode? elementMode = null)
