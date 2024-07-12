@@ -62,18 +62,19 @@ export const config: Options.Testrunner = {
     capabilities: [{
         browserName: 'electron',
         browserVersion: 'latest',
-        // 'wdio:chromedriverOptions': {
-        //     binary: 'C:\\AdLer\\GitHub\\Autorentool\\node_modules\\electron-chromedriver\\bin\\chromedriver',
-        // },
-        protocol: 'http',
-        hostname: 'localhost',
-        port: 5000,
+        'wdio:chromedriverOptions': {
+            binary: 'C:\\AdLer\\GitHub\\Autorentool\\node_modules\\electron-chromedriver\\bin\\chromedriver',
+        },
+        //protocol: 'https',
+        //hostname: 'localhost',
+        //port: 5001,
         acceptInsecureCerts: true,
         // Electron service options
         // see https://webdriver.io/docs/desktop-testing/electron/configuration/#service-options
         'wdio:electronServiceOptions': {
             // custom path to app binary
-            appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\AuthoringTool\\bin\\Debug\\net6.0\\xAuthoringTool.exe',
+            //appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\AuthoringTool\\bin\\Debug\\net6.0\\xAuthoringTool.exe',
+            //appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\node_modules\\electron-chromedriver\\bin',
             // custom application args
             appArgs: []
         }
@@ -110,7 +111,7 @@ export const config: Options.Testrunner = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:5000',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -127,7 +128,8 @@ export const config: Options.Testrunner = {
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
     services: [['electron',{
-        appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\AuthoringTool\\bin\\Debug\\net6.0\\xAuthoringTool.exe',
+        //appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\AuthoringTool\\bin\\Debug\\net6.0\\xAuthoringTool.exe',
+        appBinaryPath: 'C:\\AdLer\\GitHub\\Autorentool\\node_modules\\electron-chromedriver\\bin',
     },],],
 
     // Framework you want to run your specs with.
