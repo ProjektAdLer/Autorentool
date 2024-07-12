@@ -134,9 +134,6 @@
                     </MudSelectItem>
                 </MudSelect>
             }
-            else
-            {
-            }
         </div>
     </Collapsable>
 </div>
@@ -277,7 +274,7 @@
 
                         <div class="flex justify-center items-center">
                             <MudIconButton Icon="@Icons.Material.Filled.Add"
-                                           Class="w-9 h-9"
+                                           Class="w-9 h-9 add-story-block-button"
                                            OnClick="@(() => StoryContentModel.StoryText.Add(""))"
                                            Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]>
                             </MudIconButton>
@@ -422,7 +419,9 @@
                 FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
                 break;
             case ElementMode.Story:
-                FormDataContainer.FormModel.LearningContent = new StoryContentFormModel();
+                var storyContentFormModel = new StoryContentFormModel();
+                storyContentFormModel.StoryText.Add("");
+                FormDataContainer.FormModel.LearningContent = storyContentFormModel;
                 FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
                 break;
             case ElementMode.Normal:

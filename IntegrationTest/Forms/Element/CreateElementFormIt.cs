@@ -333,6 +333,32 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
     }
 
+    [Test]
+    public void StoryMode_ShowsStoryContentCollapsable_SubmitsOnClick()
+    {
+        var sut = GetRenderedComponent(ElementMode.Story);
+        
+        var collapsables = sut.FindComponents<Collapsable>();
+
+        var storyCollapsable = collapsables.First(collapsable => collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
+        
+        var addButton = storyCollapsable.FindComponentWithMarkup<MudIconButton>("add-story-block-button");
+        addButton.Find("button").Click();
+        
+        var tfs = storyCollapsable.FindComponentsOrFail<MudTextField<string>>().ToList();
+        tfs.ElementAt(0).Find("textarea").Change("a sob story");
+        tfs.ElementAt(1).Find("textarea").Change("a happy story");
+        
+        var submitButton = sut.FindComponent<DefaultSubmitButton>();
+        submitButton.Find("button").Click();
+        
+        SpacePresenter.Received().CreateStoryElementInSlotFromFormModel(FormModel);
+        var storyContent = (StoryContentFormModel)FormModel.LearningContent!;
+        Assert.That(storyContent.StoryText, Has.Count.EqualTo(2));
+        Assert.That(storyContent.StoryText.ElementAt(0), Is.EqualTo("a sob story"));
+        Assert.That(storyContent.StoryText.ElementAt(1), Is.EqualTo("a happy story"));
+    }
+
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
     {
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
