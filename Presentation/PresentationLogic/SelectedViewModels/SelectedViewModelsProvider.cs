@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BusinessLogic.Commands;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.Story;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
@@ -72,7 +73,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     public void SetActiveElementSlotInSpace(int slot, ICommand? command)
     {
         if (command is not null)
-            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveElementSlotInSpace, s => ActiveElementSlotInSpace = s));
+            _undoStack.Push(new ActiveElementSlotInSpaceStackEntry(command, ActiveElementSlotInSpace,
+                s => ActiveElementSlotInSpace = s));
         ActiveElementSlotInSpace = slot;
         ActiveStorySlotInSpace = -1;
         Logger.LogTrace("ActiveSlotInSpace set to {Slot}", slot);
@@ -82,7 +84,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     public void SetActiveStorySlotInSpace(int slot, ICommand? command)
     {
         if (command is not null)
-            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveStorySlotInSpace, s => ActiveStorySlotInSpace = s));
+            _undoStack.Push(new ActiveStorySlotInSpaceStackEntry(command, ActiveStorySlotInSpace,
+                s => ActiveStorySlotInSpace = s));
         ActiveStorySlotInSpace = slot;
         ActiveElementSlotInSpace = -1;
         Logger.LogTrace("ActiveStorySlotInSpace set to {Slot}", slot);
@@ -139,7 +142,10 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         LearningElement = learningElement;
         Logger.LogTrace("LearningElement set to {LearningElement} with id {Id}", learningElement?.Name,
             learningElement?.Id);
-        SetActiveElementSlotInSpace(-1, command);
+        if (learningElement?.LearningContent is StoryContentViewModel)
+            SetActiveStorySlotInSpace(-1, command);
+        else
+            SetActiveElementSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -171,8 +177,12 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                     el.Command, LearningElement, le => LearningElement = le),
                 SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
                     ce.Command, LearningContent, lc => LearningContent = lc),
-                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveElementSlotInSpace,
+                ActiveElementSlotInSpaceStackEntry sl => new ActiveElementSlotInSpaceStackEntry(sl.Command,
+                    ActiveElementSlotInSpace,
                     s => ActiveElementSlotInSpace = s),
+                ActiveStorySlotInSpaceStackEntry stl => new ActiveStorySlotInSpaceStackEntry(stl.Command,
+                    ActiveStorySlotInSpace,
+                    s => ActiveStorySlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();
@@ -196,8 +206,12 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                     el.Command, LearningElement, le => LearningElement = le),
                 SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
                     ce.Command, LearningContent, lc => LearningContent = lc),
-                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveElementSlotInSpace,
+                ActiveElementSlotInSpaceStackEntry sl => new ActiveElementSlotInSpaceStackEntry(sl.Command,
+                    ActiveElementSlotInSpace,
                     s => ActiveElementSlotInSpace = s),
+                ActiveStorySlotInSpaceStackEntry stl => new ActiveStorySlotInSpaceStackEntry(stl.Command,
+                    ActiveStorySlotInSpace,
+                    s => ActiveStorySlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();
