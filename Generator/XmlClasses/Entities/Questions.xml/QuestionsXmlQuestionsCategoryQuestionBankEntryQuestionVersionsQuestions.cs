@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace Generator.XmlClasses.Entities.Questions.xml;
@@ -9,5 +10,10 @@ public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuest
     }
 
     [XmlElement(ElementName = "question")]
-    public List<QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion> Question { get; set; } = new();
+    public List<QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion> Question
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = new();
 }

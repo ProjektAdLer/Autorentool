@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace Generator.XmlClasses.Entities.Questions.xml;
 
 public class QuestionsXmlQuestionsCategory
 {
+    [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
     public QuestionsXmlQuestionsCategory()
     {
         Parent = "0";
@@ -28,28 +30,70 @@ public class QuestionsXmlQuestionsCategory
     public string ContextId { get; set; }
 
     [XmlElement(ElementName = "contextlevel")]
-    public string ContextLevel { get; set; } = "50";
+    public string ContextLevel
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "50";
 
     [XmlElement(ElementName = "contextinstanceid")]
-    public string ContextInstanceId { get; set; } = "1";
+    public string ContextInstanceId
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "1";
 
-    [XmlElement(ElementName = "info")] public string Info { get; set; } = "";
+    [XmlElement(ElementName = "info")]
+    public string Info
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "";
 
     [XmlElement(ElementName = "infoformat")]
-    public string InfoFormat { get; set; } = "0";
+    public string InfoFormat
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "0";
 
     [XmlElement(ElementName = "stamp")]
-    public string Stamp { get; set; } = new(Enumerable
+    public string Stamp
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = new(Enumerable
         .Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 10)
         .Select(s => s[new Random().Next(s.Length)]).ToArray());
 
     [XmlElement(ElementName = "parent")] public string Parent { get; set; }
 
     [XmlElement(ElementName = "sortorder")]
-    public string SortOrder { get; set; } = "0";
+    public string SortOrder
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "0";
 
-    [XmlElement(ElementName = "idnumber")] public string IdNumber { get; set; } = "$@NULL@$";
+    [XmlElement(ElementName = "idnumber")]
+    public string IdNumber
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = "$@NULL@$";
 
     [XmlElement(ElementName = "question_bank_entries")]
-    public QuestionsXmlQuestionsCategoryQuestionBankEntries QuestionBankEntries { get; set; } = new();
+    public QuestionsXmlQuestionsCategoryQuestionBankEntries QuestionBankEntries
+    {
+        get;
+        [ExcludeFromCodeCoverage(Justification = "Used by serialization")]
+        set;
+    } = new();
 }
