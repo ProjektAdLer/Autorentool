@@ -1,26 +1,29 @@
-@using Presentation.PresentationLogic.LearningElement
+@using System.Diagnostics.CodeAnalysis
 @using MudBlazor.Utilities
 @using Presentation.Components
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
-@using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningContent.Story
+@using Presentation.PresentationLogic.LearningElement
 <div @onclick="@(e => OnSelect.InvokeAsync(LearningElement))"
      class="@GetElementDivCss()">
     <div class="flex flex-row gap-2 items-center p-2 ml-14">
         <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon()"></MudIcon>
-        <p class="break-words">@LearningElement.Name</p>
+        <p class="break-words">@LearningElement.Name (Position @GetLearningElementPosition(LearningElement))</p>
     </div>
 </div>
 
 @code {
-    [Parameter, EditorRequired, AllowNull]
-    public ILearningElementViewModel LearningElement { get; set; }
-    [Parameter, EditorRequired]
-    public EventCallback<ILearningElementViewModel> OnSelect { get; set; }
-    [Parameter, EditorRequired]
-    public bool IsSelected { get; set; }
+    [Parameter, EditorRequired, AllowNull] public ILearningElementViewModel LearningElement { get; set; }
+    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnSelect { get; set; }
+    [Parameter, EditorRequired] public bool IsSelected { get; set; }
+
+    private int GetLearningElementPosition(ILearningElementViewModel le)
+    {
+        var kvP = le.Parent!.LearningSpaceLayout.LearningElements.FirstOrDefault(kv => kv.Value == le);
+        return kvP.Key;
+    }
 
     private string GetElementDivCss()
     {
