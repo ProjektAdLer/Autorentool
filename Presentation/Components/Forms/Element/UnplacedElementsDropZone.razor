@@ -156,7 +156,12 @@
         if (commandName.StartsWith("CreateLearningElement") ||
             commandName.StartsWith("LoadLearningElement") ||
             commandName.StartsWith("PlaceLearningElement") ||
-            commandName.StartsWith("PlaceStoryElement"))
+            commandName.StartsWith("PlaceStoryElement") ||
+            commandName.StartsWith("DeleteLearningElementInWorld") ||
+            commandName.StartsWith("ChangeLearningSpaceLayout") ||
+            commandName.StartsWith("RemoveStoryElementFromLayout") ||
+            commandName.StartsWith("RemoveLearningElementFromLayout"))
+
             await InvokeStateHasChanged();
     }
 
