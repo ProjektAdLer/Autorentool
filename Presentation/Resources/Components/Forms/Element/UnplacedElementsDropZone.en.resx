@@ -19,7 +19,7 @@
         <value>All unplaced elements</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Theme" xml:space="preserve">
-        <value>Topic of the learning space</value>
+        <value>Theme of the learning space</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Type" xml:space="preserve">
         <value>Type of the element</value>
