@@ -22,7 +22,6 @@
                     <MudListItem title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
                     </MudListItem>
                     <MudDivider Style="border-color: rgb(179,179,179)"/>
-                    <MudListItem IconColor="Color.Default" Disabled="true" Icon="@Icons.Material.Filled.Person" OnClick="() => ChangeActiveSide(SideToShow.PersonDialog)"></MudListItem>
 
                 </MudList>
             </MudPaper>
@@ -202,10 +201,6 @@
 
                 break;
 
-            case SideToShow.PersonDialog:
-
-                break;
-
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -217,8 +212,7 @@
 
     private enum SideToShow
     {
-        LoginDialog,
-        PersonDialog
+        LoginDialog
     }
 
     private SideToShow ActiveSide { get; set; }
@@ -253,14 +247,14 @@
     {
         get => Configuration[IApplicationConfiguration.BackendBaseUrl];
         set => Configuration[IApplicationConfiguration.BackendBaseUrl] = value;
-    } 
-    
+    }
+
     private string Username
     {
         get => Configuration[IApplicationConfiguration.BackendUsername];
         set => Configuration[IApplicationConfiguration.BackendUsername] = value;
     }
-    
+
 
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
@@ -336,6 +330,7 @@
             _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
             return;
         }
+
         try
         {
             StartSpinner();
