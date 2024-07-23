@@ -38,6 +38,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void EditLearningSpace_CallsPresentationLogic()
     {
         var space = ViewModelProvider.GetLearningSpace();
@@ -259,6 +260,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0002]
     public void CreateLearningElementInSlot_CallsSelectedViewModelsProviderAndPresentationLogic()
     {
         var space = ViewModelProvider.GetLearningSpace();
@@ -357,6 +359,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASN0011]
     public void CreateStoryElementInSlotFromFormModel_CallsSelectedViewModelsProviderAndPresentationLogic()
     {
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -429,6 +432,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
     public void EditLearningElement_CallsPresentationLogic()
     {
         var space = ViewModelProvider.GetLearningSpace();
@@ -473,6 +477,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0015]
     public void EditLearningElementWithSlotIndex_CallsSelectedViewModelsProvider()
     {
         var space = ViewModelProvider.GetLearningSpace();
@@ -501,6 +506,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0016]
     public void DeleteLearningElement_SetsErrorWhenSelectedSpaceNull()
     {
         var element = ViewModelProvider.GetLearningElement();
@@ -547,6 +553,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0038]
     public async Task ShowSelectedElementContent_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -741,6 +748,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void SetLearningSpaceLayout_CallsChangeLearningSpaceLayoutAndSetsActiveElementSlot()
     {
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
@@ -817,7 +825,8 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void OnReplaceLearningElementDialogClose_ValidCloseResult_CallsDragStoryElementFromUnplaced()
+    // ANF-ID: [ASN0017]
+    public void OnReplaceLearningElementDialogClose_ValidCloseResult_CallsDragLearningElementFromUnplaced()
     {
         var learningWorldVm = ViewModelProvider.GetLearningWorld();
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();
@@ -895,6 +904,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASN0019]
     public void OnReplaceStoryElementDialogClose_ValidCloseResult_CallsDragStoryElementFromUnplaced()
     {
         var learningWorldVm = ViewModelProvider.GetLearningWorld();
@@ -945,6 +955,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASN0015]
     public void DeleteStoryElement_ValidLearningSpaceVm_CallsDeleteStoryElementInSpace()
     {
         var learningSpaceVm = ViewModelProvider.GetLearningSpace();

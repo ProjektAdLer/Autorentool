@@ -47,6 +47,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsSaveLearningWorldAsync_WhenUnsavedChangesAndYesResponse()
     {
         var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f", "f")
@@ -70,6 +71,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsDeleteLearningWorld_WhenNoUnsavedChangesOrNoResponse()
     {
         var learningWorld = new LearningWorldViewModel("saved", "f", "f", "f", "f", "f", "f", "f")
@@ -93,6 +95,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_CallsErrorService_WhenUnexpectedDialogResultType()
     {
         var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f", "f")
@@ -117,6 +120,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public async Task DeleteLearningWorld_AbortsWhenDialogCanceled()
     {
         var learningWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f", "f", "f")

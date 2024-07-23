@@ -1749,6 +1749,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1765,6 +1766,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1784,6 +1786,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public async Task LoadLearningWorldAsync_CallsDialogManagerAndElementMapper()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -1813,6 +1816,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2179,6 +2183,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void PresentationLogic_LoadLearningWorldViewModel_ReturnsLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3412,6 +3417,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void GetFileInfoForLearningWorld_IsWhiteSpace_ReturnsNull()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3426,6 +3432,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void GetFileInfoForLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3438,6 +3445,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public void DeleteLearningWorldByPath_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3450,6 +3458,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0038]
     public void OpenContentFilesFolder_CallsBusinessLogicAndShellWrapper()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

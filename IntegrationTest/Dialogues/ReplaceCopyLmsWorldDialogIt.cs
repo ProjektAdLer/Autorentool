@@ -28,6 +28,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task CopyButtonPressed_CallsDialogAndReturnsResult()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
@@ -42,6 +43,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task CancelButtonPressed_CallsDialogAndReturnsResult()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
@@ -55,6 +57,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task ReplaceButtonPressed_CallsDialogAndReturnsResult()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();

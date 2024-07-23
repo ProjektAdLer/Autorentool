@@ -130,6 +130,7 @@ public class ContentFilesViewUt
     }
 
     [Test]
+    // ANF-ID: [AWA0037, AWA0043]
     public void ClickDelete_ShowsDialog_DeletesOnOkIfNotInWorlds()
     {
         var items = PresentationLogicSetItems().ToList();

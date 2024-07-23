@@ -62,6 +62,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_LmsNotConnected_RenderLmsLoginDialogWithForm()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -97,6 +98,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO25]
     public async Task DialogCreated_LmsConnected_RenderLmsLoginDialogWithWorldsAndLogoutButton()
     {
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -151,6 +153,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsBackendApiUnreachableException_ShowsErrorMessage()
     {
         _presentationLogic.IsLmsConnected().Throws(x => throw new BackendApiUnreachableException());
@@ -165,6 +168,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsBackendInvalidTokenException_ShowsErrorMessageAndCallsLogout()
     {
         var exceptionThrown = false;
@@ -192,6 +196,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO23]
     public async Task DialogCreated_LmsIsConnected_GetLmsWorldListThrowsBackendException_SetErrorInErrorService()
     {
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -202,6 +207,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndClickLoginButton_MissingValue_NothingHappens()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -238,6 +244,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndPressEnterInPasswordField_CallsPresentationLogic()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -255,6 +262,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21, AHO23]
     public async Task EnterDetailsAndClickLoginButton_CorrectCredentials_CallsGetLmsWorldListInPresentationLogic()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -428,6 +436,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteWorldButtonClicked_CancelDialog_NothingHappens()
     {
         var dialogReference = Substitute.For<IDialogReference>();
@@ -458,6 +467,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteWorldButtonClicked_ConfirmDialog_CallsDeleteLmsWorldAndGetLmsWorldList()
     {
         var dialogReference = Substitute.For<IDialogReference>();
@@ -490,6 +500,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task
         DeleteWorldButtonClicked_ConfirmDialog_PresentationLogicThrowsBackendException_SetsErrorInErrorService()
     {

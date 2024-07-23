@@ -49,6 +49,7 @@ public class SpaceLayoutSelectionUt : MudBlazorTestFixture<SpaceLayoutSelection>
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public async Task ClickFloorPlan_SetsFloorPlanInSpace()
     {
         var floorPlanValues = Enum.GetValues<FloorPlanEnum>();
