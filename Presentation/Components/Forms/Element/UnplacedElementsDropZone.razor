@@ -203,7 +203,7 @@
 
     private bool ShowAfterSearchStringFilter(ILearningElementViewModel element)
     {
-        if (!string.IsNullOrEmpty(SearchString) && !element.Name.Contains(SearchString))
+        if (!string.IsNullOrEmpty(SearchString) && !element.Name.ToLowerInvariant().Contains(SearchString.ToLowerInvariant()))
         {
             return false;
         }
