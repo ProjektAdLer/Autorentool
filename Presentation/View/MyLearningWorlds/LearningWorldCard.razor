@@ -28,7 +28,7 @@
             <CardHeaderActions>
                 @if (!string.IsNullOrWhiteSpace(LearningWorld.SavePath))
                 {
-                    <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
+                    <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Delete"
                             Class="close-button absolute -right-1 -top-1 w-9 h-8 text-blacktrans-200 p-4 font-bold drop-shadow transform ease-in-out duration-75 active:drop-shadow-none hover:text-buttonbgblue m-2 rounded-full"
                             Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
                 }
