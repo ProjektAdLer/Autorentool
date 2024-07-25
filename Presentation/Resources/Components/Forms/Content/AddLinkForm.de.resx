@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="AddLinkForm.SnackbarMessage" xml:space="preserve">
-        <value>Verbindung hinzugefügt</value>
+        <value>Link hinzugefügt</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
         <value>Name für den Link</value>
