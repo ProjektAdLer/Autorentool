@@ -63,7 +63,7 @@
         <value>Neue Aufgabe erstellen</value>
     </data>
     <data name="AdaptivityContent.Dialog.Table.Header.DeleteTask" xml:space="preserve">
-        <value>Aufgabe entfernen</value>
+        <value>Aufgabe löschen</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.RequiredQuestion" xml:space="preserve">
         <value>Als "zu lösende Frage" festlegen</value>
