@@ -1,4 +1,3 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using Shared;
@@ -21,7 +20,8 @@ public interface IElementCommandFactory
     ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
         string name,
         ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<LearningSpace> action);
+        ElementModel elementModel, int workload, int points, double positionX, double positionY,
+        Action<LearningSpace> action);
 
     /// <summary>
     /// Creates a command to create a learning element in a slot.
@@ -64,22 +64,4 @@ public interface IElementCommandFactory
     IEditLearningElement GetEditCommand(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction);
-
-    /// <summary>
-    /// Creates a command to load a learning element from a file.
-    /// </summary>
-    ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, string filepath,
-        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction);
-
-    /// <summary>
-    /// Creates a command to load a learning element from a stream.
-    /// </summary>
-    ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, Stream stream,
-        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction);
-
-    /// <summary>
-    /// Creates a command to save a learning element to a file.
-    /// </summary>
-    ISaveLearningElement GetSaveCommand(IBusinessLogic businessLogic, LearningElement learningElement, string filepath);
-
 }

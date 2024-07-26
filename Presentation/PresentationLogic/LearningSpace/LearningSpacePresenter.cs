@@ -350,26 +350,6 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         };
     }
 
-    /// <inheritdoc cref="ILearningSpacePresenter.LoadLearningElementAsync"/>
-    public async Task LoadLearningElementAsync(int slotIndex)
-    {
-        if (!CheckLearningSpaceNotNull("LoadLearningElementAsync"))
-            return;
-        try
-        {
-            //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-            await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm!, slotIndex);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while loading learning element", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while loading learning element", e.Message);
-        }
-    }
-
     /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>

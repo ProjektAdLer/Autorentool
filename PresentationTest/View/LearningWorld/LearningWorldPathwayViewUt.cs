@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
@@ -232,32 +231,6 @@ public class LearningWorldPathwayViewUt
         await addConditionButton.InvokeAsync(async () =>
             await ((EventCallback<MouseEventArgs>)addConditionButton.Instance.Parameters["onclick"]).InvokeAsync(null));
         _worldPresenter.Received().CreatePathWayCondition();
-    }
-
-    [Test]
-    public async Task LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
-    {
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
-            ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
-        await loadSpaceButton.InvokeAsync(async () =>
-            await ((EventCallback<MouseEventArgs>)loadSpaceButton.Instance.Parameters["onclick"]).InvokeAsync(null));
-        await _worldPresenter.Received().LoadLearningSpaceAsync();
-    }
-
-    [Test]
-    public async Task LoadSpaceButton_Clicked_OperationCancelledExceptionCaught()
-    {
-        _worldPresenter.LoadLearningSpaceAsync().Throws<OperationCanceledException>();
-
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        var loadSpaceButton = systemUnderTest.FindComponents<Stub<MudButton>>().First(btn =>
-            ((string)btn.Instance.Parameters["Class"]).Contains("load-learning-space"));
-        await loadSpaceButton.InvokeAsync(async () =>
-            await ((EventCallback<MouseEventArgs>)loadSpaceButton.Instance.Parameters["onclick"]).InvokeAsync(null));
-        await _worldPresenter.Received().LoadLearningSpaceAsync();
     }
 
     private IRenderedComponent<LearningWorldPathwayView> GetLearningWorldViewForTesting(

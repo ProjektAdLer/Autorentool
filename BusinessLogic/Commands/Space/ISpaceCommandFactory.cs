@@ -37,21 +37,4 @@ public interface ISpaceCommandFactory
     IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name,
         string description, int requiredPoints, Theme theme, Entities.Topic? topic,
         Action<ILearningSpace> mappingAction);
-
-    /// <summary>
-    /// Creates a command to load a learning space.
-    /// </summary>
-    ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction);
-
-    /// <summary>
-    /// Creates a command to load a learning space.
-    /// </summary>
-    ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, Stream stream, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction);
-
-    /// <summary>
-    /// Creates a command to save a learning space.
-    /// </summary>
-    ISaveLearningSpace GetSaveCommand(IBusinessLogic businessLogic, LearningSpace learningSpace, string filepath);
 }
