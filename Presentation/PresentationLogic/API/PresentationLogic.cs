@@ -111,8 +111,6 @@ public class PresentationLogic : IPresentationLogic
     }
 
     private static string WorldFileEnding => FileEndings.WorldFileEnding;
-    private static string SpaceFileEnding => FileEndings.SpaceFileEnding;
-    private static string ElementFileEnding => FileEndings.ElementFileEnding;
 
     internal ILogger<PresentationLogic> Logger { get; }
     internal IMapper Mapper { get; }
