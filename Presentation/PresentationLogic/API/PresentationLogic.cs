@@ -983,11 +983,11 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>
-    public void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name)
+    public void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm, string name)
     {
-        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentFm);
         var command = TaskCommandFactory.GetCreateCommand(contentEntity, name,
-            content => CMapper.Map(content, adaptivityContentVm));
+            content => CMapper.Map(content, adaptivityContentFm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -1002,7 +1002,18 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
-    public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
+    public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm,
+        IAdaptivityTaskViewModel adaptivityTaskVm)
+    {
+        var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentFm);
+        var taskEntity = Mapper.Map<AdaptivityTask>(adaptivityTaskVm);
+        var command = TaskCommandFactory.GetDeleteCommand(contentEntity, taskEntity,
+            content => CMapper.Map(content, adaptivityContentFm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    public void DeleteAdaptivityTask(AdaptivityContentViewModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
         var contentEntity = Mapper.Map<AdaptivityContent>(adaptivityContentVm);

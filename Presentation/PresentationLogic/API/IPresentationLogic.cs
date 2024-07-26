@@ -458,9 +458,9 @@ public interface IPresentationLogic
     /// <summary>
     /// Creates a Adaptivity Task in the given Adaptivity Content.
     /// </summary>
-    /// <param name="adaptivityContentVm">The Adaptivity Content to create the Task in.</param>
+    /// <param name="adaptivityContentFm">The Adaptivity Content Form Model to create the Task in.</param>
     /// <param name="name">The name of the Task.</param>
-    void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm, string name);
+    void CreateAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm, string name);
 
     /// <summary>
     /// Edits a given Adaptivity Task
@@ -474,9 +474,17 @@ public interface IPresentationLogic
     /// <summary>
     /// Deletes a given Adaptivity Task from the given Adaptivity Content.
     /// </summary>
-    /// <param name="adaptivityContentVm">The Adaptivity Content to delete the Task from.</param>
+    /// <param name="adaptivityContentFm">The Adaptivity Content Form Model to delete the Task from.</param>
     /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
-    void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentVm,
+    void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm,
+        IAdaptivityTaskViewModel adaptivityTaskVm);
+
+    /// <summary>
+    /// Deletes a given Adaptivity Task from the given Adaptivity Content.
+    /// </summary>
+    /// <param name="adaptivityContentVm">The Adaptivity Content View Model to delete the Task from.</param>
+    /// <param name="adaptivityTaskVm">The Adaptivity Task to delete.</param>
+    void DeleteAdaptivityTask(AdaptivityContentViewModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm);
 
 
