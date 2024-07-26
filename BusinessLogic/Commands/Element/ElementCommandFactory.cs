@@ -58,12 +58,6 @@ public class ElementCommandFactory : IElementCommandFactory
         new DeleteLearningElementInWorld(learningElement, parentWorld, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInWorld>());
 
-    public IDragLearningElement GetDragCommand(LearningElement learningElement, double oldPositionX,
-        double oldPositionY,
-        double newPositionX, double newPositionY, Action<LearningElement> mappingAction) =>
-        new DragLearningElement(learningElement, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction, LoggerFactory.CreateLogger<DragLearningElement>());
-
     public IEditLearningElement GetEditCommand(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction) =>

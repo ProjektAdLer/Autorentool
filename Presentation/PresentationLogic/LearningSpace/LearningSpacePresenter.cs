@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using AutoMapper;
 using MudBlazor;
 using Presentation.Components.Forms.Models;
@@ -214,7 +213,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
             return;
         }
-        
+
         SetSelectedLearningElement(null);
         _selectedViewModelsProvider.SetActiveStorySlotInSpace(i, null);
         _mediator.RequestOpenStoryElementDialog();
@@ -228,12 +227,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveElementSlotInSpace,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!,
+            _selectedViewModelsProvider.ActiveElementSlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
     }
-    
+
     public void CreateStoryElementInSlot(string name, ILearningContentViewModel learningContent,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points)
@@ -241,7 +241,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateStoryElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveStorySlotInSpace,
+        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!,
+            _selectedViewModelsProvider.ActiveStorySlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
@@ -252,7 +253,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         CreateLearningElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
             model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
     }
-    
+
     public void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model)
     {
         CreateStoryElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),

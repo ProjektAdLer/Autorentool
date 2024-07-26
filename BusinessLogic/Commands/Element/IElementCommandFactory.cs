@@ -53,12 +53,6 @@ public interface IElementCommandFactory
         Action<LearningWorld> mappingAction);
 
     /// <summary>
-    /// Creates a command to drag a learning element.
-    /// </summary>
-    IDragLearningElement GetDragCommand(LearningElement learningElement, double oldPositionX, double oldPositionY,
-        double newPositionX, double newPositionY, Action<LearningElement> mappingAction);
-
-    /// <summary>
     /// Creates a command to edit a learning element.
     /// </summary>
     IEditLearningElement GetEditCommand(LearningElement learningElement, LearningSpace? parentSpace, string name,

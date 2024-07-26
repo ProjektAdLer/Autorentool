@@ -474,14 +474,6 @@ public interface IPresentationLogic
     void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm, double oldPositionX, double oldPositionY);
 
     /// <summary>
-    /// Drags a Learning Element from its old position to its current position.
-    /// </summary>
-    /// <param name="learningElementVm">The view model of the Learning Element to be moved. The element's new position is determined by its current 'PositionX' and 'PositionY' properties.</param>
-    /// <param name="oldPositionX">The old X-coordinate of the element's position.</param>
-    /// <param name="oldPositionY">The old Y-coordinate of the element's position.</param>
-    void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
-
-    /// <summary>
     /// Asynchronously shows the content of a Learning Content view model.
     /// </summary>
     /// <param name="content">The Learning Content view model to display. It must be either a FileContentViewModel or a LinkContentViewModel.</param>

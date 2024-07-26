@@ -1,4 +1,3 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;

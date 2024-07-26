@@ -1106,31 +1106,6 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void DragLearningElement_CallsBusinessLogic()
-    {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
-        var mockCommand = Substitute.For<IDragLearningElement>();
-        var learningElementVm = ViewModelProvider.GetLearningElement();
-        var mockMapper = Substitute.For<IMapper>();
-        var learningElementEntity = EntityProvider.GetLearningElement();
-        Substitute.For<ILogger<ElementCommandFactory>>();
-        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
-            .Returns(learningElementEntity);
-        mockElementCommandFactory.GetDragCommand(learningElementEntity, 1, 2,
-                learningElementEntity.PositionX, learningElementEntity.PositionY,
-                Arg.Any<Action<BusinessLogic.Entities.LearningElement>>())
-            .Returns(mockCommand);
-
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
-            elementCommandFactory: mockElementCommandFactory);
-
-        systemUnderTest.DragLearningElement(learningElementVm, 1, 2);
-
-        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
-    }
-
-    [Test]
     // ANF-ID: [AWA0016]
     public void DeleteLearningElementInSpace_CallsBusinessLogic()
     {

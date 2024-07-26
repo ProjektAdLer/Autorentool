@@ -762,18 +762,6 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DragLearningElement"/>
-    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,
-        double oldPositionY)
-    {
-        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-
-        var command = ElementCommandFactory.GetDragCommand(elementEntity, oldPositionX, oldPositionY,
-            elementEntity.PositionX, elementEntity.PositionY,
-            space => CMapper.Map(space, learningElementVm));
-        BusinessLogic.ExecuteCommand(command);
-    }
-
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInSpace"/>
     public void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm)
