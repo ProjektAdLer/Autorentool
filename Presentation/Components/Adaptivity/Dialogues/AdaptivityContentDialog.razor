@@ -200,13 +200,13 @@
         if (ContentToEdit != null && ContentToEdit is AdaptivityContentViewModel adaptivityContentViewModel)
         {
             PresentationLogic.DeleteAdaptivityTask(adaptivityContentViewModel, task);
+            Mapper.Map(ContentToEdit, MyContent);
         }
         else
         {
             PresentationLogic.DeleteAdaptivityTask(MyContent, task);
         }
 
-        PresentationLogic.DeleteAdaptivityTask(MyContent, task);
         _nameValues.Remove(task);
         _nameMudFormRefs.Remove(task);
         await MapIntoContainer();
