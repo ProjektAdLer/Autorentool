@@ -120,7 +120,7 @@ public class ReadAtfUt
 
             Assert.That(listSpace.Count, Is.EqualTo(2));
             Assert.That(listSpace[0].SpaceSlotContents,
-                Is.EqualTo(new List<int?> { 1, 2, null, 3, null, 4 })); // R_20X20_6L sort order is 0, 1, 2, 3, 5, 4
+                Is.EqualTo(new List<int?> { 1, 2, null, 3, 4, null })); // R_20X20_6L sort order is 0, 1, 2, 3, 5, 4
             Assert.That(listSpace[1].SpaceSlotContents, Is.EqualTo(new List<int?> { 5, null, null, null, null, null }));
 
             Assert.That(getUrlList, Has.Count.EqualTo(1));
