@@ -8,12 +8,14 @@
 ### Added
 
 ### Changed
+- Changed the order of learning elements in 13- and 15-slot floor plan
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+- Fixed the order of learning elements in learning world tree view
 
 ### Security
 
