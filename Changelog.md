@@ -8,16 +8,26 @@
 ### Added
 
 ### Changed
+- Improved the filter search field in unplaced learning elements to be case-insensitive.
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+- Fixed a bug in adaptivity elements where changes in the learning content were not applied correctly.
+- Fixed a bug where the program crashed after deleting two learning elements in a row using the right click menu.
+- Fixed a bug where the list of unplaced elements was not updated after changing the floor plan.
+- Fixed a bug where a story slot was not made active after undoing the creation of a story element.
 
 ### Security
 
 </details>
+
+## [2.1.7] - 2024-05-28
+
+### Removed
+- Removed primitive H5P
 
 ## [2.1.5] - 2024-05-22
 
