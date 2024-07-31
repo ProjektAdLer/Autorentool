@@ -10,6 +10,7 @@ namespace PresentationTest.PresentationLogic.LearningSpace.FloorPlans;
 public class FloorPlanViewModelProviderUt
 {
     [Test]
+    // ANF-ID: [AWA0023]
     public void GetFloorPlan_ForEachFloorPlanEnum_ReturnsCorrectViewModel([Values] FloorPlanEnum floorPlan)
     {
         // Arrange

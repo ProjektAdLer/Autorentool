@@ -17,7 +17,7 @@
 
                     <div class="absolute flex justify-center -top-3 2xl:-top-4">
                         <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-7 2xl:h-7 -top-5 flex rounded-lg p-1 element-icon"/>
-                    </div>
+                    </div> 
 
                     <div class="flex flex-col items-center">
 
@@ -54,7 +54,7 @@
 </MudMenu>
 
 @code {
-
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
 

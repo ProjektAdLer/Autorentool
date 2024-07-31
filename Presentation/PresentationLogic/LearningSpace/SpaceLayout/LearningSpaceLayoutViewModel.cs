@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans;
 using Shared;
@@ -7,6 +9,8 @@ namespace Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 
 public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
 {
+    private FloorPlanEnum _floorPlanName;
+
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
@@ -18,7 +22,7 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
         LearningElements = new Dictionary<int, ILearningElementViewModel>();
         StoryElements = new Dictionary<int, ILearningElementViewModel>();
     }
-    
+
     internal LearningSpaceLayoutViewModel(FloorPlanEnum floorPlanName)
     {
         FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(floorPlanName);
@@ -28,13 +32,14 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     }
 
     public IFloorPlanViewModel FloorPlanViewModel { get; private set; }
+
     public FloorPlanEnum FloorPlanName
     {
         get => _floorPlanName;
         set
         {
             if (value == _floorPlanName) return;
-            _floorPlanName = value;
+            SetField(ref _floorPlanName, value);
             ChangeFloorPlan(_floorPlanName);
         }
     }
@@ -50,8 +55,6 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningElements.Values;
-
-    private FloorPlanEnum _floorPlanName;
 
     public void ChangeFloorPlan(FloorPlanEnum floorPlanName)
     {
@@ -87,11 +90,14 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
             throw new ArgumentException("There was no element at the given index", nameof(index));
         LearningElements.Remove(index);
     }
-    
+
     public void ClearAllElements() => LearningElements.Clear();
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     private IDictionary<int, ILearningElementViewModel> AdaptLearningElementsToNewFloorPlan(
-        IDictionary<int, ILearningElementViewModel> learningElements, FloorPlanEnum oldFloorPlanName, FloorPlanEnum newFloorPlanName)
+        IDictionary<int, ILearningElementViewModel> learningElements, FloorPlanEnum oldFloorPlanName,
+        FloorPlanEnum newFloorPlanName)
     {
         if (oldFloorPlanName == newFloorPlanName) return learningElements;
         var newFloorPlanCapacity = FloorPlanViewModelProvider.GetFloorPlan(newFloorPlanName).Capacity;
@@ -108,5 +114,18 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
                     new KeyValuePair<int, ILearningElementViewModel>(i, kvP.Value))
                 : newLearningElementsUncompressed;
         return newLearningElements.ToDictionary(kvP => kvP.Key, kvP => kvP.Value);
+    }
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

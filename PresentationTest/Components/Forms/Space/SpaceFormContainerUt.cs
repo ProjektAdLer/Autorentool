@@ -59,6 +59,7 @@ public class SpaceFormContainerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public void Render_SpaceNull_ShowsCreate()
     {
         Presenter.LearningSpaceVm.Returns((ILearningSpaceViewModel?)null);
@@ -76,6 +77,7 @@ public class SpaceFormContainerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0023]
     public void Render_SpaceNotNull_ShowsEdit()
     {
         Presenter.LearningSpaceVm.Returns(Substitute.For<ILearningSpaceViewModel>());
@@ -93,6 +95,7 @@ public class SpaceFormContainerUt
     }
 
     [Test]
+    // ANF-ID: [AWA0001]
     public async Task OnForceNew_ForcesNew()
     {
         Presenter.LearningSpaceVm.Returns(Substitute.For<ILearningSpaceViewModel>());

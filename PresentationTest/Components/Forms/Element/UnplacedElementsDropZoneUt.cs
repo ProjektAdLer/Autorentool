@@ -92,6 +92,7 @@ public class UnplacedElementsDropZoneUt
     }
 
     [Test]
+    // ANF-ID: [ASN0031]
     public void Render_RendersUnplacedItems()
     {
         var expectedItem1 = Substitute.For<ILearningElementViewModel>();
@@ -207,6 +208,7 @@ public class UnplacedElementsDropZoneUt
     [TestCase("")]
     [TestCase("1")]
     [TestCase("xyz")]
+    // ANF-ID: [ASN0029]
     public async Task Filter_SearchText_ShowFilteredItems(string searchString)
     {
         var items = GetTestItems();
@@ -239,6 +241,7 @@ public class UnplacedElementsDropZoneUt
     [TestCase(new[] { "StoryElement", "LearningElement" }, 9)]
     [TestCase(new[] { "AdaptivityElement", "LearningElement" }, 9)]
     [TestCase(new[] { "StoryElement", "AdaptivityElement", "LearningElement" }, 11)]
+    // ANF-ID: [ASN0030]
     public async Task Filter_ElementType_ShowFilteredItems(string[] elementTypes, int expectedCount)
     {
         // Arrange
@@ -269,6 +272,7 @@ public class UnplacedElementsDropZoneUt
     }
 
     [Test]
+    // ANF-ID: [ASN0030]
     public async Task Filter_ElementType_AddAndRemoveFilters()
     {
         var items = GetTestItems();
@@ -331,6 +335,7 @@ public class UnplacedElementsDropZoneUt
     [TestCase(new[] { "Adaptivity", "Story" }, 4)]
     [TestCase(new[] { "Text", "Image", "Video", "H5P" }, 7)]
     [TestCase(new[] { "Text", "Image", "Video", "H5P", "Adaptivity", "Story" }, 11)]
+    // ANF-ID: [ASN0030]
     public async Task Filter_ContentType_ShowFilteredItems(string[] contentTypes, int expectedCount)
     {
         // Arrange
@@ -361,6 +366,7 @@ public class UnplacedElementsDropZoneUt
     }
 
     [Test]
+    // ANF-ID: [ASN0030]
     public async Task Filter_ContentType_AddAndRemoveFilters()
     {
         var items = GetTestItems();
@@ -417,6 +423,7 @@ public class UnplacedElementsDropZoneUt
     [TestCase(new[] { "Medium" }, 3)]
     [TestCase(new[] { "Hard" }, 2)]
     [TestCase(new[] { "Easy", "Medium", "Hard" }, 9)]
+    // ANF-ID: [ASN0030]
     public async Task Filter_Difficulty_ShowFilteredItems(string[] contentTypes,
         int expectedCount)
     {
@@ -448,6 +455,7 @@ public class UnplacedElementsDropZoneUt
     }
 
     [Test]
+    // ANF-ID: [ASN0030]
     public async Task Filter_Difficulty_AddAndRemoveFilters()
     {
         var items = GetTestItems();

@@ -28,6 +28,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
     private IShellWrapper _shellwrapper;
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task OkButtonPressed_ResultNotNull()
     {
         var parameters = new DialogParameters
@@ -48,6 +49,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task Open3DButtonPressed_CallsShellWrapperOpenUrl()
     {
         var parameters = new DialogParameters
@@ -66,6 +68,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
     }
 
     [Test]
+    // ANF-ID: [AHO22]
     public async Task OpenMoodleButtonPressed_CallsShellWrapperOpenUrl()
     {
         var parameters = new DialogParameters
