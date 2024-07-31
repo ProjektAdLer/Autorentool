@@ -45,4 +45,8 @@
       <Compile Remove="PresentationLogic\EntityMapping\LearningElement\H5PTestElementMapperUt.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="View\H5pValidator\" />
+    </ItemGroup>
+
 </Project>

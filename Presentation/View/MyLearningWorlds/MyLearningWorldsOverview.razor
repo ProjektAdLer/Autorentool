@@ -17,12 +17,21 @@
         <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
                 <div class="btn-standard w-36 flex justify-center items-center create-world-button"
+                     @onclick="CreateLearningWorld">
+                    <button class="gap-2">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Title="h5p validation test" Class="z-20 add-learning-world"></MudIcon>
+                        <p class="z-10 uppercase">Im Test button</p>
+                        </button>
+                    </div>
+                </section>
+            <section class="flex flex-row justify-center">
+                <div class="btn-standard w-36 flex justify-center items-center create-world-button"
                      @onclick="CreateLearningWorld"
                      title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
-                    <button class="gap-2">
+
                         <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
                         <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
-                    </button>
+                   
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
                 <div class="btn-standard w-36 flex justify-center items-center import-world-button"
@@ -144,6 +153,11 @@
             NavigateToApp();
     }
 
+    
+    private void CreateH5PValidator()
+    {
+        _createLearningWorldDialogOpen = true;
+    }
     private void CreateLearningWorld()
     {
         _createLearningWorldDialogOpen = true;

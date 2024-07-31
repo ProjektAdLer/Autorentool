@@ -254,4 +254,7 @@
       <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\H5pValidator\" />
+  </ItemGroup>
 </Project>
