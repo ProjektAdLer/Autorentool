@@ -39,7 +39,7 @@
         <value>Lernraum importieren</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Und-/Oder-Verbindung erstellen</value>
+        <value>Bedingung erstellen</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Lade Lernraum</value>
