@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
@@ -639,66 +638,6 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.ShowElementContent(element);
         errorService.Received().SetError("Error while showing learning element content", Arg.Any<string>());
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_SetsErrorWhenSelectedSpaceNull()
-    {
-        var mockErrorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
-
-        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-
-        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_CallsPresentationLogic()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement(parent: space);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        await systemUnderTest.LoadLearningElementAsync(1);
-
-        await presentationLogic.Received().LoadLearningElementAsync(space, 1);
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_SerializationException_CallsErrorManager()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(_ => throw new SerializationException("test"));
-        var space = ViewModelProvider.GetLearningSpace();
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.SetLearningSpace(space);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-        errorService.Received(1).SetError("Error while loading learning element", "test");
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_InvalidOperationException_CallsErrorManager()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(_ => throw new InvalidOperationException("test"));
-        var space = ViewModelProvider.GetLearningSpace();
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.SetLearningSpace(space);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-        errorService.Received(1).SetError("Error while loading learning element", "test");
     }
 
     [Test]

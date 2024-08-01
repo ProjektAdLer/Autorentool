@@ -164,33 +164,6 @@ public class WorldCommandFactoryUt
     }
 
     [Test]
-    // ANF-ID: [ASE2]
-    public void GetLoadCommand_WithAuthoringToolWorkspaceAndStream_ReturnsLoadLearningWorldCommand()
-    {
-        // Arrange
-        var authoringToolWorkspace = EntityProvider.GetAuthoringToolWorkspace();
-        var stream = Substitute.For<Stream>();
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        var learningWorld = EntityProvider.GetLearningWorld();
-        businessLogic.LoadLearningWorld(Arg.Any<Stream>()).Returns(learningWorld);
-        Action<AuthoringToolWorkspace> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetLoadCommand(authoringToolWorkspace, stream, businessLogic, mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<LoadLearningWorld>());
-        var resultCasted = result as LoadLearningWorld;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.Workspace, Is.EqualTo(authoringToolWorkspace));
-            Assert.That(resultCasted.LearningWorld, Is.EqualTo(learningWorld));
-            Assert.That(resultCasted.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
     // ANF-ID: [ASE6]
     public void GetSaveCommand_WithBusinessLogicLearningWorldAndFilePath_ReturnsSaveLearningWorldCommand()
     {

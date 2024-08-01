@@ -19,21 +19,15 @@ public class DataAccess : IDataAccess
     internal readonly IContentFileHandler ContentFileHandler;
     internal readonly IFileSystem FileSystem;
     internal readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
-    internal readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
     internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
-    internal readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     internal readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
 
 
     public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
-        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement,
-        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink,
-        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler,
-        IFileSystem fileSystem, IMapper mapper)
+        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink, IContentFileHandler contentFileHandler,
+        ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
-        XmlHandlerSpace = xmlHandlerSpace;
-        XmlHandlerElement = xmlHandlerElement;
         ContentFileHandler = contentFileHandler;
         WorldSavePathsHandler = worldSavePathsHandler;
         FileSystem = fileSystem;
@@ -59,36 +53,6 @@ public class DataAccess : IDataAccess
     public LearningWorld LoadLearningWorld(Stream stream)
     {
         return Mapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromStream(stream));
-    }
-
-    public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
-    {
-        XmlHandlerSpace.SaveToDisk(Mapper.Map<LearningSpacePe>(space), filepath);
-    }
-
-    public LearningSpace LoadLearningSpace(string filepath)
-    {
-        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromDisk(filepath));
-    }
-
-    public LearningSpace LoadLearningSpace(Stream stream)
-    {
-        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromStream(stream));
-    }
-
-    public void SaveLearningElementToFile(LearningElement element, string filepath)
-    {
-        XmlHandlerElement.SaveToDisk(Mapper.Map<LearningElementPe>(element), filepath);
-    }
-
-    public LearningElement LoadLearningElement(string filepath)
-    {
-        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromDisk(filepath));
-    }
-
-    public LearningElement LoadLearningElement(Stream stream)
-    {
-        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
     /// <inheritdoc cref="IDataAccess.LoadLearningContentAsync(string)"/>
@@ -197,14 +161,14 @@ public class DataAccess : IDataAccess
         //save world to savedworlds folder
         var newSavePath =
             FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
-        
+
         //we must update the save path in the world entity because it still holds the save path from the archive,
         //which is in turn the save path on the previous machine. this *could* lead to an exception being thrown,
         //if the current user on the new machine is not the exact same username as the user on the previous machine.
         //this problem resolves itself when the application is restarted, as the loaded world contains the correct save path,
         //but for the world that is loaded in the current session, we must update the save path.
         world.SavePath = newSavePath;
-        
+
         //parse save path back into name
         if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
 

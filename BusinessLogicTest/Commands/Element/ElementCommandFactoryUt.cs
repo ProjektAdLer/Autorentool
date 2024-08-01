@@ -1,8 +1,6 @@
-using BusinessLogic.API;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
-using NSubstitute;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -238,35 +236,6 @@ public class ElementCommandFactoryUt
     }
 
     [Test]
-    public void GetDragCommand_WithLearningElementAndCoordinates_ReturnsDragLearningElementCommand()
-    {
-        // Arrange
-        var learningElement = EntityProvider.GetLearningElement();
-        var oldPositionX = 0.2;
-        var oldPositionY = 0.3;
-        var newPositionX = 0.4;
-        var newPositionY = 0.5;
-        Action<LearningElement> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetDragCommand(learningElement, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<DragLearningElement>());
-        var resultCasted = result as DragLearningElement;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.LearningElement, Is.EqualTo(learningElement));
-            Assert.That(resultCasted.OldPositionX, Is.EqualTo(oldPositionX));
-            Assert.That(resultCasted.OldPositionY, Is.EqualTo(oldPositionY));
-            Assert.That(resultCasted.NewPositionX, Is.EqualTo(newPositionX));
-            Assert.That(resultCasted.NewPositionY, Is.EqualTo(newPositionY));
-            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
     // ANF-ID: [AWA0015, AWA0010]
     public void GetEditCommand_WithLearningElementAndParameters_ReturnsEditLearningElementCommand()
     {
@@ -302,82 +271,6 @@ public class ElementCommandFactoryUt
             Assert.That(resultCasted.Points, Is.EqualTo(points));
             Assert.That(resultCasted.LearningContent, Is.EqualTo(learningContent));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
-    // ANF-ID: [AWA0018, AWA0019]
-    public void GetLoadCommand_WithLearningSpaceAndFilePath_ReturnsLoadLearningElementCommandUsingFilePath()
-    {
-        // Arrange
-        var parentSpace = EntityProvider.GetLearningSpace();
-        var slotIndex = 1;
-        var filepath = "/path/to/file";
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<LearningSpace> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, filepath, businessLogic, mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<LoadLearningElement>());
-        var resultCasted = result as LoadLearningElement;
-        Assert.That(resultCasted!.ParentSpace, Is.EqualTo(parentSpace));
-        Assert.That(resultCasted.SlotIndex, Is.EqualTo(slotIndex));
-        Assert.That(resultCasted.Filepath, Is.EqualTo(filepath));
-        Assert.That(resultCasted.BusinessLogic, Is.EqualTo(businessLogic));
-        Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-    }
-
-    [Test]
-    // ANF-ID: [AWA0018, AWA0019]
-    public void GetLoadCommand_WithLearningSpaceAndStream_ReturnsLoadLearningElementCommandUsingStream()
-    {
-        // Arrange
-        var parentSpace = EntityProvider.GetLearningSpace();
-        var slotIndex = 1;
-        var stream = new MemoryStream();
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        var learningElement = EntityProvider.GetLearningElement();
-        businessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(learningElement);
-        Action<LearningSpace> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetLoadCommand(parentSpace, slotIndex, stream, businessLogic, mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<LoadLearningElement>());
-        var resultCasted = result as LoadLearningElement;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.ParentSpace, Is.EqualTo(parentSpace));
-            Assert.That(resultCasted.SlotIndex, Is.EqualTo(slotIndex));
-            Assert.That(resultCasted.LearningElement, Is.EqualTo(learningElement));
-            Assert.That(resultCasted.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
-    // ANF-ID: [AWA0017, AWA0012]
-    public void GetSaveCommand_WithBusinessLogicAndLearningElement_ReturnsSaveLearningElementCommand()
-    {
-        // Arrange
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        var learningElement = EntityProvider.GetLearningElement();
-        var filepath = "/path/to/file";
-
-        // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningElement, filepath);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<SaveLearningElement>());
-        var resultCasted = result as SaveLearningElement;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.LearningElement, Is.EqualTo(learningElement));
-            Assert.That(resultCasted.Filepath, Is.EqualTo(filepath));
         });
     }
 }
