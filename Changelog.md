@@ -9,6 +9,7 @@
 
 ### Changed
 - Improved the filter search field in unplaced learning elements to be case-insensitive.
+- Changed the order of learning elements in 13- and 15-slot floor plan
 
 ### Deprecated
 
@@ -19,6 +20,7 @@
 - Fixed a bug where the program crashed after deleting two learning elements in a row using the right click menu.
 - Fixed a bug where the list of unplaced elements was not updated after changing the floor plan.
 - Fixed a bug where a story slot was not made active after undoing the creation of a story element.
+- Fixed the order of learning elements in learning world tree view
 - Fixed a bug in adaptivity element question preview, where long comments exceeded the viewport.
 
 ### Security

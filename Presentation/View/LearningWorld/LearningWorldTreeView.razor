@@ -1,15 +1,15 @@
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.Mediator
-@using Presentation.PresentationLogic.SelectedViewModels
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
+@using MudBlazor.Utilities
 @using Presentation.Components
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
-@using MudBlazor.Utilities
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Shared.Command
 @using Shared.Extensions
 @implements IDisposable
@@ -54,8 +54,9 @@
                                                                    IsSelected="@IsLearningElementSelected(entranceElement)"
                                                                    OnSelect="@(ele => OnLearningElementClicked(ele))"/>
                                     }
-                                    @foreach (var learningElement in learningSpace.ContainedLearningElements)
+                                    @foreach (var key in learningSpace.LearningSpaceLayout.LearningElements.Keys.OrderBy(key => key))
                                     {
+                                        var learningElement = learningSpace.LearningSpaceLayout.LearningElements[key];
                                         <LearningWorldTreeViewItem @key="learningElement" LearningElement="@learningElement"
                                                                    IsSelected="@IsLearningElementSelected(learningElement)"
                                                                    OnSelect="@(ele => OnLearningElementClicked(ele))"/>
