@@ -28,10 +28,10 @@
         <value>Import a learning world as ZIP file (e.g. from another computer or from a backup)</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
-        <value>NEW</value>
+        <value>Create learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>Import</value>
+        <value>Import learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug for Philipp</value>

@@ -34,10 +34,10 @@
         <value>Lernwelt als ZIP-Datei importieren (z.B. von anderem Rechner oder aus Sicherheitskopie)</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>Importieren</value>
+        <value>Lernwelt importieren</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
-        <value>NEU</value>
+        <value>Lernwelt erstellen</value>
     </data>
     <data name="Page.LearningWorld.Subheading" xml:space="preserve">
         <value>Fahren Sie mit der Maus über Ihre Lernwelten, und öffnen Sie diese anschließend.</value>

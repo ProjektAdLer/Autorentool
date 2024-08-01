@@ -16,21 +16,21 @@
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
-                <div class="btn-standard w-36 flex justify-center items-center create-world-button"
+                <div class="btn-standard w-44 flex justify-center items-center create-world-button"
                      @onclick="CreateLearningWorld"
                      title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
                     <button class="gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
-                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world" Size="Size.Small"></MudIcon>
+                        <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                     </button>
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
-                <div class="btn-standard w-36 flex justify-center items-center import-world-button"
+                <div class="btn-standard w-44 flex justify-center items-center import-world-button"
                      @onclick="ImportLearningWorldAsync"
                      title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
                     <button class="gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
-                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
+                        <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world" Size="Size.Small"></MudIcon>
+                        <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                     </button>
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
