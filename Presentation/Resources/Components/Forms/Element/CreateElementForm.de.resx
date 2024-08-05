@@ -75,10 +75,10 @@
         <value>Lernziele</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Beschreibung.</value>
+        <value>Beschreibung zu diesem Element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr(e) Lernziel(e).</value>
+        <value>Lernziel(e) zu diesem Element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
         <value>Schwierigkeitsgrad</value>

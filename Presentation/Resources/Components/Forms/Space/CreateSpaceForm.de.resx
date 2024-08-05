@@ -48,10 +48,10 @@
         <value>Lernziele</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Beschreibung für Ihren Lernraum.</value>
+        <value>Beschreibung für diesen Lernraum</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diesen Lernraum.</value>
+        <value>Lernziel(e) für diesen Lernraum</value>
     </data>
     <data name="CreateSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm ist null</value>
@@ -63,7 +63,7 @@
         <value>Benötigte Punkte für das Abschließen des Lernraums</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme des Lernraums</value>
+        <value>Auswahl an Themes mit verschiedenen Themenwelten für den Lernraum</value>
     </data>
     <data name="CreateSpaceForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>

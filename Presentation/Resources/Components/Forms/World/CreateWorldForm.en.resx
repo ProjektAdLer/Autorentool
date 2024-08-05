@@ -34,10 +34,10 @@
         <value>Language</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description for your learning world.</value>
+        <value>Description for this learning world</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s) for this learning world.</value>
+        <value>Learning outcome(s) for this learning world</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Create learning world</value>

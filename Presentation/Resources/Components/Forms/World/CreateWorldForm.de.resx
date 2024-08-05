@@ -37,10 +37,10 @@
         <value>Link zur Evaluation</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Beschreibung für Ihre Lernwelt.</value>
+        <value>Beschreibung für diese Lernwelt</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diese Lernwelt.</value>
+        <value>Lernziel(e) für diese Lernwelt</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Lernwelt erstellen</value>

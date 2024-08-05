@@ -19,7 +19,7 @@
 </header>
 
 <div class="flex justify-between items-start p-2">
-    <MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditElementForm.Text"]</MudText>
+    <MudText Class="text-adlergrey-200 p-2 text-xs">@Localizer["EditElementForm.Text"]</MudText>
 
     <MudTooltip Placement="Placement.Bottom" Delay="150" Duration="250" Arrow="true" Class="w-[700px] p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="Erklärung">
         <ChildContent>
@@ -227,23 +227,24 @@
                     For="() => FormModel.LearningContent"
                     @ref="_pseudoGroupStoryContent">
 
-                    <div class="flex flex-row items-center gap-1 py-2">
-                        <p class="text-xs pl-6">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
-                        <MudTooltip Placement="Placement.Right"
-                                    Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
-                            <TooltipContent>
-                                <MudText
-                                    Class="text-xs">
-                                    @((MarkupString)Localizer["EditElementForm.Story.Tooltip"].ToString())
-                                </MudText>
-                            </TooltipContent>
-                            <ChildContent>
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
-                                         Class="text-adlergrey hover:text-adlerdarkblue">
-                                </MudIcon>
-                            </ChildContent>
-                        </MudTooltip>
-                    </div>
+
+                        <p class="text-xs pl-4">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]
+                            <MudTooltip Placement="Placement.Right"
+                                        Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                                <TooltipContent>
+                                    <MudText
+                                        Class="text-xs">
+                                        @((MarkupString)Localizer["EditElementForm.Story.Tooltip"].ToString())
+                                    </MudText>
+                                </TooltipContent>
+                                <ChildContent>
+                                    <MudIcon Icon="@Icons.Material.Filled.Info"
+                                             Class="text-sm 2xl:text-lg text-adlergrey-200 hover:text-adlerdarkblue">
+                                    </MudIcon>
+                                </ChildContent>
+                            </MudTooltip>
+                        </p>
+
 
                     @if (StoryContentModel != null)
                     {

@@ -66,10 +66,10 @@
         <value>Learning outcomes</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description.</value>
+        <value>Description to this element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s).</value>
+        <value>Learning outcome(s) for this element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Points</value>

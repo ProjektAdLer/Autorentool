@@ -24,7 +24,7 @@
     }
     <div class="w-full grow h-full flex flex-col flex-nowrap mb-2 px-0 mx-0">
     <MudTable Items="@Elements" Hover="true" @ref="_mudTable" HeaderClass="table-head-bordered" CustomHeader="true"
-              Class="@TableClasses" Virtualize="true" Striped="true" FixedHeader="true"
+              Class="@TableClasses" Virtualize="true" FixedHeader="true"
               RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
               Filter="Filter" Dense="true">
         <ToolBarContent>

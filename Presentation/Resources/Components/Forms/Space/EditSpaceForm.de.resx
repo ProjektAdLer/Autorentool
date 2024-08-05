@@ -63,7 +63,7 @@
         <value>Benötigte Punkte für das Abschließen des Lernraums</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme des Lernraums</value>
+        <value>Auswahl an Themes mit verschiedenen Themenwelten für den Lernraum</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Erforderliche Angabe</value>
