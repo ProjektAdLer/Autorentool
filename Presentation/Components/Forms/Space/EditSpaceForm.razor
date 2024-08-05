@@ -56,9 +56,24 @@
 
         <div class="px-4">
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"] InitiallyCollapsed="false">
-                @*<MudText Typo="Typo.caption">
-                                @Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"]
-            </MudText>*@
+               
+                <p class="text-xs pl-4">@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle"]
+                    <MudTooltip Placement="Placement.Right"
+                                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                        <TooltipContent>
+                            <MudText
+                                Class="text-xs">
+                                @((MarkupString)Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Text"].ToString())
+                            </MudText>
+                        </TooltipContent>
+                        <ChildContent>
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                     Class="text-adlergrey-200 hover:text-adlerdarkblue">
+                            </MudIcon>
+                        </ChildContent>
+                    </MudTooltip>
+                </p>
+              
                 <div class="flex rounded-lg w-4/4 px-1 pb-2">
                     <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
                 </div>

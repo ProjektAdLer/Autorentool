@@ -48,10 +48,10 @@
         <value>Lernziele</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Beschreibung für Ihren Lernraum.</value>
+        <value>Beschreibung für diesem Lernraum</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulieren Sie hier Ihr(e) Lernziel(e) für diesen Lernraum.</value>
+        <value>Lernziel(e) für diesen Lernraum</value>
     </data>
     <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm ist null</value>
@@ -69,12 +69,15 @@
         <value>* Erforderliche Angabe</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
-        <value>Fahren Sie mit der Maus über die Grundrisse, um diese vergrößert anzeigen zu lassen und zusätzlich die spätere Raumansicht in der 3D-Lernumgebung anzuschauen. </value>
+        <value>Fahren Sie in der Miniaturansicht mit der Maus über die Grundrisse, um sich die Platzierung der Eingangs- und Ausgangstüren anzeigen zu lassen sowie die Darstellung des Raumes in der 3D-Lernumgebung. </value>
     </data>
     <data name="EditSpaceForm.Goals.Button" xml:space="preserve">
         <value>Lernziel-Formulierung</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Beschreibung</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle" xml:space="preserve">
+        <value>Auswahl an Grundrissen für den Lernraum. Die Zahl gibt an, wie viele Slots zum Platzieren von Lern- und Adaptivitätselementen zur Verfügung stehen</value>
     </data>
 </root>
