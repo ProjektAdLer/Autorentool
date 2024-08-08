@@ -34,10 +34,10 @@
         <value>Tester-Feedback</value>
     </data>
     <data name="Feedback.Button.UX.Hover" xml:space="preserve">
-        <value>Feedback zur Benutzeroberfläche - Öffnet eine neue Seite</value>
+        <value>Feedback zur Benutzeroberfläche - Öffnet ein Browserfenster</value>
     </data>
     <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
-        <value>Technisches Feedback - Öffnet eine neue Seite</value>
+        <value>Technisches Feedback - Öffnet ein Browserfenster</value>
     </data>
     <data name="LearningWorld.Save.Hover" xml:space="preserve">
         <value>Lernwelt speichern</value>
@@ -58,7 +58,7 @@
         <value>Zum finalen Feedback</value>
     </data>
     <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
-        <value>Allgemeines Feedback zu AdLer - Öffnet eine neue Seite</value>
+        <value>Allgemeines Feedback zu AdLer - Öffnet ein Browserfenster</value>
     </data>
     <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
         <value>Feedback geben</value>
@@ -139,7 +139,7 @@
         <value>Benutzerhandbuch</value>
     </data>
     <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
-        <value>Tutorial</value>
+        <value>Didaktische Handreichung</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>
@@ -149,5 +149,11 @@
     </data>
     <data name="Functionality.Button.Close.Hover" xml:space="preserve">
         <value>Schließen</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
+        <value>Didaktische Handreichung - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
+        <value>Benutzerhandbuch - Öffnet ein Browserfenster</value>
     </data>
 </root>

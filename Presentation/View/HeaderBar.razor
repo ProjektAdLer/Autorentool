@@ -131,22 +131,29 @@
         <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
-            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
-            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
-            <MudDivider></MudDivider>
-
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX" title="@Localizer["MudPopover.Feedback.Final.Hover"]">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            
+            <MudListItem title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenManual">@Localizer["HeaderBar.Help.UserManual"]</MudLink>
             </MudListItem>
 
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug" title="@Localizer["Feedback.Button.Technical.Hover"]">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            <MudListItem title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</MudLink>
             </MudListItem>
 
             <MudDivider></MudDivider>
 
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer" title="@Localizer["HeaderBar.Help.About.Hover"]">@Localizer["HeaderBar.Help.About"]</MudLink>
+            <MudListItem title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            </MudListItem>
+
+            <MudListItem title="@Localizer["Feedback.Button.Technical.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            </MudListItem>
+
+            <MudDivider></MudDivider>
+
+            <MudListItem title="@Localizer["HeaderBar.Help.About.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
 
         </MudMenu>
@@ -628,6 +635,10 @@
 
     private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
 
+    private void OpenManual() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringautorentool.html");
+    
+    private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
+    
     private string icon = help;
 
     const string help =
