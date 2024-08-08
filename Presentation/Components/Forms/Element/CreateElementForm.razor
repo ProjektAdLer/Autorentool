@@ -230,9 +230,8 @@
                 <PseudoFormFieldGrouping
                     For="() => FormModel.LearningContent"
                     @ref="_pseudoGroupStoryContent">
-
-                    <div class="flex flex-row items-center gap-1 py-2">
-                        <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
+                
+                    <p class="text-xs pl-4">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]
                         <MudTooltip Placement="Placement.Right"
                                     Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                             <TooltipContent>
@@ -247,8 +246,8 @@
                                 </MudIcon>
                             </ChildContent>
                         </MudTooltip>
-                    </div>
-
+                    </p>
+                    
                     @if (StoryContentModel != null)
                     {
                         @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
@@ -265,10 +264,10 @@
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                    OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
                                                    Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
-                                                   Class="w-8 h-8">
+                                                   Class="w-8 h-8 text-adlergrey-200 hover:text-adlerdarkblue-700">
                                     </MudIconButton>
                                 </div>
-                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/550")</p>
+                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/400 Zeichen")</p>
                             </div>
                         }
 

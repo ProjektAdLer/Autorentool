@@ -226,8 +226,7 @@
                 <PseudoFormFieldGrouping
                     For="() => FormModel.LearningContent"
                     @ref="_pseudoGroupStoryContent">
-
-
+                    
                         <p class="text-xs pl-4">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]
                             <MudTooltip Placement="Placement.Right"
                                         Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
@@ -244,8 +243,7 @@
                                 </ChildContent>
                             </MudTooltip>
                         </p>
-
-
+                        
                     @if (StoryContentModel != null)
                     {
                         @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
@@ -265,7 +263,7 @@
                                                    Class="w-8 h-8">
                                     </MudIconButton>
                                 </div>
-                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/550")</p>
+                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/400 Zeichen")</p>
                             </div>
                         }
 

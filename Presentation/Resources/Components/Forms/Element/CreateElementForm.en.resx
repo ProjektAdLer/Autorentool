@@ -141,7 +141,7 @@ For more information on H5P files, please read the user documentation of the aut
         <value>Story</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
-        <value>Story of this story element</value>
+        <value>Story of this story element. Each text block can contain 400 characters</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.StoryTitle" xml:space="preserve">
         <value>Title of the story element</value>
@@ -159,7 +159,7 @@ For more information on H5P files, please read the user documentation of the aut
         <value>Delete text block</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
-        <value>Slide </value>
+        <value>Text block </value>
     </data>
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Story element created</value>

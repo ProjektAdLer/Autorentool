@@ -22,7 +22,7 @@
         <value>Story text blocks cannot be empty. Please either add text or delete the empty block(s).</value>
     </data>
     <data name="StoryContentValidator.BlockTooLong.ErrorMessage" xml:space="preserve">
-        <value>Story text blocks may only be 550 digits long at maximum.</value>
+        <value>Story text blocks may only be 400 digits long at maximum.</value>
     </data>
     <data name="StoryContentValidator.StoryTextNoBlocks.ErrorMessage" xml:space="preserve">
         <value>The story element must contain at elast one non-empty text block.</value>

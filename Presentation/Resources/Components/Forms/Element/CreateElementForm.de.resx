@@ -142,7 +142,7 @@ Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation
         <value>Story</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
-        <value>Story zu diesem Storyelement</value>
+        <value>Story zu diesem Storyelement. Je Textblock können 400 Zeichen verwendet werden</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.StoryTitle" xml:space="preserve">
         <value>Titel des Storyelements</value>
@@ -160,7 +160,7 @@ Für mehr Informationen zu H5P-Dateien lesen Sie bitte die Benutzerdokumentation
         <value>Neuen Textblock hinzufügen</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
-        <value>Slide </value>
+        <value>Textblock </value>
     </data>
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Storyelement erstellt</value>
