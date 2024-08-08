@@ -30,7 +30,7 @@
         
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
-            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]     @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
 
         }
         else
