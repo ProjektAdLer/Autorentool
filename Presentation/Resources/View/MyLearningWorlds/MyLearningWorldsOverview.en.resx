@@ -49,13 +49,13 @@
         <value>Load (.awf)</value>
     </data>
     <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
-        <value>Confirm deleting world</value>
+        <value>Confirm deleting learning world</value>
     </data>
     <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
-        <value>Through this action the world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting world?</value>
+        <value>Through this action the learning world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting learning world?</value>
     </data>
     <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
-        <value>Delete world</value>
+        <value>Delete learning world</value>
     </data>
     <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
         <value>Show file names</value>

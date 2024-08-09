@@ -49,13 +49,13 @@
         <value>Laden (.awf)</value>
     </data>
     <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
-        <value>Welt löschen bestätigen</value>
+        <value>Löschen der Lernwelt bestätigen</value>
     </data>
     <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
-        <value>Durch diese Aktion wird die Welt &lt;b&gt;permanent und unwiderruflich&lt;/b&gt; gelöscht. Welt wirklich löschen?</value>
+        <value>Durch diese Aktion wird die Lernwelt &lt;b&gt;permanent und unwiderruflich&lt;/b&gt; gelöscht. Lernwelt wirklich löschen?</value>
     </data>
     <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
-        <value>Welt löschen</value>
+        <value>Lernwelt löschen</value>
     </data>
     <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
         <value>Dateinamen anzeigen</value>

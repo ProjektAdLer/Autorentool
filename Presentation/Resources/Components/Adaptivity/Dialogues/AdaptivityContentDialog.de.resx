@@ -68,4 +68,7 @@
     <data name="AdaptivityContentDialog.Table.Button.RequiredQuestion" xml:space="preserve">
         <value>Als "zu lösende Frage" festlegen</value>
     </data>
+    <data name="AdaptivityContentDialog.Table.Button.RequiredQuestionIsSelected" xml:space="preserve">
+        <value>Zu lösende Frage</value>
+    </data>
 </root>

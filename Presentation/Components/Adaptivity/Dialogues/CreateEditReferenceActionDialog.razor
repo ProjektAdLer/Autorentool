@@ -36,10 +36,11 @@
                         </div>
                         <div class="p-2">
                             <div class="flex flex-row gap-1">
-                                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Reference.Element.Label.Text"]</MudText>
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Element.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                                </MudTooltip>
+                                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Reference.Element.Label.Text"]
+                                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Element.Info.Text"]">
+                                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                                    </MudTooltip>
+                                </MudText>
                             </div>
                             <GridSelect T="ILearningElementViewModel"
                                         Elements="LearningElements"
@@ -72,10 +73,11 @@
                         </div>
                         <div class="p-2">
                             <div class="flex flex-row gap-1">
-                                <MudText Class="font-bold text-sm pl-2">@Localizer["Reference.Content.Label.Text"]</MudText>
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Content.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                                </MudTooltip>
+                                <MudText Class="font-bold text-sm pl-2">@Localizer["Reference.Content.Label.Text"]
+                                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Content.Info.Text"]">
+                                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                                    </MudTooltip>
+                                </MudText>
                             </div>
                             <GridSelect T="ILearningContentViewModel"
                                         Elements="LearningContents"
