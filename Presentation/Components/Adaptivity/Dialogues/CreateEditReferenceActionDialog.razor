@@ -48,7 +48,7 @@
                                         RequiredError="@Localizer["Element.RequiredError.Text"]"
                                         FilterFuncSearchableStrings="element => new[] { element.Name }">
                                 <ElementTemplate>
-                                    <div>@context.Name</div>
+                                    <MudText Class="text-xs font-bold break-all leading-none truncate" title="@context.Name">@context.Name</MudText>
                                 </ElementTemplate>
                             </GridSelect>
                         </div>
@@ -84,7 +84,7 @@
                                         RequiredError="@Localizer["Content.RequiredError.Text"]"
                                         FilterFuncSearchableStrings="content => new[] { content.Name }">
                                 <ElementTemplate>
-                                    <MudText Class="text-adlertextgrey text-xs font-bold break-all leading-none truncate">@context.Name</MudText>
+                                    <MudText Class="text-xs font-bold break-all leading-none truncate" title="@context.Name">@context.Name</MudText>
                                 </ElementTemplate>
                             </GridSelect>
                         </div>

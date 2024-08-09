@@ -151,9 +151,9 @@
         <value>Close</value>
     </data>
     <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
-        <value>User manual - Opens a browser window</value>
+        <value>User manual (only available in German) - Opens a browser window</value>
     </data>
     <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
-        <value>Didactic guide - Opens a browser window</value>
+        <value>Didactic guide (only available in German) - Opens a browser window</value>
     </data>
 </root>
