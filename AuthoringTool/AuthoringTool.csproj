@@ -133,5 +133,13 @@
         <DependentUpon>MyLearningWorld.en.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+    
+    <ItemGroup>
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\frame.d.ts" />
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-integration.d.ts" />
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-standalone.d.ts" />
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\index.d.ts" />
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\utils.d.ts" />
+    </ItemGroup>
 
 </Project>
