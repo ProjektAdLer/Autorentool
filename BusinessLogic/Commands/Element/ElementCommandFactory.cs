@@ -1,4 +1,3 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
@@ -24,11 +23,12 @@ public class ElementCommandFactory : IElementCommandFactory
             LoggerFactory.CreateLogger<CreateLearningElementInSlot>());
 
     public ICreateStoryElementInSlot GetCreateStoryInSlotCommand(LearningSpace parentSpaceEntity, int slotIndex,
-        string name,
-        ILearningContent contentEntity, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ElementModel elementModel, int workload, int points, double positionX, double positionY, Action<LearningSpace> action) =>
+        string name, ILearningContent contentEntity, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX,
+        double positionY, Action<LearningSpace> action) =>
         new CreateStoryElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description, goals,
-            difficulty, elementModel, workload, points, positionX, positionY, action, LoggerFactory.CreateLogger<CreateStoryElementInSlot>());
+            difficulty, elementModel, workload, points, positionX, positionY, action,
+            LoggerFactory.CreateLogger<CreateStoryElementInSlot>());
 
     public ICreateLearningElementInSlot GetCreateInSlotCommand(LearningSpace parentSpace, int slotIndex,
         LearningElement learningElement, Action<LearningSpace> mappingAction) =>
@@ -48,8 +48,8 @@ public class ElementCommandFactory : IElementCommandFactory
         new DeleteLearningElementInSpace(learningElement, parentSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInSpace>());
 
-    public IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement, LearningSpace parentSpace,
-        Action<LearningSpace> mappingAction) =>
+    public IDeleteStoryElementInSpace GetDeleteStoryInSpaceCommand(LearningElement learningElement,
+        LearningSpace parentSpace, Action<LearningSpace> mappingAction) =>
         new DeleteStoryElementInSpace(learningElement, parentSpace, mappingAction,
             LoggerFactory.CreateLogger<DeleteStoryElementInSpace>());
 
@@ -58,30 +58,9 @@ public class ElementCommandFactory : IElementCommandFactory
         new DeleteLearningElementInWorld(learningElement, parentWorld, mappingAction,
             LoggerFactory.CreateLogger<DeleteLearningElementInWorld>());
 
-    public IDragLearningElement GetDragCommand(LearningElement learningElement, double oldPositionX,
-        double oldPositionY,
-        double newPositionX, double newPositionY, Action<LearningElement> mappingAction) =>
-        new DragLearningElement(learningElement, oldPositionX, oldPositionY, newPositionX, newPositionY,
-            mappingAction, LoggerFactory.CreateLogger<DragLearningElement>());
-
     public IEditLearningElement GetEditCommand(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction) =>
         new EditLearningElement(learningElement, parentSpace, name, description, goals, difficulty, elementModel,
             workload, points, learningContent, mappingAction, LoggerFactory.CreateLogger<EditLearningElement>());
-
-    public ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, string filepath,
-        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction) =>
-        new LoadLearningElement(parentSpace, slotIndex, filepath, businessLogic, mappingAction,
-            LoggerFactory.CreateLogger<LoadLearningElement>());
-
-    public ILoadLearningElement GetLoadCommand(LearningSpace parentSpace, int slotIndex, Stream stream,
-        IBusinessLogic businessLogic, Action<LearningSpace> mappingAction) =>
-        new LoadLearningElement(parentSpace, slotIndex, stream, businessLogic, mappingAction,
-            LoggerFactory.CreateLogger<LoadLearningElement>());
-
-    public ISaveLearningElement GetSaveCommand(IBusinessLogic businessLogic, LearningElement learningElement,
-        string filepath) =>
-        new SaveLearningElement(businessLogic, learningElement, filepath,
-            LoggerFactory.CreateLogger<SaveLearningElement>());
 }

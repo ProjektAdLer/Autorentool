@@ -46,11 +46,6 @@ public class WorldCommandFactory : IWorldCommandFactory
         new LoadLearningWorld(workspace, filepath, businessLogic, mappingAction,
             LoggerFactory.CreateLogger<LoadLearningWorld>());
 
-    public ILoadLearningWorld GetLoadCommand(AuthoringToolWorkspace workspace, Stream stream,
-        IBusinessLogic businessLogic, Action<AuthoringToolWorkspace> mappingAction) =>
-        new LoadLearningWorld(workspace, stream, businessLogic, mappingAction,
-            LoggerFactory.CreateLogger<LoadLearningWorld>());
-
     public ISaveLearningWorld GetSaveCommand(IBusinessLogic businessLogic, LearningWorld learningWorld,
         string filepath, Action<LearningWorld> mappingAction) =>
         new SaveLearningWorld(businessLogic, learningWorld, filepath, mappingAction,

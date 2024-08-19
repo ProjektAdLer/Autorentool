@@ -204,13 +204,7 @@ public class CommandStateManagerUt
         var deleteLearningWorldCommand =
             new DeleteLearningWorld(workspace, learningWorld, _ => { }, new NullLogger<DeleteLearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(learningElement);
-        mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(learningSpace);
         mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(learningWorld);
-        var loadLearningElementCommand = new LoadLearningElement(learningSpace, 0, "e", mockBusinessLogic, _ => { },
-            new NullLogger<LoadLearningElement>());
-        var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { },
-            new NullLogger<LoadLearningSpace>());
         var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { },
             new NullLogger<LoadLearningWorld>());
 
@@ -237,8 +231,6 @@ public class CommandStateManagerUt
         systemUnderTest.Execute(deleteLearningSpaceCommand);
         systemUnderTest.Execute(deleteLearningWorldCommand);
         systemUnderTest.Execute(loadLearningWorldCommand);
-        systemUnderTest.Execute(loadLearningSpaceCommand);
-        systemUnderTest.Execute(loadLearningElementCommand);
         // command to remove
         systemUnderTest.Execute(createSecondLearningWorldCommand);
         systemUnderTest.Undo();

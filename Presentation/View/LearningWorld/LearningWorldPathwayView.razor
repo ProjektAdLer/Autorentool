@@ -27,10 +27,6 @@
                     <img src="CustomIcons/Space/space-icon_bright.png" class="absolute opacity-20 w-8 h-8">
                     <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
                 </MudButton>
-                <MudButton Class="relative btn-standard w-14 load-learning-space" title=@Localizer["LearningWorldView.ImportLearningSpace.Title"] @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">
-                    <img src="CustomIcons/Space/space-icon_bright.png" class="absolute opacity-20 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Class="absolute"></MudIcon>
-                </MudButton>
                 <MudButton Class="relative btn-standard w-14 add-condition" title=@Localizer["LearningWorldView.NewCondition.Title"] @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">
                     <img src="CustomIcons/condition-icon.png" class="absolute opacity-20 w-8 h-8">
                     <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
@@ -133,13 +129,6 @@
     private void AddNewPathWayCondition()
     {
         LearningWorldP.CreatePathWayCondition();
-    }
-
-    private async Task LoadLearningSpaceAsync()
-    {
-        await LearningWorldP.LoadLearningSpaceAsync();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-        await InvokeAsync(StateHasChanged);
     }
 
     private void TriggerStateHasChanged()

@@ -40,12 +40,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
         ITopicViewModel? topic = null);
 
     /// <summary>
-    /// Calls the LoadLearningElementAsync method in PresentationLogic and adds the returned
-    /// learning element to its parent.
-    /// </summary>
-    Task LoadLearningElementAsync(int slotIndex);
-
-    /// <summary>
     /// Sets the LearningSpaceVm.
     /// </summary>
     /// <param name="space">The learning space that should be set as selected.</param>

@@ -45,13 +45,6 @@ public interface IBusinessLogic
 
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
-    LearningWorld LoadLearningWorld(Stream stream);
-    void SaveLearningSpace(LearningSpace learningSpace, string filepath);
-    LearningSpace LoadLearningSpace(string filepath);
-    LearningSpace LoadLearningSpace(Stream stream);
-    void SaveLearningElement(LearningElement learningElement, string filepath);
-    LearningElement LoadLearningElement(string filepath);
-    LearningElement LoadLearningElement(Stream stream);
     Task<ILearningContent> LoadLearningContentAsync(string filepath);
 
     /// <summary>

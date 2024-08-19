@@ -208,58 +208,6 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
-    {
-        try
-        {
-            DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-        }
-    }
-
-    public LearningSpace LoadLearningSpace(string filepath)
-    {
-        try
-        {
-            var space = DataAccess.LoadLearningSpace(filepath);
-            return space;
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public void SaveLearningElement(LearningElement learningElement, string filepath)
-    {
-        try
-        {
-            DataAccess.SaveLearningElementToFile(learningElement, filepath);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-        }
-    }
-
-    public LearningElement LoadLearningElement(string filepath)
-    {
-        try
-        {
-            var learningElement = DataAccess.LoadLearningElement(filepath);
-            return learningElement;
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
     public async Task<ILearningContent> LoadLearningContentAsync(string filepath)
     {
         return await DataAccess.LoadLearningContentAsync(filepath);
@@ -282,45 +230,6 @@ public class BusinessLogic : IBusinessLogic
     public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return DataAccess.GetSavedLearningWorldPaths();
-    }
-
-    public LearningWorld LoadLearningWorld(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningWorld(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public LearningSpace LoadLearningSpace(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningSpace(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public LearningElement LoadLearningElement(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningElement(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations)
