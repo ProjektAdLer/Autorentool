@@ -49,6 +49,15 @@
             </section>
         </div>
         <div id="h5p-container"></div>
+                  <div class="btn-standard w-36 flex justify-center items-center import-world-button"
+                             @onclick="ImportLearningWorldAsync"
+                             title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
+                            <button class="gap-2">
+                                <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
+                                <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
+                            </button>
+                            <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
+                        </div>
                <section class="flex flex-col w-5/6 m-auto bg-blacktrans-100 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
                     <div class="flex flex-row gap-2 justify-between">
                         <div class="flex justify-start">
@@ -189,6 +198,7 @@
       //ValidatorDialog = true;
        _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
         await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
+        await InvokeAsync(StateHasChanged);
     }
     private void CreateLearningWorld()
     {
