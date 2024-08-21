@@ -66,6 +66,175 @@
       <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-hub-sharing.css" />
       <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p.css" />
       <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\utils.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\tobi-test.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\content\content.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\fontawesome-webfont.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\fontawesome-webfont.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\fontawesome-webfont.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\fontawesome-webfont.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\fontawesome-webfont.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\FontAwesome.otf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\h5p-font-awesome.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\FontAwesome-4.5\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\dist\h5p-drag-text.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\dist\h5p-drag-text.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\icon.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\af.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ar.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\bg.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\bs.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ca.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\cs.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\da.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\de.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\el.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\es-mx.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\es.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\et.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\eu.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\fa.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\fi.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\fr.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ga.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\gl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\he.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\hu.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\it.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ja.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\km.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ko.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\lt.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\lv.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\mn.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\nb.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\nl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\nn.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\pl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\pt-br.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\pt.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ro.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\ru.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sma.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sme.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\smj.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sr.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sv.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\sw.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\te.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\tr.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\uk.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\vi.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\language\zh-tw.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\presave.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\semantics.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.DragText-1.10\upgrades.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\fonts\h5p.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\fonts\h5p.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\fonts\h5p.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\fonts\h5p.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.FontIcons-1.0\styles\h5p-font-icons.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-help-dialog.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-icon.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-message-dialog.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-progress-circle.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-progressbar.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-score-bar.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-simple-rounded-button.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-slider.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-speech-bubble.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-tip.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\css\joubel-ui.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\fonts\joubel.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\fonts\joubel.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\fonts\joubel.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\fonts\joubel.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-help-dialog.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-message-dialog.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-progress-circle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-progressbar.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-score-bar.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-simple-rounded-button.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-slider.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-speech-bubble.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-throbber.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-tip.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\js\joubel-ui.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.JoubelUI-1.3\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\h5p.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\images\minus-one.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\images\plus-one.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\scripts\explainer.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\scripts\question.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\scripts\score-points.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\styles\explainer.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Question-1.5\styles\question.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Transition-1.0\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5P.Transition-1.0\transition.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\h5p-editor-range-list.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\h5p-editor-range-list.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\ar.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\bg.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\ca.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\cs.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\de.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\el.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\en.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\es-mx.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\es.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\et.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\eu.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\fi.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\fr.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\gl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\it.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\ka.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\ko.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\lt.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\lv.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\mn.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\nb.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\nl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\nn.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\pl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\pt-br.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\pt.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\ru.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\sl.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\sma.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\sme.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\smj.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\sv.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\sw.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\language\uk.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.RangeList-1.0\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.ShowWhen-1.0\h5p-show-when.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.ShowWhen-1.0\h5p-show-when.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.ShowWhen-1.0\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.TableList-1.0\h5p-editor-table-list.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.TableList-1.0\h5p-editor-table-list.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\H5PEditor.TableList-1.0\library.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\applied-patch-after-updating.patch" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\h5p-jquery-ui.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\h5p-jquery-ui.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\animated-overlay.gif" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_flat_75_ffffff_40x100.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_glass_65_ffffff_1x400.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_glass_75_dadada_1x400.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_glass_95_fef1ec_1x400.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-icons_222222_256x240.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-icons_2e83ff_256x240.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-icons_454545_256x240.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-icons_888888_256x240.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\images\ui-icons_cd0a0a_256x240.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\jQuery.ui-1.10\library.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -80,6 +249,7 @@
     <ItemGroup>
       <Folder Include="View" />
       <Folder Include="wwwroot\fonts" />
+      <Folder Include="wwwroot\H5pStandalone\h5p-folder\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -99,6 +269,8 @@
 
     <ItemGroup>
       <None Include="wwwroot\css\Presentation.global.css" />
+      <None Remove="wwwroot\H5pStandalone\**" />
+      <None Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\**" />
     </ItemGroup>
     
     <ItemGroup>
@@ -146,6 +318,8 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>App.de.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Remove="wwwroot\H5pStandalone\**" />
+        <EmbeddedResource Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\**" />
     </ItemGroup>
     
     <ItemGroup>
@@ -154,15 +328,13 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>MyLearningWorld.en.resx</DependentUpon>
       </Compile>
+      <Compile Remove="wwwroot\H5pStandalone\**" />
+      <Compile Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\**" />
     </ItemGroup>
     
     <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\frame.d.ts" />
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-integration.d.ts" />
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-standalone.d.ts" />
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\index.d.ts" />
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\tobi-test.razor.ts" />
-      <TypeScriptCompile Include="wwwroot\H5pStandalone\utils.d.ts" />
+      <Content Remove="wwwroot\H5pStandalone\**" />
+      <Content Remove="wwwroot\H5pStandalone\h5p-folder\Abfrage Definitionen\**" />
     </ItemGroup>
 
 </Project>

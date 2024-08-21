@@ -30,6 +30,7 @@ using Generator.ATF;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using Presentation.Components.Culture;
@@ -302,6 +303,9 @@ public class Startup
             app.UseHsts();
         }
 
+        // Argument for UseStaticFiles to try load H5pStandalone, -> Loads only H5pStandalone
+        // new StaticFileOptions{ FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/H5pStandalone")), RequestPath = "/H5pStandalone"}
+        
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

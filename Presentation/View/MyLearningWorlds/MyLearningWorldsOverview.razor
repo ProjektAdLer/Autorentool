@@ -16,7 +16,7 @@
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
-        <div id="h5p-container"></div>
+       
         <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
                 <div class="btn-standard w-36 flex justify-center items-center create-world-button"
@@ -48,6 +48,7 @@
                 </div>
             </section>
         </div>
+        <div id="h5p-container"></div>
                <section class="flex flex-col w-5/6 m-auto bg-blacktrans-100 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
                     <div class="flex flex-row gap-2 justify-between">
                         <div class="flex justify-start">
@@ -66,13 +67,7 @@
                         </div>
                     </div>
                     <MudGrid Class="flex justify-center overflow-auto my-4 shrink" Spacing="2">
-                        @foreach (var (world, fileInfo) in OrderedWorldsWithFileinfos)
-                        {
-                            <LearningWorldCard @key="world" OnOpenLearningWorld="OpenLearningWorld" LearningWorld="world"
-                                               OnCloseLearningWorld="DeleteLearningWorld"
-                                               FileInfo="fileInfo"
-                                               ShowFileName="_showFileName"/>
-                        }
+                       
                     </MudGrid>
                 </section>
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-100 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
@@ -124,7 +119,8 @@
     private bool _showFileName;
     private bool _sortByDate = true;
     private string _h5pTestButtonText = "h5p validation test text";
-    private IJSObjectReference? _module;
+    private IJSObjectReference? _h5pStandalone;
+ //  private IJSObjectReference? _tobiTestJs;
 
     private CssBuilder SortByDateButtonClass => new CssBuilder()
         .AddClass("opacity-20", !_sortByDate)
@@ -156,12 +152,15 @@
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
+        MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
         if (firstRender)
         {
-            _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
-                "./H5pStandalone/tobi-test.js");
+            _h5pStandalone = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+                "./H5pStandalone/main.bundle.js");
+        //    _tobiTestJs = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+        //        "./H5pStandalone/tobi-test.js");
         }
-        MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        
         
     }
 
@@ -180,14 +179,16 @@
     
     private async void  CreateH5PValidator()
     {
-        if (_module != null)
+    /*
+        if (_h5pStandalone != null)
         {
-            _h5pTestButtonText  = new (await _module.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+            _h5pTestButtonText  = new (await _h5pStandalone.InvokeAsync<string>("javaScriptHalloWorldFunction"));
             
         }
-       // _h5pValidatorDialog = true;
-       //_h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
-       // await JsRuntime.InvokeVoidAsync("test", "h5p-container");
+      */  
+      //ValidatorDialog = true;
+       _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+        await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
     }
     private void CreateLearningWorld()
     {
@@ -224,9 +225,9 @@
     
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        if (_module is not null)
+        if (_h5pStandalone is not null)
         {
-            await _module.DisposeAsync();
+            await _h5pStandalone.DisposeAsync();
         }
     }
 
