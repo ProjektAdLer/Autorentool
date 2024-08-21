@@ -44,6 +44,28 @@
       <_ContentIncludedByDefault Remove="wwwroot\favicon.png" />
       <_ContentIncludedByDefault Remove="wwwroot\favicon2.ico" />
       <_ContentIncludedByDefault Remove="wwwroot\favicon_highres.ico" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-core-27.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-core-27.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-core-27.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-core-27.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-hub-publish.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-hub-publish.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-hub-publish.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\fonts\h5p-hub-publish.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\frame.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\frame.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-integration.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\h5p-standalone.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\index.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\main.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\README.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-admin.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-confirmation-dialog.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-core-button.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-hub-registration.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p-hub-sharing.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\styles\h5p.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\H5pStandalone\utils.d.ts" />
     </ItemGroup>
 
     <ItemGroup>
@@ -139,6 +161,7 @@
       <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-integration.d.ts" />
       <TypeScriptCompile Include="wwwroot\H5pStandalone\h5p-standalone.d.ts" />
       <TypeScriptCompile Include="wwwroot\H5pStandalone\index.d.ts" />
+      <TypeScriptCompile Include="wwwroot\H5pStandalone\tobi-test.razor.ts" />
       <TypeScriptCompile Include="wwwroot\H5pStandalone\utils.d.ts" />
     </ItemGroup>
 

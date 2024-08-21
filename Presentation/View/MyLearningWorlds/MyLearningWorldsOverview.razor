@@ -11,18 +11,12 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Abstractions
 @inject IJSRuntime JsRuntime
+@implements IAsyncDisposable
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
-        
-        
-        
         <div id="h5p-container"></div>
-        <script type="text/javascript" src="H5pStandalone/main.bundle.js"></script>
-        
-        
-        
         <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
                 <div class="btn-standard w-36 flex justify-center items-center create-world-button"
@@ -130,6 +124,7 @@
     private bool _showFileName;
     private bool _sortByDate = true;
     private string _h5pTestButtonText = "h5p validation test text";
+    private IJSObjectReference? _module;
 
     private CssBuilder SortByDateButtonClass => new CssBuilder()
         .AddClass("opacity-20", !_sortByDate)
@@ -158,10 +153,16 @@
         _showFileName = false;
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async void OnAfterRender(bool firstRender)
     {
-        base.OnAfterRender(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+                "./H5pStandalone/tobi-test.js");
+        }
         MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        
     }
 
 
@@ -179,8 +180,14 @@
     
     private async void  CreateH5PValidator()
     {
-        //_h5pValidatorDialog = true;
-        await JsRuntime.InvokeVoidAsync("initializeH5pPlayerByDivElement", "h5p-container");
+        if (_module != null)
+        {
+            _h5pTestButtonText  = new (await _module.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+            
+        }
+       // _h5pValidatorDialog = true;
+       //_h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+       // await JsRuntime.InvokeVoidAsync("test", "h5p-container");
     }
     private void CreateLearningWorld()
     {
@@ -212,6 +219,15 @@
         if (result.Canceled) return;
         PresentationLogic.DeleteLearningWorldByPath(learningWorldViewModel.SavePath);
         PresentationLogic.DeleteLearningWorld(WorkspaceViewModel, learningWorldViewModel);
+    }
+    
+    
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            await _module.DisposeAsync();
+        }
     }
 
 }

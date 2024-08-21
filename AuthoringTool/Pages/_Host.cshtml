@@ -14,23 +14,13 @@
                 CultureInfo.CurrentCulture,
                 CultureInfo.CurrentUICulture)));
 }
-<component type="typeof(App)" render-mode="ServerPrerendered"/>
-<script>
-    function javaScriptHalloWorldFunction()
-    {
-        console.log("hello java script world");
-        return "hallo java script world";
-    }
-        
-    function initializeH5pPlayerByDivElement(containerId)
-    {
-        const el = document.getElementById(containerId);
-        const options = {
-            h5pJsonPath:  '/h5p-folder',
-            frameJs: '/assets/frame.bundle.js',
-            frameCss: '/assets/styles/h5p.css',
-        }
-        new H5PStandalone.H5P(el, options);   
-    }
 
-</script>
+<component type="typeof(App)" render-mode="ServerPrerendered"/>
+
+@section Scripts {
+<script  src="H5pStandalone/main.bundle.js?v=@DateTime.Now.Ticks"></script>
+<script  src="H5pStandalone/tobi-test.js?v=@DateTime.Now.Ticks"></script>
+}
+
+
+
