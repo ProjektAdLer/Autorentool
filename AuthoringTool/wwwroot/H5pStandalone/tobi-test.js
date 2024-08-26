@@ -37,7 +37,7 @@ window.testH5P = function (containerId)
         frameCss: '/H5pStandalone/styles/h5p.css',
     }
     new H5PStandalone.H5P(el, options);
-    return "hallo java script world";
+    return "testH5P called";
 }
 
 /*
