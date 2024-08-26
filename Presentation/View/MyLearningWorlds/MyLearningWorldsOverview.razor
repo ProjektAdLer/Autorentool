@@ -11,7 +11,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Abstractions
 @inject IJSRuntime JsRuntime
-@implements IAsyncDisposable
+
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
@@ -128,7 +128,7 @@
     private bool _showFileName;
     private bool _sortByDate = true;
     private string _h5pTestButtonText = "h5p validation test text";
-    private IJSObjectReference? _h5pStandalone;
+ //   private IJSObjectReference? _h5pStandalone;
  //  private IJSObjectReference? _tobiTestJs;
 
     private CssBuilder SortByDateButtonClass => new CssBuilder()
@@ -164,8 +164,8 @@
         MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
         if (firstRender)
         {
-            _h5pStandalone = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
-                "./H5pStandalone/main.bundle.js");
+         //   _h5pStandalone = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+         //       "./H5pStandalone/main.bundle.js");
         //    _tobiTestJs = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
         //        "./H5pStandalone/tobi-test.js");
         }
@@ -196,8 +196,9 @@
         }
       */  
       //ValidatorDialog = true;
-       _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
-        await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
+      // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+       _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("testH5P", "h5p-container"));
+       // await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
         await InvokeAsync(StateHasChanged);
     }
     private void CreateLearningWorld()
@@ -232,7 +233,8 @@
         PresentationLogic.DeleteLearningWorld(WorkspaceViewModel, learningWorldViewModel);
     }
     
-    
+   /*
+    @implements IAsyncDisposable
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (_h5pStandalone is not null)
@@ -240,5 +242,5 @@
             await _h5pStandalone.DisposeAsync();
         }
     }
-
+*/
 }
