@@ -42,7 +42,7 @@
                                 <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
                                     <div class="flex flex-row gap-2 items-center">
                                         <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
-                                        <p class="break-words">@learningSpace.Name</p>
+                                        <p class="break-all">@learningSpace.Name</p>
                                     </div>
                                 </span>
                             </TitleContentAfterToggler>
