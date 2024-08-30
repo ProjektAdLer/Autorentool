@@ -17,13 +17,9 @@
     <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
         <div class="flex">
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
-                <MudList Clickable="true">
-
-                    <MudListItem title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
+                <MudList Clickable="false">
+                    <MudListItem Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
                     </MudListItem>
-                    <MudDivider Style="border-color: rgb(179,179,179)"/>
-                    <MudListItem IconColor="Color.Default" Disabled="true" Icon="@Icons.Material.Filled.Person" OnClick="() => ChangeActiveSide(SideToShow.PersonDialog)"></MudListItem>
-
                 </MudList>
             </MudPaper>
         </div>
