@@ -17,15 +17,19 @@
                           For="@(() => FormModel.Name)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
-                          Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
+                          Placeholder="@Localizer["AddLinkForm.Field.Name.Text"]"
+                          Margin="Margin.Dense">
+            </MudTextField>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
                           Variant="Variant.Filled"
                           For="@(() => FormModel.Link)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
-                          Label="@Localizer["AddLinkForm.Field.Link.Text"]"
                           Adornment="Adornment.End"
-                          AdornmentIcon="@Icons.Material.Filled.Link"/>
+                          AdornmentIcon="@Icons.Material.Filled.Link"
+                          Placeholder="@Localizer["AddLinkForm.Field.Link.Text"]"
+                          Margin="Margin.Dense">
+            </MudTextField>
         </div>
     </Fields>
 
