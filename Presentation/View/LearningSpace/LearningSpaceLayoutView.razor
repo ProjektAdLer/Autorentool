@@ -34,7 +34,7 @@
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
                         }
                     </ChildContent>
                 </MudDropZone>
@@ -61,7 +61,10 @@
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                            <div class="flex flex-row gap-1 justify-center items-center">
+                                <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                                <p class="text-xs 2xl:text-sm">Story</p>
+                            </div>
                         }
                     </ChildContent>
                 </MudDropZone>
@@ -134,7 +137,7 @@
 
     private string GetCanDropClass() => new CssBuilder("bg-adlergreen w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 
-    private string GetNoDropClass() => new CssBuilder("bg-formerror w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
+    private string GetNoDropClass() => new CssBuilder("bg-[rgb(128,36,28)] w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
 
     private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
     {
@@ -158,16 +161,27 @@
         return slotPositionString.ToString();
     }
 
-    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace);
+    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace, false);
 
-    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace);
-
-    private string GetSlotStyleStringInternal(int position, int selectedPos)
-    {
+    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace, true);
+    
+    private string GetSlotStyleStringInternal(int position, int selectedPos, bool isStorySlot)
+    { 
         var activeSlotIsPos = selectedPos == position;
-        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
-            .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
-            .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default text-adlergrey-400 hover:text-white font-bold");
+        
+        if (isStorySlot)
+        {
+            //Farben für ActiveStorySlotInSpace
+            cssBuilder.AddClass("bg-adlergold-200 border-adlergold-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlergold-700 bg-adlerdeactivatedtext hover:bg-adlergold-300 hover:border-adlergold-300", !activeSlotIsPos);
+        }
+        else
+        {
+            //Farben für ActiveElementSlotInSpace
+            cssBuilder.AddClass("bg-adlerblue-200 border-adlerblue-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlerblue-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        }
         return cssBuilder.ToString();
     }
 
