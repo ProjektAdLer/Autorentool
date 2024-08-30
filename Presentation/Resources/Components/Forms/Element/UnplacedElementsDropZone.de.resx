@@ -24,7 +24,7 @@
         <value>Theme des Lernraums</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Type" xml:space="preserve">
-        <value>Typ des Elements</value>
+        <value>Inhalt des Elements</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Element" xml:space="preserve">
         <value>Art des Elements</value>
