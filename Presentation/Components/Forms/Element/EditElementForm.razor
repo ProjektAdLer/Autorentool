@@ -108,7 +108,10 @@
                            Immediate="false"
                            Label="@Localizer["EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
                            For="@(() => FormModel.Difficulty)"
-                           Variant="Variant.Outlined">
+                           Variant="Variant.Outlined"
+                           Dense="true"
+                           Margin="Margin.Dense"
+                           Class="text-xs">
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
                         <div class="flex items-center gap-2">
                             <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
