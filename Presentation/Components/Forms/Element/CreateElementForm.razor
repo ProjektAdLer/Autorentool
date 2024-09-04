@@ -150,45 +150,23 @@
                 }
                 else
                 {
-                    <TableSelect
-                        T="ILearningContentFormModel"
-                        @bind-Value="FormDataContainer.FormModel.LearningContent"
-                        For="@(() => FormModel.LearningContent!)"
-                        Elements="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
-                        OnKeyUp="HandleKeyEvent"
-                        FilterFuncSearchableStrings="ILearningContentFormModel.GetSearchableStrings">
-                        <HeaderContent>
-                            <MudTh></MudTh>
-                            <MudTh Class="p-0">@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
-                            <MudTh Class="p-0">@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
-                        </HeaderContent>
-                        <RowTemplate>
-                            <MudTd Class="p-0">
-                                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                               OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                                               Class="show-content-preview py-2"/>
-                            </MudTd>
-                            <MudTd Class="p-0" DataLabel="Name">
-                                <MudTooltip Text="@context.Name"
-                                            Arrow="true"
-                                            Placement="Placement.Right"
-                                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                            Duration="Double.Epsilon">
-                                    <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
-                                </MudTooltip>
-                            </MudTd>
-                            <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
-                                @if (context is FileContentFormModel fileContentContext)
-                                {
-                                    @fileContentContext.Type
-                                }
-                                else
-                                {
-                                    <span>Link</span>
-                                }
-                            </MudTd>
-                        </RowTemplate>
-                    </TableSelect>
+                    <div class="flex items-center">
+                        <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                       Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
+                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
+                                       Class="show-content-preview py-2"/>
+                        <MudTextField
+                            T="ILearningContentFormModel"
+                            @ref="_contentTextField"
+                            @bind-Value="FormDataContainer.FormModel.LearningContent"
+                            @bind-Text="@LearningContentName"
+                            Variant="Variant.Outlined"
+                            For="@(() => FormModel.LearningContent!)"
+                            ReadOnly="true">
+                        </MudTextField>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog">
+                        </MudIconButton>
+                    </div>
                     @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                     {
                         <div class="flex flex-col">
@@ -304,7 +282,7 @@
 {
     <div class="px-4">
         <Collapsable
-            Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]  InitiallyCollapsed="true">
+            Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudText
                     Typo="Typo.caption">
@@ -384,6 +362,7 @@
 
     private BaseForm<LearningElementFormModel, LearningElement> _form = null!;
     private MudTextField<string> _nameField = null!;
+    private MudTextField<ILearningContentFormModel>? _contentTextField;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -452,6 +431,35 @@
         StateHasChanged();
     }
 
+    private async void OpenLearningContentDialog()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var parameters = new DialogParameters
+        {
+            { nameof(LearningContentDialog.LearningContent), FormDataContainer.FormModel.LearningContent }
+        };
+        var dialog = await DialogService.ShowAsync<LearningContentDialog>("blabla", parameters, options);
+        _ = await dialog.Result;
+        if (dialog.Result.Result.Canceled)
+            return;
+
+        if (!Equals(FormModel.LearningContent, dialog.Result.Result.Data))
+        {
+            var dialogResult = (ILearningContentFormModel)dialog.Result.Result.Data;
+            FormModel.LearningContent = dialogResult;
+            _contentTextField?.ResetValidation();
+        }
+
+        StateHasChanged();
+    }
+
     private async Task HandleKeyEvent(KeyboardEventArgs arg)
     {
         if (arg.Key == "Enter")
@@ -506,6 +514,13 @@
             { nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value },
         };
         await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
+
+
+    private string LearningContentName
+    {
+        get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;
+        set { }
     }
 
 }

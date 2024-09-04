@@ -143,49 +143,23 @@
         <div class="px-4">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] InitiallyCollapsed="false">
                 <p class="text-xs pl-6">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text"]</p>
-                <TableSelect
-                    T="ILearningContentFormModel"
-                    @bind-Value="FormDataContainer.FormModel.LearningContent"
-                    OnPropertyChangingWithValue="OnContentChanging"
-                    For="@(() => FormModel.LearningContent!)"
-                    Elements="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
-                    FilterFuncSearchableStrings="ILearningContentFormModel.GetSearchableStrings">
-                    <HeaderContent>
-                        <MudTh></MudTh>
-                        <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
-                        <MudTh Class="p-0">@Localizer["EditElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd Class="p-0">
-                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                                           Class="show-content-preview py-2"/>
-                        </MudTd>
-                        <MudTd Class="p-0" DataLabel="Name">
-                            <MudTooltip Text="@context.Name"
-                                        Arrow="true"
-                                        Placement="Placement.Right"
-                                        Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                        Duration="Double.Epsilon">
-                                <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
-                            </MudTooltip>
-                        </MudTd>
-                        <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
-                            @switch (context)
-                            {
-                                case FileContentFormModel fileContentContext:
-                                    <span>@fileContentContext.Type</span>
-                                    break;
-                                case LinkContentFormModel:
-                                    <span>Link</span>
-                                    break;
-                                default:
-                                    <span>???</span>
-                                    break;
-                            }
-                        </MudTd>
-                    </RowTemplate>
-                </TableSelect>
+
+                <div class="flex items-center">
+                    <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                   Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
+                                   OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
+                                   Class="show-content-preview py-2"/>
+                    <MudTextField
+                        T="ILearningContentFormModel"
+                        @bind-Value="FormDataContainer.FormModel.LearningContent"
+                        @bind-Text="@LearningContentName"
+                        Variant="Variant.Outlined"
+                        For="@(() => FormModel.LearningContent!)"
+                        ReadOnly="true">
+                    </MudTextField>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog">
+                    </MudIconButton>
+                </div>
                 @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                 {
                     <div class="flex flex-col">
@@ -454,6 +428,37 @@
         StateHasChanged();
     }
 
+    private async void OpenLearningContentDialog()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var parameters = new DialogParameters
+        {
+            { nameof(LearningContentDialog.LearningContent), FormDataContainer.FormModel.LearningContent }
+        };
+        var dialog = await DialogService.ShowAsync<LearningContentDialog>("blabla", parameters, options);
+        _ = await dialog.Result;
+        if (dialog.Result.Result.Canceled)
+            return;
+
+        if (FormModel.LearningContent != null && !Equals(FormModel.LearningContent, dialog.Result.Result.Data))
+        {
+            var dialogResult = (ILearningContentFormModel)dialog.Result.Result.Data;
+            var propertyChangedEventArgs = new PropertyChangingWithValueEventArgs<ILearningContentFormModel>(nameof(FormModel.LearningContent), FormModel.LearningContent, dialogResult);
+            OnContentChanging(propertyChangedEventArgs);
+            FormModel.LearningContent = dialogResult;
+            OnValidFieldChange(FormModel);
+        }
+
+        StateHasChanged();
+    }
+
     private string GetSnackbarMessage()
     {
         return ElementMode switch
@@ -513,6 +518,12 @@
             { nameof(GenericInfoDialog.DialogText), (MarkupString)Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text"].Value },
         };
         await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
+    }
+
+    private string LearningContentName
+    {
+        get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;
+        set { }
     }
 
 }
