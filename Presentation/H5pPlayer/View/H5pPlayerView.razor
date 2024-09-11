@@ -12,9 +12,11 @@
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        _h5pPlayerController = new H5pPlayerController();
-        _h5pPlayerController.StartH5pPlayer(JsRuntime);
-        
+        if (firstRender)
+        {
+            _h5pPlayerController = new H5pPlayerController();
+            _h5pPlayerController.StartH5pPlayer(JsRuntime);
+        }
     }
 
  
