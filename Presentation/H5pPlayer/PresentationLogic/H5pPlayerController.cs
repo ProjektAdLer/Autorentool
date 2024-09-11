@@ -8,16 +8,22 @@ namespace Presentation.H5pPlayer.PresentationLogic;
 
 public class H5pPlayerController
 {
+ 
 
-    public void StartH5pPlayer(IJSRuntime jsRuntime)
+    public H5pPlayerController(IJSRuntime jsRuntime)
     {
         IJavaScriptAdapter javaScriptAdapter = new JavaScriptAdapter(jsRuntime);
-        IDisplayH5pUcOutputPort displayH5PUcOutputPort = new H5pPlayerPresenter();
-        IDisplayH5pUcInputPort displayH5PUcInputPort = new DisplayH5pUc(javaScriptAdapter, displayH5PUcOutputPort);
-        var displayH5pTo = new DisplayH5pInputTo("testpath0");
-        displayH5PUcInputPort.StartToDisplayH5p(displayH5pTo);
+        DisplayH5pPresenter = new H5pPlayerPresenter();
+        DisplayH5pUc = new DisplayH5pUc(javaScriptAdapter, DisplayH5pPresenter);
+    }
+
+    public void StartH5pPlayer(string h5pPath)
+    {
+        var displayH5pTo = new DisplayH5pInputTo(h5pPath);
+        DisplayH5pUc.StartToDisplayH5p(displayH5pTo);
     }
     
-
+    internal IDisplayH5pUcInputPort DisplayH5pUc { get; }
+    internal IDisplayH5pUcOutputPort DisplayH5pPresenter { get; }
 
 }

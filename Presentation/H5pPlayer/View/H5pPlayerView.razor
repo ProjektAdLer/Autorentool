@@ -14,15 +14,18 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            _h5pPlayerController = new H5pPlayerController();
-            _h5pPlayerController.StartH5pPlayer(JsRuntime);
+            StartH5pPlayer();
         }
     }
 
- 
+    private void StartH5pPlayer()
+    {
+        _h5pPlayerController = new H5pPlayerController(JsRuntime);
+        _h5pPlayerController.StartH5pPlayer("testPath");
+    }
+
 
 }
 
 
 
-}
