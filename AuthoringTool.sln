@@ -38,6 +38,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendAccessTest", "Backen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "TestHelpers\TestHelpers.csproj", "{2A4C03C8-8CD8-4D1D-BB5A-19E7AA4AD61B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H5pPlayer", "H5pPlayer\H5pPlayer\H5pPlayer.csproj", "{ACEB8645-4B4F-4C81-A833-4E374F405923}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H5pPlayerTest", "H5pPlayer\H5pPlayerTest\H5pPlayerTest.csproj", "{55C40F65-F3DD-437B-B2EA-6DA824F7FE69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +120,14 @@ Global
 		{2A4C03C8-8CD8-4D1D-BB5A-19E7AA4AD61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A4C03C8-8CD8-4D1D-BB5A-19E7AA4AD61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A4C03C8-8CD8-4D1D-BB5A-19E7AA4AD61B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACEB8645-4B4F-4C81-A833-4E374F405923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACEB8645-4B4F-4C81-A833-4E374F405923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACEB8645-4B4F-4C81-A833-4E374F405923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACEB8645-4B4F-4C81-A833-4E374F405923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55C40F65-F3DD-437B-B2EA-6DA824F7FE69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55C40F65-F3DD-437B-B2EA-6DA824F7FE69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55C40F65-F3DD-437B-B2EA-6DA824F7FE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55C40F65-F3DD-437B-B2EA-6DA824F7FE69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340} = {26CB0AD6-8B7E-422E-AC51-5B38C0278892}

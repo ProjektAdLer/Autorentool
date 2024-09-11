@@ -36,6 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\ElectronWrapper\ElectronWrapper.csproj" />
+    <ProjectReference Include="..\H5pPlayer\H5pPlayer\H5pPlayer.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +256,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="View\H5pValidator\" />
+    <Folder Include="H5pPlayer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="H5pPlayer\View\H5pPlayerView.razor" />
   </ItemGroup>
 </Project>

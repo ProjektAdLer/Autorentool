@@ -37,7 +37,7 @@ window.testH5P2 = function (containerId)
         frameCss: '/H5pStandalone/styles/h5p.css',
     }
     new H5PStandalone.H5P(el, options);
-    return "testH5P called";
+    
 }
 
 
@@ -58,11 +58,17 @@ window.testH5P =async function (containerId)
 
     H5P.externalDispatcher.on("xAPI", (event) => {
         console.log("xAPI event", event);
+
+        // Konvertiere das JavaScript-Event in ein JSON-String
+        const jsonData = JSON.stringify(event);
+
+        // JSON-Daten an die .NET-Methode senden  
+        DotNet.invokeMethodAsync('Presentation', 'ReceiveJsonData', jsonData);
     });
 
     H5P.xAPICompletedListener = xAPICompletedListener;
     
-
+    
     return "123testH5P called123";
 }
 

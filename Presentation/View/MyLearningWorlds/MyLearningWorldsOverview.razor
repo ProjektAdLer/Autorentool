@@ -10,10 +10,20 @@
 @using Presentation.Components.Forms.World
 @using System.Diagnostics.CodeAnalysis
 @using System.IO.Abstractions
+@using System.Text.Json
+@using global::H5pPlayer.BusinessLogic
+@using global::H5pPlayer.BusinessLogic.UseCases.DisplayH5p
+@using global::H5pPlayer.JavaScriptApi
+@using Presentation.H5pPlayer.PresentationLogic
+@using Presentation.H5pPlayer.View
+
+
+
 @inject IJSRuntime JsRuntime
 
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
+    <H5pPlayerView/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
        
@@ -186,7 +196,7 @@
     }
 
     
-    private async void  CreateH5PValidator()
+    private  void  CreateH5PValidator()
     {
     /*
         if (_h5pStandalone != null)
@@ -194,16 +204,31 @@
             _h5pTestButtonText  = new (await _h5pStandalone.InvokeAsync<string>("javaScriptHalloWorldFunction"));
             
         }
-      */  
-      //ValidatorDialog = true;
-      // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
-       _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("testH5P", "h5p-container"));
-       // await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
-        await InvokeAsync(StateHasChanged);
+        */
+        //ValidatorDialog = true;
+        // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
+        // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("testH5P", "h5p-container"));
+        // await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
+       // await InvokeAsync(StateHasChanged);
+       var h5pPlayerController = new H5pPlayerController();
+       h5pPlayerController.StartH5pPlayer(JsRuntime);
+
     }
     private void CreateLearningWorld()
     {
         _createLearningWorldDialogOpen = true;
+    }
+    
+    [JSInvokable]
+    public static void ReceiveJsonData(string jsonData)
+    {
+        // JSON-Daten deserialisieren
+        var jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonData);
+
+        Console.WriteLine($"Received JSON data from JavaScript: {jsonObject}");
+        Console.WriteLine($"Received JSON data from JavaScript: {jsonData}");
+
+        // Hier kannst du die JSON-Daten weiterverarbeiten
     }
 
     private void OnNewLearningWorldCreated()
