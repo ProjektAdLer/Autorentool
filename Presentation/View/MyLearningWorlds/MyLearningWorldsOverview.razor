@@ -23,7 +23,7 @@
 
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
-    <H5pPlayerView/>
+
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
        
@@ -58,7 +58,7 @@
                 </div>
             </section>
         </div>
-        <div id="h5p-container"></div>
+    
                   <div class="btn-standard w-36 flex justify-center items-center import-world-button"
                              @onclick="ImportLearningWorldAsync"
                              title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
@@ -182,7 +182,8 @@
         
         
     }
-
+    
+   
 
     private void NavigateToApp()
     {
@@ -210,10 +211,30 @@
         // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("testH5P", "h5p-container"));
         // await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
        // await InvokeAsync(StateHasChanged);
-       var h5pPlayerController = new H5pPlayerController();
-       h5pPlayerController.StartH5pPlayer(JsRuntime);
-
+      
+       OpenH5pPlayerDialog();
+     
     }
+    
+    private void OpenH5pPlayerDialog()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters();
+        DialogService.Show<H5pPlayerView>("H5P-Player", parameters, options);
+       
+        
+       
+        StateHasChanged();
+    }
+
+ 
+    
     private void CreateLearningWorld()
     {
         _createLearningWorldDialogOpen = true;

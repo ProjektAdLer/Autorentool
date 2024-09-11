@@ -1,11 +1,25 @@
-
+@using Presentation.H5pPlayer.PresentationLogic
+@inject IJSRuntime JsRuntime
 
 
 <PageTitle>H5P-Player</PageTitle>
+<div id="h5p-container"></div>
 
-
-<h3>H5P Player Component</h3>
+<h3>H5P Player Component die geladen wird</h3>
 @code {
+    private H5pPlayerController? _h5pPlayerController;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        _h5pPlayerController = new H5pPlayerController();
+        _h5pPlayerController.StartH5pPlayer(JsRuntime);
+        
+    }
+
+ 
+
+}
 
 
 
