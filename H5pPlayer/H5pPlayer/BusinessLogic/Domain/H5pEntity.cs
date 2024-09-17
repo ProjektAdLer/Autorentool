@@ -28,9 +28,33 @@ public class H5pEntity
     /// <see cref="System.IO.Path.GetInvalidPathChars()"/></exception>
     private static void ThrowExceptionIfPathToSetIsNotValid(string value)
     {
-  //      ArgumentException.ThrowIfNullOrWhiteSpace(value, "H5pJsonSourcePath");
-   //     ArgumentException.ThrowIfNullOrEmpty(value, "H5pJsonSourcePath");
+        ThrowArgumentNullExceptionIfPathIsNull(value);
+        ThrowArgumentExceptionIfStringIsEmpty(value);
+        ThrowArgumentExceptionIfStringIsNullOrWhitespace(value);
         if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
             throw new ArgumentException("H5pJsonSourcePath contains invalid path chars!");
     }
+
+    private static void ThrowArgumentNullExceptionIfPathIsNull(string value)
+    {
+        if (value == null)
+            throw new ArgumentNullException(nameof(H5pJsonSourcePath));
+    }
+    
+    private static void ThrowArgumentExceptionIfStringIsEmpty(string value)
+    {
+        if (value == string.Empty)
+            throw new ArgumentException(nameof(H5pJsonSourcePath));
+    }
+    
+    private static void ThrowArgumentExceptionIfStringIsNullOrWhitespace(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException(nameof(H5pJsonSourcePath));
+    }
+
+
+ 
+    
+  
 }

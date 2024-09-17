@@ -49,7 +49,7 @@ public class H5pEntityUt
 
         var exception = Assert.Throws<ArgumentException>(
             () => systemUnderTest.H5pJsonSourcePath = validPath + badChars[number]);
-        Assert.That(exception.Message, Is.EqualTo("Path to be checked contains invalid path chars!"));
+        Assert.That(exception.Message, Is.EqualTo("H5pJsonSourcePath contains invalid path chars!"));
     }
 
     private static H5pEntity CrateDefaultSystemUnderTest()
