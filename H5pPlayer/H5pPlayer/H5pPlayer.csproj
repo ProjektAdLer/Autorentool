@@ -14,5 +14,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.30"/>
     </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="H5pPlayerTest" />
+    </ItemGroup>
 
 </Project>
