@@ -31,9 +31,10 @@ public class H5pEntity
         ThrowArgumentNullExceptionIfStringIsNull(value);
         ThrowArgumentExceptionIfStringIsEmpty(value);
         ThrowArgumentExceptionIfStringIsNullOrWhitespace(value);
-        if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-            throw new ArgumentException("H5pJsonSourcePath contains invalid path chars!");
+        ThrowArgumentExceptionIfPathContainsInvalidPathChars(value);
     }
+
+   
 
     private static void ThrowArgumentNullExceptionIfStringIsNull(string value)
     {
@@ -52,7 +53,11 @@ public class H5pEntity
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException(nameof(H5pJsonSourcePath));
     }
-
+    private static void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string value)
+    {
+        if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+            throw new ArgumentException("H5pJsonSourcePath contains invalid path chars!");
+    }
 
  
     
