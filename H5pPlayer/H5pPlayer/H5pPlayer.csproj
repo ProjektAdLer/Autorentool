@@ -17,5 +17,8 @@
     <ItemGroup>
         <InternalsVisibleTo Include="H5pPlayerTest" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Api\" />
+    </ItemGroup>
 
 </Project>

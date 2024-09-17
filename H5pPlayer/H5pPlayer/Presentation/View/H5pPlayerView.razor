@@ -1,0 +1,32 @@
+@using H5pPlayer.Presentation.PresentationLogic
+@using Microsoft.JSInterop
+@inject IJSRuntime JsRuntime
+
+
+<PageTitle>H5P-Player</PageTitle>
+<div id="h5p-container"></div>
+
+<h3>H5P Player Component die geladen wird</h3>
+@code {
+    private H5pPlayerController? _h5pPlayerController;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            StartH5pPlayer();
+        }
+    }
+
+    private void StartH5pPlayer()
+    {
+        _h5pPlayerController = new H5pPlayerController(JsRuntime);
+        _h5pPlayerController.StartH5pPlayer("testPath");
+    }
+
+
+}
+
+
+
