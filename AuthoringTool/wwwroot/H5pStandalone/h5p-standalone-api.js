@@ -1,31 +1,5 @@
 ﻿
-/*
 
-import {H5PStandalone} from "h5p-standalone";
-
-export function javaScriptHalloWorldFunction() {
-    console.log("hello java script world");
-    return "hallo java script world";
-}
-
- export function test(containerId) {
-    const el = document.getElementById(containerId);
-    const options = {
-        h5pJsonPath: './h5p-folder',
-        frameJs: './frame.bundle.js',
-        frameCss: './styles/h5p.css',
-   };
-    new H5PStandalone(el, options);
-}
-
-*/
-
-/*
-window.javaScriptHalloWorldFunction = function () {
-    console.log("hello java script world");
-    return "hallo java script world";
-}
-*/
 window.testH5P2 = function (containerId)
 {
 
