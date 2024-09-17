@@ -21,4 +21,8 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\H5pPlayer\H5pPlayer.csproj" />
+    </ItemGroup>
+
 </Project>
