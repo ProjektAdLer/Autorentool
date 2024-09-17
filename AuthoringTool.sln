@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "TestHelpers\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H5pPlayer", "H5pPlayer\H5pPlayer\H5pPlayer.csproj", "{7C5C5A6D-D5F0-4F66-BF27-65562BB6EDBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H5pPlayerTest", "H5pPlayer\H5pPlayerTest\H5pPlayerTest.csproj", "{E5892931-E46E-4BE6-99B9-D2CB8B9E69DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,10 @@ Global
 		{7C5C5A6D-D5F0-4F66-BF27-65562BB6EDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C5C5A6D-D5F0-4F66-BF27-65562BB6EDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C5C5A6D-D5F0-4F66-BF27-65562BB6EDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5892931-E46E-4BE6-99B9-D2CB8B9E69DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5892931-E46E-4BE6-99B9-D2CB8B9E69DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5892931-E46E-4BE6-99B9-D2CB8B9E69DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5892931-E46E-4BE6-99B9-D2CB8B9E69DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340} = {26CB0AD6-8B7E-422E-AC51-5B38C0278892}
