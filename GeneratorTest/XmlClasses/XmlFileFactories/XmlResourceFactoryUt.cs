@@ -47,7 +47,6 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileBlock2, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
-            Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.Not.Null);
         });
     }
@@ -131,12 +130,12 @@ public class XmlResourceFactoryUt
 
         // Act
         var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem)
-            {
-                FilesXmlFilesList = new List<FilesXmlFile>(),
-                FileElementId = "1",
-                FileElementName = "FileName",
-                FileElementType = "pdf"
-            };
+        {
+            FilesXmlFilesList = new List<FilesXmlFile>(),
+            FileElementId = "1",
+            FileElementName = "FileName",
+            FileElementType = "pdf"
+        };
         systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something", "2404");
 
         // Assert
@@ -144,16 +143,20 @@ public class XmlResourceFactoryUt
         {
             Assert.That(systemUnderTest.FilesXmlFilesList[0].ContentHash, Is.EqualTo("1234"));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
-            Assert.That(systemUnderTest.FilesXmlFilesList[0].Filename, Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Filename,
+                Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.FilesXmlFilesList[0].Source, Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Source,
+                Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Timecreated, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContentHash, Is.EqualTo("1234"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
-            Assert.That(systemUnderTest.FilesXmlFilesList[1].Filename, Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Filename,
+                Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Source,
+                Is.EqualTo($"{systemUnderTest.FileElementName}.{systemUnderTest.FileElementType}"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.Not.Empty);
             Assert.That(systemUnderTest.FilesXmlFilesList[0].ElementUuid, Is.EqualTo("2404"));
@@ -184,14 +187,12 @@ public class XmlResourceFactoryUt
         var mockInforefFile = new ActivitiesInforefXmlFile();
         var mockInforefFileref = new ActivitiesInforefXmlFileref();
         var mockInforefGradeItem = new ActivitiesInforefXmlGradeItem();
-        var mockInforefGradeItemref = new ActivitiesInforefXmlGradeItemref();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         // Act
         var systemUnderTest = new XmlResourceFactory(mockReadAtf, mockFileManager, mockFileSystem, mockGradesGradeItem,
             mockGradesGradeItems, mockGradesGradebook, mockFileResource, mockFileResourceActivity, mockRoles,
             mockModule, mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem,
-            mockInforefGradeItemref,
             mockInforefInforef);
 
         systemUnderTest.FileElementDesc = "DESC";
@@ -229,9 +230,8 @@ public class XmlResourceFactoryUt
                 .Serialize("resource", systemUnderTest.FileElementId);
 
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref.File, Has.Count.EqualTo(2));
-            Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref.GradeItem, Is.EqualTo(mockInforefGradeItem));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef.Fileref, Is.EqualTo(mockInforefFileref));
-            Assert.That(systemUnderTest.ActivitiesInforefXmlInforef.GradeItemref, Is.EqualTo(mockInforefGradeItemref));
+            Assert.That(systemUnderTest.ActivitiesInforefXmlInforef.GradeItemref, Is.EqualTo(null));
             systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("resource", systemUnderTest.FileElementId);
         });
     }

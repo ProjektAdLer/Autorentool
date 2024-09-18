@@ -47,7 +47,6 @@ public class XmlUrlFactoryUt
             Assert.That(systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
-            Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.Not.Null);
         });
     }
@@ -95,13 +94,11 @@ public class XmlUrlFactoryUt
         var mockGradehistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFileref = new ActivitiesInforefXmlFileref();
         var mockInforefGradeItem = new ActivitiesInforefXmlGradeItem();
-        var mockInforefGradeItemref = new ActivitiesInforefXmlGradeItemref();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         var systemUnderTest = new XmlUrlFactory(mockReadAtf, mockFileSystem, mockGradesGradeItem,
             mockGradesGradeItems, mockGradesGradebook, mockUrl, mockUrlActivity, mockRoles, mockModule,
-            mockGradehistory, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref,
-            mockInforefInforef);
+            mockGradehistory, mockInforefFileref, mockInforefGradeItem, mockInforefInforef);
 
         var urlLearningElementJson = new LearningElementJson(1, "", "Video auf Youtube",
             "youtube.de", "video", "url", 1,
@@ -161,7 +158,6 @@ public class XmlUrlFactoryUt
 
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.EqualTo(mockInforefFileref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.EqualTo(mockInforefGradeItem));
-            Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.EqualTo(mockInforefGradeItemref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.EqualTo(mockInforefInforef));
             systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("url", systemUnderTest.UrlId);
         });
