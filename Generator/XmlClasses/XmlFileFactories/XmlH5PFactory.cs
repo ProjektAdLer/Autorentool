@@ -17,10 +17,9 @@ namespace Generator.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory : IXmlH5PFactory
 {
-    private readonly string _workDir;
-
     private readonly IFileSystem _fileSystem;
     private readonly string _hardcodedPath = "XMLFilesForExport";
+    private readonly string _workDir;
 
     public readonly IXmlFileManager FileManager;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -180,7 +179,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = H5PElementId,
-            Filename = H5PElementName,
+            Filename = H5PElementName + "." + H5PElementType,
             Source = H5PElementName + "." + H5PElementType,
             Filesize = filesize,
             Component = "mod_h5pactivity",
