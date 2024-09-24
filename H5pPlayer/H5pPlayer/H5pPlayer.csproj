@@ -18,9 +18,6 @@
         <InternalsVisibleTo Include="H5pPlayerTest" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Api\" />
-    </ItemGroup>
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\background.png" />
     </ItemGroup>
 
