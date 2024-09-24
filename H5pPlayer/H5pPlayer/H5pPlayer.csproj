@@ -20,5 +20,8 @@
     <ItemGroup>
       <Folder Include="Api\" />
     </ItemGroup>
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\background.png" />
+    </ItemGroup>
 
 </Project>
