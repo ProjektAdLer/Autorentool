@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using H5pPlayer.BusinessLogic.Domain;
+using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.JavaScriptApi;
 
@@ -11,13 +12,24 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     {
         JsRuntime = jsRuntime;
     }
-    // hier muss auch der Pfad zur H5pJson abgeschnitteten werden also hier muss http: weggeschnitten werden!!!!!
-    public async void  DisplayH5p(string h5pJsonSourcePath)
+    public async Task DisplayH5p(H5pEntity h5pEntity)
     {
-        // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("javaScriptHalloWorldFunction"));
-       // _h5pTestButtonText  = new (await JsRuntime.InvokeAsync<string>("testH5P", "h5p-container"));
-        await JsRuntime.InvokeVoidAsync("testH5P", "h5p-container");
-        // await InvokeAsync(StateHasChanged);
-    
+        var jsonSourcePath = IfJsonSourcePathContainsHttpsDeleteIt(h5pEntity);
+        await JsRuntime.InvokeVoidAsync("testH5P", jsonSourcePath);
+    }
+
+    /// <summary>
+    /// why we must delete https:
+    /// https://github.com/ProjektAdLer/Autorentool/issues/570#issuecomment-2275233471
+    /// </summary>
+    private static string IfJsonSourcePathContainsHttpsDeleteIt(H5pEntity h5pEntity)
+    {
+        var jsonSourcePath = h5pEntity.H5pJsonSourcePath;
+        if (jsonSourcePath.StartsWith("https:"))
+        {
+            jsonSourcePath = jsonSourcePath.Substring("https:".Length);
+        }
+
+        return jsonSourcePath;
     }
 }

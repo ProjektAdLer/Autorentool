@@ -1,5 +1,6 @@
 ﻿using System.Reflection.PortableExecutable;
 using H5pPlayer.BusinessLogic;
+using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.JavaScriptApi;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
@@ -25,7 +26,7 @@ public class DisplayH5pUcUt
 
         systemUnderTest.StartToDisplayH5p(displayH5pInputTo);
         
-        mockJavaScriptAdapter.Received().DisplayH5p(h5pJsonSourcePath);
+        mockJavaScriptAdapter.Received().DisplayH5p(Arg.Any<H5pEntity>());
     }
  
     

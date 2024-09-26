@@ -1,6 +1,8 @@
-﻿namespace H5pPlayer.BusinessLogic.JavaScriptApi;
+﻿using H5pPlayer.BusinessLogic.Domain;
+
+namespace H5pPlayer.BusinessLogic.JavaScriptApi;
 
 public interface IJavaScriptAdapter
 {
-    void DisplayH5p(string h5pJsonSourcePath);
+    Task DisplayH5p(H5pEntity h5pEntity);
 }

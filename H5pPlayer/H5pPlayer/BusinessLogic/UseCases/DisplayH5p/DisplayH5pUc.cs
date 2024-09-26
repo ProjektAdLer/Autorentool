@@ -27,7 +27,7 @@ public class DisplayH5pUc : IDisplayH5pUcInputPort
         {
             CreateH5pEntity();
             H5pEntity.H5pJsonSourcePath = displayH5PTo.H5pJsonSourcePath;
-            JavaScriptAdapter.DisplayH5p(H5pEntity.H5pJsonSourcePath);
+            JavaScriptAdapter.DisplayH5p(H5pEntity);
         }
         catch (ArgumentException e)
         {

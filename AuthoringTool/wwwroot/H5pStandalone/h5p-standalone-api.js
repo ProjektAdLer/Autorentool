@@ -15,7 +15,7 @@ window.testH5P2 = function (containerId)
 }
 
 
-window.testH5P =async function (containerId)
+window.testH5P =async function (h5pJsonPath)
 {
     const fs = require('fs');
     const el = document.getElementById("h5p-container");
@@ -25,7 +25,8 @@ window.testH5P =async function (containerId)
         // h5pJsonPath:  './H5pStandalone/h5p-folder/1_Start/h5p.json',
         // h5pJsonPath:  '//localhost:8086/courses/3/h5p/6c324c62-1557-4e28-a1f7-c2df227c3c8c.h5p',
         // h5pJsonPath:  '//localhost:8001/H5pStandalone/h5p-folder/1_Start',
-          h5pJsonPath:  '//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen',
+        //  h5pJsonPath:  '//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen',
+        h5pJsonPath:  h5pJsonPath,
         frameJs: '//localhost:8001/H5pStandalone/frame.bundle.js',
         frameCss: '//localhost:8001/H5pStandalone/styles/h5p.css',
     }
