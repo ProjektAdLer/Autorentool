@@ -35,8 +35,7 @@ public class JavaScriptAdapterUt
     {
         var h5pJsonPath = "https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen";
         var h5pEntity = CreateH5pEntity(h5pJsonPath);
-        var fakeJsInterop = Substitute.For<IJSRuntime>();
-        var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
+        var systemUnderTest = CreateJavaScriptAdapter();
 
         await systemUnderTest.DisplayH5p(h5pEntity);
 
