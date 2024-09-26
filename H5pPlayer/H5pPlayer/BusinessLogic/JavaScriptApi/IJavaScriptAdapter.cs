@@ -1,4 +1,4 @@
-﻿namespace H5pPlayer.BusinessLogic;
+﻿namespace H5pPlayer.BusinessLogic.JavaScriptApi;
 
 public interface IJavaScriptAdapter
 {

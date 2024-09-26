@@ -1,5 +1,6 @@
 ﻿using System.Reflection.PortableExecutable;
 using H5pPlayer.BusinessLogic;
+using H5pPlayer.BusinessLogic.JavaScriptApi;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using NSubstitute;

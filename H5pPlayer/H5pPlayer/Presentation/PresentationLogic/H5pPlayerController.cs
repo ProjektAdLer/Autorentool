@@ -1,6 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic;
+using H5pPlayer.BusinessLogic.JavaScriptApi;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
-using H5pPlayer.JavaScriptApi;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.Presentation.PresentationLogic;

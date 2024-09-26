@@ -1,7 +1,6 @@
-﻿using H5pPlayer.BusinessLogic;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 
-namespace H5pPlayer.JavaScriptApi;
+namespace H5pPlayer.BusinessLogic.JavaScriptApi;
 
 public class JavaScriptAdapter : IJavaScriptAdapter
 {
