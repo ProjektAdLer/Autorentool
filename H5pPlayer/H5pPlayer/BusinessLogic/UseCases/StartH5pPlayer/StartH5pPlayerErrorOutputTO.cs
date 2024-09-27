@@ -1,8 +1,8 @@
-﻿namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+﻿namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 
-public struct  DisplayH5pErrorOutputTo
+public struct  StartH5pPlayerErrorOutputTO
 {
-    public DisplayH5pErrorOutputTo(
+    public StartH5pPlayerErrorOutputTO(
         string invalidH5pJsonSourcePath,
         string h5PJsonSourcePathErrorText)
     {

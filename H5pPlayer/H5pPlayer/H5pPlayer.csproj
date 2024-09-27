@@ -27,5 +27,11 @@
     <ItemGroup>
       <UpToDateCheckInput Remove="Presentation23\View\H5pPlayerView.razor" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\DataAccess\DataAccess.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="BusinessLogic\UseCases\DisplayH5p\" />
+    </ItemGroup>
 
 </Project>
