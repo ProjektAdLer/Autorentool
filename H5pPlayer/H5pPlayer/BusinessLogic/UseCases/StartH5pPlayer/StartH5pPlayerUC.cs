@@ -6,7 +6,7 @@ namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 
 /// <summary>
 /// Documentation:
-/// https://projektadler.github.io/Documentation/hse2.html#definition
+/// https://projektadler.github.io/Documentation/hse7.html
 /// </summary>
 public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 {
