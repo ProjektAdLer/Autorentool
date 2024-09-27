@@ -2,5 +2,5 @@
 
 public interface IStartH5pPlayerUCInputPort
 {
-    void StartToDisplayH5p(StartH5pPlayerInputTO displayH5PInputTo);
+    void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo);
 }

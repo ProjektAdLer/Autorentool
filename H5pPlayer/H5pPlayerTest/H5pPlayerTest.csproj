@@ -26,8 +26,4 @@
       <ProjectReference Include="..\H5pPlayer\H5pPlayer.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="BusinessLogic\UseCases\StartH5pPlayer\" />
-    </ItemGroup>
-
 </Project>

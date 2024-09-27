@@ -2,11 +2,16 @@
 
 public class H5pEntity
 {
-    private string h5pJsonSourcePath;
 
-
+    public H5pEntity()
+    {
+        ActiveDisplayMode = H5pDisplayMode.Display;
+        // init by empty cause of unix mac windows usage. 
+        // -> otherwise we must deside the OS here 
+        h5pJsonSourcePath = string.Empty;
+    }
     
-
+    private string h5pJsonSourcePath;
     /// <exception cref="ArgumentNullException">If path is null.</exception>
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
@@ -33,21 +38,16 @@ public class H5pEntity
         ThrowArgumentExceptionIfStringIsNullOrWhitespace(value);
         ThrowArgumentExceptionIfPathContainsInvalidPathChars(value);
     }
-
-   
-
     private static void ThrowArgumentNullExceptionIfStringIsNull(string value)
     {
         if (value == null)
             throw new ArgumentNullException(nameof(H5pJsonSourcePath));
     }
-    
     private static void ThrowArgumentExceptionIfStringIsEmpty(string value)
     {
         if (value == string.Empty)
             throw new ArgumentException(nameof(H5pJsonSourcePath));
     }
-    
     private static void ThrowArgumentExceptionIfStringIsNullOrWhitespace(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -59,7 +59,8 @@ public class H5pEntity
             throw new ArgumentException("H5pJsonSourcePath contains invalid path chars!");
     }
 
- 
-    
+
+    public H5pDisplayMode ActiveDisplayMode { get; set; }
+
   
 }

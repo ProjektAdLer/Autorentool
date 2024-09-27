@@ -30,8 +30,5 @@
     <ItemGroup>
       <ProjectReference Include="..\..\DataAccess\DataAccess.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="BusinessLogic\UseCases\DisplayH5p\" />
-    </ItemGroup>
 
 </Project>

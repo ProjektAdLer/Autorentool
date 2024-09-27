@@ -1,5 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.JavaScriptApi;
+using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
 namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 
@@ -9,25 +10,22 @@ namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 /// </summary>
 public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 {
+
     public StartH5pPlayerUC(
-        IJavaScriptAdapter javaScriptAdapter,
+        IDisplayH5pUC displayH5PUc,
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
     {
-        JavaScriptAdapter = javaScriptAdapter;
+        DisplayH5pUC = displayH5PUc;
         StartH5PPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
     }
 
 
-    public void StartToDisplayH5p(StartH5pPlayerInputTO displayH5PInputTo)
+    public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
-        
-            MapTOtoEntity(displayH5PInputTo);
-            // call dataaccess
-            JavaScriptAdapter.DisplayH5p(H5pEntity);
-      
-        
-        
+        MapTOtoEntity(displayH5PInputTo);
+        // call dataaccess via zipfilesystemaccess  to entzipp h5p
+        DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
     }
 
     private void MapTOtoEntity(StartH5pPlayerInputTO displayH5PInputTo)
@@ -35,6 +33,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         try
         {
             CreateH5pEntity();
+            H5pEntity.ActiveDisplayMode = displayH5PInputTo.DisplayMode;
             H5pEntity.H5pJsonSourcePath = displayH5PInputTo.H5pJsonSourcePath;
         }
         catch (ArgumentException e)
@@ -65,7 +64,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     
    
 
-    internal IJavaScriptAdapter JavaScriptAdapter { get; }
+    internal IDisplayH5pUC DisplayH5pUC { get; }
     internal H5pEntity H5pEntity { get; set; }
     internal IStartH5pPlayerUCOutputPort StartH5PPlayerUcOutputPort { get;  }
 }
