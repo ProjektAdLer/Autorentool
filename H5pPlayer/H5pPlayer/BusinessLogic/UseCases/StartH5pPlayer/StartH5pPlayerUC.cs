@@ -42,10 +42,10 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         }
     }
 
-    private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO displayH5PInputTo)
+    private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0)
     {
         var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidH5pJsonSourcePath = displayH5PInputTo.H5pJsonSourcePath;
+        errorOutputTo.InvalidH5pJsonSourcePath = startH5PPlayerInputT0.H5pJsonSourcePath;
         errorOutputTo.H5pJsonSourcePathErrorText = "H5P Json Path was wrong!";
         StartH5PPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
