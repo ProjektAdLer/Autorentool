@@ -29,10 +29,12 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         PresentationLogic = Substitute.For<IPresentationLogic>();
         WorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        ErrorService = Substitute.For<IErrorService>();
         Context.Services.AddSingleton(MyLearningWorldsProvider);
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(WorkspaceVm);
         Context.Services.AddSingleton(SelectedViewModelsProvider);
+        Context.Services.AddSingleton(ErrorService);
         Context.ComponentFactories.AddStub<HeaderBar>();
         Context.ComponentFactories.AddStub<CreateWorldForm>();
         Context.ComponentFactories.AddStub<LearningWorldCard>();
@@ -42,6 +44,7 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
     private IPresentationLogic PresentationLogic { get; set; }
     private IAuthoringToolWorkspaceViewModel WorkspaceVm { get; set; }
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    private IErrorService ErrorService { get; set; }
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -51,6 +54,7 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         Assert.That(systemUnderTest.Instance.Localizer, Is.Not.Null);
         Assert.That(systemUnderTest.Instance.MyLearningWorldsProvider, Is.EqualTo(MyLearningWorldsProvider));
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
+        ;
         Assert.That(systemUnderTest.Instance.NavManager, Is.Not.Null);
     }
 
