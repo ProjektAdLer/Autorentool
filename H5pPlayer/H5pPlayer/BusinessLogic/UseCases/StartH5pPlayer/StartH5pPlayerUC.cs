@@ -34,7 +34,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         {
             CreateH5pEntity();
             H5pEntity.ActiveDisplayMode = displayH5PInputTo.DisplayMode;
-            H5pEntity.H5pJsonSourcePath = displayH5PInputTo.H5pJsonSourcePath;
+            H5pEntity.H5pZipSourcePath = displayH5PInputTo.H5pZipSourcePath;
         }
         catch (ArgumentException e)
         {
@@ -45,8 +45,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0)
     {
         var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidH5pJsonSourcePath = startH5PPlayerInputT0.H5pJsonSourcePath;
-        errorOutputTo.H5pJsonSourcePathErrorText = "H5P Json Path was wrong!";
+        errorOutputTo.InvalidH5pZipSourcePath = startH5PPlayerInputT0.H5pZipSourcePath;
+        errorOutputTo.H5pZipSourcePathErrorText = "H5P Zip Path was wrong!";
         StartH5PPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
 

@@ -24,7 +24,7 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     /// </summary>
     private static string IfJsonSourcePathContainsHttpsDeleteIt(H5pEntity h5pEntity)
     {
-        var jsonSourcePath = h5pEntity.H5pJsonSourcePath;
+        var jsonSourcePath = h5pEntity.H5pZipSourcePath;
         if (jsonSourcePath.StartsWith("https:"))
         {
             jsonSourcePath = jsonSourcePath.Substring("https:".Length);

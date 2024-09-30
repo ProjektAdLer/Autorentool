@@ -12,7 +12,7 @@ public class H5pEntityUt
         var systemUnderTest = CrateDefaultSystemUnderTest();
         
         Assert.That(systemUnderTest.ActiveDisplayMode, Is.EqualTo(H5pDisplayMode.Display));
-        Assert.That(systemUnderTest.H5pJsonSourcePath, Is.EqualTo(string.Empty));
+        Assert.That(systemUnderTest.H5pZipSourcePath, Is.EqualTo(string.Empty));
     }
     
     [TestCase(@"C:\Temp")]                 // Windows absolute path
@@ -27,40 +27,40 @@ public class H5pEntityUt
     [TestCase(@"/path with spaces")]       // Unix/macOS with spaces
     [TestCase(@"/")]                       // Root path Unix/macOS
     [TestCase(@"C:\")]                     // Root path Windows
-    public void ValidH5pJsonSourcePath(string validPath)
+    public void ValidH5pZipSourcePath(string validPath)
     {
         var systemUnderTest = CrateDefaultSystemUnderTest();
 
         Assert.DoesNotThrow(
-            () => systemUnderTest.H5pJsonSourcePath = validPath);
-        Assert.That(systemUnderTest.H5pJsonSourcePath, Is.EqualTo(validPath));
+            () => systemUnderTest.H5pZipSourcePath = validPath);
+        Assert.That(systemUnderTest.H5pZipSourcePath, Is.EqualTo(validPath));
     }
     
     [Test]
-    public void NullH5pJsonSourcePath()
+    public void NullH5pZipSourcePath()
     {
         string invalidPath = null;
 
         var systemUnderTest = CrateDefaultSystemUnderTest();
 
         var exception = Assert.Throws<ArgumentNullException>(
-            () => systemUnderTest.H5pJsonSourcePath = invalidPath);
-        Assert.That(exception.Message, Is.EqualTo("Value cannot be null. (Parameter 'H5pJsonSourcePath')"));
+            () => systemUnderTest.H5pZipSourcePath = invalidPath);
+        Assert.That(exception.Message, Is.EqualTo("Value cannot be null. (Parameter 'H5pZipSourcePath')"));
     }
     
     [TestCase("")]
     [TestCase("   ")]
-    public void EmptyOrWhitespaceH5pJsonSourcePath(string pathToCheck)
+    public void EmptyOrWhitespaceH5pZipSourcePath(string pathToCheck)
     {
         var systemUnderTest = CrateDefaultSystemUnderTest();
 
         var exception = Assert.Throws<ArgumentException>(
-            () => systemUnderTest.H5pJsonSourcePath = pathToCheck);
-        Assert.That(exception.Message, Contains.Substring("H5pJsonSourcePath"));
+            () => systemUnderTest.H5pZipSourcePath = pathToCheck);
+        Assert.That(exception.Message, Contains.Substring("H5pZipSourcePath"));
     }
     
     [Test]
-    public void H5pJsonSourcePath([Range(0, 32)] int number)
+    public void H5pZipSourcePath([Range(0, 32)] int number)
     {
         string validPath = @"C:\Temp\Invalid";
         char[] badChars = Path.GetInvalidPathChars();// 33 elements
@@ -68,8 +68,8 @@ public class H5pEntityUt
         var systemUnderTest = CrateDefaultSystemUnderTest();
 
         var exception = Assert.Throws<ArgumentException>(
-            () => systemUnderTest.H5pJsonSourcePath = validPath + badChars[number]);
-        Assert.That(exception.Message, Is.EqualTo("H5pJsonSourcePath contains invalid path chars!"));
+            () => systemUnderTest.H5pZipSourcePath = validPath + badChars[number]);
+        Assert.That(exception.Message, Is.EqualTo("H5pZipSourcePath contains invalid path chars!"));
     }
 
     private static H5pEntity CrateDefaultSystemUnderTest()

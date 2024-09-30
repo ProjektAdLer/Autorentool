@@ -16,25 +16,25 @@ public class StartH5pPlayerUcUT
        
     [TestCase(@"C:\Temp")]
     [TestCase(@"Test\Temp\Tested")]
-    public void MapTOtoEntity_ValidH5pJsonSourcePath(string validPath)
+    public void MapTOtoEntity_ValidH5pZipSourcePath(string validPath)
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,validPath);
         
         Assert.DoesNotThrow(
             () => systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO));
-        Assert.That(systemUnderTest.H5pEntity.H5pJsonSourcePath, Is.EqualTo(validPath));
+        Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
     }
    
     [Test]
-    public void MapTOtoEntity_NullH5pJsonSourcePath()
+    public void MapTOtoEntity_NullH5pZipSourcePath()
     {
         string invalidPath = null;
 
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,invalidPath);
-        const string expectedErrorMessage = "H5P Json Path was wrong!";
+        const string expectedErrorMessage = "H5P Zip Path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -46,12 +46,12 @@ public class StartH5pPlayerUcUT
 
     [TestCase("")]
     [TestCase("   ")]
-    public void MapTOtoEntity_EmptyOrWhitespaceH5pJsonSourcePath(string pathToCheck)
+    public void MapTOtoEntity_EmptyOrWhitespaceH5pZipSourcePath(string pathToCheck)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,pathToCheck);
-        const string expectedErrorMessage = "H5P Json Path was wrong!";
+        const string expectedErrorMessage = "H5P Zip Path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(pathToCheck, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -61,7 +61,7 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
-    public void MapTOtoEntity_InvalidH5pJsonSourcePath([Range(0, 32)] int number)
+    public void MapTOtoEntity_InvalidH5pZipSourcePath([Range(0, 32)] int number)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -69,7 +69,7 @@ public class StartH5pPlayerUcUT
         const string validPath = @"C:\Temp\Invalid";
         var invalidPath = validPath + badChars[number];
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,invalidPath);
-        const string expectedErrorMessage = "H5P Json Path was wrong!";
+        const string expectedErrorMessage = "H5P Zip Path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -112,8 +112,8 @@ public class StartH5pPlayerUcUT
     {
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
         var systemUnderTest = CreateStandardSystemUnderTest(mockDisplayH5pUC);
-        const string h5pJsonSourcePath = "C://PathToJson/Source";
-        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,h5pJsonSourcePath);
+        const string h5pZipSourcePath = "C://PathToZip/Source";
+        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,h5pZipSourcePath);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
@@ -126,9 +126,9 @@ public class StartH5pPlayerUcUT
     
     private static StartH5pPlayerInputTO CreateStartH5pPlayerInputT0(
         H5pDisplayMode displayMode = H5pDisplayMode.Display,
-        string h5pJsonSourcePath = "C://Default_PathToJson/Source")
+        string h5pZipSourcePath = "C://Default_PathToZip/Source")
     {
-        var transportObject = new StartH5pPlayerInputTO(displayMode, h5pJsonSourcePath);
+        var transportObject = new StartH5pPlayerInputTO(displayMode, h5pZipSourcePath);
         return transportObject;
     }
     
@@ -137,8 +137,8 @@ public class StartH5pPlayerUcUT
         string expectedErrorMessage)
     {
         var expectedOutputTo = new StartH5pPlayerErrorOutputTO();
-        expectedOutputTo.InvalidH5pJsonSourcePath = invalidPath;
-        expectedOutputTo.H5pJsonSourcePathErrorText = expectedErrorMessage;
+        expectedOutputTo.InvalidH5pZipSourcePath = invalidPath;
+        expectedOutputTo.H5pZipSourcePathErrorText = expectedErrorMessage;
         return expectedOutputTo;
     }
 

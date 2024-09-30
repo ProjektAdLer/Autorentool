@@ -6,14 +6,14 @@ public struct  StartH5pPlayerInputTO
 {
     public StartH5pPlayerInputTO(
         H5pDisplayMode displayMode,
-        string h5pJsonSourcePath)
+        string h5pZipSourcePath)
     {
         DisplayMode = displayMode;
-        H5pJsonSourcePath = h5pJsonSourcePath;
+        H5pZipSourcePath = h5pZipSourcePath;
     }
 
 
     public H5pDisplayMode DisplayMode { get; }
-    public string H5pJsonSourcePath { get; }
+    public string H5pZipSourcePath { get; }
     
 }

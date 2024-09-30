@@ -3,15 +3,15 @@
 public struct  StartH5pPlayerErrorOutputTO
 {
     public StartH5pPlayerErrorOutputTO(
-        string invalidH5pJsonSourcePath,
-        string h5PJsonSourcePathErrorText)
+        string invalidH5pZipSourcePath,
+        string h5PZipSourcePathErrorText)
     {
-        InvalidH5pJsonSourcePath = invalidH5pJsonSourcePath;
-        H5pJsonSourcePathErrorText = h5PJsonSourcePathErrorText;
+        InvalidH5pZipSourcePath = invalidH5pZipSourcePath;
+        H5pZipSourcePathErrorText = h5PZipSourcePathErrorText;
     }
 
 
-    public string InvalidH5pJsonSourcePath { get; set; }
+    public string InvalidH5pZipSourcePath { get; set; }
     
-    public string H5pJsonSourcePathErrorText { get; set; }
+    public string H5pZipSourcePathErrorText { get; set; }
 }

@@ -8,21 +8,21 @@ public class H5pEntity
         ActiveDisplayMode = H5pDisplayMode.Display;
         // init by empty cause of unix mac windows usage. 
         // -> otherwise we must deside the OS here 
-        h5pJsonSourcePath = string.Empty;
+        h5pZipSourcePath = string.Empty;
     }
     
-    private string h5pJsonSourcePath;
+    private string h5pZipSourcePath;
     /// <exception cref="ArgumentNullException">If path is null.</exception>
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
     /// <see cref="System.IO.Path.GetInvalidPathChars()"/></exception>
-    public string H5pJsonSourcePath
+    public string H5pZipSourcePath
     {
-        get => h5pJsonSourcePath;
+        get => h5pZipSourcePath;
         set
         {
             ThrowExceptionIfPathToSetIsNotValid(value);
-            h5pJsonSourcePath = value;
+            h5pZipSourcePath = value;
         }
     }
 
@@ -41,22 +41,22 @@ public class H5pEntity
     private static void ThrowArgumentNullExceptionIfStringIsNull(string value)
     {
         if (value == null)
-            throw new ArgumentNullException(nameof(H5pJsonSourcePath));
+            throw new ArgumentNullException(nameof(H5pZipSourcePath));
     }
     private static void ThrowArgumentExceptionIfStringIsEmpty(string value)
     {
         if (value == string.Empty)
-            throw new ArgumentException(nameof(H5pJsonSourcePath));
+            throw new ArgumentException(nameof(H5pZipSourcePath));
     }
     private static void ThrowArgumentExceptionIfStringIsNullOrWhitespace(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException(nameof(H5pJsonSourcePath));
+            throw new ArgumentException(nameof(H5pZipSourcePath));
     }
     private static void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string value)
     {
         if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-            throw new ArgumentException("H5pJsonSourcePath contains invalid path chars!");
+            throw new ArgumentException("H5pZipSourcePath contains invalid path chars!");
     }
 
 
