@@ -9,9 +9,12 @@ public class H5pEntity
         // init by empty cause of unix mac windows usage. 
         // -> otherwise we must deside the OS here 
         h5pZipSourcePath = string.Empty;
+        _pathValidator = new PathValidator();
     }
     
     private string h5pZipSourcePath;
+    private readonly PathValidator _pathValidator;
+
     /// <exception cref="ArgumentNullException">If path is null.</exception>
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
@@ -31,12 +34,12 @@ public class H5pEntity
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
     /// <see cref="System.IO.Path.GetInvalidPathChars()"/></exception>
-    private static void ThrowExceptionIfH5pZipSourcePathIsNotValid(string value)
+    private void ThrowExceptionIfH5pZipSourcePathIsNotValid(string value)
     {
-        PathValidator.ThrowArgumentNullExceptionIfPathIsNull(value, nameof(H5pZipSourcePath));
-        PathValidator.ThrowArgumentExceptionIfPathIsEmpty(value, nameof(H5pZipSourcePath));
-        PathValidator.ThrowArgumentExceptionIfPathIsNullOrWhitespace(value, nameof(H5pZipSourcePath));
-        PathValidator.ThrowArgumentExceptionIfPathContainsInvalidPathChars(value, "H5pZipSourcePath contains invalid path chars!");
+        _pathValidator.ThrowArgumentNullExceptionIfPathIsNull(value, nameof(H5pZipSourcePath));
+        _pathValidator.ThrowArgumentExceptionIfPathIsEmpty(value, nameof(H5pZipSourcePath));
+        _pathValidator.ThrowArgumentExceptionIfPathIsNullOrWhitespace(value, nameof(H5pZipSourcePath));
+        _pathValidator.ThrowArgumentExceptionIfPathContainsInvalidPathChars(value, "H5pZipSourcePath contains invalid path chars!");
     }
 
 
