@@ -14,8 +14,18 @@ public class StartH5pPlayerUcUT
     
     
        
-    [TestCase(@"C:\Temp")]
-    [TestCase(@"Test\Temp\Tested")]
+    [TestCase(@"C:\Temp")]                 // Windows absolute path
+    [TestCase(@"Test\Temp\Tested")]        // Windows relative path
+    [TestCase(@"Test/Temp/Tested")]        // Unix/macOS relative path
+    [TestCase(@"/usr/local/bin")]          // Unix/macOS absolute path
+    [TestCase(@"C:/Program Files/Temp")]   // Mixed style path (Windows)
+    [TestCase(@"/tmp/test#folder/")]       // Unix/macOS with special characters
+    [TestCase(@"C:\Temp with spaces\file")]// Windows with spaces
+    [TestCase(@".\relative\path")]         // Windows relative path with .
+    [TestCase(@"..\parent\path")]          // Windows relative path with ..
+    [TestCase(@"/path with spaces")]       // Unix/macOS with spaces
+    [TestCase(@"/")]                       // Root path Unix/macOS
+    [TestCase(@"C:\")]                     // Root path Windows
     public void MapTOtoEntity_ValidH5pZipSourcePath(string validPath)
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
