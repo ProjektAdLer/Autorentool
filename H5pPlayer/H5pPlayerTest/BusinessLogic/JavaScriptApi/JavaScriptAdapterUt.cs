@@ -29,6 +29,7 @@ public class JavaScriptAdapterUt
         //await fakeJsInterop.Received().InvokeVoidAsync("testH5P", "//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen");
     }
  
+ 
 
     [Test]
     public async Task DisplayH5p_NotModifyH5pEntityH5pJsonSourcePath()
@@ -39,13 +40,13 @@ public class JavaScriptAdapterUt
 
         await systemUnderTest.DisplayH5p(h5pEntity);
 
-        Assert.That(h5pEntity.H5pJsonSourcePath, Is.EqualTo(h5pJsonPath));
+        Assert.That(h5pEntity.H5pZipSourcePath, Is.EqualTo(h5pJsonPath));
     }
 
     private static H5pEntity CreateH5pEntity(string h5pJsonPath)
     {
         var h5pEntity = new H5pEntity();
-        h5pEntity.H5pJsonSourcePath = h5pJsonPath;
+        h5pEntity.H5pZipSourcePath = h5pJsonPath;
         return h5pEntity;
     }
     
