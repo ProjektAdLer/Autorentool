@@ -21,7 +21,7 @@ public class H5pEntity
         get => h5pZipSourcePath;
         set
         {
-            ThrowExceptionIfPathToSetIsNotValid(value);
+            ThrowExceptionIfH5pZipSourcePathIsNotValid(value);
             h5pZipSourcePath = value;
         }
     }
@@ -31,32 +31,12 @@ public class H5pEntity
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
     /// <see cref="System.IO.Path.GetInvalidPathChars()"/></exception>
-    private static void ThrowExceptionIfPathToSetIsNotValid(string value)
+    private static void ThrowExceptionIfH5pZipSourcePathIsNotValid(string value)
     {
-        ThrowArgumentNullExceptionIfStringIsNull(value);
-        ThrowArgumentExceptionIfStringIsEmpty(value);
-        ThrowArgumentExceptionIfStringIsNullOrWhitespace(value);
-        ThrowArgumentExceptionIfPathContainsInvalidPathChars(value);
-    }
-    private static void ThrowArgumentNullExceptionIfStringIsNull(string value)
-    {
-        if (value == null)
-            throw new ArgumentNullException(nameof(H5pZipSourcePath));
-    }
-    private static void ThrowArgumentExceptionIfStringIsEmpty(string value)
-    {
-        if (value == string.Empty)
-            throw new ArgumentException(nameof(H5pZipSourcePath));
-    }
-    private static void ThrowArgumentExceptionIfStringIsNullOrWhitespace(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException(nameof(H5pZipSourcePath));
-    }
-    private static void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string value)
-    {
-        if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-            throw new ArgumentException("H5pZipSourcePath contains invalid path chars!");
+        PathValidator.ThrowArgumentNullExceptionIfPathIsNull(value, nameof(H5pZipSourcePath));
+        PathValidator.ThrowArgumentExceptionIfPathIsEmpty(value, nameof(H5pZipSourcePath));
+        PathValidator.ThrowArgumentExceptionIfPathIsNullOrWhitespace(value, nameof(H5pZipSourcePath));
+        PathValidator.ThrowArgumentExceptionIfPathContainsInvalidPathChars(value, "H5pZipSourcePath contains invalid path chars!");
     }
 
 
