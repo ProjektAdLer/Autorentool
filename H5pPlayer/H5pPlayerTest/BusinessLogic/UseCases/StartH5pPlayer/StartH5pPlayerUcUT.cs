@@ -9,23 +9,17 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.StartH5pPlayer;
 [TestFixture]
 public class StartH5pPlayerUcUT
 {
+  
 
-    
-    
-    
        
-    [TestCase(@"C:\Temp")]                 // Windows absolute path
-    [TestCase(@"Test\Temp\Tested")]        // Windows relative path
-    [TestCase(@"Test/Temp/Tested")]        // Unix/macOS relative path
-    [TestCase(@"/usr/local/bin")]          // Unix/macOS absolute path
-    [TestCase(@"C:/Program Files/Temp")]   // Mixed style path (Windows)
-    [TestCase(@"/tmp/test#folder/")]       // Unix/macOS with special characters
-    [TestCase(@"C:\Temp with spaces\file")]// Windows with spaces
-    [TestCase(@".\relative\path")]         // Windows relative path with .
-    [TestCase(@"..\parent\path")]          // Windows relative path with ..
-    [TestCase(@"/path with spaces")]       // Unix/macOS with spaces
-    [TestCase(@"/")]                       // Root path Unix/macOS
-    [TestCase(@"C:\")]                     // Root path Windows
+    [TestCase(@"C:\Temp.zip")]                 // Windows absolute path
+    [TestCase(@"/usr/local/bin.zip")]          // Unix/macOS absolute path
+    [TestCase(@"C:/Program Files/Temp.zip")]   // Mixed style path (Windows)
+    [TestCase(@"/tmp/test#folder/d.zip")]       // Unix/macOS with special characters
+    [TestCase(@"C:\Temp with spaces\file.zip")]// Windows with spaces
+    [TestCase(@"/path with spaces.zip")]       // Unix/macOS with spaces
+    [TestCase(@"/d.zip")]                       // Root path Unix/macOS
+    [TestCase(@"C:\d.zip")]                     // Root path Windows
     public void MapTOtoEntity_ValidH5pZipSourcePath(string validPath)
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
@@ -44,15 +38,13 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,invalidPath);
-        const string expectedErrorMessage = "H5P Zip Path was wrong!";
+        const string expectedErrorMessage = "H5P zip path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
      
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
-
-  
 
     [TestCase("")]
     [TestCase("   ")]
@@ -61,7 +53,7 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,pathToCheck);
-        const string expectedErrorMessage = "H5P Zip Path was wrong!";
+        const string expectedErrorMessage = "H5P zip path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(pathToCheck, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -71,7 +63,7 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
-    public void MapTOtoEntity_InvalidH5pZipSourcePath([Range(0, 32)] int number)
+    public void MapTOtoEntity_InvalidPathCharsInH5pZipSourcePath([Range(0, 32)] int number)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -79,7 +71,7 @@ public class StartH5pPlayerUcUT
         const string validPath = @"C:\Temp\Invalid";
         var invalidPath = validPath + badChars[number];
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,invalidPath);
-        const string expectedErrorMessage = "H5P Zip Path was wrong!";
+        const string expectedErrorMessage = "H5P zip path was wrong!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -87,7 +79,45 @@ public class StartH5pPlayerUcUT
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
 
+    [Test]
+    public void MapTOtoEntity_MissingZipExtensionInH5pZipSourcePath([Values]H5pDisplayMode displayMode)
+    {
+        var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
+        const string invalidPath = @"C:\Temp\Invalid";
+        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode,invalidPath);
+        const string expectedErrorMessage = "H5P zip path was wrong!";
+        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
+        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+       
+        mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
+    }
+
+           
+    
+    [TestCase(@"Test\Temp\Tested.zip")]        // Windows relative path
+    [TestCase(@"Test/Temp/Tested.zip")]        // Unix/macOS relative path
+    [TestCase(@".\relative\path.zip")]         // Windows relative path with .
+    [TestCase(@"..\parent\path.zip")]          // Windows relative path with ..
+    public void MapTOtoEntity_PathIsNotRootedInH5pZipSourcePath(string invalidPath)
+    {
+        var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
+        var displayMode = H5pDisplayMode.Display;
+        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode,invalidPath);
+        const string expectedErrorMessage = "H5P zip path was wrong!";
+        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
+
+        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+       
+        mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
+    }
+
+    
+    
+    
+    
     [Test]
     public void MapTOtoEntity_DisplayMode([Values]H5pDisplayMode displayMode)
     {

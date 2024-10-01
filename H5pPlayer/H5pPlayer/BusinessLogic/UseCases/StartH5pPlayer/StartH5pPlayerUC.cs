@@ -16,11 +16,29 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
     {
         DisplayH5pUC = displayH5PUc;
-        StartH5PPlayerUcOutputPort = startH5PPlayerUcOutputPort;
+        StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
     }
 
 
+    /// <summary>
+    /// Was für pfade kommen an:
+    /// frage gestellt in discord. warte noch auf antwort
+    /// 
+    /// H5pJsonSourcePath rein in
+    ///     Aus dem ZipSourcePath extrahieren
+    ///     das könnte man z.b. in der Entity machen somit bräuchte die Entity nur einen getter
+    ///     Aber achtung erst muss die Zip Datei in den H5pOrdner der H5pStandalone in wwwroot des
+    ///     Autorentools implementiert werden
+    ///
+    ///     
+    /// 
+    ///  JavascriptAdapter aufräumen, -> json path in jsonpath inentitiy
+    ///
+    ///
+    /// Vgl Datei ContentFilesAdd in Presentation.Componentes.ContentFiles
+    /// 
+    /// </summary>
     public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
         MapTOtoEntity(displayH5PInputTo);
@@ -46,8 +64,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     {
         var errorOutputTo = new StartH5pPlayerErrorOutputTO();
         errorOutputTo.InvalidH5pZipSourcePath = startH5PPlayerInputT0.H5pZipSourcePath;
-        errorOutputTo.H5pZipSourcePathErrorText = "H5P Zip Path was wrong!";
-        StartH5PPlayerUcOutputPort.ErrorOutput(errorOutputTo);
+        errorOutputTo.H5pZipSourcePathErrorText = "H5P zip path was wrong!";
+        StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
 
     private void CreateH5pEntity()
@@ -66,5 +84,5 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 
     internal IDisplayH5pUC DisplayH5pUC { get; }
     internal H5pEntity H5pEntity { get; set; }
-    internal IStartH5pPlayerUCOutputPort StartH5PPlayerUcOutputPort { get;  }
+    internal IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
 }

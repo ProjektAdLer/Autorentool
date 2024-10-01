@@ -108,6 +108,7 @@
 
             foreach (var file in files)
             {
+                Console.Write(file.);
                 var fileEnding = file.Name.Split(".").Skip(1).Select(s => "." + s).LastOrDefault();
                 if (fileEnding is not null && fileEnding.ToLowerInvariant() == ".zip")
                 {

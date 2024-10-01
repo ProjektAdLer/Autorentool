@@ -6,27 +6,33 @@ public class PathValidator
     {
     }
 
-    public void ThrowArgumentNullExceptionIfPathIsNull(string value, string parameterName)
+    public void ThrowArgumentExceptionIfPathIsNotRooted(string path, string message)
     {
-        if (value == null)
+        if(!Path.IsPathRooted(path))
+            throw new ArgumentException(message);
+    }
+
+    public void ThrowArgumentNullExceptionIfPathIsNull(string path, string parameterName)
+    {
+        if (path == null)
             throw new ArgumentNullException(parameterName);
     }
 
-    public void ThrowArgumentExceptionIfPathIsEmpty(string value, string message)
+    public void ThrowArgumentExceptionIfPathIsEmpty(string path, string message)
     {
-        if (value == string.Empty)
+        if (path == string.Empty)
             throw new ArgumentException(message);
     }
 
-    public void ThrowArgumentExceptionIfPathIsNullOrWhitespace(string value, string message)
+    public void ThrowArgumentExceptionIfPathIsNullOrWhitespace(string path, string message)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentException(message);
     }
 
-    public void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string value, string message)
+    public void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string path, string message)
     {
-        if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+        if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
             throw new ArgumentException(message);
     }
 }
