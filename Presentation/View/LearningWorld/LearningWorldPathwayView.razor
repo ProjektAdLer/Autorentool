@@ -39,7 +39,9 @@
     </section>
     <div class="bg-white rounded w-full h-full grow overflow-scroll">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-[900px] h-[2000px]"
-             @onmousemove=@(e => MouseService.FireMove(this, e))@onmouseup=@(e => MouseService.FireUp(this, e))@onmouseleave=@(e => MouseService.FireOut(this, e))>
+             @onmousemove=@(e => MouseService.FireMove(this, e))
+             @onmouseup=@(e => MouseService.FireUp(this, e))
+             @onmouseleave=@(e => MouseService.FireOut(this, e))>
 
             @if (LearningWorldP.LearningWorldVm != null)
             {
