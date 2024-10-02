@@ -8,7 +8,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 {
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
-    
+
     protected override string Title => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
 
     protected override string ObjectStyleWhenSelected =>
@@ -52,7 +52,6 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
         ? ""
         : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
 
-    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
 
     [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
 
@@ -64,7 +63,6 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     {
         var menuEntries = new List<RightClickMenuEntry>
         {
-            new("Open", () => OnOpenLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
             new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
             new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
         };
