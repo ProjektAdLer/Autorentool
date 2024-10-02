@@ -1,6 +1,8 @@
 ﻿@using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
@@ -17,7 +19,7 @@
 
                     <div class="absolute flex justify-center -top-3 2xl:-top-4">
                         <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-7 2xl:h-7 -top-5 flex rounded-lg p-1 element-icon"/>
-                    </div> 
+                    </div>
 
                     <div class="flex flex-col items-center">
 
@@ -46,15 +48,24 @@
     <ChildContent>
         @if (LearningElement.LearningContent is IFileContentViewModel or ILinkContentViewModel)
         {
-            <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+            <MudMenuItem
+                OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">
+                @Localizer["DragDropLearningElement.RightClickMenu.Show"]
+            </MudMenuItem>
         }
-        <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
-        <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
+        <MudMenuItem
+            OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">
+            @Localizer["DragDropLearningElement.RightClickMenu.Edit"]
+        </MudMenuItem>
+        <MudMenuItem
+            OnClick="@DeleteLearningElement">
+            @Localizer["DragDropLearningElement.RightClickMenu.Delete"]
+        </MudMenuItem>
     </ChildContent>
 </MudMenu>
 
 @code {
-    
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
 
@@ -70,6 +81,10 @@
     [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
 
     [Parameter] public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+
+    [Inject, AllowNull] internal IStringLocalizer<DragDropLearningElement> Localizer { get; set; }
+
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -121,6 +136,25 @@
     private string GetElementStyleString()
     {
         return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerblue-300 bg-adlerblue-100 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300";
+    }
+
+    private async Task DeleteLearningElement()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.DialogText", LearningElement.Name].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.SubmitButtonText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
+        };
+
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.Title"].Value, dialogParameters);
+        var result = await dialogReference.Result;
+        if (result.Canceled)
+        {
+            return;
+        }
+
+        await OnDeleteLearningElement.InvokeAsync(LearningElement);
     }
 
     public void Dispose()

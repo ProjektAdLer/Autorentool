@@ -253,5 +253,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningElement\DragDropLearningElement.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DragDropLearningElement.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningElement\DragDropLearningElement.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DragDropLearningElement.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
