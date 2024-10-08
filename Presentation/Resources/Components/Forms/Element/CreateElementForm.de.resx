@@ -190,4 +190,16 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     <data name="CreateElementForm.Tooltip.Image.Alt" xml:space="preserve">
         <value>Beispielbild für Slots in einem Lernraum-Grundriss</value>
     </data>
+    <data name="CreateElementForm.LearningMaterial.Dialog.Title" xml:space="preserve">
+        <value>Externes Lernmaterial ändern</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Preview" xml:space="preserve">
+        <value>Lernmaterial anzeigen</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Edit" xml:space="preserve">
+        <value>Lernmaterial auswählen bzw. ändern</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
+        <value>Ausgewähltes Lernmaterial:</value>
+    </data>
 </root>

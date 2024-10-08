@@ -150,23 +150,34 @@
                 }
                 else
                 {
-                    <div class="flex items-center">
-                        <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                       Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
-                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
-                                       Class="show-content-preview py-2"/>
-                        <MudTextField
-                            T="ILearningContentFormModel"
-                            @ref="_contentTextField"
-                            @bind-Value="FormDataContainer.FormModel.LearningContent"
-                            @bind-Text="@LearningContentName"
-                            Variant="Variant.Outlined"
-                            For="@(() => FormModel.LearningContent!)"
-                            ReadOnly="true">
-                        </MudTextField>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog">
-                        </MudIconButton>
+                    <div class="flex flex-col gap-1 p-4">
+                        <MudText Class="text-xs font-bold">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial"]</MudText>
+                        <div class="flex items-center cursor-default rounded border-2 border-adlergrey-200 bg-adlerdeactivated">
+                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                           Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
+                                           OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
+                                           Class="show-content-preview py-2"
+                                           Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+                        
+                            <MudTextField
+                                T="ILearningContentFormModel"
+                                @ref="_contentTextField"
+                                @bind-Value="FormDataContainer.FormModel.LearningContent"
+                                @bind-Text="@LearningContentName"
+                                Variant="Variant.Text"
+                                For="@(() => FormModel.LearningContent!)"
+                                ReadOnly="true"
+                                Disabled="true"
+                                DisableUnderLine="true"
+                                Style="color: rgb(69,160,229);"
+                                Margin="Margin.Dense"
+                                Class="pb-3 px-1">
+                            </MudTextField>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Edit"]">
+                            </MudIconButton>
+                        </div>
                     </div>
+                    
                     @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                     {
                         <div class="flex flex-col">
@@ -445,7 +456,7 @@
         {
             { nameof(LearningContentDialog.LearningContent), FormDataContainer.FormModel.LearningContent }
         };
-        var dialog = await DialogService.ShowAsync<LearningContentDialog>("blabla", parameters, options);
+        var dialog = await DialogService.ShowAsync<LearningContentDialog>(Localizer["CreateElementForm.LearningMaterial.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
         if (dialog.Result.Result.Canceled)
             return;
