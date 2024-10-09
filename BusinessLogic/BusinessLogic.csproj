@@ -18,7 +18,7 @@
       <Compile Remove="Commands\Adaptivity\Action\CommentAction\IEditCommentAction.cs" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.7.1" />
+      <PackageReference Include="FluentValidation" Version="11.10.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
     </ItemGroup>
     <ItemGroup>
