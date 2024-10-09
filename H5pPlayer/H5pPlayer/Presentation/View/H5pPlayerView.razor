@@ -9,13 +9,22 @@
 </div>
 
 @code {
+
+    
+    [Parameter] 
+    public string? H5pZipSourcePath { get; set; }
+    
+    
+    [Parameter] 
+    public string? UnzippedH5psPath{ get; set; }
+    
     private H5pPlayerController? _h5pPlayerController;
 
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
-        {
+        { 
             StartH5pPlayer();
         }
     }
@@ -23,7 +32,8 @@
     private void StartH5pPlayer()
     {
         //_h5pPlayerController = new H5pPlayerController(JsRuntime);
-        _h5pPlayerController.StartH5pPlayer("https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen");
+        //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
+        _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
     }
 
 

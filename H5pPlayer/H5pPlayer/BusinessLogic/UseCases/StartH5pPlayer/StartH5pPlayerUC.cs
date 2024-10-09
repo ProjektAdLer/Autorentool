@@ -37,6 +37,9 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     ///
     ///
     /// Vgl Datei ContentFilesAdd in Presentation.Componentes.ContentFiles
+    ///  
+    ///
+    ///
     /// 
     /// </summary>
     public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
@@ -46,25 +49,53 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
     }
 
-    private void MapTOtoEntity(StartH5pPlayerInputTO displayH5PInputTo)
+    private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
+    {
+        CreateH5pEntity();
+        H5pEntity.ActiveDisplayMode = startH5pPlayerInputTo.DisplayMode;
+        MapPaths(startH5pPlayerInputTo);
+    }
+
+    private void MapPaths(StartH5pPlayerInputTO startH5pPlayerInputTo)
     {
         try
         {
-            CreateH5pEntity();
-            H5pEntity.ActiveDisplayMode = displayH5PInputTo.DisplayMode;
-            H5pEntity.H5pZipSourcePath = displayH5PInputTo.H5pZipSourcePath;
+            H5pEntity.H5pZipSourcePath = startH5pPlayerInputTo.H5pZipSourcePath;
+            H5pEntity.UnzippedH5psPath = startH5pPlayerInputTo.UnzippedH5psPath;
         }
         catch (ArgumentException e)
         {
-            CreateErrorOutputForInvalidPath(displayH5PInputTo);
+            CreateErrorOutputForInvalidPath(startH5pPlayerInputTo, e.Message);
         }
     }
 
-    private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0)
+    private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0, string errorMessage)
+    {
+        if (errorMessage.Contains(nameof(H5pEntity.H5pZipSourcePath)))
+        {
+            CreateErrorOutputForH5pZipSourcePath(startH5PPlayerInputT0.H5pZipSourcePath, errorMessage);
+        }
+        else
+        {
+            CreateErrorOutputForUnzippedH5psPath(startH5PPlayerInputT0.UnzippedH5psPath, errorMessage);
+        }
+    }
+
+
+
+    private void CreateErrorOutputForH5pZipSourcePath(string invalidH5pZipSourcePath, string errorMessage)
     {
         var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidH5pZipSourcePath = startH5PPlayerInputT0.H5pZipSourcePath;
-        errorOutputTo.H5pZipSourcePathErrorText = "H5P zip path was wrong!";
+        errorOutputTo.InvalidPath = invalidH5pZipSourcePath;
+        errorOutputTo.ErrorTextForInvalidPath = errorMessage;
+        StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
+    }
+    
+    private void CreateErrorOutputForUnzippedH5psPath(string invalidUnzippedH5psPath, string errorMessage)
+    {
+        var errorOutputTo = new StartH5pPlayerErrorOutputTO();
+        errorOutputTo.InvalidPath = invalidUnzippedH5psPath;
+        errorOutputTo.ErrorTextForInvalidPath = errorMessage;
         StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
 

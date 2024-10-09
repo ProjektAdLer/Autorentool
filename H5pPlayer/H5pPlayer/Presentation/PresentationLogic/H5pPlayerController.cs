@@ -19,9 +19,9 @@ public class H5pPlayerController
         StartH5PPlayerUc = new StartH5pPlayerUC(displayH5pUC, StartH5PPlayerPresenter);
     }
 
-    public void StartH5pPlayer(string h5pPath)
+    public void StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
     {
-        var displayH5pTo = new StartH5pPlayerInputTO(H5pDisplayMode.Display, h5pPath);
+        var displayH5pTo = new StartH5pPlayerInputTO(H5pDisplayMode.Display, h5pSourcePath, unzippedH5psPath);
         StartH5PPlayerUc.StartH5pPlayer(displayH5pTo);
     }
     

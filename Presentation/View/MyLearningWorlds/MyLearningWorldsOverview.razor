@@ -158,8 +158,9 @@
         NavigateToApp();
     }
     
-    private async void OpenH5pPlayerDialog()
+    private  void OpenH5pPlayerDialog()
     {
+        /*
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
@@ -171,6 +172,7 @@
         var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
         _ = await dialog.Result;
         StateHasChanged();
+        */
     }
 
     private void OpenLearningWorld(ILearningWorldViewModel learningWorldViewModel)

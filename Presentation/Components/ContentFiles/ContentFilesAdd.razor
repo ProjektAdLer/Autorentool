@@ -8,7 +8,9 @@
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
+@using H5pPlayer.API
 @using Presentation.Components.Dialogues
+@using Shared.Configuration
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -120,6 +122,20 @@
                     await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
                     continue;
                 }
+                
+                if (fileEnding.ToLowerInvariant()  == ".h5p")
+                {
+                    var h5pZipSourcePath = ApplicationPaths.ContentFolder + "\\" + file.Name;
+                    Logger.LogTrace("Start H5P-Player with path: " + h5pZipSourcePath);
+                    Console.Write("Start H5P-Player with path: " + h5pZipSourcePath);
+                    OpenH5pPlayerDialog(h5pZipSourcePath);
+                }
+        
+                
+                // 
+                // hier sollte ich wissen, dass in der zip eine H5P.zip oder .h5p ist muss ich ncoh testen mit if
+                //  ApplicationPaths.ContentFolder;
+                //pfad zu ContentFIles: C:\Users\Tobias\AppData\Roaming\AdLerAuthoring\ContentFiles 
 
                 await HandleFileAsync(file);
             }
@@ -136,6 +152,9 @@
             await _fileUpload.ResetAsync();
         }
     }
+    // gesamten Zip pfad an H5P-Player geben
+    // -> hole hier die .zip wenn darin eine h5p.zip ist
+    
 
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
@@ -156,12 +175,15 @@
             if (entry.Length == 0) continue;
             var fileName = PathHelper.TrimFileName(entry.Name);
             var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
-            if (!AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+            fileEnding = fileEnding.Trim().ToLowerInvariant();
+            if (!AllowedFileEndings.Endings.Contains(fileEnding))
             {
+                
                 unsupportedFiles.Add(entry.FullName);
                 continue;
             }
-
+   
+                
             using var memoryStream = new MemoryStream();
             await entry.Open().CopyToAsync(memoryStream);
             memoryStream.Position = 0;
@@ -249,6 +271,25 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
+    private async void OpenH5pPlayerDialog(string h5pZipSourcePath)
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters()
+        {
+            {"H5pZipSourcePath", h5pZipSourcePath}
+        };
+        
+        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
+    }
+    
     private void ToggleSpinner()
     {
         Working = !Working;

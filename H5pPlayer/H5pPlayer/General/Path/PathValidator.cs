@@ -1,4 +1,4 @@
-﻿namespace H5pPlayer.BusinessLogic.Domain;
+﻿namespace H5pPlayer.General.Path;
 
 public class PathValidator
 {
@@ -8,7 +8,7 @@ public class PathValidator
 
     public void ThrowArgumentExceptionIfPathIsNotRooted(string path, string message)
     {
-        if(!Path.IsPathRooted(path))
+        if(!System.IO.Path.IsPathRooted(path))
             throw new ArgumentException(message);
     }
 
@@ -32,7 +32,7 @@ public class PathValidator
 
     public void ThrowArgumentExceptionIfPathContainsInvalidPathChars(string path, string message)
     {
-        if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+        if (path.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0)
             throw new ArgumentException(message);
     }
 }

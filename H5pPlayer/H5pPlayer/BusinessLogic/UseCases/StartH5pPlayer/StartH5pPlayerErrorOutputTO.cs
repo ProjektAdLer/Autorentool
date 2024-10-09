@@ -3,15 +3,15 @@
 public struct  StartH5pPlayerErrorOutputTO
 {
     public StartH5pPlayerErrorOutputTO(
-        string invalidH5pZipSourcePath,
-        string h5PZipSourcePathErrorText)
+        string invalidPath,
+        string errorTextForInvalidPath)
     {
-        InvalidH5pZipSourcePath = invalidH5pZipSourcePath;
-        H5pZipSourcePathErrorText = h5PZipSourcePathErrorText;
+        InvalidPath = invalidPath;
+        ErrorTextForInvalidPath = errorTextForInvalidPath;
     }
 
 
-    public string InvalidH5pZipSourcePath { get; set; }
+    public string InvalidPath { get; set; }
     
-    public string H5pZipSourcePathErrorText { get; set; }
+    public string ErrorTextForInvalidPath { get; set; }
 }

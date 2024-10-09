@@ -13,6 +13,7 @@ public class H5pEntityUt
         
         Assert.That(systemUnderTest.ActiveDisplayMode, Is.EqualTo(H5pDisplayMode.Display));
         Assert.That(systemUnderTest.H5pZipSourcePath, Is.EqualTo(string.Empty));
+        Assert.That(systemUnderTest.UnzippedH5psPath, Is.EqualTo(string.Empty));
     }
     
    

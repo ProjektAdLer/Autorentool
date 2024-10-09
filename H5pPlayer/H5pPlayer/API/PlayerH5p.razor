@@ -9,8 +9,19 @@
     see only intern: https://wiki.projekt-adler.eu/de/AMG/Blazor/Naming
 -->
 
-<H5pPlayerView></H5pPlayerView>
+<H5pPlayerView 
+    H5pZipSourcePath="@H5pZipSourcePath"
+    UnzippedH5psPath="@UnzippedH5psPath">
+</H5pPlayerView>
 
 @code {
+
+    [Parameter] 
+    public string? H5pZipSourcePath { get; set; }
     
+    
+
+    [Parameter] 
+    public string? UnzippedH5psPath{ get; set; }
+
 }
