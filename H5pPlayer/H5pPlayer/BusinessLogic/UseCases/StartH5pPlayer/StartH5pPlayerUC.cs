@@ -65,39 +65,31 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         }
         catch (ArgumentException e)
         {
-            CreateErrorOutputForInvalidPath(startH5pPlayerInputTo, e.Message);
+            HandleErrorOutputForInvalidPath(startH5pPlayerInputTo, e.Message);
         }
     }
 
-    private void CreateErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0, string errorMessage)
+    private void HandleErrorOutputForInvalidPath(StartH5pPlayerInputTO startH5PPlayerInputT0, string errorMessage)
     {
         if (errorMessage.Contains(nameof(H5pEntity.H5pZipSourcePath)))
         {
-            CreateErrorOutputForH5pZipSourcePath(startH5PPlayerInputT0.H5pZipSourcePath, errorMessage);
+            CreateErrorOutputForInvalidPath(startH5PPlayerInputT0.H5pZipSourcePath, errorMessage);
         }
         else
         {
-            CreateErrorOutputForUnzippedH5psPath(startH5PPlayerInputT0.UnzippedH5psPath, errorMessage);
+            CreateErrorOutputForInvalidPath(startH5PPlayerInputT0.UnzippedH5psPath, errorMessage);
         }
     }
 
-
-
-    private void CreateErrorOutputForH5pZipSourcePath(string invalidH5pZipSourcePath, string errorMessage)
+    private void CreateErrorOutputForInvalidPath(string invalidPath, string errorMessage)
     {
         var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidPath = invalidH5pZipSourcePath;
+        errorOutputTo.InvalidPath = invalidPath;
         errorOutputTo.ErrorTextForInvalidPath = errorMessage;
         StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
     
-    private void CreateErrorOutputForUnzippedH5psPath(string invalidUnzippedH5psPath, string errorMessage)
-    {
-        var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidPath = invalidUnzippedH5psPath;
-        errorOutputTo.ErrorTextForInvalidPath = errorMessage;
-        StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
-    }
+
 
     private void CreateH5pEntity()
     {
