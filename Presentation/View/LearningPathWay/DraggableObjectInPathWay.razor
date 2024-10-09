@@ -1,5 +1,7 @@
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
@@ -17,7 +19,7 @@
             @((MarkupString)DeletePathButtonShape)
         }
     </Clickable>
-    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedDeleteObject">
+    <Clickable  T="IObjectInPathWayViewModel"  OnClickedParam="ObjectInPathWay" OnClicked="@DeleteLearningObject">
         @((MarkupString)DeleteObjectButtonShape)
     </Clickable>
     <title>@Title</title>
@@ -47,7 +49,7 @@
 
     [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
 
-    [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnClickedDeleteObject { get; set; }
+    [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnDeleteObject { get; set; }
 
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
@@ -55,6 +57,11 @@
 
     [Inject] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
+    
+    [Inject, AllowNull] internal IStringLocalizer<DraggableObjectInPathWay> Localizer { get; set; }
+
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+
 
     protected abstract string Text { get; }
 
@@ -83,6 +90,25 @@
         {
             throw new ArgumentNullException(nameof(ObjectInPathWay));
         }
+    }
+    
+    private async Task DeleteLearningObject()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.DialogText", ObjectName].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.SubmitButtonText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
+        };
+
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.Title"].Value, dialogParameters);
+        var result = await dialogReference.Result;
+        if (result.Canceled)
+        {
+            return;
+        }
+
+        await OnDeleteObject.InvokeAsync(ObjectInPathWay);
     }
 
 }

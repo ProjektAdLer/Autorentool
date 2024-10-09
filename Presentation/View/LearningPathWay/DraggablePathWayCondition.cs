@@ -46,7 +46,9 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
                                         style=""fill:none;stroke:white;stroke-width:1""/>";
 
     protected override string DeleteObjectButtonShape =>
-        @"<text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
+        @"<g transform=""translate(58,0) scale(0.8,0.8)"">
+        <path d=""M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"" fill=""gray"" style=""user-select:none; cursor: pointer""/>
+    </g>";
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
 }

@@ -253,5 +253,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DragDropLearningElement.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableObjectInPathWay.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggableObjectInPathWay.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableObjectInPathWay.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggableObjectInPathWay.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

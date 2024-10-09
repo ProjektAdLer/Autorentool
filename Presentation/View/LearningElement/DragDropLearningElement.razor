@@ -18,9 +18,11 @@
         <MudCardContent
             Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
 
-            <div class="absolute flex justify-center -top-3 2xl:-top-4">
+            <div class="absolute flex justify-between -top-3 2xl:-top-4">
                 <MudIcon Icon="@GetElementIcon()"
                          Class="w-6 h-6 2xl:w-7 2xl:h-7 -top-5 flex rounded-lg p-1 element-icon"/>
+                
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@DeleteLearningElement"></MudIconButton>
             </div>
 
             <div class="flex flex-col items-center">
