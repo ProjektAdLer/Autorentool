@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
-using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
@@ -28,7 +27,6 @@ public class DraggableObjectInPathWay
     {
         _ctx = new TestContext();
         _ctx.ComponentFactories.AddStub<Draggable<IObjectInPathWayViewModel>>();
-        _ctx.ComponentFactories.AddStub<RightClickMenu<IObjectInPathWayViewModel>>();
         _mouseService = Substitute.For<IMouseService>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _localizer = Substitute.For<IStringLocalizer<DraggableObjectInPathWay>>();
@@ -55,19 +53,13 @@ public class DraggableObjectInPathWay
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var onRightClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var showingRightClickMenu = true;
-        var onOpenLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onEditLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onDeleteLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onRemoveLearningSpaceFromTopic = new Action<ILearningSpaceViewModel>(_ => { });
-        var onCloseRightClickMenu = new Action(() => { });
         var positioningService = Substitute.For<ILearningWorldPresenter>();
         var systemUnderTest =
-            GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked, onRightClicked,
-                showingRightClickMenu, onOpenLearningSpace, onEditLearningSpace, onDeleteLearningSpace,
-                onRemoveLearningSpaceFromTopic,
-                onCloseRightClickMenu, positioningService);
+            GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked
+                , onEditLearningSpace, onDeleteLearningSpace, onRemoveLearningSpaceFromTopic, positioningService);
 
         Assert.Multiple(() =>
         {
@@ -77,9 +69,6 @@ public class DraggableObjectInPathWay
                 Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
             Assert.That(systemUnderTest.Instance.OnDoubleClickedDraggable,
                 Is.EqualTo(EventCallback.Factory.Create(onDoubleClicked.Target!, onDoubleClicked)));
-            Assert.That(systemUnderTest.Instance.OnRightClickedDraggable,
-                Is.EqualTo(EventCallback.Factory.Create(onRightClicked.Target!, onRightClicked)));
-            Assert.That(systemUnderTest.Instance.ShowingRightClickMenu, Is.EqualTo(showingRightClickMenu));
             Assert.That(systemUnderTest.Instance.OnEditLearningSpace,
                 Is.EqualTo(EventCallback.Factory.Create(onEditLearningSpace.Target!, onEditLearningSpace)));
             Assert.That(systemUnderTest.Instance.OnDeleteLearningSpace,
@@ -87,8 +76,6 @@ public class DraggableObjectInPathWay
             Assert.That(systemUnderTest.Instance.OnRemoveLearningSpaceFromTopic,
                 Is.EqualTo(EventCallback.Factory.Create(onRemoveLearningSpaceFromTopic.Target!,
                     onRemoveLearningSpaceFromTopic)));
-            Assert.That(systemUnderTest.Instance.OnCloseRightClickMenu,
-                Is.EqualTo(EventCallback.Factory.Create(onCloseRightClickMenu.Target!, onCloseRightClickMenu)));
             Assert.That(systemUnderTest.Instance.PositioningService, Is.EqualTo(positioningService));
         });
     }
@@ -100,17 +87,12 @@ public class DraggableObjectInPathWay
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var onRightClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var showingRightClickMenu = false;
         var onEditPathWayCondition = new Action<PathWayConditionViewModel>(_ => { });
         var onDeletePathWayCondition = new Action<PathWayConditionViewModel>(_ => { });
-        var onCloseRightClickMenu = new Action(() => { });
         var positioningService = Substitute.For<ILearningWorldPresenter>();
         var systemUnderTest =
             GetRenderedDraggablePathWayCondition(pathWayCondition, onClicked, onDragged, onDoubleClicked,
-                onRightClicked,
-                showingRightClickMenu, onEditPathWayCondition, onDeletePathWayCondition, onCloseRightClickMenu,
-                positioningService);
+                onEditPathWayCondition, onDeletePathWayCondition, positioningService);
 
         Assert.Multiple(() =>
         {
@@ -120,13 +102,8 @@ public class DraggableObjectInPathWay
                 Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
             Assert.That(systemUnderTest.Instance.OnDoubleClickedDraggable,
                 Is.EqualTo(EventCallback.Factory.Create(onDoubleClicked.Target!, onDoubleClicked)));
-            Assert.That(systemUnderTest.Instance.OnRightClickedDraggable,
-                Is.EqualTo(EventCallback.Factory.Create(onRightClicked.Target!, onRightClicked)));
-            Assert.That(systemUnderTest.Instance.ShowingRightClickMenu, Is.EqualTo(showingRightClickMenu));
             Assert.That(systemUnderTest.Instance.OnDeletePathWayCondition,
                 Is.EqualTo(EventCallback.Factory.Create(onDeletePathWayCondition.Target!, onDeletePathWayCondition)));
-            Assert.That(systemUnderTest.Instance.OnCloseRightClickMenu,
-                Is.EqualTo(EventCallback.Factory.Create(onCloseRightClickMenu.Target!, onCloseRightClickMenu)));
             Assert.That(systemUnderTest.Instance.PositioningService, Is.EqualTo(positioningService));
         });
     }
@@ -140,19 +117,15 @@ public class DraggableObjectInPathWay
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var onRightClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        const bool showingRightClickMenu = false;
-        var onOpenLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onEditLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onDeleteLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onRemoveLearningSpaceFromTopic = new Action<ILearningSpaceViewModel>(_ => { });
-        var onCloseRightClickMenu = new Action(() => { });
         var positioningService = Substitute.For<ILearningWorldPresenter>();
         var systemUnderTest =
-            GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked, onRightClicked,
-                showingRightClickMenu, onOpenLearningSpace, onEditLearningSpace, onDeleteLearningSpace,
+            GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked,
+                onEditLearningSpace, onDeleteLearningSpace,
                 onRemoveLearningSpaceFromTopic,
-                onCloseRightClickMenu, positioningService);
+                positioningService);
 
         Assert.That(systemUnderTest.HasComponent<Stub<Draggable<IObjectInPathWayViewModel>>>());
         var stub = systemUnderTest.FindComponent<Stub<Draggable<IObjectInPathWayViewModel>>>();
@@ -201,16 +174,12 @@ public class DraggableObjectInPathWay
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        var onRightClicked = new Action<IObjectInPathWayViewModel>(_ => { });
-        const bool showingRightClickMenu = false;
         var onEditPathWayCondition = new Action<PathWayConditionViewModel>(_ => { });
         var onDeletePathWayCondition = new Action<PathWayConditionViewModel>(_ => { });
-        var onCloseRightClickMenu = new Action(() => { });
         var positioningService = Substitute.For<ILearningWorldPresenter>();
         var systemUnderTest =
             GetRenderedDraggablePathWayCondition(pathWayCondition, onClicked, onDragged, onDoubleClicked,
-                onRightClicked,
-                showingRightClickMenu, onEditPathWayCondition, onDeletePathWayCondition, onCloseRightClickMenu,
+                onEditPathWayCondition, onDeletePathWayCondition,
                 positioningService);
 
         Assert.That(systemUnderTest.HasComponent<Stub<Draggable<IObjectInPathWayViewModel>>>());
@@ -232,8 +201,8 @@ public class DraggableObjectInPathWay
             @"<rect x=""0"" y=""0"" width=""75"" height=""41.5"" rx=""2"" style=""fill:#e9e9e9;opacity:80%;stroke:rgb(204,204,204);stroke-width:1""></rect>
 <g ></g>
 <g >
-                  <text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>
-              </g>
+    <text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>
+</g>
 <title></title>");
     }
 
@@ -242,8 +211,8 @@ public class DraggableObjectInPathWay
     {
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
         Assert.That(
-            () => GetRenderedDraggableLearningSpace(null!, _ => { }, (_, _) => { }, _ => { }, _ => { }, false, _ => { },
-                _ => { }, _ => { }, _ => { }, () => { }, null!), Throws.ArgumentNullException);
+            () => GetRenderedDraggableLearningSpace(null!, _ => { }, (_, _) => { }, _ => { }, _ => { }, _ => { },
+                _ => { }, null!), Throws.ArgumentNullException);
     }
 
     [Test]
@@ -251,19 +220,16 @@ public class DraggableObjectInPathWay
     {
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
         Assert.That(
-            () => GetRenderedDraggablePathWayCondition(null!, _ => { }, (_, _) => { }, _ => { }, _ => { }, false,
-                _ => { }, _ => { },
-                () => { }, null!), Throws.ArgumentNullException);
+            () => GetRenderedDraggablePathWayCondition(null!, _ => { }, (_, _) => { }, _ => { }, _ => { },
+                _ => { }, null!), Throws.ArgumentNullException);
     }
 
     private IRenderedComponent<DraggableLearningSpace> GetRenderedDraggableLearningSpace(
         IObjectInPathWayViewModel objectViewmodel, Action<IObjectInPathWayViewModel> onClicked,
         DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler onDragged,
-        Action<IObjectInPathWayViewModel> onDoubleClicked,
-        Action<IObjectInPathWayViewModel> onRightClicked, bool showingRightClickMenu,
-        Action<ILearningSpaceViewModel> onOpenLearningSpace, Action<ILearningSpaceViewModel> onEditLearningSpace,
+        Action<IObjectInPathWayViewModel> onDoubleClicked, Action<ILearningSpaceViewModel> onEditLearningSpace,
         Action<ILearningSpaceViewModel> onDeleteLearningSpace,
-        Action<ILearningSpaceViewModel> onRemoveLearningSpaceFromTopic, Action onCloseRightClickMenu,
+        Action<ILearningSpaceViewModel> onRemoveLearningSpaceFromTopic,
         ILearningWorldPresenter positioningService)
     {
         return _ctx.RenderComponent<DraggableLearningSpace>(parameters => parameters
@@ -271,12 +237,9 @@ public class DraggableObjectInPathWay
             .Add(p => p.OnClickedDraggable, onClicked)
             .Add(p => p.OnDraggedDraggable, onDragged)
             .Add(p => p.OnDoubleClickedDraggable, onDoubleClicked)
-            .Add(p => p.OnRightClickedDraggable, onRightClicked)
-            .Add(p => p.ShowingRightClickMenu, showingRightClickMenu)
             .Add(p => p.OnEditLearningSpace, onEditLearningSpace)
             .Add(p => p.OnDeleteLearningSpace, onDeleteLearningSpace)
             .Add(p => p.OnRemoveLearningSpaceFromTopic, onRemoveLearningSpaceFromTopic)
-            .Add(p => p.OnCloseRightClickMenu, onCloseRightClickMenu)
             .Add(p => p.PositioningService, positioningService)
         );
     }
@@ -285,9 +248,8 @@ public class DraggableObjectInPathWay
         IObjectInPathWayViewModel objectViewmodel, Action<IObjectInPathWayViewModel> onClicked,
         DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler onDragged,
         Action<IObjectInPathWayViewModel> onDoubleClicked,
-        Action<IObjectInPathWayViewModel> onRightClicked, bool showingRightClickMenu,
         Action<PathWayConditionViewModel> onEditPathWayCondition,
-        Action<PathWayConditionViewModel> onDeletePathWayCondition, Action onCloseRightClickMenu,
+        Action<PathWayConditionViewModel> onDeletePathWayCondition,
         ILearningWorldPresenter positioningService)
     {
         return _ctx.RenderComponent<DraggablePathWayCondition>(parameters => parameters
@@ -295,10 +257,7 @@ public class DraggableObjectInPathWay
             .Add(p => p.OnClickedDraggable, onClicked)
             .Add(p => p.OnDraggedDraggable, onDragged)
             .Add(p => p.OnDoubleClickedDraggable, onDoubleClicked)
-            .Add(p => p.OnRightClickedDraggable, onRightClicked)
-            .Add(p => p.ShowingRightClickMenu, showingRightClickMenu)
             .Add(p => p.OnDeletePathWayCondition, onDeletePathWayCondition)
-            .Add(p => p.OnCloseRightClickMenu, onCloseRightClickMenu)
             .Add(p => p.PositioningService, positioningService)
         );
     }

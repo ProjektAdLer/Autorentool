@@ -104,16 +104,11 @@ public class DragDropLearningElementUt
             GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked, onEditLearningElement,
                 onDeleteLearningElement, onShowLearningElementContent);
 
-        var menu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
-        var activatorContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ActivatorContent"]);
-        var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
+        var card = systemUnderTest.FindComponentOrFail<Stub<MudCard>>();
         var mudCardContent = _ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]);
         var cardContent = _ctx.Render((RenderFragment)mudCardContent.FindComponentOrFail<Stub<MudCardContent>>()
             .Instance.Parameters["ChildContent"]);
         var icons = cardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
-
-        Assert.That(menu.Instance.Parameters["ActivationEvent"], Is.EqualTo(MouseEvent.RightClick));
-        Assert.That(menu.Instance.Parameters["PositionAtCursor"], Is.EqualTo(true));
 
         var elementIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("element-icon"));
         var difficultyIcon =
@@ -133,10 +128,8 @@ public class DragDropLearningElementUt
         element.LearningContent.Returns(content);
         element.Difficulty.Returns((LearningElementDifficultyEnum)123);
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
-        var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
-            .Parameters["ActivatorContent"]);
         var mudCardContent =
-            _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+            _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudCard>>().Instance
                 .Parameters["ChildContent"]);
         Assert.That(() => _ctx.Render((RenderFragment)mudCardContent.FindComponent<Stub<MudCardContent>>().Instance
                 .Parameters["ChildContent"]),
@@ -158,10 +151,8 @@ public class DragDropLearningElementUt
         var element = Substitute.For<ILearningElementViewModel>();
         element.LearningContent.Returns((ILearningContentViewModel)null!);
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
-        var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
-            .Parameters["ActivatorContent"]);
         var mudCardContent =
-            _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+            _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudCard>>().Instance
                 .Parameters["ChildContent"]);
         Assert.That(() => _ctx.Render((RenderFragment)mudCardContent.FindComponent<Stub<MudCardContent>>().Instance
             .Parameters["ChildContent"]), Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -180,9 +171,7 @@ public class DragDropLearningElementUt
         element.LearningContent.Returns(content);
         element.Difficulty.Returns(difficulty);
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
-        var menu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
-        var activatorContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ActivatorContent"]);
-        var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
+        var card = systemUnderTest.FindComponentOrFail<Stub<MudCard>>();
         var mudCardContent = _ctx.Render((RenderFragment)_ctx
             .Render((RenderFragment)card.Instance.Parameters["ChildContent"])
             .FindComponentOrFail<Stub<MudCardContent>>().Instance.Parameters["ChildContent"]);

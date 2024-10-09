@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningPathway;
 using Shared;
 
@@ -50,12 +49,4 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
         @"<text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
-
-    protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
-    {
-        return new List<RightClickMenuEntry>
-        {
-            new("Delete", () => OnDeletePathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay)),
-        };
-    }
 }

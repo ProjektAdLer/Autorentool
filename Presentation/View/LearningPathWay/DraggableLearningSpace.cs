@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.View.LearningPathWay;
@@ -58,21 +57,4 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
 
     [Parameter] public EventCallback<ILearningSpaceViewModel>? OnRemoveLearningSpaceFromTopic { get; set; }
-
-    protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
-    {
-        var menuEntries = new List<RightClickMenuEntry>
-        {
-            new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
-            new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
-        };
-
-        if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
-        {
-            menuEntries.Add(new RightClickMenuEntry("Remove topic",
-                () => OnRemoveLearningSpaceFromTopic?.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
-        }
-
-        return menuEntries;
-    }
 }

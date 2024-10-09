@@ -23,15 +23,6 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="DragDropLearningElement.RightClickMenu.Show" xml:space="preserve">
-        <value>Lernmaterial anzeigen</value>
-    </data>
-    <data name="DragDropLearningElement.RightClickMenu.Edit" xml:space="preserve">
-        <value>Bearbeiten</value>
-    </data>
-    <data name="DragDropLearningElement.RightClickMenu.Delete" xml:space="preserve">
-        <value>Löschen</value>
-    </data>
     <data name="DragDropLearningElement.DeleteElementConfirmationDialog.Title" xml:space="preserve">
         <value>Lernelement löschen</value>
     </data>
