@@ -32,4 +32,7 @@
     <data name="DragDropLearningElement.DeleteElementConfirmationDialog.SubmitButtonText" xml:space="preserve">
         <value>Ja</value>
     </data>
+    <data name="DragDropLearningElement.Element.Delete" xml:space="preserve">
+        <value>Element löschen</value>
+    </data>
 </root>
