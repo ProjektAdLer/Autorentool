@@ -25,7 +25,7 @@
         <value>Veröffentlichen der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Lernwelt als Moodle Lernwelt-Datei (.mbz) veröffentlichen</value>
+        <value>Lernwelt als Moodle-Lernwelt-Datei (.mbz) veröffentlichen</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
