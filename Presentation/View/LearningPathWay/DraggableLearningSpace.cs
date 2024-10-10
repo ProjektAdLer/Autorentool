@@ -8,7 +8,9 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
 
-    protected override string Title => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    protected override string ObjectInPathwayTitle => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    
+    protected override string ObjectInPathwayDeletionTitle => Localizer["DraggableObjectInPathWay.LearningSpace.Delete"].Value;
 
     protected override string ObjectStyleWhenSelected =>
         @"fill:rgb(207,220,229);opacity:80%;stroke:rgb(161,200,229);stroke-width:75";

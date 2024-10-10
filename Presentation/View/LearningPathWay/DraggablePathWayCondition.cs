@@ -1,13 +1,17 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Presentation.PresentationLogic.LearningPathway;
 using Shared;
+using Microsoft.Extensions.Localization;
 
 namespace Presentation.View.LearningPathWay;
 
 public class DraggablePathWayCondition : DraggableObjectInPathWay
 {
+    protected override string ObjectInPathwayDeletionTitle => Localizer["DraggableObjectInPathWay.Condition.Delete"].Value;
+    
     protected override string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
-
+    
     protected override string Text
     {
         get
@@ -26,7 +30,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
         }
     }
 
-    protected override string Title => "";
+    protected override string ObjectInPathwayTitle => "";
 
     protected override string ObjectStyleWhenSelected =>
         @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:1";

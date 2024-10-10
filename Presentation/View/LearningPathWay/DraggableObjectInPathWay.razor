@@ -21,8 +21,9 @@
     </Clickable>
     <Clickable  T="IObjectInPathWayViewModel"  OnClickedParam="ObjectInPathWay" OnClicked="@DeleteLearningObject">
         @((MarkupString)DeleteObjectButtonShape)
+        <title>@ObjectInPathwayDeletionTitle</title>
     </Clickable>
-    <title>@Title</title>
+    <title>@ObjectInPathwayTitle</title>
 </Draggable>
 
 <PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX
@@ -65,7 +66,9 @@
 
     protected abstract string Text { get; }
 
-    protected abstract string Title { get; }
+    protected abstract string ObjectInPathwayTitle { get; }
+    
+    protected abstract string ObjectInPathwayDeletionTitle { get; }
 
     protected abstract string ObjectName { get; }
 

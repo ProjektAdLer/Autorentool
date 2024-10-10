@@ -27,4 +27,10 @@
     <data name="DraggableObjectInPathWay.DeleteObjectConfirmationDialog.Title" xml:space="preserve">
         <value>Objekt löschen</value>
     </data>
+    <data name="DraggableObjectInPathWay.LearningSpace.Delete" xml:space="preserve">
+        <value>Lernraum löschen</value>
+    </data>
+    <data name="DraggableObjectInPathWay.Condition.Delete" xml:space="preserve">
+        <value>Bedingung löschen</value>
+    </data>
 </root>
