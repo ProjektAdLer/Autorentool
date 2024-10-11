@@ -85,6 +85,10 @@
     protected abstract string DeletePathButtonShape { get; }
 
     protected abstract string DeleteObjectButtonShape { get; }
+    
+    protected abstract string DeleteObjectConfirmationDialogText { get; }
+    
+    protected abstract string DeleteObjectConfirmationDialogTitle { get; }
 
     protected override void OnParametersSet()
     {
@@ -99,12 +103,12 @@
     {
         var dialogParameters = new DialogParameters
         {
-            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.DialogText", ObjectName].Value },
+            { nameof(GenericCancellationConfirmationDialog.DialogText), DeleteObjectConfirmationDialogText },
             { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.SubmitButtonText"].Value },
             { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
         };
 
-        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.Title"].Value, dialogParameters);
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(DeleteObjectConfirmationDialogTitle, dialogParameters);
         var result = await dialogReference.Result;
         if (result.Canceled)
         {

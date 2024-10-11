@@ -33,4 +33,16 @@
     <data name="DraggableObjectInPathWay.Condition.Delete" xml:space="preserve">
         <value>Bedingung löschen</value>
     </data>
+    <data name="DraggableObjectInPathWay.Condition.DeleteConfirmationDialog.Text" xml:space="preserve">
+        <value>Sind Sie sich sicher, dass Sie die Bedingung &lt;b&gt;{0}&lt;/b&gt; löschen möchten?</value>
+    </data>
+    <data name="DraggableObjectInPathWay.Condition.Or" xml:space="preserve">
+        <value>ODER</value>
+    </data>
+    <data name="DraggableObjectInPathWay.Condition.And" xml:space="preserve">
+        <value>UND</value>
+    </data>
+    <data name="DraggableObjectInPathWay.LearningSpace.DeleteConfirmationDialog.Text" xml:space="preserve">
+        <value>Sind Sie sich sicher, dass Sie den Lernraum &lt;b&gt;{0}&lt;/b&gt; löschen möchten?</value>
+    </data>
 </root>
