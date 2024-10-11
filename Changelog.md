@@ -7,14 +7,17 @@
 
 ### Added
 - Added a feature to mark H5P Elements as primitive.
+- Added Confirmation dialog when deleting a learning element, learning space and pathway condition.
 
 ### Changed
 - Improved the filter search field in unplaced learning elements to be case-insensitive.
 - Changed the order of learning elements in 13- and 15-slot floor plan.
+- Changed Icon for deleting learning elements, learning spaces and pathway conditions.
 
 ### Deprecated
 
 ### Removed
+- Removed the right-click menu for learning element, learning space and pathway condition.
 
 ### Fixed
 - Fixed a bug in adaptivity elements where changes in the learning content were not applied correctly.
