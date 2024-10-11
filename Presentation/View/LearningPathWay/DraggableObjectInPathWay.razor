@@ -1,5 +1,4 @@
 @using System.Diagnostics.CodeAnalysis
-@using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic
@@ -59,8 +58,6 @@
     [Inject] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
     
-    [Inject, AllowNull] internal IStringLocalizer<DraggableObjectInPathWay> Localizer { get; set; }
-
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
 
@@ -89,6 +86,8 @@
     protected abstract string DeleteObjectConfirmationDialogText { get; }
     
     protected abstract string DeleteObjectConfirmationDialogTitle { get; }
+    
+    protected abstract string DeleteObjectConfirmationDialogSubmitButtonText { get; }
 
     protected override void OnParametersSet()
     {
@@ -104,7 +103,7 @@
         var dialogParameters = new DialogParameters
         {
             { nameof(GenericCancellationConfirmationDialog.DialogText), DeleteObjectConfirmationDialogText },
-            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["DraggableObjectInPathWay.DeleteObjectConfirmationDialog.SubmitButtonText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), DeleteObjectConfirmationDialogSubmitButtonText },
             { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
         };
 

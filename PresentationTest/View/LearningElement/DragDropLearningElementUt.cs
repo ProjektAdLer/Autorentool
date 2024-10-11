@@ -36,6 +36,7 @@ public class DragDropLearningElementUt
         _ctx.ComponentFactories.AddStub<MudCard>();
         _ctx.ComponentFactories.AddStub<MudCardContent>();
         _ctx.ComponentFactories.AddStub<MudIcon>();
+        _ctx.ComponentFactories.AddStub<MudIconButton>();
         _ctx.ComponentFactories.AddStub<MudListItem>();
         _ctx.ComponentFactories.AddStub<MudMenuItem>();
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
@@ -61,12 +62,9 @@ public class DragDropLearningElementUt
         learningElement.LearningContent = content;
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var onDoubleClicked = new Action<ILearningElementViewModel>(_ => { });
-        var onEditLearningElement = new Action<ILearningElementViewModel>(_ => { });
         var onDeleteLearningElement = new Action<ILearningElementViewModel>(_ => { });
-        var onShowLearningElementContent = new Action<ILearningElementViewModel>(_ => { });
         var systemUnderTest =
-            GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked, onEditLearningElement,
-                onDeleteLearningElement, onShowLearningElementContent);
+            GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked, onDeleteLearningElement);
 
         Assert.Multiple(() =>
         {
@@ -76,13 +74,8 @@ public class DragDropLearningElementUt
                 Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
             Assert.That(systemUnderTest.Instance.OnDoubleClicked,
                 Is.EqualTo(EventCallback.Factory.Create(onDoubleClicked.Target!, onDoubleClicked)));
-            Assert.That(systemUnderTest.Instance.OnEditLearningElement,
-                Is.EqualTo(EventCallback.Factory.Create(onEditLearningElement.Target!, onEditLearningElement)));
             Assert.That(systemUnderTest.Instance.OnDeleteLearningElement,
                 Is.EqualTo(EventCallback.Factory.Create(onDeleteLearningElement.Target!, onDeleteLearningElement)));
-            Assert.That(systemUnderTest.Instance.OnShowLearningElementContent,
-                Is.EqualTo(EventCallback.Factory.Create(onShowLearningElementContent.Target!,
-                    onShowLearningElementContent)));
         });
     }
 
@@ -97,26 +90,27 @@ public class DragDropLearningElementUt
 
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var onDoubleClicked = new Action<ILearningElementViewModel>(_ => { });
-        var onEditLearningElement = new Action<ILearningElementViewModel>(_ => { });
         var onDeleteLearningElement = new Action<ILearningElementViewModel>(_ => { });
-        var onShowLearningElementContent = new Action<ILearningElementViewModel>(_ => { });
         var systemUnderTest =
-            GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked, onEditLearningElement,
-                onDeleteLearningElement, onShowLearningElementContent);
+            GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked,
+                onDeleteLearningElement);
 
         var card = systemUnderTest.FindComponentOrFail<Stub<MudCard>>();
         var mudCardContent = _ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]);
         var cardContent = _ctx.Render((RenderFragment)mudCardContent.FindComponentOrFail<Stub<MudCardContent>>()
             .Instance.Parameters["ChildContent"]);
         var icons = cardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
+        var iconButtons = cardContent.FindComponentsOrFail<Stub<MudIconButton>>().ToList();
+        var deleteButton = iconButtons.FirstOrDefault();
 
-        var elementIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("element-icon"));
-        var difficultyIcon =
-            icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
+        var elementIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Class", out var classObj) && ((string)classObj).Contains("element-icon"));
+        var difficultyIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Class", out var classObj) && ((string)classObj).Contains("difficulty-icon"));
+
         Assert.Multiple(() =>
         {
             Assert.That(elementIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.VideoElementIcon));
             Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.DifficultyPolygonMedium));
+            Assert.That(deleteButton?.Instance.Parameters["Icon"], Is.EqualTo(Icons.Material.Filled.Delete));
         });
     }
 
@@ -141,8 +135,7 @@ public class DragDropLearningElementUt
     {
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
         Assert.That(
-            () => GetRenderedDragDropLearningElement(null!, _ => { }, _ => { }, _ => { }, _ => { },
-                _ => { }), Throws.ArgumentNullException);
+            () => GetRenderedDragDropLearningElement(null!, _ => { }, _ => { }, _ => { }), Throws.ArgumentNullException);
     }
 
     [Test]
@@ -184,23 +177,17 @@ public class DragDropLearningElementUt
         ILearningElementViewModel objectViewmodel,
         Action<ILearningElementViewModel>? onClicked = null,
         Action<ILearningElementViewModel>? onDoubleClicked = null,
-        Action<ILearningElementViewModel>? onEditLearningElement = null,
-        Action<ILearningElementViewModel>? onDeleteLearningElement = null,
-        Action<ILearningElementViewModel>? onShowLearningElementContent = null)
+        Action<ILearningElementViewModel>? onDeleteLearningElement = null)
     {
         onClicked ??= _ => { };
         onDoubleClicked ??= _ => { };
-        onEditLearningElement ??= _ => { };
         onDeleteLearningElement ??= _ => { };
-        onShowLearningElementContent ??= _ => { };
 
         return _ctx.RenderComponent<DragDropLearningElement>(parameters => parameters
             .Add(p => p.LearningElement, objectViewmodel)
             .Add(p => p.OnClicked, onClicked)
             .Add(p => p.OnDoubleClicked, onDoubleClicked)
-            .Add(p => p.OnEditLearningElement, onEditLearningElement)
             .Add(p => p.OnDeleteLearningElement, onDeleteLearningElement)
-            .Add(p => p.OnShowLearningElementContent, onShowLearningElementContent)
         );
     }
 }

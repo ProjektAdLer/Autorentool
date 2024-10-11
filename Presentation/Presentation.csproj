@@ -253,13 +253,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DragDropLearningElement.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableObjectInPathWay.de.resx">
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableLearningSpace.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DraggableObjectInPathWay.de.Designer.cs</LastGenOutput>
+      <LastGenOutput>DraggableLearningSpace.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableObjectInPathWay.en.resx">
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableLearningSpace.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DraggableObjectInPathWay.en.Designer.cs</LastGenOutput>
+      <LastGenOutput>DraggableLearningSpace.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggablePathWayCondition.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggablePathWayCondition.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggablePathWayCondition.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggablePathWayCondition.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

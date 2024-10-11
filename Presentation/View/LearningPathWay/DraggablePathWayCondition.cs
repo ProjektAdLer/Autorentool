@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Presentation.PresentationLogic.LearningPathway;
 using Shared;
 
@@ -7,7 +9,7 @@ namespace Presentation.View.LearningPathWay;
 public class DraggablePathWayCondition : DraggableObjectInPathWay
 {
     protected override string ObjectInPathwayDeletionTitle =>
-        Localizer["DraggableObjectInPathWay.Condition.Delete"].Value;
+        Localizer["DraggablePathWayCondition.Delete"].Value;
 
     protected override string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
 
@@ -54,9 +56,15 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
     </g>";
 
     protected override string DeleteObjectConfirmationDialogText => 
-        Localizer["DraggableObjectInPathWay.Condition.DeleteConfirmationDialog.Text", 
-            Localizer["DraggableObjectInPathWay.Condition." + ((PathWayConditionViewModel)ObjectInPathWay).Condition].Value].Value;
-    protected override string DeleteObjectConfirmationDialogTitle  => Localizer["DraggableObjectInPathWay.Condition.Delete"].Value;
+        Localizer["DraggablePathWayCondition.DeleteConfirmationDialog.Text", 
+            Localizer["DraggablePathWayCondition." + ((PathWayConditionViewModel)ObjectInPathWay).Condition].Value].Value;
+    protected override string DeleteObjectConfirmationDialogTitle  => Localizer["DraggablePathWayCondition.Delete"].Value;
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
+    
+    [Inject, AllowNull] internal IStringLocalizer<DraggablePathWayCondition> Localizer { get; set; }
+
+    protected override string DeleteObjectConfirmationDialogSubmitButtonText =>
+        Localizer["DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
+
 }
