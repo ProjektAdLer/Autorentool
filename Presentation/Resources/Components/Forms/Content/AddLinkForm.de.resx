@@ -35,4 +35,7 @@
     <data name="AddLinkForm.Info.Text" xml:space="preserve">
         <value>Videos können nicht als Datei importiert werden. Aus diesem Grund können Sie alternativ einen Link zu Ihrem Video hinzufügen.</value>
     </data>
+    <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
+        <value>Fehler beim Hinzufügen eines Links</value>
+    </data>
 </root>

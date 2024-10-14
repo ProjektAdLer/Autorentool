@@ -75,7 +75,7 @@
         }
         catch (SerializationException e)
         {
-            ErrorService.SetError("Error while adding link", e.Message);
+            ErrorService.SetError(@Localizer["AddLinkForm.Field.Link.ErrorMessage"], e.Message);
         }
         if (RerenderContentContainer is not null)
             await RerenderContentContainer();
