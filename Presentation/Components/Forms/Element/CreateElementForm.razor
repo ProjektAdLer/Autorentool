@@ -143,14 +143,14 @@
     case ElementMode.Normal:
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] InitiallyCollapsed="false">
-                <p class="text-xs pl-6">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
+                <p class="text-xs pl-2 pt-1">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                 @if (!WorldPresenter.GetAllContent().Any())
                 {
                     <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
                 }
                 else
                 {
-                    <div class="flex flex-col gap-1 p-4">
+                    <div class="flex flex-col gap-1 p-2">
                         <MudText Class="text-xs font-bold">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial"]</MudText>
                         <div class="flex items-center cursor-default rounded border-2 border-adlergrey-200 bg-adlerdeactivated">
                             <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
@@ -158,7 +158,7 @@
                                            OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
                                            Class="show-content-preview py-2"
                                            Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
-                        
+                                            
                             <MudTextField
                                 T="ILearningContentFormModel"
                                 @ref="_contentTextField"
@@ -173,6 +173,7 @@
                                 Margin="Margin.Dense"
                                 Class="pb-3 px-1">
                             </MudTextField>
+                            
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Edit"]">
                             </MudIconButton>
                         </div>
@@ -204,7 +205,7 @@
     case ElementMode.Adaptivity:
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] InitiallyCollapsed="false">
-                <p class="text-xs pl-6">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
+                <p class="text-xs pl-2 pt-1">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
                 <div class="flex flex-col items-center justify-center">
                     <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard" OnClick="OpenAdaptivityContentDialog">
                         @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
@@ -221,7 +222,7 @@
                     @ref="_pseudoGroupStoryContent">
 
                     <div class="flex flex-row items-center gap-1 py-2">
-                        <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
+                        <p class="text-xs pl-2 pt-1">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
                         <MudTooltip Placement="Placement.Right"
                                     Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                             <TooltipContent>
@@ -242,7 +243,7 @@
                     {
                         @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
                         {
-                            <p class="text-xs pl-4 pt-4 font-bold text-adlertextgrey">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
+                            <p class="text-xs pl-2 pt-4 font-bold text-adlertextgrey">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
                             var x = i;
                             <div class="flex flex-col">
                                 <div class="flex flex-row items-center">
@@ -250,22 +251,24 @@
                                                   Variant="Variant.Outlined" Lines="5"
                                                   @bind-Value="@(StoryContentModel.StoryText[x])"
                                                   DebounceInterval="DebounceInterval"
-                                                  Class="pl-4"/>
+                                                  Class="pl-2"/>
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                    OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
                                                    Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
-                                                   Class="w-8 h-8">
+                                                   Size="Size.Small"
+                                                   Class="p-2">
                                     </MudIconButton>
                                 </div>
-                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/550")</p>
+                                <p class="pl-2 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/550")</p>
                             </div>
                         }
 
                         <div class="flex justify-center items-center">
                             <MudIconButton Icon="@Icons.Material.Filled.Add"
-                                           Class="w-9 h-9 add-story-block-button"
+                                           Class="add-story-block-button p-2"
                                            OnClick="@(() => StoryContentModel.StoryText.Add(""))"
-                                           Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]>
+                                           Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]
+                                           Size="Size.Small">
                             </MudIconButton>
                         </div>
                     }
