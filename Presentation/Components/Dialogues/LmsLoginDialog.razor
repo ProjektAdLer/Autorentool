@@ -386,7 +386,7 @@
         }
         catch (BackendException e)
         {
-            ErrorService.SetError("Error while trying to get the LMS world list", e.Message);
+            ErrorService.SetError(@Localizer["DialogContent.AdLerServer.ErrorMessage.Refresh"], e.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -414,7 +414,7 @@
         }
         catch (BackendException e)
         {
-            ErrorService.SetError("Error while trying to delete the LMS world", e.Message);
+            ErrorService.SetError(@Localizer["DialogContent.AdLerServer.ErrorMessage.Delete"], e.Message);
         }
         finally
         {

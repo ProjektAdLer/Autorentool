@@ -126,4 +126,10 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.Field.Username.Required" xml:space="preserve">
         <value>Es muss ein Benutzername angegeben werden.</value>
     </data>
+    <data name="DialogContent.AdLerServer.ErrorMessage.Delete" xml:space="preserve">
+        <value>Fehler beim Versuch, die LMS-Welt zu löschen</value>
+    </data>
+    <data name="DialogContent.AdLerServer.ErrorMessage.Refresh" xml:space="preserve">
+        <value>Fehler beim Versuch, die Liste der LMS-Welten abzurufen</value>
+    </data>
 </root>
