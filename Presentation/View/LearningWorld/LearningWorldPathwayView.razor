@@ -51,12 +51,9 @@
                                                OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
                                                OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                                OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                               OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                               OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
+                                               OnDeleteObject="@LearningWorldP.DeleteLearningObject"
                                                OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
-                                               OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                               PositioningService="@LearningWorldP"
-                                               ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject">
+                                               PositioningService="@LearningWorldP">
                         <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
                                                OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
                     </DraggablePathWayCondition>
@@ -68,14 +65,10 @@
                                             OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
                                             OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                             OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                            OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                            OnDeleteObject="@LearningWorldP.DeleteLearningObject"
                                             OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
-                                            OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
-                                            OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                             OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
-                                            OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                            PositioningService="@LearningWorldP"
-                                            ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"/>
+                                            PositioningService="@LearningWorldP"/>
                 }
 
                 @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
@@ -87,9 +80,6 @@
                              PositioningService="LearningWorldP"/>
                 }
             }
-            <!-- The RightClickMenu might lies behind other spaces. 
-                This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
-            <!--<use xlink:href="#rightClickMenu" />-->
         </svg>
     </div>
 </article>

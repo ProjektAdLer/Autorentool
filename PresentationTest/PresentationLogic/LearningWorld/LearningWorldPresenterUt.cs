@@ -244,30 +244,6 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void RightClickedLearningSpace_SetsRightClickedLearningObjectToSpace()
-    {
-        var space = ViewModelProvider.GetLearningSpace();
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.RightClickOnObjectInPathWay(space);
-
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
-    }
-
-    [Test]
-    public void HideRightClickMenu_SetsRightClickedLearningObjectToNull()
-    {
-        var space = ViewModelProvider.GetLearningSpace();
-        var systemUnderTest = CreatePresenterForTesting();
-
-        systemUnderTest.RightClickOnObjectInPathWay(space);
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
-
-        systemUnderTest.HideRightClickMenu();
-
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
-    }
-
-    [Test]
     public void ClickedLearningSpace_SetsSelectedLearningObjectToSpace()
     {
         var world = ViewModelProvider.GetLearningWorld();
@@ -293,7 +269,6 @@ public class LearningWorldPresenterUt
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
 
         Assert.That(selectedViewModelsProvider.LearningObjectInPathWay, Is.EqualTo(space));
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
 
     [Test]
@@ -900,29 +875,6 @@ public class LearningWorldPresenterUt
         errorService.Received().SetError("Operation failed", "No learning world selected");
     }
 
-    [Test]
-    public void RightClickedPathWayCondition_SetsRightClickedLearningObjectToSpace()
-    {
-        var condition = ViewModelProvider.GetPathWayCondition();
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.RightClickOnObjectInPathWay(condition);
-
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(condition));
-    }
-
-    [Test]
-    public void HideRightClickMenuFromCondition_SetsRightClickedLearningObjectToNull()
-    {
-        var conditionViewModel = ViewModelProvider.GetPathWayCondition();
-        var systemUnderTest = CreatePresenterForTesting();
-
-        systemUnderTest.RightClickOnObjectInPathWay(conditionViewModel);
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(conditionViewModel));
-
-        systemUnderTest.HideRightClickMenu();
-
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
-    }
 
     [Test]
     public void ClickedPathWayCondition_SetsSelectedLearningObjectToCondition()
