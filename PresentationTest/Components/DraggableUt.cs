@@ -202,37 +202,18 @@ public class DraggableUt
         Assert.That(onDoubleClickEventTriggered, Is.EqualTo(learningObject));
     }
 
-    [Test]
-    public void RightClick_OnRightClickedTriggered()
-    {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
-        ILearningElementViewModel? onRightClickedEventTriggered = null;
-
-        Action<ILearningElementViewModel> onRightClicked = e => { onRightClickedEventTriggered = e; };
-
-        var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, onRightClicked: onRightClicked);
-
-        systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs { Button = 2 });
-        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs { Button = 2 });
-
-        Assert.That(onRightClickedEventTriggered, Is.EqualTo(learningObject));
-    }
-
     private IRenderedComponent<Draggable<ILearningElementViewModel>> CreateRenderedDraggableComponent(
         RenderFragment? childContent = null,
         ILearningElementViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
         Action<double>? yChanged = null, Action<ILearningElementViewModel>? onClicked = null,
         DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler? onDragged = null,
-        Action<ILearningElementViewModel>? onDoubleClicked = null,
-        Action<ILearningElementViewModel>? onRightClicked = null)
+        Action<ILearningElementViewModel>? onDoubleClicked = null)
     {
         xChanged ??= _ => { };
         yChanged ??= _ => { };
         onClicked ??= _ => { };
         onDragged ??= (_, _) => { };
         onDoubleClicked ??= _ => { };
-        onRightClicked ??= _ => { };
         return _testContext.RenderComponent<Draggable<ILearningElementViewModel>>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
             .Add(p => p.LearningObject, learningObject)
@@ -243,7 +224,6 @@ public class DraggableUt
             .Add(p => p.OnClicked, onClicked)
             .Add(p => p.OnDragged, onDragged)
             .Add(p => p.OnDoubleClicked, onDoubleClicked)
-            .Add(p => p.OnRightClicked, onRightClicked)
         );
     }
 }

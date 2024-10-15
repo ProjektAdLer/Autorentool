@@ -1,5 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
-using Presentation.Components.RightClickMenu;
+using Microsoft.Extensions.Localization;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.View.LearningPathWay;
@@ -9,7 +10,9 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
 
-    protected override string Title => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    protected override string ObjectInPathwayTitle => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    
+    protected override string ObjectInPathwayDeletionTitle => Localizer["DraggableLearningSpace.Delete"].Value;
 
     protected override string ObjectStyleWhenSelected =>
         @"fill:rgb(184,210,229);opacity:80%;stroke:rgb(138,190,229);stroke-width:75";
@@ -46,33 +49,24 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
 
     protected override string DeleteObjectButtonShape =>
-        @"<text font-size=""16"" transform=""translate(66,16)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
+        @"<g transform=""translate(60,2) scale(0.8,0.8)"">
+        <path d=""M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"" fill=""gray"" style=""user-select:none; cursor: pointer""/>
+    </g>";
+
+    protected override string DeleteObjectConfirmationDialogText => Localizer["DraggableLearningSpace.DeleteConfirmationDialog.Text", ObjectName].Value;
+    protected override string DeleteObjectConfirmationDialogTitle => Localizer["DraggableLearningSpace.Delete"].Value;
 
     private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null
         ? ""
         : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
 
-
-    [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
-
+    
     [Parameter, EditorRequired] public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
 
     [Parameter] public EventCallback<ILearningSpaceViewModel>? OnRemoveLearningSpaceFromTopic { get; set; }
+    
+    [Inject, AllowNull] internal IStringLocalizer<DraggableLearningSpace> Localizer { get; set; }
 
-    protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
-    {
-        var menuEntries = new List<RightClickMenuEntry>
-        {
-            new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
-            new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
-        };
+    protected override string DeleteObjectConfirmationDialogSubmitButtonText => Localizer["DraggableLearningSpace.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
 
-        if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
-        {
-            menuEntries.Add(new RightClickMenuEntry("Remove topic",
-                () => OnRemoveLearningSpaceFromTopic?.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
-        }
-
-        return menuEntries;
-    }
 }
