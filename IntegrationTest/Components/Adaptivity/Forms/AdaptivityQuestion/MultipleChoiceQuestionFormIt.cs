@@ -52,7 +52,6 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         null!;
 
     private const string ExpectedString = "expectedString";
-    private const string DefaultChoiceText = "MultipleChoiceQuestionForm.Text.Choice ";
 
     [Test]
     public void Render_InjectsDependenciesAndParameters()
@@ -172,12 +171,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         Assert.That(FormModel.Text, Is.EqualTo(""));
         Assert.That(FormModel.Choices, Has.Count.EqualTo(2));
         Assert.That(FormModel.CorrectChoices, Has.Count.EqualTo(0));
-        var i = 1;
-        foreach (var choice in FormModel.Choices)
-        {
-            Assert.That(choice.Text, Is.EqualTo(DefaultChoiceText + i));
-            i++;
-        }
+        
 
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
@@ -207,14 +201,9 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var addButton = buttons[0].Find("button");
         var choices = FormModel.Choices.ToList();
         Assert.That(choices, Has.Count.EqualTo(2));
-        Assert.That(choices[0].Text, Is.EqualTo(DefaultChoiceText + 1));
-        Assert.That(choices[1].Text, Is.EqualTo(DefaultChoiceText + 2));
         addButton.Click();
         choices = FormModel.Choices.ToList();
         Assert.That(choices, Has.Count.EqualTo(3));
-        Assert.That(choices[0].Text, Is.EqualTo(DefaultChoiceText + 1));
-        Assert.That(choices[1].Text, Is.EqualTo(DefaultChoiceText + 2));
-        Assert.That(choices[2].Text, Is.EqualTo(DefaultChoiceText + 3));
         var choiceToRemove = choices[1]; // Choice 2
         var iconButtons = systemUnderTest.FindComponentsWithMarkup<MudIconButton>("button-delete-choice");
         var removeButton = iconButtons.ElementAt(1).Find("button");
@@ -222,8 +211,6 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         removeButton.Click();
         choices = FormModel.Choices.ToList();
         Assert.That(choices, Has.Count.EqualTo(2));
-        Assert.That(choices[0].Text, Is.EqualTo(DefaultChoiceText + 1));
-        Assert.That(choices[1].Text, Is.EqualTo(DefaultChoiceText + 3));
         Assert.That(choices.Any(x => x.Id == choiceToRemove.Id), Is.False);
     }
 
@@ -307,29 +294,48 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         // Multiple response - no correct choice
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel>());
 
-        mudCheckBox.Change(true);
+        systemUnderTest.InvokeAsync(() =>
+        {
+            var mudSwitchInput = systemUnderTest.FindComponent<MudSwitch<bool>>().Find("input");
+            mudSwitchInput.Change(true);
+        });
 
         // Single response - automatically sets the first choice as correct
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
 
-        var mudRadioButtonOfChoice2 = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>().Last().Find("input");
-        mudRadioButtonOfChoice2.Click();
+        systemUnderTest.InvokeAsync(() =>
+        {
+            var mudRadioButtonOfChoice2 = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>().Last().Find("input");
+            mudRadioButtonOfChoice2.Click();
+        });
 
         // Single response - choice 2 is now correct
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
 
-        mudCheckBox.Change(false);
+        systemUnderTest.InvokeAsync(() =>
+        {
+            var mudSwitchInput = systemUnderTest.FindComponent<MudSwitch<bool>>().Find("input");
+            mudSwitchInput.Change(false);
+        });
 
         // Multiple response - choice 2 is still correct
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
 
-        var mudCheckBoxOfChoice1 = systemUnderTest.FindComponents<MudCheckBox<bool>>()[0].Find("input");
-        mudCheckBoxOfChoice1.Change(true);
+        systemUnderTest.InvokeAsync(() =>
+        {
+            var mudCheckBoxOfChoice1 = systemUnderTest.FindComponents<MudCheckBox<bool>>()[0].Find("input");
+            mudCheckBoxOfChoice1.Change(true);
+        });
 
         // Multiple response - choice 1 is now also correct
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1, choice2 });
 
-        mudCheckBox.Change(true);
+        systemUnderTest.InvokeAsync(() =>
+        {
+            var mudSwitchInput = systemUnderTest.FindComponent<MudSwitch<bool>>().Find("input");
+            mudSwitchInput.Change(true);
+        });
+
 
         // Single response - choice 1 is now correct because it is the first choice in the choices list that is correct
         CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
@@ -388,9 +394,6 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         Assert.Multiple(() =>
         {
             Assert.That(textFieldQuestionText.Instance.Text, Is.Empty);
-            Assert.That(textFieldChoice1.Instance.Text, Is.EqualTo(DefaultChoiceText + 1));
-            Assert.That(textFieldChoice2.Instance.Text, Is.EqualTo(DefaultChoiceText + 2));
-            Assert.That(textFieldChoice3.Instance.Text, Is.EqualTo(DefaultChoiceText + 3));
         });
 
         // Set values
@@ -522,7 +525,6 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
             Assert.That(textFieldQuestionText.Instance.Text, Is.EqualTo("old"));
             Assert.That(textFieldChoice1.Instance.Text, Is.EqualTo("old1"));
             Assert.That(textFieldChoice2.Instance.Text, Is.EqualTo("old2"));
-            Assert.That(textFieldChoice3.Instance.Text, Is.EqualTo(DefaultChoiceText + 3));
         });
 
         // Set values

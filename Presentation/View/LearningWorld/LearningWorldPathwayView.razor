@@ -1,11 +1,11 @@
-﻿@using Presentation.PresentationLogic.AuthoringToolWorkspace
+﻿@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningPathWay
 @using Direction = Shared.Direction
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
 @ChildContent
 
     <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] h-full grow">
@@ -138,13 +138,6 @@
     private void AddNewPathWayCondition()
     {
         LearningWorldP.CreatePathWayCondition();
-    }
-
-    private async Task LoadLearningSpaceAsync()
-    {
-        await LearningWorldP.LoadLearningSpaceAsync();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-        await InvokeAsync(StateHasChanged);
     }
 
     private void TriggerStateHasChanged()
