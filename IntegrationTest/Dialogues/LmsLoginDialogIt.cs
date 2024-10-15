@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using NSubstitute;
@@ -68,14 +69,13 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        Assert.That(mudTexts, Has.Count.EqualTo(4));
         Assert.Multiple(() =>
         {
             Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
             Assert.That(mudTexts[1].Markup, Contains.Substring(""));
             Assert.That(mudTexts[2].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[3].Markup, Contains.Substring("Header.Moodle.Text"));
-            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Button.Login"));
+            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Login"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -94,7 +94,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         //Left sidebar (LoginDialog, PersonDialog)
         Assert.That(mudLists, Has.Count.EqualTo(1));
         var mudListItems = mudLists[0].FindComponents<MudListItem>();
-        Assert.That(mudListItems, Has.Count.EqualTo(2));
+        Assert.That(mudListItems, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -113,18 +113,17 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(9));
+        Assert.That(mudTexts, Has.Count.EqualTo(8));
         Assert.Multiple(() =>
         {
             Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
             Assert.That(mudTexts[1].Markup, Contains.Substring(""));
             Assert.That(mudTexts[2].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[3].Markup, Contains.Substring("Header.Moodle.Text"));
-            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Button.Logout"));
-            Assert.That(mudTexts[5].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
+            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Logout"));
+            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
+            Assert.That(mudTexts[5].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
             Assert.That(mudTexts[6].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
             Assert.That(mudTexts[7].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
-            Assert.That(mudTexts[8].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -156,13 +155,21 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     public async Task DialogCreated_IsLmsConnectedThrowsBackendApiUnreachableException_ShowsErrorMessage()
     {
         _presentationLogic.IsLmsConnected().Throws(x => throw new BackendApiUnreachableException());
+        
+        Localizer["DialogContent.Error.APIUnreachable"]
+            .Returns(new LocalizedString("DialogContent.Error.APIUnreachable","API is unreachable"));
+        
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(6));
-        Assert.Multiple(() =>
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        DialogProvider.WaitForAssertion(() =>
         {
-            Assert.That(mudTexts[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("API is unreachable"));
         });
     }
 
@@ -183,10 +190,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(6));
-        Assert.Multiple(() =>
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        DialogProvider.WaitForAssertion(() =>
         {
-            Assert.That(mudTexts[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.TokenInvalid"));
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("DialogContent.Error.TokenInvalid"));
         });
 
         await _presentationLogic.Received(2).IsLmsConnected();
@@ -196,6 +207,9 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     [Test]
     public async Task DialogCreated_LmsIsConnected_GetLmsWorldListThrowsBackendException_SetErrorInErrorService()
     {
+        Localizer["DialogContent.AdLerServer.ErrorMessage.Refresh"]
+            .Returns(new LocalizedString("DialogContent.AdLerServer.ErrorMessage.Refresh","Error while trying to get the LMS world list"));
+        
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Throws(new BackendException("nix gut"));
         await OpenDialogAndGetDialogReferenceAsync();
@@ -286,6 +300,9 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     // ANF-ID: [AHO21]
     public async Task EnterDetailsAndClickLoginButton_UrlDoesNotIncludeProtocol_ShowsErrorMessage()
     {
+        Localizer["DialogContent.Error.ProtocolMissing"]
+            .Returns(new LocalizedString("DialogContent.Error.ProtocolMissing","Protocol is missing in the URL"));
+        
         _presentationLogic.IsLmsConnected().Returns(false);
         await OpenDialogAndGetDialogReferenceAsync();
 
@@ -298,8 +315,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudButtons[0].Find("button").Click();
 
         await _presentationLogic.Received(0).Login(Arg.Any<string>(), Arg.Any<string>());
-        var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.ProtocolMissing"));
+        DialogProvider.WaitForAssertion(() =>
+        {
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("Protocol is missing in the URL"));
+        });
     }
 
     [Test]
@@ -307,6 +330,9 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     public async Task
         EnterDetailsAndClickLoginButton_PresentationThrowsBackendInvalidLoginException_ExceptionIsHandled()
     {
+        Localizer["DialogContent.Error.WrongUserOrPassword"]
+            .Returns(new LocalizedString("DialogContent.Error.WrongUserOrPassword","Wrong username or password"));
+        
         _presentationLogic.IsLmsConnected().Returns(false);
         await OpenDialogAndGetDialogReferenceAsync();
 
@@ -321,8 +347,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
         mudButtons[0].Find("button").Click();
 
-        var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.WrongUserOrPassword"));
+        DialogProvider.WaitForAssertion(() =>
+        {
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("Wrong username or password"));
+        });
     }
 
     [Test]
@@ -343,8 +375,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
         mudButtons[0].Find("button").Click();
 
-        var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("nix gut"));
+        DialogProvider.WaitForAssertion(() =>
+        {
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("nix gut"));
+        });
     }
 
     [Test]
@@ -364,9 +402,15 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         var mudButtons = DialogProvider.FindComponentsOrFail<MudButton>().ToArray();
         mudButtons[0].Find("button").Click();
+        
+        DialogProvider.WaitForAssertion(() =>
+        {
+            var errorElement = DialogProvider.Find("h6.invalid-login-error");
+            Assert.That(errorElement,Is.Not.Null);
 
-        var mudText = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudText[4].Find("h6").InnerHtml, Is.EqualTo("DialogContent.Error.APIUnreachable"));
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("DialogContent.Error.APIUnreachable"));
+        });
     }
 
     [Test]
@@ -500,6 +544,9 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         var dialogService = Substitute.For<IDialogService>();
         dialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>())
             .Returns(dialogReference);
+
+        Localizer["DialogContent.AdLerServer.ErrorMessage.Delete"]
+            .Returns(new LocalizedString("DialogContent.AdLerServer.ErrorMessage.Delete","Error while trying to delete the LMS world"));
 
         _presentationLogic.DeleteLmsWorld(Arg.Any<LmsWorldViewModel>()).Throws(new BackendException("nix gut"));
 
