@@ -19,26 +19,26 @@
             @if (LearningElement.LearningContent is IStoryContentViewModel)
             {
                 <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
-
-                    <div class="absolute flex -top-2.5 -right-2.5 2xl:-top-2.5 2xl:-right-2.5 z-20">
-
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                       OnClick="@DeleteLearningElement"
-                                       Class="p-2" Size="Size.Small" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIconButton>
-                    </div>
                     
                     <div class="flex flex-col items-center">
                         <div class="flex justify-center items-center z-10">
                             <MudListItem
                                 Class="truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0"
-                                Text="@LearningElement.Name">
+                                Text="@LearningElement.Name" 
+                                OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                             </MudListItem>
                         </div>
                     </div>
+                    
+                    <div class="absolute flex -top-2.5 -right-2.5 2xl:-top-2.5 2xl:-right-2.5 z-20">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       OnClick="@DeleteLearningElement"
+                                       Class="p-2" Size="Size.Small" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIconButton>
+                    </div>
 
-                    <div class="absolute flex z-0 opacity-30">
+                    <div class="absolute top-1 z-0 opacity-30">
                         <MudIcon Icon="@GetElementIcon()"
-                                 Class="w-7 h-7 2xl:w-9 2xl:h-9 flex items-center justify-start rounded p-1 element-icon"/>
+                                 Class="w-9 h-9 2xl:w-11 2xl:h-11 flex items-center rounded p-1 element-icon"/>
                     </div>
                 </MudCardContent>
             }
@@ -46,23 +46,23 @@
             else
                {
                 <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
-                    <div class="absolute flex -top-2.5 -right-2.5 2xl:-top-2.5 2xl:-right-2.5 z-20">
-
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                       OnClick="@DeleteLearningElement"
-                                       Class="p-2" Size="Size.Small" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIconButton>
-                    </div>
-
                     <div class="flex flex-col items-center">
-
-
+                        
                         <div class="flex justify-center items-center z-10">
                             <MudListItem
                                 Class="truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0"
-                                Text="@LearningElement.Name">
+                                Text="@LearningElement.Name"
+                                OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                             </MudListItem>
                         </div>
 
+                        <div class="absolute flex -top-2.5 -right-2.5 2xl:-top-2.5 2xl:-right-2.5 z-20">
+                        
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           OnClick="@DeleteLearningElement"
+                                           Class="p-2" Size="Size.Small" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIconButton>
+                        </div>
+                        
                         <div class="absolute flex z-0 opacity-30">
                             <MudIcon Icon="@GetElementIcon()"
                                      Class="w-7 h-7 2xl:w-9 2xl:h-9 flex items-center justify-start rounded p-1 element-icon"/>

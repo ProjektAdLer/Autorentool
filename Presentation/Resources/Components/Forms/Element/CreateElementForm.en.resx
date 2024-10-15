@@ -105,7 +105,7 @@
         <value>Description</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
-        <value>Is the H5P element primitive?</value>
+        <value>Is this a non-finishable H5P?</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
         <value>&lt;p class="py-1 text-sm 2xl:text-base"&gt;H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.&lt;/p&gt;
