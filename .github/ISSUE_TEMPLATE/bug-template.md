@@ -1,8 +1,8 @@
 ---
 name: Bug Template
 about: Bugreport für das Autorentool
-title: '[Bug]'
-labels: 'bug'
+title: "[Bug]"
+labels: bug
 assignees: ''
 
 ---

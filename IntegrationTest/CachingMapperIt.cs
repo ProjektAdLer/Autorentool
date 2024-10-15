@@ -36,6 +36,7 @@ namespace IntegrationTest;
 public class CachingMapperIt
 {
     [Test]
+    // ANF-ID: [ASN0003, ASN0004]
     public void CreateWorldThenUndoAndRedo_ViewModelShouldStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
@@ -73,6 +74,7 @@ public class CachingMapperIt
     }
 
     [Test]
+    // ANF-ID: [ASN0003, ASN0004]
     public void CreateWorldAndSpaceThenUndoAndRedo_CheckIfWorldViewModelStaysTheSame()
     {
         var commandStateManager = new CommandStateManager();
@@ -134,6 +136,7 @@ public class CachingMapperIt
     }
 
     [Test]
+    // ANF-ID: [ASN0003, ASN0004]
     public void CreateWorldAndSpaceAndElementThenUndoAndRedo_CheckIfAllViewModelsStayTheSame()
     {
         var commandStateManager = new CommandStateManager();

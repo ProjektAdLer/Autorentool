@@ -80,8 +80,6 @@ public class DraggableObjectInPathWay
             Assert.That(systemUnderTest.Instance.OnRightClickedDraggable,
                 Is.EqualTo(EventCallback.Factory.Create(onRightClicked.Target!, onRightClicked)));
             Assert.That(systemUnderTest.Instance.ShowingRightClickMenu, Is.EqualTo(showingRightClickMenu));
-            Assert.That(systemUnderTest.Instance.OnOpenLearningSpace,
-                Is.EqualTo(EventCallback.Factory.Create(onOpenLearningSpace.Target!, onOpenLearningSpace)));
             Assert.That(systemUnderTest.Instance.OnEditLearningSpace,
                 Is.EqualTo(EventCallback.Factory.Create(onEditLearningSpace.Target!, onEditLearningSpace)));
             Assert.That(systemUnderTest.Instance.OnDeleteLearningSpace,
@@ -232,11 +230,11 @@ public class DraggableObjectInPathWay
                 (RenderFragment)stub.Instance.Parameters[nameof(Draggable<PathWayConditionViewModel>.ChildContent)]);
         childContent.MarkupMatches(
             @"<rect x=""0"" y=""0"" width=""75"" height=""41.5"" rx=""2"" style=""fill:#e9e9e9;opacity:80%;stroke:rgb(204,204,204);stroke-width:1""></rect>
-              <g  ></g>
-              <g  >
+<g ></g>
+<g >
                   <text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>
               </g>
-              <title></title>");
+<title></title>");
     }
 
     [Test]
@@ -275,7 +273,6 @@ public class DraggableObjectInPathWay
             .Add(p => p.OnDoubleClickedDraggable, onDoubleClicked)
             .Add(p => p.OnRightClickedDraggable, onRightClicked)
             .Add(p => p.ShowingRightClickMenu, showingRightClickMenu)
-            .Add(p => p.OnOpenLearningSpace, onOpenLearningSpace)
             .Add(p => p.OnEditLearningSpace, onEditLearningSpace)
             .Add(p => p.OnDeleteLearningSpace, onDeleteLearningSpace)
             .Add(p => p.OnRemoveLearningSpaceFromTopic, onRemoveLearningSpaceFromTopic)

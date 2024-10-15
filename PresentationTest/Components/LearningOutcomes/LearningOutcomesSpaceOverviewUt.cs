@@ -58,6 +58,7 @@ public class LearningOutcomesSpaceOverviewUt
     }
 
     [Test]
+    // ANF-ID: [AHO01]
     public void ClickCreateStructuredButton_CallsDialogService_WithStructuredLearningOutcomeDialog()
     {
         var collection = new LearningOutcomeCollectionViewModel();
@@ -72,6 +73,7 @@ public class LearningOutcomesSpaceOverviewUt
     }
 
     [Test]
+    // ANF-ID: [AHO02]
     public void ClickCreateManualButton_CallsDialogService_WithStructuredLearningOutcomeDialog()
     {
         var collection = new LearningOutcomeCollectionViewModel();

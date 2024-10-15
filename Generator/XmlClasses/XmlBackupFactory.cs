@@ -405,7 +405,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
         {
             SectionId = "0",
-            Title = "",
+            Title = "General",
             Directory = "sections/section_0",
         });
 

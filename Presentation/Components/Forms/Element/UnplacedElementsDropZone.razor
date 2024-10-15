@@ -156,7 +156,12 @@
         if (commandName.StartsWith("CreateLearningElement") ||
             commandName.StartsWith("LoadLearningElement") ||
             commandName.StartsWith("PlaceLearningElement") ||
-            commandName.StartsWith("PlaceStoryElement"))
+            commandName.StartsWith("PlaceStoryElement") ||
+            commandName.StartsWith("DeleteLearningElementInWorld") ||
+            commandName.StartsWith("ChangeLearningSpaceLayout") ||
+            commandName.StartsWith("RemoveStoryElementFromLayout") ||
+            commandName.StartsWith("RemoveLearningElementFromLayout"))
+
             await InvokeStateHasChanged();
     }
 
@@ -198,7 +203,7 @@
 
     private bool ShowAfterSearchStringFilter(ILearningElementViewModel element)
     {
-        if (!string.IsNullOrEmpty(SearchString) && !element.Name.Contains(SearchString))
+        if (!string.IsNullOrEmpty(SearchString) && !element.Name.ToLowerInvariant().Contains(SearchString.ToLowerInvariant()))
         {
             return false;
         }

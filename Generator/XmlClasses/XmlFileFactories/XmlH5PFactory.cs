@@ -17,15 +17,17 @@ namespace Generator.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory : IXmlH5PFactory
 {
-    private readonly string _workDir;
-
     private readonly IFileSystem _fileSystem;
     private readonly string _hardcodedPath = "XMLFilesForExport";
+    private readonly string _workDir;
 
     public readonly IXmlFileManager FileManager;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
     private List<FilesXmlFile> _filesXmlFilesList;
     public string CurrentTime;
+    public string H5PCompletionGradeItemNumber;
+    public string H5PCompletionPassGrade;
+    public string H5PCompletionView;
     public string H5PElementDesc;
     public string H5PElementId;
     public string H5PElementName;
@@ -33,6 +35,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public float H5PElementPoints;
     public string H5PElementType;
     public string H5PElementUuid;
+    public string H5PGradePass;
 
 
     public XmlH5PFactory(IReadAtf readAtf, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
@@ -55,6 +58,10 @@ public class XmlH5PFactory : IXmlH5PFactory
         H5PElementParentSpaceString = "";
         H5PElementType = "";
         H5PElementDesc = "";
+        H5PCompletionPassGrade = "";
+        H5PCompletionView = "";
+        H5PGradePass = "";
+        H5PCompletionGradeItemNumber = "";
         H5PElementPoints = 0;
         _filesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
@@ -152,6 +159,24 @@ public class XmlH5PFactory : IXmlH5PFactory
                     break;
             }
 
+            switch (h5PElement.ElementCategory)
+            {
+                case "h5p":
+                    H5PCompletionPassGrade = "1";
+                    H5PCompletionView = "0";
+                    H5PGradePass = "100.00000";
+                    H5PCompletionGradeItemNumber = "0";
+                    break;
+                case "primitiveH5P":
+                    H5PCompletionPassGrade = "0";
+                    H5PCompletionView = "1";
+                    H5PGradePass = "0.00000";
+                    H5PCompletionGradeItemNumber = "$@NULL@$";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(h5PElement.ElementFileType, "H5P type not supported");
+            }
+
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_workDir, _hardcodedPath,
                 h5PElement.ElementName + "." + h5PElement.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_workDir, _hardcodedPath,
@@ -180,7 +205,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = H5PElementId,
-            Filename = H5PElementName,
+            Filename = H5PElementName + "." + H5PElementType,
             Source = H5PElementName + "." + H5PElementType,
             Filesize = filesize,
             Component = "mod_h5pactivity",
@@ -213,6 +238,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesGradesXmlGradeItem.Timecreated = CurrentTime;
         ActivitiesGradesXmlGradeItem.Timemodified = CurrentTime;
         ActivitiesGradesXmlGradeItem.Id = H5PElementId;
+        ActivitiesGradesXmlGradeItem.Gradepass = H5PGradePass;
 
         ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ??
                                                   new ActivitiesGradesXmlGradeItem();
@@ -252,6 +278,10 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesModuleXmlModule.ShowDescription = "0";
         ActivitiesModuleXmlModule.Id = H5PElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
+        ActivitiesModuleXmlModule.Completionpassgrade = H5PCompletionPassGrade;
+        ActivitiesModuleXmlModule.CompletionView = H5PCompletionView;
+        ActivitiesModuleXmlModule.Completiongradeitemnumber = H5PCompletionGradeItemNumber;
         //AdlerScore can not be null at this point because it is set in the constructor
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax =
             H5PElementPoints.ToString("F5", CultureInfo.InvariantCulture);

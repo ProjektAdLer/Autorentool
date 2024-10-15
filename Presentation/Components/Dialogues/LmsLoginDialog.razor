@@ -199,10 +199,6 @@
 
                 break;
 
-            case SideToShow.PersonDialog:
-
-                break;
-
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -214,8 +210,7 @@
 
     private enum SideToShow
     {
-        LoginDialog,
-        PersonDialog
+        LoginDialog
     }
 
     private SideToShow ActiveSide { get; set; }
@@ -250,14 +245,14 @@
     {
         get => Configuration[IApplicationConfiguration.BackendBaseUrl];
         set => Configuration[IApplicationConfiguration.BackendBaseUrl] = value;
-    } 
-    
+    }
+
     private string Username
     {
         get => Configuration[IApplicationConfiguration.BackendUsername];
         set => Configuration[IApplicationConfiguration.BackendUsername] = value;
     }
-    
+
 
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
@@ -333,6 +328,7 @@
             _errorInvalidUrlMessage = Localizer["DialogContent.Error.ProtocolMissing"];
             return;
         }
+
         try
         {
             StartSpinner();

@@ -195,8 +195,7 @@
                     @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                     {
                         <div class="flex flex-col">
-                            @* PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool. *@
-                            <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)" Disabled="true">
+                            <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
                                 @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
                                 <MudTooltip>
                                     <ChildContent>

@@ -63,6 +63,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_LmsNotConnected_RenderLmsLoginDialogWithForm()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -91,13 +92,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         Assert.That(mudButtons, Has.Count.EqualTo(1));
 
         var mudLists = DialogProvider.FindComponents<MudList>();
-        //Left sidebar (LoginDialog, PersonDialog)
+        //Left sidebar (LoginDialog)
         Assert.That(mudLists, Has.Count.EqualTo(1));
         var mudListItems = mudLists[0].FindComponents<MudListItem>();
         Assert.That(mudListItems, Has.Count.EqualTo(1));
     }
 
     [Test]
+    // ANF-ID: [AHO25]
     public async Task DialogCreated_LmsConnected_RenderLmsLoginDialogWithWorldsAndLogoutButton()
     {
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -118,7 +120,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         {
             Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
             Assert.That(mudTexts[1].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[2].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[2].Markup, Contains.Substring("Header.Moodle.Text"));
             Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Logout"));
             Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
             Assert.That(mudTexts[5].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
@@ -152,6 +154,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsBackendApiUnreachableException_ShowsErrorMessage()
     {
         _presentationLogic.IsLmsConnected().Throws(x => throw new BackendApiUnreachableException());
@@ -174,6 +177,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsBackendInvalidTokenException_ShowsErrorMessageAndCallsLogout()
     {
         var exceptionThrown = false;
@@ -205,6 +209,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO23]
     public async Task DialogCreated_LmsIsConnected_GetLmsWorldListThrowsBackendException_SetErrorInErrorService()
     {
         Localizer["DialogContent.AdLerServer.ErrorMessage.Refresh"]
@@ -218,6 +223,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndClickLoginButton_MissingValue_NothingHappens()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -254,6 +260,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21]
     public async Task EnterDetailsAndPressEnterInPasswordField_CallsPresentationLogic()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -271,6 +278,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO21, AHO23]
     public async Task EnterDetailsAndClickLoginButton_CorrectCredentials_CallsGetLmsWorldListInPresentationLogic()
     {
         _presentationLogic.IsLmsConnected().Returns(false);
@@ -474,6 +482,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteWorldButtonClicked_CancelDialog_NothingHappens()
     {
         var dialogReference = Substitute.For<IDialogReference>();
@@ -504,6 +513,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task DeleteWorldButtonClicked_ConfirmDialog_CallsDeleteLmsWorldAndGetLmsWorldList()
     {
         var dialogReference = Substitute.For<IDialogReference>();
@@ -536,6 +546,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     }
 
     [Test]
+    // ANF-ID: [AHO24]
     public async Task
         DeleteWorldButtonClicked_ConfirmDialog_PresentationLogicThrowsBackendException_SetsErrorInErrorService()
     {

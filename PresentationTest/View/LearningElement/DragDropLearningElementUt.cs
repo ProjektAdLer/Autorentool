@@ -4,6 +4,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
@@ -25,8 +26,12 @@ public class DragDropLearningElementUt
     [SetUp]
     public void Setup()
     {
+        _stringLocalizer = Substitute.For<IStringLocalizer<DragDropLearningElement>>();
+        _stringLocalizer[Arg.Any<string>()]
+            .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
         _ctx = new TestContext();
         _ctx.Services.AddMudServices();
+        _ctx.Services.AddSingleton(_stringLocalizer);
         _ctx.ComponentFactories.AddStub<MudMenu>();
         _ctx.ComponentFactories.AddStub<MudCard>();
         _ctx.ComponentFactories.AddStub<MudCardContent>();
@@ -45,6 +50,7 @@ public class DragDropLearningElementUt
     }
 
     private TestContext _ctx;
+    private IStringLocalizer<DragDropLearningElement> _stringLocalizer;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
 
     [Test]

@@ -1749,6 +1749,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1765,6 +1766,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -1784,6 +1786,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public async Task LoadLearningWorldAsync_CallsDialogManagerAndElementMapper()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -1813,6 +1816,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void LoadLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2179,6 +2183,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE2]
     public void PresentationLogic_LoadLearningWorldViewModel_ReturnsLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -2379,7 +2384,7 @@ public class PresentationLogicUt
 
     [Test]
     // ANF-ID: [AWA0007]
-    public void DeleteAdaptivityTask_CallsBusinessLogic()
+    public void DeleteAdaptivityTask_WithFormModel_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
@@ -2408,6 +2413,42 @@ public class PresentationLogicUt
         systemUnderTest.DeleteAdaptivityTask(mockAdaptivityContentFormModel, mockAdaptivityTaskViewModel);
 
         mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentFormModel);
+        mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+    }
+
+    [Test]
+    // ANF-ID: [AWA0007]
+    public void DeleteAdaptivityTask_WithViewModel_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
+        var mockCommand = Substitute.For<IDeleteAdaptivityTask>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockAdaptivityContentViewModel = ViewModelProvider.GetAdaptivityContent();
+        var mockAdaptivityContentEntity = EntityProvider.GetAdaptivityContent();
+        var mockAdaptivityTaskViewModel = ViewModelProvider.GetAdaptivityTask();
+        var mockAdaptivityTaskEntity = EntityProvider.GetAdaptivityTask();
+        Substitute.For<ILogger<TaskCommandFactory>>();
+        mockMapper
+            .Map<AdaptivityContent>(mockAdaptivityContentViewModel)
+            .Returns(mockAdaptivityContentEntity);
+        mockMapper
+            .Map<AdaptivityTask>(mockAdaptivityTaskViewModel)
+            .Returns(mockAdaptivityTaskEntity);
+        mockTaskCommandFactory
+            .GetDeleteCommand(mockAdaptivityContentEntity, mockAdaptivityTaskEntity,
+                Arg.Any<Action<AdaptivityContent>>())
+            .Returns(mockCommand);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+                taskCommandFactory: mockTaskCommandFactory);
+
+        systemUnderTest.DeleteAdaptivityTask((AdaptivityContentViewModel)mockAdaptivityContentViewModel,
+            mockAdaptivityTaskViewModel);
+
+        mockMapper.Received().Map<AdaptivityContent>(mockAdaptivityContentViewModel);
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -3412,6 +3453,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void GetFileInfoForLearningWorld_IsWhiteSpace_ReturnsNull()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3426,6 +3468,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE5]
     public void GetFileInfoForLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3438,6 +3481,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [ASE4]
     public void DeleteLearningWorldByPath_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -3450,6 +3494,7 @@ public class PresentationLogicUt
     }
 
     [Test]
+    // ANF-ID: [AWA0038]
     public void OpenContentFilesFolder_CallsBusinessLogicAndShellWrapper()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

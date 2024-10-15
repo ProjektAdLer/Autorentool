@@ -36,6 +36,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task YesButtonPressed_ReturnsPositiveResponse()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
@@ -46,6 +47,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task NoButtonPressed_ReturnsNegativeResponse()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
@@ -56,6 +58,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
     }
 
     [Test]
+    // ANF-ID: [ASE6]
     public async Task CancelButtonPressed_ReturnsCancelledResponse()
     {
         var dialog = await OpenDialogAndGetDialogReferenceAsync();

@@ -69,4 +69,7 @@
     <data name="Page.LearningWorld.ShowFile.Checkbox" xml:space="preserve">
         <value>Display the entire name of the .awf file</value>
     </data>
+    <data name="Page.LearningWorld.Error.ReloadLearningWorlds" xml:space="preserve">
+        <value>Error while loading a learning world</value>
+    </data>
 </root>

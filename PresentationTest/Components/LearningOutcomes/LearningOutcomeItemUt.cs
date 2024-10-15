@@ -56,6 +56,7 @@ public class LearningOutcomeItemUt
     }
 
     [Test]
+    // ANF-ID: [AHO04]
     public void ClickEdit_ManualOutcome_ShouldCallDialogProviderWithManualOutcomeDialog()
     {
         var collection = new LearningOutcomeCollectionViewModel();
@@ -73,6 +74,7 @@ public class LearningOutcomeItemUt
     }
 
     [Test]
+    // ANF-ID: [AHO03]
     public void ClickEdit_StructuredOutcome_ShouldCallDialogProviderWithManualOutcomeDialog()
     {
         var collection = new LearningOutcomeCollectionViewModel();
@@ -90,6 +92,7 @@ public class LearningOutcomeItemUt
     }
 
     [Test]
+    // ANF-ID: [AHO05]
     public void ClickDelete_ShouldCallPresentationLogic()
     {
         var collection = new LearningOutcomeCollectionViewModel();

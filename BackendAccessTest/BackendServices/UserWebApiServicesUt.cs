@@ -134,7 +134,7 @@ public class UserWebApiServicesUt
         var mockHttpMessageHandler = new MockHttpMessageHandler();
         httpClientFactory.CreateClient(Arg.Any<ProgressMessageHandler>())
             .Returns(new HttpClient(mockHttpMessageHandler));
-        
+
         mockHttpMessageHandler.When("*").Throw(new HttpRequestException("Invalid URL", new SocketException()));
 
         var userWebApiServices =
@@ -142,7 +142,8 @@ public class UserWebApiServicesUt
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
-        Assert.That(ex!.Message, Is.EqualTo("The URL is not reachable. Either the URL does not exist or there is no internet connection."));
+        Assert.That(ex!.Message,
+            Is.EqualTo("The URL is not reachable. Either the URL does not exist or there is no internet connection."));
     }
 
     [Test]
@@ -739,7 +740,7 @@ public class UserWebApiServicesUt
 
         mockedHttp.VerifyNoOutstandingExpectation();
     }
-    
+
     private static IPreflightHttpClient CreatePreflightHttpClient()
     {
         var mockHttpHandler = new MockHttpMessageHandler();
@@ -772,6 +773,7 @@ public class UserWebApiServicesUt
         fileSystem ??= Substitute.For<IFileSystem>();
         preflightHttpClient ??= CreatePreflightHttpClient();
 
-        return new UserWebApiServices(configuration, progressMessageHandler, httpClientFactory, logger, fileSystem, preflightHttpClient);
+        return new UserWebApiServices(configuration, progressMessageHandler, httpClientFactory, logger, fileSystem,
+            preflightHttpClient);
     }
 }

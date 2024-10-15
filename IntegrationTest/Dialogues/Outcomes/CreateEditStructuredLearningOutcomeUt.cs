@@ -50,7 +50,7 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
     }
 
     [Test]
-    // ANF-ID: [AHO01]
+    // ANF-ID: [AHO01, AHO03]
     public async Task SubmitWithOutCurrentLearningOutcome_VerbNotSet_DoesNotCallAddStructuredLearningOutcome()
     {
         await GetDialogAsync();
@@ -240,6 +240,7 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
     }
 
     [Test]
+    // ANF-ID: [AHO01, AHO03]
     public async Task Reset_ResetsAllFields()
     {
         await GetDialogAsync();

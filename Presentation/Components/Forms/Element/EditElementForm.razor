@@ -192,8 +192,7 @@
                 @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                 {
                     <div class="flex flex-col">
-                        @* PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool. *@
-                        <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)" Disabled="true">
+                        <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
                             @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
                             <MudTooltip>
                                 <ChildContent>
@@ -302,7 +301,7 @@
 {
     <div class="px-4">
         <Collapsable
-            Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"]  InitiallyCollapsed="true">
+            Title=@Localizer["EditElementForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
             <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
                 <MudText
                     Typo="Typo.caption">
@@ -448,7 +447,8 @@
         };
         var parameters = new DialogParameters
         {
-            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent }
+            { nameof(AdaptivityContentDialog.MyContent), FormDataContainer.FormModel.LearningContent },
+            { nameof(AdaptivityContentDialog.ContentToEdit), ElementToEdit.LearningContent }
         };
         var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>(Localizer["EditElementForm.AdaptivityContent.Dialog.Title"], parameters, options);
         _ = await dialog.Result;

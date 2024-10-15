@@ -30,6 +30,7 @@ public class CloseAppButtonUt
     private IShutdownManager _shutdownManager;
 
     [Test]
+    // ANF-ID: [ASN0025]
     public void OnClick_CallsShutdownManager()
     {
         using (_context)

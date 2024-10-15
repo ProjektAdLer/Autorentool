@@ -1,13 +1,13 @@
-@using Presentation.PresentationLogic.LearningSpace
-@using Shared
-@using AutoMapper
-@using BusinessLogic.Entities
-@using Presentation.Components.Forms.Models
-@using Presentation.Components.LearningOutcomes
-@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using AutoMapper
+@using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.LearningOutcomes
+@using Presentation.PresentationLogic.LearningSpace
+@using Shared
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditSpaceForm.Header.Title"]</h2>
@@ -200,7 +200,17 @@
         if (LearningSpacePresenter.LearningSpaceVm == null)
             throw new ApplicationException(Localizer["EditSpaceForm.ApplicationException.Message"]);
         LearningSpacePresenter.LearningSpaceVm.PropertyChanged += LearningSpacePropertyChanged;
+        LearningSpacePresenter.LearningSpaceVm.LearningSpaceLayout.PropertyChanged += LearningSpaceLayoutPropertyChanged;
         _focusCalled = false;
+    }
+
+    private void LearningSpaceLayoutPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LearningSpaceViewModel.LearningSpaceLayout.FloorPlanName)
+           )
+        {
+            InvokeAsync(MapIntoContainer);
+        }
     }
 
     private void LearningSpacePropertyChanged(object? sender, PropertyChangedEventArgs e)

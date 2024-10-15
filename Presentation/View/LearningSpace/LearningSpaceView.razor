@@ -1,11 +1,11 @@
+@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
 @using Shared.Command
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
-@using Presentation.Components.Dialogues
 @implements IDisposable
 
 @if (LearningSpaceP.LearningSpaceVm != null)
@@ -137,10 +137,12 @@
         // if (commandName is "CreateLearningElement" or "LoadLearningElement" or
         //     "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or
         //     "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
-        if(commandName.StartsWith("CreateLearningElement") ||
-           commandName.StartsWith("LoadLearningElement") ||
-           commandName.StartsWith("PlaceLearningElement") ||
-           commandName.StartsWith("PlaceStoryElement"))
+        if (commandName.StartsWith("CreateLearningElement") ||
+            commandName.StartsWith("LoadLearningElement") ||
+            commandName.StartsWith("PlaceLearningElement") ||
+            commandName.StartsWith("PlaceStoryElement") ||
+            commandName.StartsWith("DeleteLearningElement") ||
+            commandName.StartsWith("DeleteStoryElement"))
         {
             await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
         }
@@ -158,7 +160,7 @@
                 await ShowReplaceLearningElementDialog();
                 break;
             case nameof(LearningSpaceP.ReplaceStoryElementDialogOpen)
-            when LearningSpaceP.ReplaceStoryElementDialogOpen:
+                when LearningSpaceP.ReplaceStoryElementDialogOpen:
                 await ShowReplaceStoryElementDialog();
                 break;
         }

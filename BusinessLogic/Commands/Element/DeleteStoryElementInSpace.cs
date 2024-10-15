@@ -58,6 +58,8 @@ public class DeleteStoryElementInSpace : IDeleteStoryElementInSpace
         Logger.LogTrace(
             "Undone deletion of StoryElement {LearningElementName} ({LearningElementId}) in LearningSpace {LearningSpaceName} ({LearningSpaceId}). Restored LearningSpace to previous state",
             LearningElement.Name, LearningElement.Id, ParentSpace.Name, ParentSpace.Id);
+
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Redo()

@@ -117,6 +117,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     {
         get => InternalUnsavedChanges ||
                ContainedLearningElements.Any(element => element.UnsavedChanges) ||
+               LearningSpaceLayout.StoryElements.Values.Any(element => element.UnsavedChanges) ||
                LearningOutcomeCollection.UnsavedChanges;
         set => InternalUnsavedChanges = value;
     }
