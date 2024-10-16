@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
+using Presentation.Components.Forms.Content;
 using Presentation.Components.Forms.Element;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
