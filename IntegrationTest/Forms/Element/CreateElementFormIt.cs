@@ -288,7 +288,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }
 
@@ -312,9 +311,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
-        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
         Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());

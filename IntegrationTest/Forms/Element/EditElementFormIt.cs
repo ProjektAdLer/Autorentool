@@ -202,9 +202,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
 
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
-        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
-
         Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
         Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
         Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));

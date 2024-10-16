@@ -145,14 +145,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadProgressDialog.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableSelect.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableSelect.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NoContentWarning.de.Designer.cs</LastGenOutput>
