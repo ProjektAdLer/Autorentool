@@ -261,13 +261,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DraggablePathWayCondition.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\LearningContentDialog.de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LearningContentDialog.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\LearningContentDialog.en.resx">
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningContentDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningContentDialog.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
