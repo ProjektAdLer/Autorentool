@@ -13,6 +13,7 @@
 - Improved the filter search field in unplaced learning elements to be case-insensitive.
 - Changed the order of learning elements in 13- and 15-slot floor plan.
 - Changed Icon for deleting learning elements, learning spaces and pathway conditions.
+- Outsourced the selection of learning content from the learning element to a separate dialog.
 
 ### Deprecated
 
