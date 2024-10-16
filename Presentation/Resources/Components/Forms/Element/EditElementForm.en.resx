@@ -93,7 +93,7 @@
         <value>Type</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>Choose a external learning material (file or link)*</value>
+        <value>Choose a external learning material*</value>
     </data>
     <data name="EditElementForm.Text" xml:space="preserve">
         <value>* Required</value>
@@ -183,5 +183,17 @@ The corresponding slots can be found in each floor plan at the position of the e
     </data>
     <data name="EditElementForm.Tooltip.Image.Alt" xml:space="preserve">
         <value>Example image for slots in a learning space floor plan</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Preview" xml:space="preserve">
+        <value>Show learning material</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Edit" xml:space="preserve">
+        <value>Change learning material</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
+        <value>Selected learning material:</value>
+    </data>
+    <data name="EditElementForm.LearningMaterial.Dialog.Title" xml:space="preserve">
+        <value>Select or change external learning material</value>
     </data>
 </root>
