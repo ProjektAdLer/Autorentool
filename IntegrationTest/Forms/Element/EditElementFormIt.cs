@@ -54,11 +54,19 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         FormModel.LearningContent = LearningContentFormModels[1];
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
+        
+        var learningContent = LearningContentFormModels[0];
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(learningContent));
+
+        _dialogServiceMock = Substitute.For<IDialogService>();
+        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        Context.Services.AddSingleton(_dialogServiceMock);
     }
 
     public LearningElementViewModel ElementVm { get; set; }
-
-
     public ILearningWorldPresenter WorldPresenter { get; set; }
     public ILearningSpacePresenter SpacePresenter { get; set; }
     public IElementModelHandler ElementModelHandler { get; set; }
@@ -67,6 +75,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     public ILearningContentFormModel[] LearningContentFormModels { get; set; }
 
     private const string Expected = "test";
+    private IDialogService _dialogServiceMock = Substitute.For<IDialogService>();
 
     [Test]
     public void Render_InjectsDependenciesAndParameters()
@@ -230,17 +239,18 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
+        
+        var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
+        editContentButton[1].Find("button").Click();
+        
         mudTextFields[0].Find("input").Change(Expected);
+        mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
-        mudTextFields[3].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
         mudNumericFields[1].Find("input").Change(123);
         mudSelect.Find("div.mud-input-control").Click();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
-        var tableRows = tableSelect.FindAll("tbody tr");
-        tableRows[0].Click();
     }
 
     private void ConfigureValidatorAllMembers()
