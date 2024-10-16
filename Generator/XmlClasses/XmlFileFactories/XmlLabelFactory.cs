@@ -98,11 +98,6 @@ public class XmlLabelFactory : IXmlLabelFactory
         CreateActivityFolder(LabelId);
 
         //file activities/label.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ??
-                                                  new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlActivityGradebook.GradeItems =
-            ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
-
         ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
 
         //file activities/label.../label.xml
@@ -140,13 +135,8 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("label", LabelId);
 
         //file activities/label.../inforef.xml
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
-                                                     new ActivitiesInforefXmlGradeItem();
         ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ??
                                               new ActivitiesInforefXmlFileref();
-        ActivitiesInforefXmlInforef.GradeItemref =
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
-            new ActivitiesInforefXmlGradeItemref();
 
         ActivitiesInforefXmlInforef.Serialize("label", LabelId);
     }

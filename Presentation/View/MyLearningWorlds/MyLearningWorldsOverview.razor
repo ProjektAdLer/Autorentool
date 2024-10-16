@@ -1,15 +1,16 @@
 @page "/MyLearningWorldsOverview"
+@using System.Diagnostics.CodeAnalysis
+@using System.IO.Abstractions
+@using System.Runtime.Serialization
 @using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.MyLearningWorlds
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.API
 @using MudBlazor.Utilities
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
-@using System.Diagnostics.CodeAnalysis
-@using System.IO.Abstractions
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.MyLearningWorlds
+@using Presentation.PresentationLogic.SelectedViewModels
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
@@ -46,7 +47,7 @@
                         <p class="text-sm">@Localizer["Checkbox.ShowFileName.Label"]</p>
                     </MudCheckBox>
                 </div>
-            
+
                 <div class="flex justify-end">
                     <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Page.LearningWorld.Subheading"]">
                         <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-blacktrans-300 hover:text-adlerdarkblue"></MudIcon>
@@ -94,6 +95,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; private init; }
 
+    [Inject, AllowNull] IErrorService ErrorService { get; set; }
+
 
     private bool _createLearningWorldDialogOpen;
     private bool _showFileName;
@@ -129,7 +132,14 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        try
+        {
+            MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError(Localizer["Page.LearningWorld.Error.ReloadLearningWorlds"], e.Message);
+        }
     }
 
 

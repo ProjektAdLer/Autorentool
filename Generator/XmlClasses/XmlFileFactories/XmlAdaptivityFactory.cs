@@ -33,7 +33,6 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         IActivitiesGradeHistoryXmlGradeHistory? gradeHistory = null,
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
         IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
-        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
         ReadAtf = readAtf;
@@ -50,7 +49,6 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
 
         ActivitiesInforefXmlFileref = inforefXmlFileref ?? new ActivitiesInforefXmlFileref();
         ActivitiesInforefXmlGradeItem = inforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
-        ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
 
         ActivitiesAdleradaptivityXmlActivity =
@@ -86,8 +84,6 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
     internal IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
 
     internal IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-
-    internal IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
 
     internal IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     internal IReadAtf ReadAtf { get; }
@@ -175,20 +171,15 @@ public class XmlAdaptivityFactory : IXmlAdaptivityFactory
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("adleradaptivity", AdaptivityElementId);
 
         //file activities/adaptivity_.../inforef.xml
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
-                                                     new ActivitiesInforefXmlGradeItem();
         ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ??
                                               new ActivitiesInforefXmlFileref();
-        ActivitiesInforefXmlInforef.GradeItemref =
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
-            new ActivitiesInforefXmlGradeItemref();
 
         ActivitiesInforefXmlInforef.Serialize("adleradaptivity", AdaptivityElementId);
     }
 
     private void CreateActivityFolder(string moduleId)
     {
-        var currWorkDir =  ApplicationPaths.BackupFolder;
+        var currWorkDir = ApplicationPaths.BackupFolder;
         FileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities",
             "adleradaptivity_" + moduleId));
     }

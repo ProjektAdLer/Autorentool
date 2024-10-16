@@ -148,7 +148,7 @@ public class ReadAtf : IReadAtf
     {
         foreach (var element in documentRootJson.World.Elements)
         {
-            if (element.ElementFileType is "h5p" or "primitiveH5P")
+            if (element.ElementFileType is "h5p")
             {
                 _listH5PElements.Add((ILearningElementJson)element);
             }

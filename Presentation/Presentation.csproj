@@ -129,14 +129,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningSpaceView.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\RightClickMenu\RightClickMenu.de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RightClickMenu.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\RightClickMenu\RightClickMenu.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RightClickMenu.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\CloseAppButton.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CloseAppButton.de.Designer.cs</LastGenOutput>
@@ -252,6 +244,30 @@
     <EmbeddedResource Update="Resources\Components\LearningOutcomes\LearningOutcomesWorldOverview.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningOutcomesWorldOverview.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningElement\DragDropLearningElement.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DragDropLearningElement.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningElement\DragDropLearningElement.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DragDropLearningElement.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableLearningSpace.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggableLearningSpace.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggableLearningSpace.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggableLearningSpace.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggablePathWayCondition.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggablePathWayCondition.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningPathWay\DraggablePathWayCondition.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DraggablePathWayCondition.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Adaptivity\Dialogues\LearningContentDialog.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>

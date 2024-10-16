@@ -1,6 +1,8 @@
 ﻿@using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Presentation.Components
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.FileContent
 @using Presentation.PresentationLogic.LearningContent.LinkContent
@@ -9,67 +11,76 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
 @implements IDisposable
-<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
-    <ActivatorContent>
-        <MudCard title="@LearningElement.Name" Outlined="true" Class="@GetElementStyleString()">
-            <section class="flex flex-col justify-start items-start">
-                <MudCardContent Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
-
-                    <div class="absolute flex justify-center -top-3 2xl:-top-4">
-                        <MudIcon Icon="@GetElementIcon()" Class="w-6 h-6 2xl:w-7 2xl:h-7 -top-5 flex rounded-lg p-1 element-icon"/>
-                    </div> 
-
-                    <div class="flex flex-col items-center">
 
 
-                        <div class="flex justify-center items-center">
+<MudCard title="@LearningElement.Name" Outlined="true" Class="@GetElementStyleString()">
+    <section class="flex flex-col justify-start items-start">
+        <MudCardContent
+            Class="relative flex justify-center w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
+            
+            <div class="absolute flex -top-2.5 -right-2.5 2xl:-top-2.5 2xl:-right-2.5 z-20">
+                    
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               OnClick="@DeleteLearningElement"
+                               Class="p-2" Size="Size.Small" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIconButton>
+            </div>
 
-                            <MudListItem Class="truncate w-20 h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 1080p:text-sm font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none p-0 mt-0.5" Text="@LearningElement.Name"></MudListItem>
-                        </div>
+            <div class="flex flex-col items-center">
 
-                        <div class="flex flex-row justify-between items-center rounded-md bg-[#b9c0ca] w-[60px] 2xl:w-[70px] 3xl:w-[75px] 1080p:w-[80px] 2500p:w-[120px] border-2 border-[#8b96a7] p-0.5 mt-0.5">
-                            <div>
-                                <MudIcon Class="flex difficulty-icon drop-shadow w-3 h-3 2xl:h-4 2xl:w-4" Icon="@GetDifficultyIcon(LearningElement.Difficulty)"></MudIcon>
-                            </div>
-                            <div class="flex items-center justify-center">
-                                <MudText Class="flex items-center justify-center rounded-full text-adlertextgrey text-[8px] 2xl:text-xs font-bold">@LearningElement.Points P.</MudText>
-                            </div>
-                        </div>
+
+                <div class="flex justify-center items-center z-10">
+                    <MudListItem
+                        Class="truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-0.5 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0"
+                        Text="@LearningElement.Name">
+                    </MudListItem>
+                </div>
+
+                <div class="absolute flex z-0 opacity-30">
+                    <MudIcon Icon="@GetElementIcon()"
+                             Class="w-7 h-7 2xl:w-9 2xl:h-9 flex items-center justify-start rounded p-1 element-icon"/>
+                </div>
+                
+                <div
+                    class="flex flex-row justify-between items-center rounded-md bg-[#b9c0ca] w-[60px] 2xl:w-[70px] 3xl:w-[75px] 1080p:w-[80px] 2500p:w-[120px] border-2 border-[#8b96a7] p-0.5 mt-0.5">
+                    <div>
+                        <MudIcon Class="flex difficulty-icon drop-shadow w-3 h-3 2xl:h-4 2xl:w-4"
+                                 Icon="@GetDifficultyIcon(LearningElement.Difficulty)">
+                        </MudIcon>
                     </div>
+                    <div class="flex items-center justify-center">
+                        <MudText
+                            Class="flex items-center justify-center rounded-full text-adlertextgrey text-[8px] 2xl:text-xs font-bold">
+                            @LearningElement.Points
+                            P.
+                        </MudText>
+                    </div>
+                </div>
+            </div>
 
-                </MudCardContent>
-            </section>
-            <MudButton Class="cursor-grab" Style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: transparent;"
-                       OnClick="() => OnClicked.InvokeAsync(LearningElement)"/>
-        </MudCard>
-    </ActivatorContent>
-    <ChildContent>
-        @if (LearningElement.LearningContent is IFileContentViewModel or ILinkContentViewModel)
-        {
-            <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
-        }
-        <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
-        <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
-    </ChildContent>
-</MudMenu>
+        </MudCardContent>
+    </section>
+    <MudButton Class="cursor-grab"
+               Style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: transparent;"
+               OnClick="() => OnClicked.InvokeAsync(LearningElement)"/>
+</MudCard>
 
 @code {
-    
+
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel LearningElement { get; set; } = null!;
 
-    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
-
-    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
-
     [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
 
     [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
 
     [Parameter] public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+
+    [Inject, AllowNull] internal IStringLocalizer<DragDropLearningElement> Localizer { get; set; }
+
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -121,6 +132,25 @@
     private string GetElementStyleString()
     {
         return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerblue-300 bg-adlerblue-100 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300";
+    }
+
+    private async Task DeleteLearningElement()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(GenericCancellationConfirmationDialog.DialogText), Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.DialogText", LearningElement.Name].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.SubmitButtonText"].Value },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
+        };
+
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.Title"].Value, dialogParameters);
+        var result = await dialogReference.Result;
+        if (result.Canceled)
+        {
+            return;
+        }
+
+        await OnDeleteLearningElement.InvokeAsync(LearningElement);
     }
 
     public void Dispose()
