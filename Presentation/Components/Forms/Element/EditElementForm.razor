@@ -385,8 +385,8 @@
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     internal Action? TriggerMasterLayoutStateHasChanged { get; set; }
 
-
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+    
     private StoryContentFormModel? StoryContentModel => FormDataContainer.FormModel.LearningContent as StoryContentFormModel;
 
     private PseudoFormFieldGrouping<ILearningContentFormModel?>? _pseudoGroupStoryContent;

@@ -34,7 +34,7 @@ public class ElementModelHandler : IElementModelHandler
             default:
             {
                 var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-                return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
+                return elementModels.Except(NpcModels).Except(AdaptivityModels).OrderBy(m => m, comparer);
             }
         }
     }

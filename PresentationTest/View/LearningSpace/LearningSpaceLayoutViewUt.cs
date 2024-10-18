@@ -41,7 +41,7 @@ public class LearningSpaceLayoutViewUt
     private const string ShadowOpen = @"<div class=""drop-shadow-xl w-full h-full"">";
 
     private const string FloorPlanClass =
-        @"<div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]""";
+        @"<div class=""mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]"">";
 
     private const string FloorPlanStyleOpen =
         @"style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;";
