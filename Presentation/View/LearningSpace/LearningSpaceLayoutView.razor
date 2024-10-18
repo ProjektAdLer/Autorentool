@@ -7,7 +7,7 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
-<div class="w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated">
+<div class="w-full min-h-[265px] bg-adlergreybright rounded-lg border-2 border-b-adlerdeactivated">
     <div class="drop-shadow-xl w-full h-full">
         <div class="mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
 
@@ -131,9 +131,9 @@
         return doorsString.ToString();
     }
 
-    private string GetCanDropClass() => new CssBuilder("bg-adlergreen w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
+    private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 
-    private string GetNoDropClass() => new CssBuilder("bg-formerror w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
+    private string GetNoDropClass() => new CssBuilder("bg-formerror text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
 
     private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
     {
@@ -170,13 +170,13 @@
         {
             //Farben für ActiveStorySlotInSpace
             cssBuilder.AddClass("bg-adlergold-200 border-adlergold-300", activeSlotIsPos);
-            cssBuilder.AddClass("border-adlergold-700 bg-adlerdeactivatedtext hover:bg-adlergold-300 hover:border-adlergold-300", !activeSlotIsPos);
+            cssBuilder.AddClass("border-adlergold-700 border-[3px] bg-adlerdeactivatedtext hover:bg-adlergold-300 hover:border-adlergold-300", !activeSlotIsPos);
         }
         else
         {
             //Farben für ActiveElementSlotInSpace
             cssBuilder.AddClass("bg-adlerblue-200 border-adlerblue-300", activeSlotIsPos);
-            cssBuilder.AddClass("border-adlerblue-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+            cssBuilder.AddClass("border-adlerblue-200 border-[3px] bg-adlerbgbright hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
         }
         return cssBuilder.ToString();
     }

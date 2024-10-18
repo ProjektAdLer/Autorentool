@@ -12,7 +12,7 @@
 @using Presentation.View.LearningElement
 @using Shared
 @using Shared.Command
-<div class="flex flex-col items-center h-full bg-adlerdeactivated rounded-lg px-1.5">
+<div class="flex flex-col items-center h-full bg-adlerbgbright border-2 border-b-adlerdeactivated rounded-lg px-1.5">
 
     <div class="grid grid-cols-2 w-full py-1 gap-4 2xl:gap-0">
 
@@ -107,19 +107,22 @@
         </div>
     </div>
 
-    <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                 Class="overflow-y-auto overflow-x-hidden flex-wrap rounded-lg flex-auto basis-4/5 border-2 border-solid p-2 mb-2 gap-4 bg-white flex flex-row justify-center w-full">
-        <ItemRenderer>
-            @if (ShowAfterFilters(@context))
-            {
-                <DragDropLearningElement
-                    LearningElement="@context"
-                    OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
-                    OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
-            }
-        </ItemRenderer>
-    </MudDropZone>
-</div>
+    <div class="overflow-y-scroll mb-2 rounded">
+        <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+                     Class="z-30 flex-wrap border-t-2 border-white py-2 gap-2 flex justify-center w-full">
+            <ItemRenderer>
+                @if (ShowAfterFilters(@context))
+                {
+                    <DragDropLearningElement
+                        LearningElement="@context"
+                        OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
+                        OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
+                }
+            </ItemRenderer>
+        </MudDropZone>
+        
+    </div>
+    </div>
 
 @code {
 

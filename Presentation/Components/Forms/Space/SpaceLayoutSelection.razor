@@ -4,7 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 
-<div class="grid grid-cols-5 gap-4 2xl:gap-5 justify-center items-center">
+<div class="grid grid-cols-5 gap-4 2xl:gap-8">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
         <MudListItem OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"

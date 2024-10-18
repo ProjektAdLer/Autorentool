@@ -38,4 +38,7 @@
     <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
         <value>Fehler beim Hinzufügen eines Links</value>
     </data>
+    <data name="AddLinkForm.Info.Infotext" xml:space="preserve">
+        <value>Falls Sie keinen Account für den Videoserver haben, von welchem aus Ihr Video abgerufen wird, achten Sie bitte darauf, dass Ihr Video auf "öffentlich" gestellt wird. Ansonsten können diese Videos in der 3D-Lernumgebung nicht angezeigt werden.</value>
+    </data>
 </root>
