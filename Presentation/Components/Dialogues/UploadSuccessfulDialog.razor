@@ -3,7 +3,7 @@
 @using ElectronWrapper
 <MudDialog>
     <DialogContent>
-        @Localizer["Dialog.UploadSuccessful.Text", WorldName]
+        @((MarkupString)Localizer["Dialog.UploadSuccessful.Text", WorldName].ToString())
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="Open3D">@Localizer["Button.Open3D.Text"]</MudButton>

@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Dialog.Text" xml:space="preserve">
-        <value>Your learning world is currently being uploaded. This might take a few moments to minutes, depending on the size of your world and your internet connection.</value>
+        <value>Your learning world is currently being uploaded. This might take a few moments to minutes, depending on your internet connection and the size of your learning world.</value>
     </data>
     <data name="Cancel.Button.Text" xml:space="preserve">
         <value>Cancel</value>
