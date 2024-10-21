@@ -107,9 +107,9 @@
         </div>
     </div>
 
-    <div class="overflow-y-scroll mb-2 bg-white">
+    <div class="flex justify-start overflow-y-scroll bg-white h-24 w-full">
         <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                     Class="z-30 flex-wrap py-2 gap-2 flex justify-center w-full">
+                     Class="z-30 flex flex-wrap gap-7 2xl:gap-10 justify-start items-center pl-2 w-full min-h-full h-max">
             <ItemRenderer>
                 @if (ShowAfterFilters(@context))
                 {
