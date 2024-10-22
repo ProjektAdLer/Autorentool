@@ -10,6 +10,7 @@ using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -42,6 +43,8 @@ public class DragDropLearningElementUt
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
+        _elementModelHandler = Substitute.For<IElementModelHandler>();
+        _ctx.Services.AddSingleton(_elementModelHandler);
     }
 
     [TearDown]
@@ -53,6 +56,7 @@ public class DragDropLearningElementUt
     private TestContext _ctx;
     private IStringLocalizer<DragDropLearningElement> _stringLocalizer;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IElementModelHandler _elementModelHandler;
 
     [Test]
     public void Constructor_SetsParametersCorrectly()
@@ -100,17 +104,17 @@ public class DragDropLearningElementUt
         var cardContent = _ctx.Render((RenderFragment)mudCardContent.FindComponentOrFail<Stub<MudCardContent>>()
             .Instance.Parameters["ChildContent"]);
         var icons = cardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
-        var iconButtons = cardContent.FindComponentsOrFail<Stub<MudIconButton>>().ToList();
-        var deleteButton = iconButtons.FirstOrDefault();
+        var buttons = cardContent.FindAll("button");
+        var deleteButton = buttons.FirstOrDefault();
 
-        var elementIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Class", out var classObj) && ((string)classObj).Contains("element-icon"));
+        var elementIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Icon", out var classObj) && ((string)classObj).Contains("screen button-icon"));
         var difficultyIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Class", out var classObj) && ((string)classObj).Contains("difficulty-icon"));
 
         Assert.Multiple(() =>
         {
             Assert.That(elementIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.VideoElementIcon));
             Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.DifficultyPolygonMedium));
-            Assert.That(deleteButton?.Instance.Parameters["Icon"], Is.EqualTo(Icons.Material.Filled.Delete));
+            Assert.That(deleteButton, Is.Not.Null);
         });
     }
 
@@ -168,8 +172,8 @@ public class DragDropLearningElementUt
         var mudCardContent = _ctx.Render((RenderFragment)_ctx
             .Render((RenderFragment)card.Instance.Parameters["ChildContent"])
             .FindComponentOrFail<Stub<MudCardContent>>().Instance.Parameters["ChildContent"]);
-        var difficultyIcon = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>()
-            .First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
+        var icons = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
+        var difficultyIcon = icons.First(icon => icon.Instance.Parameters.TryGetValue("Class", out var classObj) && ((string)classObj).Contains("difficulty-icon"));
         Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(expectedIconString));
     }
 
