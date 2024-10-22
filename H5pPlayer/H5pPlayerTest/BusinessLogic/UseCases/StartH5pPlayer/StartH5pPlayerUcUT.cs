@@ -1,5 +1,4 @@
 ﻿using H5pPlayer.BusinessLogic.Domain;
-using H5pPlayer.BusinessLogic.JavaScriptApi;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using NSubstitute;
@@ -225,12 +224,14 @@ public class StartH5pPlayerUcUT
     
 
     [Test]
-    public void ExtractZippedH5p()
+    public void ExtractZippedH5pToTemporaryFolder()
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
         
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        
+        
         
     }
     
