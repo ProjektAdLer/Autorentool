@@ -14,6 +14,7 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
     <PackageReference Include="MudBlazor" Version="6.14.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
@@ -144,14 +145,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadProgressDialog.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableSelect.de.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Components\Forms\TableSelect.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableSelect.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Forms\Element\NoContentWarning.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NoContentWarning.de.Designer.cs</LastGenOutput>
@@ -267,6 +260,22 @@
     <EmbeddedResource Update="Resources\View\LearningPathWay\DraggablePathWayCondition.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DraggablePathWayCondition.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningContentDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningContentDialog.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningContentDialog.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\Forms\Content\LearningContentDialog.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningContentDialog.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

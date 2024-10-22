@@ -18,7 +18,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="TableSelect.Placeholder" xml:space="preserve">
-        <value>Suche</value>
+    <data name="LearningContentDialog.LearningMaterial.Dialog.Subtitle" xml:space="preserve">
+        <value>All external learning material that has already been imported into the authoring tool is listed below. Select the desired learning material for the learning element from this list.</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Search" xml:space="preserve">
+        <value>Search...</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Preview" xml:space="preserve">
+        <value>Show learning material</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Type" xml:space="preserve">
+        <value>Type</value>
     </data>
 </root>
