@@ -1,6 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Domain;
 
-namespace H5pPlayer.BusinessLogic.JavaScriptApi;
+namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 
 public interface IJavaScriptAdapter
 {

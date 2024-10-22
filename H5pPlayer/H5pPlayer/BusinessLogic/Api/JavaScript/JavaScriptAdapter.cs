@@ -1,7 +1,7 @@
 ﻿using H5pPlayer.BusinessLogic.Domain;
 using Microsoft.JSInterop;
 
-namespace H5pPlayer.BusinessLogic.JavaScriptApi;
+namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 
 public class JavaScriptAdapter : IJavaScriptAdapter
 {
@@ -14,7 +14,14 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     }
     public async Task DisplayH5p(H5pEntity h5pEntity)
     {
+        
+        
+        // hier muss der pfad für die h5p-json gebaut werden
+        // aus H5pEntity.H5pZipSourcePath und H5pEntityUnzippedH5psPath 
         var jsonSourcePath = IfJsonSourcePathContainsHttpsDeleteIt(h5pEntity);
+        
+        
+        
         await JsRuntime.InvokeVoidAsync("testH5P", jsonSourcePath);
     }
 
