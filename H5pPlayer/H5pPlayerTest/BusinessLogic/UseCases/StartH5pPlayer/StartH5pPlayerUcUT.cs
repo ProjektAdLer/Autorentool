@@ -1,4 +1,5 @@
-﻿using H5pPlayer.BusinessLogic.Domain;
+﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using NSubstitute;
@@ -21,10 +22,13 @@ public class StartH5pPlayerUcUT
     [TestCase(@"C:\d" + H5pFileEnding)]                     // Root path Windows
     public void ValidH5pZipSourcePath(string validPath)
     {
-        var systemUnderTest = CreateStandardSystemUnderTest();
+        var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,validPath);
         
-        Assert.DoesNotThrow(() => systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO));
+        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        
+        mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
     }
    
@@ -108,27 +112,34 @@ public class StartH5pPlayerUcUT
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode,invalidPath);
         const string expectedErrorMessage = "H5pZipSourcePath must be rooted!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
-
+    
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
        
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
 
     
-    [TestCase(@"C:\Temp"+ H5pFileEnding)]                 // Windows absolute path
-    [TestCase(@"/usr/local/bin" + H5pFileEnding)]          // Unix/macOS absolute path
-    [TestCase(@"C:/Program Files/Temp" + H5pFileEnding)]   // Mixed style path (Windows)
-    [TestCase(@"/tmp/test#folder/d" + H5pFileEnding)]       // Unix/macOS with special characters
-    [TestCase(@"C:\Temp with spaces\file" + H5pFileEnding)]// Windows with spaces
-    [TestCase(@"/path with spaces" + H5pFileEnding)]       // Unix/macOS with spaces
-    [TestCase(@"/d" + H5pFileEnding)]                       // Root path Unix/macOS
-    [TestCase(@"C:\d" + H5pFileEnding)]                     // Root path Windows
+    [TestCase(@"https://example.com/path/to/resource")]   // Basic HTTPS URL
+    [TestCase(@"https://example.com/resource#with-fragment")]   // URL with fragment identifier
+    [TestCase(@"https://example.com/path with spaces/resource")]   // URL with spaces
+    [TestCase(@"https://example.com/path/to/resource?query=parameter")]   // URL with query parameters
+    [TestCase(@"https://example.com:8080/path/to/resource")]   // URL with custom port number
+    [TestCase(@"https://example.com/path/to/special_characters#frag!ment$123")]   // URL with special characters and fragment
+    [TestCase(@"https://example.com/path/to/deeply/nested/resource")]   // URL with deeply nested path
+    [TestCase(@"https://localhost:5000/api/resource")]   // Localhost URL with custom port
+    [TestCase(@"https://example.com/resource.ext")]   // URL with file extension
+    [TestCase(@"https://example.com/path/to/resource/file.json")]   // URL pointing to a JSON file
+    [TestCase(@"https://example.com/path/to/resource/file.xml")]   // URL pointing to an XML file
+    [TestCase(@"https://example.com/api/v1/resource/123")]   // API-style URL with versioning and ID
     public void ValidUnzippedH5psPath(string validPath)
-    {
-        var systemUnderTest = CreateStandardSystemUnderTest();
+    { 
+        var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(null,mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,null, validPath);
+
+        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
-        Assert.DoesNotThrow(() => systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO));
+        mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.UnzippedH5psPath, Is.EqualTo(validPath));
     }
     
@@ -184,27 +195,7 @@ public class StartH5pPlayerUcUT
     }
     
     
-    [TestCase(@"Test\Temp\Tested" + H5pFileEnding)]        // Windows relative path
-    [TestCase(@"Test/Temp/Tested" + H5pFileEnding)]        // Unix/macOS relative path
-    [TestCase(@".\relative\path" + H5pFileEnding)]         // Windows relative path with .
-    [TestCase(@"..\parent\path" + H5pFileEnding)]          // Windows relative path with ..
-    public void PathIsNotRootedInUnzippedH5psPath(string invalidPath)
-    {
-        var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
-        var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
-        var displayMode = H5pDisplayMode.Display;
-        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode,null,invalidPath);
-        const string expectedErrorMessage = "UnzippedH5psPath must be rooted!";
-        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
-
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
-       
-        mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
-    }
-    
-    
-    
-    
+ 
     [Test]
     public void MapDisplayMode([Values]H5pDisplayMode displayMode)
     {
@@ -226,13 +217,17 @@ public class StartH5pPlayerUcUT
     [Test]
     public void ExtractZippedH5pToTemporaryFolder()
     {
-        var systemUnderTest = CreateStandardSystemUnderTest();
+        var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
+        var systemUnderTest = CreateStandardSystemUnderTest(
+            null, null, mockFileSystemDataAccess);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
         
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
-        
-        
-        
+
+
+        mockFileSystemDataAccess.Received().ExtractZipFile(
+            systemUnderTest.H5pEntity.H5pZipSourcePath,
+            systemUnderTest.H5pEntity.UnzippedH5psPath);
     }
     
     
@@ -266,7 +261,7 @@ public class StartH5pPlayerUcUT
         string unzippedH5psPath = null)
     {
         h5pZipSourcePath ??= "C://Default_PathToZip/Source" + H5pFileEnding;
-        unzippedH5psPath ??= "https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen";
+        unzippedH5psPath ??= "https://localhost:8001/H5pStandalone/h5p-folder/";
         var transportObject = new StartH5pPlayerInputTO(displayMode, h5pZipSourcePath, unzippedH5psPath);
         return transportObject;
     }
@@ -282,13 +277,16 @@ public class StartH5pPlayerUcUT
     }
 
     private static StartH5pPlayerUC CreateStandardSystemUnderTest(
-        IDisplayH5pUC? fakeDisplayH5PUc = null,
-        IStartH5pPlayerUCOutputPort? outputPort = null)
+        IDisplayH5pUC? fakeDisplayH5pUc = null,
+        IStartH5pPlayerUCOutputPort? outputPort = null,
+        IFileSystemDataAccess? dataAccess = null)
     {
-        fakeDisplayH5PUc ??= Substitute.For<IDisplayH5pUC>();
+        fakeDisplayH5pUc ??= Substitute.For<IDisplayH5pUC>();
         outputPort ??= Substitute.For<IStartH5pPlayerUCOutputPort>();
+        dataAccess ??= Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = new StartH5pPlayerUC(
-            fakeDisplayH5PUc,
+            dataAccess,
+            fakeDisplayH5pUc,
             outputPort);
         return systemUnderTest;
     }

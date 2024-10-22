@@ -1,6 +1,11 @@
-﻿namespace H5pPlayer.DataAccess.FileSystem;
+﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 
-public class FileSystemDataAccess
+namespace H5pPlayer.DataAccess.FileSystem;
+
+public class FileSystemDataAccess : IFileSystemDataAccess
 {
-    
+    public void ExtractZipFile(string sourceZipFilePath, string destinationFolderPath)
+    {
+        throw new NotImplementedException();
+    }
 }

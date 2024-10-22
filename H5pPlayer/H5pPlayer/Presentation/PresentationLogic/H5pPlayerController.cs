@@ -3,6 +3,7 @@ using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
+using H5pPlayer.DataAccess.FileSystem;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.Presentation.PresentationLogic;
@@ -16,7 +17,8 @@ public class H5pPlayerController
         IJavaScriptAdapter javaScriptAdapter = new JavaScriptAdapter(jsRuntime);
         IDisplayH5pUC displayH5pUC = new DisplayH5pUC(javaScriptAdapter);
         StartH5PPlayerPresenter = new H5PPlayerPlayerPresenter();
-        StartH5PPlayerUc = new StartH5pPlayerUC(displayH5pUC, StartH5PPlayerPresenter);
+        var fileSystemDataAccess = new FileSystemDataAccess();
+        StartH5PPlayerUc = new StartH5pPlayerUC(fileSystemDataAccess, displayH5pUC, StartH5PPlayerPresenter);
     }
 
     public void StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)

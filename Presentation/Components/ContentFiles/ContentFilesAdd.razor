@@ -63,7 +63,7 @@
     </Collapsable>
 
 </MudStack>
-
+@inject NavigationManager Navigation
 @code {
 
 
@@ -125,10 +125,13 @@
                 
                 if (fileEnding.ToLowerInvariant()  == ".h5p")
                 {
-                    var h5pZipSourcePath = ApplicationPaths.ContentFolder + "\\" + file.Name;
-                    Logger.LogTrace("Start H5P-Player with path: " + h5pZipSourcePath);
-                    Console.Write("Start H5P-Player with path: " + h5pZipSourcePath);
-                    OpenH5pPlayerDialog(h5pZipSourcePath);
+                    var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                    var unzippedH5psPath = Path.Combine(Navigation.BaseUri, "H5pStandalone", "h5p-folder");
+                    Logger.LogTrace("Start H5P-Player with: " + 
+                                    "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                                    "unzippedH5psPath: " + unzippedH5psPath );
+
+                    OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5psPath);
                 }
         
                 
@@ -271,7 +274,7 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
-    private async void OpenH5pPlayerDialog(string h5pZipSourcePath)
+    private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
     {
         var options = new DialogOptions
         {
@@ -282,7 +285,8 @@
         };
         var parameters = new DialogParameters()
         {
-            {"H5pZipSourcePath", h5pZipSourcePath}
+            {"H5pZipSourcePath", h5pZipSourcePath},
+            {"UnzippedH5psPath", unzippedH5psPath}
         };
         
         var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);

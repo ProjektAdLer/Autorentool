@@ -1,6 +1,7 @@
-﻿using H5pPlayer.BusinessLogic.Domain;
-using H5pPlayer.BusinessLogic.JavaScriptApi;
+﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using Shared.Configuration;
 
 namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 
@@ -12,9 +13,11 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 {
 
     public StartH5pPlayerUC(
+        IFileSystemDataAccess dataAccess,
         IDisplayH5pUC displayH5PUc,
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
     {
+        FileSystemDataAccess = dataAccess;
         DisplayH5pUC = displayH5PUc;
         StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
@@ -23,14 +26,23 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 
     /// <summary>
     /// Was für pfade kommen an:
-    /// frage gestellt in discord. warte noch auf antwort
+    /// ContentFIles
+    ///     ZipSourcePath: C:\Users\%USERPROFILE%\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p
     /// 
+    /// UnzippedH5psPath: https://localhost:8001/H5pStandalone/h5p-folder
+    ///
+    ///
     /// H5pJsonSourcePath rein in
     ///     Aus dem ZipSourcePath extrahieren
     ///     das könnte man z.b. in der Entity machen somit bräuchte die Entity nur einen getter
     ///     Aber achtung erst muss die Zip Datei in den H5pOrdner der H5pStandalone in wwwroot des
     ///     Autorentools implementiert werden
     ///
+    /// Philipp hat seine middleware getestet. -> funktioniert.
+    /// ich habe bedenken, da nun alle Anfragen an z.B.http://localhost:8001/ContentFiles
+    /// mit einer Dateiendung von .h5p gehen die Middleware aktivieren
+    /// -> somit werden all diese .h5p in memory (je datei die angefordert wird) geöffnet.
+    /// 
     ///     
     /// 
     ///  JavascriptAdapter aufräumen, -> json path in jsonpath inentitiy
@@ -39,14 +51,19 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// Vgl Datei ContentFilesAdd in Presentation.Componentes.ContentFiles
     ///  
     ///
-    ///
+    /// 1. 
     /// 
     /// </summary>
     public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
         MapTOtoEntity(displayH5PInputTo);
-        // call dataaccess via zipfilesystemaccess  to entzipp h5p
+        ExtractZippedSourceH5pToTemporaryFolder();
         DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
+    }
+
+    private void ExtractZippedSourceH5pToTemporaryFolder()
+    {
+        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, H5pEntity.UnzippedH5psPath);
     }
 
     private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
@@ -96,15 +113,9 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         H5pEntity = new H5pEntity();
     }
 
-   
-
-    
-    
-    
-    
     
    
-
+    internal IFileSystemDataAccess FileSystemDataAccess { get; }
     internal IDisplayH5pUC DisplayH5pUC { get; }
     internal H5pEntity H5pEntity { get; set; }
     internal IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
