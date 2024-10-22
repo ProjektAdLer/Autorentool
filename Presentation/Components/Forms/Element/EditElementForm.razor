@@ -151,37 +151,40 @@
                 <div class="flex flex-col gap-1 p-2">
                     <MudText Class="text-xs font-bold">@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial"]</MudText>
                 
-                    <div class="flex items-center cursor-default rounded border-2 border-adlergrey-200 bg-adlerdeactivated">
-                        <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                       Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
-                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
-                                       Class="show-content-preview py-2"
-                                       Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+                    <div class="flex items-center justify-between cursor-default rounded border-2 border-adlergrey-200 bg-adlerdeactivated">
+                        <div class="flex justify-start">
+                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                           Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
+                                           OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
+                                           Class="show-content-preview py-2"
+                                           Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+
+                            <MudTooltip Text="@LearningContentName"
+                                        Arrow="true"
+                                        Placement="Placement.Right"
+                                        Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                                        Duration="Double.Epsilon"
+                                        Delay="DebounceInterval">
+
+                                <MudTextField
+                                    T="ILearningContentFormModel"
+                                    @bind-Value="FormDataContainer.FormModel.LearningContent"
+                                    @bind-Text="@LearningContentName"
+                                    Variant="Variant.Text"
+                                    For="@(() => FormModel.LearningContent!)"
+                                    ReadOnly="true"
+                                    Disabled="true"
+                                    DisableUnderLine="true"
+                                    Style="color: rgb(69,160,229);"
+                                    Margin="Margin.Dense"
+                                    Class="pb-3">
+                                </MudTextField>
+                    
+                            </MudTooltip>
+                        </div>
                         
-                        <MudTooltip Text="@LearningContentName"
-                                    Arrow="true"
-                                    Placement="Placement.Right"
-                                    Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                    Duration="Double.Epsilon" 
-                                    Delay="DebounceInterval">
-                            
-                            <MudTextField
-                                T="ILearningContentFormModel"
-                                @bind-Value="FormDataContainer.FormModel.LearningContent"
-                                @bind-Text="@LearningContentName"
-                                Variant="Variant.Text"
-                                For="@(() => FormModel.LearningContent!)"
-                                ReadOnly="true"
-                                Disabled="true"
-                                DisableUnderLine="true"
-                                Style="color: rgb(69,160,229);"
-                                Margin="Margin.Dense"
-                                Class="pb-3">
-                            </MudTextField>
-                            
-                        </MudTooltip>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
-                        </MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
+                            </MudIconButton>
                     </div>
                 </div>
                 
