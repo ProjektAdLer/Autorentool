@@ -6,6 +6,22 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+</details>
+
+## [2.2.0] - 2024-10-23
+
+### Added
 - Added a feature to mark H5P Elements as primitive.
 - Added Confirmation dialog when deleting a learning element, learning space and pathway condition.
 - Added 3d representation in the story, learning and adaptivity element cards.
@@ -36,8 +52,6 @@
 - Fixed a bug where unplaced elements are incorrectly dragged and dropped into the slots.
 
 ### Security
-
-</details>
 
 ## [2.1.7] - 2024-05-28
 
