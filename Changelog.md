@@ -8,17 +8,22 @@
 ### Added
 - Added a feature to mark H5P Elements as primitive.
 - Added Confirmation dialog when deleting a learning element, learning space and pathway condition.
+- Added 3d representation in the story, learning and adaptivity element cards.
+- Added the writerside documentation in the authoringtool with a link.
 
 ### Changed
 - Improved the filter search field in unplaced learning elements to be case-insensitive.
 - Changed the order of learning elements in 13- and 15-slot floor plan.
 - Changed Icon for deleting learning elements, learning spaces and pathway conditions.
 - Outsourced the selection of learning content from the learning element to a separate dialog.
+- Changed the styling of the story element slots for higher visibility.
+- Changed the styling of the switch button for selecting multiple or single choice question for higher visibility.
 
 ### Deprecated
 
 ### Removed
 - Removed the right-click menu for learning element, learning space and pathway condition.
+- Removed the button for importing learning spaces.
 
 ### Fixed
 - Fixed a bug in adaptivity elements where changes in the learning content were not applied correctly.
@@ -27,6 +32,8 @@
 - Fixed a bug where a story slot was not made active after undoing the creation of a story element.
 - Fixed the order of learning elements in learning world tree view.
 - Fixed a bug in adaptivity element question preview, where long comments exceeded the viewport.
+- Fixed a bug where points were shown in the story element cards.
+- Fixed a bug where unplaced elements are incorrectly dragged and dropped into the slots.
 
 ### Security
 
