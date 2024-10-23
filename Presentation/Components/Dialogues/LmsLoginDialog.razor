@@ -178,6 +178,12 @@
                                             @Localizer["DialogContent.Error.TokenInvalid"]
                                         </MudText>
                                     }
+                                    @if (_showErrorMoodleUnreachable)
+                                    {
+                                        <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                            @Localizer["DialogContent.Error.MoodleUnreachable"]
+                                        </MudText>
+                                    }
                                 </div>
                                 <div class="flex flex-col">
                                     <!--TODO: Password reset link and API link should be set in the config - we need a proper configuration dialog -->
@@ -262,6 +268,7 @@
 
     private bool _isPasswordVisible = false;
     private bool _showErrorTokenInvalid = false;
+    private bool _showErrorMoodleUnreachable = false;
     private bool _spinnerActive = false;
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
@@ -306,6 +313,10 @@
         {
             _showErrorTokenInvalid = true;
             Logout();
+        }
+        catch (BackendMoodleApiUnreachableException)
+        {
+            _showErrorMoodleUnreachable = true;
         }
         finally
         {

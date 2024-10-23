@@ -175,6 +175,29 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
             Assert.That(errorText, Is.EqualTo("API is unreachable"));
         });
     }
+    
+    [Test]
+    // ANF-ID: [AHO21]
+    public async Task DialogCreated_IsLmsConnectedThrowsMoodleUnreachableException_ShowsErrorMessage()
+    {
+        _presentationLogic.IsLmsConnected().Throws(x => throw new BackendMoodleApiUnreachableException());
+        
+        Localizer["DialogContent.Error.MoodleUnreachable"]
+            .Returns(new LocalizedString("DialogContent.Error.MoodleUnreachable","Moodle is unreachable"));
+        
+        await OpenDialogAndGetDialogReferenceAsync();
+
+        var mudTexts = DialogProvider.FindComponents<MudText>();
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        DialogProvider.WaitForAssertion(() =>
+        {
+            var errorElement = DialogProvider.Find("h6.mud-error-text");
+            Assert.That(errorElement, Is.Not.Null);
+
+            var errorText = errorElement.TextContent.Trim();
+            Assert.That(errorText, Is.EqualTo("Moodle is unreachable"));
+        });
+    }
 
     [Test]
     // ANF-ID: [AHO21]

@@ -274,7 +274,7 @@ public class UserWebApiServicesUt
 
         var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
-        var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
+        var ex = Assert.ThrowsAsync<BackendHttpRequestException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
         Assert.That(ex!.Message, Is.EqualTo("Error Message"));
     }
@@ -322,7 +322,7 @@ public class UserWebApiServicesUt
     {
         var mockedHttp = new MockHttpMessageHandler();
 
-        var exception = new HttpRequestException("The provided token is invalid");
+        var exception = new BackendHttpRequestException("The provided token is invalid", null, null, ErrorCodes.LmsTokenInvalid);
         mockedHttp
             .When("*")
             .Throw(exception);
@@ -336,6 +336,31 @@ public class UserWebApiServicesUt
         var ex = Assert.ThrowsAsync<BackendInvalidTokenException>(async () =>
             await userWebApiServices.GetUserInformationAsync("token"));
         Assert.That(ex!.Message, Is.EqualTo("The provided token is invalid"));
+        Assert.That(ex.InnerException, Is.EqualTo(exception));
+    }
+    
+    [Test]
+    // ANF-ID: [AHO21]
+    public void GetUserInformationAsync_MoodleUnreachable_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var exception = new BackendHttpRequestException(
+            "Das Ergebnis der Moodle Web Api konnte nicht gelesen werden. Response string is: 404 page not found\n",
+            null, null, ErrorCodes.LmsError);
+        mockedHttp
+            .When("*")
+            .Throw(exception);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
+
+        var ex = Assert.ThrowsAsync<BackendMoodleApiUnreachableException>(async () =>
+            await userWebApiServices.GetUserInformationAsync("token"));
+        Assert.That(ex!.Message, Is.EqualTo("Das Ergebnis der Moodle Web Api konnte nicht gelesen werden. Response string is: 404 page not found\n"));
         Assert.That(ex.InnerException, Is.EqualTo(exception));
     }
 
