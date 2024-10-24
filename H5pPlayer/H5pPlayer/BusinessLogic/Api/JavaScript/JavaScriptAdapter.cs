@@ -38,11 +38,10 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     /// </summary>
     private static string IfPathOfH5PToPlayPathContainsHttpDeleteHttp(string pathOfH5pToPlay)
     {
-        if (pathOfH5pToPlay.StartsWith("http:"))
+        if (pathOfH5pToPlay.StartsWith("http:") || pathOfH5pToPlay.StartsWith("https:"))
         {
-            pathOfH5pToPlay = pathOfH5pToPlay.Substring("http:".Length);
+            pathOfH5pToPlay = pathOfH5pToPlay.Substring(pathOfH5pToPlay.IndexOf(':') + 1);
         }
-
         return pathOfH5pToPlay;
     }
 
