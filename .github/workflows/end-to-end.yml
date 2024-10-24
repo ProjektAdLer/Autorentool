@@ -1,0 +1,567 @@
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      enable_screen_recording:
+        description: 'Enable screen recording'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+          
+  build-backend-and-run-authoring-tool:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout workflow files
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/workflows
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout AdlerDevelopmentEnvironment repository
+        uses: actions/checkout@v4
+        with:
+          repository: ProjektAdLer/AdlerDevelopmentEnvironment
+          path: AdlerDevelopmentEnvironment
+          submodules: 'true'
+
+      - name: Prepare .env file
+        run: |
+          mkdir -p cleaned_env
+          awk '
+          BEGIN { FS=": "; OFS="=" }
+          {
+            if ($0 ~ /^[[:space:]]*#/ || NF == 0) {
+              print $0;  # Kommentare und leere Zeilen unverändert ausgeben
+            } else if (index($0, ":") > 0 && index($2, ",") > 0) {
+              split($2, values, ",");
+              for (i in values) {
+                print $1 "_ARRAY_" (i-1) OFS values[i];
+              }
+            } else {
+              print $0;  # Andere Zeilen unverändert ausgeben
+            }
+          }
+          ' AdlerDevelopmentEnvironment/non-moodle/.env > cleaned_env/.env
+          
+          # Entferne Kommentare am Ende der Zeilen
+          sed -i 's/[[:space:]]*#.*$//' cleaned_env/.env
+          
+          cat cleaned_env/.env
+
+      - name: Load environment variables
+        uses: xom9ikk/dotenv@v2.3.0
+        with:
+          path: cleaned_env
+          load-mode: strict
+
+      - name: Setup Chrome environment variables
+        run: |
+            echo "CHROME_VERSION=110.0.5481.77-1" >> $GITHUB_ENV
+            echo "CHROME_URL=https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_110.0.5481.77-1_amd64.deb" >> $GITHUB_ENV
+            echo "CHROME_DEB=google-chrome-stable_110.0.5481.77-1_amd64.deb" >> $GITHUB_ENV
+            echo "CHROMEDRIVER_URL=https://old.chromedriver.getwebdriver.com/110.0.5481.77/chromedriver_linux64.zip" >> $GITHUB_ENV
+            echo "CHROMEDRIVER_ZIP=chromedriver_linux64.zip" >> $GITHUB_ENV
+
+      - name: Make scripts executable
+        run: |
+            # Finde alle Skripte im Verzeichnis scripts und mache sie ausführbar
+            while IFS= read -r -d '' script; do
+              chmod +x "$script"
+              script_name=$(basename "$script")
+              env_var_name="script_${script_name//./_}"
+              echo "$env_var_name=$script" >> $GITHUB_ENV
+              echo "Made executable and created env var for: $script as $env_var_name"
+            done < <(find $GITHUB_WORKSPACE/.github/workflows/end-to-end_scripts -type f \( -name "*.sh" -o -name "*.py" -o -name "*.bash" \) -print0)
+        
+            # Gib alle erstellten Umgebungsvariablen aus
+            echo "Created environment variables:"
+            grep "^script_" $GITHUB_ENV
+
+      - name: Cache Chrome download
+        uses: actions/cache@v4
+        id: chrome-cache
+        with:
+          path: /tmp/chrome
+          key: ${{ runner.os }}-chrome-${{ env.CHROME_URL }}
+
+      - name: Handle Chrome download or cache
+        run: |
+          mkdir -p /tmp/chrome
+          touch /tmp/chrome_download_progress.log
+          if [ "${{ steps.chrome-cache.outputs.cache-hit }}" == 'true' ]; then
+            echo "Chrome loaded from cache"
+            echo "DONE" > /tmp/chrome_download_progress.log
+          else
+            echo "Downloading Chrome..."
+            (
+              curl -L "${CHROME_URL}" -o "/tmp/chrome/${CHROME_DEB}" --progress-bar 2>&1 | tee /tmp/chrome_download_progress.log > /dev/null
+              echo "DONE" >> /tmp/chrome_download_progress.log
+            ) &
+          fi
+          tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.x'
+
+      - name: Install python dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install docker selenium
+
+      - name: Check Environment
+        run: |
+            echo "Alle benutzerdefinierten Umgebungsvariablen:"
+            env | grep '^_' | sort
+            echo "Alle Skript-Umgebungsvariablen:"
+            env | grep script_ | sort
+            echo "Alle Umgebungsvariablen:"
+            env | sort
+      
+      - name: docker compose
+        run: |
+            cd $GITHUB_WORKSPACE/AdlerDevelopmentEnvironment/non-moodle
+            
+            docker compose up -d --build &
+
+      - name: Install dependencies
+        run: |
+            lscpu
+            sudo apt-get update
+            sudo apt-get install -y wget xvfb xdotool ffmpeg \
+                libgtk-3-0 libnotify4 libgconf-2-4 libnss3 libxss1 libasound2 libgbm1 \
+                libx11-xcb1 libxcb-dri3-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+                libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 \
+                x11-utils libxkbcommon-x11-0 \
+                libu2f-udev
+
+      - name: Download latest Autorentool release
+        if: false
+        run: |
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/ProjektAdLer/Autorentool/releases/latest)
+            DOWNLOAD_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith("linux-unpacked.tar.gz")) | .browser_download_url')
+            echo "$DOWNLOAD_URL"
+            wget -q -O AuthoringTool.tar.gz $DOWNLOAD_URL
+            tar -xvzf AuthoringTool.tar.gz
+            #chmod +x AuthoringTool.AppImage
+
+      - name: Checkout Autorentool repository
+        uses: actions/checkout@v4
+        with:
+          repository: ProjektAdLer/Autorentool
+          path: Autorentool
+          submodules: 'true'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.100'
+
+      - name: Cache NuGet Packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            Linux-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+        working-directory: ./Autorentool
+
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: Run Tailwind build
+        run: npm run tailwind-build
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: Build AuthoringTool binary
+        run: |
+            dotnet electronize build /target linux
+            mv ./bin/Desktop_Publish/linux-unpacked $GITHUB_WORKSPACE/linux-unpacked
+        working-directory: ./Autorentool/AuthoringTool
+
+      - name: List workspace contents
+        run: |
+            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+            ls -aR $GITHUB_WORKSPACE
+
+      - name: Wait for containers to be ready
+        run: python3 $script_wait_for_containers_py
+        env:
+            PYTHONUNBUFFERED: 1
+
+      - name: Check Docker containers
+        run: $script_check_docker_sh
+            
+      - name: Check Backend Health
+        run: |
+            echo "curl -s ${_URL_BACKEND}/api/health"
+            curl -s ${_URL_BACKEND}/api/health
+            
+      - name: Test Moodle
+        run: |
+            echo "curl -s -L ${_URL_MOODLE}"
+            curl -s -L ${_URL_MOODLE}
+    
+      - name: Test Moodle API steps
+        run: |
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+
+      - name: Fix some problems
+        run: |
+            sudo apt-get update
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+            
+            sudo apt-get install -y iproute2
+            sudo ip addr add 127.0.0.1 dev lo
+            
+            sudo apt-get install -y libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0 
+            
+            export ELECTRON_DISABLE_SANDBOX=1
+            
+            export LIBGL_ALWAYS_SOFTWARE=1
+
+      - name: Install Chrome and ChromeDriver
+        run: |
+            # Remove existing Chrome installations
+            sudo apt-get remove -y --purge google-chrome-stable
+            sudo apt-get autoremove -y
+            
+            # Add Google Chrome's official repository
+            curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/google-chrome.asc
+            echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            
+            # Update package lists
+            sudo apt-get update
+            
+            # Wait for downloading Google Chrome
+            echo "Waiting for Chrome download to complete..."
+            while true; do
+              status=$(tr '\r' '\n' < /tmp/chrome_download_progress.log | tail -n 1)
+              if [ "$status" = "DONE" ]; then
+                echo "Download completed"
+                break
+              else
+                echo "Download progress: $status"
+              fi
+              sleep 2
+            done
+        
+            if [ -f "/tmp/chrome/${CHROME_DEB}" ]; then
+              file_size=$(du -h "/tmp/chrome/${CHROME_DEB}" | cut -f1)
+              echo "Chrome downloaded successfully. File size: $file_size"
+            else
+              echo "Download failed"
+              exit 1
+            fi
+            echo "Google Chrome download finished"
+          
+            sudo apt-get install -y "/tmp/chrome/${CHROME_DEB}"
+            
+            # Hold the package to prevent automatic updates
+            #sudo apt-mark hold google-chrome-stable
+            
+            # Download and install ChromeDriver
+            echo "Downloading ChromeDriver..."
+            wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36" "${CHROMEDRIVER_URL}" -O "/tmp/${CHROMEDRIVER_ZIP}"
+            unzip -o "/tmp/${CHROMEDRIVER_ZIP}" -d /tmp
+            sudo mv /tmp/chromedriver /usr/bin/chromedriver
+            sudo chmod +x /usr/bin/chromedriver
+            
+            # Verify installation
+            chromedriver --version
+
+      - name: Start and check Xvfb
+        run: |
+            Xvfb :99 -screen 0 1920x1080x24 &
+            echo "Waiting for Xvfb to be ready..."
+            for attempt in $(seq 1 30); do
+                if xdpyinfo -display :99 >/dev/null 2>&1; then
+                    echo "Xvfb is ready after $attempt attempt(s)"
+                    break
+                fi
+                sleep 0.5
+            done
+            # xdpyinfo -display :99
+            echo "Xvfb is ready"
+            echo "DISPLAY=:99" >> $GITHUB_ENV
+                
+      - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose screen_recording.mp4 &
+            echo $! > ffmpeg_pid.txt
+    
+      - name: Run Autorentool
+        run: |
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
+            
+            echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+            ./linux-unpacked/authoring-tool --remote-debugging-port=9222 &
+            tool_pid=$!
+            sleep 3  # Wait time to allow for initialization
+            
+            max_attempts=5
+            for attempt in $(seq 1 $max_attempts); do
+                echo "Attempt $attempt of $max_attempts to start Authoring Tool"
+                # Check if the application is running
+                window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+                if [ -n "$window_id" ]; then
+                    echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
+                    break
+                else
+                    echo "Attempt $attempt failed"
+                
+                    if [ $attempt -eq $max_attempts ]; then
+                        echo "All $max_attempts attempts failed. Aborting pipeline."
+                        exit 1
+                    else
+                        DISPLAY=:99 xdotool key "ctrl+r" sleep 2
+                    fi
+                fi
+            done
+            
+            # Check if the tool is actually running
+            if ! ps -p $tool_pid > /dev/null; then
+                echo "Authoring Tool process is not running. Aborting pipeline."
+                exit 1
+            fi
+            echo "Authoring Tool is running with PID $tool_pid"
+            echo "AUTHORING_TOOL_PID=$tool_pid" >> $GITHUB_ENV
+        
+      - name: Get window position
+        run: |
+            window_id=$(DISPLAY=:99 xdotool search --name "^Autorentool" | head -n 1)
+            if [ -n "$window_id" ]; then
+                window_name=$(xdotool getwindowname $window_id)
+                echo "Found window: $window_name"
+                window_info=$(xwininfo -id $window_id)
+                window_x=$(echo "$window_info" | grep "Absolute upper-left X" | awk '{print $4}')
+                window_y=$(echo "$window_info" | grep "Absolute upper-left Y" | awk '{print $4}')
+                window_width=$(echo "$window_info" | grep "Width" | awk '{print $2}')
+                window_height=$(echo "$window_info" | grep "Height" | awk '{print $2}')
+                echo "Window position: $window_x, $window_y, $window_width, $window_height"
+            else
+                echo "AuthoringTool window not found"
+                exit 1
+            fi
+            echo "WINDOW_X=$window_x" >> $GITHUB_ENV
+            echo "WINDOW_Y=$window_y" >> $GITHUB_ENV
+            echo "WINDOW_ID=$window_id" >> $GITHUB_ENV
+    
+      - name: Simulate interactions
+        run: | 
+            BACKEND_URL="http://${_URL_BACKEND}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_1
+            PASSWORD=$_USER_PASSWORD_ARRAY_1
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
+            
+            echo "MOODLE_URL: $MOODLE_URL"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            echo "SPACENAME: $SPACENAME"
+            echo "ELEMENTNAME: $ELEMENTNAME"
+            
+            
+            $script_simulate_interactions_sh $BACKEND_URL $COURSENAME $USERNAME $PASSWORD $SPACENAME $ELEMENTNAME
+            
+            kill $AUTHORING_TOOL_PID
+
+      - name: Stop screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
+
+      - name: Upload screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+            name: screen-recording
+            path: screen_recording.mp4
+            
+      - name: Check Docker containers
+        run: $script_check_docker
+            
+      - name: Execute Moodle steps
+        run: |
+            # Manager
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_1}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_1}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+            
+            # Student
+            # URL-Kodierung der Werte
+            USERNAME=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_NAME_ARRAY_0}'))")
+            PASSWORD=$(python -c "import urllib.parse; print(urllib.parse.quote('${_USER_PASSWORD_ARRAY_0}'))")
+            echo $USERNAME
+            echo $PASSWORD
+            
+            # Token abrufen
+            TEST_URL="${_URL_MOODLE}/login/token.php?username=${USERNAME}&password=${PASSWORD}&service=adler_services"
+            echo "TEST_URL: ${TEST_URL}"
+            TOKEN_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Token-Response erhalten: $TOKEN_RESPONSE"
+            TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.token')
+            echo "Token erhalten: $TOKEN"
+            
+            # Webservice Seiten Informationen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            INFORMATION_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Information erhalten: $INFORMATION_RESPONSE"
+            
+            # Kurs mit Name suchen
+            TEST_URL="${_URL_MOODLE}/webservice/rest/server.php?wstoken=${TOKEN}&wsfunction=core_course_search_courses&criterianame=search&criteriavalue=testWorld&moodlewsrestformat=json"
+            echo "TEST_URL: ${TEST_URL}"
+            COURSES_RESPONSE=$(curl -s "${TEST_URL}")
+            echo "Kurse erhalten: $COURSES_RESPONSE"
+            
+      - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose moodle_check.mp4 &
+            echo $! > ffmpeg_pid.txt
+        
+      - name: Enrol Student
+        run: |
+            if ! DISPLAY=:99 xdpyinfo >/dev/null 2>&1; then
+                echo "ERROR: X server is not running properly"
+            else
+                echo "X server is running properly"
+            fi
+            
+            MOODLE_URL="http://${_URL_MOODLE}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_0
+            PASSWORD=$_USER_PASSWORD_ARRAY_0
+            
+            echo "MOODLE_URL: $MOODLE_URL"
+            echo "COURSENAME: $COURSENAME" 
+            echo "USERNAME: $USERNAME"
+            echo "PASSWORD: $PASSWORD"
+            
+            $script_enrol_student_sh $MOODLE_URL $COURSENAME $USERNAME $PASSWORD 
+
+      - name: Stop screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
+
+      - name: Upload screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+            name: moodle_check
+            path: moodle_check.mp4
+            
+      - name: Start screen and recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            ffmpeg -f x11grab -video_size 1920x1080 -i :99 -codec:v libx264 -r 30 -v verbose check_3d.mp4 &
+            echo $! > ffmpeg_pid.txt
+            
+      - name: Test in 3D
+        run: |
+            URL_3D="http://${_URL_3D}"
+            COURSENAME="testWorld"
+            USERNAME=$_USER_NAME_ARRAY_0
+            PASSWORD=$_USER_PASSWORD_ARRAY_0
+            SPACENAME="testSpace"
+            ELEMENTNAME="testElement"
+            
+            $script_test_3d_sh $URL_3D $USERNAME $PASSWORD $COURSENAME $SPACENAME $ELEMENTNAME
+
+      - name: Stop screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        run: |
+            sleep 1
+            kill $(cat ffmpeg_pid.txt)
+            sleep 5  # Give ffmpeg time to finish writing
+
+      - name: Upload screen recording
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+            name: check_3d
+            path: check_3d.mp4
