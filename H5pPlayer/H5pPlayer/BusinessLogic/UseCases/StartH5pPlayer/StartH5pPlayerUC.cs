@@ -38,11 +38,6 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     ///     Aber achtung erst muss die Zip Datei in den H5pOrdner der H5pStandalone in wwwroot des
     ///     Autorentools implementiert werden
     ///
-    /// Philipp hat seine middleware getestet. -> funktioniert.
-    /// ich habe bedenken, da nun alle Anfragen an z.B.http://localhost:8001/ContentFiles
-    /// mit einer Dateiendung von .h5p gehen die Middleware aktivieren
-    /// -> somit werden all diese .h5p in memory (je datei die angefordert wird) geöffnet.
-    /// 
     ///     
     /// 
     ///  JavascriptAdapter aufräumen, -> json path in jsonpath inentitiy
@@ -60,12 +55,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         ExtractZippedSourceH5pToTemporaryFolder();
         DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
     }
-
-    private void ExtractZippedSourceH5pToTemporaryFolder()
-    {
-        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, H5pEntity.UnzippedH5psPath);
-    }
-
+    
+    
     private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
     {
         CreateH5pEntity();
@@ -104,6 +95,31 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         errorOutputTo.InvalidPath = invalidPath;
         errorOutputTo.ErrorTextForInvalidPath = errorMessage;
         StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
+    }
+    
+    
+    private void ExtractZippedSourceH5pToTemporaryFolder()
+    {
+        var destinationDirectoryName = BuildDestinationDirectoryName();
+        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, destinationDirectoryName);
+    }
+    /// <summary>
+    /// to reach the wwwroot-directory we need a path like that:
+    /// C:\Users\%USERPROFILE%\Documents\GitHub\Autorentool\AuthoringTool\wwwroot\H5pStandalone\h5p-folder
+    /// We get this from: <see cref="Environment.CurrentDirectory"/>
+    /// </summary>
+    private string BuildDestinationDirectoryName()
+    {
+        string[] paths = new string[]
+        {
+            Environment.CurrentDirectory,
+            "wwwroot",
+            "H5pStandalone",
+            "h5p-folder",
+            Path.GetFileNameWithoutExtension(H5pEntity.H5pZipSourcePath),
+        };
+        var destinationDirectoryName = Path.Combine(paths);
+        return destinationDirectoryName;
     }
     
 

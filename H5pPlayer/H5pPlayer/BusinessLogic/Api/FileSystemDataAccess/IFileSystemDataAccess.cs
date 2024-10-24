@@ -3,5 +3,5 @@
 public interface IFileSystemDataAccess
 {
 
-    void ExtractZipFile(string sourceZipFilePath, string destinationFolderPath);
+    void ExtractZipFile(string sourceZipFilePath, string destinationDirectoryPath);
 }

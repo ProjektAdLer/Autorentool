@@ -123,16 +123,7 @@
                     continue;
                 }
                 
-                if (fileEnding.ToLowerInvariant()  == ".h5p")
-                {
-                    var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                    var unzippedH5psPath = Path.Combine(Navigation.BaseUri, "H5pStandalone", "h5p-folder");
-                    Logger.LogTrace("Start H5P-Player with: " + 
-                                    "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                    "unzippedH5psPath: " + unzippedH5psPath );
-
-                    OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5psPath);
-                }
+          
         
                 
                 // 
@@ -141,6 +132,19 @@
                 //pfad zu ContentFIles: C:\Users\Tobias\AppData\Roaming\AdLerAuthoring\ContentFiles 
 
                 await HandleFileAsync(file);
+                
+                if (fileEnding.ToLowerInvariant()  == ".h5p")
+                {
+                    var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                    var baseUri = new Uri(Navigation.BaseUri); 
+                    var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                    
+                    Logger.LogTrace("Start H5P-Player with: " + 
+                                    "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                                    "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                    
+                    OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                }
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");

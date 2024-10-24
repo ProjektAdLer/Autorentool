@@ -224,10 +224,9 @@ public class StartH5pPlayerUcUT
         
         systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
-
         mockFileSystemDataAccess.Received().ExtractZipFile(
             systemUnderTest.H5pEntity.H5pZipSourcePath,
-            systemUnderTest.H5pEntity.UnzippedH5psPath);
+            Arg.Is<string>(path => path.Contains(@"wwwroot\H5pStandalone\h5p-folder")));
     }
     
     
