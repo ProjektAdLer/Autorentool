@@ -356,7 +356,7 @@ jobs:
             for attempt in $(seq 1 $max_attempts); do
                 echo "Attempt $attempt of $max_attempts to start Authoring Tool"
                 # Check if the application is running
-                window_id=$(DISPLAY=:99 xdotool search --name "Autorentool v2.1.7" | head -n 1)
+                window_id=$(DISPLAY=:99 xdotool search --name "^Autorentool" | head -n 1)
                 if [ -n "$window_id" ]; then
                     echo "Authoring Tool started successfully and loaded correctly on attempt $attempt"
                     break
