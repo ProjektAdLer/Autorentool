@@ -14,9 +14,9 @@ public class JavaScriptAdapterUt
     
     
     [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "https://localhost:8001/H5pStandalone/h5p-folder")]
+        "https://localhost:8001/H5pStandalone/h5p-folder/")]
     [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "//localhost:8001/H5pStandalone/h5p-folder")]
+        "//localhost:8001/H5pStandalone/h5p-folder/")]
     public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
         var h5pEntity = CreateH5pEntity(h5pSourcePath, unzippedH5psPath);
