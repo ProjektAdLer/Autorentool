@@ -100,7 +100,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     
     private void ExtractZippedSourceH5pToTemporaryFolder()
     {
-        var destinationDirectoryName = BuildDestinationDirectoryName();
+        var destinationDirectoryName = BuildDestinationDirectoryNameForOneH5p();
         FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, destinationDirectoryName);
     }
     /// <summary>
@@ -108,7 +108,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// C:\Users\%USERPROFILE%\Documents\GitHub\Autorentool\AuthoringTool\wwwroot\H5pStandalone\h5p-folder
     /// We get this from: <see cref="Environment.CurrentDirectory"/>
     /// </summary>
-    private string BuildDestinationDirectoryName()
+    private string BuildDestinationDirectoryNameForOneH5p()
     {
         string[] paths = new string[]
         {
