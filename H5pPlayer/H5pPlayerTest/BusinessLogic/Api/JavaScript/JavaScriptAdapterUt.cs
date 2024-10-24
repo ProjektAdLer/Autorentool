@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
 
-namespace H5pPlayerTest.BusinessLogic.Api.JavaScriptApi;
+namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;
 
 [TestFixture]
 public class JavaScriptAdapterUt
