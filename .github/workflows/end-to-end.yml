@@ -7,8 +7,7 @@ on:
   push:
     branches: [ "main", "end-to-end-pipeline" ]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [ "main", "end-to-end-pipeline" ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
