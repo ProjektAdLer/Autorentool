@@ -14,29 +14,34 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     }
     public async Task DisplayH5p(H5pEntity h5pEntity)
     {
-        
-        
-        // hier muss der pfad für die h5p-json gebaut werden
-        // aus H5pEntity.H5pZipSourcePath und H5pEntityUnzippedH5psPath 
-        var jsonSourcePath = IfJsonSourcePathContainsHttpsDeleteIt(h5pEntity);
-        
-        
-        
-        await JsRuntime.InvokeVoidAsync("testH5P", jsonSourcePath);
+        var pathOfH5pToPlay = GeneratePathOfH5PToPlay(h5pEntity);
+        await JsRuntime.InvokeVoidAsync("testH5P", pathOfH5pToPlay);
     }
 
+    private static string GeneratePathOfH5PToPlay(H5pEntity h5pEntity)
+    {
+        var nameOfH5pToPlay = Path.GetFileNameWithoutExtension(h5pEntity.H5pZipSourcePath);
+        var pathOfH5pToPlay = h5pEntity.UnzippedH5psPath + "/" + nameOfH5pToPlay;
+        
+        pathOfH5pToPlay = IfPathOfH5PToPlayPathContainsHttpsDeleteHttps(pathOfH5pToPlay);
+
+        return pathOfH5pToPlay;
+    }
+    
+    
     /// <summary>
     /// why we must delete https:
     /// https://github.com/ProjektAdLer/Autorentool/issues/570#issuecomment-2275233471
     /// </summary>
-    private static string IfJsonSourcePathContainsHttpsDeleteIt(H5pEntity h5pEntity)
+    private static string IfPathOfH5PToPlayPathContainsHttpsDeleteHttps(string pathOfH5pToPlay)
     {
-        var jsonSourcePath = h5pEntity.H5pZipSourcePath;
-        if (jsonSourcePath.StartsWith("https:"))
+        if (pathOfH5pToPlay.StartsWith("https:"))
         {
-            jsonSourcePath = jsonSourcePath.Substring("https:".Length);
+            pathOfH5pToPlay = pathOfH5pToPlay.Substring("https:".Length);
         }
 
-        return jsonSourcePath;
+        return pathOfH5pToPlay;
     }
+
+
 }

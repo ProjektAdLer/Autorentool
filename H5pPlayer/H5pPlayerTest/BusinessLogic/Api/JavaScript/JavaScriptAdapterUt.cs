@@ -9,11 +9,17 @@ namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;
 [TestFixture]
 public class JavaScriptAdapterUt
 {
-    [TestCase("https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen")]
-    [TestCase("//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen")]
-    public async Task DisplayH5p(string h5pJsonPath)
+    //test fall hone https nicht vergessen !!!!!!!!!!!!!!!!!!!!!!!!
+    
+    
+    
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "https://localhost:8001/H5pStandalone/h5p-folder")]
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "//localhost:8001/H5pStandalone/h5p-folder")]
+    public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
-        var h5pEntity = CreateH5pEntity(h5pJsonPath);
+        var h5pEntity = CreateH5pEntity(h5pSourcePath, unzippedH5psPath);
         var fakeJsInterop = Substitute.For<IJSRuntime>();
         var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
         
@@ -24,29 +30,33 @@ public class JavaScriptAdapterUt
             Arg.Is<object[]>(
                 args => 
                 args.Length == 1 && 
-                (string)args[0] == "//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"));
+                (string)args[0] == "//localhost:8001/H5pStandalone/h5p-folder/Accordion_Test"));
         // following is not possible:
         //await fakeJsInterop.Received().InvokeVoidAsync("testH5P", "//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen");
     }
  
  
-
-    [Test]
-    public async Task DisplayH5p_NotModifyH5pEntityH5pJsonSourcePath()
+    // just because the Entity is injected instead of an TO
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "https://localhost:8001/H5pStandalone/h5p-folder")]
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "//localhost:8001/H5pStandalone/h5p-folder")]
+    public async Task DisplayH5p_NotModifyH5pEntityH5pJsonSourcePath(string h5pSourcePath, string unzippedH5psPath)
     {
-        var h5pJsonPath = "https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen";
-        var h5pEntity = CreateH5pEntity(h5pJsonPath);
+        var h5pEntity = CreateH5pEntity(h5pSourcePath, unzippedH5psPath);
         var systemUnderTest = CreateJavaScriptAdapter();
 
         await systemUnderTest.DisplayH5p(h5pEntity);
 
-        Assert.That(h5pEntity.H5pZipSourcePath, Is.EqualTo(h5pJsonPath));
+        Assert.That(h5pEntity.H5pZipSourcePath, Is.EqualTo(h5pSourcePath));
+        Assert.That(h5pEntity.UnzippedH5psPath, Is.EqualTo(unzippedH5psPath));
     }
 
-    private static H5pEntity CreateH5pEntity(string h5pJsonPath)
+    private static H5pEntity CreateH5pEntity(string h5pSourcePath, string unzippedH5psPath)
     {
         var h5pEntity = new H5pEntity();
-        h5pEntity.H5pZipSourcePath = h5pJsonPath;
+        h5pEntity.H5pZipSourcePath = h5pSourcePath;
+        h5pEntity.UnzippedH5psPath = unzippedH5psPath;
         return h5pEntity;
     }
     
