@@ -176,7 +176,7 @@ coords=($(FIND_ELEMENT "title" "(.mbz)"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.1 click 1 sleep 0.1
 
 echo Click on Hochladen
-coords=($(FIND_ELEMENT "buttontext" "Hochladen"))
+coords=($(FIND_ELEMENT "class" "mud-button-text-success"))
 DISPLAY=:99 xdotool mousemove ${coords[0]} ${coords[1]} sleep 0.1 click 1 sleep 2
 
 echo Click on mud-button-text-primary

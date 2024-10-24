@@ -493,6 +493,14 @@ jobs:
             echo "TEST_URL: ${TEST_URL}"
             COURSES_RESPONSE=$(curl -s "${TEST_URL}")
             echo "Kurse erhalten: $COURSES_RESPONSE"
+            if $COUSES_RESPONSE | jq -r '.courses[0].id'; then
+                COURSEID=$(echo $COURSES_RESPONSE | jq -r '.courses[0].id')
+                echo "Kurs gefunden mit ID: $COURSEID"
+            else
+                echo "Kurs nicht gefunden"
+                echo "Sind die Schritte in 'Simulate interactions' ordnungsgemäß durchgeführt worden?"
+                exit 1
+            fi
             
       - name: Start screen and recording
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.enable_screen_recording == 'true'
