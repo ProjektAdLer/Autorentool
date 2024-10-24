@@ -1,5 +1,5 @@
 
-name: CI
+name: End-to-End
 
 # Controls when the workflow will run
 on:
