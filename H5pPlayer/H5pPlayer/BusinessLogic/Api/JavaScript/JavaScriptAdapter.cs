@@ -33,7 +33,7 @@ public class JavaScriptAdapter : IJavaScriptAdapter
     
     
     /// <summary>
-    /// why we must delete https:
+    /// why we must delete https or http:
     /// https://github.com/ProjektAdLer/Autorentool/issues/570#issuecomment-2275233471
     /// </summary>
     private static string IfPathOfH5PToPlayPathContainsHttpDeleteHttp(string pathOfH5pToPlay)
