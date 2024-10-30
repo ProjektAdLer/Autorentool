@@ -237,7 +237,7 @@
     private Task SelectLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         Mediator.RequestOpenSpaceDialog();
-        if (SelectedViewModelsProvider.LearningElement != null && SelectedViewModelsProvider.LearningElement.Parent != learningSpace)
+        if (SelectedViewModelsProvider.LearningElement != null)
             SelectedViewModelsProvider.SetLearningElement(null, null);
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpace, null);
         return Task.CompletedTask;
