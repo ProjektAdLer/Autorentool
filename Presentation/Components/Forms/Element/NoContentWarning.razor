@@ -3,10 +3,14 @@
 @using MudBlazor.Utilities
 @using Presentation.PresentationLogic.Mediator
 @inherits MudBaseInput<Presentation.Components.Forms.Models.ILearningContentFormModel>
-<div class="flex flex-col justify-center items-center min-h-12 w-72">
-    <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesView">
-        <MudText Class="@TextCssClass.Build()">@Localizer["NoContentWarning.Text"]</MudText>
-    </MudButton>
+<div class="flex flex-col min-h-12 w-full">
+    <MudText Class="flex text-start text-sm px-6 text-formerror font-bold py-2 break-words">@Localizer["NoContentWarning.Text"]</MudText>
+    <div class="flex justify-center items-center">
+        <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesView">
+            <MudIcon Icon="@Icons.Material.Filled.Reply" Class="-scale-x-100"></MudIcon>
+            <MudText Class="@TextCssClass.Build()">@Localizer["NoContentWarning.ButtonText"]</MudText>
+        </MudButton>
+    </div>
 </div>
 
 @code {
@@ -19,6 +23,6 @@
 
     private void OpenContentFilesView() => Mediator.RequestOpenContentDialog();
 
-    private CssBuilder ButtonCssClass => new CssBuilder("w-72 h-24").AddClass("bg-buttonbgblue");
-    private CssBuilder TextCssClass => new CssBuilder("text-center text-lg font-bold").AddClass("text-formerror", Error);
+    private CssBuilder ButtonCssClass => new CssBuilder("w-64").AddClass("btn-standard");
+    private CssBuilder TextCssClass => new CssBuilder("text-sm font-bold").AddClass("text-formerror", Error);
 }

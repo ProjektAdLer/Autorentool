@@ -21,7 +21,7 @@
         <value>New</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s) for this learning space.</value>
+        <value>Learning outcome(s) for this learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Learning outcomes</value>
@@ -39,7 +39,7 @@
         <value>General</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description for your learning space.</value>
+        <value>Description for this learning space</value>
     </data>
     <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
@@ -51,18 +51,21 @@
         <value>Required points to complete the learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
-        <value>Theme of learning space</value>
+        <value>Selection of themes with different theme worlds for the learning space</value>
     </data>
     <data name="EditSpaceForm.Text" xml:space="preserve">
         <value>* Required</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Text" xml:space="preserve">
-        <value />
+        <value>Move the mouse over the floor plans in the thumbnail view to display the placement of the entrance and exit doors as well as the representation of the space in the 3D learning environment. </value>
     </data>
     <data name="EditSpaceForm.Goals.Button" xml:space="preserve">
         <value>Learning outcome formulation</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Description</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle" xml:space="preserve">
+        <value>Selection of floor plans for the learning space. The numer indicates how many slots are available for placing learning and adaptivity elements</value>
     </data>
 </root>

@@ -18,7 +18,13 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="TableSelect.Placeholder" xml:space="preserve">
-        <value>Suche</value>
+    <data name="DraggableLearningSpace.Delete" xml:space="preserve">
+        <value>Delete learning space</value>
+    </data>
+    <data name="DraggableLearningSpace.DeleteObjectConfirmationDialog.SubmitButtonText" xml:space="preserve">
+        <value>Yes</value>
+    </data>
+    <data name="DraggableLearningSpace.DeleteConfirmationDialog.Text" xml:space="preserve">
+        <value>Are you sure you want to delete the learning space &lt;b&gt;{0}&lt;/b&gt;?</value>
     </data>
 </root>

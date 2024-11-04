@@ -29,11 +29,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     private readonly IErrorService _errorService;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IMapper _mapper;
 
     private ILearningWorldViewModel? _learningWorldVm;
 
@@ -64,7 +64,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
-            HideRightClickMenu();
         }
     }
 
@@ -77,9 +76,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
         remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.RightClickedLearningObject"/>
-    public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -184,27 +180,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
-
-        HideRightClickMenu();
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.DragObjectInPathWay"/>
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
     {
         _presentationLogic.DragObjectInPathWay(args.LearningObject, args.OldPositionX, args.OldPositionY);
-        HideRightClickMenu();
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.RightClickOnObjectInPathWay"/>
-    public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWayView)
-    {
-        RightClickedLearningObject = objectInPathWayView;
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.HideRightClickMenu"/>
-    public void HideRightClickMenu()
-    {
-        RightClickedLearningObject = null;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.ClickOnObjectInWorld"/>
@@ -520,6 +501,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
                 _mediator.RequestOpenElementDialog();
                 break;
         }
+
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
     }
 

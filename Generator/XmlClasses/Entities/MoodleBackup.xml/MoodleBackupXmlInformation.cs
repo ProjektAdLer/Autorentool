@@ -16,7 +16,7 @@ public class MoodleBackupXmlInformation : IMoodleBackupXmlInformation
         MnetRemoteUsers = "0";
         IncludeFiles = "1";
         IncludeFileReferencesToExternalContent = "0";
-        OriginalWwwRoot = "https://moodle.cluuub.xyz";
+        OriginalWwwRoot = "";
         OriginalSiteIdentifierHash = "c9629ccd3c092478330b78bdf4dcdb18";
         OriginalCourseId = "1";
         OriginalCourseFormat = "topics";

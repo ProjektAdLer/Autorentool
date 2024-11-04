@@ -50,7 +50,7 @@
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
                                   DebounceInterval="DebounceInterval"
                                   OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
-                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>
         </MudTd>
@@ -67,7 +67,7 @@
                     <div class="flex flex-row justify-between">
 
                         <div class="flex items-center justify-center">
-                            <MudTooltip Placement="Placement.Top" Duration="double.Epsilon" Style="background: transparent;">
+                            <MudTooltip Placement="Placement.Right" Duration="double.Epsilon" Style="background: transparent;">
                                 <ChildContent>
                                     <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.RemoveRedEye"></MudIconButton>
                                 </ChildContent>
@@ -98,7 +98,8 @@
                                                  ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                                  ToggledIcon="@Icons.Material.Filled.Key"
                                                  Icon="@Icons.Material.Outlined.KeyOff"
-                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"/>
+                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"
+                                                 ToggledTitle="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestionIsSelected"]"/>
                         </div>
                     </div>
                 }

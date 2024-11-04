@@ -49,11 +49,11 @@
 
         <div class="px-4">
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                  <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
+                <div class="px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
                                AnchorOrigin="Origin.BottomCenter"
                                OnKeyUp="HandleKeyEvent"
-                               Label=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
                                Text="@FormDataContainer.FormModel.Theme.ToString()"
                                For="@(() => FormModel.Theme)">
                         @foreach (var theme in _themes)

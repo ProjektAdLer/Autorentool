@@ -6,8 +6,6 @@ namespace BusinessLogic.Commands.World;
 
 public class LoadLearningWorld : ILoadLearningWorld
 {
-    private IMemento? _memento;
-
     public LoadLearningWorld(AuthoringToolWorkspace workspace, string filepath, IBusinessLogic businessLogic,
         Action<AuthoringToolWorkspace> mappingAction, ILogger<LoadLearningWorld> logger)
     {
@@ -29,9 +27,7 @@ public class LoadLearningWorld : ILoadLearningWorld
 
     public void Execute()
     {
-        _memento = Workspace.GetMemento();
-
-        LearningWorld = BusinessLogic.LoadLearningWorld(Filepath);
+        LearningWorld ??= BusinessLogic.LoadLearningWorld(Filepath);
 
         Workspace.LearningWorlds.Add(LearningWorld);
 
@@ -41,25 +37,5 @@ public class LoadLearningWorld : ILoadLearningWorld
             Filepath);
 
         MappingAction.Invoke(Workspace);
-    }
-
-    public void Undo()
-    {
-        if (_memento == null)
-        {
-            throw new InvalidOperationException("_memento is null");
-        }
-
-        Workspace.RestoreMemento(_memento);
-
-        Logger.LogTrace("Undone loading of LearningWorld");
-
-        MappingAction.Invoke(Workspace);
-    }
-
-    public void Redo()
-    {
-        Logger.LogTrace("Redoing LoadLearningWorld");
-        Execute();
     }
 }

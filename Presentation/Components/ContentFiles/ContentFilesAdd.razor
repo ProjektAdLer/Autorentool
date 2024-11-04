@@ -117,7 +117,7 @@
 
                 if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
                 {
-                    await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
+                    await InvokeAsync(async () => await DialogService.ShowMessageBox(@Localizer["Invocation.MessageBox.Title"], Localizer["Invocation.MessageBox.Message", file.Name]));
                     continue;
                 }
 

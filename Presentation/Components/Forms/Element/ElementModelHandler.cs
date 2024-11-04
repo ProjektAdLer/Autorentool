@@ -34,7 +34,7 @@ public class ElementModelHandler : IElementModelHandler
             default:
             {
                 var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-                return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
+                return elementModels.Except(NpcModels).Except(AdaptivityModels).OrderBy(m => m, comparer);
             }
         }
     }
@@ -93,7 +93,9 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
+            //Adaptivity
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
+            //Story NPCs
             ElementModel.a_npc_sheriffjustice =>
                 "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
@@ -172,6 +174,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
+                //adaptivity
                 yield return ElementModel.a_npc_alerobot;
                 break;
             case ContentTypeEnum.Story:

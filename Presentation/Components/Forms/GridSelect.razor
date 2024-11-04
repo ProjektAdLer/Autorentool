@@ -20,8 +20,8 @@
         </div>
     }
 
-    <div class="h-2/3 w-full">
-        <div class="py-2 grid grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center overflow-scroll h-32 p-0 text-xs font-bold text-adlertextgrey break-words text-center leading-none truncate">
+    <div class="h-2/3 w-full overflow-auto">
+        <div class="py-2 grid grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center h-32 p-0 text-xs font-bold break-all leading-none text-adlertextgrey">
             @for (var i = 0; i < FilteredElements.Count(); i++)
             {
                 var element = FilteredElements.ElementAt(i);

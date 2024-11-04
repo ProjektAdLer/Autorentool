@@ -18,7 +18,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="RightClickMenu.OnParametersSet.ArgumentException.Message" xml:space="preserve">
-        <value>LearningObject is not of supported type</value>
+    <data name="LearningContentDialog.LearningMaterial.Dialog.Subtitle" xml:space="preserve">
+        <value>Untenstehend wird das gesamte externe Lernmaterial aufgelistet, das bereits in das Autorentool importiert wurde. Wählen Sie aus dieser Auflistung das gewünschte Lernmaterial zum Lernelement aus.</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Search" xml:space="preserve">
+        <value>Suche...</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Preview" xml:space="preserve">
+        <value>Lernmaterial anzeigen</value>
+    </data>
+    <data name="LearningContentDialog.LearningMaterial.Type" xml:space="preserve">
+        <value>Typ</value>
     </data>
 </root>

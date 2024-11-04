@@ -13,6 +13,7 @@ using NUnit.Framework;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Buttons;
+using Presentation.Components.Forms.Content;
 using Presentation.Components.Forms.Element;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.API;
@@ -64,10 +65,22 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         };
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
+        
+        var learningContent = LearningContentFormModels[0];
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(learningContent));
+
+        _dialogServiceMock = Substitute.For<IDialogService>();
+        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference);
+
+        Context.Services.AddSingleton(_dialogServiceMock);
+
     }
 
 
     private const string Expected = "test";
+    private IDialogService _dialogServiceMock = Substitute.For<IDialogService>();
 
 
     [Test]
@@ -276,7 +289,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-        Assert.That(systemUnderTest.HasComponent<TableSelect<ILearningContentViewModel>>(), Is.False);
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }
 
@@ -300,9 +312,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var systemUnderTest = GetFormWithPopoverProvider();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
 
-
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
-        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
         Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
@@ -380,16 +389,18 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        var tableSelect = systemUnderTest.FindComponent<TableSelect<ILearningContentFormModel>>();
+        
+        var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
+        editContentButton[1].Find("button").Click();
+        
         mudTextFields[0].Find("input").Change(Expected);
+        mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
-        mudTextFields[3].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
         mudNumericFields[1].Find("input").Change(123);
         mudSelect.Find("div.mud-input-control").Click();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
-        tableSelect.WaitForElements("tbody tr", TimeSpan.FromSeconds(2))[0].Click();
     }
 
 

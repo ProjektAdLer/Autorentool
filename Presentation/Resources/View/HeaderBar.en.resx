@@ -37,10 +37,10 @@
         <value>Tester feedback</value>
     </data>
     <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
-        <value>Technical feedback - Opens new web page</value>
+        <value>Technical feedback - Opens a browser window</value>
     </data>
     <data name="Feedback.Button.UX.Hover" xml:space="preserve">
-        <value>User experience feedback - Opens new web page</value>
+        <value>User experience feedback - Opens a browser window</value>
     </data>
     <data name="Functionality.Button.Undo.Hover" xml:space="preserve">
         <value>Undo</value>
@@ -52,7 +52,7 @@
         <value>Close</value>
     </data>
     <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
-        <value>Final feedback - Opens new web page</value>
+        <value>Final feedback - Opens a browser window</value>
     </data>
     <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
         <value>To the final feedback</value>
@@ -67,7 +67,7 @@
         <value>Report technical error</value>
     </data>
     <data name="Export.SnackBar.Message" xml:space="preserve">
-        <value>World upload completed.</value>
+        <value>Publishing of the learning world completed.</value>
     </data>
     <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
         <value>Exporting learning world was canceled</value>
@@ -91,13 +91,13 @@
         <value>You are not logged in</value>
     </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
-        <value>Do you want to upload the learning world &lt;b&gt;{0}&lt;/b&gt; to the backend?</value>
+        <value>Do you want to upload the learning world &lt;b&gt;{0}&lt;/b&gt;?</value>
     </data>
     <data name="UploadLearningWorld.SubmitButtonText" xml:space="preserve">
-        <value>Upload</value>
+        <value>Publish</value>
     </data>
     <data name="DialogService.UploadLearningWorld.Dialog" xml:space="preserve">
-        <value>Upload learning world</value>
+        <value>Publish learning world</value>
     </data>
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
@@ -121,7 +121,7 @@
         <value>Your learning world {0} was successfully uploaded. Click &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;here&lt;/a&gt;&lt;/strong&gt;, to open the world in moodle or &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;here&lt;/a&gt;&lt;/strong&gt;, to go to the 3D website.</value>
     </data>
     <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
-        <value>Upload successful</value>
+        <value>Publish successful</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
         <value>Archive learning world (.zip)</value>
@@ -139,12 +139,24 @@
         <value>User manual</value>
     </data>
     <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
-        <value>Tutorial</value>
+        <value>Didactic guide</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Learning world already exists</value>
     </data>
     <data name="LearningOutcomes.Overview" xml:space="preserve">
         <value>Learning outcomes of this learning world</value>
+    </data>
+    <data name="Functionality.Button.Close.Hover" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
+        <value>User manual (only available in German) - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
+        <value>Didactic guide (only available in German) - Opens a browser window</value>
+    </data>
+    <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
+        <value>Uploading the learning world...</value>
     </data>
 </root>

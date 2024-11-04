@@ -41,16 +41,16 @@ public class T40X3213LViewModel : IFloorPlanViewModel
         new() { X = 5, Y = 5 },
         new() { X = 11, Y = 5 },
         new() { X = 17, Y = 5 },
-        new() { X = 5, Y = 16 },
-        new() { X = 11, Y = 16 },
         new() { X = 30, Y = 12 },
-        new() { X = 17, Y = 19 },
         new() { X = 30, Y = 26 },
         new() { X = 17, Y = 33 },
         new() { X = 11, Y = 33 },
         new() { X = 5, Y = 33 },
         new() { X = 5, Y = 22 },
-        new() { X = 11, Y = 22 }
+        new() { X = 11, Y = 22 },
+        new() { X = 17, Y = 19 },
+        new() { X = 11, Y = 16 },
+        new() { X = 5, Y = 16 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>

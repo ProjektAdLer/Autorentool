@@ -33,7 +33,7 @@
         <value>Abbrechen</value>
     </data>
     <data name="ReplaceCopyLmsWorldDialog.DialogContent" xml:space="preserve">
-        <value>Auf dem LMS Moodle existiert bereits eine Lernwelt mit dem Namen  &lt;b&gt;{0}&lt;/b&gt;. Möchten Sie diese Lernwelt ersetzen oder eine Kopie erstellen?</value>
+        <value>Auf dem LMS Moodle existiert bereits eine Lernwelt mit dem Namen &lt;b&gt;{0}&lt;/b&gt;. Möchten Sie diese Lernwelt ersetzen oder eine Kopie erstellen?</value>
     </data>
     <data name="ReplaceCopyLmsWorldDialog.ConfirmationDialogText" xml:space="preserve">
         <value>Sind Sie sicher, dass Sie die bestehende Lernwelt ersetzen möchten? Alle Daten der bisherigen Lernwelt, einschließlich des Nutzerfortschritts, werden damit unwiderruflich gelöscht.</value>

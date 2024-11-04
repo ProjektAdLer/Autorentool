@@ -2,7 +2,7 @@
 @using BusinessLogic.Validation
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-<MudCard Outlined="true" Class="bg-adlergrey-200 shadow-xl p-2 m-1 w-72 h-full">
+<MudCard Outlined="true" Class="bg-adlergrey-200 shadow-xl p-2 m-1 w-96 max-h-[calc(100dvh-15dvh)] overflow-y-auto">
     <MudText Class="text-md font-bold text-adlerdarkblue">
         @(Localizer["AdaptivityQuestionPreview.Header.Question." + AdaptivityQuestion.Difficulty])
     </MudText>

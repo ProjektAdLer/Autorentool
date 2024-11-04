@@ -18,7 +18,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="RightClickMenu.OnParametersSet.ArgumentException.Message" xml:space="preserve">
-        <value>Der Typ des Lernobjekts wird nicht unterstützt</value>
+    <data name="DraggablePathWayCondition.Delete" xml:space="preserve">
+        <value>Delete condition</value>
+    </data>
+    <data name="DraggablePathWayCondition.DeleteConfirmationDialog.Text" xml:space="preserve">
+        <value>Are you sure you want to delete the condition &lt;b&gt;{0}&lt;/b&gt;?</value>
+    </data>
+    <data name="DraggablePathWayCondition.And" xml:space="preserve">
+        <value>AND</value>
+    </data>
+    <data name="DraggablePathWayCondition.Or" xml:space="preserve">
+        <value>OR</value>
+    </data>
+    <data name="DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText" xml:space="preserve">
+        <value>Yes</value>
     </data>
 </root>

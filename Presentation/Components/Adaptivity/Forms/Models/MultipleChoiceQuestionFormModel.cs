@@ -15,7 +15,7 @@ public class MultipleChoiceQuestionFormModel
     public Guid Id { get; set; }
     public string Text { get; set; }
     public bool IsSingleResponse { get; set; }
-    public ICollection<ChoiceViewModel> Choices { get; set; }
+    public IList<ChoiceViewModel> Choices { get; set; }
     public ICollection<ChoiceViewModel> CorrectChoices { get; set; }
     public int ExpectedCompletionTime { get; set; }
 }

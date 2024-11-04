@@ -16,13 +16,13 @@
         </value>
     </resheader>
     <data name="UnplacedElementsDropZone.Title" xml:space="preserve">
-        <value>All unplaced elements</value>
+        <value>Unplaced elements</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Theme" xml:space="preserve">
-        <value>Topic of the learning space</value>
+        <value>Theme of the learning space</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Type" xml:space="preserve">
-        <value>Type of the element</value>
+        <value>Content of the element</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Element" xml:space="preserve">
         <value>Type of the element</value>

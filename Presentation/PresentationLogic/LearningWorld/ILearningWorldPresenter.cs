@@ -22,12 +22,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     ILearningWorldViewModel? LearningWorldVm { get; }
 
     /// <summary>
-    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
-    /// Otherwise, it is null.
-    /// </summary>
-    IObjectInPathWayViewModel? RightClickedLearningObject { get; }
-
-    /// <summary>
     /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
     /// </summary>
     void DeleteSelectedLearningObject();
@@ -82,12 +76,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
 
     /// <summary>
-    /// Handles a right-click event on an object in the pathway, setting the right-clicked learning object.
-    /// </summary>
-    /// <param name="objectInPathWayView">The object in the pathway that was right-clicked.</param>
-    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWayView);
-
-    /// <summary>
     /// Handles a click event on an object in the world, setting the selected learning object.
     /// </summary>
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
@@ -102,11 +90,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// </summary>
     /// <param name="pathWayCondition">The pathway condition to switch, represented as a PathWayConditionViewModel.</param>
     void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition);
-
-    /// <summary>
-    /// Hides the right-click menu by resetting the right-clicked learning object.
-    /// </summary>
-    void HideRightClickMenu();
 
     /// <summary>
     /// Deletes the specified learning space from the current learning world.
@@ -182,5 +165,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void EditSelectedLearningSpace();
 
     void CreateUnplacedLearningElementFromFormModel(LearningElementFormModel model);
-    void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent, ILearningElementViewModel elementToEdit, LearningElementFormModel model);
+
+    void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent, ILearningElementViewModel elementToEdit,
+        LearningElementFormModel model);
 }

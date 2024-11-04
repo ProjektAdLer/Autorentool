@@ -23,4 +23,10 @@
     <data name="AddLinkForm.Info.Text" xml:space="preserve">
         <value>Videos cannot be imported as a file. For this reason, you can alternatively add a link to your video.</value>
     </data>
+    <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
+        <value>Error while adding link</value>
+    </data>
+    <data name="AddLinkForm.Info.Infotext" xml:space="preserve">
+        <value>If you do not have an account for the video server from which your video is retrieved, please make sure that your video is set to ‘public’. Otherwise, these videos cannot be displayed in the 3D learning environment.</value>
+    </data>
 </root>

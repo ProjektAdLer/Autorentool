@@ -25,7 +25,7 @@
         <value>Veröffentlichen der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Lernwelt als Moodle Lernwelt-Datei (.mbz) veröffentlichen</value>
+        <value>Lernwelt als Moodle-Lernwelt-Datei (.mbz) veröffentlichen</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
@@ -34,10 +34,10 @@
         <value>Tester-Feedback</value>
     </data>
     <data name="Feedback.Button.UX.Hover" xml:space="preserve">
-        <value>Feedback zur Benutzeroberfläche - Öffnet eine neue Seite</value>
+        <value>Feedback zur Benutzeroberfläche - Öffnet ein Browserfenster</value>
     </data>
     <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
-        <value>Technisches Feedback - Öffnet eine neue Seite</value>
+        <value>Technisches Feedback - Öffnet ein Browserfenster</value>
     </data>
     <data name="LearningWorld.Save.Hover" xml:space="preserve">
         <value>Lernwelt speichern</value>
@@ -58,7 +58,7 @@
         <value>Zum finalen Feedback</value>
     </data>
     <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
-        <value>Allgemeines Feedback zu AdLer - Öffnet eine neue Seite</value>
+        <value>Allgemeines Feedback zu AdLer - Öffnet ein Browserfenster</value>
     </data>
     <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
         <value>Feedback geben</value>
@@ -67,16 +67,16 @@
         <value>Technischen Fehler melden</value>
     </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
-        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; in das Backend hochladen?</value>
+        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; veröffentlichen?</value>
     </data>
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
     </data>
     <data name="UploadLearningWorld.SubmitButtonText" xml:space="preserve">
-        <value>Hochladen</value>
+        <value>Veröffentlichen</value>
     </data>
     <data name="Export.SnackBar.Message" xml:space="preserve">
-        <value>Hochladen der Welt abgeschlossen.</value>
+        <value>Veröffentlichen der Lernwelt abgeschlossen.</value>
     </data>
     <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
         <value>Exportieren von Lernwelt abgebrochen</value>
@@ -97,7 +97,7 @@
         <value>Du bist nicht angemeldet</value>
     </data>
     <data name="DialogService.UploadLearningWorld.Dialog" xml:space="preserve">
-        <value>Lade Lernwelt hoch</value>
+        <value>Lernwelt veröffentlichen</value>
     </data>
     <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
         <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an, um Lernwelten in das Backend hochzuladen.</value>
@@ -118,7 +118,7 @@
         <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element &lt;b&gt;{2}&lt;/b&gt; in Lernraum &lt;b&gt;{1}&lt;/b&gt;. Da dieser Lernraum aber erst nach dem Raum, in dem Element &lt;b&gt;{0}&lt;/b&gt; platziert ist, freigeschaltet wird, ist diese Referenz nicht zulässig.</value>
     </data>
     <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
-        <value>Hochladen erfolgreich</value>
+        <value>Veröffentlichen erfolgreich</value>
     </data>
     <data name="UploadLearningWorld.Success.DialogText" xml:space="preserve">
         <value>Ihre Lernwelt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
@@ -139,12 +139,24 @@
         <value>Benutzerhandbuch</value>
     </data>
     <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
-        <value>Tutorial</value>
+        <value>Didaktische Handreichung</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>
     </data>
     <data name="LearningOutcomes.Overview" xml:space="preserve">
         <value>Lernziele dieser Lernwelt</value>
+    </data>
+    <data name="Functionality.Button.Close.Hover" xml:space="preserve">
+        <value>Schließen</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
+        <value>Didaktische Handreichung - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
+        <value>Benutzerhandbuch - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
+        <value>Hochladen der Lernwelt...</value>
     </data>
 </root>

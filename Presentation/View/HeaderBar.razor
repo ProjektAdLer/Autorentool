@@ -27,7 +27,16 @@
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"]   @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        
+        @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
+        {
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
+
+        }
+        else
+        {
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Disabled="true"></MudIconButton>
+        }
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
@@ -70,7 +79,7 @@
             </button>
         }
 
-        <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
+        @*<MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
                 <button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</button>
@@ -81,14 +90,14 @@
                     <p class="uppercase">@Localizer["MudPopover.Feedback.Final.Text"]</p>
                 </a>
             </div>
-        </MudPopover>
+        </MudPopover>*@
 
     </div>
     @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
         <div class="flex justify-center items-center gap-2 cursor-default">
             <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
-            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] v@(Constants.ApplicationVersion)</p>
+            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
         </div>
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
@@ -122,22 +131,29 @@
         <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
         <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
-            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.UserManual"]</MudMenuItem>
-            <MudMenuItem Disabled="true">@Localizer["HeaderBar.Help.Tutorial"]</MudMenuItem>
-            <MudDivider></MudDivider>
-
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX" title="@Localizer["MudPopover.Feedback.Final.Hover"]">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            
+            <MudListItem title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenManual">@Localizer["HeaderBar.Help.UserManual"]</MudLink>
             </MudListItem>
 
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug" title="@Localizer["Feedback.Button.Technical.Hover"]">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            <MudListItem title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</MudLink>
             </MudListItem>
 
             <MudDivider></MudDivider>
 
-            <MudListItem>
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer" title="@Localizer["HeaderBar.Help.About.Hover"]">@Localizer["HeaderBar.Help.About"]</MudLink>
+            <MudListItem title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            </MudListItem>
+
+            <MudListItem title="@Localizer["Feedback.Button.Technical.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            </MudListItem>
+
+            <MudDivider></MudDivider>
+
+            <MudListItem title="@Localizer["HeaderBar.Help.About.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
 
         </MudMenu>
@@ -282,7 +298,7 @@
             { nameof(UploadProgressDialog.CancellationTokenSource), cancellationTokenSource }
         };
 
-        var uploadProgressDialogReference = await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+        var uploadProgressDialogReference = await DialogService.ShowAsync<UploadProgressDialog>(Localizer["DialogService.UploadLearningWorld.Dialog.Title"].ToString(), parameters, options);
 
         try
         {
@@ -320,7 +336,7 @@
         {
             { "LmsWorldName", worldName }
         };
-        var replaceCopyLmsWorldDialog = await DialogService.ShowAsync<ReplaceCopyLmsWorldDialog>(@Localizer["ConfirmReplaceOrCreateCopyDialog.Title"], parameters, options);
+        var replaceCopyLmsWorldDialog = await DialogService.ShowAsync<ReplaceCopyLmsWorldDialog>(@Localizer["ConfirmReplaceOrCreateCopyDialog.Title"].ToString(), parameters, options);
         var result = await replaceCopyLmsWorldDialog.Result;
 
         if (result.Canceled)
@@ -619,6 +635,10 @@
 
     private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
 
+    private void OpenManual() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringautorentool.html");
+    
+    private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
+    
     private string icon = help;
 
     const string help =
