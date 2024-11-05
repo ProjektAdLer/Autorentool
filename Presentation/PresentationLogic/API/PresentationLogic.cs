@@ -111,8 +111,6 @@ public class PresentationLogic : IPresentationLogic
     }
 
     private static string WorldFileEnding => FileEndings.WorldFileEnding;
-    private static string SpaceFileEnding => FileEndings.SpaceFileEnding;
-    private static string ElementFileEnding => FileEndings.ElementFileEnding;
 
     internal ILogger<PresentationLogic> Logger { get; }
     internal IMapper Mapper { get; }
@@ -342,30 +340,6 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
-    public async Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
-    {
-        ElectronCheck();
-        var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
-        var command = SpaceCommandFactory.GetSaveCommand(BusinessLogic, spaceEntity, filepath);
-        BusinessLogic.ExecuteCommand(command);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
-    public async Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm)
-    {
-        ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var command = SpaceCommandFactory.GetLoadCommand(worldEntity, filepath, BusinessLogic,
-            world => CMapper.Map(world, learningWorldVm));
-        BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
-            command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreatePathWayCondition"/>
@@ -786,18 +760,6 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DragLearningElement"/>
-    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,
-        double oldPositionY)
-    {
-        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-
-        var command = ElementCommandFactory.GetDragCommand(elementEntity, oldPositionX, oldPositionY,
-            elementEntity.PositionX, elementEntity.PositionY,
-            space => CMapper.Map(space, learningElementVm));
-        BusinessLogic.ExecuteCommand(command);
-    }
-
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInSpace"/>
     public void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm)
@@ -838,32 +800,6 @@ public class PresentationLogic : IPresentationLogic
 
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
-
-    /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
-    public async Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
-    {
-        ElectronCheck();
-        var filepath =
-            await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
-        var command = ElementCommandFactory.GetSaveCommand(BusinessLogic, elementEntity, filepath);
-        BusinessLogic.ExecuteCommand(command);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex)
-    {
-        ElectronCheck();
-        var filepath =
-            await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        var command = ElementCommandFactory.GetLoadCommand(parentSpaceEntity, slotIndex, filepath, BusinessLogic,
-            parent => CMapper.Map(parent, parentSpaceVm));
-        BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningElement(parentSpaceVm.ContainedLearningElements.Last(), command);
-    }
-
 
     /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
     public async Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
@@ -943,35 +879,6 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var path = BusinessLogic.GetContentFilesFolderPath();
         ShellWrapper.OpenPathAsync(path);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldViewModel"/>
-    public void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream)
-    {
-        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
-        var command = WorldCommandFactory.GetLoadCommand(workspaceEntity, stream, BusinessLogic,
-            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
-        BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.Last(), command);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceViewModel"/>
-    public void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream)
-    {
-        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var command = SpaceCommandFactory.GetLoadCommand(worldEntity, stream, BusinessLogic,
-            world => CMapper.Map(world, learningWorldVm));
-        BusinessLogic.ExecuteCommand(command);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadLearningElementViewModel"/>
-    public void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream)
-    {
-        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        var command = ElementCommandFactory.GetLoadCommand(parentSpaceEntity, slotIndex, stream, BusinessLogic,
-            parent => CMapper.Map(parent, parentSpaceVm));
-        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModelAsync"/>

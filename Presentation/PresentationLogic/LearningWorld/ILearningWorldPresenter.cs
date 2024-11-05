@@ -42,12 +42,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
         int requiredPoints, Theme theme, TopicViewModel? topic = null);
 
     /// <summary>
-    /// Asynchronously loads the learning space associated with the currently selected learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task LoadLearningSpaceAsync();
-
-    /// <summary>
     /// Edits an existing learning world.
     /// </summary>
     /// <param name="name">The name of the learning world.</param>
@@ -65,12 +59,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
     void SaveLearningWorld();
-
-    /// <summary>
-    /// Asynchronously saves the selected learning space associated with the current learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task SaveSelectedLearningSpaceAsync();
 
     /// <summary>
     /// Deletes the specified pathway condition from the current learning world.
