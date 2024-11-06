@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <Folder Include="BusinessLogic\Api\" />
+      <Folder Include="BusinessLogic\BusinessRules\" />
     </ItemGroup>
 
 </Project>
