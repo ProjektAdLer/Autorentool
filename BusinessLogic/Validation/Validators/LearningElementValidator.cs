@@ -29,7 +29,8 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
             {
                 v.Add(storyContentValidator);
             })
-            .NotEmpty();
+            .NotEmpty()
+            .WithMessage(localizer["LearningElementValidator.NoContent.Error"]);
     }
 
     private bool IsUniqueName(Guid id, string name) => UniqueNameHelper.IsUnique(

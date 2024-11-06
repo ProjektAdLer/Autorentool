@@ -24,4 +24,7 @@
     <data name="LearningElementValidator.Name.Valid" xml:space="preserve">
         <value>Darf nur Buchstaben, Ziffern, Leerzeichen, Bindestriche und Unterstriche enthalten.</value>
     </data>
+    <data name="LearningElementValidator.NoContent.Error" xml:space="preserve">
+        <value>Die Angabe eines Lernmaterials ist erforderlich.</value>
+    </data>
 </root>
