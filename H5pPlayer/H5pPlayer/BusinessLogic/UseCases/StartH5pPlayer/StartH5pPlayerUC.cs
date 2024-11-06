@@ -103,26 +103,14 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     
     private void ExtractZippedSourceH5pToTemporaryFolder()
     {
-        var destinationDirectoryName = BuildDestinationDirectoryNameForOneH5p();
-        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, destinationDirectoryName);
+        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, BuildTemporaryDirectoryFullNameForOneH5p());
     }
-    /// <summary>
-    /// to reach the wwwroot-directory we need a path like that:
-    /// C:\Users\%USERPROFILE%\Documents\GitHub\Autorentool\AuthoringTool\wwwroot\H5pStandalone\h5p-folder
-    /// We get this from: <see cref="Environment.CurrentDirectory"/>
-    /// </summary>
-    private string BuildDestinationDirectoryNameForOneH5p()
+
+    
+    private string BuildTemporaryDirectoryFullNameForOneH5p()
     {
-        string[] paths = new string[]
-        {
-            Environment.CurrentDirectory,
-            "wwwroot",
-            "H5pStandalone",
-            "h5p-folder",
-            Path.GetFileNameWithoutExtension(H5pEntity.H5pZipSourcePath),
-        };
-        var destinationDirectoryName = Path.Combine(paths);
-        return destinationDirectoryName;
+        return TemporaryArchiveManager.BuildTemporaryDirectoryFullNameForOneH5p(
+            Path.GetFileNameWithoutExtension(H5pEntity.H5pZipSourcePath));
     }
     
 
