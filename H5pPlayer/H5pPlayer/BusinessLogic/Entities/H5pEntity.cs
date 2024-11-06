@@ -1,7 +1,6 @@
-﻿using H5pPlayer.General;
-using H5pPlayer.General.Path;
+﻿using H5pPlayer.General.Path;
 
-namespace H5pPlayer.BusinessLogic.Domain;
+namespace H5pPlayer.BusinessLogic.Entities;
 
 public class H5pEntity
 {

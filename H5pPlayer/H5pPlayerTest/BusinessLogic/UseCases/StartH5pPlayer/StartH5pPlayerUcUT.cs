@@ -1,5 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
-using H5pPlayer.BusinessLogic.Domain;
+using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using NSubstitute;

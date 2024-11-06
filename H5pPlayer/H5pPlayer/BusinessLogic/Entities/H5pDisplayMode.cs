@@ -1,4 +1,4 @@
-﻿namespace H5pPlayer.BusinessLogic.Domain;
+﻿namespace H5pPlayer.BusinessLogic.Entities;
 
 public enum H5pDisplayMode
 {

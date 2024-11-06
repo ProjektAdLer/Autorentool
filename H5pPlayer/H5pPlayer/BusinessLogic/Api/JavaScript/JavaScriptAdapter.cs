@@ -1,4 +1,4 @@
-﻿using H5pPlayer.BusinessLogic.Domain;
+﻿using H5pPlayer.BusinessLogic.Entities;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.Api.JavaScript;

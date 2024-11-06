@@ -1,5 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
-using H5pPlayer.BusinessLogic.Domain;
+using H5pPlayer.BusinessLogic.Entities;
 using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
