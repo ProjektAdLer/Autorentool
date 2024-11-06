@@ -10,6 +10,20 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.StartH5pPlayer;
 public class StartH5pPlayerUcUT
 {
   
+    [Test]
+    public void CleanH5pFolderInWwwroot()
+    {
+        var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
+        var systemUnderTest = CreateStandardSystemUnderTest(null, null, mockFileSystemDataAccess);
+        var directoryForCleaning = @"wwwroot\H5pStandalone\h5p-folder";
+        var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
+
+        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+
+        mockFileSystemDataAccess.Received().DeleteAllFilesInDirectory(
+            Arg.Is<string>(path => path.Contains(directoryForCleaning)));
+    }
+    
     const string H5pFileEnding = ".h5p";
        
     [TestCase(@"C:\Temp"+ H5pFileEnding)]                 // Windows absolute path

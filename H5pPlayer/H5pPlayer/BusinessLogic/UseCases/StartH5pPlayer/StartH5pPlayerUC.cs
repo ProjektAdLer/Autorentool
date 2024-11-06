@@ -1,4 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.BusinessLogic.BusinessRules;
 using H5pPlayer.BusinessLogic.Domain;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using Shared.Configuration;
@@ -21,8 +22,9 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         DisplayH5pUC = displayH5PUc;
         StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
+        TemporaryArchiveManager = new TemporaryArchiveManager(dataAccess);
     }
-
+    private TemporaryArchiveManager TemporaryArchiveManager { get; set; }
 
     /// <summary>
     /// Was für pfade kommen an:
@@ -51,6 +53,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// </summary>
     public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
+        TemporaryArchiveManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
         DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
