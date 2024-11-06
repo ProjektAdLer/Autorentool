@@ -163,9 +163,9 @@ public class Startup
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddTransient(typeof(IValidationWrapper<>), typeof(ValidationWrapper<>));
-        services.AddSingleton<IValidator<MultipleChoiceSingleResponseQuestion>,
+        services.AddTransient<IValidator<MultipleChoiceSingleResponseQuestion>,
             MultipleChoiceSingleResponseQuestionValidator>();
-        services.AddSingleton<IValidator<MultipleChoiceMultipleResponseQuestion>,
+        services.AddTransient<IValidator<MultipleChoiceMultipleResponseQuestion>,
             MultipleChoiceMultipleResponseQuestionValidator>();
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
