@@ -30,7 +30,7 @@
         <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
-        <value>Inkompatible Dateiendung</value>
+        <value>Nicht unterstützte Dateiendung</value>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
         <value>Datei leer</value>
