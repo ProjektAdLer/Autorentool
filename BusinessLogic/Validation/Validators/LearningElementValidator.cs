@@ -4,6 +4,7 @@ using BusinessLogic.Entities.LearningContent.Story;
 using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Localization;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace BusinessLogic.Validation.Validators;
@@ -13,15 +14,15 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
 {
     private readonly ILearningElementNamesProvider _learningElementNamesProvider;
 
-    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<ILearningContent> learningContentValidator, IValidator<StoryContent> storyContentValidator)
+    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<ILearningContent> learningContentValidator, IValidator<StoryContent> storyContentValidator, IStringLocalizer<LearningElementValidator> localizer)
     {
         _learningElementNamesProvider = learningElementNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsValidElementName()
+            .IsValidElementName(localizer["LearningElementValidator.Name.Valid"])
             .Must((element, name) => IsUniqueName(element.Id, name))
-            .WithMessage("Already in use.");
+            .WithMessage(localizer["LearningElementValidator.Name.Duplicate"]);
         RuleFor(x => x.LearningContent)
             //.SetValidator(learningContentValidator)
             .SetInheritanceValidator(v =>
