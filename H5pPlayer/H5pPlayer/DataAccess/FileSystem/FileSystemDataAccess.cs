@@ -19,9 +19,13 @@ public class FileSystemDataAccess : IFileSystemDataAccess
         var zipArchive = ZipExtensions.GetZipArchive(FileSystem, sourceArchiveFileName);
         zipArchive.ExtractToDirectory(FileSystem, destinationDirectoryName);
     }
-    
-    
-    
+
+    public void DeleteAllFilesInDirectory(string directoryForCleaning)
+    {
+        throw new NotImplementedException();
+    }
+
+
     private IFileSystem FileSystem { get; }
 
 }
