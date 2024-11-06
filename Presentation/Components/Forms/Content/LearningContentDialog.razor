@@ -33,11 +33,11 @@
     
         <HeaderContent>
             <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
-            <MudTh Class="pl-0 bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
-            <MudTh Class="pl-0 bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
+            <MudTh Class="bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd Class="p-0 px-2">
+            <MudTd Class="py-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                Class="show-content-preview"
                                Title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
@@ -51,7 +51,7 @@
                     <p class="pt-2 cursor-pointer max-w-full">@context.Name</p>
                 </MudTooltip>
             </MudTd>
-            <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
+            <MudTd Class="p-0 cursor-default" DataLabel="Type">
                 @if (context is FileContentFormModel fileContentContext)
                 {
                     @fileContentContext.Type
