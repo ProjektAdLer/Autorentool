@@ -173,7 +173,7 @@
             }
             catch (IOException e)
             {
-                ErrorService.SetError("Error while loading content", e.Message);
+                ErrorService.SetError(Localizer["DialogService.MessageBox.Import.ErrorMessage"], e.Message);
                 errorFiles.Add(entry.FullName);
             }
             catch (HashExistsException)
@@ -194,9 +194,11 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = true,
         };
-        var dialog = await DialogService.ShowAsync<ImportZipDialog>("Import Zip File", parameters, options);
+        var dialog = await DialogService.ShowAsync<ImportZipDialog>(Localizer["DialogService.MessageBox.Import.Title"], parameters, options);
         await dialog.Result;
     }
 
@@ -241,9 +243,9 @@
         {
             ErrorService.SetError("Error while loading content", e.Message);
         }
-        catch (HashExistsException hEEx)
+        catch (HashExistsException)
         {
-            await InvokeAsync(() => { DialogService.ShowMessageBox("Duplicate file", $"File with same content as '{file.Name}' already exists in content folder in file '{hEEx.DuplicateFileName}'"); });
+            await InvokeAsync(() => { DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Duplicate.Title"], Localizer["DialogService.MessageBox.Duplicate.Text", file.Name]);});
         }
 
         Logger.LogTrace("LoadLearningContentViewModel returned");
