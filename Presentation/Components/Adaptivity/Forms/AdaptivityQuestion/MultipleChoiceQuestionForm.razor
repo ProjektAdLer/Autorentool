@@ -71,8 +71,18 @@
                     </div>
                  }
             </div>
-
-            <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
+            
+            <MudText Class="cursor-default font-bold text-sm pl-2.5">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]
+                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="cursor-default text-xs">@Localizer["MultipleChoiceQuestionForm.Info.Infotext"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </MudText>
+            
             <MudCollectionValidation T="ICollection<ChoiceViewModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
 
             <div class="flex justify-center items-center w-full px-2 overflow-y-auto">
