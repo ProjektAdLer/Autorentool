@@ -135,4 +135,7 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.Error.MoodleUnreachable" xml:space="preserve">
         <value>Moodle ist nicht erreichbar.</value>
     </data>
+    <data name="DialogContent.AdLerServer.CourseDeleteSuccessful.Snackbar" xml:space="preserve">
+        <value>Moodle-Kurs erfolgreich gelöscht.</value>
+    </data>
 </root>

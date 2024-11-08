@@ -33,4 +33,7 @@
     <data name="DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText" xml:space="preserve">
         <value>Ja</value>
     </data>
+    <data name="DraggablePathWayCondition.SnackbarDeletionMessage" xml:space="preserve">
+        <value>Bedingung erfolgreich gelöscht.</value>
+    </data>
 </root>

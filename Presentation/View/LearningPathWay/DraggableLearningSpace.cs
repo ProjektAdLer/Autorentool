@@ -65,8 +65,9 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 
     [Parameter] public EventCallback<ILearningSpaceViewModel>? OnRemoveLearningSpaceFromTopic { get; set; }
     
-    [Inject, AllowNull] internal IStringLocalizer<DraggableLearningSpace> Localizer { get; set; }
+    [Inject, AllowNull] internal new IStringLocalizer<DraggableLearningSpace> Localizer { get; set; }
 
     protected override string DeleteObjectConfirmationDialogSubmitButtonText => Localizer["DraggableLearningSpace.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
 
+    protected override string SnackBarDeletionMessage =>  Localizer["DraggableLearningSpace.SnackbarDeletionMessage"].Value;
 }

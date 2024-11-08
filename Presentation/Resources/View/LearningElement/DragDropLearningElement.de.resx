@@ -35,4 +35,7 @@
     <data name="DragDropLearningElement.Element.Delete" xml:space="preserve">
         <value>Element löschen</value>
     </data>
+    <data name="DragDropLearningElement.Snackbar.ElementDelete" xml:space="preserve">
+        <value>Element erfolgreich gelöscht.</value>
+    </data>
 </root>

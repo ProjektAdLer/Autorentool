@@ -4,6 +4,7 @@
 @using System.Runtime.Serialization
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Utilities
+@inject ISnackbar Snackbar
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
 @using Presentation.PresentationLogic.API
@@ -184,6 +185,8 @@
         if (result.Canceled) return;
         PresentationLogic.DeleteLearningWorldByPath(learningWorldViewModel.SavePath);
         PresentationLogic.DeleteLearningWorld(WorkspaceViewModel, learningWorldViewModel);
+        
+        Snackbar.Add(@Localizer["MyLearningWorldsOverview.Snackbar.LearningWorldDelete"], Severity.Success);
     }
 
 }
