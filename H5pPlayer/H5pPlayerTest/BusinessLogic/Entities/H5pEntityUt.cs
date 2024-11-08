@@ -1,6 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Entities;
 
-namespace H5pPlayerTest.BusinessLogic.Domain;
+namespace H5pPlayerTest.BusinessLogic.Entities;
 
 [TestFixture]
 public class H5pEntityUt
