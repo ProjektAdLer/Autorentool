@@ -9,7 +9,6 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
     public TerminateH5pPlayerUc(IFileSystemDataAccess dataAccess)
     {
         TemporaryH5pManager = new TemporaryH5PsInWwwrootManager(dataAccess);
-        
     }
 
 
