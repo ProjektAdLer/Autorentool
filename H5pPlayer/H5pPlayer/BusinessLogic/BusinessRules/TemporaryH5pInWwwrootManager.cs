@@ -1,8 +1,9 @@
-﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+﻿using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
+using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 
 namespace H5pPlayer.BusinessLogic.BusinessRules;
 
-public class TemporaryH5PsInWwwrootManager
+public class TemporaryH5PsInWwwrootManager : ICleanupH5pPlayerPort
 {
     private IFileSystemDataAccess FileSystemDataAccess { get; }
 
