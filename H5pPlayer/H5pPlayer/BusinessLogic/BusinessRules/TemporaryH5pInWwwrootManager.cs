@@ -7,7 +7,7 @@ public class TemporaryH5PsInWwwrootManager : ICleanupH5pPlayerPort
 {
     private IFileSystemDataAccess FileSystemDataAccess { get; }
 
-    public TemporaryH5PsInWwwrootManager(IFileSystemDataAccess fileSystemDataAccess)
+    internal TemporaryH5PsInWwwrootManager(IFileSystemDataAccess fileSystemDataAccess)
     {
         FileSystemDataAccess = fileSystemDataAccess;
     }
