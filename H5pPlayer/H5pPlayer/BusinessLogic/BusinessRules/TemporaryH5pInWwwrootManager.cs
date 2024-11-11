@@ -2,11 +2,11 @@
 
 namespace H5pPlayer.BusinessLogic.BusinessRules;
 
-public class TemporaryArchiveManager
+public class TemporaryH5PsInWwwrootManager
 {
     private IFileSystemDataAccess FileSystemDataAccess { get; }
 
-    public TemporaryArchiveManager(IFileSystemDataAccess fileSystemDataAccess)
+    public TemporaryH5PsInWwwrootManager(IFileSystemDataAccess fileSystemDataAccess)
     {
         FileSystemDataAccess = fileSystemDataAccess;
     }
