@@ -11,15 +11,10 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
         TemporaryH5pManager = new TemporaryH5PsInWwwrootManager(dataAccess);
     }
 
-
     public void TerminateH5pPlayer()
     {
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
     }
     
     private TemporaryH5PsInWwwrootManager TemporaryH5pManager { get; set; }
-
-    
-    
-
 }
