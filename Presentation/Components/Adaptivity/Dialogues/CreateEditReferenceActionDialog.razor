@@ -12,6 +12,8 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.Adaptivity
+@using Presentation.View.LearningElement
+
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
@@ -21,7 +23,7 @@
                          Class="tab-panel-element relative text-adlertextgrey bg-adlergrey-100 text-sm font-bold normal-case">
                 <!-- Element reference -->
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
-                    <div class="p-2 mb-4">
+                    <div class="p-2 mb-2">
                         <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
                         <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
                             <MudTextField Variant="Variant.Outlined"
@@ -48,7 +50,11 @@
                                     RequiredError="@Localizer["Element.RequiredError.Text"]"
                                     FilterFuncSearchableStrings="element => new[] { element.Name }">
                             <ElementTemplate>
-                                <MudText Class="text-xs font-bold break-all leading-none truncate" title="@context.Name">@context.Name</MudText>
+                                <DragDropLearningElement ShowDeleteButton="false" 
+                                                         LearningElement="@context"
+                                                         OnDeleteLearningElement="@(() => { return Task.CompletedTask; })"
+                                                         OnClicked="@SetSelectedElement"
+                                                         IsSelected="@(EqualityComparer<ILearningElementViewModel>.Default.Equals(context,_learningElement))"></DragDropLearningElement>
                             </ElementTemplate>
                         </GridSelect>
                     </div>
@@ -58,7 +64,7 @@
                          Class="tab-panel-content relative text-adlertextgrey bg-adlergrey-100 text-sm break-all font-bold normal-case">
                 <!-- Content reference -->
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
-                    <div class="p-2 mb-4">
+                    <div class="p-2 mb-2">
                         <MudText Class="font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
                         <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
                             <MudTextField T="string"
@@ -95,7 +101,7 @@
     </div>
 </div>
 <div class="flex justify-end items-center">
-    <MudButton Class="btn-standard sticky m-6"
+    <MudButton Class="btn-standard sticky mx-6 my-4"
                @onclick="SubmitAsync">
         @Localizer["Button.Submit.Text"]
     </MudButton>
@@ -198,5 +204,10 @@
         LinkContentViewModel question => LearningContents.OfType<LinkContentViewModel>().SingleOrDefault(q => q.Equals(question)),
         _ => throw new ArgumentOutOfRangeException(nameof(actionContent), "Content must be File or Link")
     };
+
+    private void SetSelectedElement(ILearningElementViewModel obj)
+    {
+        _learningElement = obj;
+    }
 
 }

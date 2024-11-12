@@ -18,20 +18,24 @@
 
     @if (LearningElement.LearningContent is IStoryContentViewModel)
     {
-        <MudCardContent Class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
+        <MudCardContent @onclick="() => OnClicked.InvokeAsync(LearningElement)" Class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
      
             <div class="flex flex-col items-center">
       
                 <MudListItem Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-2 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-10" 
                              Text="@LearningElement.Name"
-                             OnClick="() => OnClicked.InvokeAsync(LearningElement)"
-                             title="@LearningElement.Name">
+                             title="@LearningElement.Name"
+                             OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                 </MudListItem>
       
                 <button @onclick="DeleteLearningElement" class="absolute -top-0 -right-0.5 2xl:top-0 2xl:right-0 z-20 opacity-75">
-                    <MudIcon Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Default" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.Delete"
+                             Size="Size.Small"
+                             Color="Color.Default"
+                             Title="@Localizer["DragDropLearningElement.Element.Delete"]">
+                    </MudIcon>
                 </button>
-     
+                
                 <img src="@ElementModelHandler.GetIconForElementModel(LearningElement.ElementModel)" class="drop-shadow w-10 h-10 2xl:w-12 2xl:h-12 opacity-50 z-0" draggable="false"/>
                 
             </div>
@@ -41,19 +45,22 @@
 
     else
     {
-        <MudCardContent Class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
+        <MudCardContent @onclick="() => OnClicked.InvokeAsync(LearningElement)" Class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
      
             <div class="flex flex-col items-center">
                 
                 <MudListItem Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-4 2xl:h-4 text-[8px] 2xl:text-xs 1080p:text-xs mt-4 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-20" 
                              Text="@LearningElement.Name"
-                             OnClick="() => OnClicked.InvokeAsync(LearningElement)"
-                             title="@LearningElement.Name">
+                             title="@LearningElement.Name"
+                             OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                 </MudListItem>
                 
-                <button @onclick="DeleteLearningElement" class="absolute -top-0 -right-0.5 2xl:top-0 2xl:right-0 z-20 opacity-75">
-                    <MudIcon Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Default" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIcon>
-                </button>
+                 @if (ShowDeleteButton)
+                {
+                    <button @onclick="DeleteLearningElement" class="absolute -top-0 -right-0.5 2xl:top-0 2xl:right-0 z-20 opacity-75">
+                        <MudIcon Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Default" Title="@Localizer["DragDropLearningElement.Element.Delete"]"></MudIcon>
+                    </button>
+                }
 
                 <img src="@ElementModelHandler.GetIconForElementModel(LearningElement.ElementModel)" class="drop-shadow w-10 h-10 2xl:w-12 2xl:h-12 opacity-50 z-0" draggable="false"/>
                 
@@ -86,6 +93,8 @@
 
     [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
     
+    [Parameter] public bool? IsSelected { get; set; }
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IElementModelHandler ElementModelHandler { get; set; }
 
@@ -94,6 +103,8 @@
     [Inject, AllowNull] internal IStringLocalizer<DragDropLearningElement> Localizer { get; set; }
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+    
+    [Parameter] public bool ShowDeleteButton { get; set; } = true;
 
     protected override void OnParametersSet()
     {
@@ -123,7 +134,6 @@
         };
     }
     
-
     private string GetElementIcon()
     {
         return LearningElement.LearningContent switch
@@ -145,11 +155,13 @@
 
     private string GetElementStyleString()
     {
+        bool isSelected = IsSelected ?? LearningElement == SelectedViewModelsProvider.LearningElement;
+        
         @if(LearningElement.LearningContent is IStoryContentViewModel)
         {
-        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlergold-300 bg-adlergold-200 relative flex rounded-lg hover:bg-adlergold-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlergold-400 hover:border-adlergold-300";
+        return isSelected ? "border-2 border-adlergold-300 bg-adlergold-200 relative flex rounded-lg hover:bg-adlergold-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlergold-400 hover:border-adlergold-300";
         }
-        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-adlerblue-300 bg-adlerblue-200 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlerblue-300 hover:border-adlerblue-300";
+        return isSelected ? "border-2 border-adlerblue-300 bg-adlerblue-200 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
     private async Task DeleteLearningElement()
