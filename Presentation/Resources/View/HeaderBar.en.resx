@@ -159,4 +159,7 @@
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Uploading the learning world...</value>
     </data>
+    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
+        <value>Learning world contains more than 50 learning spaces.</value>
+    </data>
 </root>

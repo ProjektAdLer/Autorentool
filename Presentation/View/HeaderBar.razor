@@ -407,6 +407,11 @@
         {
             errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
         }
+        
+        if (world.LearningSpaces.Count > 50)
+        {
+            errorString.AppendLine($"<li> {Localizer["ErrorString.TooMany.LearningSpaces.Message"]} </li>");
+        }
 
         foreach (var space in world.LearningSpaces)
         {
