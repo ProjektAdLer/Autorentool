@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
@@ -19,11 +20,12 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly IShutdownManager _shutdownManager;
+    private readonly IStringLocalizer<AuthoringToolWorkspacePresenter> _localizer;
 
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
         ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
-        IDialogService dialogService, IErrorService errorService)
+        IDialogService dialogService, IErrorService errorService, IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
     {
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
@@ -32,6 +34,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _dialogService = dialogService;
         _errorService = errorService;
         _selectedViewModelsProvider = selectedViewModelsProvider;
+        _localizer = localizer;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
@@ -148,7 +151,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             CloseOnEscapeKey = true,
             DisableBackdropClick = true
         };
-        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
+        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(_localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
         var result = await dialog.Result;
         return result;
     }

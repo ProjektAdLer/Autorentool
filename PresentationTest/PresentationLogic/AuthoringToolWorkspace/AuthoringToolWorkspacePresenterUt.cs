@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using NSubstitute;
@@ -228,7 +229,6 @@ public class AuthoringToolWorkspacePresenterUt
                 var options = (DialogOptions)callinfo[2];
                 Assert.Multiple(() =>
                 {
-                    Assert.That(callinfo[0], Is.EqualTo("Unsaved changes!"));
                     Assert.That(parameters[nameof(UnsavedWorldDialog.WorldName)], Is.EqualTo(unsavedWorld.Name));
                     Assert.That(options.CloseButton, Is.True);
                     Assert.That(options.CloseOnEscapeKey, Is.True);
@@ -316,7 +316,7 @@ public class AuthoringToolWorkspacePresenterUt
         ILogger<AuthoringToolWorkspacePresenter>? logger = null,
         ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IShutdownManager? shutdownManager = null,
-        IDialogService? dialogService = null, IErrorService? errorService = null)
+        IDialogService? dialogService = null, IErrorService? errorService = null, IStringLocalizer<AuthoringToolWorkspacePresenter>? localizer = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
@@ -325,7 +325,8 @@ public class AuthoringToolWorkspacePresenterUt
         shutdownManager ??= Substitute.For<IShutdownManager>();
         dialogService ??= Substitute.For<IDialogService>();
         errorService ??= Substitute.For<IErrorService>();
+        localizer ??= Substitute.For<IStringLocalizer<AuthoringToolWorkspacePresenter>>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, logger,
-            selectedViewModelsProvider, shutdownManager, dialogService, errorService);
+            selectedViewModelsProvider, shutdownManager, dialogService, errorService, localizer);
     }
 }

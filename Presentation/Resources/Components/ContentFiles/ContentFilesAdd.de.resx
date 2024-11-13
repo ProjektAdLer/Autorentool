@@ -33,7 +33,7 @@
         <value>Nicht unterstützte Dateiendung</value>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
-        <value>Datei leer</value>
+        <value>Leere Datei</value>
     </data>
     <data name="DialogService.MessageBox.Message" xml:space="preserve">
         <value>Die Datei {0} war leer. Sie wird übersprungen.</value>
@@ -64,5 +64,8 @@
     </data>
     <data name="DialogService.MessageBox.Duplicate.Text" xml:space="preserve">
         <value>Die Datei '{0}' wurde bereits in das Autorentool importiert und liegt dort bereits ab.</value>
+    </data>
+    <data name="DialogService.MessageBox.Text" xml:space="preserve">
+        <value>Die Datei {0} ist leer. Sie konnte deshalb nicht importiert werden.</value>
     </data>
 </root>
