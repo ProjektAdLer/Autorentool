@@ -1,8 +1,8 @@
-﻿@using System.ComponentModel
+﻿@inject ISnackbar Snackbar
+@using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
-@inject ISnackbar Snackbar
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.Element
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
@@ -89,9 +89,9 @@
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningElementViewModel LearningElement { get; set; } = null!;
 
-    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+    [Parameter] public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
 
-    [Parameter, EditorRequired] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+    [Parameter] public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
     
     [Parameter] public bool? IsSelected { get; set; }
     

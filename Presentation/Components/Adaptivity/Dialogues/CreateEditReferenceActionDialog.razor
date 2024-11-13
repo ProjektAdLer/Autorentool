@@ -11,9 +11,8 @@
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
-@using Shared.Adaptivity
 @using Presentation.View.LearningElement
-
+@using Shared.Adaptivity
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
@@ -52,8 +51,6 @@
                             <ElementTemplate>
                                 <DragDropLearningElement ShowDeleteButton="false" 
                                                          LearningElement="@context"
-                                                         OnDeleteLearningElement="@(() => { return Task.CompletedTask; })"
-                                                         OnClicked="@SetSelectedElement"
                                                          IsSelected="@(EqualityComparer<ILearningElementViewModel>.Default.Equals(context,_learningElement))"></DragDropLearningElement>
                             </ElementTemplate>
                         </GridSelect>
@@ -204,10 +201,5 @@
         LinkContentViewModel question => LearningContents.OfType<LinkContentViewModel>().SingleOrDefault(q => q.Equals(question)),
         _ => throw new ArgumentOutOfRangeException(nameof(actionContent), "Content must be File or Link")
     };
-
-    private void SetSelectedElement(ILearningElementViewModel obj)
-    {
-        _learningElement = obj;
-    }
 
 }
