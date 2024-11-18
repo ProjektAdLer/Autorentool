@@ -50,12 +50,12 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// 1. 
     /// 
     /// </summary>
-    public void StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
+    public async Task StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
-        DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
+        await DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
     }
     
     

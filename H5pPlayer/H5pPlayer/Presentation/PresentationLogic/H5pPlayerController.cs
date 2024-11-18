@@ -21,10 +21,10 @@ public class H5pPlayerController
         StartH5PPlayerUc = new StartH5pPlayerUC(fileSystemDataAccess, displayH5pUC, StartH5PPlayerPresenter);
     }
 
-    public void StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
+    public async Task StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
     {
         var displayH5pTo = new StartH5pPlayerInputTO(H5pDisplayMode.Display, h5pSourcePath, unzippedH5psPath);
-        StartH5PPlayerUc.StartH5pPlayer(displayH5pTo);
+        await StartH5PPlayerUc.StartH5pPlayer(displayH5pTo);
     }
     
     internal IStartH5pPlayerUCInputPort StartH5PPlayerUc { get; }

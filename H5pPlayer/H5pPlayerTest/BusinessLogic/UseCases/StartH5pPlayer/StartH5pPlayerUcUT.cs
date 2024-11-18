@@ -11,14 +11,14 @@ public class StartH5pPlayerUcUT
 {
   
     [Test]
-    public void CleanH5pFolderInWwwroot()
+    public async Task CleanH5pFolderInWwwroot()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, null, mockFileSystemDataAccess);
         var directoryForCleaning = @"wwwroot\H5pStandalone\h5p-folder";
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockFileSystemDataAccess.Received().DeleteAllFilesInDirectory(
             Arg.Is<string>(path => path.Contains(directoryForCleaning)));
@@ -34,20 +34,20 @@ public class StartH5pPlayerUcUT
     [TestCase(@"/path with spaces" + H5pFileEnding)]       // Unix/macOS with spaces
     [TestCase(@"/d" + H5pFileEnding)]                       // Root path Unix/macOS
     [TestCase(@"C:\d" + H5pFileEnding)]                     // Root path Windows
-    public void ValidH5pZipSourcePath(string validPath)
+    public async Task ValidH5pZipSourcePath(string validPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,validPath);
         
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
     }
    
     [Test]
-    public void NullH5pZipSourcePath()
+    public async Task NullH5pZipSourcePath()
     {
         string invalidPath = null;
         string validPath = @"C:\Temp";
@@ -58,7 +58,7 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage =   "Value cannot be null. (Parameter 'H5pZipSourcePath')";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
      
         mockDisplayH5pOutputPort.Received().ErrorOutput(Arg.Is<StartH5pPlayerErrorOutputTO>(x =>
             x.InvalidPath == expectedOutputTo.InvalidPath &&
@@ -67,7 +67,7 @@ public class StartH5pPlayerUcUT
 
     [TestCase("")]
     [TestCase("   ")]
-    public void EmptyOrWhitespaceH5pZipSourcePath(string pathToCheck)
+    public async Task EmptyOrWhitespaceH5pZipSourcePath(string pathToCheck)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -75,13 +75,13 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "H5pZipSourcePath was empty or whitespace!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(pathToCheck, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
 
     [Test]
-    public void InvalidPathCharsInH5pZipSourcePath([Range(0, 32)] int number)
+    public async Task InvalidPathCharsInH5pZipSourcePath([Range(0, 32)] int number)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -92,13 +92,13 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "H5pZipSourcePath contains invalid path chars!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
        
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
 
     [Test]
-    public void MissingH5pExtensionInH5pZipSourcePath([Values]H5pDisplayMode displayMode)
+    public async Task MissingH5pExtensionInH5pZipSourcePath([Values]H5pDisplayMode displayMode)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -107,7 +107,7 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "H5pZipSourcePath misses .h5p extension!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
        
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
@@ -118,7 +118,7 @@ public class StartH5pPlayerUcUT
     [TestCase(@"Test/Temp/Tested" + H5pFileEnding)]        // Unix/macOS relative path
     [TestCase(@".\relative\path" + H5pFileEnding)]         // Windows relative path with .
     [TestCase(@"..\parent\path" + H5pFileEnding)]          // Windows relative path with ..
-    public void PathIsNotRootedInH5pZipSourcePath(string invalidPath)
+    public async Task PathIsNotRootedInH5pZipSourcePath(string invalidPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -127,7 +127,7 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "H5pZipSourcePath must be rooted!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
     
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
        
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
@@ -145,13 +145,13 @@ public class StartH5pPlayerUcUT
     [TestCase(@"https://example.com/path/to/resource/file.json")]   // URL pointing to a JSON file
     [TestCase(@"https://example.com/path/to/resource/file.xml")]   // URL pointing to an XML file
     [TestCase(@"https://example.com/api/v1/resource/123")]   // API-style URL with versioning and ID
-    public void ValidUnzippedH5psPath(string validPath)
+    public async Task ValidUnzippedH5psPath(string validPath)
     { 
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null,mockDisplayH5pOutputPort);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,null, validPath);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.UnzippedH5psPath, Is.EqualTo(validPath));
@@ -159,7 +159,7 @@ public class StartH5pPlayerUcUT
     
     
     [Test]
-    public void NullUnzippedH5psPath()
+    public async Task NullUnzippedH5psPath()
     {
         string invalidPath = null;
         string validPath = @"C:\Temp" + H5pFileEnding;
@@ -170,14 +170,14 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage =   "Value cannot be null. (Parameter 'UnzippedH5psPath')";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
      
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
 
     [TestCase("")]
     [TestCase("   ")]
-    public void EmptyOrWhitespaceUnzippedH5psPath(string pathToCheck)
+    public async Task EmptyOrWhitespaceUnzippedH5psPath(string pathToCheck)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -185,14 +185,14 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "UnzippedH5psPath was empty or whitespace!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(pathToCheck, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
     
     
     [Test]
-    public void InvalidPathCharsInUnzippedH5psPath([Range(0, 32)] int number)
+    public async Task InvalidPathCharsInUnzippedH5psPath([Range(0, 32)] int number)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(null, mockDisplayH5pOutputPort);
@@ -203,7 +203,7 @@ public class StartH5pPlayerUcUT
         const string expectedErrorMessage = "UnzippedH5psPath contains invalid path chars!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
        
         mockDisplayH5pOutputPort.Received().ErrorOutput(expectedOutputTo);
     }
@@ -211,12 +211,12 @@ public class StartH5pPlayerUcUT
     
  
     [Test]
-    public void MapDisplayMode([Values]H5pDisplayMode displayMode)
+    public async Task MapDisplayMode([Values]H5pDisplayMode displayMode)
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode);
         
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
         Assert.That(systemUnderTest.H5pEntity.ActiveDisplayMode, 
             Is.EqualTo(displayMode));
@@ -229,14 +229,14 @@ public class StartH5pPlayerUcUT
     
 
     [Test]
-    public void ExtractZippedH5pToTemporaryFolder()
+    public async Task ExtractZippedH5pToTemporaryFolder()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockFileSystemDataAccess);
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
         
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockFileSystemDataAccess.Received().ExtractZipFile(
             systemUnderTest.H5pEntity.H5pZipSourcePath,
@@ -245,16 +245,16 @@ public class StartH5pPlayerUcUT
     
     
     [Test]
-    public void StartH5pPlayerToDisplayH5p()
+    public async Task StartH5pPlayerToDisplayH5p()
     {
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
         var systemUnderTest = CreateStandardSystemUnderTest(mockDisplayH5pUC);
         const string h5pZipSourcePath = "C://PathToZip/Source" + H5pFileEnding;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0,h5pZipSourcePath);
 
-        systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
+        await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
-        mockDisplayH5pUC.Received().StartToDisplayH5pUC(Arg.Any<H5pEntity>());
+        await mockDisplayH5pUC.Received().StartToDisplayH5pUC(Arg.Any<H5pEntity>());
     }
  
     
