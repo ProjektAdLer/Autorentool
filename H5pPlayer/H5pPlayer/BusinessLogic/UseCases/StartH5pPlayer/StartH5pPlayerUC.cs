@@ -123,7 +123,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
    
     internal IFileSystemDataAccess FileSystemDataAccess { get; }
     internal IDisplayH5pUC DisplayH5pUC { get; }
-    internal H5pEntity H5pEntity { get; set; }
+    internal H5pEntity? H5pEntity { get; set; }
     internal IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
     private TemporaryH5PsInWwwrootManager TemporaryH5pManager { get; set; }
 
