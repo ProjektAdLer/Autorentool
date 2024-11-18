@@ -9,8 +9,12 @@
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
 @using H5pPlayer.Api
+@using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
+@using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
 @using Shared.Configuration
+@inject IJSRuntime JsRuntime
+
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -280,6 +284,8 @@
 
     private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
     {
+        
+       
         var options = new DialogOptions
         {
             DisableBackdropClick = false,
@@ -294,9 +300,58 @@
         };
         
         var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
-        _ = await dialog.Result;
-        StateHasChanged();
+
+        // Warten, bis der Dialog geschlossen wird
+        var result = await dialog.Result;
+        var dataAccess = new FileSystemDataAccess();
+        var terminateH5pPlayer = new TerminateH5pPlayerUc(dataAccess);
+        // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
+        if (result.Canceled)
+        {
+            // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
+            Console.WriteLine("Der Dialog wurde abgebrochen oder geschlossen.");
+            
+            terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+            try
+            {
+                 await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        else
+        {
+            // Der Dialog wurde mit einem Ergebnis geschlossen, hier können Sie das Ergebnis verarbeiten
+            var dialogData = result.Data;
+            Console.WriteLine("Dialog wurde mit Ergebnis geschlossen: " + dialogData);
+            terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+           
+            try
+            {
+                await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        await InvokeAsync(StateHasChanged);
     }
+    
+    // private IJSObjectReference? _h5pModule;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     // Import the JavaScript module and assign it to the _h5pModule variable
+    //     _h5pModule = await JsRuntime.InvokeAsync<IJSObjectReference>(
+    //         "import", "./H5pStandalone/h5p-standalone-api.js");
+    // }
     
     private void ToggleSpinner()
     {

@@ -9,10 +9,6 @@ namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;
 [TestFixture]
 public class JavaScriptAdapterUt
 {
-    //test fall hone https nicht vergessen !!!!!!!!!!!!!!!!!!!!!!!!
-    
-    
-    
     [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
         "https://localhost:8001/H5pStandalone/h5p-folder/")]
     [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
@@ -26,7 +22,7 @@ public class JavaScriptAdapterUt
         await systemUnderTest.DisplayH5p(h5pEntity);
         
         await fakeJsInterop.Received(1).InvokeAsync<IJSVoidResult>(
-            "testH5P", 
+            "displayH5p", 
             Arg.Is<object[]>(
                 args => 
                 args.Length == 1 && 

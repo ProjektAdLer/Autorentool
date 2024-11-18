@@ -1,94 +1,99 @@
-﻿
+﻿// General information: 
+// We cant use JavaScript 6 modules
+// if we use JavaScript modules we get error: 
+// Failed to load module script: Expected a JavaScript 
+// module script but the server responded with a MIME type of
+// "text/html". Strict MIME type checking is enforced for
+// module scripts per HTML spec
 
-window.testH5P2 = function (containerId)
-{
+window.onload = function () {
 
-    const el = document.getElementById("h5p-container");
-    const options = {
-       // h5pJsonPath:  './H5pStandalone/h5p-folder/1_Start/h5p.json',
-        h5pJsonPath:  '/localhost/H5pStandalone/h5p-folder/AbfrageDefinitionen/h5p.json',
-        frameJs: '/H5pStandalone/frame.bundle.js',
-        frameCss: '/H5pStandalone/styles/h5p.css',
+    let h5pInstance = null;
+
+
+
+    // can throw exceptions
+    window.displayH5p = async function (h5pJsonPath) {
+
+        console.log("displayH5p javascript function called with path:", h5pJsonPath);
+        resetH5pInstance();
+        await buildH5p(h5pJsonPath);
     }
-    new H5PStandalone.H5P(el, options);
-    
+
+    // can throw exceptions
+    window.validateH5p = async function (h5pJsonPath) {
+
+        console.log("validateH5p javascript function called with path:", h5pJsonPath);
+        resetH5pInstance();
+        await buildH5p(h5pJsonPath);
+
+
+        // H5PStandalone.prototype.externalDispatcher.on("xAPI", (event) => {
+        //     console.log("xAPI event", event);
+        //
+        //     // Konvertiere das JavaScript-Event in ein JSON-String
+        //     const jsonData = JSON.stringify(event);
+        //
+        //     // JSON-Daten an die .NET-Methode senden  
+        //   //  DotNet.invokeMethodAsync('Presentation', 'ReceiveJsonData', jsonData);
+        // });
+        //
+        // H5PStandalone.H5P.xAPICompletedListener = xAPICompletedListener;
+    }
+
+    async function buildH5p(h5pJsonPath) {
+
+        const el = document.getElementById("h5p-container");
+
+        if (el) {
+            const options = {
+                h5pJsonPath: h5pJsonPath,
+                frameJs: '//localhost:8001/H5pStandalone/frame.bundle.js',
+                frameCss: '//localhost:8001/H5pStandalone/styles/h5p.css',
+            }
+
+            try {
+                await createH5pInstance(el, options);
+            } catch (error) {
+                console.error("Error during instantiation of H5P:", error);
+                throw  error;
+            }
+
+        } else {
+            console.error("Can not find H5P-Container element.");
+        }
+    }
+
+    async function createH5pInstance(el, options) {
+
+        h5pInstance = new H5PStandalone.H5P(el, options);
+        await h5pInstance;
+    }
+
+
+    // can throw exceptions
+    window.terminateH5pStandalone = async function () {
+        const el = document.getElementById("h5p-container");
+        resetHtmlContainerOfH5p(el);
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+        H5PIntegration.contents = {};
+        resetH5pInstance();
+        console.log("Container completely removed and rebuilt.");
+    };
+
+
+    function resetH5pInstance() {
+        if (h5pInstance) {
+            h5pInstance = null;
+        }
+    }
+
+    function resetHtmlContainerOfH5p(el) {
+        if (el) {
+            el.innerHTML = "";
+        }
+    }
 }
 
-
-window.testH5P =async function (h5pJsonPath)
-{
-    const fs = require('fs');
-    const el = document.getElementById("h5p-container");
-
-
-    const options = {
-        // h5pJsonPath:  './H5pStandalone/h5p-folder/1_Start/h5p.json',
-        // h5pJsonPath:  '//localhost:8086/courses/3/h5p/6c324c62-1557-4e28-a1f7-c2df227c3c8c.h5p',
-        // h5pJsonPath:  '//localhost:8001/H5pStandalone/h5p-folder/1_Start',
-        //  h5pJsonPath:  '//localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen',
-        h5pJsonPath:  h5pJsonPath,
-        frameJs: '//localhost:8001/H5pStandalone/frame.bundle.js',
-        frameCss: '//localhost:8001/H5pStandalone/styles/h5p.css',
-    }
-    await new H5PStandalone.H5P(el, options);
-
-    H5P.externalDispatcher.on("xAPI", (event) => {
-        console.log("xAPI event", event);
-
-        // Konvertiere das JavaScript-Event in ein JSON-String
-        const jsonData = JSON.stringify(event);
-
-        // JSON-Daten an die .NET-Methode senden  
-        DotNet.invokeMethodAsync('Presentation', 'ReceiveJsonData', jsonData);
-    });
-
-    H5P.xAPICompletedListener = xAPICompletedListener;
-    
-    
-    return "123testH5P called123";
-}
-
-// from: https://github.com/ProjektAdLer/2D_3D_AdLer/blob/main/src/Components/Core/Presentation/React/LearningSpaceDisplay/LearningElementModal/LearningElementModalController.ts#L95
-function xAPICompletedListener(t) {
-    if ((t.getVerb() === "completed" || t.getVerb() === "answered") &&
-        !t.getVerifiedStatementValue(["context", "contextActivities", "parent"])) 
-    {
-        let n = t.getScore(),
-            r = t.getMaxScore(),
-            i = t.getVerifiedStatementValue([
-                "object",
-                "definition",
-                "extensions",
-                "http://h5p.org/x-api/h5p-local-content-id",
-            ]);
-
-        e.setFinished(i, n, r);  
-    }
-}
-
-
-
-
-
-/*
- function javaScriptHalloWorldFunction()
- {
-     console.log("hello java script world");
-     return "hallo java script world";
- }
-
- function test(containerId)
- {
-
-     const el = document.getElementById(containerId);
-     const options = {
-         h5pJsonPath:  '/h5p-folder',
-         frameJs: '../wwwroot/H5pStandalone/frame.bundle.js',
-         frameCss: '../wwwroot/H5pStandalone/styles/h5p.css',
-     }
-     new H5PStandalone(el, options);
- }
-
- window.javaScriptHalloWorldFunction = javaScriptHalloWorldFunction;
- window.test = test;
- */
