@@ -3,11 +3,11 @@ using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 
 namespace H5pPlayer.BusinessLogic.BusinessRules;
 
-public class TemporaryH5PsInWwwrootManager : ICleanupH5pPlayerPort
+public class TemporaryH5psInWwwrootManager : ICleanupH5pPlayerPort
 {
     private IFileSystemDataAccess FileSystemDataAccess { get; }
 
-    internal TemporaryH5PsInWwwrootManager(IFileSystemDataAccess fileSystemDataAccess)
+    internal TemporaryH5psInWwwrootManager(IFileSystemDataAccess fileSystemDataAccess)
     {
         FileSystemDataAccess = fileSystemDataAccess;
     }

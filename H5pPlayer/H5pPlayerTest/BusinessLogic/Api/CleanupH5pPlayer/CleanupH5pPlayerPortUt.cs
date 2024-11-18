@@ -14,6 +14,6 @@ public class CleanupH5pPlayerPortUt
 
         var cleanupH5pPlayer =  systemUnderTest.CreateCleanupH5pPlayerPort();
         
-        Assert.That(cleanupH5pPlayer, Is.TypeOf<TemporaryH5PsInWwwrootManager>());
+        Assert.That(cleanupH5pPlayer, Is.TypeOf<TemporaryH5psInWwwrootManager>());
     }
 }

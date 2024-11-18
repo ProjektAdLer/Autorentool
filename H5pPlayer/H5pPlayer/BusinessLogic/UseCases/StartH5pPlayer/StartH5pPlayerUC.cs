@@ -22,7 +22,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         DisplayH5pUC = displayH5PUc;
         StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
         H5pEntity = null;
-        TemporaryH5pManager = new TemporaryH5PsInWwwrootManager(dataAccess);
+        TemporaryH5pManager = new TemporaryH5psInWwwrootManager(dataAccess);
     }
 
     /// <summary>
@@ -125,6 +125,6 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     internal IDisplayH5pUC DisplayH5pUC { get; }
     internal H5pEntity? H5pEntity { get; set; }
     internal IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
-    private TemporaryH5PsInWwwrootManager TemporaryH5pManager { get; set; }
+    private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; set; }
 
 }
