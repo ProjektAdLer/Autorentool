@@ -103,7 +103,7 @@
                         </SidebarItem>
                     </Sidebar>
                 </SideContainer>
-                <div class="flex flex-col gap-2 w-full h-[98%]">
+                <div class="flex flex-col gap-2 w-full h-[98%] relative">
                     <CenterContainer>
                             @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
                             {
@@ -111,6 +111,7 @@
                             }
                         else
                         {
+                            <h1 class="absolute top-32 left-6 text-center text-white font-bold text-lg">Bitte öffnen Sie einen Lernraum, um den Lernraum-Editor angezeigt zu bekommen!</h1>
                             <img class="w-64 2xl:w-96 opacity-5 inset-0 m-auto absolute" src="CustomIcons/autorentool-logo.png">
                         }
                     </CenterContainer>
