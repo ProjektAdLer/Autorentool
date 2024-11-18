@@ -11,9 +11,9 @@ public class DisplayH5pUC : IDisplayH5pUC
         JavaScriptAdapter = javaScriptAdapter;
     }
 
-    public void StartToDisplayH5pUC(H5pEntity h5pEntity)
+    public async Task StartToDisplayH5pUC(H5pEntity h5pEntity)
     {
-        JavaScriptAdapter.DisplayH5p(h5pEntity);
+       await JavaScriptAdapter.DisplayH5p(h5pEntity);
     }
     
     

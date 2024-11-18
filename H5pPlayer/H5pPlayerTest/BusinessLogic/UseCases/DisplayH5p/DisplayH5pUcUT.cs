@@ -9,14 +9,14 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.DisplayH5p;
 public class DisplayH5pUcUT
 {
     [Test]
-    public void StartToDisplayH5pUC_CallJavaScriptAdapter()
+    public async Task StartToDisplayH5pUC_CallJavaScriptAdapter()
     {
         var mockJavaScriptAdapter = Substitute.For<IJavaScriptAdapter>();
         var systemUnderTest = new DisplayH5pUC(mockJavaScriptAdapter);
         var h5pEntity = new H5pEntity();
         
-        systemUnderTest.StartToDisplayH5pUC(h5pEntity);
+        await systemUnderTest.StartToDisplayH5pUC(h5pEntity);
 
-        mockJavaScriptAdapter.Received().DisplayH5p(h5pEntity);
+        await mockJavaScriptAdapter.Received().DisplayH5p(h5pEntity);
     }
 }
