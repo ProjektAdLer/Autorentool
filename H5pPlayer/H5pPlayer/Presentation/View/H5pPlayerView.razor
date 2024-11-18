@@ -25,15 +25,15 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         { 
-            StartH5pPlayer();
+            await StartH5pPlayer();
         }
     }
 
-    private void StartH5pPlayer()
+    private async Task StartH5pPlayer()
     {
         _h5pPlayerController = new H5pPlayerController(JsRuntime);
         //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
-        _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
+        await _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
     }
 
 
