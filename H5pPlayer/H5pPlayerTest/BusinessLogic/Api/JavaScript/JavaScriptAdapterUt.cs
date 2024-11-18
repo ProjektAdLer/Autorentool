@@ -47,6 +47,21 @@ public class JavaScriptAdapterUt
         Assert.That(h5pEntity.H5pZipSourcePath, Is.EqualTo(h5pSourcePath));
         Assert.That(h5pEntity.UnzippedH5psPath, Is.EqualTo(unzippedH5psPath));
     }
+    
+    
+    
+    // [Test]
+    // public void TerminateH5pStandalone_Outdated()
+    // {
+    //     var mockJsRuntime = Substitute.For<IJSRuntime>();
+    //     var systemUnderTest = CreateSystemUnderTest(mockJsRuntime);
+    //
+    //     systemUnderTest.TerminateH5pPlayer();
+    //     
+    //      mockJsRuntime.Received().InvokeAsync<IJSVoidResult>("terminateH5pPlayer");
+    // }
+    //
+    
 
     private static H5pEntity CreateH5pEntity(string h5pSourcePath, string unzippedH5psPath)
     {

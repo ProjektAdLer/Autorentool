@@ -1,4 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
 using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
@@ -21,29 +22,25 @@ public class TerminateH5pPlayerUcUt
         mockFileSystemDataAccess.Received().DeleteAllFilesInDirectory(
             Arg.Is<string>(path => path.Contains(directoryForCleaning)));
     }
-
+    
     [Test]
-    public void TerminateH5pStandalone()
+    public void TerminateH5pJavaScriptPlayer()
     {
-        var mockJsRuntime = Substitute.For<IJSRuntime>();
-        var systemUnderTest = CreateSystemUnderTest(mockJsRuntime);
+        var mockJavaScriptAdapter= Substitute.For<IJavaScriptAdapter>();
+        var systemUnderTest = CreateSystemUnderTest(mockJavaScriptAdapter);
 
         systemUnderTest.TerminateH5pPlayer();
         
-         mockJsRuntime.Received().InvokeAsync<IJSVoidResult>("terminateH5pPlayer");
+        mockJavaScriptAdapter.Received().TerminateH5pJavaScriptPlayer();
     }
-    
-    private static TerminateH5pPlayerUc CreateSystemUnderTest(IJSRuntime jsRuntime = null,
+
+    private static TerminateH5pPlayerUc CreateSystemUnderTest(
+        IJavaScriptAdapter javaScriptAdapter = null,
         IFileSystemDataAccess fileSystemDataAccess = null)
     {
-        jsRuntime = jsRuntime ?? Substitute.For<IJSRuntime>();
+        javaScriptAdapter = javaScriptAdapter ?? Substitute.For<IJavaScriptAdapter>();
         fileSystemDataAccess ??= Substitute.For<IFileSystemDataAccess>();
-        var systemUnderTest = new TerminateH5pPlayerUc(jsRuntime, fileSystemDataAccess);
+        var systemUnderTest = new TerminateH5pPlayerUc(javaScriptAdapter, fileSystemDataAccess);
         return systemUnderTest;
     }
-
-    
-    
-    // mockJsRuntime.Received().InvokeAsync<IJSVoidResult>("terminateH5pPlayer");
-
 }

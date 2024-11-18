@@ -9,6 +9,7 @@
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
 @using H5pPlayer.Api
+@using H5pPlayer.BusinessLogic.Api.JavaScript
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
@@ -303,8 +304,9 @@
 
         // Warten, bis der Dialog geschlossen wird
         var result = await dialog.Result;
+        var javaScriptAdapter = new JavaScriptAdapter(JsRuntime);
         var dataAccess = new FileSystemDataAccess();
-        var terminateH5pPlayer = new TerminateH5pPlayerUc(JsRuntime, dataAccess);
+        var terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
         // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
         if (result.Canceled)
         {
