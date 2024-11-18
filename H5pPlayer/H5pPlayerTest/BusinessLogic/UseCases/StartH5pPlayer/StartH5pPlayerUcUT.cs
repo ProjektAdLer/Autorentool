@@ -223,10 +223,6 @@ public class StartH5pPlayerUcUT
     }
     
     
-    // hier weiter extract ziped H5p
-
-    
-    
 
     [Test]
     public async Task ExtractZippedH5pToTemporaryFolder()
