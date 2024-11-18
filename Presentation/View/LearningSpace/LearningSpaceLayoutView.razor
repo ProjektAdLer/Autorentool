@@ -7,9 +7,8 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
-<div class="w-full min-h-[265px]">
-    <div class="drop-shadow-xl w-full h-full">
-        <div class="mt-5 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
+    <div class="flex flex-col w-full h-full">
+        <div class="h-full relative" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;">
 
             @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
             {
@@ -67,7 +66,6 @@
             }
         </div>
     </div>
-</div>
 
 @code {
 
@@ -143,6 +141,7 @@
         slotPositionString.Append($"top: {(int)((slotPosition.Y + 1) / 35.0 * 100)}%; ");
         slotPositionString.Append($"left: {(int)((slotPosition.X + 1) / 35.0 * 100)}%; ");
         slotPositionString.Append("transform: translate(-70%, -100%);");
+        slotPositionString.Append("scale: 0.8;");
         return slotPositionString.ToString();
     }
 
@@ -154,6 +153,7 @@
         slotPositionString.Append($"top: {(int)((slotPos.Y + 1) / 35.0 * 100)}%; ");
         slotPositionString.Append($"left: {(int)((slotPos.X + 1) / 35.0 * 100)}%; ");
         slotPositionString.Append("transform: translate(-70%, -100%);");
+        slotPositionString.Append("scale: 0.8;");
         return slotPositionString.ToString();
     }
 

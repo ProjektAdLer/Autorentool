@@ -10,90 +10,92 @@
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
-    <div class="cursor-default mx-2 rounded-lg">
-        <div class="flex justify-center p-2">
-            <p class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["LearningSpace.Title.Text"]</p>
+    <div class="bg-adlerbgbright m-2 h-full flex flex-col">
+        <div class="cursor-default mx-2 rounded-lg">
+            <div class="flex justify-center p-2">
+                <p class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["LearningSpace.Title.Text"]</p>
+            </div>
         </div>
-    </div>
 
-    @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
-    {
-        <div class="cursor-default flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-start border-b-2 border-adlergrey-100 px-2">
-            <div class="px-1 flex justify-start items-center space-x-2 2xl:max-w-[70%]">
-                <img class="w-6 2xl:w-8 opacity-50" src="CustomIcons/Space/space-icon_bright.png" alt="learningspace">
-                <p class="text-sm 2xl:text-lg opacity-80 text-adlerdarkblue-800 font-bold truncate 2xl:whitespace-normal 2xl:break-words" title="@LearningSpaceP.LearningSpaceVm.Name">@LearningSpaceP.LearningSpaceVm.Name</p>
+        @if (SelectedViewModelsProvider.LearningObjectInPathWay != null)
+        {
+            <div class="cursor-default flex shrink grow basis-2/12 2xl:flex-row 2xl:justify-between 2xl:items-start px-2">
+                <div class="px-1 flex justify-start items-center space-x-2 2xl:max-w-[70%]">
+                    <img class="w-6 2xl:w-8 opacity-50" src="CustomIcons/Space/space-icon_bright.png" alt="learningspace">
+                    <p class="text-xs 2xl:text-lg opacity-80 text-adlerdarkblue-800 font-bold truncate 2xl:whitespace-normal 2xl:break-words" title="@LearningSpaceP.LearningSpaceVm.Name">@LearningSpaceP.LearningSpaceVm.Name</p>
+                </div>
+
+                <section class="p-1 flex justify-end items-center">
+                    <div class="flex flex-col justify-start">
+                        <p class="text-xs 2xl:text-base text-adlerblue-600 space-theme">
+                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
+                        </p>
+                        <p class="text-xs 2xl:text-base text-adlerblue-600 space-workload">
+                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
+                        </p>
+                        <p class="text-xs 2xl:text-base text-adlerblue-600 space-points">
+                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.RequiredPoints
+                            <span class="text-adlergrey-600"> / </span> @LearningSpaceP.LearningSpaceVm?.Points
+                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text.Points.Suffix"]</span>
+                        </p>
+                        <div class="flex flex-row items-center gap-1">
+                            <p class="text-xs 2xl:text-base text-adlergrey-600 space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
+                            <MudIconButton OnClick="@ToggleOpen"
+                                           Icon="@LearningOutcomeIcon"
+                                           Title="@Localizer["LearningSpace.SpaceGoals.Overview"]"
+                                           Class="h-2 w-2 2xl:h-5 2xl:w-5 opacity-70">
+                            </MudIconButton>
+
+                            <MudPopover AnchorOrigin="Origin.BottomLeft" Fixed="true" Open="@_isOpen" Class="bg-white rounded drop-shadow-xl h-fit w-[550px] text-adlergrey-800 text-justify p-4">
+                                <div class="flex flex-col">
+                                    <div class="flex flex-row justify-between items-center">
+                                        <p class="pl-1 cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningSpace.LearningOutcomesOverview.Title"]</p>
+                                        <MudIconButton Class="w-8 h-8" OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.Close"></MudIconButton>
+                                    </div>
+                                    <p class="pl-1 pb-2 cursor-default">
+                                        @Localizer["LearningSpace.LearningOutcomesOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningSpaceP.LearningSpaceVm?.Name</span>
+                                    </p>
+
+                                    <div class="h-[150px] overflow-y-scroll bg-adlerbgbright rounded border border-adlergrey-200 p-2">
+
+                                        @if (LearningSpaceP.LearningSpaceVm?.LearningOutcomeCollection.LearningOutcomes.Count == 0)
+                                        {
+                                            <div class="flex justify-center items-center p-4">
+                                                <p class="cursor-default pl-1 text-base font-bold text-adlertextgrey opacity-80">@Localizer["LearningSpaceView.NoOutcome"]</p>
+                                            </div>
+                                        }
+
+                                        @if (LearningSpaceP?.LearningSpaceVm != null)
+                                        {
+                                            foreach (var outcome in LearningSpaceP.LearningSpaceVm.LearningOutcomeCollection.LearningOutcomes)
+                                            {
+                                                <MudText>
+                                                    <ul class="list-disc list-outside pl-2 mx-2 py-1">
+                                                        <li class="marker:text-adlergrey break-words cursor-default text-xs 2xl:text-sm">
+                                                            @outcome.GetOutcome()
+                                                        </li>
+                                                    </ul>
+                                                </MudText>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </MudPopover>
+                        </div>
+                        @ChildContent
+                    </div>
+                </section>
+            </div>
+        }
+
+        @if (LearningSpaceP.LearningSpaceVm != null)
+        {
+            <div class="bg-white grow shrink basis-10/12">
+                <LearningSpaceLayoutView LearningSpace="LearningSpaceP.LearningSpaceVm"/>
             </div>
 
-            <section class="p-1 flex justify-end items-center">
-                <div class="flex flex-col justify-start">
-                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-theme">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
-                    </p>
-                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-workload">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
-                    </p>
-                    <p class="text-sm 2xl:text-base text-adlerblue-600 space-points">
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.RequiredPoints
-                        <span class="text-adlergrey-600"> / </span> @LearningSpaceP.LearningSpaceVm?.Points
-                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text.Points.Suffix"]</span>
-                    </p>
-                    <div class="flex flex-row items-center gap-1">
-                        <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
-                        <MudIconButton OnClick="@ToggleOpen"
-                                       Icon="@LearningOutcomeIcon"
-                                       Title="@Localizer["LearningSpace.SpaceGoals.Overview"]"
-                                       Class="h-4 w-4 2xl:h-5 2xl:w-5 opacity-70">
-                        </MudIconButton>
-
-                        <MudPopover AnchorOrigin="Origin.BottomLeft" Fixed="true" Open="@_isOpen" Class="bg-white rounded drop-shadow-xl h-fit w-[550px] text-adlergrey-800 text-justify p-4">
-                            <div class="flex flex-col">
-                                <div class="flex flex-row justify-between items-center">
-                                    <p class="pl-1 cursor-default text-lg text-adlertextgrey font-bold">@Localizer["LearningSpace.LearningOutcomesOverview.Title"]</p>
-                                    <MudIconButton Class="w-8 h-8" OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.Close"></MudIconButton>
-                                </div>
-                                <p class="pl-1 pb-2 cursor-default">
-                                    @Localizer["LearningSpace.LearningOutcomesOverview.Text.Part1"] <span class="font-bold text-adlertextgrey cursor-default">@LearningSpaceP.LearningSpaceVm?.Name</span>
-                                </p>
-
-                                <div class="h-[150px] overflow-y-scroll bg-adlerbgbright rounded border border-adlergrey-200 p-2">
-
-                                    @if (LearningSpaceP.LearningSpaceVm?.LearningOutcomeCollection.LearningOutcomes.Count == 0)
-                                    {
-                                        <div class="flex justify-center items-center p-4">
-                                            <p class="cursor-default pl-1 text-base font-bold text-adlertextgrey opacity-80">@Localizer["LearningSpaceView.NoOutcome"]</p>
-                                        </div>
-                                    }
-
-                                    @if (LearningSpaceP?.LearningSpaceVm != null)
-                                    {
-                                        foreach (var outcome in LearningSpaceP.LearningSpaceVm.LearningOutcomeCollection.LearningOutcomes)
-                                        {
-                                            <MudText>
-                                                <ul class="list-disc list-outside pl-2 mx-2 py-1">
-                                                    <li class="marker:text-adlergrey break-words cursor-default text-xs 2xl:text-sm">
-                                                        @outcome.GetOutcome()
-                                                    </li>
-                                                </ul>
-                                            </MudText>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </MudPopover>
-                    </div>
-                    @ChildContent
-                </div>
-            </section>
-        </div>
-    }
-
-    @if (LearningSpaceP.LearningSpaceVm != null)
-    {
-        <div class="2xl:max-h-[580px] max-h-[385px] rounded-b-lg bg-white w-full pl-2 overflow-y-scroll overflow-x-hidden">
-            <LearningSpaceLayoutView LearningSpace="LearningSpaceP.LearningSpaceVm"/>
-        </div>
-        
-    }
+        }
+    </div>
 }
 
 @code {
