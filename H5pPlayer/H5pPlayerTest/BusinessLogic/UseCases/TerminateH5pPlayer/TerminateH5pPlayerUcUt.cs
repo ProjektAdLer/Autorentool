@@ -11,27 +11,27 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.TerminateH5pPlayer;
 public class TerminateH5pPlayerUcUt
 {
     [Test]
-    public void CleanH5pFolderInWwwroot()
+    public async Task  CleanH5pFolderInWwwroot()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
         var directoryForCleaning = @"wwwroot\H5pStandalone\h5p-folder";
         
-        systemUnderTest.TerminateH5pPlayer();
+        await systemUnderTest.TerminateH5pPlayer();
         
         mockFileSystemDataAccess.Received().DeleteAllFilesInDirectory(
             Arg.Is<string>(path => path.Contains(directoryForCleaning)));
     }
     
     [Test]
-    public void TerminateH5pJavaScriptPlayer()
+    public async Task TerminateH5pJavaScriptPlayer()
     {
         var mockJavaScriptAdapter= Substitute.For<IJavaScriptAdapter>();
         var systemUnderTest = CreateSystemUnderTest(mockJavaScriptAdapter);
 
-        systemUnderTest.TerminateH5pPlayer();
+        await systemUnderTest.TerminateH5pPlayer();
         
-        mockJavaScriptAdapter.Received().TerminateH5pJavaScriptPlayer();
+        await mockJavaScriptAdapter.Received().TerminateH5pJavaScriptPlayer();
     }
 
     private static TerminateH5pPlayerUc CreateSystemUnderTest(

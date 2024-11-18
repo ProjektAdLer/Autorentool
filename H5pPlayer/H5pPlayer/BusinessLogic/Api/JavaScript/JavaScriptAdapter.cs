@@ -34,20 +34,17 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             }
         }
 
-        public void TerminateH5pJavaScriptPlayer()
+        public async Task TerminateH5pJavaScriptPlayer()
         {
-            throw new NotImplementedException();
-
-
-// try
-// {
-//     await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
-//
-// }
-// catch (JSException ex)
-// {
-//     Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-// }
+     
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+            }
+            catch (JSException ex)
+            {
+               // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
         }
 
 
@@ -80,5 +77,3 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
         }
     }
 }
-
-

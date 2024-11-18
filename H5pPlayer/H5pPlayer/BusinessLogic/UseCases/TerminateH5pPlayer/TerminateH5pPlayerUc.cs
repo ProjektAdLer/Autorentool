@@ -14,10 +14,10 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
         TemporaryH5pManager = new TemporaryH5psInWwwrootManager(dataAccess);
     }
 
-    public void TerminateH5pPlayer()
+    public async Task TerminateH5pPlayer()
     {
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
-        JavaScriptAdapter.TerminateH5pJavaScriptPlayer();
+        await JavaScriptAdapter.TerminateH5pJavaScriptPlayer();
     }
     
     private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; }

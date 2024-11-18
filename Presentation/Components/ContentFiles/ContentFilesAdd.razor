@@ -313,7 +313,7 @@
             // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
             Console.WriteLine("Der Dialog wurde abgebrochen oder geschlossen.");
             
-            terminateH5pPlayer.TerminateH5pPlayer();
+            await terminateH5pPlayer.TerminateH5pPlayer();
             dialog.Close();
             try
             {
@@ -330,7 +330,7 @@
             // Der Dialog wurde mit einem Ergebnis geschlossen, hier können Sie das Ergebnis verarbeiten
             var dialogData = result.Data;
             Console.WriteLine("Dialog wurde mit Ergebnis geschlossen: " + dialogData);
-            terminateH5pPlayer.TerminateH5pPlayer();
+            await terminateH5pPlayer.TerminateH5pPlayer();
             dialog.Close();
            
             try

@@ -2,5 +2,5 @@
 
 public interface ITerminateH5pPlayerUcPort
 {
-    void TerminateH5pPlayer();
+    Task TerminateH5pPlayer();
 }

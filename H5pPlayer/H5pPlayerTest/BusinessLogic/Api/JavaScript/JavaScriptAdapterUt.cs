@@ -50,17 +50,17 @@ public class JavaScriptAdapterUt
     
     
     
-    // [Test]
-    // public void TerminateH5pStandalone_Outdated()
-    // {
-    //     var mockJsRuntime = Substitute.For<IJSRuntime>();
-    //     var systemUnderTest = CreateSystemUnderTest(mockJsRuntime);
-    //
-    //     systemUnderTest.TerminateH5pPlayer();
-    //     
-    //      mockJsRuntime.Received().InvokeAsync<IJSVoidResult>("terminateH5pPlayer");
-    // }
-    //
+    [Test]
+    public async Task TerminateH5pStandalone_Outdated()
+    {
+        var mockJsRuntime = Substitute.For<IJSRuntime>();
+        var systemUnderTest = CreateJavaScriptAdapter(mockJsRuntime);
+    
+        await systemUnderTest.TerminateH5pJavaScriptPlayer();
+        
+         mockJsRuntime.Received().InvokeAsync<IJSVoidResult>("terminateH5pPlayer");
+    }
+    
     
 
     private static H5pEntity CreateH5pEntity(string h5pSourcePath, string unzippedH5psPath)
