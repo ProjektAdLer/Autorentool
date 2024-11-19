@@ -36,13 +36,14 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
 
         public async Task TerminateH5pJavaScriptPlayer()
         {
-     
             try
             {
                 await _jsRuntime.InvokeVoidAsync("terminateH5pStandalone");
             }
-            catch (JSException ex)
+            catch (JSException jsEx)
             {
+                Console.WriteLine("JavaScript error when calling displayH5p: " + jsEx.Message);
+
                // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
             }
         }
