@@ -93,9 +93,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 
     private void CreateErrorOutputForInvalidPath(string invalidPath, string errorMessage)
     {
-        var errorOutputTo = new StartH5pPlayerErrorOutputTO();
-        errorOutputTo.InvalidPath = invalidPath;
-        errorOutputTo.ErrorTextForInvalidPath = errorMessage;
+        var errorOutputTo = new StartH5pPlayerErrorOutputTO(
+            invalidPath, errorMessage);
         StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
     
