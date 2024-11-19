@@ -279,9 +279,7 @@ public class StartH5pPlayerUcUT
         string invalidPath, 
         string expectedErrorMessage)
     {
-        var expectedOutputTo = new StartH5pPlayerErrorOutputTO();
-        expectedOutputTo.InvalidPath = invalidPath;
-        expectedOutputTo.ErrorTextForInvalidPath = expectedErrorMessage;
+        var expectedOutputTo = new StartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
         return expectedOutputTo;
     }
 
