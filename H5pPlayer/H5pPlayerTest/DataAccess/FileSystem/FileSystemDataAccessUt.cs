@@ -13,14 +13,14 @@ public class FileSystemDataAccessUt
 
     
     [Test]
-    public void DeleteAllFilesAndDirectoriesInDirectory()
+    public void DeleteDirectoryRecursively_DeleteAllFilesAndDirectoriesInDirectory()
     {        
         var directoryPath = @"C:\TestDirectory";
         var mockFileSystem = FakeFileSystemWithFilesAndTwoDirectoryDepths(directoryPath);
         FakeFileSystemConfiguration(mockFileSystem, directoryPath);
         var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
         
-        systemUnderTest.DeleteAllFilesInDirectory(directoryPath);
+        systemUnderTest.DeleteDirectoryRecursively(directoryPath);
 
         Assert.That(mockFileSystem.Directory.GetFiles(directoryPath), Is.Empty);
         Assert.That(mockFileSystem.Directory.GetDirectories(directoryPath), Is.Empty);
@@ -30,17 +30,69 @@ public class FileSystemDataAccessUt
 
 
     [Test]
-    public void ThrowsExceptionIfDirectoryDoesNotExist()
+    public void DeleteDirectoryRecursively_ThrowsExceptionIfDirectoryDoesNotExist()
     {
-        var systemUnderTest = CreateTestableFileSystemDataAccess();
-        var nonExistentDirectory = @"C:\NonExistentDirectory";
+        var directoryPath = @"C:\NonExistentDirectory";
+        var mockFileSystem = Substitute.For<IFileSystem>();
+        mockFileSystem.Directory.Exists(directoryPath).Returns(false);
 
-        Assert.Throws<DirectoryNotFoundException>(() => systemUnderTest.DeleteAllFilesInDirectory(nonExistentDirectory));
+        var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
+
+        Assert.Throws<DirectoryNotFoundException>(() => systemUnderTest.DeleteDirectoryRecursively(directoryPath));
+    }
+
+
+    [Test]
+    public void DeleteDirectoryRecursively_DeletesEmptyDirectory()
+    {
+        var emptyDirectory = @"C:\EmptyDirectory";
+        var mockFileSystem = Substitute.For<IFileSystem>();
+        mockFileSystem.Directory.Exists(emptyDirectory).Returns(true);
+        mockFileSystem.Directory.GetFiles(emptyDirectory).Returns(Array.Empty<string>());
+        mockFileSystem.Directory.GetDirectories(emptyDirectory).Returns(Array.Empty<string>());
+
+        var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
+    
+        systemUnderTest.DeleteDirectoryRecursively(emptyDirectory);
+
+        mockFileSystem.Directory.Received(1).Delete(emptyDirectory, true);
     }
     
     
+    [Test]
+    public void DeleteDirectoryRecursively_ThrowsExceptionIfAccessDenied()
+    {
+        var restrictedDirectory = @"C:\RestrictedDirectory";
+        var mockFileSystem = Substitute.For<IFileSystem>();
+        mockFileSystem.Directory.Exists(restrictedDirectory).Returns(true);
+        mockFileSystem.Directory.When(d => d.Delete(restrictedDirectory, true))
+            .Do(x => throw new UnauthorizedAccessException());
+
+        var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
+
+        Assert.Throws<UnauthorizedAccessException>(() => systemUnderTest.DeleteDirectoryRecursively(restrictedDirectory));
+    }
     
+  
     
+    [Test]
+    public void DeleteDirectoryRecursively_ThrowsExceptionIfPathIsNull()
+    {
+        var systemUnderTest = CreateTestableFileSystemDataAccess();
+
+        Assert.Throws<ArgumentNullException>(() => systemUnderTest.DeleteDirectoryRecursively(null));
+    }
+    
+     
+    [Test]
+    public void DeleteDirectoryRecursively_ThrowsExceptionIfPathIsEmpty()
+    {
+        var systemUnderTest = CreateTestableFileSystemDataAccess();
+
+        Assert.Throws<ArgumentException>(() => systemUnderTest.DeleteDirectoryRecursively(string.Empty));
+    }
+    
+
     
     private static FileSystemDataAccess CreateTestableFileSystemDataAccess(IFileSystem mockFileSystem = null)
     {

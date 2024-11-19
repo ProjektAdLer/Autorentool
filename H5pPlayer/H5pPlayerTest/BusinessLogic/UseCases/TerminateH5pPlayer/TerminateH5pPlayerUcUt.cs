@@ -19,7 +19,7 @@ public class TerminateH5pPlayerUcUt
         
         await systemUnderTest.TerminateH5pPlayer();
         
-        mockFileSystemDataAccess.Received().DeleteAllFilesInDirectory(
+        mockFileSystemDataAccess.Received().DeleteDirectoryRecursively(
             Arg.Is<string>(path => path.Contains(directoryForCleaning)));
     }
     

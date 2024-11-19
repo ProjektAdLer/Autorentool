@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using DataAccess.Extensions;
 using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+using H5pPlayer.General.Path;
 
 namespace H5pPlayer.DataAccess.FileSystem;
 
@@ -19,9 +20,10 @@ public class FileSystemDataAccess : IFileSystemDataAccess
     public FileSystemDataAccess(IFileSystem fileSystem)
     { 
         FileSystem = fileSystem;
+        PathValidator = new PathValidator();
+        
     }
     
-
  
     public void ExtractZipFile(string sourceArchiveFileName, string destinationDirectoryName)
     {
@@ -29,36 +31,24 @@ public class FileSystemDataAccess : IFileSystemDataAccess
         zipArchive.ExtractToDirectory(FileSystem, destinationDirectoryName);
     }
 
-    /// <exception cref="DirectoryNotFoundException"></exception>
-    public void DeleteAllFilesInDirectory(string directory)
+    public void DeleteDirectoryRecursively(string directory)
     {
-        ThrowExceptionIfDirectoryDoesNotExist(directory);
-        DeleteAllFilesIn(directory);
-        DeleteAllSubDirectoriesIn(directory);
-    }
-    private void ThrowExceptionIfDirectoryDoesNotExist(string directory)
-    {
-        if (string.IsNullOrWhiteSpace(directory) || !FileSystem.Directory.Exists(directory))
-            throw new DirectoryNotFoundException("The specified directory does not exist or the path is empty.");
-    }
-    private void DeleteAllFilesIn(string directory)
-    {
-        foreach (var file in FileSystem.Directory.GetFiles(directory))
-        {
-            FileSystem.File.Delete(file);
-        }
-    }
-    private void DeleteAllSubDirectoriesIn(string directory)
-    {
-        foreach (var subDirectory in FileSystem.Directory.GetDirectories(directory))
-        {
-            FileSystem.Directory.Delete(subDirectory, true);
-        }
+        PathValidator.ThrowArgumentNullExceptionIfPathIsNull(directory, nameof(directory));
+        PathValidator.ThrowArgumentExceptionIfPathIsEmpty(directory, nameof(directory));
+        ThrowExceptionIfDirectoryNotExists(directory);
+        FileSystem.Directory.Delete(directory, true);
     }
 
-
+    private void ThrowExceptionIfDirectoryNotExists(string directory)
+    {
+        if (!FileSystem.Directory.Exists(directory))
+        {
+            throw new DirectoryNotFoundException($"The directory '{directory}' does not exist.");
+        }
+    }
 
 
     private IFileSystem FileSystem { get; }
+    private PathValidator PathValidator { get; }
 
 }
