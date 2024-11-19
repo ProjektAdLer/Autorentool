@@ -11,7 +11,7 @@ public class FileSystemDataAccess : IFileSystemDataAccess
     public FileSystemDataAccess()
     { 
         FileSystem = new System.IO.Abstractions.FileSystem();
-        
+        PathValidator = new PathValidator();
     }
     
     /// <summary>
