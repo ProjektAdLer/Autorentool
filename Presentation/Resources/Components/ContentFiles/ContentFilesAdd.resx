@@ -17,4 +17,31 @@
     <data name="DialogService.MessageBox.Text" xml:space="preserve">
         <value />
     </data>
+    <data name="ContentFilesAdd.AddedMaterial.Success" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.UnsupportedFileEnding.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.FileLoadingError.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.DuplicatedFile.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.LargeFile.Snackbar" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ContentFilesAdd.ErrorMessage.LoadingMaterial" xml:space="preserve">
+        <value />
+    </data>
 </root>

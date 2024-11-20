@@ -10,6 +10,7 @@
 @using Presentation.PresentationLogic.Mediator
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
+@inject ISnackbar Snackbar
 @using System.Runtime.Serialization
 <style type="text/css">  
    .mud-table-toolbar {
@@ -243,7 +244,8 @@
         var result = await dialog.Result;
 
         if (result.Canceled) return;
-
+        Snackbar.Add(@Localizer["ContentFilesView.Snackbar.OneMaterialDelete"], Severity.Success);
+        
         var matches = WorkspaceViewModel.LearningWorlds
             .SelectMany(world => world.AllLearningElements
                 .Where(element => element.LearningContent.Equals(item))
@@ -261,19 +263,19 @@
         }
         catch (ArgumentOutOfRangeException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
         catch (FileNotFoundException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
         catch (SerializationException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
         catch (IOException e)
         {
-            ErrorService.SetError("Error deleting content: File in use", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialInUse"], e.Message);
         }
     }
 
@@ -297,7 +299,8 @@
         var result = await dialog.Result;
 
         if (result.Canceled) return;
-
+        Snackbar.Add(@Localizer["ContentFilesView.Snackbar.MaterialDelete"], Severity.Success);
+        
         var contentInUse = GetContentInUseFromDeletionCandidates();
 
         var doNotFilterForUnused = true;
@@ -320,15 +323,15 @@
         }
         catch (ArgumentOutOfRangeException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
         catch (FileNotFoundException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
         catch (SerializationException e)
         {
-            ErrorService.SetError("Error deleting content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.MaterialDelete"], e.Message);
         }
 
         _deletionCandidates = _deletionCandidates.Where(x => Items.Contains(x));
@@ -394,7 +397,7 @@
         }
         catch (InvalidOperationException e)
         {
-            ErrorService.SetError("Error opening content files folder", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesView.ErrorMessage.OpenMaterialFolder"], e.Message);
         }
     }
 

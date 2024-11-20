@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="AddLinkForm.SnackbarMessage" xml:space="preserve">
-        <value>Link added</value>
+        <value>Video added as link</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
         <value>Link name</value>
