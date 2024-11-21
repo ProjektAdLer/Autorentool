@@ -21,8 +21,30 @@ public class JavaScriptAdapterUt
 
         await systemUnderTest.DisplayH5p(javaScriptAdapterTO);
 
+        await AssertThatFollowingJavaInteropFunctionIsCalled("displayH5p", fakeJsInterop);
+    }
+
+
+
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "https://localhost:8001/H5pStandalone/h5p-folder/")]
+    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+        "//localhost:8001/H5pStandalone/h5p-folder/")]
+    public async Task ValidateH5p(string h5pSourcePath, string unzippedH5psPath)
+    {
+        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
+        var fakeJsInterop = Substitute.For<IJSRuntime>();
+        var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
+
+        await systemUnderTest.ValidateH5p(javaScriptAdapterTO);
+
+        await AssertThatFollowingJavaInteropFunctionIsCalled("validateH5p", fakeJsInterop);
+    }
+    
+    private static async Task AssertThatFollowingJavaInteropFunctionIsCalled(string nameOfFunctionToCall, IJSRuntime fakeJsInterop)
+    {
         await fakeJsInterop.Received(1).InvokeAsync<IJSVoidResult>(
-            "displayH5p",
+            nameOfFunctionToCall,
             Arg.Is<object[]>(
                 args =>
                     args.Length == 1 &&

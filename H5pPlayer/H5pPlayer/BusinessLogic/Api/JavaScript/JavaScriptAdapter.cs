@@ -14,12 +14,22 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
 
      
 
-        public async Task DisplayH5p(JavaScriptAdapterTO javascriptAdapterTO)
+        public async Task DisplayH5p(JavaScriptAdapterTO javaScriptAdapterTo)
+        {
+            await CallJavaScriptInterop(javaScriptAdapterTo, "displayH5p");
+        }
+        
+        public async Task ValidateH5p(JavaScriptAdapterTO javaScriptAdapterTo)
+        {
+            await CallJavaScriptInterop(javaScriptAdapterTo, "validateH5p");
+        }
+
+        private async Task CallJavaScriptInterop(JavaScriptAdapterTO javaScriptAdapterTo, string nameOfFunctionToCall)
         {
             try
             {
-                var pathOfH5pToPlay = GeneratePathOfH5PToPlay(javascriptAdapterTO);
-                await _jsRuntime.InvokeVoidAsync("displayH5p", pathOfH5pToPlay);
+                var pathOfH5pToPlay = GeneratePathOfH5PToPlay(javaScriptAdapterTo);
+                await _jsRuntime.InvokeVoidAsync(nameOfFunctionToCall, pathOfH5pToPlay);
             }
             catch (JSException jsEx)
             {
@@ -31,13 +41,14 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             }
         }
 
+
         /// <example>
         /// example path: //localhost:8001/H5pStandalone/h5p-folder/Accordion_Test
         /// </example>
-        private static string GeneratePathOfH5PToPlay(JavaScriptAdapterTO javascriptAdapterTO)
+        private static string GeneratePathOfH5PToPlay(JavaScriptAdapterTO javaScriptAdapterTo)
         {
-            var nameOfH5pToPlay = Path.GetFileNameWithoutExtension(javascriptAdapterTO.H5pZipSourcePath);
-            var pathOfH5pToPlay = javascriptAdapterTO.UnzippedH5psPath + nameOfH5pToPlay;
+            var nameOfH5pToPlay = Path.GetFileNameWithoutExtension(javaScriptAdapterTo.H5pZipSourcePath);
+            var pathOfH5pToPlay = javaScriptAdapterTo.UnzippedH5psPath + nameOfH5pToPlay;
 
             pathOfH5pToPlay = IfPathOfH5PToPlayPathContainsHttpDeleteHttp(pathOfH5pToPlay);
 
@@ -72,5 +83,8 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
                 // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
             }
         }
+        
+
+    
     }
 }
