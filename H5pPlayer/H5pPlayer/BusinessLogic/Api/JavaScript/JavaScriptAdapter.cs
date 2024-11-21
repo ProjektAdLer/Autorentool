@@ -59,7 +59,7 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
         /// why we must delete https or http:
         /// https://github.com/ProjektAdLer/Autorentool/issues/570#issuecomment-2275233471
         /// </summary>
-        private static string IfPathOfH5PToPlayPathContainsHttpDeleteHttp(string pathOfH5pToPlay)
+        private static string IfPathOfH5PToPlayContainsHttpDeleteHttp(string pathOfH5pToPlay)
         {
             if (pathOfH5pToPlay.StartsWith("http:") || pathOfH5pToPlay.StartsWith("https:"))
             {
