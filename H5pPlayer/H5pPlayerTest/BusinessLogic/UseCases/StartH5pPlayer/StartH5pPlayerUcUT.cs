@@ -266,8 +266,8 @@ public class StartH5pPlayerUcUT
     
     private static StartH5pPlayerInputTO CreateStartH5pPlayerInputT0(
         H5pDisplayMode displayMode = H5pDisplayMode.Display,
-        string h5pZipSourcePath = null,
-        string unzippedH5psPath = null)
+        string? h5pZipSourcePath = null,
+        string? unzippedH5psPath = null)
     {
         h5pZipSourcePath ??= "C://Default_PathToZip/Source" + H5pFileEnding;
         unzippedH5psPath ??= "https://localhost:8001/H5pStandalone/h5p-folder/";
