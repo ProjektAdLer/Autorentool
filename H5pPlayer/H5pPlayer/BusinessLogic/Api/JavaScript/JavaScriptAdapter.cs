@@ -50,7 +50,7 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             var nameOfH5pToPlay = Path.GetFileNameWithoutExtension(javaScriptAdapterTo.H5pZipSourcePath);
             var pathOfH5pToPlay = javaScriptAdapterTo.UnzippedH5psPath + nameOfH5pToPlay;
 
-            pathOfH5pToPlay = IfPathOfH5PToPlayPathContainsHttpDeleteHttp(pathOfH5pToPlay);
+            pathOfH5pToPlay = IfPathOfH5PToPlayContainsHttpDeleteHttp(pathOfH5pToPlay);
 
             return pathOfH5pToPlay;
         }
