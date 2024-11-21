@@ -32,23 +32,6 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// 
     /// UnzippedH5psPath: https://localhost:8001/H5pStandalone/h5p-folder
     ///
-    ///
-    /// H5pJsonSourcePath rein in
-    ///     Aus dem ZipSourcePath extrahieren
-    ///     das könnte man z.b. in der Entity machen somit bräuchte die Entity nur einen getter
-    ///     Aber achtung erst muss die Zip Datei in den H5pOrdner der H5pStandalone in wwwroot des
-    ///     Autorentools implementiert werden
-    ///
-    ///     
-    /// 
-    ///  JavascriptAdapter aufräumen, -> json path in jsonpath inentitiy
-    ///
-    ///
-    /// Vgl Datei ContentFilesAdd in Presentation.Componentes.ContentFiles
-    ///  
-    ///
-    /// 1. 
-    /// 
     /// </summary>
     public async Task StartH5pPlayer(StartH5pPlayerInputTO displayH5PInputTo)
     {
