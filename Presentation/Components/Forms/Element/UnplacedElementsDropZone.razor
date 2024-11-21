@@ -12,9 +12,9 @@
 @using Presentation.View.LearningElement
 @using Shared
 @using Shared.Command
-<div class="bg-adlerbgbright rounded-lg p-2">
+<div class="flex flex-col bg-adlerbgbright h-full rounded m-1.5 2xl:m-2">
 
-    <div class="grid grid-cols-2 w-full py-1 gap-4 2xl:gap-0 border-b-2 border-adlergrey-100">
+    <div class="flex shrink grow basis-2/12 justify-between w-full py-1 border-b-2 border-adlergrey-100 h-fit">
 
         <div class="grid grid-rows-2 items-center justify-start gap-2 p-1">
             <p class="cursor-default text-xs 2xl:text-sm text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
@@ -107,9 +107,9 @@
         </div>
     </div>
 
-    <div class="flex justify-start overflow-y-scroll bg-white h-24 w-full">
+    <div class="grow shrink basis-10/12 overflow-y-scroll bg-white w-full rounded-b-lg">
         <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                     Class="z-30 flex flex-wrap gap-7 2xl:gap-10 justify-start items-center pl-2 w-full min-h-full h-max">
+                     Class="z-30 flex flex-wrap gap-3 2xl:gap-6 justify-start items-center pl-1 2xl:pl-4 w-full min-h-full max-h-[calc(20vh)]">
             <ItemRenderer>
                 @if (ShowAfterFilters(@context))
                 {
