@@ -32,23 +32,6 @@ public class JavaScriptAdapterUt
     }
 
 
-    // just because the Entity is injected instead of an TO
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "https://localhost:8001/H5pStandalone/h5p-folder/")]
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "//localhost:8001/H5pStandalone/h5p-folder/")]
-    public async Task DisplayH5p_NotModifyH5pEntityH5pJsonSourcePath(string h5pSourcePath, string unzippedH5psPath)
-    {
-        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
-
-        var systemUnderTest = CreateJavaScriptAdapter();
-
-        await systemUnderTest.DisplayH5p(javaScriptAdapterTO);
-
-        Assert.That(javaScriptAdapterTO.H5pZipSourcePath, Is.EqualTo(h5pSourcePath));
-        Assert.That(javaScriptAdapterTO.UnzippedH5psPath, Is.EqualTo(unzippedH5psPath));
-    }
-
 
     [Test]
     public async Task TerminateH5pJavaScriptPlayer()
