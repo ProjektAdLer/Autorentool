@@ -5,7 +5,6 @@ namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
 public class DisplayH5pUC : IDisplayH5pUC
 {
-
     public DisplayH5pUC(IJavaScriptAdapter javaScriptAdapter)
     {
         JavaScriptAdapter = javaScriptAdapter;
@@ -13,11 +12,10 @@ public class DisplayH5pUC : IDisplayH5pUC
 
     public async Task StartToDisplayH5pUC(H5pEntity h5pEntity)
     {
-       await JavaScriptAdapter.DisplayH5p(h5pEntity);
+        var javaScriptAdapterTO = new JavaScriptAdapterTO(h5pEntity.UnzippedH5psPath, h5pEntity.H5pZipSourcePath);
+        await JavaScriptAdapter.DisplayH5p(javaScriptAdapterTO);
     }
-    
-    
-    
-    internal IJavaScriptAdapter JavaScriptAdapter { get; }
 
+
+    internal IJavaScriptAdapter JavaScriptAdapter { get; }
 }

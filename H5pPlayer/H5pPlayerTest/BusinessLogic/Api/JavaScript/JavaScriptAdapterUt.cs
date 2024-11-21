@@ -1,5 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
+using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
@@ -15,11 +16,11 @@ public class JavaScriptAdapterUt
         "//localhost:8001/H5pStandalone/h5p-folder/")]
     public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
-        var h5pEntity = CreateH5pEntity(h5pSourcePath, unzippedH5psPath);
+        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
         var fakeJsInterop = Substitute.For<IJSRuntime>();
         var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
 
-        await systemUnderTest.DisplayH5p(h5pEntity);
+        await systemUnderTest.DisplayH5p(javaScriptAdapterTO);
 
         await fakeJsInterop.Received(1).InvokeAsync<IJSVoidResult>(
             "displayH5p",
@@ -39,13 +40,14 @@ public class JavaScriptAdapterUt
         "//localhost:8001/H5pStandalone/h5p-folder/")]
     public async Task DisplayH5p_NotModifyH5pEntityH5pJsonSourcePath(string h5pSourcePath, string unzippedH5psPath)
     {
-        var h5pEntity = CreateH5pEntity(h5pSourcePath, unzippedH5psPath);
+        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
+
         var systemUnderTest = CreateJavaScriptAdapter();
 
-        await systemUnderTest.DisplayH5p(h5pEntity);
+        await systemUnderTest.DisplayH5p(javaScriptAdapterTO);
 
-        Assert.That(h5pEntity.H5pZipSourcePath, Is.EqualTo(h5pSourcePath));
-        Assert.That(h5pEntity.UnzippedH5psPath, Is.EqualTo(unzippedH5psPath));
+        Assert.That(javaScriptAdapterTO.H5pZipSourcePath, Is.EqualTo(h5pSourcePath));
+        Assert.That(javaScriptAdapterTO.UnzippedH5psPath, Is.EqualTo(unzippedH5psPath));
     }
 
 
@@ -60,13 +62,11 @@ public class JavaScriptAdapterUt
         await mockJsRuntime.Received().InvokeVoidAsync("terminateH5pStandalone");
     }
 
-
-    private static H5pEntity CreateH5pEntity(string h5pSourcePath, string unzippedH5psPath)
+    
+    private static JavaScriptAdapterTO CreateJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
     {
-        var h5pEntity = new H5pEntity();
-        h5pEntity.H5pZipSourcePath = h5pSourcePath;
-        h5pEntity.UnzippedH5psPath = unzippedH5psPath;
-        return h5pEntity;
+        var javaScriptAdapterTO = new JavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
+        return javaScriptAdapterTO;
     }
 
 
