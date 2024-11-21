@@ -18,19 +18,7 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             _jsRuntime = jsRuntime;
         }
 
-        public async Task TerminateH5pJavaScriptPlayer()
-        {
-            try
-            {
-                await _jsRuntime.InvokeVoidAsync("terminateH5pStandalone");
-            }
-            catch (JSException jsEx)
-            {
-                Console.WriteLine("JavaScript error when calling displayH5p: " + jsEx.Message);
-
-               // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-            }
-        }
+     
 
         public async Task DisplayH5p(JavaScriptAdapterTO javascriptAdapterTO)
         {
@@ -74,6 +62,21 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             }
 
             return pathOfH5pToPlay;
+        }
+        
+        
+        public async Task TerminateH5pJavaScriptPlayer()
+        {
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+            }
+            catch (JSException jsEx)
+            {
+                Console.WriteLine("JavaScript error when calling displayH5p: " + jsEx.Message);
+
+                // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
         }
     }
 }
