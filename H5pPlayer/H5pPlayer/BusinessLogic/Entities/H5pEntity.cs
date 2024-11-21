@@ -25,6 +25,8 @@ public class H5pEntity
     
     /// <summary>
     /// Path to "H5P-Filename.h5p" for playing in H5P-Player.
+    /// This is the source. From this source we copy the H5P to
+    /// the temporary directory.
     /// </summary>
     /// <example>
     /// Something like that:
