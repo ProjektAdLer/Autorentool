@@ -1,10 +1,4 @@
-﻿// using H5pPlayer.BusinessLogic.Entities;
-
-
-using System;
-using System.Threading.Tasks;
-using H5pPlayer.BusinessLogic.Entities;
-using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+﻿using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.Api.JavaScript
