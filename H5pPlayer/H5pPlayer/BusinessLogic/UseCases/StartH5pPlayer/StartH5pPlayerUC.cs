@@ -81,7 +81,10 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         StartH5pPlayerUcOutputPort.ErrorOutput(errorOutputTo);
     }
     
-    
+    /// <summary>
+    /// Todo: error management
+    /// for example: excess denied ...
+    /// </summary>
     private void ExtractZippedSourceH5pToTemporaryFolder()
     {
         FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, BuildTemporaryDirectoryFullNameForOneH5p());
