@@ -6,5 +6,6 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 public interface IJavaScriptAdapter
 {
     Task TerminateH5pJavaScriptPlayer();
-    Task DisplayH5p(JavaScriptAdapterTO h5PEntity);
+    Task DisplayH5p(JavaScriptAdapterTO javaScriptAdapterTO);
+    Task ValidateH5p(JavaScriptAdapterTO javaScriptAdapterTO);
 }
