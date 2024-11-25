@@ -5,7 +5,7 @@ namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
 public class DisplayH5pUC : IDisplayH5pUC
 {
-    public DisplayH5pUC(IJavaScriptAdapter javaScriptAdapter)
+    internal DisplayH5pUC(IJavaScriptAdapter javaScriptAdapter)
     {
         JavaScriptAdapter = javaScriptAdapter;
     }

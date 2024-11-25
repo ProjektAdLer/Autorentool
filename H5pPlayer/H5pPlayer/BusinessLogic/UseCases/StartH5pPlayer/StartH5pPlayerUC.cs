@@ -13,7 +13,7 @@ namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 {
 
-    public StartH5pPlayerUC(
+    internal StartH5pPlayerUC(
         IFileSystemDataAccess dataAccess,
         IDisplayH5pUC displayH5PUc,
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
