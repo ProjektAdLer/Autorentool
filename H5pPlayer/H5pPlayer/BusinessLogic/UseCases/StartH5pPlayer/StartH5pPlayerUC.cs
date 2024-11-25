@@ -41,10 +41,10 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
-        await IfUserWantsStartToValidateElseStartToDisplay();
+        await IfUserWantsToValidateH5pStartToValidateElseStartToDisplay();
     }
 
-    private async Task IfUserWantsStartToValidateElseStartToDisplay()
+    private async Task IfUserWantsToValidateH5pStartToValidateElseStartToDisplay()
     {
         if(H5pEntity.ActiveDisplayMode == H5pDisplayMode.Validate)
             await ValidateH5PUc.StartToValidateH5p(H5pEntity);
