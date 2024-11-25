@@ -44,15 +44,6 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         await IfUserWantsToValidateH5pStartToValidateElseStartToDisplay();
     }
 
-    private async Task IfUserWantsToValidateH5pStartToValidateElseStartToDisplay()
-    {
-        if(H5pEntity.ActiveDisplayMode == H5pDisplayMode.Validate)
-            await ValidateH5PUc.StartToValidateH5p(H5pEntity);
-        else
-            await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
-    }
-
-
     private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
     {
         CreateH5pEntity();
@@ -99,6 +90,14 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     private void ExtractZippedSourceH5pToTemporaryFolder()
     {
         FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, BuildTemporaryDirectoryFullNameForOneH5p());
+    }
+
+    private async Task IfUserWantsToValidateH5pStartToValidateElseStartToDisplay()
+    {
+        if(H5pEntity.ActiveDisplayMode == H5pDisplayMode.Validate)
+            await ValidateH5PUc.StartToValidateH5p(H5pEntity);
+        else
+            await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
     }
 
     
