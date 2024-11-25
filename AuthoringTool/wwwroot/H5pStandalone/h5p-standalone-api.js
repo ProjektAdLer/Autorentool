@@ -9,7 +9,8 @@
 window.onload = function () {
 
     let h5pInstance = null;
-
+    let externalDispatcher = null;
+    let xAPICompletedListener = null;
 
 
     // can throw exceptions
@@ -26,20 +27,21 @@ window.onload = function () {
         console.log("validateH5p javascript function called with path:", h5pJsonPath);
         resetH5pInstance();
         await buildH5p(h5pJsonPath);
-
-
-        // H5PStandalone.prototype.externalDispatcher.on("xAPI", (event) => {
-        //     console.log("xAPI event", event);
-        //
-        //     // Konvertiere das JavaScript-Event in ein JSON-String
-        //     const jsonData = JSON.stringify(event);
-        //
-        //     // JSON-Daten an die .NET-Methode senden  
-        //   //  DotNet.invokeMethodAsync('Presentation', 'ReceiveJsonData', jsonData);
-        // });
-        //
-        // H5PStandalone.H5P.xAPICompletedListener = xAPICompletedListener;
+        setupEventListenersAndCallbackToDotNet();
     }
+         
+    // can throw exceptions
+    window.terminateH5pStandalone = async function () {
+        const el = document.getElementById("h5p-container");
+        resetHtmlContainerOfH5p(el);
+        localStorage.clear();
+        sessionStorage.clear();
+        releaseEventListeners();
+        window.location.reload();
+        H5PIntegration.contents = {};
+        resetH5pInstance();
+        console.log("Container completely removed and rebuilt.");
+    };
 
     async function buildH5p(h5pJsonPath) {
 
@@ -71,19 +73,6 @@ window.onload = function () {
     }
 
 
-    // can throw exceptions
-    window.terminateH5pStandalone = async function () {
-        const el = document.getElementById("h5p-container");
-        resetHtmlContainerOfH5p(el);
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.reload();
-        H5PIntegration.contents = {};
-        resetH5pInstance();
-        console.log("Container completely removed and rebuilt.");
-    };
-
-
     function resetH5pInstance() {
         if (h5pInstance) {
             h5pInstance = null;
@@ -94,6 +83,39 @@ window.onload = function () {
         if (el) {
             el.innerHTML = "";
         }
+    }
+
+  
+    function setupEventListenersAndCallbackToDotNet() {
+        
+        if (h5pInstance && !externalDispatcher) {
+            
+            externalDispatcher = h5pInstance.externalDispatcher;
+
+            if (externalDispatcher) {
+                
+                externalDispatcher.on("xAPI", onXAPIEvent);
+                xAPICompletedListener = onXAPIEvent; 
+            } else {
+                console.error("External dispatcher is not available.");
+            }
+        }
+    }
+
+    function onXAPIEvent(event) {
+        console.log("xAPI event received:", event);
+        const jsonData = JSON.stringify(event);
+        DotNet.invokeMethodAsync('H5pPlayer.BusinessLogic.Api.JavaScript', 'ReceiveJsonData', jsonData);
+    }
+
+
+    function releaseEventListeners() {
+        if (externalDispatcher && xAPICompletedListener) {
+            externalDispatcher.off("xAPI", xAPICompletedListener);
+            console.log("xAPI Event listeners successfully removed.");
+        }
+        externalDispatcher = null;
+        xAPICompletedListener = null;
     }
 }
 
