@@ -24,6 +24,6 @@ public class ValidateH5pUc
     
     
     
-    public IJavaScriptAdapter JavaScriptAdapter { get; }
+    private IJavaScriptAdapter JavaScriptAdapter { get; }
 
 }
