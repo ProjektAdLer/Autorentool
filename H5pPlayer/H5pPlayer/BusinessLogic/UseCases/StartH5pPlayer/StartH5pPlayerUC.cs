@@ -38,7 +38,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
-        await DisplayH5pUC.StartToDisplayH5pUC(H5pEntity);
+        await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
     }
     
     

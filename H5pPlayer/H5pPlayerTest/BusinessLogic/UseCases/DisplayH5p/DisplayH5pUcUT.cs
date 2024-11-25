@@ -9,7 +9,7 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.DisplayH5p;
 public class DisplayH5pUcUT
 {
     [Test]
-    public async Task StartToDisplayH5pUC_CallJavaScriptAdapter()
+    public async Task StartToDisplayH5p_CallJavaScriptAdapter()
     {
         var mockJavaScriptAdapter = Substitute.For<IJavaScriptAdapter>();
         var systemUnderTest = new DisplayH5pUC(mockJavaScriptAdapter);
@@ -17,7 +17,7 @@ public class DisplayH5pUcUT
         var h5pZipSourcePath = @"C:\ValidPath2.h5p";
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
         
-        await systemUnderTest.StartToDisplayH5pUC(h5pEntity);
+        await systemUnderTest.StartToDisplayH5p(h5pEntity);
 
         var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         await mockJavaScriptAdapter.Received().DisplayH5p(Arg.Is(javaScriptAdapterTO));

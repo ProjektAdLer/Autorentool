@@ -250,7 +250,7 @@ public class StartH5pPlayerUcUT
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
         
-        await mockDisplayH5pUC.Received().StartToDisplayH5pUC(Arg.Any<H5pEntity>());
+        await mockDisplayH5pUC.Received().StartToDisplayH5p(Arg.Any<H5pEntity>());
     }
  
     

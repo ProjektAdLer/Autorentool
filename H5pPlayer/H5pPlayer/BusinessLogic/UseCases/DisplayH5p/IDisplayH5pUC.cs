@@ -4,5 +4,5 @@ namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
 public interface IDisplayH5pUC
 {
-    Task StartToDisplayH5pUC(H5pEntity h5pEntity);
+    Task StartToDisplayH5p(H5pEntity h5pEntity);
 }
