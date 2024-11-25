@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 
-public class ValidateH5pUc
+public class ValidateH5pUc : IValidateH5pUc
 {
 
     internal ValidateH5pUc(IJavaScriptAdapter javaScriptAdapter)

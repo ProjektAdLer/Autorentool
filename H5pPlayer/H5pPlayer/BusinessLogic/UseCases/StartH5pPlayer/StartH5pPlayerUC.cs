@@ -2,6 +2,7 @@
 using H5pPlayer.BusinessLogic.BusinessRules;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using Shared.Configuration;
 
 namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
@@ -14,10 +15,12 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 {
 
     internal StartH5pPlayerUC(
+        IValidateH5pUc validateH5PUc, 
         IFileSystemDataAccess dataAccess,
         IDisplayH5pUC displayH5PUc,
         IStartH5pPlayerUCOutputPort startH5PPlayerUcOutputPort)
     {
+        ValidateH5PUc = validateH5PUc;
         FileSystemDataAccess = dataAccess;
         DisplayH5pUC = displayH5PUc;
         StartH5pPlayerUcOutputPort = startH5PPlayerUcOutputPort;
@@ -38,10 +41,18 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
         MapTOtoEntity(displayH5PInputTo);
         ExtractZippedSourceH5pToTemporaryFolder();
-        await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
+        await IfUserWantsToValidateStartToValidateElseStartToDisplay();
     }
-    
-    
+
+    private async Task IfUserWantsToValidateStartToValidateElseStartToDisplay()
+    {
+        if(H5pEntity.ActiveDisplayMode == H5pDisplayMode.Validate)
+            await ValidateH5PUc.StartToValidateH5p(H5pEntity);
+        else
+            await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
+    }
+
+
     private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
     {
         CreateH5pEntity();
@@ -104,8 +115,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
         H5pEntity = new H5pEntity();
     }
 
-    
-   
+
+    internal IValidateH5pUc ValidateH5PUc { get; }
     internal IFileSystemDataAccess FileSystemDataAccess { get; }
     internal IDisplayH5pUC DisplayH5pUC { get; }
     internal H5pEntity? H5pEntity { get; set; }
