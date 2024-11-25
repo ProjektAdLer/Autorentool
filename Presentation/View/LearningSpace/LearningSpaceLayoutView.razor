@@ -80,6 +80,7 @@
     private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\" viewBox=\"-1 -1 34 34\">"
                                                                       + GetSvgPolygonString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + GetSvgDoorsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
+                                                                      + GetSvgArrowsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + "</svg>";
 
     private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
@@ -123,11 +124,60 @@
         var doorsString = new StringBuilder();
         foreach (var (p1, p2) in floorPlan.DoorPositions)
         {
-            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgba(204,204,204);stroke-width:0.5\" />");
+            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgb(204,204,204);stroke-width:0.5\" />");
         }
 
         return doorsString.ToString();
     }
+    
+    private string GetCornerPointsArrowString(IFloorPlanViewModel floorPlan)
+    {
+        var cornerPointsArrowString = new StringBuilder();
+
+        foreach (var arrow in floorPlan.ArrowCornerPoints)
+        {
+            cornerPointsArrowString.Append("clip-path: polygon(");
+
+            foreach (var cornerPoint in arrow)
+            {
+                cornerPointsArrowString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
+            }
+
+            if (arrow.Any())
+            {
+                cornerPointsArrowString.Length -= 2;
+            }
+            else
+            {
+                cornerPointsArrowString.Append("0% 0%");
+            }
+
+            cornerPointsArrowString.Append(");");
+        }
+
+        return cornerPointsArrowString.ToString();
+    }
+    
+
+    private string GetSvgArrowsString(IFloorPlanViewModel floorPlan)
+    {
+        var svgString = new StringBuilder();
+
+        foreach (var arrow in floorPlan.ArrowCornerPoints)
+        {
+            svgString.Append("<polygon points=\"");
+
+            foreach (var cornerPoint in arrow)
+            {
+                svgString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
+            }
+
+            svgString.Append("\" style=\"fill:rgb(153,153,153); stroke:rgba(153,153,153); stroke-width:0.2\" />");
+        }
+
+        return svgString.ToString();
+    }
+
 
     private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 

@@ -35,33 +35,52 @@ public class D40X3715LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 4, Y = 33 },
-        new() { X = 4, Y = 29 },
-        new() { X = 4, Y = 22 },
-        new() { X = 4, Y = 17 },
-        new() { X = 4, Y = 10 },
-        new() { X = 4, Y = 5 },
-        new() { X = 10, Y = 5 },
-        new() { X = 16, Y = 5 },
-        new() { X = 21, Y = 5 },
+        new() { X = 3, Y = 32 },
+        new() { X = 3, Y = 26 },
+        new() { X = 3, Y = 20 },
+        new() { X = 3, Y = 15 },
+        new() { X = 3, Y = 9 },
+        new() { X = 3, Y = 3 },
+        new() { X = 9, Y = 3 },
+        new() { X = 15, Y = 3 },
+        new() { X = 21, Y = 3 },
         new() { X = 27, Y = 9 },
-        new() { X = 31, Y = 15 },
-        new() { X = 31, Y = 24 },
-        new() { X = 27, Y = 30 },
-        new() { X = 20, Y = 33 },
-        new() { X = 15, Y = 33 }
+        new() { X = 30, Y = 14 },
+        new() { X = 30, Y = 23 },
+        new() { X = 27, Y = 27 },
+        new() { X = 21, Y = 32 },
+        new() { X = 15, Y = 32 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 9, Y = 34 },
-        new() { X = 33, Y = 18 }
+        new() { X = 9, Y = 32 },
+        new() { X = 30, Y = 18 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 5, Y = 32 }, new Point { X = 10, Y = 32 }),
-        (new Point { X = 32, Y = 14 }, new Point { X = 32, Y = 19 })
+        (new Point { X = 5, Y = 32 }, new Point { X = 11, Y = 32 }),
+        (new Point { X = 32, Y = 13 }, new Point { X = 32, Y = 19 })
+    };
+    
+    public IList<IList<Point>> ArrowCornerPoints { get; } = new List<IList<Point>>
+    {
+        new List<Point>
+        {
+            //Intro
+            new() { X = 8, Y = 32 },
+            new() { X = 7, Y = 33 },
+            new() { X = 9, Y = 33 }
+        },
+
+        new List<Point>
+        {
+            //Outro
+            new() { X = 33, Y = 16 },
+            new() { X = 32, Y = 15 },
+            new() { X = 32, Y = 17 }
+        }
     };
 
     public string GetIcon => Icon;
