@@ -27,7 +27,8 @@ window.onload = function () {
         console.log("validateH5p javascript function called with path:", h5pJsonPath);
         resetH5pInstance();
         await buildH5p(h5pJsonPath);
-        setupEventListenersAndCallbackToDotNet();
+        
+       // setupEventListenersAndCallbackToDotNet();
     }
          
     // can throw exceptions
@@ -37,9 +38,9 @@ window.onload = function () {
         localStorage.clear();
         sessionStorage.clear();
         releaseEventListeners();
-        window.location.reload();
         H5PIntegration.contents = {};
         resetH5pInstance();
+        window.location.reload();
         console.log("Container completely removed and rebuilt.");
     };
 
@@ -70,6 +71,18 @@ window.onload = function () {
 
         h5pInstance = new H5PStandalone.H5P(el, options);
         await h5pInstance;
+
+        h5pInstance.externalDispatcher.on("xAPI", (event) => {
+            console.log("xAPI event", event);
+
+            // Konvertiere das JavaScript-Event in ein JSON-String
+            const jsonData = JSON.stringify(event);
+
+            // JSON-Daten an die .NET-Methode senden  
+            DotNet.invokeMethodAsync('H5pPlayer.BusinessLogic.Api.JavaScript', 'ReceiveJsonData', jsonData);
+        });
+
+        //h5pInstance.xAPICompletedListener = xAPICompletedListener;
     }
 
 

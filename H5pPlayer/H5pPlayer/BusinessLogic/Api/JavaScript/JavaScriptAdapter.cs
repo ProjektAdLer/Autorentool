@@ -1,4 +1,5 @@
-﻿using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+﻿using System.Text.Json;
+using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.Api.JavaScript
@@ -33,11 +34,11 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             }
             catch (JSException jsEx)
             {
-                Console.WriteLine("JavaScript error when calling displayH5p: " + jsEx.Message);
+                Console.WriteLine("JavaScript error when calling " + nameOfFunctionToCall + ": " + jsEx.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("General error when calling displayH5p: " + ex.Message);
+                Console.WriteLine("General error when calling " + nameOfFunctionToCall + ": " + ex.Message);
             }
         }
 
@@ -82,6 +83,19 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
 
                 // Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
             }
+        }
+        
+        
+        [JSInvokable]
+        public static void ReceiveJsonData(string jsonData)
+        {
+            // JSON-Daten deserialisieren
+            var jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonData);
+
+            Console.WriteLine($"Received JSON data from JavaScript: {jsonObject}");
+            Console.WriteLine($"Received JSON data from JavaScript: {jsonData}");
+
+
         }
         
 
