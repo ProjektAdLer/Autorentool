@@ -85,7 +85,7 @@ else
         {
             { nameof(CreateEditReferenceActionDialog.Question), Question },
             { nameof(CreateEditReferenceActionDialog.ExistingAction), Rule?.Action },
-            //{ nameof(CreateEditReferenceActionDialog.ExistingRule), Rule}
+            { nameof(CreateEditReferenceActionDialog.ExistingRule), Rule}
         };
         
         var dialogReference = await DialogService.ShowAsync<CreateEditReferenceActionDialog>(@Localizer["ReferenceDialog.Title.Text"],
