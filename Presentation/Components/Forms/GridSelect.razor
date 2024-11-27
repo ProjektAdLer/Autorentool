@@ -25,7 +25,7 @@
             @for (var i = 0; i < FilteredElements.Count(); i++)
             {
                 var element = FilteredElements.ElementAt(i);
-                <div onclick="@(() => SelectAsync(element))" class="cursor-pointer">
+                <div onclick="@(() => SelectAsync(element))" class="@GetCssBuilder(element, i)">
                     @ElementTemplate(element)
                 </div>
             }
@@ -40,13 +40,15 @@
     [Parameter, EditorRequired, AllowNull] public RenderFragment<T> ElementTemplate { get; set; }
 
     [Parameter] public Func<T, IEnumerable<string>>? FilterFuncSearchableStrings { get; set; }
+    
+    [Parameter]
+    public bool AllowDeselect { get; set; } = true;
 
     private IEnumerable<T> FilteredElements => FilterFuncSearchableStrings is null || string.IsNullOrWhiteSpace(_searchString) ? Elements : Elements.Where(ele => FilterFuncSearchableStrings(ele).Any(str => str.ToLower().Contains(_searchString.ToLower())));
 
     private string? _searchString = "";
 
-    private string GetCssBuilder(T element, int i) => new CssBuilder("grid cursor-pointer w-[100px] h-[48px] text-clip place-content-center")
-        .AddClass("bg-adlerblue-100 border-adlerblue-300 cursor-pointer", element.Equals(Value))
+    private string GetCssBuilder(T element, int i) => new CssBuilder("cursor-pointer")
         .AddClass($"element-{i}")
         .Build();
 
@@ -54,7 +56,10 @@
     {
         if (element.Equals(Value))
         {
-            await SetValueAsync(default!);
+            if (AllowDeselect)
+            {
+                await SetValueAsync(default!);
+            }
         }
         else
         {

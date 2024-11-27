@@ -1161,6 +1161,48 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.ReplaceContentReferenceActionByElementReferenceAction"/>
+    public void ReplaceContentReferenceActionByElementReferenceAction(IAdaptivityQuestionViewModel question,
+        IAdaptivityRuleViewModel ruleVm, ElementReferenceActionViewModel elementReferenceActionVm,
+        IAdaptivityTriggerViewModel triggerVm)
+    {
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var ruleEntity = Mapper.Map<IAdaptivityRule>(ruleVm);
+        var elementReferenceActionEntity = Mapper.Map<ElementReferenceAction>(elementReferenceActionVm);
+        var triggerEntity = Mapper.Map<IAdaptivityTrigger>(triggerVm);
+
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+            entity => CMapper.Map(entity, question));
+        
+        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity, elementReferenceActionEntity,
+            entity => CMapper.Map(entity, question));
+        
+        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.ReplaceElementReferenceActionByContentReferenceAction"/>
+    public void ReplaceElementReferenceActionByContentReferenceAction(IAdaptivityQuestionViewModel question,
+        IAdaptivityRuleViewModel ruleVm, ContentReferenceActionViewModel contentReferenceActionVm,
+        IAdaptivityTriggerViewModel triggerVm)
+    {
+        var questionEntity = Mapper.Map<IAdaptivityQuestion>(question);
+        var ruleEntity = Mapper.Map<IAdaptivityRule>(ruleVm);
+        var craE = Mapper.Map<ContentReferenceAction>(contentReferenceActionVm);
+        var triggerE = Mapper.Map<IAdaptivityTrigger>(triggerVm);
+
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+            entity => CMapper.Map(entity, question));
+        
+        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerE, craE,
+            entity => CMapper.Map(entity, question));
+        
+        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.GetLmsWorldList"/>
     public async Task<List<LmsWorldViewModel>> GetLmsWorldList()
     {

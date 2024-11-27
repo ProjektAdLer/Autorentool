@@ -5,17 +5,23 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Forms;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.AdaptivityContent;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
 using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.SelectedViewModels;
+using Presentation.View.LearningElement;
 using Shared.Adaptivity;
 using TestHelpers;
 
@@ -28,18 +34,29 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     public async Task Setup()
     {
         ExistingAction = null;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         PresentationLogic = Substitute.For<IPresentationLogic>();
         LearningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
-        Contents = new ILearningContentViewModel[] { ViewModelProvider.GetFileContent() };
+        Contents = new ILearningContentViewModel[] { ViewModelProvider.GetFileContent(type: "png") };
         PresentationLogic.GetAllContent().Returns(Contents);
         World = Substitute.For<ILearningWorldViewModel>();
         var element = Substitute.For<ILearningElementViewModel>();
         element.Id.Returns(Guid.NewGuid());
+        element.LearningContent.Returns(Contents.First());
         World.AllLearningElements.Returns(new[] { element });
         LearningWorldPresenter.LearningWorldVm.Returns(World);
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(LearningWorldPresenter);
         Question = Substitute.For<IAdaptivityQuestionViewModel>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        _elementModelHandler = Substitute.For<IElementModelHandler>();
+        _stringLocalizer = Substitute.For<IStringLocalizer<DragDropLearningElement>>();
+        _stringLocalizer[Arg.Any<string>()]
+            .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
+        Context.Services.AddSingleton(_stringLocalizer);
+        Context.Services.AddSingleton(_selectedViewModelsProvider);
+        Context.Services.AddSingleton(_elementModelHandler);
+        Context.ComponentFactories.AddStub<TableSelect<ILearningContentViewModel>>();
         await GetDialogAsync();
     }
 
@@ -51,11 +68,16 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
 
     private IDialogReference Dialog { get; set; }
     private IAdaptivityActionViewModel? ExistingAction { get; set; }
+    private IAdaptivityRuleViewModel? ExistingRule { get; set; }
     private IAdaptivityQuestionViewModel Question { get; set; }
     private IPresentationLogic PresentationLogic { get; set; }
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
     private ILearningWorldViewModel World { get; set; }
     private ILearningContentViewModel[] Contents { get; set; }
+    
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IElementModelHandler _elementModelHandler;
+    private IStringLocalizer<DragDropLearningElement> _stringLocalizer;
 
     private async Task GetDialogAsync()
     {
@@ -64,7 +86,10 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
             { nameof(CreateEditReferenceActionDialog.Question), Question },
         };
         if (ExistingAction != null)
+        {
             dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingAction), ExistingAction);
+            //dialogParameters.Add(nameof(CreateEditReferenceActionDialog.ExistingRule), ExistingRule);
+        }
         Dialog = await OpenDialogAndGetDialogReferenceAsync("title", new DialogOptions(),
             dialogParameters);
     }
@@ -74,9 +99,11 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
         await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
-        await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
-        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
-            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
+        
+        var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
+        componentUnderTest.Instance.LearningContent = Contents[0];
+        componentUnderTest.Instance.Comment = "foo";
+
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
@@ -110,6 +137,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         var cravm = ViewModelProvider.GetContentReferenceAction();
         cravm.Content = Contents.First();
         ExistingAction = cravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         await GetDialogAsync();
 
         await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
@@ -128,6 +156,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         var eravm = ViewModelProvider.GetElementReferenceAction();
         eravm.ElementId = World.AllLearningElements.First().Id;
         ExistingAction = eravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         await GetDialogAsync();
 
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
@@ -145,6 +174,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         var cravm = ViewModelProvider.GetContentReferenceAction();
         cravm.Content = Contents.First();
         ExistingAction = cravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         await GetDialogAsync();
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
@@ -159,10 +189,64 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         var eravm = ViewModelProvider.GetElementReferenceAction();
         eravm.ElementId = World.AllLearningElements.First().Id;
         ExistingAction = eravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         await GetDialogAsync();
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
 
         PresentationLogic.DidNotReceiveWithAnyArgs().EditElementReferenceAction(eravm, eravm.ElementId, "foo");
+    }
+    
+    [Test]
+    // ANF-ID: [AWA0027]
+    public async Task ExistingAction_ElementSelected_CallsReplaceElementReferenceActionByContentReferenceAction()
+    {
+        var eravm = ViewModelProvider.GetElementReferenceAction();
+        eravm.ElementId = World.AllLearningElements.First().Id;
+        ExistingAction = eravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
+        await GetDialogAsync();
+
+        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
+            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
+        
+        await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
+        
+        var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
+        componentUnderTest.Instance.LearningContent = Contents[0];
+
+        await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
+
+        PresentationLogic.Received().ReplaceElementReferenceActionByContentReferenceAction(
+            Arg.Any<IAdaptivityQuestionViewModel>(),
+            Arg.Any<IAdaptivityRuleViewModel>(),
+            Arg.Any<ContentReferenceActionViewModel>(),
+            Arg.Any<CorrectnessTriggerViewModel>());
+    }
+    
+    [Test]
+    // ANF-ID: [AWA0027]
+    public async Task ExistingAction_ContentSelected_CallsReplaceContentReferenceActionByElementReferenceAction()
+    {
+        var cravm = ViewModelProvider.GetContentReferenceAction();
+        cravm.Content = Contents.First();
+        ExistingAction = cravm;
+        ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
+        await GetDialogAsync();
+
+        await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
+            .ChangeAsync(new ChangeEventArgs { Value = "foo" });
+        
+        await DialogProvider.Find(".tab-panel-element").ClickAsync(new MouseEventArgs());
+        
+        await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
+
+        await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
+
+        PresentationLogic.Received().ReplaceContentReferenceActionByElementReferenceAction(
+            Arg.Any<IAdaptivityQuestionViewModel>(),
+            Arg.Any<IAdaptivityRuleViewModel>(),
+            Arg.Any<ElementReferenceActionViewModel>(),
+            Arg.Any<CorrectnessTriggerViewModel>());
     }
 }

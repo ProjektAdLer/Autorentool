@@ -16,81 +16,89 @@
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
+        <div class="p-2 mb-2">
+            <MudText Class="font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
+
+        </div>
+        <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+            <MudTextField Variant="Variant.Outlined"
+                          Class="shadow-none m-0"
+                          T="string"
+                          Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
+                          @bind-Value="Comment"
+                          Lines="2"
+                          Required="false"/>
+        </div>
 
         <MudTabs @ref="_tabs">
-            <MudTabPanel Disabled="@(ExistingAction is ContentReferenceActionViewModel)" @ref="_elementPanel" Text="@Localizer["Element.Text"]"
+            <MudTabPanel @ref="_elementPanel" Text="@Localizer["Element.Text"]"
                          Class="tab-panel-element relative text-adlertextgrey bg-adlergrey-100 text-sm font-bold normal-case">
                 <!-- Element reference -->
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
-                    <div class="p-2 mb-2">
-                        <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
-                        <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
-                            <MudTextField Variant="Variant.Outlined"
-                                          Class="shadow-none m-0"
-                                          T="string"
-                                          Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
-                                          @bind-Value="_comment"
-                                          Lines="2"
-                                          Required="false"/>
-                        </div>
-                    </div>
                     <div class="p-2">
                         <div class="flex flex-row gap-1">
                             <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Reference.Element.Label.Text"]
-                                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Element.Info.Text"]">
-                                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
-                                    </MudTooltip>
-                                </MudText>
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Element.Info.Text"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                                </MudTooltip>
+                            </MudText>
                         </div>
                         <GridSelect T="ILearningElementViewModel"
                                     Elements="LearningElements.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
-                                    @bind-Value="_learningElement"
+                                    @bind-Value="LearningElement"
+                                    AllowDeselect="false"
                                     Required="true"
                                     RequiredError="@Localizer["Element.RequiredError.Text"]"
                                     FilterFuncSearchableStrings="element => new[] { element.Name }">
                             <ElementTemplate>
-                                <DragDropLearningElement ShowDeleteButton="false" 
+                                <DragDropLearningElement ShowDeleteButton="false"
                                                          LearningElement="@context"
-                                                         IsSelected="@(EqualityComparer<ILearningElementViewModel>.Default.Equals(context,_learningElement))"></DragDropLearningElement>
+                                                         IsSelected="@(EqualityComparer<ILearningElementViewModel>.Default.Equals(context, LearningElement))"></DragDropLearningElement>
                             </ElementTemplate>
                         </GridSelect>
                     </div>
                 </MudForm>
             </MudTabPanel>
-            <MudTabPanel Disabled="@(ExistingAction is ElementReferenceActionViewModel)" @ref="_contentPanel" Text="@Localizer["Content.Text"]"
+            <MudTabPanel @ref="_contentPanel" Text="@Localizer["Content.Text"]"
                          Class="tab-panel-content relative text-adlertextgrey bg-adlergrey-100 text-sm break-all font-bold normal-case">
                 <!-- Content reference -->
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
-                    <div class="p-2 mb-2">
-                        <MudText Class="font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
-                        <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
-                            <MudTextField T="string"
-                                          @bind-Value="_comment"
-                                          Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
-                                          Lines="2"
-                                          Required="false"
-                                          Class="shadow-none m-0"
-                                          Variant="Variant.Outlined"/>
-                        </div>
-                    </div>
                     <div class="p-2">
                         <div class="flex flex-row gap-1">
                             <MudText Class="font-bold text-sm pl-2">@Localizer["Reference.Content.Label.Text"]
-                                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Content.Info.Text"]">
-                                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
-                                    </MudTooltip>
-                                </MudText>
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Content.Info.Text"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
+                                </MudTooltip>
+                            </MudText>
                         </div>
-                        <GridSelect T="ILearningContentViewModel"
-                                    Elements="LearningContents.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
-                                    @bind-Value="_learningContent"
-                                    Required="true"
-                                    RequiredError="@Localizer["Content.RequiredError.Text"]"
-                                    FilterFuncSearchableStrings="content => new[] { content.Name }">
-                            <ElementTemplate>
-                                <MudText Class="text-xs font-bold break-all leading-none truncate" title="@context.Name">@context.Name</MudText>
-                            </ElementTemplate>
-                        </GridSelect>
+                        <TableSelect
+                            T="ILearningContentViewModel"
+                            @bind-Value="LearningContent"
+                            Required="true"
+                            RequiredError="@Localizer["Content.RequiredError.Text"]"
+                            AllowDeselect="false"
+                            Elements="LearningContents.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
+                            FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                            <HeaderContent>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd Class="px-1.5">
+                                    <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                                   OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                                </MudTd>
+                                <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
+                                <MudTd Class="cursor-pointer" DataLabel="Type">
+                                    @if (context is FileContentViewModel fileContentContext)
+                                    {
+                                        @fileContentContext.Type
+                                    }
+                                    else
+                                    {
+                                        <span>Link</span>
+                                    }
+                                </MudTd>
+                            </RowTemplate>
+                        </TableSelect>
                     </div>
                 </MudForm>
             </MudTabPanel>
@@ -114,6 +122,8 @@
     [Inject, AllowNull] internal IStringLocalizer<CreateEditReferenceActionDialog> Localizer { get; set; }
 
     [Parameter] public IAdaptivityActionViewModel? ExistingAction { get; set; }
+    
+    [Parameter] public IAdaptivityRuleViewModel? ExistingRule { get; set; }
 
     [Parameter, EditorRequired, AllowNull] public IAdaptivityQuestionViewModel Question { get; set; }
 
@@ -130,8 +140,53 @@
     private MudTabPanel _contentPanel = null!;
     private MudTabPanel _elementPanel = null!;
     private ILearningContentViewModel? _learningContent;
+    internal ILearningContentViewModel? LearningContent
+    {
+        get => _learningContent;
+        set
+        {
+            _learningContent = value;
+            if (value != null)
+            {
+                _learningElement = null;
+            }
+        } 
+    }
     private ILearningElementViewModel? _learningElement;
-    private string _comment = "";
+    private ILearningElementViewModel? LearningElement
+    {
+        get => _learningElement;
+        set
+        {
+            _learningElement = value;
+            if (value != null)
+            {
+                _learningContent = null;
+            }
+        }
+    }
+    internal string Comment = "";
+    
+    private bool _initialized;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (_initialized) return;
+        switch (ExistingAction)
+        {
+            case null:
+                break;
+            case ContentReferenceActionViewModel cravm:
+                Comment = cravm.Comment;
+                break;
+            case ElementReferenceActionViewModel eravm:
+                Comment = eravm.Comment;
+                break;
+        }
+        _initialized = true;
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -144,13 +199,13 @@
                 return;
             case ContentReferenceActionViewModel cravm:
                 _tabs.ActivatePanel(_contentPanel);
-                _learningContent = GetLearningContentViewModel(cravm.Content);
-                _comment = cravm.Comment;
+                LearningContent = GetLearningContentViewModel(cravm.Content);
+                Comment = cravm.Comment;
                 break;
             case ElementReferenceActionViewModel eravm:
                 _tabs.ActivatePanel(_elementPanel);
-                _learningElement = LearningElements.SingleOrDefault(lc => eravm.ElementId == lc.Id);
-                _comment = eravm.Comment;
+                LearningElement = LearningElements.SingleOrDefault(lc => eravm.ElementId == lc.Id);
+                Comment = eravm.Comment;
                 break;
         }
     }
@@ -163,24 +218,34 @@
         try
         {
             switch (ExistingAction)
-            {
-                case ContentReferenceActionViewModel cravm when cravm.Content.Equals(_learningContent) && cravm.Comment.Equals(_comment):
+            { 
+                case ContentReferenceActionViewModel when LearningContent == null:
+                    PresentationLogic.ReplaceContentReferenceActionByElementReferenceAction(Question, ExistingRule!,
+                        new ElementReferenceActionViewModel(LearningElement!.Id, Comment),
+                        new CorrectnessTriggerViewModel(AnswerResult.Incorrect));
+                    return;
+                case ElementReferenceActionViewModel when LearningElement == null:
+                    PresentationLogic.ReplaceElementReferenceActionByContentReferenceAction(Question, ExistingRule!,
+                        new ContentReferenceActionViewModel(LearningContent!, Comment),
+                        new CorrectnessTriggerViewModel(AnswerResult.Incorrect));
+                    return;
+                case ContentReferenceActionViewModel cravm when cravm.Content.Equals(LearningContent) && cravm.Comment.Equals(Comment):
                     DialogInstance.Close();
                     return;
                 case ContentReferenceActionViewModel cravm:
-                    PresentationLogic.EditContentReferenceAction(cravm, _learningContent!, _comment);
+                    PresentationLogic.EditContentReferenceAction(cravm, LearningContent!, Comment);
                     break;
-                case ElementReferenceActionViewModel eravm when eravm.ElementId == _learningElement!.Id && eravm.Comment.Equals(_comment):
+                case ElementReferenceActionViewModel eravm when eravm.ElementId == LearningElement!.Id && eravm.Comment.Equals(Comment):
                     DialogInstance.Close();
                     return;
                 case ElementReferenceActionViewModel eravm:
-                    PresentationLogic.EditElementReferenceAction(eravm, _learningElement.Id, _comment);
+                    PresentationLogic.EditElementReferenceAction(eravm, LearningElement.Id, Comment);
                     break;
                 default:
                 {
                     IAdaptivityActionViewModel action = _tabs.ActivePanel == _contentPanel
-                        ? new ContentReferenceActionViewModel(_learningContent!, _comment)
-                        : new ElementReferenceActionViewModel(_learningElement!.Id, _comment);
+                        ? new ContentReferenceActionViewModel(LearningContent!, Comment)
+                        : new ElementReferenceActionViewModel(LearningElement!.Id, Comment);
                     PresentationLogic.CreateAdaptivityRule(
                         Question,
                         new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
