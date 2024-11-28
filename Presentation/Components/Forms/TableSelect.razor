@@ -1,7 +1,6 @@
 @typeparam T where T : notnull
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
-@using MudBlazor.Utilities
 @using Shared.Localization
 @using Shared.Observer
 @inherits MudBaseInput<T>
@@ -14,7 +13,7 @@
     }
     <div class="w-full grow h-full flex flex-col flex-nowrap mb-2 px-0 mx-0">
     <MudTable Items="@Elements" Hover="true" @ref="_mudTable" HeaderClass="table-head-bordered" CustomHeader="true"
-              Class="@TableClasses" Virtualize="true" Striped="true" FixedHeader="true"
+              Virtualize="true" Striped="true" FixedHeader="true"
               RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
               Filter="Filter" Dense="true">
         <ToolBarContent>
@@ -64,10 +63,6 @@
 
     private MudTable<T>? _mudTable;
     private string? _searchString;
-
-    private string TableClasses => CssBuilder.Empty().AddClass("border-2 border-formerror rounded-lg shadow-lg", () => Error).Build();
-    
-    
 
     private async Task RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
     {

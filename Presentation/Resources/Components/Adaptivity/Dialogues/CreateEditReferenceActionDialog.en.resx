@@ -25,7 +25,7 @@
         <value>Learning element</value>
     </data>
     <data name="Content.RequiredError.Text" xml:space="preserve">
-        <value>Learning content required</value>
+        <value>Learning material required</value>
     </data>
     <data name="Element.RequiredError.Text" xml:space="preserve">
         <value>Lerning element required!</value>

@@ -71,6 +71,7 @@
                                 </MudTooltip>
                             </MudText>
                         </div>
+                        <MudText> @LearningContent?.Name </MudText>
                         <TableSelect
                             T="ILearningContentViewModel"
                             @bind-Value="LearningContent"
@@ -212,9 +213,12 @@
 
     private async Task SubmitAsync()
     {
-        await _form.Validate();
-        if (!_form.IsValid) return;
-
+        if(!(_tabs.ActivePanel == _elementPanel && LearningContent != null || _tabs.ActivePanel == _contentPanel && LearningElement != null))
+        {
+            await _form.Validate();
+            if (!_form.IsValid) return;
+        }
+        
         try
         {
             switch (ExistingAction)
@@ -243,13 +247,7 @@
                     break;
                 default:
                 {
-                    IAdaptivityActionViewModel action = _tabs.ActivePanel == _contentPanel
-                        ? new ContentReferenceActionViewModel(LearningContent!, Comment)
-                        : new ElementReferenceActionViewModel(LearningElement!.Id, Comment);
-                    PresentationLogic.CreateAdaptivityRule(
-                        Question,
-                        new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
-                        action);
+                    CreateAdaptivityRuleFromSelected();
                     break;
                 }
             }
@@ -258,6 +256,27 @@
         {
             DialogInstance.Close();
         }
+    }
+
+    private void CreateAdaptivityRuleFromSelected()
+    {
+        IAdaptivityActionViewModel action;
+        if (LearningElement == null && LearningContent != null)
+        {
+            action = new ContentReferenceActionViewModel(LearningContent!, Comment);
+        }
+        else if (LearningElement != null && LearningContent == null)
+        {
+            action = new ElementReferenceActionViewModel(LearningElement.Id, Comment);
+        }
+        else
+        {
+            throw new InvalidOperationException("Either LearningElement or LearningContent must be set");
+        }
+        PresentationLogic.CreateAdaptivityRule(
+            Question,
+            new CorrectnessTriggerViewModel(AnswerResult.Incorrect),
+            action);
     }
 
     private ILearningContentViewModel? GetLearningContentViewModel(ILearningContentViewModel actionContent) => actionContent switch
