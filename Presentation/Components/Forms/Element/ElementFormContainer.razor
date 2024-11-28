@@ -8,7 +8,7 @@
 @using Presentation.PresentationLogic.LearningContent.Story
 @implements IDisposable
 @implements IAsyncDisposable
-<MudCard Class="overflow-auto w-full max-h-[128rem]">
+<MudCard Class="overflow-auto w-full max-h-[128rem] shadow-none">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
         <CreateElementForm ElementMode="ElementMode"/>

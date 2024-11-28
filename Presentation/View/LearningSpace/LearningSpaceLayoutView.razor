@@ -7,14 +7,17 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
-    <div class="flex flex-col w-full h-full">
-        <div class="h-full relative" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;">
+@using Microsoft.JSInterop
 
-            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
-            {
-                var x = i;
-                var identifier = $"{LearningSpace.Id.ToString()}_ele_{x}";
 
+<div class="flex flex-col w-full h-full">
+    <div class="h-[100%] w-[92%]">
+    <div class="h-full relative" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;">
+        <div class="w-[95%]">
+        @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
+        {
+            var x = i;
+            var identifier = $"{LearningSpace.Id.ToString()}_ele_{x}";
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                              Class="@GetSlotStyleString(x)"
                              style="@GetElementSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
@@ -35,49 +38,63 @@
                         }
                     </ChildContent>
                 </MudDropZone>
-            }
-            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions.Count; i++)
-            {
-                var x = i;
-                var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
-                <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                             Class="@GetStorySlotStyleString(x)"
-                             style="@GetStorySlotPositionString(x)"
-                             @onclick="() => ClickOnStorySlot(x)"
-                             CanDrop="vm => vm.LearningContent is StoryContentViewModel"
-                             CanDropClass="@GetCanDropClass()"
-                             NoDropClass="@GetNoDropClass()">
-                    <ItemRenderer>
-                        <DragDropLearningElement
-                            LearningElement="@context"
-                            OnDeleteLearningElement="@LearningSpaceP.DeleteStoryElement"
-                            OnClicked="@LearningSpaceP.ClickedLearningElement"/>
-                    </ItemRenderer>
-                    <ChildContent>
-                        @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
-                        {
-                            <div class="flex flex-row gap-1 justify-center items-center">
-                                <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
-                                <p class="text-xs 2xl:text-sm">Story</p>
-                            </div>
-                        }
-                    </ChildContent>
-                </MudDropZone>
-            }
+        }
+        @for (var i = 0; i < LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions.Count; i++)
+        {
+            var x = i;
+            var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
+            <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                         Class="@GetStorySlotStyleString(x)"
+                         style="@GetStorySlotPositionString(x)"
+                         @onclick="() => ClickOnStorySlot(x)"
+                         CanDrop="vm => vm.LearningContent is StoryContentViewModel"
+                         CanDropClass="@GetCanDropClass()"
+                         NoDropClass="@GetNoDropClass()">
+                <ItemRenderer>
+                    <DragDropLearningElement
+                        LearningElement="@context"
+                        OnDeleteLearningElement="@LearningSpaceP.DeleteStoryElement"
+                        OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                </ItemRenderer>
+                <ChildContent>
+                    @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
+                    {
+                        <div class="flex flex-row gap-1 justify-center items-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                            <p class="text-xs 2xl:text-sm">Story</p>
+                        </div>
+                    }
+                </ChildContent>
+            </MudDropZone>
+        }
         </div>
     </div>
+    </div>
+</div>
 
 @code {
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ILearningSpacePresenter LearningSpaceP { get; set; }
 
+    [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
+    
+    private double ScreenWidth { get; set; }
+    
+    private double ScreenHeight { get; set; }
+    
+    public class Dimensions
+    {
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Parameter, EditorRequired] public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
 
-    private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\" viewBox=\"-1 -1 34 34\">"
+    private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"xMidYMid meet\" viewBox=\"-1 -1 34 34\">"
                                                                       + GetSvgPolygonString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + GetSvgDoorsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + GetSvgArrowsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
@@ -178,6 +195,46 @@
         return svgString.ToString();
     }
 
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // Bildschirmbreite ermitteln und speichern
+        var dimensions = await GetCurrentScreenDimensions();
+        ScreenWidth = dimensions.Width;
+        ScreenHeight = dimensions.Height;
+    }
+
+    private async Task<Dimensions> GetCurrentScreenDimensions()
+    {
+        return await JSRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dimensions = await JSRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+            ScreenWidth = dimensions.Width;
+            ScreenHeight = dimensions.Height;
+
+            Console.WriteLine($"Initial Screen Dimensions: {ScreenWidth} x {ScreenHeight}");
+
+            // Registriere den Resize-Listener
+            await JSRuntime.InvokeVoidAsync("subscribeToResize", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable] // Wichtig: Diese Methode muss aufgerufen werden können
+    public Task OnResize(Dimensions dimensions)
+    {
+        Console.WriteLine($"OnResize: Neue Bildschirmgröße {dimensions.Width}x{dimensions.Height}");
+        ScreenWidth = dimensions.Width;
+        ScreenHeight = dimensions.Height;
+
+        StateHasChanged(); // Erzwingt das erneute Rendern der Slots
+        return Task.CompletedTask;
+    }
+
 
     private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 
@@ -187,11 +244,64 @@
     {
         var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
         var slotPositionString = new StringBuilder();
-        slotPositionString.Append("position: absolute; ");
-        slotPositionString.Append($"top: {(int)((slotPosition.Y + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append($"left: {(int)((slotPosition.X + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append("transform: translate(-70%, -100%);");
-        slotPositionString.Append("scale: 0.8;");
+
+        // Hier wird die bereits abgerufene Breite genutzt
+        double viewportWidth;
+        double scaleFactor;
+        
+        /*if (ScreenWidth < 1536)
+        {
+            viewportWidth = 34.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("scale: 0.6;");
+        }*/
+        
+        if (ScreenWidth >= 1024 && ScreenWidth < 1280)
+        {
+            viewportWidth = 40.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("scale: 0.6;");
+        }
+        if (ScreenWidth >= 1280 && ScreenWidth < 1536)
+        {
+            viewportWidth = 45.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("scale: 0.6;");
+        }
+        if (ScreenWidth >= 1536)
+        {
+            viewportWidth = 50.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);   
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 24)}%; ");
+            slotPositionString.Append("transform: translate(130%, -60%);");
+            slotPositionString.Append("scale: 0.7;");
+        }
         return slotPositionString.ToString();
     }
 
@@ -199,11 +309,36 @@
     {
         var slotPos = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[position];
         var slotPositionString = new StringBuilder();
-        slotPositionString.Append("position: absolute; ");
-        slotPositionString.Append($"top: {(int)((slotPos.Y + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append($"left: {(int)((slotPos.X + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append("transform: translate(-70%, -100%);");
-        slotPositionString.Append("scale: 0.8;");
+        
+        double viewportWidth;
+        double scaleFactor;
+        
+        if(ScreenWidth < 1536)
+        {
+            viewportWidth = 34.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+            
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("scale: 0.6;");
+        }
+        else
+        {
+            viewportWidth = 50.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            double adjustedWidth = 20.0 * scaleFactor;
+            
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 24)}%; ");
+            slotPositionString.Append("transform: translate(130%, -60%);");
+            slotPositionString.Append("scale: 0.7;");
+        }
         return slotPositionString.ToString();
     }
 
@@ -239,3 +374,4 @@
     private void ClickOnStorySlot(int i) => LearningSpaceP.ClickOnStorySlot(i);
 
 }
+

@@ -35,21 +35,21 @@ public class D40X3715LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 3, Y = 32 },
-        new() { X = 3, Y = 26 },
-        new() { X = 3, Y = 20 },
-        new() { X = 3, Y = 15 },
-        new() { X = 3, Y = 9 },
-        new() { X = 3, Y = 3 },
-        new() { X = 9, Y = 3 },
-        new() { X = 15, Y = 3 },
-        new() { X = 21, Y = 3 },
-        new() { X = 27, Y = 9 },
+        new() { X = 4, Y = 32 },
+        new() { X = 4, Y = 26 },
+        new() { X = 4, Y = 20 },
+        new() { X = 4, Y = 15 },
+        new() { X = 4, Y = 9 },
+        new() { X = 4, Y = 4 },
+        new() { X = 9, Y = 4 },
+        new() { X = 14, Y = 4 },
+        new() { X = 20, Y = 4 },
+        new() { X = 26, Y = 9 },
         new() { X = 30, Y = 14 },
         new() { X = 30, Y = 23 },
-        new() { X = 27, Y = 27 },
-        new() { X = 21, Y = 32 },
-        new() { X = 15, Y = 32 }
+        new() { X = 26, Y = 27 },
+        new() { X = 20, Y = 32 },
+        new() { X = 14, Y = 32 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
