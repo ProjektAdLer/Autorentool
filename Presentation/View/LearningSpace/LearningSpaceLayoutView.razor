@@ -249,7 +249,7 @@
         double viewportWidth;
         double scaleFactor;
         
-        /*if (ScreenWidth < 1536)
+        if (ScreenWidth < 1536)
         {
             viewportWidth = 34.0;
             scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
@@ -261,9 +261,9 @@
             slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
             slotPositionString.Append("transform: translate(-50%, -70%);");
             slotPositionString.Append("scale: 0.6;");
-        }*/
+        }
         
-        if (ScreenWidth >= 1024 && ScreenWidth < 1280)
+        /*if (ScreenWidth >= 1024 && ScreenWidth < 1280)
         {
             viewportWidth = 40.0;
             scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
@@ -288,7 +288,7 @@
             slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
             slotPositionString.Append("transform: translate(-50%, -70%);");
             slotPositionString.Append("scale: 0.6;");
-        }
+        }*/
         if (ScreenWidth >= 1536)
         {
             viewportWidth = 50.0;
