@@ -113,7 +113,23 @@ module.exports = {
             },
             fontFamily: {
                 'sans': ['Roboto']
-            }
+            },
+            animation: {
+                'move-left-right': 'moveLR 8s ease-in-out infinite',
+                'move-right-left': 'moveRL 8s ease-in-out infinite',
+            },
+            keyframes: {
+                moveLR: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '50%': { transform: 'translateX(50%)' },
+                    '100%': { transform: 'translateX(0%)' },
+                },
+                moveRL: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '50%': { transform: 'translateX(-50%)' },
+                    '100%': { transform: 'translateX(0%)' },
+                }
+            },
         },
     },
     plugins: [
@@ -131,4 +147,5 @@ module.exports = {
         "list-disc",
         "list-inside"
     ]
+
 }

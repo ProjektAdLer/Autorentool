@@ -11,9 +11,9 @@
 
 
 <div class="flex flex-col w-full h-full">
-    <div class="h-[100%] w-[92%]">
+
     <div class="h-full relative" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;">
-        <div class="w-[95%]">
+      
         @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
         {
             var x = i;
@@ -67,10 +67,10 @@
                 </ChildContent>
             </MudDropZone>
         }
-        </div>
+        
     </div>
     </div>
-</div>
+
 
 @code {
 
@@ -174,7 +174,6 @@
 
         return cornerPointsArrowString.ToString();
     }
-    
 
     private string GetSvgArrowsString(IFloorPlanViewModel floorPlan)
     {
@@ -194,7 +193,6 @@
 
         return svgString.ToString();
     }
-
     
     protected override async Task OnInitializedAsync()
     {
@@ -235,7 +233,6 @@
         return Task.CompletedTask;
     }
 
-
     private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 
     private string GetNoDropClass() => new CssBuilder("bg-formerror text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
@@ -257,39 +254,13 @@
             double adjustedWidth = 20.0 * scaleFactor;
 
             slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 33)}%; ");
             slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("transform: translate(-50%, -30%);");
             slotPositionString.Append("scale: 0.6;");
         }
         
-        /*if (ScreenWidth >= 1024 && ScreenWidth < 1280)
-        {
-            viewportWidth = 40.0;
-            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
-            
-            double adjustedWidth = 20.0 * scaleFactor;
-
-            slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -70%);");
-            slotPositionString.Append("scale: 0.6;");
-        }
-        if (ScreenWidth >= 1280 && ScreenWidth < 1536)
-        {
-            viewportWidth = 45.0;
-            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
-            
-            double adjustedWidth = 20.0 * scaleFactor;
-
-            slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -70%);");
-            slotPositionString.Append("scale: 0.6;");
-        }*/
-        if (ScreenWidth >= 1536)
+        else
         {
             viewportWidth = 50.0;
             scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);   
@@ -298,8 +269,8 @@
 
             slotPositionString.Append("position: absolute; ");
             slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 24)}%; ");
-            slotPositionString.Append("transform: translate(130%, -60%);");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 22)}%; ");
+            slotPositionString.Append("transform: translate(180%, -60%);");
             slotPositionString.Append("scale: 0.7;");
         }
         return slotPositionString.ToString();
@@ -321,9 +292,9 @@
             double adjustedWidth = 20.0 * scaleFactor;
             
             slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 33)}%; ");
             slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -70%);");
+            slotPositionString.Append("transform: translate(-50%, -30%);");
             slotPositionString.Append("scale: 0.6;");
         }
         else
@@ -335,8 +306,8 @@
             
             slotPositionString.Append("position: absolute; ");
             slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 24)}%; ");
-            slotPositionString.Append("transform: translate(130%, -60%);");
+            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 22)}%; ");
+            slotPositionString.Append("transform: translate(180%, -60%);");
             slotPositionString.Append("scale: 0.7;");
         }
         return slotPositionString.ToString();
