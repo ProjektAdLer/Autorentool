@@ -68,7 +68,7 @@ module.exports = {
                     900: "rgb(229,157,23)", //dunkel
                 },
                 adlerbrown: {
-                    DEFAULT: "rgb(77,62,54)", //DEFAULT = 300
+                    DEFAULT: "rgb(77,62,54)", //DEFAULT = 700
                     100: "rgb(77,32,8)", // hell
                     200: "rgb(77,37,15)",
                     300: "rgb(77,42,23)",

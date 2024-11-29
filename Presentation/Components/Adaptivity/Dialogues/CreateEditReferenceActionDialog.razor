@@ -14,13 +14,10 @@
 @using Presentation.View.LearningElement
 @using Shared.Adaptivity
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
-    <MudText Class="px-2 mb-1 text-sm">@Localizer["Reference.Text"]</MudText>
+    <MudText Class="px-2 mb-1 text-sm cursor-default">@Localizer["Reference.Text"]</MudText>
     <div class="border-adlerdarkblue border-4 rounded-lg m-2">
-        <div class="p-2 mb-2">
-            <MudText Class="font-bold text-sm pl-2">@Localizer["Note.Label.Text"]</MudText>
-
-        </div>
-        <div class="border-4 border-adlergrey-100 rounded-md m-1.5">
+        <MudText Class="font-bold text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
+        <div class="border-4 border-adlergrey-100 rounded-lg mx-1.5">
             <MudTextField Variant="Variant.Outlined"
                           Class="shadow-none m-0"
                           T="string"
@@ -30,18 +27,22 @@
                           Required="false"/>
         </div>
 
-        <MudTabs @ref="_tabs">
+        <MudTabs Class="pt-3" HideSlider="true" @ref="_tabs">
             <MudTabPanel @ref="_elementPanel" Text="@Localizer["Element.Text"]"
-                         Class="tab-panel-element relative text-adlertextgrey bg-adlergrey-100 text-sm font-bold normal-case">
+                         Class="@GetTabPanelClass(_elementPanel)">
                 <!-- Element reference -->
-                <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
+                <MudForm Class="bg-white border-t-2 border-adlergrey-200" @ref="_form">
                     <div class="p-2">
-                        <div class="flex flex-row gap-1">
-                            <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Reference.Element.Label.Text"]
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Element.Info.Text"]">
+                        <div class="flex flex-row justify-between items-center gap-1">
+                            <MudText Class="cursor-default font-bold text-sm p-1 text-adlertextgrey">@Localizer["Reference.Element.Label.Text"]
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Element.Info.Text"]">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
+                            <div class="flex flex-row gap-1 w-72 cursor-default">
+                                <MudText Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
+                                <MudText Class="text-sm font-bold truncate text-ellipsis"> @LearningElement?.Name </MudText>
+                            </div>
                         </div>
                         <GridSelect T="ILearningElementViewModel"
                                     Elements="LearningElements.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
@@ -60,18 +61,22 @@
                 </MudForm>
             </MudTabPanel>
             <MudTabPanel @ref="_contentPanel" Text="@Localizer["Content.Text"]"
-                         Class="tab-panel-content relative text-adlertextgrey bg-adlergrey-100 text-sm break-all font-bold normal-case">
+                         Class="@GetTabPanelClass(_contentPanel)">
                 <!-- Content reference -->
                 <MudForm Class="bg-white border-t-2 border-adlergrey-100" @ref="_form">
                     <div class="p-2">
-                        <div class="flex flex-row gap-1">
-                            <MudText Class="font-bold text-sm pl-2">@Localizer["Reference.Content.Label.Text"]
-                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Reference.Content.Info.Text"]">
+                        <div class="flex flex-row justify-between items-center gap-1">
+                            <MudText Class="font-bold text-sm p-1 cursor-default text-adlertextgrey">@Localizer["Reference.Content.Label.Text"]
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Content.Info.Text"]">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
+                            <div class="flex flex-row gap-1 w-72 cursor-default">
+                                <MudText Class="text-sm">@Localizer["Reference.Material.Element.Text.Selected"]</MudText>
+                                <MudText Class="text-sm font-bold truncate text-ellipsis"> @LearningContent?.Name </MudText>
+                            </div>
                         </div>
-                        <MudText> @LearningContent?.Name </MudText>
+                        
                         <TableSelect
                             T="ILearningContentViewModel"
                             @bind-Value="LearningContent"
@@ -122,6 +127,8 @@
 
     [Inject, AllowNull] internal IStringLocalizer<CreateEditReferenceActionDialog> Localizer { get; set; }
 
+    [Parameter] public bool? IsSelected { get; set; }
+    
     [Parameter] public IAdaptivityActionViewModel? ExistingAction { get; set; }
     
     [Parameter] public IAdaptivityRuleViewModel? ExistingRule { get; set; }
@@ -154,6 +161,7 @@
         } 
     }
     private ILearningElementViewModel? _learningElement;
+
     private ILearningElementViewModel? LearningElement
     {
         get => _learningElement;
@@ -169,6 +177,21 @@
     internal string Comment = "";
     
     private bool _initialized;
+    
+    private string GetTabPanelClass(MudTabPanel panel)
+    {
+        bool isSelected = _tabs?.ActivePanel == panel;
+        
+        @if(panel == _elementPanel)
+        {
+            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold" : "text-adlergrey-300 bg-adlergrey-100";
+        }
+        @if(panel == _contentPanel)
+        {
+            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold rounded-tr" : "text-adlergrey-300 bg-adlergrey-100 rounded-tr";
+        }
+        return "border-2 flex rounded-lg";
+    }
 
     protected override void OnParametersSet()
     {

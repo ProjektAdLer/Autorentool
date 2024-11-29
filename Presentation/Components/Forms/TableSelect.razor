@@ -5,35 +5,46 @@
 @using Shared.Observer
 @inherits MudBaseInput<T>
 
-
-<div class="flex flex-col items-center mx-2 2xl:mx-4">
-    @if (Error)
+<div class="flex flex-col w-[100%] h-52 bg-adlerbgbright border-adlergrey-100 border-4 rounded">
+    @if (FilterFuncSearchableStrings is not null)
     {
-        <MudText Class="text-formerror">@ErrorText</MudText>
-    }
-    <div class="w-full grow h-full flex flex-col flex-nowrap mb-2 px-0 mx-0">
-    <MudTable Items="@Elements" Hover="true" @ref="_mudTable" HeaderClass="table-head-bordered" CustomHeader="true"
-              Virtualize="true" Striped="true" FixedHeader="true"
-              RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
-              Filter="Filter" Dense="true">
-        <ToolBarContent>
-            <div class="bg-adlerbgbright rounded-lg flex flex-row gap-2 pb-2 px-2 w-full">
-                <MudTextField @bind-Value="_searchString"
+        <div class="w-full h-1/3 flex flex-row justify-between">
+            <div>
+                <MudTextField T="string"
+                              Class="fixed w-1/3 px-2 mt-0"
                               Immediate="true"
-                              Placeholder="@Localizer["TableSelect.Placeholder"]"
                               Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Outlined.Search"/>
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              @bind-Value="_searchString"/>
             </div>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTHeadRow Class="header-centered">@HeaderContent</MudTHeadRow>
-        </HeaderContent>
-        <RowTemplate>
-            @RowTemplate.Invoke(context)
-        </RowTemplate>
-    </MudTable>   
+            <div>
+            @if (Error)
+            {
+                <MudText Class="text-formerror px-2 text-sm">@ErrorText</MudText>
+            }
+            </div>
         </div>
+    }
+    
+    <div class="h-2/3 w-[100%]">
+        <MudTable Items="@Elements" 
+                  Hover="true" 
+                  @ref="_mudTable" 
+                  Elevation="0" 
+                  Height="135px"
+                  RowClassFunc="@SelectedRowClassFunc" 
+                  OnRowClick="RowClickEvent" T="@T"
+                  Filter="Filter" 
+                  Dense="true"
+                  Class="w-[99%]">
+            <RowTemplate>
+                @RowTemplate.Invoke(context)
+            </RowTemplate>
+        </MudTable>   
     </div>
+</div>
+
+
 
 @code {
 
@@ -60,8 +71,8 @@
 
     private IStringLocalizer Localizer => LocalizerFactory.GetGenericLocalizer<TableSelect<T>>();
     
-
     private MudTable<T>? _mudTable;
+    
     private string? _searchString;
 
     private async Task RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
@@ -102,7 +113,7 @@
 
     private string SelectedRowClassFunc(T element, int rowNumber)
     {
-        return element.Equals(Value) ? "bg-adlergrey-100" : string.Empty;
+        return element.Equals(Value) ? "bg-adlerblue-200" : string.Empty;
     }
 
     private bool Filter(T element) =>
