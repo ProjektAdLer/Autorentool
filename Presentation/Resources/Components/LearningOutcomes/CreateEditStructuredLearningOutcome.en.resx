@@ -156,4 +156,7 @@
     <data name="CreateEditStructuredLearningOutcome.Text.Two" xml:space="preserve">
         <value>2. Now formulate a learning outcome.</value>
     </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.1" xml:space="preserve">
+        <value>[What?]</value>
+    </data>
 </root>

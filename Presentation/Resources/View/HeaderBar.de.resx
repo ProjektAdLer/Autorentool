@@ -159,4 +159,34 @@
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Hochladen der Lernwelt...</value>
     </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivitätselement</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value>Informationen zum Adaptivitätselement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value>Informationen zum Storyelement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement" xml:space="preserve">
+        <value>Storyelement</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value>Eingabeunterstützung</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value>Informationen zur Eingabeunterstützung zum Formulieren von Lernzielen - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling" xml:space="preserve">
+        <value>Bedienung</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value>Softwarekomponenten</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value>Im Autorentool verfügbare Bedienschritte - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value>Softwarekomponenten des Autorentools - Öffnet ein neues Browserfenster</value>
+    </data>
 </root>

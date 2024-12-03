@@ -14,4 +14,34 @@
     <data name="Functionality.Button.Redo.Hover" xml:space="preserve">
         <value />
     </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement" xml:space="preserve">
+        <value />
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value />
+    </data>
 </root>
