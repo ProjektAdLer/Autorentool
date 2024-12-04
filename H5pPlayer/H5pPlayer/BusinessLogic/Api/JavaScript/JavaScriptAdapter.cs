@@ -86,18 +86,9 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             }
         }
         
-        
         [JSInvokable]
-        public static void ReceiveJsonData(string jsonData)
+        public Task ReceiveJsonData(string jsonData)
         {
-            // JSON-Daten deserialisieren
-            var jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonData);
-
-            // Console.WriteLine($"Received JSON data from JavaScript: {jsonObject}");
-            // Console.WriteLine($"Received JSON data from JavaScript: {jsonData}");
-    
-       
-            
             // if verb contains completed -> Dann ist H5P abschließbar
             try
             {
@@ -122,6 +113,35 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
                 Console.WriteLine($"Fehler beim Verarbeiten des JSON: {ex.Message}");
             }
         }
+        
+        
+        // [JSInvokable]
+        // public static void ReceiveJsonData(string jsonData)
+        // {
+        //     // if verb contains completed -> Dann ist H5P abschließbar
+        //     try
+        //     {
+        //         // JSON parsen
+        //         var root = JsonNode.Parse(jsonData);
+        //
+        //         // `verb` extrahieren
+        //         var verbPart = root?["data"]?["statement"]?["verb"];
+        //
+        //         // Prüfung, ob die `verb`-ID "completed" enthält
+        //         bool isCompleted = verbPart?["id"]?.GetValue<string>() == "http://adlnet.gov/expapi/verbs/completed";
+        //
+        //         // Ergebnisse anzeigen
+        //         Console.WriteLine("Verb-Teil:");
+        //         Console.WriteLine(verbPart?.ToJsonString() ?? "Verb nicht gefunden");
+        //
+        //         Console.WriteLine("\nPrüfungen:");
+        //         Console.WriteLine($"Abgeschlossen (verb: completed): {isCompleted}");
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine($"Fehler beim Verarbeiten des JSON: {ex.Message}");
+        //     }
+        // }
         
 
     

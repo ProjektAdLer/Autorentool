@@ -65,6 +65,19 @@ public class JavaScriptAdapterUt
 
         await mockJsRuntime.Received().InvokeVoidAsync("terminateH5pStandalone");
     }
+    
+    
+    [Test]
+    public async Task ReceiveJsonData()
+    {
+        var jsonData = "";
+        var mockH5pIsCompletedInputPort = Substitute.For<IH5pIsCompletedInputPort>()
+        var systemUnderTest = CreateJavaScriptAdapter();
+        
+        await systemUnderTest.ReceiveJsonData(jsonData);
+
+
+    }
 
     
     private static JavaScriptAdapterTO CreateJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
@@ -80,4 +93,8 @@ public class JavaScriptAdapterUt
         var systemUnderTest = new JavaScriptAdapter(fakeJsInterop);
         return systemUnderTest;
     }
+}
+
+public interface IH5pIsCompletedInputPort
+{
 }
