@@ -19,6 +19,14 @@
 
 </details>
 
+## [2.2.1] - 2024-12-04
+
+### Changed
+- Limited number of learning spaces to be uploaded to 50. 
+
+### Fixed
+- #664: Resolved an issue where resource and url elements were created with incorrect completion conditions in the generator.
+
 ## [2.2.0] - 2024-10-23
 
 ### Added
