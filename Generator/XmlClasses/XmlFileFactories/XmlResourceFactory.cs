@@ -220,6 +220,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.SectionId = FileElementParentSpaceString;
         ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpaceString;
         ActivitiesModuleXmlModule.Indent = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
+        ActivitiesModuleXmlModule.CompletionView = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";

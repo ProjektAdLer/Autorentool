@@ -151,7 +151,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesModuleXmlModule.SectionNumber = UrlParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = UrlId;
-        ActivitiesModuleXmlModule.Completion = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
+        ActivitiesModuleXmlModule.CompletionView = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax =
             UrlPoints.ToString("F5", CultureInfo.InvariantCulture);
