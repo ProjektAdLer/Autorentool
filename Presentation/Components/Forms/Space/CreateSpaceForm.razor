@@ -6,18 +6,20 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
-<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-    <div class="flex justify-center py-2 2xl:py-3">
+<div class="absolute w-full z-30 h-24">
+    <header class="py-4 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
+    </header>
+    <div class="flex justify-between items-start">
+        <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["CreateSpaceForm.Text"]</MudText>
     </div>
-</header>
+</div>
 
-<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateSpaceForm.Text"]</MudText>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace" @ref="_form"
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-4">
+        <div class="px-2 overflow-y-scroll top-28 h-[70%] absolute flex flex-col w-[96%] mx-2 border-t border-dotted">
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -28,9 +30,7 @@
                                   Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
                 </div>
             </Collapsable>
-        </div>
-
-        <div class="px-4">
+            
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
@@ -45,9 +45,7 @@
                                      Margin="Margin.Dense"/>
                 </div>
             </Collapsable>
-        </div>
-
-        <div class="px-4">
+      
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
                   <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                 <div class="px-4 pb-2">
@@ -63,9 +61,7 @@
                     </MudSelect>
                 </div>
             </Collapsable>
-        </div>
-
-        <div class="px-4">
+            
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-4 flex flex-col">
                     <MudText Class="cursor-default text-justify" Typo="Typo.caption">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
@@ -74,9 +70,7 @@
                     </div>
                 </div>
             </Collapsable>
-        </div>
-
-        <div class="px-4">
+      
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
@@ -94,8 +88,10 @@
 
     </Fields>
     <FooterButtons>
-        <DefaultSubmitButton/>
-        <DefaultResetButton/>
+        <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+            <DefaultSubmitButton/>
+            <DefaultResetButton/>
+        </div>
     </FooterButtons>
 </BaseForm>
 

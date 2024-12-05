@@ -16,7 +16,7 @@
 <MudTable T="ILearningContentViewModel" 
           Items="Items" 
           RowClass="bg-white" 
-          Class="w-[96%] h-full flex flex-col flex-nowrap mb-2 mx-2 shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-4"
+          Class="w-[95%] h-full flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-4"
           Virtualize="true" 
           Filter="Filter" 
           Hover="true" 
@@ -26,11 +26,11 @@
           OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
           OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
     <ToolBarContent>
-        <div class="flex flex-row">
+        <div class="flex flex-row gap-8">
             <p class="flex items-center text-sm 2xl:text-base font-bold leading-tight">@Localizer["Header"]</p>
             <MudSpacer />
             <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+                          AdornmentIcon="@Icons.Material.Outlined.Search" Style="margin-top: 0px;"/>
         </div>
     </ToolBarContent>
     <HeaderContent>
@@ -158,7 +158,6 @@
                 <p class="pl-1 font-bold uppercase">@Localizer["PagerContent.Button.Text"]</p>
             </button>
         </div>
-
     </PagerContent>
 </MudTable>
 
