@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
     <PackageReference Include="MudBlazor" Version="6.14.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="View\Toolbox\LearningObjectRenderFragmentBase.razor.css">
