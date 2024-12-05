@@ -293,7 +293,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         mudTextFields[0].Find("input").Change("https://foobar.com");
         mudTextFields[1].Find("input").Change("Username");
         mudTextFields[2].Find("input").Change("Password");
-        mudTextFields[2].Find("input").KeyPress(Key.Enter);
+        mudTextFields[2].Find("input").KeyUp(Key.Enter);
 
         _applicationConfiguration.Received()[IApplicationConfiguration.BackendBaseUrl] = "https://foobar.com";
         _applicationConfiguration.Received()[IApplicationConfiguration.BackendUsername] = "Username";

@@ -43,7 +43,7 @@
                     <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByDate"]"/>
                     <MudIconButton OnClick="() => _sortByDate = false" Icon="@Icons.Material.Filled.SortByAlpha" Class="@(SortByNameButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByName"]"/>
                     <MudDivider Vertical="true" FlexItem="true"/>
-                    <MudCheckBox @bind-Checked="_showFileName" title="@Localizer["Page.LearningWorld.ShowFile.Checkbox"]">
+                    <MudCheckBox @bind-Value="_showFileName" title="@Localizer["Page.LearningWorld.ShowFile.Checkbox"]">
                         <p class="text-sm">@Localizer["Checkbox.ShowFileName.Label"]</p>
                     </MudCheckBox>
                 </div>

@@ -56,7 +56,7 @@
         </MudTd>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]">
             <div class="flex justify-center">
-                <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
+                <MudCheckBox T="bool?" Value="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
             </div>
         </MudTd>
         @foreach (var difficulty in Enum.GetValues(typeof(QuestionDifficulty)).Cast<QuestionDifficulty>())

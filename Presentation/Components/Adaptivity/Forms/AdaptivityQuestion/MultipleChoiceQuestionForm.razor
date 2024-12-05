@@ -1,3 +1,6 @@
+@using System.Diagnostics.CodeAnalysis
+@using AutoMapper
+@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Adaptivity.Forms.Models
 @using Presentation.Components.Forms
@@ -5,9 +8,6 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
-@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
-@using AutoMapper
-@using System.Diagnostics.CodeAnalysis
 <div class="w-full flex flex-row items-center justify-between cursor-default">
     <MudText Class="px-2" Typo="Typo.h6">
         @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
@@ -46,8 +46,8 @@
                          <MudText Class="text-adlergrey-200">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
                          <MudSwitch T="bool"
                                     Style="margin-right: 0px; margin-left: 2px"
-                                    Checked="FormDataContainer.FormModel.IsSingleResponse"
-                                    CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
+                                    Value="FormDataContainer.FormModel.IsSingleResponse"
+                                    ValueChanged="b => IsSingleResponseChanged((bool)b!)"
                                     Color="Color.Info"
                                     UnCheckedColor="Color.Info"
                                     For="@(() => FormModel.IsSingleResponse)">
@@ -61,8 +61,8 @@
                         <MudText Class="text-adlerblue">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
                         <MudSwitch T="bool"
                                    Style="margin-right: 0px; margin-left: 2px"
-                                   Checked="FormDataContainer.FormModel.IsSingleResponse"
-                                   CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
+                                   Value="FormDataContainer.FormModel.IsSingleResponse"
+                                   ValueChanged="b => IsSingleResponseChanged((bool)b!)"
                                    Color="Color.Info"
                                    UnCheckedColor="Color.Info"
                                    For="@(() => FormModel.IsSingleResponse)">
@@ -79,13 +79,13 @@
                 @if (FormModel.IsSingleResponse)
                 {
                     <div class="bg-white">
-                        <MudRadioGroup T="ChoiceViewModel" SelectedOption="FormModel.CorrectChoices.First()" SelectedOptionChanged="ChangeCorrectChoice" Class="overflow-y-auto">
+                        <MudRadioGroup T="ChoiceViewModel" Value="FormModel.CorrectChoices.First()" ValueChanged="ChangeCorrectChoice" Class="overflow-y-auto">
                             <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
                                 @foreach (var choice in FormDataContainer.FormModel.Choices)
                                 {
                                     <div class="flex flex-row justify-center items-center">
                                         <MudRadio Size="Size.Small"
-                                                  Option="choice"
+                                                  Value="choice"
                                                   Class="flex justify-center items-center m-0"/>
                                         <MudForm Model="choice" Validation="ValidateChoiceModel">
                                             <MudTextField T="string"
@@ -116,8 +116,8 @@
                             {
                                 <div class="flex flex-row justify-center items-center">
                                     <MudCheckBox T="bool"
-                                                 Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
-                                                 CheckedChanged="b => ChangeCorrectness(choice, (bool)b!)"
+                                                 Value="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                                 ValueChanged="b => ChangeCorrectness(choice, (bool)b!)"
                                                  Class="flex justify-center items-center m-0"
                                                  Size="Size.Small"/>
 

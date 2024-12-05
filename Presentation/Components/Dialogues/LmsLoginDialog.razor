@@ -154,7 +154,7 @@
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
                                     <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
-                                                  OnKeyPress="OnKeyPress"
+                                                  OnKeyUp="OnKeyPress"
                                                   InputType=@PasswordInputType Adornment="Adornment.End"
                                                   AdornmentIcon=@ShowPasswordIcon
                                                   OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
