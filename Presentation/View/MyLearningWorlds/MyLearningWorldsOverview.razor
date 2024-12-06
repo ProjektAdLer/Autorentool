@@ -65,7 +65,7 @@
                 }
             </MudGrid>
         </section>
-        <MudDrawer Width="35%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
+        <MudDrawer Width="31%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
             @if (_createLearningWorldDialogOpen)
             {
                 <CreateWorldForm OnSubmitted="OnNewLearningWorldCreated"/>
