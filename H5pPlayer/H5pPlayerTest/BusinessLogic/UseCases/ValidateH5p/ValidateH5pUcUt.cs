@@ -20,7 +20,7 @@ public class ValidateH5pUcUt
     /// to the CORRECT INSTANCE of <see cref="ValidateH5pUc"/>
     /// </summary>
     [Test]
-    public void InitializeReceiveFromJavaScriptAdapterWithValidateH5pUc()
+    public void EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc()
     {
         var systemUnderTest = CreateValidateH5PUc();
         

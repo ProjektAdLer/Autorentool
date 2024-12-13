@@ -12,6 +12,11 @@ public class ValidateH5pUc : IValidateH5pUc
     internal ValidateH5pUc(ICallJavaScriptAdapter iCallJavaScriptAdapter)
     {
         ICallJavaScriptAdapter = iCallJavaScriptAdapter;
+        EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc();
+    }
+
+    private void EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc()
+    {
         ReceiveFromJavaScriptAdapter.VaidateH5pUc = this;
     }
 
