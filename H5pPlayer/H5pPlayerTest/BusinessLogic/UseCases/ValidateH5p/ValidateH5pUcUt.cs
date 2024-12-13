@@ -31,7 +31,7 @@ public class ValidateH5pUcUt
     public async Task StartToValidateH5p()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
-        var systemUnderTest = CreateValidateH5PUc(mockJavaScriptAdapter);
+        var systemUnderTest = CreateValidateH5PUc(null, mockJavaScriptAdapter);
         var unzippedH5psPath = @"C:\ValidPath1.h5p";
         var h5pZipSourcePath = @"C:\ValidPath2.h5p";
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
@@ -44,13 +44,39 @@ public class ValidateH5pUcUt
     }
     
     
-    
+    [Test]
+    public void SetH5pIsCompletable()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var validateH5pTO = new ValidateH5pTO(true);
+
+        systemUnderTest.ValidateH5p(validateH5pTO);
+
+        mockValidateH5pUcOutputPort.Received().SetH5pIsCompletable();
+    }
+
+    [Test]
+    public void H5pIsNotCompletedAlready()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var validateH5pTO = new ValidateH5pTO(false);
+
+        systemUnderTest.ValidateH5p(validateH5pTO);
+
+        mockValidateH5pUcOutputPort.DidNotReceive().SetH5pIsCompletable();
+    }
+
     
 
-    private static ValidateH5pUc CreateValidateH5PUc(ICallJavaScriptAdapter? mockJavaScriptAdapter = null)
+    private static ValidateH5pUc CreateValidateH5PUc(
+        IValidateH5pUcOutputPort? mockValidateH5PUcOutputPort = null,
+        ICallJavaScriptAdapter? mockJavaScriptAdapter = null)
     {
+        mockValidateH5PUcOutputPort ??= Substitute.For<IValidateH5pUcOutputPort>();
         mockJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
-        return new ValidateH5pUc(mockJavaScriptAdapter);
+        return new ValidateH5pUc(mockValidateH5PUcOutputPort, mockJavaScriptAdapter);
     }
 
 
@@ -70,3 +96,4 @@ public class ValidateH5pUcUt
         return h5pEntity;
     }
 }
+

@@ -16,12 +16,12 @@ public class H5pPlayerController
     public H5pPlayerController(IJSRuntime jsRuntime)
     {
         ICallJavaScriptAdapter callJavaScriptAdapter = new CallJavaScriptAdapter(jsRuntime);
+        H5PPlayerPresenter = new H5PPlayerPlayerPresenter();
         IDisplayH5pUC displayH5pUC = new DisplayH5pUC(callJavaScriptAdapter);
-        IValidateH5pUc validateH5pUc = new ValidateH5pUc(callJavaScriptAdapter);
-        StartH5PPlayerPresenter = new H5PPlayerPlayerPresenter();
+        IValidateH5pUc validateH5pUc = new ValidateH5pUc(H5PPlayerPresenter ,callJavaScriptAdapter);
         var fileSystemDataAccess = new FileSystemDataAccess();
         StartH5PPlayerUc = new StartH5pPlayerUC(
-            validateH5pUc, fileSystemDataAccess, displayH5pUC, StartH5PPlayerPresenter);
+            validateH5pUc, fileSystemDataAccess, displayH5pUC, H5PPlayerPresenter);
     }
 
     public async Task StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
@@ -31,6 +31,6 @@ public class H5pPlayerController
     }
     
     internal IStartH5pPlayerUCInputPort StartH5PPlayerUc { get; }
-    internal IStartH5pPlayerUCOutputPort StartH5PPlayerPresenter { get; }
+    internal H5PPlayerPlayerPresenter H5PPlayerPresenter { get; }
 
 }

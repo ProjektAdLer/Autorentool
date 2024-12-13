@@ -38,12 +38,3 @@ public class ReceiveFromJavaScriptAdapterUt
     }
 }
 
-public struct ValidationCompletedTO
-{
-    public ValidationCompletedTO(bool isValidationCompleted)
-    {
-        IsValidationCompleted = isValidationCompleted;
-    }
-
-    public bool IsValidationCompleted { get; }
-}
