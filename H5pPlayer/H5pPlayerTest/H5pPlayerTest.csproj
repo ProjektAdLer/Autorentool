@@ -29,6 +29,7 @@
 
     <ItemGroup>
       <Folder Include="BusinessLogic\BusinessRules\" />
+      <Folder Include="Presentation\View\" />
     </ItemGroup>
 
 </Project>
