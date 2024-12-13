@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using H5pPlayer.BusinessLogic.Api.JavaScript;
+﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
-using Microsoft.JSInterop;
 
 namespace H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 
