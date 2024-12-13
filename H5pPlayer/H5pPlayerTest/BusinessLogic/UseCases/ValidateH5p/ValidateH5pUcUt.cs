@@ -10,6 +10,15 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.ValidateH5p;
 public class ValidateH5pUcUt
 {
 
+    /// <summary>
+    /// this constructor unit-test is explicitly needed,
+    /// because we do not unit-test the real interaction between
+    /// the <see cref="ValidateH5pUc"/> and the <see cref="ReceiveFromJavaScriptAdapter"/>
+    ///
+    /// with this test we ensure the possibility to interact
+    /// from <see cref="ReceiveFromJavaScriptAdapter"/>
+    /// to the CORRECT INSTANCE of <see cref="ValidateH5pUc"/>
+    /// </summary>
     [Test]
     public void InitializeReceiveFromJavaScriptAdapterWithValidateH5pUc()
     {
