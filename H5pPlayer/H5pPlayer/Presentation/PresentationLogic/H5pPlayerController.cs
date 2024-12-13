@@ -15,9 +15,9 @@ public class H5pPlayerController
 
     public H5pPlayerController(IJSRuntime jsRuntime)
     {
-        IJavaScriptAdapter javaScriptAdapter = new JavaScriptAdapter(jsRuntime);
-        IDisplayH5pUC displayH5pUC = new DisplayH5pUC(javaScriptAdapter);
-        IValidateH5pUc validateH5pUc = new ValidateH5pUc(javaScriptAdapter);
+        ICallJavaScriptAdapter callJavaScriptAdapter = new CallJavaScriptAdapter(jsRuntime);
+        IDisplayH5pUC displayH5pUC = new DisplayH5pUC(callJavaScriptAdapter);
+        IValidateH5pUc validateH5pUc = new ValidateH5pUc(callJavaScriptAdapter);
         StartH5PPlayerPresenter = new H5PPlayerPlayerPresenter();
         var fileSystemDataAccess = new FileSystemDataAccess();
         StartH5PPlayerUc = new StartH5pPlayerUC(

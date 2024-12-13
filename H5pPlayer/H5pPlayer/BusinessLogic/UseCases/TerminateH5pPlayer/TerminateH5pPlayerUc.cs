@@ -8,19 +8,19 @@ public class TerminateH5pPlayerUc : ITerminateH5pPlayerUcPort
 {
 
     public TerminateH5pPlayerUc(
-        IJavaScriptAdapter javaScriptAdapter, IFileSystemDataAccess dataAccess)
+        ICallJavaScriptAdapter iCallJavaScriptAdapter, IFileSystemDataAccess dataAccess)
     {
-        JavaScriptAdapter = javaScriptAdapter;
+        ICallJavaScriptAdapter = iCallJavaScriptAdapter;
         TemporaryH5pManager = new TemporaryH5psInWwwrootManager(dataAccess);
     }
 
     public async Task TerminateH5pPlayer()
     {
         TemporaryH5pManager.CleanDirectoryForTemporaryH5psInWwwroot();
-        await JavaScriptAdapter.TerminateH5pJavaScriptPlayer();
+        await ICallJavaScriptAdapter.TerminateH5pJavaScriptPlayer();
     }
     
     private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; }
-    private IJavaScriptAdapter JavaScriptAdapter { get; }
+    private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
 
 }

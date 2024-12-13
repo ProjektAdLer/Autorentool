@@ -9,25 +9,41 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.ValidateH5p;
 [TestFixture]
 public class ValidateH5pUcUt
 {
+
     [Test]
-    public async Task  ValidateH5p()
+    public void InitializeReceiveFromJavaScriptAdapterWithValidateH5pUc()
     {
-        var mockJavaScriptAdapter = Substitute.For<IJavaScriptAdapter>();
-        var systemUnderTest = new ValidateH5pUc(mockJavaScriptAdapter);
+        var systemUnderTest = CreateValidateH5PUc();
+        
+        Assert.That( ReceiveFromJavaScriptAdapter.VaidateH5pUc, Is.EqualTo(systemUnderTest));
+    }
+    
+    [Test]
+    public async Task StartToValidateH5p()
+    {
+        var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
+        var systemUnderTest = CreateValidateH5PUc(mockJavaScriptAdapter);
         var unzippedH5psPath = @"C:\ValidPath1.h5p";
         var h5pZipSourcePath = @"C:\ValidPath2.h5p";
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
 
         await systemUnderTest.StartToValidateH5p(h5pEntity);
 
-        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         await mockJavaScriptAdapter.Received().ValidateH5p(Arg.Is(javaScriptAdapterTO));
-        await mockJavaScriptAdapter.Received().ValidateH5p(Arg.Any<JavaScriptAdapterTO>());
+        await mockJavaScriptAdapter.Received().ValidateH5p(Arg.Any<CallJavaScriptAdapterTO>());
     }
 
-    private static JavaScriptAdapterTO CreateJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
+    private static ValidateH5pUc CreateValidateH5PUc(ICallJavaScriptAdapter? mockJavaScriptAdapter = null)
     {
-        var javaScriptAdapterTO = new JavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
+        mockJavaScriptAdapter ??= Substitute.For<ICallJavaScriptAdapter>();
+        return new ValidateH5pUc(mockJavaScriptAdapter);
+    }
+
+
+    private static CallJavaScriptAdapterTO CreateJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
+    {
+        var javaScriptAdapterTO = new CallJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         return javaScriptAdapterTO;
     }
     

@@ -1,8 +1,8 @@
 ﻿namespace H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
-public struct JavaScriptAdapterTO
+public struct CallJavaScriptAdapterTO
 {
-    public JavaScriptAdapterTO(
+    public CallJavaScriptAdapterTO(
         string unzippedH5psPath,
         string zippedH5psPath)
     {

@@ -1,5 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
@@ -7,7 +8,7 @@ using NSubstitute;
 namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;
 
 [TestFixture]
-public class JavaScriptAdapterUt
+public class CallJavaScriptAdapterUt
 {
     [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
         "https://localhost:8001/H5pStandalone/h5p-folder/")]
@@ -15,9 +16,9 @@ public class JavaScriptAdapterUt
         "//localhost:8001/H5pStandalone/h5p-folder/")]
     public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
-        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
+        var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
         var fakeJsInterop = Substitute.For<IJSRuntime>();
-        var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
+        var systemUnderTest = CreateCallJavaScriptAdapter(fakeJsInterop);
 
         await systemUnderTest.DisplayH5p(javaScriptAdapterTO);
 
@@ -32,9 +33,9 @@ public class JavaScriptAdapterUt
         "//localhost:8001/H5pStandalone/h5p-folder/")]
     public async Task ValidateH5p(string h5pSourcePath, string unzippedH5psPath)
     {
-        var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
+        var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
         var fakeJsInterop = Substitute.For<IJSRuntime>();
-        var systemUnderTest = CreateJavaScriptAdapter(fakeJsInterop);
+        var systemUnderTest = CreateCallJavaScriptAdapter(fakeJsInterop);
 
         await systemUnderTest.ValidateH5p(javaScriptAdapterTO);
 
@@ -59,7 +60,7 @@ public class JavaScriptAdapterUt
     public async Task TerminateH5pJavaScriptPlayer()
     {
         var mockJsRuntime = Substitute.For<IJSRuntime>();
-        var systemUnderTest = CreateJavaScriptAdapter(mockJsRuntime);
+        var systemUnderTest = CreateCallJavaScriptAdapter(mockJsRuntime);
 
         await systemUnderTest.TerminateH5pJavaScriptPlayer();
 
@@ -67,34 +68,23 @@ public class JavaScriptAdapterUt
     }
     
     
-    [Test]
-    public async Task ReceiveJsonData()
-    {
-        var jsonData = "";
-        var mockH5pIsCompletedInputPort = Substitute.For<IH5pIsCompletedInputPort>()
-        var systemUnderTest = CreateJavaScriptAdapter();
-        
-        await systemUnderTest.ReceiveJsonData(jsonData);
-
-
-    }
 
     
-    private static JavaScriptAdapterTO CreateJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
+    private static CallJavaScriptAdapterTO CreateCallJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
     {
-        var javaScriptAdapterTO = new JavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
+        var javaScriptAdapterTO = new CallJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         return javaScriptAdapterTO;
     }
 
 
-    private static JavaScriptAdapter CreateJavaScriptAdapter(IJSRuntime? fakeJsInterop = null)
+    private static CallJavaScriptAdapter CreateCallJavaScriptAdapter(
+        IJSRuntime? fakeJsInterop = null,
+        IValidateH5pUc fakeValidateH5pUc = null)
     {
         fakeJsInterop = fakeJsInterop ?? Substitute.For<IJSRuntime>();
-        var systemUnderTest = new JavaScriptAdapter(fakeJsInterop);
+        fakeValidateH5pUc = fakeValidateH5pUc ?? Substitute.For<IValidateH5pUc>();
+        var systemUnderTest = new CallJavaScriptAdapter(fakeJsInterop);
         return systemUnderTest;
     }
 }
 
-public interface IH5pIsCompletedInputPort
-{
-}

@@ -26,7 +26,7 @@ public class TerminateH5pPlayerUcUt
     [Test]
     public async Task TerminateH5pJavaScriptPlayer()
     {
-        var mockJavaScriptAdapter= Substitute.For<IJavaScriptAdapter>();
+        var mockJavaScriptAdapter= Substitute.For<ICallJavaScriptAdapter>();
         var systemUnderTest = CreateSystemUnderTest(mockJavaScriptAdapter);
 
         await systemUnderTest.TerminateH5pPlayer();
@@ -35,12 +35,12 @@ public class TerminateH5pPlayerUcUt
     }
 
     private static TerminateH5pPlayerUc CreateSystemUnderTest(
-        IJavaScriptAdapter javaScriptAdapter = null,
+        ICallJavaScriptAdapter iCallJavaScriptAdapter = null,
         IFileSystemDataAccess fileSystemDataAccess = null)
     {
-        javaScriptAdapter = javaScriptAdapter ?? Substitute.For<IJavaScriptAdapter>();
+        iCallJavaScriptAdapter = iCallJavaScriptAdapter ?? Substitute.For<ICallJavaScriptAdapter>();
         fileSystemDataAccess ??= Substitute.For<IFileSystemDataAccess>();
-        var systemUnderTest = new TerminateH5pPlayerUc(javaScriptAdapter, fileSystemDataAccess);
+        var systemUnderTest = new TerminateH5pPlayerUc(iCallJavaScriptAdapter, fileSystemDataAccess);
         return systemUnderTest;
     }
 }
