@@ -11,15 +11,7 @@ public class ReceiveFromJavaScriptAdapter
     
     public static IValidateH5pUc VaidateH5pUc { get; set; }
 
-    /// <summary>
-    /// todo:
-    /// For the back call from the JavaScript code part, we build a new class here.
-    ///  .Net methods that are called from JavaScript must be static.
-    /// now we have to instantiate the JavaScript adapter in the static method.
-    /// -> here, however, we cannot inject the dependencies.
-    /// -> This means that we would have null references
-    /// if someone calls another method with this instance. 
-    /// </summary>
+
     [JSInvokable]
     public static void ReceiveJsonData(string jsonData)
     {
