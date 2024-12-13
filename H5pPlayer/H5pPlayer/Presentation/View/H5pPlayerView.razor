@@ -4,8 +4,17 @@
 <div>
     <PageTitle>H5P-Player</PageTitle>
     <div id="h5p-container"></div>
-
-    <h3>H5P Player Component die geladen wird</h3>
+@if (_h5pPlayerVm != null)
+    {
+        @if (_h5pPlayerVm.IsCompletable)
+        {
+            <div style="color: green; display: flex; align-items: center;">
+                <span>&#10003;</span> <!-- Grüner Haken -->
+                <span style="margin-left: 5px;">H5P is completable</span>
+            </div>
+        }
+    }
+  
 </div>
 
 @code {
@@ -19,22 +28,34 @@
     public string? UnzippedH5psPath{ get; set; }
     
     private H5pPlayerController? _h5pPlayerController;
+    private H5pPlayerViewModel? _h5pPlayerVm;
 
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
-        { 
+        {
+            CreateH5pPlayerVm();
             await StartH5pPlayer();
         }
     }
 
+    private void CreateH5pPlayerVm()
+    {
+        _h5pPlayerVm = new H5pPlayerViewModel();
+        _h5pPlayerVm.OnChange += StateHasChanged;
+    }
+
     private async Task StartH5pPlayer()
     {
-        _h5pPlayerController = new H5pPlayerController(JsRuntime);
+        
+        _h5pPlayerController = new H5pPlayerController(_h5pPlayerVm, JsRuntime);
         //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
         await _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
     }
 
-
+    public void Dispose()
+    {
+        _h5pPlayerVm.OnChange -= StateHasChanged;
+    }
 }

@@ -33,6 +33,9 @@ public class ReceiveFromJavaScriptAdapter
 
             Console.WriteLine("\nPrüfungen:");
             Console.WriteLine($"Abgeschlossen (verb: completed): {isCompleted}");
+
+            var validateH5pTO = new ValidateH5pTO(isCompleted);
+            VaidateH5pUc.ValidateH5p(validateH5pTO);
         }
         catch (Exception ex)
         {
