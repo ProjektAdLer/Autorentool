@@ -2,7 +2,7 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @implements IAsyncDisposable
-<MudDialog>
+<MudDialog DefaultFocus="DefaultFocus.None">
     <DialogContent>
         @Localizer["Dialog.Text"]
         <MudProgressLinear Value="_progress" Min="0" Max="100" Color="Color.Primary" Class="my-4 w-full"/>
