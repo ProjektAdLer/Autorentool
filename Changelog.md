@@ -19,6 +19,12 @@
 
 </details>
 
+## [2.2.2] - 2024-12-19
+
+### Fixed
+
+- Fixed a crash after upload learning world
+
 ## [2.2.1] - 2024-12-04
 
 ### Changed
