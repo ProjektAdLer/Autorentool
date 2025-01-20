@@ -24,7 +24,7 @@ public class ValidateH5pUcUt
     {
         var systemUnderTest = CreateValidateH5PUc();
         
-        Assert.That( ReceiveFromJavaScriptAdapter.VaidateH5pUc, Is.EqualTo(systemUnderTest));
+        Assert.That( ReceiveFromJavaScriptAdapter.ValidateH5pUc, Is.EqualTo(systemUnderTest));
     }
     
     [Test]

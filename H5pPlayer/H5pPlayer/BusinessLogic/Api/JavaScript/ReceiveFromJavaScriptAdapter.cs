@@ -7,40 +7,61 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 public class ReceiveFromJavaScriptAdapter
 {
     
-    
-    
-    public static IValidateH5pUc VaidateH5pUc { get; set; }
+    public static IValidateH5pUc ValidateH5pUc { get; set; }
 
 
+    /// <summary>
+    /// Ausführlicher Testen:
+    /// - gibt es die json-member überhaupt usw
+    ///
+    /// todo nochmal durchspielen, da kein integrationstest aktuell
+    /// </summary>
+    /// <param name="jsonData"></param>
     [JSInvokable]
     public static void ReceiveJsonData(string jsonData)
     {
-        // if verb contains completed -> Dann ist H5P abschließbar
         try
         {
-            // JSON parsen
             var root = JsonNode.Parse(jsonData);
+            var statement = root?["data"]?["statement"];
+            var verbId = statement?["verb"]?["id"]?.GetValue<string>();
 
-            // `verb` extrahieren
-            var verbPart = root?["data"]?["statement"]?["verb"];
 
-            // Prüfung, ob die `verb`-ID "completed" enthält
-            bool isCompleted = verbPart?["id"]?.GetValue<string>() == "http://adlnet.gov/expapi/verbs/completed";
-
-            // Ergebnisse anzeigen
-            Console.WriteLine("Verb-Teil:");
-            Console.WriteLine(verbPart?.ToJsonString() ?? "Verb nicht gefunden");
-
-            Console.WriteLine("\nPrüfungen:");
-            Console.WriteLine($"Abgeschlossen (verb: completed): {isCompleted}");
-
-            var validateH5pTO = new ValidateH5pTO(isCompleted);
-            VaidateH5pUc.ValidateH5p(validateH5pTO);
+            ValidateReceivedJsonData(verbId, statement);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Fehler beim Verarbeiten des JSON: {ex.Message}");
+            Console.WriteLine($"Error processing JSON data: {ex.Message}");
         }
 
     }
+
+    private static void ValidateReceivedJsonData(string? verbId, JsonNode? statement)
+    {
+        var validateH5pTO = new ValidateH5pTO(IsCompleted(verbId, statement));
+        ValidateH5pUc.ValidateH5p(validateH5pTO);
+    }
+
+    private static bool IsCompleted(string? verbId, JsonNode? statement)
+    {
+        return IsAnsweredOrCompleted(verbId) && IsNotChild(statement);
+    }
+    private static bool IsAnsweredOrCompleted(string? verbId)
+    {
+        return verbId == "http://adlnet.gov/expapi/verbs/answered" ||
+               verbId == "http://adlnet.gov/expapi/verbs/completed";
+    }
+    
+    private static bool IsNotChild(JsonNode? statement)
+    {
+       return !CheckIfStatementHasParentContext(statement);
+     
+    }
+
+    private static bool CheckIfStatementHasParentContext(JsonNode? statement)
+    {
+        var isChild = statement?["context"]?["contextActivities"]?["parent"]?[0]?["id"] != null;
+        return isChild;
+    }
+  
 }

@@ -17,7 +17,7 @@ public class ValidateH5pUc : IValidateH5pUc
 
     private void EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc()
     {
-        ReceiveFromJavaScriptAdapter.VaidateH5pUc = this;
+        ReceiveFromJavaScriptAdapter.ValidateH5pUc = this;
     }
 
     public async Task  StartToValidateH5p(H5pEntity h5pEntity)
