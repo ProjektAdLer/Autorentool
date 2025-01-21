@@ -9,7 +9,7 @@ public class H5pPlayerViewModelUt
 
     /// <summary>
     /// OnChange is tested in: <see cref="IsCompletable_SetToDifferentValue_ShouldTriggerOnChangeEvent"/>
-    /// because only += operation allowed on Actions.-> cant be asserted!
+    /// because only "+=" operation allowed on Actions.-> cant be asserted!
     /// </summary>
     [Test]
     public void Constructor_Standard()
