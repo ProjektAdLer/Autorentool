@@ -2,8 +2,15 @@
 
 public class H5pPlayerViewModel
 {
-    private bool _isCompletable;
 
+    public H5pPlayerViewModel()
+    {
+        IsCompletable = false;
+        InvalidPathErrorVm = new InvalidPathErrorViewModel();
+    }
+    public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
+    
+    private bool _isCompletable;
     public bool IsCompletable
     {
         get => _isCompletable;
@@ -23,4 +30,5 @@ public class H5pPlayerViewModel
     {
         OnChange?.Invoke();
     }
+
 }
