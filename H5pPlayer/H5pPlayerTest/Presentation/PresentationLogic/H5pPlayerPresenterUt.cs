@@ -12,7 +12,7 @@ public class H5pPlayerPresenterUt
     [Test]
     public void SetH5pIsCompletable()
     {
-        var h5pPlayerVm = new H5pPlayerViewModel();
+        var h5pPlayerVm = CreateH5pPlayerVm();
         var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
         
         systemUnderTest.SetH5pIsCompletable();
@@ -20,12 +20,12 @@ public class H5pPlayerPresenterUt
         Assert.That(h5pPlayerVm.IsCompletable, Is.True);
     }
 
-   
+
 
     [Test]
     public void SetInvalidPathError()
     {
-        var h5pPlayerVm = new H5pPlayerViewModel();
+        var h5pPlayerVm = CreateH5pPlayerVm();
         var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
         var errorTo = CreateErrorOutputTO("PathIs wrong Test", "InvalidPath");
 
@@ -46,10 +46,18 @@ public class H5pPlayerPresenterUt
         return errorTo;
     }
 
+    
+    private static H5pPlayerViewModel CreateH5pPlayerVm()
+    {
+        Action fakeAction = () => { };
+        var h5pPlayerVm = new H5pPlayerViewModel(fakeAction);
+        return h5pPlayerVm;
+    }
 
     private static H5pPlayerPresenter CreateH5pPlayerPresenter(H5pPlayerViewModel? h5pPlayerVm = null)
     {
-        h5pPlayerVm ??= new H5pPlayerViewModel();
+        Action fakeAction = () => { };
+        h5pPlayerVm ??= new H5pPlayerViewModel(fakeAction);
         var systemUnderTest = new H5pPlayerPresenter(h5pPlayerVm);
         return systemUnderTest;
     }

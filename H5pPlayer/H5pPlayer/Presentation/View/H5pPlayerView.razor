@@ -42,8 +42,7 @@
 
     private void CreateH5pPlayerVm()
     {
-        _h5pPlayerVm = new H5pPlayerViewModel();
-        _h5pPlayerVm.OnChange += StateHasChanged;
+        _h5pPlayerVm = new H5pPlayerViewModel(StateHasChanged);
     }
 
     private async Task StartH5pPlayer()
@@ -54,8 +53,5 @@
         await _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
     }
 
-    public void Dispose()
-    {
-        _h5pPlayerVm.OnChange -= StateHasChanged;
-    }
+   
 }

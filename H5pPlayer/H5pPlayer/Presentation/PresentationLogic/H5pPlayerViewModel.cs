@@ -3,10 +3,11 @@
 public class H5pPlayerViewModel
 {
 
-    public H5pPlayerViewModel()
+    public H5pPlayerViewModel(Action stateHasChanged)
     {
         IsCompletable = false;
         InvalidPathErrorVm = new InvalidPathErrorViewModel();
+        OnChange += stateHasChanged;
     }
     public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
     
@@ -24,7 +25,7 @@ public class H5pPlayerViewModel
         }
     }
     
-    public event Action OnChange;
+    private event Action OnChange;
 
     private void NotifyStateChanged()
     {

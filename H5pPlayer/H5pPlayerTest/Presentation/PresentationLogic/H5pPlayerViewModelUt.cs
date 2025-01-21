@@ -7,12 +7,25 @@ namespace H5pPlayerTest.Presentation.PresentationLogic;
 public class H5pPlayerViewModelUt
 {
 
+    /// <summary>
+    /// OnChange is tested in: <see cref="IsCompletable_SetToDifferentValue_ShouldTriggerOnChangeEvent"/>
+    /// because only += operation allowed on Actions.-> cant be asserted!
+    /// </summary>
+    [Test]
+    public void Constructor_Standard()
+    {
+        var systemUnderTest = CreateH5pPlayerVm();
+
+        Assert.That(systemUnderTest.IsCompletable , Is.False);
+        Assert.That(systemUnderTest.InvalidPathErrorVm , Is.Not.Null);
+    }
+
     [Test]
     public void IsCompletable_SetToDifferentValue_ShouldTriggerOnChangeEvent()
     {
-        var systemUnderTest = CreateH5pPlayerVm();
         var eventTriggered = false;
-        systemUnderTest.OnChange += () => eventTriggered = true;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
 
         systemUnderTest.IsCompletable = true;
 
@@ -22,32 +35,22 @@ public class H5pPlayerViewModelUt
     [Test]
     public void IsCompletable_SetToSameValue_ShouldNotTriggerOnChangeEvent()
     {
-        var systemUnderTest = CreateH5pPlayerVm(true);
         var eventTriggered = false;
-        systemUnderTest.OnChange += () => eventTriggered = true;
-
-        systemUnderTest.IsCompletable = true;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
+        
+        systemUnderTest.IsCompletable = false;
 
         Assert.That(eventTriggered, Is.False);
     }
 
-    [Test]
-    public void NotifyStateChanged_ShouldInvokeOnChangeEvent()
+   
+
+    private H5pPlayerViewModel CreateH5pPlayerVm(
+        Action? fakeAction = null)
     {
-        var systemUnderTest  = CreateH5pPlayerVm();
-        var onChangeMock = Substitute.For<Action>();
-        systemUnderTest.OnChange += onChangeMock;
-
-        systemUnderTest.IsCompletable = true;
-
-        onChangeMock.Received(1).Invoke();
-    }
-
-
-    private H5pPlayerViewModel CreateH5pPlayerVm(bool isCompletable = false)
-    {
-        var viewModel = new H5pPlayerViewModel();
-        viewModel.IsCompletable = isCompletable;
+        fakeAction ??=  () => { };
+        var viewModel = new H5pPlayerViewModel(fakeAction);
         return viewModel;
     }
 }
