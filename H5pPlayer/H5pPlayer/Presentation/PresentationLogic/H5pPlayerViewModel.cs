@@ -6,7 +6,7 @@ public class H5pPlayerViewModel
     public H5pPlayerViewModel(Action stateHasChanged)
     {
         IsCompletable = false;
-        InvalidPathErrorVm = new InvalidPathErrorViewModel();
+        InvalidPathErrorVm = new InvalidPathErrorViewModel(stateHasChanged);
         OnChange += stateHasChanged;
     }
     public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
