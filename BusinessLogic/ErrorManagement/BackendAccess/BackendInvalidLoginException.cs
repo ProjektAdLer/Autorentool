@@ -11,10 +11,6 @@ public class BackendInvalidLoginException : Exception
     {
     }
 
-    protected BackendInvalidLoginException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
-
     public BackendInvalidLoginException(string? message) : base(message)
     {
     }
