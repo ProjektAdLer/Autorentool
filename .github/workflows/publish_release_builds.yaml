@@ -230,7 +230,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref_name }}_amd64.snap
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-amd64.snap
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.snap
           tag: ${{ github.ref }}
           
       - name: Upload linux appimage to release
@@ -238,7 +238,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.AppImage
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-amd64.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.AppImage
           tag: ${{ github.ref }}
 
       - name: Upload linux-unpacked tar.xz to release
@@ -246,7 +246,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.xz
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-amd64-unpacked.tar.xz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.xz
           tag: ${{ github.ref }}
           
   publish-linux-arm64:
