@@ -7,6 +7,7 @@ public class InvalidPathErrorViewModel
     {
         ErrorTextForInvalidPath = "init";
         InvalidPath = "init";
+        InvalidPathErrorIsActive = false;
         OnChange += action;
     }
 
@@ -40,6 +41,19 @@ public class InvalidPathErrorViewModel
     }
     
     
+    private bool _invalidPathErrorIsActive;
+    public bool InvalidPathErrorIsActive
+    {
+        get => _invalidPathErrorIsActive;
+        set
+        {
+            if (_invalidPathErrorIsActive != value)
+            {
+                _invalidPathErrorIsActive = value;
+                NotifyStateChanged();
+            }
+        } 
+    }
     
     private event Action OnChange;
 
@@ -47,4 +61,6 @@ public class InvalidPathErrorViewModel
     {
         OnChange?.Invoke();
     }
+    
+ 
 }

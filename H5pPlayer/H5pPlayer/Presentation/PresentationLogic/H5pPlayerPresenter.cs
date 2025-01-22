@@ -16,6 +16,7 @@ public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOut
     {
         H5pPlayerVm!.InvalidPathErrorVm.ErrorTextForInvalidPath = startH5PPlayerErrorOutputTo.ErrorTextForInvalidPath;
         H5pPlayerVm!.InvalidPathErrorVm.InvalidPath = startH5PPlayerErrorOutputTo.InvalidPath;
+        H5pPlayerVm!.InvalidPathErrorVm.InvalidPathErrorIsActive = true;
     }
 
     public void SetH5pIsCompletable()

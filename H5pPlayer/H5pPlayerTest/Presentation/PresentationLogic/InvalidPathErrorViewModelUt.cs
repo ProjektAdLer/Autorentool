@@ -54,6 +54,31 @@ public class InvalidPathErrorViewModelUt
         Assert.That(eventTriggered, Is.False);
     }
 
+        
+    [Test]
+    public void InvalidPathErrorIsActive_SetToDifferentValue_ShouldTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateInvalidPathErrorViewModel(action);
+
+        systemUnderTest.InvalidPathErrorIsActive = true;
+
+        Assert.That(eventTriggered, Is.True);
+    }
+
+    [Test]
+    public void InvalidPathErrorIsActive_SetToSameValue_ShouldNotTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateInvalidPathErrorViewModel(action);
+        
+        systemUnderTest.InvalidPathErrorIsActive =  false;
+
+        Assert.That(eventTriggered, Is.False);
+    }
+
 
     public static InvalidPathErrorViewModel CreateInvalidPathErrorViewModel(Action? fakeAction = null)
     {

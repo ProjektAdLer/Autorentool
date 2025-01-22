@@ -34,6 +34,7 @@ public class H5pPlayerPresenterUt
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.ErrorTextForInvalidPath, 
             Is.EqualTo(errorTo.ErrorTextForInvalidPath));
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPath, Is.EqualTo(errorTo.InvalidPath));
+        Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPathErrorIsActive, Is.True);
     }
 
     private static StartH5pPlayerErrorOutputTO CreateErrorOutputTO(
