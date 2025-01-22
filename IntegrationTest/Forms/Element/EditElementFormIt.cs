@@ -55,13 +55,14 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         FormModel.LearningContent = LearningContentFormModels[1];
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
-        
+
         var learningContent = LearningContentFormModels[0];
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(learningContent));
 
         _dialogServiceMock = Substitute.For<IDialogService>();
-        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+        _dialogServiceMock
+            .ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
         Context.Services.AddSingleton(_dialogServiceMock);
@@ -185,7 +186,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Test]
     [Ignore(
         "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
-        Until = "2024-12-31")]
+        Until = "2025-1-31")]
     // ANF-ID: [AWA0015]
     public void H5PContentSelected_ShowsPrimitiveCheckbox()
     {
@@ -237,10 +238,10 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        
+
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
-        
+
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
