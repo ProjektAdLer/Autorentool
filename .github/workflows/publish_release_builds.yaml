@@ -147,9 +147,6 @@ jobs:
           files: ./AuthoringTool/bin/Desktop_Publish/win-unpacked
           dest: ./AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
 
-      - name: Pack windows-unpacked into 7z
-        run: 7z a -t7z -mx=9 ./AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.7z ./AuthoringTool/bin/Desktop_Publish/win-unpacked
-
       - name: Upload Windows installer to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -164,14 +161,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
           asset_name: AuthoringTool-${{ github.ref_name }}-win-unpacked.zip
-          tag: ${{ github.ref }}
-      
-      - name: Upload win-unpacked 7z to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.7z
-          asset_name: AuthoringTool-${{ github.ref_name }}-win-unpacked.7z
           tag: ${{ github.ref }}
   
   publish-linux:
@@ -225,9 +214,6 @@ jobs:
         working-directory: ./AuthoringTool/bin/Desktop_Publish
         run: tar -cavf ${{ github.ref_name }}-linux-unpacked.tar.gz ./linux-unpacked
         
-      - name: Pack linux-unpacked into 7z
-        working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: 7z a -t7z -mx=9 ${{ github.ref_name }}-linux-unpacked.7z ./linux-unpacked
       
       - name: Upload linux snap to release
         uses: svenstaro/upload-release-action@v2
@@ -251,14 +237,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.gz
           asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.gz
-          tag: ${{ github.ref }}
-
-      - name: Upload linux-unpacked 7z to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.7z
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.7z
           tag: ${{ github.ref }}
           
   publish-linux-arm64:
