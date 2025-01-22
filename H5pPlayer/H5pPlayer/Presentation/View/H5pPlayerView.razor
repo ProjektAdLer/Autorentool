@@ -4,8 +4,13 @@
 <div>
     <PageTitle>H5P-Player</PageTitle>
     <div id="h5p-container"></div>
+
+
     @if (_h5pPlayerVm != null)
     {
+        <InvalidPathErrorView InvalidPathErrorVm="_h5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
+
+        
         @if (_h5pPlayerVm.IsCompletable)
         {
             <div style="color: green; display: flex; align-items: center;">
