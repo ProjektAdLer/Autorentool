@@ -182,40 +182,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
     }
 
-    [Test]
-    [Ignore(
-        "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
-        Until = "2024-12-31")]
-    // ANF-ID: [AWA0015]
-    public void H5PContentSelected_ShowsPrimitiveCheckbox()
-    {
-        var content = new[]
-        {
-            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
-        };
-        WorldPresenter.GetAllContent().Returns(content);
-        var contentFormModels = new[]
-        {
-            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
-        };
-        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
-        var systemUnderTest = GetFormWithPopoverProvider();
-        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
-
-
-        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
-        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
-        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
-
-        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
-        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
-
-        checkbox.Find("input").Change(true);
-
-        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
-        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
-    }
-
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
     {
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
