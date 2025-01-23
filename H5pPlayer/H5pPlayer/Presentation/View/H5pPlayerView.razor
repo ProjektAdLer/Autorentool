@@ -1,10 +1,14 @@
 ﻿@using H5pPlayer.Presentation.PresentationLogic
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
-<div>
-    <PageTitle>H5P-Player</PageTitle>
-    <div id="h5p-container"></div>
 
+
+<div>
+    <p style="color: red">Dieses Fenster muss geöffnet bleiben bis die Validierung abgeschlossen ist!</p>
+    <p>Bitte prüfen Sie das H5P, indem Sie die darin enthaltenen Aufgaben lösen.</p>
+    <div style="margin-top: 20px;"></div>
+    <div id="h5p-container"></div>
+    <div style="margin-top: 20px;"></div>
 
     @if (_h5pPlayerVm != null)
     {
@@ -15,7 +19,7 @@
         {
             <div style="color: green; display: flex; align-items: center;">
                 <span>&#10003;</span> <!-- Grüner Haken -->
-                <span style="margin-left: 5px;">H5P is completable</span>
+                <span style="margin-left: 5px;">H5P ist abschließbar</span>
             </div>
         }
     }
