@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
@@ -171,7 +172,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         Assert.That(FormModel.Text, Is.EqualTo(""));
         Assert.That(FormModel.Choices, Has.Count.EqualTo(2));
         Assert.That(FormModel.CorrectChoices, Has.Count.EqualTo(0));
-        
+
 
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
@@ -229,23 +230,23 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var choice2 = FormModel.Choices.Last();
         var choices = FormModel.Choices.ToList();
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel>());
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel>());
 
         checkBoxChoice1.Find("input").Change(true);
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
 
         checkBoxChoice2.Find("input").Change(true);
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1, choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1, choice2 });
 
         checkBoxChoice1.Find("input").Change(false);
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice2 });
 
         checkBoxChoice2.Find("input").Change(false);
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel>());
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel>());
     }
 
     [Test]
@@ -256,7 +257,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var mudCheckBox = systemUnderTest.FindComponent<MudSwitch<bool>>();
         var checkbox = mudCheckBox.Find("input");
         checkbox.Change(true);
-        var mudRadioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>();
+        var mudRadioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceFormModel>>();
 
         Assert.That(mudRadioButtons, Has.Count.EqualTo(2));
         var radioButtonChoice1 = mudRadioButtons[0];
@@ -266,19 +267,19 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var choice2 = FormModel.Choices.Last();
         var choices = FormModel.Choices.ToList();
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
 
         radioButtonChoice1.Find("input").Click();
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
 
         radioButtonChoice2.Find("input").Click();
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice2 });
 
         radioButtonChoice1.Find("input").Click();
 
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
     }
 
     [Test]
@@ -292,7 +293,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var choices = FormModel.Choices.ToList();
 
         // Multiple response - no correct choice
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel>());
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel>());
 
         systemUnderTest.InvokeAsync(() =>
         {
@@ -301,16 +302,17 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         });
 
         // Single response - automatically sets the first choice as correct
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
 
         systemUnderTest.InvokeAsync(() =>
         {
-            var mudRadioButtonOfChoice2 = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>().Last().Find("input");
+            var mudRadioButtonOfChoice2 =
+                systemUnderTest.FindComponents<MudRadio<ChoiceFormModel>>().Last().Find("input");
             mudRadioButtonOfChoice2.Click();
         });
 
         // Single response - choice 2 is now correct
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice2 });
 
         systemUnderTest.InvokeAsync(() =>
         {
@@ -319,7 +321,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         });
 
         // Multiple response - choice 2 is still correct
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice2 });
 
         systemUnderTest.InvokeAsync(() =>
         {
@@ -328,7 +330,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         });
 
         // Multiple response - choice 1 is now also correct
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1, choice2 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1, choice2 });
 
         systemUnderTest.InvokeAsync(() =>
         {
@@ -338,7 +340,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
 
 
         // Single response - choice 1 is now correct because it is the first choice in the choices list that is correct
-        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceViewModel> { choice1 });
+        CheckFormModelContainingChoicesAndCorrectChoices(choices, new List<ChoiceFormModel> { choice1 });
     }
 
     [Test]
@@ -372,7 +374,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var textFieldChoice1 = mudTextFields[1];
         var textFieldChoice2 = mudTextFields[2];
         var textFieldChoice3 = mudTextFields[3];
-        var radioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>();
+        var radioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceFormModel>>();
         var checkBoxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
         IElement checkChoice1;
         IElement checkChoice3;
@@ -391,10 +393,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
             checkChoice3 = checkBoxes[2].Find("input");
         }
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(textFieldQuestionText.Instance.Text, Is.Empty);
-        });
+        Assert.Multiple(() => { Assert.That(textFieldQuestionText.Instance.Text, Is.Empty); });
 
         // Set values
         textFieldQuestionText.Find("textarea").Change(ExpectedString);
@@ -417,9 +416,9 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         if (isSingleResponse)
         {
             PresentationLogic.Received(1).CreateMultipleChoiceSingleResponseQuestion(task, difficulty,
-                ExpectedString, Arg.Any<List<ChoiceViewModel>>(), Arg.Any<ChoiceViewModel>(), Arg.Any<int>());
+                ExpectedString, Arg.Any<List<ChoiceFormModel>>(), Arg.Any<ChoiceFormModel>(), Arg.Any<int>());
             var arguments = PresentationLogic.ReceivedCalls().First().GetArguments();
-            var choices = arguments[3] as List<ChoiceViewModel>;
+            var choices = arguments[3] as List<ChoiceFormModel>;
             Assert.That(choices, Has.Count.EqualTo(3));
             Assert.Multiple(() =>
             {
@@ -432,10 +431,10 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         else
         {
             PresentationLogic.Received(1).CreateMultipleChoiceMultipleResponseQuestion(task, difficulty, ExpectedString,
-                Arg.Any<List<ChoiceViewModel>>(), Arg.Any<List<ChoiceViewModel>>(), Arg.Any<int>());
+                Arg.Any<List<ChoiceFormModel>>(), Arg.Any<List<ChoiceFormModel>>(), Arg.Any<int>());
             var arguments = PresentationLogic.ReceivedCalls().First().GetArguments();
-            var choices = arguments[3] as List<ChoiceViewModel>;
-            var correctChoices = arguments[4] as List<ChoiceViewModel>;
+            var choices = arguments[3] as List<ChoiceFormModel>;
+            var correctChoices = arguments[4] as List<ChoiceFormModel>;
             Assert.That(choices, Has.Count.EqualTo(3));
             Assert.That(correctChoices, Has.Count.EqualTo(2));
             Assert.Multiple(() =>
@@ -469,8 +468,8 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
             FormDataContainer.FormModel.Text = "old";
             FormDataContainer.FormModel.IsSingleResponse =
                 questionToEdit is MultipleChoiceSingleResponseQuestionViewModel;
-            FormDataContainer.FormModel.Choices = new List<ChoiceViewModel> { new("old1"), new("old2") };
-            FormDataContainer.FormModel.CorrectChoices = new List<ChoiceViewModel>
+            FormDataContainer.FormModel.Choices = new List<ChoiceFormModel> { new("old1"), new("old2") };
+            FormDataContainer.FormModel.CorrectChoices = new List<ChoiceFormModel>
                 { FormDataContainer.FormModel.Choices.First() };
         });
 
@@ -498,7 +497,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         var textFieldChoice1 = mudTextFields[1];
         var textFieldChoice2 = mudTextFields[2];
         var textFieldChoice3 = mudTextFields[3];
-        var radioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceViewModel>>();
+        var radioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceFormModel>>();
         var checkBoxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
         IElement checkChoice1;
         IElement checkChoice2;
@@ -552,11 +551,11 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
             case (false, true):
             case (true, false):
                 PresentationLogic.Received(1).EditMultipleChoiceQuestionWithTypeChange(task, questionToEdit,
-                    isSingleResponse, ExpectedString, Arg.Any<List<ChoiceViewModel>>(),
-                    Arg.Any<List<ChoiceViewModel>>(), Arg.Any<int>());
+                    isSingleResponse, ExpectedString, Arg.Any<List<ChoiceFormModel>>(),
+                    Arg.Any<List<ChoiceFormModel>>(), Arg.Any<int>());
                 var arguments = PresentationLogic.ReceivedCalls().First().GetArguments();
-                var choices = arguments[4] as List<ChoiceViewModel>;
-                var correctChoices = arguments[5] as List<ChoiceViewModel>;
+                var choices = arguments[4] as List<ChoiceFormModel>;
+                var correctChoices = arguments[5] as List<ChoiceFormModel>;
                 Assert.That(choices, Has.Count.EqualTo(3));
                 Assert.Multiple(() =>
                 {
@@ -579,10 +578,10 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
                 break;
             case (false, false):
                 PresentationLogic.Received(1).EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion,
-                    ExpectedString, Arg.Any<List<ChoiceViewModel>>(), Arg.Any<List<ChoiceViewModel>>(), Arg.Any<int>());
+                    ExpectedString, Arg.Any<List<ChoiceFormModel>>(), Arg.Any<List<ChoiceFormModel>>(), Arg.Any<int>());
                 arguments = PresentationLogic.ReceivedCalls().First().GetArguments();
-                choices = arguments[2] as List<ChoiceViewModel>;
-                correctChoices = arguments[3] as List<ChoiceViewModel>;
+                choices = arguments[2] as List<ChoiceFormModel>;
+                correctChoices = arguments[3] as List<ChoiceFormModel>;
                 Assert.That(choices, Has.Count.EqualTo(3));
                 Assert.That(correctChoices, Has.Count.EqualTo(2));
                 Assert.Multiple(() =>
@@ -596,9 +595,9 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
                 break;
             case (true, true):
                 PresentationLogic.Received(1).EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion,
-                    ExpectedString, Arg.Any<List<ChoiceViewModel>>(), Arg.Any<ChoiceViewModel>(), Arg.Any<int>());
+                    ExpectedString, Arg.Any<List<ChoiceFormModel>>(), Arg.Any<ChoiceFormModel>(), Arg.Any<int>());
                 arguments = PresentationLogic.ReceivedCalls().First().GetArguments();
-                choices = arguments[2] as List<ChoiceViewModel>;
+                choices = arguments[2] as List<ChoiceFormModel>;
                 Assert.That(choices, Has.Count.EqualTo(3));
                 Assert.Multiple(() =>
                 {
@@ -611,8 +610,151 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         }
     }
 
-    private void CheckFormModelContainingChoicesAndCorrectChoices(ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices)
+    [Test]
+    public async Task EditQuestion_OnCloseWithoutSubmit_DoesNotChangeQuestion([Values] bool wasSingleResponse,
+        [Values] bool isSingleResponse)
+    {
+        const string changedString = "ChangedString";
+        var task = Substitute.For<IAdaptivityTaskViewModel>();
+        const QuestionDifficulty difficulty = QuestionDifficulty.Medium;
+        var onSubmittedCalled = false;
+        var onSubmitted = EventCallback.Factory.Create(this, () => onSubmittedCalled = true);
+        var choicesVm = new List<ChoiceViewModel>
+        {
+            new(ExpectedString + 1),
+            new(ExpectedString + 2)
+        };
+        var singleResponseQuestion = new MultipleChoiceSingleResponseQuestionViewModel(0, ExpectedString,
+            choicesVm.First(), difficulty, choicesVm);
+        var multipleResponseQuestion = new MultipleChoiceMultipleResponseQuestionViewModel(0, ExpectedString,
+            difficulty, new Collection<ChoiceViewModel> { choicesVm.First(), choicesVm.Last() },
+            choicesVm);
+        IMultipleChoiceQuestionViewModel questionToEdit = wasSingleResponse
+            ? singleResponseQuestion
+            : multipleResponseQuestion;
+        Mapper.When(x => x.Map(questionToEdit, FormDataContainer.FormModel)).Do(_ =>
+        {
+            FormDataContainer.FormModel.Text = questionToEdit.Text;
+            FormDataContainer.FormModel.IsSingleResponse =
+                questionToEdit is MultipleChoiceSingleResponseQuestionViewModel;
+            FormDataContainer.FormModel.Choices =
+                questionToEdit.Choices.Select(x => new ChoiceFormModel(x.Text)).ToList();
+            FormDataContainer.FormModel.CorrectChoices = questionToEdit is MultipleChoiceSingleResponseQuestionViewModel
+                ? FormDataContainer.FormModel.Choices
+                    .Where(x =>
+                        ((MultipleChoiceSingleResponseQuestionViewModel)questionToEdit).CorrectChoice.Text ==
+                        x.Text).ToList()
+                : FormDataContainer.FormModel.Choices
+                    .Where(x => questionToEdit.CorrectChoices.Any(y => x.Text.Contains(y.Text))).ToList();
+        });
+
+        var systemUnderTest = GetRenderedComponent(taskVm: task, difficulty: difficulty, onSubmitted: onSubmitted,
+            questionToEditVm: questionToEdit);
+
+        var mudForm = systemUnderTest.FindComponent<MudForm>();
+
+        // Check that validation everytime returns true
+        await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
+        Assert.That(mudForm.Instance.IsValid, Is.True);
+
+        // Set IsSingleResponse to testcase value
+        var mudCheckBoxIsSingleResponse = systemUnderTest.FindComponent<MudSwitch<bool>>();
+        mudCheckBoxIsSingleResponse.Find("input").Change(isSingleResponse);
+
+        // Add choice
+        var mudButtonAddChoice = systemUnderTest.FindComponents<MudButton>()[0].Find("button");
+        mudButtonAddChoice.Click();
+
+        // Get all components
+        var mudSubmitButton = systemUnderTest.FindComponents<MudButton>().Last();
+        var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
+        Assert.That(mudTextFields, Has.Count.EqualTo(4));
+        var textFieldQuestionText = mudTextFields[0];
+        var textFieldChoice1 = mudTextFields[1];
+        var textFieldChoice2 = mudTextFields[2];
+        var textFieldChoice3 = mudTextFields[3];
+        var radioButtons = systemUnderTest.FindComponents<MudRadio<ChoiceFormModel>>();
+        var checkBoxes = systemUnderTest.FindComponents<MudCheckBox<bool>>();
+        IElement checkChoice1;
+        IElement checkChoice2;
+        IElement checkChoice3;
+        if (isSingleResponse)
+        {
+            Assert.That(radioButtons, Has.Count.EqualTo(3));
+            Assert.That(checkBoxes, Has.Count.EqualTo(0));
+            checkChoice1 = radioButtons[0].Find("input");
+            checkChoice2 = radioButtons[1].Find("input");
+            checkChoice3 = radioButtons[2].Find("input");
+        }
+
+        else
+        {
+            Assert.That(radioButtons, Has.Count.EqualTo(0));
+            Assert.That(checkBoxes, Has.Count.EqualTo(3));
+            checkChoice1 = checkBoxes[0].Find("input");
+            checkChoice2 = checkBoxes[1].Find("input");
+            checkChoice3 = checkBoxes[2].Find("input");
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(textFieldQuestionText.Instance.Text, Is.EqualTo(ExpectedString));
+            Assert.That(textFieldChoice1.Instance.Text, Is.EqualTo(ExpectedString + 1));
+            Assert.That(textFieldChoice2.Instance.Text, Is.EqualTo(ExpectedString + 2));
+        });
+
+        // Set values
+        textFieldQuestionText.Find("textarea").Change(changedString);
+        textFieldChoice1.Find("input").Change(changedString + 1);
+        textFieldChoice2.Find("input").Change(changedString + 2);
+        textFieldChoice3.Find("input").Change(changedString + 3);
+        if (isSingleResponse)
+        {
+            checkChoice3.Click();
+        }
+        else
+        {
+            checkChoice1.Change(false);
+            checkChoice2.Change(true);
+            checkChoice3.Change(true);
+        }
+
+        // Close without submit
+        systemUnderTest.Dispose();
+        Assert.That(onSubmittedCalled, Is.False);
+
+        switch (wasSingleResponse, isSingleResponse)
+        {
+            case (false, true):
+            case (true, false):
+                PresentationLogic.DidNotReceive().EditMultipleChoiceQuestionWithTypeChange(task, questionToEdit,
+                    isSingleResponse, Arg.Any<string>(), Arg.Any<List<ChoiceFormModel>>(),
+                    Arg.Any<List<ChoiceFormModel>>(), Arg.Any<int>());
+                break;
+            case (false, false):
+                PresentationLogic.DidNotReceive().EditMultipleChoiceMultipleResponseQuestion(multipleResponseQuestion,
+                    Arg.Any<string>(), Arg.Any<List<ChoiceFormModel>>(), Arg.Any<List<ChoiceFormModel>>(),
+                    Arg.Any<int>());
+                break;
+            case (true, true):
+                PresentationLogic.DidNotReceive().EditMultipleChoiceSingleResponseQuestion(singleResponseQuestion,
+                    Arg.Any<string>(), Arg.Any<List<ChoiceFormModel>>(), Arg.Any<ChoiceFormModel>(), Arg.Any<int>());
+                break;
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(questionToEdit.Text, Is.EqualTo(ExpectedString));
+            Assert.That(questionToEdit.Choices, Has.Count.EqualTo(2));
+            Assert.That(questionToEdit.CorrectChoices,
+                questionToEdit is MultipleChoiceSingleResponseQuestionViewModel
+                    ? Has.Count.EqualTo(1)
+                    : Has.Count.EqualTo(2));
+        });
+    }
+
+    private void CheckFormModelContainingChoicesAndCorrectChoices(ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices)
     {
         Assert.That(FormModel.Choices, Has.Count.EqualTo(choices.Count));
         Assert.That(FormModel.CorrectChoices, Has.Count.EqualTo(correctChoices.Count));
@@ -644,7 +786,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
                     null => false,
                     string str => str != "" && str == ExpectedString,
                     bool => true,
-                    List<ChoiceViewModel> choices => choices.Any(),
+                    List<ChoiceFormModel> choices => choices.Any(),
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 return valid ? Enumerable.Empty<string>() : new[] { $"Must be {ExpectedString}" };

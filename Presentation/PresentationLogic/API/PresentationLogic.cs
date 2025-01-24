@@ -27,6 +27,7 @@ using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
 using ElectronWrapper;
 using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -937,8 +938,8 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceSingleResponseQuestion"/>
     public void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceViewModel> choices,
-        ChoiceViewModel correctChoice, int expectedCompletionTime)
+        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceFormModel> choices,
+        ChoiceFormModel correctChoice, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
@@ -951,8 +952,8 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateMultipleChoiceMultipleResponseQuestion"/>
     public void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel taskViewModel,
-        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
+        QuestionDifficulty difficulty, string questionText, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
@@ -966,7 +967,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceSingleResponseQuestion"/>
     public void EditMultipleChoiceSingleResponseQuestion(
         MultipleChoiceSingleResponseQuestionViewModel questionViewModel,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string questionText, ICollection<ChoiceFormModel> choices, ChoiceFormModel correctChoice,
         int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceSingleResponseQuestion>(questionViewModel);
@@ -981,7 +982,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceMultipleResponseQuestion"/>
     public void EditMultipleChoiceMultipleResponseQuestion(
         MultipleChoiceMultipleResponseQuestionViewModel questionViewModel, string questionText,
-        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime)
+        ICollection<ChoiceFormModel> choices, ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime)
     {
         var questionEntity = Mapper.Map<MultipleChoiceMultipleResponseQuestion>(questionViewModel);
         var choicesEntity = Mapper.Map<ICollection<Choice>>(choices);
@@ -995,8 +996,8 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.EditMultipleChoiceQuestionWithTypeChange"/>
     public void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel taskViewModel,
         IMultipleChoiceQuestionViewModel question,
-        bool isSingleResponse, string text, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices,
+        bool isSingleResponse, string text, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices,
         int expectedCompletionTime)
     {
         var taskEntity = Mapper.Map<AdaptivityTask>(taskViewModel);

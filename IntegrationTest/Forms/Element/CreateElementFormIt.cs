@@ -65,17 +65,17 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         };
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
-        
+
         var learningContent = LearningContentFormModels[0];
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(learningContent));
 
         _dialogServiceMock = Substitute.For<IDialogService>();
-        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+        _dialogServiceMock
+            .ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
         Context.Services.AddSingleton(_dialogServiceMock);
-
     }
 
 
@@ -312,21 +312,22 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void StoryMode_ShowsStoryContentCollapsable_SubmitsOnClick()
     {
         var sut = GetRenderedComponent(ElementMode.Story);
-        
+
         var collapsables = sut.FindComponents<Collapsable>();
 
-        var storyCollapsable = collapsables.First(collapsable => collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
-        
+        var storyCollapsable = collapsables.First(collapsable =>
+            collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
+
         var addButton = storyCollapsable.FindComponentWithMarkup<MudIconButton>("add-story-block-button");
         addButton.Find("button").Click();
-        
+
         var tfs = storyCollapsable.FindComponentsOrFail<MudTextField<string>>().ToList();
         tfs.ElementAt(0).Find("textarea").Change("a sob story");
         tfs.ElementAt(1).Find("textarea").Change("a happy story");
-        
+
         var submitButton = sut.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
-        
+
         SpacePresenter.Received().CreateStoryElementInSlotFromFormModel(FormModel);
         var storyContent = (StoryContentFormModel)FormModel.LearningContent!;
         Assert.That(storyContent.StoryText, Has.Count.EqualTo(2));
@@ -355,10 +356,10 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        
+
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
-        
+
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
