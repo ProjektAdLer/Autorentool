@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Internal;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
@@ -30,6 +31,7 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         cfg.AddProfile(new ViewModelFormModelMappingProfile());
         cfg.AddCollectionMappersOnce();
+        cfg.Internal().MethodMappingEnabled = false;
     };
 
     private void CreateContentMap()

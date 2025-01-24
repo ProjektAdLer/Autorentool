@@ -1,5 +1,6 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using AutoMapper.Internal;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
@@ -57,6 +58,7 @@ public class ViewModelEntityMappingProfile : Profile
     {
         cfg.AddProfile(new ViewModelEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
+        cfg.Internal().MethodMappingEnabled = false;
     };
 
 
