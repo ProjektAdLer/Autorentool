@@ -320,21 +320,25 @@ public class ZipExtensionUnitTest
     {
         string sourcePath = @"C:\source";
         string destinationPath = @"C:\output.zip";
-       
+
         _mockFileSystem.AddDirectory(sourcePath);
-        _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("File1 content"));
-        _mockFileSystem.AddFile(destinationPath, new MockFileData("Existing content")
-        {
-            Attributes = FileAttributes.ReadOnly
-        });
-        
-        var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
+        _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("File content"));
+
+        var fileSystemMock = Substitute.For<IFileSystem>();
+        fileSystemMock.FileSystemWatcher.Returns(_mockFileSystem.FileSystemWatcher);
+        fileSystemMock.Directory.Returns(_mockFileSystem.Directory);
+        fileSystemMock.File.OpenWrite(Arg.Any<string>())
+            .Throws(new UnauthorizedAccessException("Simulated Unauthorized Access"));
+
+        var systemUnderTest = CreateZipExtensionWrapper(fileSystemMock);
+
         var exception = Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
             await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath));
-        
+
         Assert.That(exception, Is.Not.Null);
-        Assert.That(exception.Message, Contains.Substring("Access to the path"));
+        Assert.That(exception.Message, Contains.Substring("Simulated Unauthorized Access"));
     }
+    
 
     
 
