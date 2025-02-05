@@ -469,8 +469,9 @@ public class UserWebApiServicesUt
             CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, fileSystem: mockfileSystem);
 
         // Act & Assert
-        var ex = Assert.ThrowsAsync<TaskCanceledException>(async () =>
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
             await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+        Assert.That(ex, Is.EqualTo(exception));
     }
 
     [Test]
