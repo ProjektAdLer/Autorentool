@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="AddLinkForm.SnackbarMessage" xml:space="preserve">
-        <value>Verbindung hinzugefügt</value>
+        <value>Link hinzugefügt</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
         <value>Name für den Link</value>
@@ -34,5 +34,11 @@
     </data>
     <data name="AddLinkForm.Info.Text" xml:space="preserve">
         <value>Videos können nicht als Datei importiert werden. Aus diesem Grund können Sie alternativ einen Link zu Ihrem Video hinzufügen.</value>
+    </data>
+    <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
+        <value>Fehler beim Hinzufügen eines Links</value>
+    </data>
+    <data name="AddLinkForm.Info.Infotext" xml:space="preserve">
+        <value>Falls Sie keinen Account für den Videoserver haben, von welchem aus Ihr Video abgerufen wird, achten Sie bitte darauf, dass Ihr Video auf "öffentlich" gestellt wird. Ansonsten können diese Videos in der 3D-Lernumgebung nicht angezeigt werden.</value>
     </data>
 </root>

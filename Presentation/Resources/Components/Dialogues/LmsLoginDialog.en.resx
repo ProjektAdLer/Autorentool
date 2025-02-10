@@ -114,4 +114,13 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="DialogContent.Field.Username.Required" xml:space="preserve">
         <value>A user name is required.</value>
     </data>
+    <data name="DialogContent.AdLerServer.ErrorMessage.Delete" xml:space="preserve">
+        <value>Error while trying to delete the LMS world</value>
+    </data>
+    <data name="DialogContent.AdLerServer.ErrorMessage.Refresh" xml:space="preserve">
+        <value>Error while trying to get the LMS world list</value>
+    </data>
+    <data name="DialogContent.Error.MoodleUnreachable" xml:space="preserve">
+        <value>Couldn't reach Moodle.</value>
+    </data>
 </root>

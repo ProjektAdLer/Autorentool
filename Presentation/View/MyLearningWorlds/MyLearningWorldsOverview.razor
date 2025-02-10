@@ -1,37 +1,37 @@
 @page "/MyLearningWorldsOverview"
+@using System.Diagnostics.CodeAnalysis
+@using System.IO.Abstractions
+@using System.Runtime.Serialization
 @using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.MyLearningWorlds
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.API
 @using MudBlazor.Utilities
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
-@using System.Diagnostics.CodeAnalysis
-@using System.IO.Abstractions
-
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.MyLearningWorlds
+@using Presentation.PresentationLogic.SelectedViewModels
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-4 overflow-hidden h-[41rem] 2xl:h-[44rem] 3xl:h-[56rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <div class="flex flex-col bg-blacktrans-100 rounded-xl">
             <section class="flex flex-row justify-center">
-                <div class="btn-standard w-36 flex justify-center items-center create-world-button"
+                <div class="btn-standard w-44 flex justify-center items-center create-world-button"
                      @onclick="CreateLearningWorld"
                      title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
                     <button class="gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
-                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world" Size="Size.Small"></MudIcon>
+                        <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                     </button>
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
-                <div class="btn-standard w-36 flex justify-center items-center import-world-button"
+                <div class="btn-standard w-44 flex justify-center items-center import-world-button"
                      @onclick="ImportLearningWorldAsync"
                      title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
                     <button class="gap-2">
-                        <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
-                        <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
+                        <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world" Size="Size.Small"></MudIcon>
+                        <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                     </button>
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
                 </div>
@@ -43,11 +43,11 @@
                     <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByDate"]"/>
                     <MudIconButton OnClick="() => _sortByDate = false" Icon="@Icons.Material.Filled.SortByAlpha" Class="@(SortByNameButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByName"]"/>
                     <MudDivider Vertical="true" FlexItem="true"/>
-                    <MudCheckBox @bind-Checked="_showFileName" title="@Localizer["Page.LearningWorld.ShowFile.Checkbox"]">
+                    <MudCheckBox @bind-Value="_showFileName" title="@Localizer["Page.LearningWorld.ShowFile.Checkbox"]">
                         <p class="text-sm">@Localizer["Checkbox.ShowFileName.Label"]</p>
                     </MudCheckBox>
                 </div>
-            
+
                 <div class="flex justify-end">
                     <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["Page.LearningWorld.Subheading"]">
                         <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-blacktrans-300 hover:text-adlerdarkblue"></MudIcon>
@@ -95,6 +95,8 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; private init; }
 
+    [Inject, AllowNull] IErrorService ErrorService { get; set; }
+
 
     private bool _createLearningWorldDialogOpen;
     private bool _showFileName;
@@ -130,7 +132,14 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        try
+        {
+            MyLearningWorldsProvider.ReloadLearningWorldsInWorkspace();
+        }
+        catch (SerializationException e)
+        {
+            ErrorService.SetError(Localizer["Page.LearningWorld.Error.ReloadLearningWorlds"], e.Message);
+        }
     }
 
 

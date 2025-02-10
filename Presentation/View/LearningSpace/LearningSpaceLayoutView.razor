@@ -1,15 +1,15 @@
-@using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View.LearningElement
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
 @using MudBlazor.Utilities
 @using Presentation.PresentationLogic.LearningContent.Story
 @using Presentation.PresentationLogic.LearningElement
-<div class="w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated">
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningElement
+<div class="w-full min-h-[265px]">
     <div class="drop-shadow-xl w-full h-full">
-        <div class="mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
+        <div class="mt-5 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
 
             @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
             {
@@ -26,15 +26,13 @@
                     <ItemRenderer>
                         <DragDropLearningElement
                             LearningElement="@context"
-                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
                             OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
                             OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                     </ItemRenderer>
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
                         }
                     </ChildContent>
                 </MudDropZone>
@@ -53,15 +51,16 @@
                     <ItemRenderer>
                         <DragDropLearningElement
                             LearningElement="@context"
-                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
                             OnDeleteLearningElement="@LearningSpaceP.DeleteStoryElement"
                             OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                     </ItemRenderer>
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                            <div class="flex flex-row gap-1 justify-center items-center">
+                                <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                                <p class="text-xs 2xl:text-sm">Story</p>
+                            </div>
                         }
                     </ChildContent>
                 </MudDropZone>
@@ -132,9 +131,9 @@
         return doorsString.ToString();
     }
 
-    private string GetCanDropClass() => new CssBuilder("bg-adlergreen w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
+    private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
 
-    private string GetNoDropClass() => new CssBuilder("bg-formerror w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
+    private string GetNoDropClass() => new CssBuilder("bg-formerror text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
 
     private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
     {
@@ -158,16 +157,27 @@
         return slotPositionString.ToString();
     }
 
-    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace);
+    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace, false);
 
-    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace);
-
-    private string GetSlotStyleStringInternal(int position, int selectedPos)
-    {
+    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace, true);
+    
+    private string GetSlotStyleStringInternal(int position, int selectedPos, bool isStorySlot)
+    { 
         var activeSlotIsPos = selectedPos == position;
-        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
-            .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
-            .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default text-adlergrey-400 hover:text-white font-bold");
+        
+        if (isStorySlot)
+        {
+            //Farben für ActiveStorySlotInSpace
+            cssBuilder.AddClass("bg-adlergold-200 border-adlergold-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlergold-700 border-[3px] bg-adlerdeactivatedtext hover:bg-adlergold-300 hover:border-adlergold-300", !activeSlotIsPos);
+        }
+        else
+        {
+            //Farben für ActiveElementSlotInSpace
+            cssBuilder.AddClass("bg-adlerblue-200 border-adlerblue-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlerblue-200 border-[3px] bg-adlerbgbright hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        }
         return cssBuilder.ToString();
     }
 

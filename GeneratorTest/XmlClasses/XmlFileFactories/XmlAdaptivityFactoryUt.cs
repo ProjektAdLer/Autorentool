@@ -37,7 +37,6 @@ public class XmlAdaptivityFactoryUt
             Assert.That(systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
-            Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesAdleradaptivityXmlActivity, Is.Not.Null);
             Assert.That(systemUnderTest.AdaptivityElementId, Is.EqualTo("0"));
@@ -66,7 +65,7 @@ public class XmlAdaptivityFactoryUt
         var mockAdlerPluginModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
 
         var systemUnderTest = new XmlAdaptivityFactory(mockReadAtf, mockFileSystem, null, null, mockGradesGradebook,
-            null, mockRoles, mockModule, mockGradeHistory, null, null, null, mockInforef);
+            null, mockRoles, mockModule, mockGradeHistory, null, null, mockInforef);
         systemUnderTest.ActivitiesModuleXmlModule.PluginLocalAdlerModule = mockAdlerPluginModule;
 
         var adaptivityElementJson1 = new AdaptivityElementJson(1,

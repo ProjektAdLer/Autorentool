@@ -12,40 +12,29 @@
 
     ///Code from https://github.com/AlexeyBoiko/BlazorDraggableDemo
     //get (optional) child html content as a RenderFragment
-        [Parameter]
+    [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     //fields bound to translate vector of <g> element
     //make these nullable so we can have parent set them once via Parameter X and Y
 
 
-    [Parameter, EditorRequired]
-    public T? LearningObject { get; set; }
+    [Parameter, EditorRequired] public T? LearningObject { get; set; }
 
-    [Parameter]
-    public double X { get; set; }
+    [Parameter] public double X { get; set; }
 
-    [Parameter]
-    public double Y { get; set; }
+    [Parameter] public double Y { get; set; }
 
     //we need these lines for @bind-X and @bind-Y to work, even if they look like we don't use them anywhere
-    [Parameter]
-    public EventCallback<double> XChanged { get; set; }
+    [Parameter] public EventCallback<double> XChanged { get; set; }
 
-    [Parameter]
-    public EventCallback<double> YChanged { get; set; }
+    [Parameter] public EventCallback<double> YChanged { get; set; }
 
-    [Parameter]
-    public EventCallback<T> OnClicked { get; set; }
+    [Parameter] public EventCallback<T> OnClicked { get; set; }
 
-    [Parameter]
-    public EventCallback<T> OnDoubleClicked { get; set; }
+    [Parameter] public EventCallback<T> OnDoubleClicked { get; set; }
 
-    [Parameter]
-    public EventCallback<T> OnRightClicked { get; set; }
-
-    [Parameter]
-    public DraggedEventArgs<T>.DraggedEventHandler? OnDragged { get; set; }
+    [Parameter] public DraggedEventArgs<T>.DraggedEventHandler? OnDragged { get; set; }
 
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
@@ -106,16 +95,15 @@
                         _lastClick = DateTime.Now;
                         OnClick(sender, e);
                         break;
-                    case 2:
-                        OnRightClicked.InvokeAsync(LearningObject);
-                        break;
                 }
+
                 break;
             }
             case true when _hasMoved:
                 OnDrag(sender, e);
                 break;
         }
+
         _isDown = false;
         _cursor = "grab";
     }
@@ -138,7 +126,7 @@
     private Task OnClick(object? sender, MouseEventArgs e)
     {
         Logger.LogDebug("OnClick");
-    //override nullability because we check in OnParametersSet - n.stich
+        //override nullability because we check in OnParametersSet - n.stich
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
         return OnClicked.InvokeAsync(LearningObject);
     }

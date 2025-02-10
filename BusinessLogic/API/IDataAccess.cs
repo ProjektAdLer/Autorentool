@@ -14,12 +14,6 @@ public interface IDataAccess
     void SaveLearningWorldToFile(LearningWorld world, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
     LearningWorld LoadLearningWorld(Stream stream);
-    void SaveLearningSpaceToFile(LearningSpace space, string filepath);
-    LearningSpace LoadLearningSpace(string filepath);
-    LearningSpace LoadLearningSpace(Stream stream);
-    void SaveLearningElementToFile(LearningElement element, string filepath);
-    LearningElement LoadLearningElement(string filepath);
-    LearningElement LoadLearningElement(Stream stream);
 
     /// <summary>
     /// Loads the file at the given filepath into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
@@ -52,6 +46,7 @@ public interface IDataAccess
     /// </summary>
     /// <returns>An enumerable of <see cref="IFileInfo"/>.</returns>
     IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
+
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
     /// that does not yet exist.
@@ -103,7 +98,7 @@ public interface IDataAccess
     /// <param name="savePath">The path to the file.</param>
     /// <returns>An <see cref="IFileInfo"/> object.</returns>
     IFileInfo GetFileInfoForPath(string savePath);
-    
+
     /// <summary>
     /// Deletes a file at the given path.
     /// </summary>

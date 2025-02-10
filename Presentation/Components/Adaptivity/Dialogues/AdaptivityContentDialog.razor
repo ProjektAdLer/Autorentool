@@ -50,13 +50,13 @@
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
                                   DebounceInterval="DebounceInterval"
                                   OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
-                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
+                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>
         </MudTd>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]">
             <div class="flex justify-center">
-                <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
+                <MudCheckBox T="bool?" Value="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
             </div>
         </MudTd>
         @foreach (var difficulty in Enum.GetValues(typeof(QuestionDifficulty)).Cast<QuestionDifficulty>())
@@ -98,7 +98,8 @@
                                                  ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                                  ToggledIcon="@Icons.Material.Filled.Key"
                                                  Icon="@Icons.Material.Outlined.KeyOff"
-                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"/>
+                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"
+                                                 ToggledTitle="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestionIsSelected"]"/>
                         </div>
                     </div>
                 }

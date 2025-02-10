@@ -24,6 +24,7 @@ public class ViewModelFormModelMappingProfile : Profile
         CreateContentMap();
         CreateAdaptivityQuestionMap();
         CreateAdaptivityQuestionMap();
+        CreateQuestionChoiceMap();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
@@ -42,12 +43,12 @@ public class ViewModelFormModelMappingProfile : Profile
             .ReverseMap();
         CreateMap<StoryContentViewModel, StoryContentFormModel>()
             .ReverseMap();
-        
+
         CreateMap<ILearningContentViewModel, ILearningContentFormModel>()
             .IncludeAllDerived()
             .ReverseMap()
             .IncludeAllDerived();
-        
+
         CreateMap<LinkContentViewModel, ILearningContentFormModel>()
             .As<LinkContentFormModel>();
         CreateMap<FileContentViewModel, ILearningContentFormModel>()
@@ -56,7 +57,7 @@ public class ViewModelFormModelMappingProfile : Profile
             .As<AdaptivityContentFormModel>();
         CreateMap<StoryContentViewModel, ILearningContentFormModel>()
             .As<StoryContentFormModel>();
-        
+
         CreateMap<LinkContentFormModel, ILearningContentViewModel>()
             .As<LinkContentViewModel>();
         CreateMap<FileContentFormModel, ILearningContentViewModel>()
@@ -98,8 +99,23 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         CreateMap<IMultipleChoiceQuestionViewModel, MultipleChoiceQuestionFormModel>();
         CreateMap<MultipleChoiceMultipleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
-            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => false));
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => false))
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((vm, fm, context) =>
+                fm.CorrectChoices = fm.Choices
+                    .Where(choiceFm => vm.CorrectChoices.Any(choiceVm => choiceVm.Id.Equals(choiceFm.Id))).ToList())
+            .ReverseMap();
         CreateMap<MultipleChoiceSingleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
-            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => true));
+            .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => true))
+            .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
+            .AfterMap((vm, fm, context) =>
+                fm.CorrectChoices = fm.Choices.Where(choiceFm => choiceFm.Id == vm.CorrectChoice.Id).ToList())
+            .ReverseMap();
+    }
+
+    private void CreateQuestionChoiceMap()
+    {
+        CreateMap<ChoiceViewModel, ChoiceFormModel>()
+            .ReverseMap();
     }
 }

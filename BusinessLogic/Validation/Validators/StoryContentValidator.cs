@@ -21,5 +21,5 @@ public class StoryContentValidator : AbstractValidator<StoryContent>
     private void IsValidStoryBlock(IRuleBuilderInitialCollection<IEnumerable<string>, string> builder) =>
         builder
             .NotEmpty().WithMessage(_localizer["StoryContentValidator.BlockEmpty.ErrorMessage"])
-            .MaximumLength(550).WithMessage(_localizer["StoryContentValidator.BlockTooLong.ErrorMessage"]);
+            .MaximumLength(400).WithMessage(_localizer["StoryContentValidator.BlockTooLong.ErrorMessage"]);
 }

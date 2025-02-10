@@ -109,10 +109,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             return await SendHttpGetRequestAsync<UserInformationBE>("Users/UserData",
                 parameters);
         }
-        catch (HttpRequestException httpReqEx)
+        catch (BackendHttpRequestException httpReqEx)
         {
-            if (httpReqEx.Message == "The provided token is invalid")
+            if (httpReqEx.ErrorType == ErrorCodes.LmsTokenInvalid)
                 throw new BackendInvalidTokenException(httpReqEx.Message, httpReqEx);
+            if (httpReqEx.ErrorType == ErrorCodes.LmsError)
+                throw new BackendMoodleApiUnreachableException(httpReqEx.Message, httpReqEx);
             throw;
         }
     }
@@ -379,7 +381,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         var error = await apiResp.Content.ReadAsStringAsync();
 
         var problemDetails = TryRead<ErrorBE>(error);
-        throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
+        throw new BackendHttpRequestException(problemDetails.Detail, null, apiResp.StatusCode, problemDetails.Type);
     }
 
 

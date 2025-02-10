@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Dialog.Text" xml:space="preserve">
-        <value>Ihre Lernwelt wird momentan hochgeladen. Dies kann einige Minuten dauern, abhängig von der Größe Ihrer Lernwelt und Internetverbindung.</value>
+        <value>Ihre Lernwelt wird momentan hochgeladen. Dies kann einige Minuten dauern, abhängig von Ihrer Internetverbindung und der Größe Ihrer Lernwelt.</value>
     </data>
     <data name="Cancel.Button.Text" xml:space="preserve">
         <value>Abbrechen</value>

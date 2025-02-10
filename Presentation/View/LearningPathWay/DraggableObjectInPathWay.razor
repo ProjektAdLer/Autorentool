@@ -1,11 +1,11 @@
+@using System.Diagnostics.CodeAnalysis
+@using Presentation.Components
+@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.Components
-@using Presentation.Components.RightClickMenu
-@using System.Diagnostics.CodeAnalysis
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable"
-           OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
+           OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
     @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
     {
@@ -18,58 +18,38 @@
             @((MarkupString)DeletePathButtonShape)
         }
     </Clickable>
-    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedDeleteObject">
+    <Clickable  T="IObjectInPathWayViewModel"  OnClickedParam="ObjectInPathWay" OnClicked="@DeleteLearningObject">
         @((MarkupString)DeleteObjectButtonShape)
+        <title>@ObjectInPathwayDeletionTitle</title>
     </Clickable>
-    <title>@Title</title>
+    <title>@ObjectInPathwayTitle</title>
 </Draggable>
 
 <PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX
               Y1="@ObjectInPathWay.OutputConnectionY"
               PositioningSrv="@PositioningService">
 </PullablePath>
-@if (ShowingRightClickMenu)
-{
-    <RightClickMenu LearningObject="@ObjectInPathWay"
-                    MenuEntries="@GetRightClickMenuEntries()"
-                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
-}
 
 @ChildContent
 
 
 @code {
 
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
+    [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
 
-    [Parameter]
-    public EventCallback<IObjectInPathWayViewModel> OnDoubleClickedDraggable { get; set; }
+    [Parameter] public EventCallback<IObjectInPathWayViewModel> OnDoubleClickedDraggable { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<IObjectInPathWayViewModel> OnRightClickedDraggable { get; set; }
+    [Parameter, EditorRequired] public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback OnCloseRightClickMenu { get; set; }
+    [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
 
-    [Parameter, EditorRequired]
-    public bool ShowingRightClickMenu { get; set; }
-
-    [Parameter, EditorRequired]
-    public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
-
-    [Parameter, EditorRequired]
-    public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
-
-    [Parameter, EditorRequired]
-    public EventCallback<IObjectInPathWayViewModel> OnClickedDeleteObject { get; set; }
+    [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnDeleteObject { get; set; }
 
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
@@ -77,10 +57,15 @@
 
     [Inject] //can never be null, DI will throw exception on unresolved types - n.stich
     public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
+    
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+
 
     protected abstract string Text { get; }
 
-    protected abstract string Title { get; }
+    protected abstract string ObjectInPathwayTitle { get; }
+    
+    protected abstract string ObjectInPathwayDeletionTitle { get; }
 
     protected abstract string ObjectName { get; }
 
@@ -97,8 +82,12 @@
     protected abstract string DeletePathButtonShape { get; }
 
     protected abstract string DeleteObjectButtonShape { get; }
-
-    protected abstract List<RightClickMenuEntry> GetRightClickMenuEntries();
+    
+    protected abstract string DeleteObjectConfirmationDialogText { get; }
+    
+    protected abstract string DeleteObjectConfirmationDialogTitle { get; }
+    
+    protected abstract string DeleteObjectConfirmationDialogSubmitButtonText { get; }
 
     protected override void OnParametersSet()
     {
@@ -107,6 +96,25 @@
         {
             throw new ArgumentNullException(nameof(ObjectInPathWay));
         }
+    }
+    
+    private async Task DeleteLearningObject()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(GenericCancellationConfirmationDialog.DialogText), DeleteObjectConfirmationDialogText },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonText), DeleteObjectConfirmationDialogSubmitButtonText },
+            { nameof(GenericCancellationConfirmationDialog.SubmitButtonColor), Color.Error },
+        };
+
+        var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(DeleteObjectConfirmationDialogTitle, dialogParameters);
+        var result = await dialogReference.Result;
+        if (result.Canceled)
+        {
+            return;
+        }
+
+        await OnDeleteObject.InvokeAsync(ObjectInPathWay);
     }
 
 }

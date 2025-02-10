@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using AutoMapper;
 using BusinessLogic.Validation;
 using Presentation.Components;
@@ -30,11 +29,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     private readonly IErrorService _errorService;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
-    private readonly IMapper _mapper;
 
     private ILearningWorldViewModel? _learningWorldVm;
 
@@ -65,7 +64,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
-            HideRightClickMenu();
         }
     }
 
@@ -78,9 +76,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
         remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.RightClickedLearningObject"/>
-    public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -185,27 +180,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         }
 
         _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
-
-        HideRightClickMenu();
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.DragObjectInPathWay"/>
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
     {
         _presentationLogic.DragObjectInPathWay(args.LearningObject, args.OldPositionX, args.OldPositionY);
-        HideRightClickMenu();
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.RightClickOnObjectInPathWay"/>
-    public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWayView)
-    {
-        RightClickedLearningObject = objectInPathWayView;
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.HideRightClickMenu"/>
-    public void HideRightClickMenu()
-    {
-        RightClickedLearningObject = null;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.ClickOnObjectInWorld"/>
@@ -292,53 +272,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             return;
         _selectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
         _mediator.RequestOpenSpaceDialog();
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.LoadLearningSpaceAsync"/>
-    public async Task LoadLearningSpaceAsync()
-    {
-        if (!CheckLearningWorldNotNull("LoadLearningSpaceAsync"))
-            return;
-        try
-        {
-            //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-            await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm!);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while loading learning space", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while loading learning space", e.Message);
-        }
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.SaveSelectedLearningSpaceAsync"/>
-    public async Task SaveSelectedLearningSpaceAsync()
-    {
-        if (!CheckLearningWorldNotNull("SaveLearningSpaceAsync"))
-            return;
-        if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
-        {
-            LogAndSetError("SaveLearningSpaceAsync", "SelectedLearningObjectInPathWay is null",
-                "No object in pathway is selected");
-            return;
-        }
-
-        try
-        {
-            await _presentationLogic.SaveLearningSpaceAsync(
-                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while saving learning space", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while saving learning space", e.Message);
-        }
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditSelectedLearningSpace"/>
@@ -568,6 +501,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
                 _mediator.RequestOpenElementDialog();
                 break;
         }
+
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
     }
 

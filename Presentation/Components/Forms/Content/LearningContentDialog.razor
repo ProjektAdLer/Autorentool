@@ -1,0 +1,103 @@
+@using System.Diagnostics.CodeAnalysis
+@using AutoMapper
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.LearningWorld
+@inherits MudBaseInput<ILearningContentFormModel>
+
+
+<p class="text-sm px-6">@Localizer["LearningContentDialog.LearningMaterial.Dialog.Subtitle"]</p>
+<div class="rounded-lg border-4 border-adlerdarkblue-100 m-4">
+    <MudContainer Class="flex justify-end bg-adlerbgbright">
+        <div class="pb-2 px-2 w-80 bg-adlerbgbright">
+            <MudTextField @bind-Value="_searchString"
+                          Immediate="true"
+                          Placeholder="@Localizer["LearningContentDialog.LearningMaterial.Search"]"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        </div>
+    </MudContainer>
+
+    <MudTable T="ILearningContentFormModel"
+              Items="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
+              Hover="true"
+              Height="450px"
+              Breakpoint="Breakpoint.Sm"
+              RowClass="cursor-pointer"
+              OnRowClick="RowClickEvent"
+              Filter="Filter"
+              RowClassFunc="@SelectedRowClassFunc" 
+              FixedHeader="true" 
+              Elevation="0"
+              HeaderClass="cursor-default">
+    
+        <HeaderContent>
+            <MudTh Class="bg-adlerbgbright pa-1"></MudTh>
+            <MudTh Class="pl-0 bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">Name</MudTh>
+            <MudTh Class="pl-0 bg-adlerbgbright text-adlerdarkblue-800 font-bold pa-1">@Localizer["LearningContentDialog.LearningMaterial.Type"]</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd Class="p-0 px-2">
+                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                               Class="show-content-preview"
+                               Title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
+            </MudTd>
+            <MudTd Class="p-0 w-full" DataLabel="Name">
+                <MudTooltip Text="@context.Name"
+                            Arrow="true"
+                            Placement="Placement.Right"
+                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
+                            Duration="Double.Epsilon">
+                    <p class="pt-2 cursor-pointer max-w-full">@context.Name</p>
+                </MudTooltip>
+            </MudTd>
+            <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
+                @if (context is FileContentFormModel fileContentContext)
+                {
+                    @fileContentContext.Type
+                }
+                else
+                {
+                    <span>Link</span>
+                }
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>
+
+
+@code {
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter, EditorRequired] public ILearningContentFormModel? LearningContent { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IStringLocalizer<LearningContentDialog> Localizer { get; set; }
+
+    [Inject, AllowNull] internal ILearningWorldPresenter WorldPresenter { get; set; }
+
+    [Inject, AllowNull] internal IMapper Mapper { get; set; }
+
+    private string? _searchString;
+
+    private void RowClickEvent(TableRowClickEventArgs<ILearningContentFormModel> tableRowClickEventArgs)
+    {
+        MudDialog?.Close(DialogResult.Ok(tableRowClickEventArgs.Item));
+    }
+
+    private string SelectedRowClassFunc(ILearningContentFormModel element, int rowNumber)
+    {
+        return element.Equals(LearningContent) ? "bg-adlergrey-100" : string.Empty;
+    }
+
+    private bool Filter(ILearningContentFormModel element) =>
+        FilterInternal(element, _searchString);
+
+    private bool FilterInternal(ILearningContentFormModel element, string? searchString) => FilterInternal(ILearningContentFormModel.GetSearchableStrings(element), searchString);
+
+    private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
+    {
+        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
+    }
+
+}

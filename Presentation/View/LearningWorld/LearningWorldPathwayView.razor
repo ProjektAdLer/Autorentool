@@ -1,107 +1,99 @@
-﻿@using Presentation.PresentationLogic.AuthoringToolWorkspace
+﻿@using System.ComponentModel
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningPathWay
 @using Direction = Shared.Direction
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
-@using System.Diagnostics.CodeAnalysis
 @ChildContent
 
-    <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] h-full grow">
-        <section class="bg-adlerbgbright rounded p-2 w-full grow cursor-default">
-            <div class="flex justify-start items-center space-x-2 py-1">
-                <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-7 h-7">
-                <p class="text-base 2xl:text-lg font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
-            </div>
-            <p class="text-sm 2xl:text-base text-adlerblue-600">
-                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
-            </p>
-            <p class="text-sm 2xl:text-base text-adlerblue-600">
-                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldPathwayView.Points.Summary"]</span>
-            </p>
-        </section>
-        <section class="flex flex-row gap-2 justify-center">
-            <div class="flex grow justify-around">
-                <MudButton Class="relative btn-standard w-14 add-learning-space" @onclick="AddNewLearningSpace" title=@Localizer["LearningWorldView.NewLearningSpace.Title"] Disabled="LearningWorldP.LearningWorldVm == null">
-                    <img src="CustomIcons/Space/space-icon_bright.png" class="absolute opacity-20 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
-                </MudButton>
-                <MudButton Class="relative btn-standard w-14 load-learning-space" title=@Localizer["LearningWorldView.ImportLearningSpace.Title"] @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">
-                    <img src="CustomIcons/Space/space-icon_bright.png" class="absolute opacity-20 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Class="absolute"></MudIcon>
-                </MudButton>
-                <MudButton Class="relative btn-standard w-14 add-condition" title=@Localizer["LearningWorldView.NewCondition.Title"] @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">
-                    <img src="CustomIcons/condition-icon.png" class="absolute opacity-20 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
-                </MudButton>
-            </div>
-        </section>
-        <div class="bg-white rounded w-full h-full grow overflow-scroll">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-[900px] h-[2000px]"
-                 @onmousemove=@(e => MouseService.FireMove(this, e))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseup=@(e => MouseService.FireUp(this, e))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseleave=@(e => MouseService.FireOut(this, e))>
-
-                @if (LearningWorldP.LearningWorldVm != null)
-                {
-                    @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
-                    {
-                        <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
-                                                   OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
-                                                   OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                                   OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                                   OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                                   OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
-                                                   OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
-                                                   OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                                   PositioningService="@LearningWorldP"
-                                                   ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject">
-                            <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
-                                                   OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
-                        </DraggablePathWayCondition>
-                    }
-
-                    @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
-                    {
-                        <DraggableLearningSpace ObjectInPathWay="@learningSpace"
-                                                OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
-                                                OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                                OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                                OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                                OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
-                                                OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
-                                                OnOpenLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
-                                                OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
-                                                OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
-                                                OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                                PositioningService="@LearningWorldP"
-                                                ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"/>
-                    }
-
-                    @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
-                    {
-                        <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX) Y1=@(learningPathWay.SourceObject.OutputConnectionY + 6)
-                                 Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
-                                 Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
-                                 LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.ClickOnObjectInWorld"
-                                 PositioningService="LearningWorldP"/>
-                    }
-                }
-                <!-- The RightClickMenu might lies behind other spaces. 
-                This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
-                <!--<use xlink:href="#rightClickMenu" />-->
-            </svg>
+<article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] h-full grow">
+    <section class="bg-adlerbgbright rounded p-2 w-full grow cursor-default">
+        <div class="flex justify-start items-center space-x-2 py-1">
+            <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-7 h-7">
+            <p class="text-base 2xl:text-lg font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-    </article>
+        <p class="text-sm 2xl:text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
+        </p>
+        <p class="text-sm 2xl:text-base text-adlerblue-600">
+            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldPathwayView.Points.Summary"]</span>
+        </p>
+    </section>
+    <section class="flex flex-row justify-around py-3">
+        <div class="btn-standard w-40 2xl:w-44 flex justify-center items-center create-space-button"
+             @onclick="AddNewLearningSpace"
+             title=@Localizer["LearningWorldView.NewLearningSpace.Title"]>
+            <button class="gap-0 2xl:gap-0.5">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["LearningWorldView.NewLearningSpace.Title"] Size="Size.Small" Class="z-20 add-learning-space"></MudIcon>
+                <p class="text-xs z-10 uppercase">@Localizer["LearningWorldView.NewLearningSpace.Title"]</p>
+            </button>
+            <img src="CustomIcons/Space/space-icon_bright.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+        </div>
+
+        <div class="btn-standard w-40 2xl:w-44 flex justify-center items-center create-condition-button"
+             @onclick="AddNewPathWayCondition"
+             title=@Localizer["LearningWorldView.NewCondition.Title"]>
+            <button class="gap-0 2xl:gap-0.5">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="z-10 add-condition" Size="Size.Small"></MudIcon>
+                <p class="text-xs z-10 uppercase">@Localizer["LearningWorldView.NewCondition.Title"]</p>
+            </button>
+            <img src="CustomIcons/condition-icon.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+        </div>
+    </section>
+
+    <div class="bg-white rounded w-full h-full grow overflow-scroll">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-[900px] h-[2000px]"
+             @onmousemove=@(e => MouseService.FireMove(this, e))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseup=@(e => MouseService.FireUp(this, e))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @onmouseleave=@(e => MouseService.FireOut(this, e))>
+
+            @if (LearningWorldP.LearningWorldVm != null)
+            {
+                @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
+                {
+                    <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
+                                               OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
+                                               OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
+                                               OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                               OnDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                               OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
+                                               PositioningService="@LearningWorldP">
+                        <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
+                                               OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
+                    </DraggablePathWayCondition>
+                }
+
+                @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+                {
+                    <DraggableLearningSpace ObjectInPathWay="@learningSpace"
+                                            OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
+                                            OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
+                                            OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                            OnDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                            OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
+                                            OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
+                                            PositioningService="@LearningWorldP"/>
+                }
+
+                @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
+                {
+                    <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX) Y1=@(learningPathWay.SourceObject.OutputConnectionY + 6)
+                             Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
+                             Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
+                             LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.ClickOnObjectInWorld"
+                             PositioningService="LearningWorldP"/>
+                }
+            }
+        </svg>
+    </div>
+</article>
 
 
 @code {
     //Pathway view of the learning world
     //formerly known as "LearningWorldView"
 
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
@@ -135,13 +127,6 @@
         LearningWorldP.CreatePathWayCondition();
     }
 
-    private async Task LoadLearningSpaceAsync()
-    {
-        await LearningWorldP.LoadLearningSpaceAsync();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-        await InvokeAsync(StateHasChanged);
-    }
-
     private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
@@ -158,6 +143,7 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
         }
+
         TriggerStateHasChanged();
     }
 
@@ -167,6 +153,7 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
         }
+
         TriggerStateHasChanged();
     }
 
@@ -174,4 +161,5 @@
     {
         TriggerStateHasChanged();
     }
+
 }

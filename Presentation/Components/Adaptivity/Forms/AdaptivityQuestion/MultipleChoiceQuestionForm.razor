@@ -1,3 +1,6 @@
+@using System.Diagnostics.CodeAnalysis
+@using AutoMapper
+@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Adaptivity.Forms.Models
 @using Presentation.Components.Forms
@@ -5,9 +8,6 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
-@using BusinessLogic.Entities.LearningContent.Adaptivity.Question
-@using AutoMapper
-@using System.Diagnostics.CodeAnalysis
 <div class="w-full flex flex-row items-center justify-between cursor-default">
     <MudText Class="px-2" Typo="Typo.h6">
         @(Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) == null
@@ -29,7 +29,8 @@
     <Fields>
         <div class="border-4 border-adlerdarkblue rounded-lg w-[500px] p-2 bg-adlerbgbright">
             <div class="flex flex-col gap-1">
-                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
+                <MudText
+                    Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
                 <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                                   For="@(() => FormModel.Text)"
@@ -40,56 +41,80 @@
                                   Class="m-0"/>
                 </div>
 
-                <MudSwitch T="bool"
-                           Class="flex items-center justify-center"
-                           Checked="FormDataContainer.FormModel.IsSingleResponse"
-                           CheckedChanged="b => IsSingleResponseChanged((bool)b!)"
-                           For="@(() => FormModel.IsSingleResponse)">
-
-                    @if (FormDataContainer.FormModel.IsSingleResponse == true)
-                    {
-                        <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
-                    }
-                    else
-                    {
-                        <MudText>@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
-                    }
-                </MudSwitch>
+                @if (FormDataContainer.FormModel.IsSingleResponse == true)
+                {
+                    <div class="flex flex-row gap-2 items-center justify-center py-2">
+                        <MudText
+                            Class="text-adlergrey-200">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                        <MudSwitch T="bool"
+                                   Style="margin-right: 0px; margin-left: 2px"
+                                   Value="FormDataContainer.FormModel.IsSingleResponse"
+                                   ValueChanged="b => IsSingleResponseChanged((bool)b!)"
+                                   Color="Color.Info"
+                                   UnCheckedColor="Color.Info"
+                                   For="@(() => FormModel.IsSingleResponse)">
+                        </MudSwitch>
+                        <MudText
+                            Class="text-adlerblue">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex flex-row gap-2 items-center justify-center py-2">
+                        <MudText
+                            Class="text-adlerblue">@Localizer["MultipleChoiceQuestionForm.Switch.MultipleChoice"]</MudText>
+                        <MudSwitch T="bool"
+                                   Style="margin-right: 0px; margin-left: 2px"
+                                   Value="FormDataContainer.FormModel.IsSingleResponse"
+                                   ValueChanged="b => IsSingleResponseChanged((bool)b!)"
+                                   Color="Color.Info"
+                                   UnCheckedColor="Color.Info"
+                                   For="@(() => FormModel.IsSingleResponse)">
+                        </MudSwitch>
+                        <MudText
+                            Class="text-adlergrey-200">@Localizer["MultipleChoiceQuestionForm.Switch.SingleChoice"]</MudText>
+                    </div>
+                }
             </div>
 
-            <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
-            <MudCollectionValidation T="ICollection<ChoiceViewModel>" Value="FormModel.CorrectChoices" For="@(() => FormModel.CorrectChoices)"/>
+            <MudText
+                Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Text.Choices"]</MudText>
+            <MudCollectionValidation T="ICollection<ChoiceFormModel>" Value="FormModel.CorrectChoices"
+                                     For="@(() => FormModel.CorrectChoices)"/>
 
             <div class="flex justify-center items-center w-full px-2 overflow-y-auto">
                 @if (FormModel.IsSingleResponse)
                 {
                     <div class="bg-white">
-                        <MudRadioGroup T="ChoiceViewModel" SelectedOption="FormModel.CorrectChoices.First()" SelectedOptionChanged="ChangeCorrectChoice" Class="overflow-y-auto">
+                        <MudRadioGroup T="ChoiceFormModel" Value="FormModel.CorrectChoices.First()"
+                                       ValueChanged="ChangeCorrectChoice" Class="overflow-y-auto">
                             <div class="overflow-y-scroll w-[460px] h-56 border-4 border-adlergrey-100 rounded-md">
                                 @foreach (var choice in FormDataContainer.FormModel.Choices)
                                 {
                                     <div class="flex flex-row justify-center items-center">
                                         <MudRadio Size="Size.Small"
-                                                  Option="choice"
+                                                  Value="choice"
                                                   Class="flex justify-center items-center m-0"/>
                                         <MudForm Model="choice" Validation="ValidateChoiceModel">
                                             <MudTextField T="string"
                                                           Class="w-[350px]"
                                                           For="@(() => choice.Text)"
-                                                          @bind-Value="@choice.Text">
+                                                          @bind-Value="@choice.Text"
+                                                          Placeholder="@Localizer["MultipleChoiceQuestionForm.Text.Choice", @FormDataContainer.FormModel.Choices.IndexOf(choice) + 1]">
                                             </MudTextField>
                                         </MudForm>
                                         <MudIconButton OnClick="() => RemoveChoice(choice)"
                                                        Icon="@Icons.Material.Filled.Delete"
                                                        Disabled="FormModel.Choices.Count <= 2"
                                                        Size="Size.Small"
-                                                       Class="w-10 h-10 button-delete-choice"/>
+                                                       Class="w-10 h-10 button-delete-choice"
+                                                       Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
 
                                     </div>
                                 }
                             </div>
                         </MudRadioGroup>
-                        </div>
+                    </div>
                 }
                 else
                 {
@@ -99,8 +124,8 @@
                             {
                                 <div class="flex flex-row justify-center items-center">
                                     <MudCheckBox T="bool"
-                                                 Checked="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
-                                                 CheckedChanged="b => ChangeCorrectness(choice, (bool)b!)"
+                                                 Value="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
+                                                 ValueChanged="b => ChangeCorrectness(choice, (bool)b!)"
                                                  Class="flex justify-center items-center m-0"
                                                  Size="Size.Small"/>
 
@@ -108,20 +133,22 @@
                                         <MudTextField T="string"
                                                       Class="w-[350px]"
                                                       For="@(() => choice.Text)"
-                                                      @bind-Value="@choice.Text">
+                                                      @bind-Value="@choice.Text"
+                                                      Placeholder="@Localizer["MultipleChoiceQuestionForm.Text.Choice", @FormDataContainer.FormModel.Choices.IndexOf(choice) + 1]">
                                         </MudTextField>
                                     </MudForm>
                                     <MudIconButton OnClick="() => RemoveChoice(choice)"
                                                    Icon="@Icons.Material.Filled.Delete"
                                                    Disabled="FormModel.Choices.Count <= 2"
                                                    Size="Size.Small"
-                                                   Class="w-10 h-10 button-delete-choice"/>
+                                                   Class="w-10 h-10 button-delete-choice"
+                                                   Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
                                 </div>
                             }
                         </div>
                     </div>
                 }
-                    </div>
+            </div>
 
             <div class="flex justify-end items-center py-2">
                 <MudButton OnClick="AddChoice"
@@ -234,6 +261,7 @@
         {
             PresentationLogic.EditMultipleChoiceQuestionWithTypeChange(Task, QuestionToEdit, model.IsSingleResponse,
                 model.Text, model.Choices, model.CorrectChoices, model.ExpectedCompletionTime);
+            return;
         }
 
         switch (QuestionToEdit)
@@ -253,17 +281,17 @@
 
     private void AddChoice()
     {
-        var choice = new ChoiceViewModel(Localizer["MultipleChoiceQuestionForm.Text.Choice"] + " " + (FormDataContainer.FormModel.Choices.Count + 1));
+        var choice = new ChoiceFormModel("");
         FormDataContainer.FormModel.Choices.Add(choice);
     }
 
-    private void RemoveChoice(ChoiceViewModel choice)
+    private void RemoveChoice(ChoiceFormModel choice)
     {
         FormDataContainer.FormModel.Choices.Remove(choice);
         FormDataContainer.FormModel.CorrectChoices.Remove(choice);
     }
 
-    private void ChangeCorrectness(ChoiceViewModel choice, bool b)
+    private void ChangeCorrectness(ChoiceFormModel choice, bool b)
     {
         if (b)
         {
@@ -290,11 +318,11 @@
 
     private Func<object, string, Task<IEnumerable<string>>> ValidateChoiceModel => (async (obj, propertyName) =>
     {
-        var modelEntity = Mapper.Map<ChoiceViewModel, Choice>((ChoiceViewModel)obj);
+        var modelEntity = Mapper.Map<ChoiceFormModel, Choice>((ChoiceFormModel)obj);
         return await ChoiceValidator.ValidateAsync(modelEntity, propertyName);
     });
 
-    private void ChangeCorrectChoice(ChoiceViewModel correctChoice)
+    private void ChangeCorrectChoice(ChoiceFormModel correctChoice)
     {
         FormModel.CorrectChoices.Clear();
         FormModel.CorrectChoices.Add(correctChoice);

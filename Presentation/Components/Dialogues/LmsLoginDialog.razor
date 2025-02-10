@@ -17,12 +17,9 @@
     <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
         <div class="flex">
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
-                <MudList Clickable="true">
-
-                    <MudListItem title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
+                <MudList Clickable="false">
+                    <MudListItem Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
                     </MudListItem>
-                    <MudDivider Style="border-color: rgb(179,179,179)"/>
-
                 </MudList>
             </MudPaper>
         </div>
@@ -101,7 +98,8 @@
                                                 {
                                                     <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)"
                                                                    Icon="@Icons.Material.Filled.Delete"
-                                                                   Title="@Localizer["DialogContent.Delete.MoodleCourse"]">
+                                                                   Title="@Localizer["DialogContent.Delete.MoodleCourse"]"
+                                                                   Class="text-adlergrey-200 hover:text-adlerdarkblue-700">
                                                     </MudIconButton>
                                                 }
                                             </div>
@@ -156,7 +154,7 @@
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
                                     <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
-                                                  OnKeyPress="OnKeyPress"
+                                                  OnKeyUp="OnKeyPress"
                                                   InputType=@PasswordInputType Adornment="Adornment.End"
                                                   AdornmentIcon=@ShowPasswordIcon
                                                   OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
@@ -178,6 +176,12 @@
                                     {
                                         <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
                                             @Localizer["DialogContent.Error.TokenInvalid"]
+                                        </MudText>
+                                    }
+                                    @if (_showErrorMoodleUnreachable)
+                                    {
+                                        <MudText Class="invalid-login-error" Color="Color.Error" Typo="Typo.subtitle2">
+                                            @Localizer["DialogContent.Error.MoodleUnreachable"]
                                         </MudText>
                                     }
                                 </div>
@@ -264,6 +268,7 @@
 
     private bool _isPasswordVisible = false;
     private bool _showErrorTokenInvalid = false;
+    private bool _showErrorMoodleUnreachable = false;
     private bool _spinnerActive = false;
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
@@ -308,6 +313,10 @@
         {
             _showErrorTokenInvalid = true;
             Logout();
+        }
+        catch (BackendMoodleApiUnreachableException)
+        {
+            _showErrorMoodleUnreachable = true;
         }
         finally
         {
@@ -384,7 +393,7 @@
         }
         catch (BackendException e)
         {
-            ErrorService.SetError("Error while trying to get the LMS world list", e.Message);
+            ErrorService.SetError(@Localizer["DialogContent.AdLerServer.ErrorMessage.Refresh"], e.Message);
         }
 
         await InvokeAsync(StateHasChanged);
@@ -412,7 +421,7 @@
         }
         catch (BackendException e)
         {
-            ErrorService.SetError("Error while trying to delete the LMS world", e.Message);
+            ErrorService.SetError(@Localizer["DialogContent.AdLerServer.ErrorMessage.Delete"], e.Message);
         }
         finally
         {

@@ -66,10 +66,10 @@
         <value>Learning outcomes</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description.</value>
+        <value>Description to this element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s).</value>
+        <value>Learning outcome(s) for this element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Points</value>
@@ -87,7 +87,7 @@
         <value>Name</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text" xml:space="preserve">
-        <value>Choose a external learning material (file or link)*</value>
+        <value>Choose a external learning material*</value>
     </data>
     <data name="CreateElementForm.Text" xml:space="preserve">
         <value>* Required</value>
@@ -105,7 +105,7 @@
         <value>Description</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text" xml:space="preserve">
-        <value>Is the H5P element primitive?</value>
+        <value>Is this a non-finishable H5P?</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
         <value>&lt;p class="py-1 text-sm 2xl:text-base"&gt;H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.&lt;/p&gt;
@@ -141,7 +141,7 @@ For more information on H5P files, please read the user documentation of the aut
         <value>Story</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Text" xml:space="preserve">
-        <value>Story of this story element</value>
+        <value>Story of this story element. Each text block can contain 400 characters</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.StoryTitle" xml:space="preserve">
         <value>Title of the story element</value>
@@ -159,7 +159,7 @@ For more information on H5P files, please read the user documentation of the aut
         <value>Delete text block</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
-        <value>Slide </value>
+        <value>Text block </value>
     </data>
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Story element created</value>
@@ -186,5 +186,17 @@ The corresponding slots can be found in each floor plan at the position of the e
     </data>
     <data name="CreateElementForm.Tooltip.Image.Alt" xml:space="preserve">
         <value>Example image for slots in a learning space floor plan</value>
+    </data>
+    <data name="CreateElementForm.LearningMaterial.Dialog.Title" xml:space="preserve">
+        <value>Select or change external learning material</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Preview" xml:space="preserve">
+        <value>Show learning material</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Edit" xml:space="preserve">
+        <value>Select or change learning material</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
+        <value>Selected learning material:</value>
     </data>
 </root>

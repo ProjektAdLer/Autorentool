@@ -1,3 +1,6 @@
+@using System.Diagnostics.CodeAnalysis
+@using System.Runtime.Serialization
+@using Microsoft.Extensions.Localization
 @using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.API
@@ -8,9 +11,6 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
-@using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
-@using System.Runtime.Serialization
 <style type="text/css">  
    .mud-table-toolbar {
    padding:  0;
@@ -22,7 +22,7 @@
    }      
 </style>
 <MudTable T="ILearningContentViewModel" Items="Items" Class="w-full h-full flex flex-col flex-nowrap mb-2 px-4 2xl:px-5"
-          Virtualize="true" Filter="Filter" Hover="true" Striped="true" HeaderClass="table-head-bordered" CustomHeader="true" FixedHeader="true"
+          Virtualize="true" Filter="Filter" Hover="true" HeaderClass="table-head-bordered" CustomHeader="true" FixedHeader="true"
           OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
           OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
     <ToolBarContent>
@@ -48,7 +48,7 @@
                         </ChildContent>
 
                     </MudMenu>
-                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" CheckedChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
+                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
 
                     <MudText Class="m-0 pl-1 pt-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
@@ -79,7 +79,7 @@
     <RowTemplate>
         <MudTd Class="py-0 flex flex-row gap-2" DataLabel="Delete">
 
-            <MudCheckBox T="bool" Checked="_deletionCandidates.Contains(context)" CheckedChanged="b => OnCheckedChange(context, b)" Class="m-0 pl-3.5 py-1.5"></MudCheckBox>
+            <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="m-0 pl-3.5 py-1.5"></MudCheckBox>
 
             @if (GetUsage(context).Any())
             {
@@ -151,7 +151,7 @@
         <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Left"/>
         <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center mb-2 justify-between">
             <div class="flex justify-center items-center">
-                <MudSwitch Class="pl-2 w-12" @bind-Checked="_showFilepath" Color="Color.Info"></MudSwitch>
+                <MudSwitch Class="pl-2 w-12" @bind-Value="_showFilepath" Color="Color.Info"></MudSwitch>
                 <p class="text-xs flex justify-start">@Localizer["PagerContent.Filepath.Text"]</p>
             </div>
             <button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
@@ -188,8 +188,6 @@
     internal string? SearchString { get; set; }
 
     private bool _showFilepath;
-
-
     private MudTable<ILearningContentViewModel>? _table;
     private IEnumerable<ILearningContentViewModel> _deletionCandidates = new List<ILearningContentViewModel>();
 

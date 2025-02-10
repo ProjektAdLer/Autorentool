@@ -1,8 +1,8 @@
 ---
 name: UI Improvement Template
 about: Ticket für UI Verbesserungen
-title: '[UI]'
-labels: 'UI'
+title: "[UI]"
+labels: UI
 assignees: ''
 
 ---

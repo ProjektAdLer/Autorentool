@@ -12,7 +12,8 @@
       "icon": "../../../wwwroot/favicon.ico"
     },
     "linux": {
-      "icon": "../../../wwwroot/favicon.png"
+      "icon": "../../../wwwroot/favicon.png",
+      "compression": null
     },
     "mac": {
       "icon": "../../../wwwroot/favicon_highres.ico"
@@ -20,7 +21,7 @@
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2023 Team AdLer",
-    "buildVersion": "2.1.7",
+    "buildVersion": "2.2.2",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop_Publish"
