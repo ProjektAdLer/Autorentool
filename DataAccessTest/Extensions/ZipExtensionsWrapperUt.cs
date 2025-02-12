@@ -1,15 +1,15 @@
-﻿using DataAccess.Extensions;
-using NUnit.Framework;
-
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.IO.Compression;
+using DataAccess.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using NUnit.Framework;
 
 namespace DataAccessTest.Extensions;
+
 [TestFixture]
-public class ZipExtensionsUnitTest
+public class ZipExtensionsWrapperUt
 {
     private MockFileSystem _mockFileSystem;
     private string _basePath;
@@ -21,7 +21,7 @@ public class ZipExtensionsUnitTest
         _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
     }
 
-    public ZipExtensionsWrapper CreateZipExtensionWrapper(IFileSystem? fileSystem = null)
+    private ZipExtensionsWrapper CreateZipExtensionWrapper(IFileSystem? fileSystem = null)
     {
         fileSystem ??= new MockFileSystem();
         return new ZipExtensionsWrapper(fileSystem);
@@ -30,8 +30,8 @@ public class ZipExtensionsUnitTest
     [Test]
     public void GetZipArchive_ValidArchive_ReturnsZipArchive()
     {
-        var archivePath = "myZipFile.zip";
-        var memoryStream = CreateMemmoryStreamWithZipArchive();
+        var archivePath = Path.Combine(_basePath, "myZipFile.zip");
+        var memoryStream = CreateMemoryStreamWithZipArchive();
         _mockFileSystem.AddFile(archivePath, new MockFileData(memoryStream.ToArray()));
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
@@ -39,6 +39,7 @@ public class ZipExtensionsUnitTest
 
         Assert.That(result, Is.TypeOf<ZipArchive>());
     }
+
     [Test]
     public void GetZipArchive_NonExistentFile_ThrowsFileNotFoundException()
     {
@@ -48,24 +49,39 @@ public class ZipExtensionsUnitTest
 
         Assert.Throws<FileNotFoundException>(() => systemUnderTest.GetZipArchive(nonExistentFilePath));
     }
+
     [Test]
     public void GetZipArchive_NotAZipFile_ThrowsInvalidDataException()
     {
-        var invalidZipFilePath = Path.Combine(_basePath,"test","invalid.zip");
+        var invalidZipFilePath = Path.Combine(_basePath, "test", "invalid.zip");
         _mockFileSystem.AddFile(invalidZipFilePath, new MockFileData("Not a zip file"));
-        
+
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        
-        Assert.Throws<InvalidDataException>(() => systemUnderTest.GetZipArchive( invalidZipFilePath));
+
+        Assert.Throws<InvalidDataException>(() => systemUnderTest.GetZipArchive(invalidZipFilePath));
     }
+
     [Test]
     public void GetZipArchive_NullArgument_ThrowsArgumentNullException()
     {
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        
-        Assert.Throws<ArgumentNullException>(() => systemUnderTest.GetZipArchive( null));
+
+        Assert.Throws<ArgumentNullException>(() => systemUnderTest.GetZipArchive(null!));
     }
-    
+
+    [Test]
+    public void GetZipArchive_EmptyPath_ThrowsArgumentException()
+    {
+        var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
+
+        var exception = Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive(string.Empty));
+        Assert.Multiple(() =>
+        {
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            Assert.That(exception.Message, Contains.Substring("The path cannot be empty or whitespace."));
+        });
+    }
+
     [Test]
     [TestCaseSource(nameof(GetInvalidPathChars))]
     public void GetZipArchive_InvalidCharactersInPath_ThrowsArgumentException(char badChar)
@@ -74,76 +90,73 @@ public class ZipExtensionsUnitTest
         var invalidPath = validPath + badChar;
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive( invalidPath));
+        var exception = Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive(invalidPath));
+        Assert.Multiple(() =>
+        {
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            Assert.That(exception.Message, Contains.Substring("The path contains invalid characters"));
+        });
     }
-    private static IEnumerable<char> GetInvalidPathChars()
-    {
-        return Path.GetInvalidPathChars();
-    }
+
     [Test]
-    public void GetZipArchive_InvalidPathFormat_ThrowsNotSupportedException()
+    public void GetZipArchive_PathNotAbsolute_ThrowsArgumentException()
     {
-        var invalidFormatPath = "://InvalidPath/file.zip";
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        if (OperatingSystem.IsWindows())
+        var exception = Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive("RelativePath"));
+        Assert.Multiple(() =>
         {
-            Assert.Throws<NotSupportedException>(() => systemUnderTest.GetZipArchive(invalidFormatPath));
-        }
-        else
-        {
-            Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive(invalidFormatPath));
-        }
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            Assert.That(exception.Message, Contains.Substring("The path must be absolute"));
+        });
     }
+
     /// <summary>
     /// Implementing tested with OpenRead. It would be better if a mock file would be constructed using the TestingHelpers that we are not allowed to access.
     /// </summary>
     [Test]
-    public void GetZipArchiveAccessIsDenied_ThrowsUnauthorizedAccessException() 
+    public void GetZipArchive_AccessIsDenied_ThrowsUnauthorizedAccessException()
     {
-        var fileSystemMock = NSubstitute.Substitute.For<IFileSystem>();
-        string archivePath = "test.zip";
+        var fileSystemMock = Substitute.For<IFileSystem>();
+        string archivePath = Path.Combine(_basePath, "test.zip");
         fileSystemMock.File
             .OpenRead(Arg.Any<string>())
-            .Returns(  _=> throw new UnauthorizedAccessException("Simulated Unauthorized Access"));
+            .Returns(_ => throw new UnauthorizedAccessException("Simulated Unauthorized Access"));
 
         var systemUnderTest = CreateZipExtensionWrapper(fileSystemMock);
-        
-        Assert.Throws<UnauthorizedAccessException>(() =>
-        {
-            systemUnderTest.GetZipArchive(archivePath);
-        });
+
+        Assert.Throws<UnauthorizedAccessException>(() => { systemUnderTest.GetZipArchive(archivePath); });
     }
+
     /// <summary>
     /// Implementing tested with OpenRead. It would be better if a mock file would be constructed using the TestingHelpers that we are not allowed to access.
     /// </summary>
     [Test]
     public void GetZipArchiveFileCannotBeRead_ThrowsIOException()
     {
-        var fileSystemMock = NSubstitute.Substitute.For<IFileSystem>();
-        string archivePath = "test.zip";
+        var fileSystemMock = Substitute.For<IFileSystem>();
+        string archivePath = Path.Combine(_basePath, "test.zip");
         fileSystemMock.File
             .OpenRead(Arg.Any<string>())
-            .Returns( _=> throw new IOException("Simulated IO Exception"));
-        
+            .Returns(_ => throw new IOException("Simulated IO Exception"));
+
         var systemUnderTest = CreateZipExtensionWrapper(fileSystemMock);
-        
-        Assert.Throws<IOException>(() =>
-        {
-            systemUnderTest.GetZipArchive(archivePath);
-        });
+
+        Assert.Throws<IOException>(() => { systemUnderTest.GetZipArchive(archivePath); });
     }
+
     [Test]
     public void GetZipArchive_LargeArchive_Success()
     {
-        var archivePath = "largeArchive.zip";
+        var archivePath = Path.Combine(_basePath, "largeArchive.zip");
         var memoryStream = CreateLargeArchive();
         _mockFileSystem.AddFile(archivePath, new MockFileData(memoryStream.ToArray()));
-        
+
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
         var result = systemUnderTest.GetZipArchive(archivePath);
 
         Assert.That(result, Is.TypeOf<ZipArchive>());
     }
+
     [Test]
     public void GetZipArchive_WhitespacePath_ThrowsArgumentException()
     {
@@ -151,13 +164,14 @@ public class ZipExtensionsUnitTest
 
         Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive("   "));
     }
+
     /// <summary>
     /// Implementing tested with OpenRead. TestingHelper doesn't implement PathTooLong exception.
     /// </summary>
     [Test]
     public void GetZipArchive_PathTooLong_ThrowsPathTooLongException()
     {
-        var longPath = new string('a', 260) + ".zip";
+        var longPath = Path.Combine(_basePath, new string('a', 260) + ".zip");
         var mockFileSystem = Substitute.For<IFileSystem>();
         mockFileSystem.File.OpenRead(Arg.Is<string>(path => path.Length > 259))
             .Throws<PathTooLongException>();
@@ -166,6 +180,7 @@ public class ZipExtensionsUnitTest
 
         Assert.Throws<PathTooLongException>(() => systemUnderTest.GetZipArchive(longPath));
     }
+
     private static MemoryStream CreateLargeArchive()
     {
         var memoryStream = new MemoryStream();
@@ -184,7 +199,7 @@ public class ZipExtensionsUnitTest
         return memoryStream;
     }
 
-    private static MemoryStream CreateMemmoryStreamWithZipArchive()
+    private static MemoryStream CreateMemoryStreamWithZipArchive()
     {
         MemoryStream? memoryStream = null;
         try
@@ -208,12 +223,13 @@ public class ZipExtensionsUnitTest
             throw;
         }
     }
+
     [Test]
     public void ExtractToDirectory_ValidArchiveAndDestination_ExtractsFilesSuccessfully()
     {
         var mockFile = new MockFileData("Mock zip content");
         _mockFileSystem.AddFile(Path.Combine("mockArchive.zip"), mockFile);
-        var mockArchive = GetMockZipArchive(new[] { Path.Combine("file1.txt"), Path.Combine("folder","file2.txt") });
+        var mockArchive = GetMockZipArchive(new[] { Path.Combine("file1.txt"), Path.Combine("folder", "file2.txt") });
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
         systemUnderTest.ExtractToDirectory(mockArchive, Path.Combine("extracted"));
@@ -232,18 +248,21 @@ public class ZipExtensionsUnitTest
         var mockArchive = GetMockZipArchive(new[] { Path.Combine("file1.txt") });
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        
-        Assert.That(() => systemUnderTest.ExtractToDirectory(mockArchive, null), Throws.TypeOf<ArgumentNullException>());
+
+        Assert.That(() => systemUnderTest.ExtractToDirectory(mockArchive, null!),
+            Throws.TypeOf<ArgumentNullException>());
     }
+
     [Test]
     public void ExtractToDirectory_WhitespaceDestination_ThrowsArgumentException()
     {
         var mockArchive = GetMockZipArchive(new[] { Path.Combine("file1.txt") });
-        
+
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
 
         Assert.Throws<ArgumentException>(() => systemUnderTest.ExtractToDirectory(mockArchive, "   "));
     }
+
     [Test]
     public void ExtractToDirectory_EmptyArchive_CreatesEmptyDirectory()
     {
@@ -251,10 +270,11 @@ public class ZipExtensionsUnitTest
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
         systemUnderTest.ExtractToDirectory(mockArchive, Path.Combine("emptyExtract"));
-        
+
         Assert.That(_mockFileSystem.Directory.Exists(Path.Combine("emptyExtract")), Is.True);
         Assert.That(_mockFileSystem.Directory.GetFiles(Path.Combine("emptyExtract")), Is.Empty);
     }
+
     /// <summary>
     /// Implementing tested with substituted mockFileSystem. It would be better if a mock file would be constructed using the TestingHelpers that we are not allowed to access.
     /// </summary>
@@ -264,14 +284,16 @@ public class ZipExtensionsUnitTest
         var mockArchive = GetMockZipArchive(new[] { Path.Combine("file1.txt") });
         var mockFileSystem = Substitute.For<IFileSystem>();
         mockFileSystem.Directory.Exists(Path.Combine("nonWritable")).Returns(true);
-        mockFileSystem.Directory.CreateDirectory(Arg.Any<string>()).Returns(_ => throw new UnauthorizedAccessException("Simulated Unauthorized Access"));
+        mockFileSystem.Directory.CreateDirectory(Arg.Any<string>()).Returns(_ =>
+            throw new UnauthorizedAccessException("Simulated Unauthorized Access"));
 
         var systemUnderTest = new ZipExtensionsWrapper(mockFileSystem);
 
-        Assert.Throws<UnauthorizedAccessException>(() => systemUnderTest.ExtractToDirectory(mockArchive, Path.Combine("nonWritable")));
+        Assert.Throws<UnauthorizedAccessException>(() =>
+            systemUnderTest.ExtractToDirectory(mockArchive, Path.Combine("nonWritable")));
     }
 
-    
+
     private ZipArchive GetMockZipArchive(string[] fileNames)
     {
         var memoryStream = new MemoryStream();
@@ -289,40 +311,42 @@ public class ZipExtensionsUnitTest
         memoryStream.Seek(0, SeekOrigin.Begin);
         return new ZipArchive(memoryStream, ZipArchiveMode.Read);
     }
-   
+
     [Test]
-    public async Task CreateFromDirectoryAsync_NullSourcePath_ThrowsArgumentNullException()
+    public void CreateFromDirectoryAsync_NullSourcePath_ThrowsArgumentNullException()
     {
-        string sourcePath = null;
+        string sourcePath = null!;
         string destinationPath = Path.Combine("output.zip");
-        
+
         var systemUnderTest = CreateZipExtensionWrapper();
-        
-        Assert.That(
-            async () => await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath),
-            Throws.ArgumentNullException);
+
+        var exception = Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath));
+        Assert.That(exception.Message, Contains.Substring("Path cannot be null."));
+        Assert.That(exception.ParamName, Is.EqualTo("path"));
     }
 
     [Test]
-    public async Task CreateFromDirectoryAsync_NullDestinationPath_ThrowsArgumentNullException()
+    public void CreateFromDirectoryAsync_NullDestinationPath_ThrowsArgumentNullException()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath = null;
-        
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = null!;
+
         var systemUnderTest = CreateZipExtensionWrapper();
-        Assert.That(
-            async () => await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath),
-            Throws.ArgumentNullException);
+        var exception = Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath));
+        Assert.That(exception.Message, Contains.Substring("Path cannot be null."));
+        Assert.That(exception.ParamName, Is.EqualTo("path"));
     }
 
     [Test]
-    public async Task CreateFromDirectoryAsync_SourcePathDoesNotExist_ThrowsDirectoryNotFoundException()
+    public void CreateFromDirectoryAsync_SourcePathDoesNotExist_ThrowsDirectoryNotFoundException()
     {
-        string sourcePath = Path.Combine("nonexistent");
-        string destinationPath = Path.Combine("output.zip");
-        
+        string sourcePath = Path.Combine(_basePath, "nonexistent");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
+
         var systemUnderTest = CreateZipExtensionWrapper();
-       
+
         Assert.That(
             async () => await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath),
             Throws.InstanceOf<DirectoryNotFoundException>());
@@ -334,8 +358,8 @@ public class ZipExtensionsUnitTest
     [Test]
     public void CreateFromDirectoryAsync_NoWritePermission_ThrowsUnauthorizedAccessException()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath =Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
 
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("File content"));
@@ -354,16 +378,14 @@ public class ZipExtensionsUnitTest
         Assert.That(exception, Is.Not.Null);
         Assert.That(exception.Message, Contains.Substring("Simulated Unauthorized Access"));
     }
-    
 
-    
 
     [Test]
     public async Task CreateFromDirectoryAsync_SubdirectoriesAreIncluded_CreatesArchiveWithHierarchy()
     {
-        string sourcePath = @"C:\source";
-        string destinationPath = @"C:\output.zip";
-    
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
+
         string subdirectoryPath = Path.Combine(sourcePath, "subdir");
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddDirectory(subdirectoryPath);
@@ -373,26 +395,24 @@ public class ZipExtensionsUnitTest
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
         await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath);
         var archive = OpenZipArchive(destinationPath);
-        Assert.Multiple(()=>
+        Assert.Multiple(() =>
         {
-          Assert.That(_mockFileSystem.File.Exists(destinationPath), Is.True);
-          Assert.That(archive.Entries.Count, Is.EqualTo(2));
-          Assert.That(archive.Entries.Any(e => e.FullName == "file1.txt"), Is.True);
-          Assert.That(archive.Entries.Any(e => e.FullName == "subdir/file2.txt" || e.FullName == @"subdir\file2.txt"), Is.True);  
+            Assert.That(_mockFileSystem.File.Exists(destinationPath), Is.True);
+            Assert.That(archive.Entries.Count, Is.EqualTo(2));
+            Assert.That(archive.Entries.Any(e => e.FullName == "file1.txt"), Is.True);
+            Assert.That(archive.Entries.Any(e => e.FullName == "subdir/file2.txt" || e.FullName == @"subdir\file2.txt"),
+                Is.True);
         });
-        
     }
-
-
 
 
     [Test]
     public async Task CreateFromDirectoryAsync_EmptySourceDirectory_CreatesEmptyArchive()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath = Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
         _mockFileSystem.AddDirectory(sourcePath);
-        
+
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
 
         await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath);
@@ -402,10 +422,10 @@ public class ZipExtensionsUnitTest
             Assert.That(_mockFileSystem.File.Exists(destinationPath), Is.True);
             Assert.That(archive.Entries.Count, Is.EqualTo(0));
         });
-
     }
+
     [Test]
-    public async Task CreateFromDirectoryAsync_EmptySourcePath_ThrowsArgumentException()
+    public void CreateFromDirectoryAsync_EmptySourcePath_ThrowsArgumentException()
     {
         var systemUnderTest = CreateZipExtensionWrapper();
 
@@ -413,42 +433,82 @@ public class ZipExtensionsUnitTest
             await systemUnderTest.CreateFromDirectoryAsync(string.Empty, Path.Combine("destination.zip")));
 
         Assert.That(exception!.ParamName, Is.EqualTo(Path.Combine("path")));
+        Assert.That(exception.Message, Contains.Substring("The path cannot be empty or whitespace."));
     }
 
     [Test]
-    public async Task CreateFromDirectoryAsync_EmptyDestinationPath_ThrowsArgumentException()
+    public void CreateFromDirectoryAsync_EmptyDestinationPath_ThrowsArgumentException()
     {
         var systemUnderTest = CreateZipExtensionWrapper();
 
         var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await systemUnderTest.CreateFromDirectoryAsync(Path.Combine("source"), string.Empty));
+            await systemUnderTest.CreateFromDirectoryAsync(Path.Combine(_basePath, "source"), string.Empty));
 
-        Assert.That(exception!.ParamName, Is.EqualTo(Path.Combine("path")));
+        Assert.That(exception!.ParamName, Is.EqualTo("path"));
+        Assert.That(exception.Message, Contains.Substring("The path cannot be empty or whitespace."));
     }
+
     [Test]
-    public async Task CreateFromDirectoryAsync_WhitespaceSourcePath_ThrowsArgumentException()
+    public void CreateFromDirectoryAsync_WhitespaceSourcePath_ThrowsArgumentException()
     {
         var systemUnderTest = CreateZipExtensionWrapper();
         var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await systemUnderTest.CreateFromDirectoryAsync("   ", Path.Combine("destination.zip")));
+            await systemUnderTest.CreateFromDirectoryAsync("   ", Path.Combine(_basePath, "destination.zip")));
 
-        Assert.That(exception!.ParamName, Is.EqualTo(Path.Combine("path")));
+        Assert.That(exception!.ParamName, Is.EqualTo("path"));
+        Assert.That(exception.Message, Contains.Substring("The path cannot be empty or whitespace."));
     }
+
     [Test]
-    public async Task CreateFromDirectoryAsync_WhitespaceDestinationPath_ThrowsArgumentException()
+    public void CreateFromDirectoryAsync_WhitespaceDestinationPath_ThrowsArgumentException()
     {
         var systemUnderTest = CreateZipExtensionWrapper();
         var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await systemUnderTest.CreateFromDirectoryAsync(Path.Combine("source"), "   "));
+            await systemUnderTest.CreateFromDirectoryAsync(Path.Combine(_basePath, "source"), "   "));
 
-        Assert.That(exception!.ParamName, Is.EqualTo(Path.Combine("path")));
+        Assert.That(exception!.ParamName, Is.EqualTo("path"));
+        Assert.That(exception.Message, Contains.Substring("The path cannot be empty or whitespace."));
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetInvalidPathChars))]
+    public void CreateFromDirectoryAsync_InvalidCharactersInSourcePath_ThrowsArgumentException(char badChar)
+    {
+        string validPath = Path.Combine(_basePath, "Temp", "Invalid");
+        var invalidPath = validPath + badChar;
+
+        var systemUnderTest = CreateZipExtensionWrapper();
+        var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
+            await systemUnderTest.CreateFromDirectoryAsync(invalidPath, validPath));
+        Assert.Multiple(() =>
+        {
+            Assert.That(exception!.ParamName, Is.EqualTo("path"));
+            Assert.That(exception.Message, Contains.Substring("The path contains invalid characters"));
+        });
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetInvalidPathChars))]
+    public void CreateFromDirectoryAsync_InvalidCharactersInDestinationPath_ThrowsArgumentException(char badChar)
+    {
+        string validPath = Path.Combine(_basePath, "Temp", "Invalid");
+        var invalidPath = validPath + badChar;
+
+        var systemUnderTest = CreateZipExtensionWrapper();
+        var exception = Assert.ThrowsAsync<ArgumentException>(async () =>
+            await systemUnderTest.CreateFromDirectoryAsync(validPath, invalidPath));
+        Assert.Multiple(() =>
+        {
+            Assert.That(exception!.ParamName, Is.EqualTo("path"));
+            Assert.That(exception.Message, Contains.Substring("The path contains invalid characters"));
+        });
     }
 
     [Test]
     public async Task CreateFromDirectoryAsync_SourceContainsFiles_CreateArchiveWithFiles()
     {
-        string sourcePath = Path.Combine("source"); 
-        string destinationPath = Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
 
         AddFilesToMockFileSystem(sourcePath, "File1 content", "File2 content");
 
@@ -456,7 +516,7 @@ public class ZipExtensionsUnitTest
         await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath);
         var archive = OpenZipArchive(destinationPath);
         var archiveEntries = archive.Entries.Select(e => Path.GetFileName(e.FullName)).ToList();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(_mockFileSystem.File.Exists(destinationPath), Is.True, "Archive file was not created.");
@@ -467,13 +527,12 @@ public class ZipExtensionsUnitTest
     }
 
 
-
     [Test]
     public async Task CreateFromDirectoryAsync_DestinationAlreadyExists_OverwritesFile()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath = Path.Combine("output.zip");
-        AddFilesToMockFileSystem(sourcePath, "file1content","file2content");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
+        AddFilesToMockFileSystem(sourcePath, "file1content", "file2content");
         _mockFileSystem.AddFile(destinationPath, new MockFileData("Existing content"));
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
@@ -489,11 +548,12 @@ public class ZipExtensionsUnitTest
             Assert.That(archiveEntries.Contains("file2.txt"), Is.True, "file2.txt was not found in the archive.");
         });
     }
+
     [Test]
     public async Task CreateFromDirectoryAsync_HiddenFilesInSource_IncludesHiddenFilesInArchive()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath = Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
 
         _mockFileSystem.AddDirectory(sourcePath);
         string hiddenFilePath = Path.Combine(sourcePath, "hidden.txt");
@@ -515,11 +575,12 @@ public class ZipExtensionsUnitTest
             Assert.That(archiveEntries.Contains("hidden.txt"), Is.True);
         });
     }
+
     [Test]
-    public async Task CreateFromDirectoryAsync_SourcePathIsFile_ThrowsDirectoryNotFoundException()
+    public void CreateFromDirectoryAsync_SourcePathIsFile_ThrowsDirectoryNotFoundException()
     {
-        string sourcePath = Path.Combine("source","file.txt");
-        string destinationPath = Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source", "file.txt");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
         _mockFileSystem.AddFile(sourcePath, new MockFileData("This is a file"));
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
@@ -528,12 +589,12 @@ public class ZipExtensionsUnitTest
             async () => await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath),
             Throws.InstanceOf<DirectoryNotFoundException>().With.Message.Contains("Could not find a part of the path"));
     }
-    
+
     [Test]
     public async Task CreateFromDirectoryAsync_SymlinksInSource_IgnoresSymlinks()
     {
-        string sourcePath = Path.Combine("source");
-        string destinationPath = Path.Combine("output.zip");
+        string sourcePath = Path.Combine(_basePath, "source");
+        string destinationPath = Path.Combine(_basePath, "output.zip");
 
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("File1 content"));
@@ -555,11 +616,12 @@ public class ZipExtensionsUnitTest
             Assert.That(archiveEntries.Contains("file1.txt"), Is.True);
         });
     }
+
     [Test]
     public async Task CreateFromDirectoryAsync_SourceContainsReadOnlyFiles_Success()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "readonly.txt"), new MockFileData("Read-only content")
         {
@@ -578,11 +640,12 @@ public class ZipExtensionsUnitTest
             Assert.That(archiveEntries.Contains("readonly.txt"), Is.True);
         });
     }
+
     [Test]
     public async Task CreateFromDirectoryAsync_SourceContainsFilesWithLongPaths_Success()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         var longFileName = new string('a', 255) + ".txt";
         _mockFileSystem.AddFile(Path.Combine(sourcePath, longFileName), new MockFileData("Long path content"));
@@ -596,8 +659,8 @@ public class ZipExtensionsUnitTest
     [Test]
     public async Task CreateFromDirectoryAsync_SourceContainsSpecialCharacterFiles_Success()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         var specialCharFileName = "file@#$!.txt";
         _mockFileSystem.AddFile(Path.Combine(sourcePath, specialCharFileName), new MockFileData("Special characters"));
@@ -615,8 +678,8 @@ public class ZipExtensionsUnitTest
     [Test]
     public async Task CreateFromDirectoryAsync_FilesAddedDuringOperation_IgnoresNewFiles()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("Initial content"));
 
@@ -640,8 +703,8 @@ public class ZipExtensionsUnitTest
     [Test]
     public async Task CreateFromDirectoryAsync_FilesRemovedDuringOperation_DoesNotFail()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "file1.txt"), new MockFileData("Initial content"));
 
@@ -663,17 +726,18 @@ public class ZipExtensionsUnitTest
     }
 
     [Test]
-    public async Task CreateFromDirectoryAsync_DestinationDriveOutOfSpace_ThrowsIOException()
+    public void CreateFromDirectoryAsync_DestinationDriveOutOfSpace_ThrowsIOException()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
         _mockFileSystem.AddFile(Path.Combine(sourcePath, "file.txt"), new MockFileData("Some content"));
 
         var limitedFileSystem = Substitute.For<IFileSystem>();
         limitedFileSystem.FileSystemWatcher.Returns(_mockFileSystem.FileSystemWatcher);
         limitedFileSystem.Directory.Returns(_mockFileSystem.Directory);
-        limitedFileSystem.File.OpenWrite(Arg.Any<string>()).Returns(_ => throw new IOException("No space left on device"));
+        limitedFileSystem.File.OpenWrite(Arg.Any<string>())
+            .Returns(_ => throw new IOException("No space left on device"));
 
         var systemUnderTest = CreateZipExtensionWrapper(limitedFileSystem);
 
@@ -681,14 +745,15 @@ public class ZipExtensionsUnitTest
             await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath));
     }
 
-    
+
     [Test]
     public async Task CreateFromDirectoryAsync_SourceContainsVeryLargeFiles_Success()
     {
-        var sourcePath = Path.Combine("source");
-        var destinationPath = Path.Combine("destination.zip");
+        var sourcePath = Path.Combine(_basePath, "source");
+        var destinationPath = Path.Combine(_basePath, "destination.zip");
         _mockFileSystem.AddDirectory(sourcePath);
-        _mockFileSystem.AddFile(Path.Combine(sourcePath, "largefile.bin"), new MockFileData(new byte[1024 * 1024 * 500])); // 500MB
+        _mockFileSystem.AddFile(Path.Combine(sourcePath, "largefile.bin"),
+            new MockFileData(new byte[1024 * 1024 * 500])); // 500MB
 
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
         await systemUnderTest.CreateFromDirectoryAsync(sourcePath, destinationPath);
@@ -700,12 +765,16 @@ public class ZipExtensionsUnitTest
         {
             Assert.That(_mockFileSystem.File.Exists(destinationPath), Is.True, "Archive file was not created.");
             Assert.That(archive.Entries.Count, Is.EqualTo(1), "Archive should contain only one file.");
-            Assert.That(archiveEntries.Contains("largefile.bin"), Is.True, "largefile.bin was not found in the archive.");
+            Assert.That(archiveEntries.Contains("largefile.bin"), Is.True,
+                "largefile.bin was not found in the archive.");
         });
     }
 
+    private static IEnumerable<char> GetInvalidPathChars()
+    {
+        return Path.GetInvalidPathChars();
+    }
 
-    
     private void AddFilesToMockFileSystem(string path, string content, string content2)
     {
         _mockFileSystem.AddDirectory(path);
@@ -718,6 +787,4 @@ public class ZipExtensionsUnitTest
         var stream = _mockFileSystem.File.OpenRead(path);
         return new ZipArchive(stream, ZipArchiveMode.Read);
     }
-    
-
 }
