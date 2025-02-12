@@ -176,7 +176,9 @@ public class DataAccessUt
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
         var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
-        var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
+        var fileSystem = Environment.OSVersion.Platform == PlatformID.Win32NT
+            ? ResourceHelper.PrepareWindowsFileSystemWithResources()
+            : ResourceHelper.PrepareUnixFileSystemWithResources();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
         xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
