@@ -226,6 +226,7 @@ public class DataAccessUt
     // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
     {
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
         var mapper = Substitute.For<IMapper>();
         var filesystem = new MockFileSystem();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -250,9 +251,10 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: filesystem);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld, "C:\\export_test.zip");
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld,
+            Path.Combine(basePath, "export_test.zip"));
 
-        var expectedZip = ZipExtensions.GetZipArchive(filesystem, "C:\\export_test.zip");
+        var expectedZip = ZipExtensions.GetZipArchive(filesystem, Path.Combine(basePath, "export_test.zip"));
         Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
 
         var png = expectedZip.Entries[1];
