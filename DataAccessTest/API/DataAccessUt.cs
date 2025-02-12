@@ -175,6 +175,7 @@ public class DataAccessUt
     // ANF-ID: [ASN0002]
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
         var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
@@ -206,7 +207,9 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: fileSystem, contentHandler: contentFileHandler);
 
-        var loadedWorld = await systemUnderTest.ImportLearningWorldFromArchiveAsync("C:\\zips\\import_test.zip");
+        var loadedWorld =
+            await systemUnderTest.ImportLearningWorldFromArchiveAsync(Path.Combine(basePath, "zips",
+                "import_test.zip"));
 
         await contentFileHandler.Received()
             .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>());
