@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="bunit.web" Version="1.24.10" />
+      <PackageReference Include="bunit.web" Version="1.38.5" />
       <PackageReference Include="NSubstitute" Version="5.1.0" />
       <PackageReference Include="NUnit.Analyzers" Version="3.10.0">
             <PrivateAssets>all</PrivateAssets>
