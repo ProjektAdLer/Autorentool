@@ -13,7 +13,7 @@ public class DisplayH5pUcUT
     [SetUp]
     public void SetUp()
     {
-        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
     [Test]

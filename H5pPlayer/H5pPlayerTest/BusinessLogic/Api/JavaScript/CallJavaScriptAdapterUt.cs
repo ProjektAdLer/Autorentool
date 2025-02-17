@@ -10,10 +10,8 @@ namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;
 [TestFixture]
 public class CallJavaScriptAdapterUt
 {
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "https://localhost:8001/H5pStandalone/h5p-folder/")]
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "//localhost:8001/H5pStandalone/h5p-folder/")]
+    [Test]
+    [TestCaseSource(nameof(GetTestCases))]
     public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
         var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
@@ -24,13 +22,9 @@ public class CallJavaScriptAdapterUt
 
         await AssertThatFollowingJavaInteropFunctionIsCalled("displayH5p", fakeJsInterop);
     }
-
-
-
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "https://localhost:8001/H5pStandalone/h5p-folder/")]
-    [TestCase(@"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
-        "//localhost:8001/H5pStandalone/h5p-folder/")]
+    
+    [Test]
+    [TestCaseSource(nameof(GetTestCases))]
     public async Task ValidateH5p(string h5pSourcePath, string unzippedH5psPath)
     {
         var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
@@ -41,8 +35,39 @@ public class CallJavaScriptAdapterUt
 
         await AssertThatFollowingJavaInteropFunctionIsCalled("validateH5p", fakeJsInterop);
     }
-    
-    private static async Task AssertThatFollowingJavaInteropFunctionIsCalled(string nameOfFunctionToCall, IJSRuntime fakeJsInterop)
+
+    private static IEnumerable<string[]> GetTestCases()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            yield return new[]
+            {
+                @"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+                "https://localhost:8001/H5pStandalone/h5p-folder/"
+            };
+            yield return new[]
+            {
+                @"C:\Users\TestUserName\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p",
+                "//localhost:8001/H5pStandalone/h5p-folder/"
+            };
+        }
+        else
+        {
+            yield return new[]
+            {
+                "/usr/local/bin/ContentFiles/Accordion_Test.h5p",
+                "https://localhost:8001/H5pStandalone/h5p-folder/"
+            };
+            yield return new[]
+            {
+                "/usr/local/bin/ContentFiles/Accordion_Test.h5p",
+                "//localhost:8001/H5pStandalone/h5p-folder/"
+            };
+        }
+    }
+
+    private static async Task AssertThatFollowingJavaInteropFunctionIsCalled(string nameOfFunctionToCall,
+        IJSRuntime fakeJsInterop)
     {
         await fakeJsInterop.Received(1).InvokeAsync<IJSVoidResult>(
             nameOfFunctionToCall,
@@ -55,7 +80,6 @@ public class CallJavaScriptAdapterUt
     }
 
 
-
     [Test]
     public async Task TerminateH5pJavaScriptPlayer()
     {
@@ -66,11 +90,10 @@ public class CallJavaScriptAdapterUt
 
         await mockJsRuntime.Received().InvokeVoidAsync("terminateH5pStandalone");
     }
-    
-    
 
-    
-    private static CallJavaScriptAdapterTO CreateCallJavaScriptAdapterTO(string unzippedH5psPath, string h5pZipSourcePath)
+
+    private static CallJavaScriptAdapterTO CreateCallJavaScriptAdapterTO(string unzippedH5psPath,
+        string h5pZipSourcePath)
     {
         var javaScriptAdapterTO = new CallJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         return javaScriptAdapterTO;
@@ -87,4 +110,3 @@ public class CallJavaScriptAdapterUt
         return systemUnderTest;
     }
 }
-

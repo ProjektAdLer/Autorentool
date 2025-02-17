@@ -16,7 +16,7 @@ public class StartH5pPlayerUcUT
     [SetUp]
     public void SetUp()
     {
-        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
     [Test]
@@ -35,14 +35,8 @@ public class StartH5pPlayerUcUT
     }
 
 
-    [TestCase(@"C:\Temp" + H5pFileEnding)] // Windows absolute path
-    [TestCase(@"/usr/local/bin" + H5pFileEnding)] // Unix/macOS absolute path
-    [TestCase(@"C:/Program Files/Temp" + H5pFileEnding)] // Mixed style path (Windows)
-    [TestCase(@"/tmp/test#folder/d" + H5pFileEnding)] // Unix/macOS with special characters
-    [TestCase(@"C:\Temp with spaces\file" + H5pFileEnding)] // Windows with spaces
-    [TestCase(@"/path with spaces" + H5pFileEnding)] // Unix/macOS with spaces
-    [TestCase(@"/d" + H5pFileEnding)] // Root path Unix/macOS
-    [TestCase(@"C:\d" + H5pFileEnding)] // Root path Windows
+    [Test]
+    [TestCaseSource(nameof(GetValidH5pZipSourcePaths))]
     public async Task ValidH5pZipSourcePath(string validPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -54,6 +48,24 @@ public class StartH5pPlayerUcUT
 
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
+    }
+
+    private static IEnumerable<string> GetValidH5pZipSourcePaths()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            yield return @"C:\Temp" + H5pFileEnding; // Windows absolute path
+            yield return @"C:/Program Files/Temp" + H5pFileEnding; // Mixed style path (Windows)
+            yield return @"C:\Temp with spaces\file" + H5pFileEnding; // Windows with spaces
+            yield return @"C:\d" + H5pFileEnding; // Root path Windows
+        }
+        else
+        {
+            yield return @"/usr/local/bin" + H5pFileEnding; // Unix/macOS absolute path
+            yield return @"/tmp/test#folder/d" + H5pFileEnding; // Unix/macOS with special characters
+            yield return @"/path with spaces" + H5pFileEnding; // Unix/macOS with spaces
+            yield return @"/d" + H5pFileEnding; // Root path Unix/macOS
+        }
     }
 
     [Test]
@@ -302,7 +314,7 @@ public class StartH5pPlayerUcUT
         string? h5pZipSourcePath = null,
         string? unzippedH5psPath = null)
     {
-        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        var basePath = OperatingSystem.IsWindows() ? "C:" : "/";
         h5pZipSourcePath ??= Path.Combine(basePath, "Default_PathToZip", "Source" + H5pFileEnding);
         unzippedH5psPath ??= "https://localhost:8001/H5pStandalone/h5p-folder/";
         var transportObject = new StartH5pPlayerInputTO(displayMode, h5pZipSourcePath, unzippedH5psPath);

@@ -14,7 +14,7 @@ public class FileSystemDataAccessUt
     [SetUp]
     public void SetUp()
     {
-        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
     [Test]
