@@ -119,10 +119,14 @@ public class ZipExtensionsWrapperUt
             yield return "NonAbsolutePath";
             yield return "C:NonAbsolutePath";
             yield return "/NonAbsolutePath";
+            yield return @".\NonAbsolutePath";
+            yield return @"..\NonAbsolutePath";
         }
         else
         {
             yield return "NonAbsolutePath";
+            yield return "./NonAbsolutePath";
+            yield return "../NonAbsolutePath";
         }
     }
 
