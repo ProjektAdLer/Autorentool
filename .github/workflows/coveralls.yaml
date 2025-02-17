@@ -61,6 +61,8 @@ jobs:
           - IntegrationTest
           - PresentationTest
           - SharedTest
+          - H5pPlayerTest
+
     steps:
       # checkout the repo
       - uses: actions/checkout@v4
