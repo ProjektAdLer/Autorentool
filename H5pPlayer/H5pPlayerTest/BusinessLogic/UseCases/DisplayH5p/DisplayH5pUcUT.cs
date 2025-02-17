@@ -8,15 +8,23 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.DisplayH5p;
 [TestFixture]
 public class DisplayH5pUcUT
 {
+    private string _basePath;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+    }
+
     [Test]
     public async Task StartToDisplayH5p_CallJavaScriptAdapter()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
         var systemUnderTest = new DisplayH5pUC(mockJavaScriptAdapter);
-        var unzippedH5psPath = @"C:\ValidPath1.h5p";
-        var h5pZipSourcePath = @"C:\ValidPath2.h5p";
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = Path.Combine(_basePath, "ValidPath2.h5p");
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
-        
+
         await systemUnderTest.StartToDisplayH5p(h5pEntity);
 
         var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);

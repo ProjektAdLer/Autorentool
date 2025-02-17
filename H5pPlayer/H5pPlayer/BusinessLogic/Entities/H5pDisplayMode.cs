@@ -3,5 +3,5 @@
 public enum H5pDisplayMode
 {
     Display = 0,
-    Validate =1,
+    Validate = 1,
 }

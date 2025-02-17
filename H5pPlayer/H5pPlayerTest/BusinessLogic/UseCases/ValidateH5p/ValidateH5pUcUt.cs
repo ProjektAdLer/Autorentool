@@ -9,6 +9,13 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.ValidateH5p;
 [TestFixture]
 public class ValidateH5pUcUt
 {
+    private string _basePath;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+    }
 
     /// <summary>
     /// this constructor unit-test is explicitly needed,
@@ -23,17 +30,17 @@ public class ValidateH5pUcUt
     public void EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc()
     {
         var systemUnderTest = CreateValidateH5PUc();
-        
-        Assert.That( ReceiveFromJavaScriptAdapter.ValidateH5pUc, Is.EqualTo(systemUnderTest));
+
+        Assert.That(ReceiveFromJavaScriptAdapter.ValidateH5pUc, Is.EqualTo(systemUnderTest));
     }
-    
+
     [Test]
     public async Task StartToValidateH5p()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
         var systemUnderTest = CreateValidateH5PUc(null, mockJavaScriptAdapter);
-        var unzippedH5psPath = @"C:\ValidPath1.h5p";
-        var h5pZipSourcePath = @"C:\ValidPath2.h5p";
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
         var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
         var javaScriptAdapterTO = CreateJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
 
@@ -42,8 +49,8 @@ public class ValidateH5pUcUt
         await mockJavaScriptAdapter.Received().ValidateH5p(Arg.Is(javaScriptAdapterTO));
         await mockJavaScriptAdapter.Received().ValidateH5p(Arg.Any<CallJavaScriptAdapterTO>());
     }
-    
-    
+
+
     [Test]
     public void SetH5pIsCompletable()
     {
@@ -68,7 +75,6 @@ public class ValidateH5pUcUt
         mockValidateH5pUcOutputPort.DidNotReceive().SetH5pIsCompletable();
     }
 
-    
 
     private static ValidateH5pUc CreateValidateH5PUc(
         IValidateH5pUcOutputPort? mockValidateH5PUcOutputPort = null,
@@ -85,8 +91,8 @@ public class ValidateH5pUcUt
         var javaScriptAdapterTO = new CallJavaScriptAdapterTO(unzippedH5psPath, h5pZipSourcePath);
         return javaScriptAdapterTO;
     }
-    
-    
+
+
     private static H5pEntity CreateH5pEntity(
         string unzippedH5psPath, string h5pZipSourcePath)
     {
@@ -96,4 +102,3 @@ public class ValidateH5pUcUt
         return h5pEntity;
     }
 }
-
