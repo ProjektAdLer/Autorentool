@@ -123,7 +123,6 @@ public class ZipExtensionsWrapperUt
         else
         {
             yield return "NonAbsolutePath";
-            yield return "/NonAbsolutePath";
         }
     }
 
