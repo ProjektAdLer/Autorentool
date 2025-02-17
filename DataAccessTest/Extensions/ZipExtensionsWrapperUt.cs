@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using DataAccess.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -18,7 +19,7 @@ public class ZipExtensionsWrapperUt
     public void SetUp()
     {
         _mockFileSystem = new MockFileSystem();
-        _basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
     private ZipExtensionsWrapper CreateZipExtensionWrapper(IFileSystem? fileSystem = null)
@@ -99,15 +100,31 @@ public class ZipExtensionsWrapperUt
     }
 
     [Test]
-    public void GetZipArchive_PathNotAbsolute_ThrowsArgumentException()
+    [TestCaseSource(nameof(GetNonAbsolutePaths))]
+    public void GetZipArchive_PathNotAbsolute_ThrowsArgumentException(string path)
     {
         var systemUnderTest = CreateZipExtensionWrapper(_mockFileSystem);
-        var exception = Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive("RelativePath"));
+        var exception = Assert.Throws<ArgumentException>(() => systemUnderTest.GetZipArchive(path));
         Assert.Multiple(() =>
         {
             Assert.That(exception.ParamName, Is.EqualTo("path"));
             Assert.That(exception.Message, Contains.Substring("The path must be absolute"));
         });
+    }
+
+    private static IEnumerable<string> GetNonAbsolutePaths()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            yield return "NonAbsolutePath";
+            yield return "C:NonAbsolutePath";
+            yield return "/NonAbsolutePath";
+        }
+        else
+        {
+            yield return "NonAbsolutePath";
+            yield return "/NonAbsolutePath";
+        }
     }
 
     /// <summary>

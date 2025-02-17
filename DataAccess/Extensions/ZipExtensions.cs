@@ -105,7 +105,7 @@ public static class ZipExtensions
             throw new ArgumentException($"The path contains invalid characters: {path}", nameof(path));
         }
 
-        if (!Path.IsPathRooted(path))
+        if (!Path.IsPathFullyQualified(path))
         {
             throw new ArgumentException($"The path must be absolute: {path}", nameof(path));
         }
