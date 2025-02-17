@@ -15,7 +15,7 @@ public class TerminateH5pPlayerUcUt
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
-        var directoryForCleaning = @"wwwroot\H5pStandalone\h5p-folder";
+        var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
         
         await systemUnderTest.TerminateH5pPlayer();
         
