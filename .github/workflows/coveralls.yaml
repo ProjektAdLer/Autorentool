@@ -61,7 +61,7 @@ jobs:
           - IntegrationTest
           - PresentationTest
           - SharedTest
-          - H5pPlayerTest
+          - H5pPlayer/H5pPlayerTest
           
     steps:
       # checkout the repo
