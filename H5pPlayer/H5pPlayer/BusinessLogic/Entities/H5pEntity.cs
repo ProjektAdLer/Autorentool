@@ -98,7 +98,6 @@ public class H5pEntity
     /// <exception cref="ArgumentException">If path is empty or whitespace.</exception>
     /// <exception cref="ArgumentException">If path contains invalid path chars from
     /// <see cref="System.IO.Path.GetInvalidPathChars()"/></exception>
-    /// <exception cref="ArgumentException">If path dos not end with .h5p</exception>
     private void ThrowExceptionIfUnzippedH5psPathIsNotValid(string path)
     {
         _pathValidator.ThrowArgumentNullExceptionIfPathIsNull(path, nameof(UnzippedH5psPath));
