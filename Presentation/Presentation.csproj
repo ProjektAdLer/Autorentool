@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\ElectronWrapper\ElectronWrapper.csproj" />
+    <ProjectReference Include="..\H5pPlayer\H5pPlayer\H5pPlayer.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -157,12 +157,30 @@
     private void CreateLearningWorld()
     {
         _createLearningWorldDialogOpen = true;
+        OpenH5pPlayerDialog();
     }
 
     private void OnNewLearningWorldCreated()
     {
         _createLearningWorldDialogOpen = false;
         NavigateToApp();
+    }
+    
+    private  void OpenH5pPlayerDialog()
+    {
+        /*
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters();
+        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+        _ = await dialog.Result;
+        StateHasChanged();
+        */
     }
 
     private void OpenLearningWorld(ILearningWorldViewModel learningWorldViewModel)
