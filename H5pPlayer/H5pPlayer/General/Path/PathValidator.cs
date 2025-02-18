@@ -8,7 +8,7 @@ public class PathValidator
 
     public void ThrowArgumentExceptionIfPathIsNotRooted(string path, string message)
     {
-        if(!System.IO.Path.IsPathRooted(path))
+        if(!System.IO.Path.IsPathFullyQualified(path))
             throw new ArgumentException(message);
     }
 

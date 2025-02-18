@@ -143,6 +143,10 @@ public class StartH5pPlayerUcUT
     [TestCase(@"Test/Temp/Tested" + H5pFileEnding)] // Unix/macOS relative path
     [TestCase(@".\relative\path" + H5pFileEnding)] // Windows relative path with .
     [TestCase(@"..\parent\path" + H5pFileEnding)] // Windows relative path with ..
+    [TestCase(@"C:Test\Temp\Tested" + H5pFileEnding)] // Windows relative path with drive letter
+    [TestCase(@"../parent/path" + H5pFileEnding)] // Unix/macOS relative path with ..
+    [TestCase(@"./relative/path" + H5pFileEnding)] // Unix/macOS relative path with .
+    [TestCase(@"~/home/user/Tested" + H5pFileEnding)] // Unix/macOS relative path with ~
     public async Task PathIsNotRootedInH5pZipSourcePath(string invalidPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
