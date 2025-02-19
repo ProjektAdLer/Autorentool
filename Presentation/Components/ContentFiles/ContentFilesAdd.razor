@@ -128,14 +128,6 @@
                     continue;
                 }
                 
-          
-        
-                
-                // 
-                // hier sollte ich wissen, dass in der zip eine H5P.zip oder .h5p ist muss ich ncoh testen mit if
-                //  ApplicationPaths.ContentFolder;
-                //pfad zu ContentFIles: C:\Users\Tobias\AppData\Roaming\AdLerAuthoring\ContentFiles 
-
                 await HandleFileAsync(file);
                 
                 if (fileEnding.ToLowerInvariant()  == ".h5p")
@@ -164,10 +156,7 @@
             await _fileUpload.ResetAsync();
         }
     }
-    // gesamten Zip pfad an H5P-Player geben
-    // -> hole hier die .zip wenn darin eine h5p.zip ist
-    
-
+   
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
         var zipStream = zipFile.OpenReadStream(1_000_000_000);
