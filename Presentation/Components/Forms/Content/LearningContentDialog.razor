@@ -40,7 +40,7 @@
             <MudTd Class="p-0 px-2">
                 <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                Class="show-content-preview"
-                               Title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
+                               title="@Localizer["LearningContentDialog.LearningMaterial.Preview"]"/>
             </MudTd>
             <MudTd Class="p-0 w-full" DataLabel="Name">
                 <MudTooltip Text="@context.Name"
@@ -67,7 +67,7 @@
 
 
 @code {
-    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired] public ILearningContentFormModel? LearningContent { get; set; }
     

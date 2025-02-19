@@ -157,6 +157,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     // ANF-ID: [AWA0006]
     public async Task ChangeRequiredDifficulty_CallsPresentationLogic([Values] bool wasSelectedAsRequired)
     {
+        Context.RenderComponent<MudPopoverProvider>();
         var task = Substitute.For<IAdaptivityTaskViewModel>();
         var question = Substitute.For<IAdaptivityQuestionViewModel>();
         question.Difficulty.Returns(QuestionDifficulty.Medium);
@@ -177,6 +178,7 @@ public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentD
     // ANF-ID: [AWA0009]
     public async Task DeleteQuestionButtonClicked_CallsPresentationLogic()
     {
+        Context.RenderComponent<MudPopoverProvider>();
         var task = Substitute.For<IAdaptivityTaskViewModel>();
         var question = Substitute.For<IAdaptivityQuestionViewModel>();
         question.Difficulty.Returns(QuestionDifficulty.Medium);

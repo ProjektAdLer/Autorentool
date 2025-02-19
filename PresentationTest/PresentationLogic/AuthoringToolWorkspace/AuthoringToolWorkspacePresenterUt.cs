@@ -232,7 +232,7 @@ public class AuthoringToolWorkspacePresenterUt
                     Assert.That(parameters[nameof(UnsavedWorldDialog.WorldName)], Is.EqualTo(unsavedWorld.Name));
                     Assert.That(options.CloseButton, Is.True);
                     Assert.That(options.CloseOnEscapeKey, Is.True);
-                    Assert.That(options.DisableBackdropClick, Is.True);
+                    Assert.That(options.BackdropClick, Is.False);
                 });
                 wasCalled = true;
             });

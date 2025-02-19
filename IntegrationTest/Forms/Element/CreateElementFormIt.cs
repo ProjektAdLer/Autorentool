@@ -87,7 +87,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Render_InjectsDependenciesAndParameters()
     {
         var onSubmitted = EventCallback.Factory.Create(this, () => { });
-
+        Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent();
 
         Assert.That(systemUnderTest.Instance.WorldPresenter, Is.EqualTo(WorldPresenter));
@@ -102,7 +102,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_SelectedViewModelsProviderContentSet_SetsInFormModelAndResetsProvider()
     {
         SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
-
+        Context.RenderComponent<MudPopoverProvider>();
         GetRenderedComponent();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels.First()));
@@ -311,6 +311,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Test]
     public void StoryMode_ShowsStoryContentCollapsable_SubmitsOnClick()
     {
+        Context.RenderComponent<MudPopoverProvider>();
         var sut = GetRenderedComponent(ElementMode.Story);
         
         var collapsables = sut.FindComponents<Collapsable>();
@@ -364,7 +365,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         mudTextFields[2].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
         mudNumericFields[1].Find("input").Change(123);
-        mudSelect.Find("div.mud-input-control").Click();
+        mudSelect.Find("div.mud-input-control").MouseDown();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
     }

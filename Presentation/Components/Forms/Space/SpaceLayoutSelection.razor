@@ -7,7 +7,7 @@
 <div class="grid grid-cols-5 gap-4 2xl:gap-8">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
-        <MudListItem OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
+        <MudListItem T="FloorPlanEnum" OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
                      Class="p-0">
             <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>

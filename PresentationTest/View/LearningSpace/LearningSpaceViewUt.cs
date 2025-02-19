@@ -37,6 +37,8 @@ public class LearningSpaceViewUt
         _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddSingleton(_localizer);
         _ctx.Services.AddLogging();
+        _ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        _ctx.RenderComponent<MudPopoverProvider>();
     }
 
     [TearDown]
@@ -54,7 +56,6 @@ public class LearningSpaceViewUt
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = GetLearningSpaceViewForTesting();
-
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.LearningSpaceP, Is.EqualTo(_learningSpacePresenter));

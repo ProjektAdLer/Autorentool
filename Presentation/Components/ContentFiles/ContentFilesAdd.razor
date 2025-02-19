@@ -40,8 +40,7 @@
                        InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
-            <ButtonTemplate>
-
+            <ActivatorContent>
                 <MudPaper Class="@PaperClasses" Outlined="true">
 
                     <MudElement Class="h-full w-full grow flex flex-col justify-center items-center">
@@ -52,7 +51,7 @@
                     </MudElement>
                 </MudPaper>
 
-            </ButtonTemplate>
+            </ActivatorContent>
         </MudFileUpload>
 
     </div>
@@ -194,7 +193,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false
+            BackdropClick = true
         };
         var dialog = await DialogService.ShowAsync<ImportZipDialog>("Import Zip File", parameters, options);
         await dialog.Result;

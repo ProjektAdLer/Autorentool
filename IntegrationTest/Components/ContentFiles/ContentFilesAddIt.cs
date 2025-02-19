@@ -32,6 +32,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         Context.Services.AddSingleton(_dialogService);
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_errorService);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IDialogService _dialogService = null!;

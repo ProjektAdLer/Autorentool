@@ -40,6 +40,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(LearningWorldPresenter);
         Question = Substitute.For<IAdaptivityQuestionViewModel>();
+        Context.RenderComponent<MudPopoverProvider>();
         await GetDialogAsync();
     }
 

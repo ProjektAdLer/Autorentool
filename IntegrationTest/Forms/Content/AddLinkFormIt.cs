@@ -30,6 +30,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(Mapper);
         Context.Services.AddSingleton(ErrorService);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IPresentationLogic PresentationLogic { get; set; }

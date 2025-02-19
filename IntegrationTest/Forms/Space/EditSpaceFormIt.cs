@@ -37,6 +37,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Context.AddLocalizerForTest<SpaceLayoutSelection>();
         Context.AddLocalizerForTest<FloorPlanEnum>();
         Context.ComponentFactories.AddStub<SpaceLayoutSelection>();
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private ILearningSpacePresenter SpacePresenter { get; set; }

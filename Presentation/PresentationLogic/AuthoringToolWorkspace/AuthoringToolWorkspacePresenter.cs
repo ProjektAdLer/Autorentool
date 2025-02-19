@@ -146,10 +146,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true
+            BackdropClick = false
         };
         var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
         var result = await dialog.Result;
+        if (result == null) return DialogResult.Cancel();
         return result;
     }
 

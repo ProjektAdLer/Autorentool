@@ -9,8 +9,8 @@
     @if(DisplayButtons) 
     {
         <div class="flex flex-row gap-2">
-            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Edit" Title="@Localizer["LearningOutcomeItem.Button.Edit"]"/>
-            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Delete" Title="@Localizer["LearningOutcomeItem.Button.Delete"]"/>
+            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => EditLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Edit" title="@Localizer["LearningOutcomeItem.Button.Edit"]"/>
+            <MudIconButton Class="p-2" Size="Size.Small" OnClick="() => DeleteLearningOutcome(LearningOutcome)" Icon="@Icons.Material.Filled.Delete" title="@Localizer["LearningOutcomeItem.Button.Delete"]"/>
         </div>
     }
 </div>
@@ -42,7 +42,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -62,7 +62,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,

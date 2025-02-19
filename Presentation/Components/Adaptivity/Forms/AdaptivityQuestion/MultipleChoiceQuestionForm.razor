@@ -14,7 +14,7 @@
             ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
             : Localizer["MultipleChoiceQuestionForm.TitleContent.Edit." + Difficulty])
     </MudText>
-    <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="() => OnSubmitted.InvokeAsync()"
+    <MudIconButton Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="() => OnSubmitted.InvokeAsync()"
                    ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
 </div>
 
@@ -100,7 +100,7 @@
                                                        Disabled="FormModel.Choices.Count <= 2"
                                                        Size="Size.Small"
                                                        Class="w-10 h-10 button-delete-choice"
-                                                       Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
+                                                       title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
 
                                     </div>
                                 }
@@ -134,7 +134,7 @@
                                                    Disabled="FormModel.Choices.Count <= 2"
                                                    Size="Size.Small"
                                                    Class="w-10 h-10 button-delete-choice"
-                                                   Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
+                                                   title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
                                 </div>
                             }
                         </div>

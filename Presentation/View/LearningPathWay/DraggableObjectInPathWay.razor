@@ -109,7 +109,7 @@
 
         var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(DeleteObjectConfirmationDialogTitle, dialogParameters);
         var result = await dialogReference.Result;
-        if (result.Canceled)
+        if (result == null || result.Canceled)
         {
             return;
         }

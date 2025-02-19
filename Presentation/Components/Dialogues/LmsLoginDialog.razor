@@ -10,15 +10,15 @@
 <MudPaper Height="450px" Style="overflow: hidden; position: relative;">
     <div class="w-full flex flex-row items-center justify-between">
         <MudText Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="CloseDialog"
+        <MudIconButton Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="CloseDialog"
                        ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
     </div>
 
     <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
         <div class="flex">
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
-                <MudList Clickable="false">
-                    <MudListItem Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
+                <MudList T="object" ReadOnly="true">
+                    <MudListItem T="object" Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
                     </MudListItem>
                 </MudList>
             </MudPaper>
@@ -82,12 +82,12 @@
                                 </MudTooltip>
                             </div>
 
-                            <MudList Class="border border-adlergrey-200 rounded">
+                            <MudList T="LmsWorldViewModel" Class="border border-adlergrey-200 rounded">
                                 <MudText Class="cursor-default pl-4 font-bold">@Localizer["DialogContent.Delete.Subtitle"]</MudText>
                                 <div class="h-28 overflow-y-scroll">
                                     @foreach (var lmsWorld in _lmsWorldList)
                                     {
-                                        <MudListItem Style="height: 48px" Class="py-0 cursor-default" Text="@lmsWorld.WorldName">
+                                        <MudListItem T="LmsWorldViewModel" Style="height: 48px" Class="py-0 cursor-default" Text="@lmsWorld.WorldName">
                                             <div class="flex flex-row justify-between items-center">
                                                 <p class="text-base truncate">@lmsWorld.WorldName</p>
                                                 @if (lmsWorld == _deleteWorld)
@@ -98,7 +98,7 @@
                                                 {
                                                     <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)"
                                                                    Icon="@Icons.Material.Filled.Delete"
-                                                                   Title="@Localizer["DialogContent.Delete.MoodleCourse"]"
+                                                                   title="@Localizer["DialogContent.Delete.MoodleCourse"]"
                                                                    Class="text-adlergrey-200 hover:text-adlerdarkblue-700">
                                                     </MudIconButton>
                                                 }
@@ -229,7 +229,7 @@
 
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
-    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
@@ -273,7 +273,7 @@
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
-    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
+    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = false, NoHeader = true };
 
     private List<LmsWorldViewModel> _lmsWorldList = new();
 
@@ -287,7 +287,12 @@
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
         UpdateLmsIsConnected();
-        MudDialog?.SetOptions(Options);
+        UpdateDialogOptions();
+    }
+
+    private Task UpdateDialogOptions()
+    {
+        return MudDialog == null ? Task.CompletedTask : MudDialog.SetOptionsAsync(Options);
     }
 
     /*
@@ -410,7 +415,7 @@
 
         var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ConfirmDeleteLmsWorld.Title"].Value, dialogParameters);
         var result = await dialogReference.Result;
-        if (result.Canceled) return;
+        if (result == null || result.Canceled) return;
 
         _deleteWorld = world;
         await InvokeAsync(StateHasChanged);

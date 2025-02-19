@@ -84,7 +84,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var vm = ViewModelProvider.GetLearningElement();
         var onNewClicked = EventCallback.Empty;
         var masterLayoutStateHasChanged = () => { };
-
+        Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent(vm, onNewClicked, masterLayoutStateHasChanged);
 
         Assert.That(systemUnderTest.Instance.WorldPresenter, Is.EqualTo(WorldPresenter));
@@ -102,7 +102,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     public void OnParametersSet_CallsMapper()
     {
         var vm = ViewModelProvider.GetLearningElement();
-
+        Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
@@ -212,7 +212,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         mudTextFields[2].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
         mudNumericFields[1].Find("input").Change(123);
-        mudSelect.Find("div.mud-input-control").Click();
+        mudSelect.Find("div.mud-input-control").MouseDown();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
     }
@@ -241,7 +241,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     public void ShowElementContentButton_Clicked_CallsShowSelectedElementContentAsync()
     {
         var vm = ViewModelProvider.GetLearningElement();
-
+        Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent(vm);
 
         systemUnderTest.FindComponentWithMarkup<MudIconButton>("btn-standard rounded").Find("button").Click();

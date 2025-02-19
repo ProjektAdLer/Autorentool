@@ -55,7 +55,7 @@
                                    Class="m-0 pl-2 py-0"
                                    Disabled="@(!_deletionCandidates.Any())"
                                    OnClick="() => DeleteSelected()"
-                                   Title="@Localizer["Content.MudTd.Delete"]"/>
+                                   title="@Localizer["Content.MudTd.Delete"]"/>
 
                 </div>
             </MudTh>
@@ -121,13 +121,13 @@
                         @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
 
                 <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                               Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.Preview"]>
+                               Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Preview"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => NewElementWithContent(context)"
-                               Icon="@Icons.Material.Filled.Add" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.NewElement"]>
+                               Icon="@Icons.Material.Filled.Add" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.NewElement"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => Delete(context)"
-                               Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" Title=@Localizer["Content.MudTd.Delete"]>
+                               Icon="@Icons.Material.Filled.Delete" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Delete"]>
                 </MudIconButton>
             </MudPopover>
         </MudTd>
@@ -197,6 +197,7 @@
         {
             if (_table == null) return null;
             if (!_deletionCandidates.Any()) return false;
+            if (_table.Items == null) return false;
             if (_table.Items.Count() == _deletionCandidates.Count()) return true;
             return null;
         }
@@ -237,10 +238,12 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
+            BackdropClick = false
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
         var result = await dialog.Result;
+        
+        if(result == null) return;
 
         if (result.Canceled) return;
 
@@ -290,12 +293,13 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
             MaxWidth = MaxWidth.Medium,
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
         var result = await dialog.Result;
 
+        if (result == null) return;
         if (result.Canceled) return;
 
         var contentInUse = GetContentInUseFromDeletionCandidates();
@@ -310,7 +314,7 @@
             };
             var dialog2 = await DialogService.ShowAsync<DeleteMultipleContentConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters2, options);
             var result2 = await dialog2.Result;
-            if (result2.Canceled) return;
+            if (result2 == null || result2.Canceled) return;
             doNotFilterForUnused = result2.Data.As<bool>();
         }
 
@@ -369,7 +373,7 @@
             await DialogService.ShowAsync<DeleteContentInUseConfirmationDialog>(Localizer["WarningDialog.Title"],
                 parameters, options);
         var warningResult = await warningDialog.Result;
-        return warningResult.Canceled;
+        return warningResult is { Canceled: true };
     }
 
     private IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> GetUsage(ILearningContentViewModel item)

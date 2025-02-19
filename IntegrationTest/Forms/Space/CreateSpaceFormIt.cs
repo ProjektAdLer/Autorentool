@@ -51,7 +51,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         var systemUnderTest = GetRenderedComponent();
 
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-
+        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         foreach (var collapsable in collapsables.Skip(1))
         {

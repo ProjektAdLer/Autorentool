@@ -31,6 +31,7 @@ public class MainLayoutUt
         _ctx.ComponentFactories.AddStub<MudThemeProvider>();
         _ctx.ComponentFactories.AddStub<MudDialogProvider>();
         _ctx.ComponentFactories.AddStub<MudSnackbarProvider>();
+        _ctx.ComponentFactories.AddStub<MudPopoverProvider>();
         _ctx.ComponentFactories.AddStub<CultureSelector>();
     }
 
@@ -61,6 +62,7 @@ public class MainLayoutUt
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudThemeProvider>>(), Throws.Nothing);
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudDialogProvider>>(), Throws.Nothing);
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudSnackbarProvider>>(), Throws.Nothing);
+            Assert.That(() => systemUnderTest.FindComponent<Stub<MudPopoverProvider>>(), Throws.Nothing);
         });
     }
 

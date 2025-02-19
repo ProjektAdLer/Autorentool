@@ -39,12 +39,12 @@ public class ImportZipDialogIt : MudDialogTestFixture<ImportZipDialog>
             Assert.That(mudHeadings[5].InnerHtml, Is.EqualTo("ImportZipDialog.Heading.Files.Error 2"));
         });
 
-        var mudLists = DialogProvider.FindComponents<MudList>();
+        var mudLists = DialogProvider.FindComponents<MudList<string>>();
         Assert.That(mudLists, Has.Count.EqualTo(4));
-        var listSuccessful = mudLists[0].FindComponents<MudListItem>();
-        var listDuplicate = mudLists[1].FindComponents<MudListItem>();
-        var listUnsupported = mudLists[2].FindComponents<MudListItem>();
-        var listError = mudLists[3].FindComponents<MudListItem>();
+        var listSuccessful = mudLists[0].FindComponents<MudListItem<string>>();
+        var listDuplicate = mudLists[1].FindComponents<MudListItem<string>>();
+        var listUnsupported = mudLists[2].FindComponents<MudListItem<string>>();
+        var listError = mudLists[3].FindComponents<MudListItem<string>>();
         Assert.Multiple(() =>
         {
             Assert.That(listSuccessful, Has.Count.EqualTo(2));

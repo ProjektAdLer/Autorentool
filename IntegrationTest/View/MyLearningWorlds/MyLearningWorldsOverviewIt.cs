@@ -38,6 +38,7 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         Context.ComponentFactories.AddStub<HeaderBar>();
         Context.ComponentFactories.AddStub<CreateWorldForm>();
         Context.ComponentFactories.AddStub<LearningWorldCard>();
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IMyLearningWorldsProvider MyLearningWorldsProvider { get; set; }
