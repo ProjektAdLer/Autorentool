@@ -70,7 +70,7 @@
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
       <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.0.0" />
         <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.2" />
     </ItemGroup>
