@@ -130,18 +130,18 @@
                 
                 await HandleFileAsync(file);
                 
-                if (fileEnding.ToLowerInvariant()  == ".h5p")
-                {
-                    var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                    var baseUri = new Uri(Navigation.BaseUri); 
-                    var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
-                    
-                    Logger.LogTrace("Start H5P-Player with: " + 
-                                    "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                     "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-                     
-                     OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
-                }
+                // if (fileEnding.ToLowerInvariant()  == ".h5p")
+                // {
+                //     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                //     var baseUri = new Uri(Navigation.BaseUri); 
+                //     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                //     
+                //     Logger.LogTrace("Start H5P-Player with: " + 
+                //                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                //                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                //      
+                //      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                // }
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
