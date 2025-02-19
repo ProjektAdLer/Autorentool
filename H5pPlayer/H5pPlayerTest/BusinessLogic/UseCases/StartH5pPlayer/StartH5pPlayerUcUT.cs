@@ -11,12 +11,12 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.StartH5pPlayer;
 public class StartH5pPlayerUcUT
 {
     const string H5pFileEnding = ".h5p";
-    private string _basePath;
+    private string RootPathDueToOperatingSystem { get;  set; }
 
     [SetUp]
     public void SetUp()
     {
-        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
+        RootPathDueToOperatingSystem = OperatingSystem.IsWindows() ? "C:" : "/";
     }
 
     [Test]
@@ -35,8 +35,8 @@ public class StartH5pPlayerUcUT
     }
 
 
-    [Test]
-    [TestCaseSource(nameof(GetValidH5pZipSourcePaths))]
+    [Test] 
+    [TestCaseSource(nameof(GetValidH5pZipSourcePaths))] 
     public async Task ValidH5pZipSourcePath(string validPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -49,30 +49,12 @@ public class StartH5pPlayerUcUT
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
         Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
     }
-
-    private static IEnumerable<string> GetValidH5pZipSourcePaths()
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            yield return @"C:\Temp" + H5pFileEnding; // Windows absolute path
-            yield return @"C:/Program Files/Temp" + H5pFileEnding; // Mixed style path (Windows)
-            yield return @"C:\Temp with spaces\file" + H5pFileEnding; // Windows with spaces
-            yield return @"C:\d" + H5pFileEnding; // Root path Windows
-        }
-        else
-        {
-            yield return @"/usr/local/bin" + H5pFileEnding; // Unix/macOS absolute path
-            yield return @"/tmp/test#folder/d" + H5pFileEnding; // Unix/macOS with special characters
-            yield return @"/path with spaces" + H5pFileEnding; // Unix/macOS with spaces
-            yield return @"/d" + H5pFileEnding; // Root path Unix/macOS
-        }
-    }
-
+    
     [Test]
     public async Task NullH5pZipSourcePath()
     {
         string invalidPath = null;
-        string validPath = Path.Combine(_basePath, "Temp");
+        string validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp");
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
@@ -111,7 +93,7 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
-        var validPath = Path.Combine(_basePath, "Temp", "Invalid");
+        var validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp", "Invalid");
         var invalidPath = validPath + badChar + H5pFileEnding;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0, invalidPath);
         const string expectedErrorMessage = "H5pZipSourcePath contains invalid path chars!";
@@ -128,7 +110,7 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
-        string invalidPath = Path.Combine(_basePath, "Temp", "Invalid");
+        string invalidPath = Path.Combine(RootPathDueToOperatingSystem, "Temp", "Invalid");
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode, invalidPath);
         const string expectedErrorMessage = "H5pZipSourcePath misses .h5p extension!";
         var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
@@ -194,7 +176,7 @@ public class StartH5pPlayerUcUT
     public async Task NullUnzippedH5psPath()
     {
         string invalidPath = null;
-        string validPath = Path.Combine(_basePath, "Temp" + H5pFileEnding);
+        string validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp" + H5pFileEnding);
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
@@ -232,7 +214,7 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
-        var validPath = Path.Combine(_basePath, "Temp", "Invalid");
+        var validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp", "Invalid");
         var invalidPath = validPath + badChar + H5pFileEnding;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(0, null, invalidPath);
         const string expectedErrorMessage = "UnzippedH5psPath contains invalid path chars!";
@@ -276,7 +258,7 @@ public class StartH5pPlayerUcUT
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
         var systemUnderTest = CreateStandardSystemUnderTest(mockValidateH5pUc, mockDisplayH5pUC);
-        string h5pZipSourcePath = Path.Combine(_basePath, "PathToZip", "Source" + H5pFileEnding);
+        string h5pZipSourcePath = Path.Combine(RootPathDueToOperatingSystem, "PathToZip", "Source" + H5pFileEnding);
         var displayMode = H5pDisplayMode.Display;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode, h5pZipSourcePath);
 
@@ -292,7 +274,7 @@ public class StartH5pPlayerUcUT
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
         var systemUnderTest = CreateStandardSystemUnderTest(mockValidateH5pUc, mockDisplayH5pUC);
-        string h5pZipSourcePath = Path.Combine(_basePath, "PathToZip", "Source" + H5pFileEnding);
+        string h5pZipSourcePath = Path.Combine(RootPathDueToOperatingSystem, "PathToZip", "Source" + H5pFileEnding);
         var displayMode = H5pDisplayMode.Validate;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode, h5pZipSourcePath);
 
@@ -313,13 +295,12 @@ public class StartH5pPlayerUcUT
     }
 
 
-    private static StartH5pPlayerInputTO CreateStartH5pPlayerInputT0(
+    private StartH5pPlayerInputTO CreateStartH5pPlayerInputT0(
         H5pDisplayMode displayMode = H5pDisplayMode.Display,
         string? h5pZipSourcePath = null,
         string? unzippedH5psPath = null)
     {
-        var basePath = OperatingSystem.IsWindows() ? "C:" : "/";
-        h5pZipSourcePath ??= Path.Combine(basePath, "Default_PathToZip", "Source" + H5pFileEnding);
+        h5pZipSourcePath ??= Path.Combine(RootPathDueToOperatingSystem, "Default_PathToZip", "Source" + H5pFileEnding);
         unzippedH5psPath ??= "https://localhost:8001/H5pStandalone/h5p-folder/";
         var transportObject = new StartH5pPlayerInputTO(displayMode, h5pZipSourcePath, unzippedH5psPath);
         return transportObject;
@@ -354,5 +335,24 @@ public class StartH5pPlayerUcUT
             displayH5pUc,
             outputPort);
         return systemUnderTest;
+    }
+    
+    
+    private static IEnumerable<string> GetValidH5pZipSourcePaths()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            yield return @"C:\Temp" + H5pFileEnding; // Windows absolute path
+            yield return @"C:/Program Files/Temp" + H5pFileEnding; // Mixed style path (Windows)
+            yield return @"C:\Temp with spaces\file" + H5pFileEnding; // Windows with spaces
+            yield return @"C:\d" + H5pFileEnding; // Root path Windows
+        }
+        else
+        {
+            yield return @"/usr/local/bin" + H5pFileEnding; // Unix/macOS absolute path
+            yield return @"/tmp/test#folder/d" + H5pFileEnding; // Unix/macOS with special characters
+            yield return @"/path with spaces" + H5pFileEnding; // Unix/macOS with spaces
+            yield return @"/d" + H5pFileEnding; // Root path Unix/macOS
+        }
     }
 }
