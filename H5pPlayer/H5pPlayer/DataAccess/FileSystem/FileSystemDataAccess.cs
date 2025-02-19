@@ -30,6 +30,12 @@ public class FileSystemDataAccess : IFileSystemDataAccess
         var zipArchive = ZipExtensions.GetZipArchive(FileSystem, sourceArchiveFileName);
         zipArchive.ExtractToDirectory(FileSystem, destinationDirectoryName);
     }
+    
+    /// <inheritdoc cref="IFileSystemDataAccess.DirectoryExists"/>
+    public bool DirectoryExists(string path)
+    {
+        return FileSystem.Directory.Exists(path);
+    }
 
 
     /// <inheritdoc cref="IFileSystemDataAccess.DeleteAllFilesAndDirectoriesIn"/>

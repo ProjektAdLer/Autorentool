@@ -1,8 +1,10 @@
-﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+﻿using System.IO.Abstractions.TestingHelpers;
+using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
+using H5pPlayer.DataAccess.FileSystem;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.StartH5pPlayer;
@@ -22,10 +24,12 @@ public class StartH5pPlayerUcUT
     [Test]
     public async Task CleanH5pFolderInWwwroot()
     {
+        var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
+        mockFileSystemDataAccess.DirectoryExists(
+            Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, null, mockFileSystemDataAccess);
-        var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0();
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
@@ -237,8 +241,14 @@ public class StartH5pPlayerUcUT
             Is.EqualTo(displayMode));
     }
 
+
+    /// <summary>
+    /// Since we are verifying the call to ExtractedZipFile,
+    /// we also ensure that the directory for temporary
+    /// zip files is created if it does not already exist
+    /// </summary>
     [Test]
-    public async Task ExtractZippedH5pToTemporaryFolder()
+    public async Task ExtractZippedH5pToDirectoryForTemporaryH5ps()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         var systemUnderTest = CreateStandardSystemUnderTest(

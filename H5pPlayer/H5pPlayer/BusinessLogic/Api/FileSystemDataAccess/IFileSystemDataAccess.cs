@@ -39,6 +39,9 @@ public interface IFileSystemDataAccess
     /// </remarks>
     void ExtractZipFile(string sourceArchiveFileName, string destinationDirectoryName);
     
+    /// <inheritdoc cref="System.IO.Abstractions.IDirectory.Exists"/>
+    bool DirectoryExists(string path);
+    
     /// <summary>
     /// Deletes all files and subdirectories in the specified directory.
     /// The directory itself remains intact.
@@ -67,4 +70,6 @@ public interface IFileSystemDataAccess
     /// Thrown if the format of <paramref name="directoryForCleaning"/> is invalid.
     /// </exception>
     void DeleteAllFilesAndDirectoriesIn(string directoryForCleaning);
+
+   
 }

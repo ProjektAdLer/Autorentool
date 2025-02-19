@@ -14,7 +14,10 @@ public class TemporaryH5psInWwwrootManager : ICleanupH5pPlayerPort
 
     public void CleanDirectoryForTemporaryH5psInWwwroot()
     {
-        FileSystemDataAccess.DeleteAllFilesAndDirectoriesIn(BuildTemporaryDirectoryFullNameForAllH5ps());
+        if (FileSystemDataAccess.DirectoryExists(BuildTemporaryDirectoryFullNameForAllH5ps()))
+        {
+            FileSystemDataAccess.DeleteAllFilesAndDirectoriesIn(BuildTemporaryDirectoryFullNameForAllH5ps());
+        }
     }
 
  

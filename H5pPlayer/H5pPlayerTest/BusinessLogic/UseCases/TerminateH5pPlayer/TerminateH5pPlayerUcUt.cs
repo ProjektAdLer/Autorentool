@@ -13,9 +13,11 @@ public class TerminateH5pPlayerUcUt
     [Test]
     public async Task  CleanH5pFolderInWwwroot()
     {
-        var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
-        var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
         var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
+        var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
+        mockFileSystemDataAccess.DirectoryExists(
+            Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);
+        var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
         
         await systemUnderTest.TerminateH5pPlayer();
         

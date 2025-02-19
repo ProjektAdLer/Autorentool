@@ -102,6 +102,32 @@ public class FileSystemDataAccessUt
     }
 
     [Test]
+    public void DirectoryExists_DirectoryExists_ReturnsTrue()
+    {
+        var mockFileSystem = new MockFileSystem();
+        var testDirectory = Path.Combine(_basePath, "test");
+        mockFileSystem.AddDirectory(testDirectory);
+        var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
+        
+        var result = systemUnderTest.DirectoryExists(testDirectory);
+        
+        Assert.That(result, Is.True);
+    }
+    
+    [Test]
+    public void DirectoryExists_DirectoryNotExists_ReturnsFalse()
+    {
+        var mockFileSystem = new MockFileSystem();
+        var testDirectory = Path.Combine(_basePath, "test");
+        var systemUnderTest = CreateTestableFileSystemDataAccess(mockFileSystem);
+        
+        var result = systemUnderTest.DirectoryExists(testDirectory);
+        
+        Assert.That(result, Is.False);
+    }
+
+    
+    [Test]
     public void DeleteAllFilesAndDirectoriesIn_ShouldThrowIfDirectoryDoesNotExist()
     {
         var mockFileSystem = new MockFileSystem();
