@@ -156,13 +156,13 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
-    [Retry(3)]
     // ANF-ID: [AWA0015]
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        var assertionAttempts = 0;
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
@@ -180,7 +180,13 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(
             () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-        Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+        systemUnderTest.WaitForAssertion(() =>
+            {
+                Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+                assertionAttempts++;
+            },
+            TimeSpan.FromSeconds(3));
+        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
