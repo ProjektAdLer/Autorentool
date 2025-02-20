@@ -1,4 +1,4 @@
-<MudButton OnClick="@(() => SubmitThenRemapAsync())" 
+<MudButton OnClick="@(async () => await SubmitThenRemapAsync())"
            Class="btn-standard p-2 rounded-lg shadow-lg">
     <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Success"></MudIcon>
     <MudText Class="px-2 font-bold uppercase">Ok</MudText>

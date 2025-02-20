@@ -179,8 +179,8 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(
             () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-
-        Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+        systemUnderTest.WaitForAssertion(() => { Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel); },
+            TimeSpan.FromSeconds(3));
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
