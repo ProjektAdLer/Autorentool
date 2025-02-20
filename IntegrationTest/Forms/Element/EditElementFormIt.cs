@@ -176,12 +176,10 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        systemUnderTest.WaitForAssertion(()=>{
         Assert.That(
             () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-        
-        }, TimeSpan.FromSeconds(1));
+
         Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
     }
 
