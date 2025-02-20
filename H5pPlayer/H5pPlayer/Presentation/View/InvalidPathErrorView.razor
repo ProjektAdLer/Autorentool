@@ -1,0 +1,18 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic
+
+
+@if (InvalidPathErrorVm?.InvalidPathErrorIsActive == true)
+{
+    <h3>InvalidPathErrorView</h3>
+    
+    <div class="alert alert-danger" role="alert">
+        <strong>Error:</strong> @InvalidPathErrorVm.ErrorTextForInvalidPath
+    </div>
+    <p><strong>Invalid Path:</strong> @InvalidPathErrorVm.InvalidPath</p>
+}
+
+
+@code {
+    [Parameter]
+    public InvalidPathErrorViewModel? InvalidPathErrorVm { get; set; }
+}

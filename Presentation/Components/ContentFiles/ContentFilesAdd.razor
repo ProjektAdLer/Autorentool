@@ -8,7 +8,14 @@
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
+@using H5pPlayer.Api
+@using H5pPlayer.BusinessLogic.Api.JavaScript
+@using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
+@using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
+@using Shared.Configuration
+@inject IJSRuntime JsRuntime
+
 <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
     <div class="flex justify-center py-2 2xl:py-3">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
@@ -61,7 +68,7 @@
     </Collapsable>
 
 </MudStack>
-
+@inject NavigationManager Navigation
 @code {
 
 
@@ -120,8 +127,21 @@
                     await InvokeAsync(async () => await DialogService.ShowMessageBox(@Localizer["Invocation.MessageBox.Title"], Localizer["Invocation.MessageBox.Message", file.Name]));
                     continue;
                 }
-
+                
                 await HandleFileAsync(file);
+                
+                // if (fileEnding.ToLowerInvariant()  == ".h5p")
+                // {
+                //     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                //     var baseUri = new Uri(Navigation.BaseUri); 
+                //     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                //     
+                //     Logger.LogTrace("Start H5P-Player with: " + 
+                //                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                //                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                //      
+                //      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                // }
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -136,7 +156,7 @@
             await _fileUpload.ResetAsync();
         }
     }
-
+   
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
         var zipStream = zipFile.OpenReadStream(1_000_000_000);
@@ -156,12 +176,15 @@
             if (entry.Length == 0) continue;
             var fileName = PathHelper.TrimFileName(entry.Name);
             var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
-            if (!AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+            fileEnding = fileEnding.Trim().ToLowerInvariant();
+            if (!AllowedFileEndings.Endings.Contains(fileEnding))
             {
+                
                 unsupportedFiles.Add(entry.FullName);
                 continue;
             }
-
+   
+                
             using var memoryStream = new MemoryStream();
             await entry.Open().CopyToAsync(memoryStream);
             memoryStream.Position = 0;
@@ -249,6 +272,71 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
+    private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
+    {
+        
+       
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters()
+        {
+            {"H5pZipSourcePath", h5pZipSourcePath},
+            {"UnzippedH5psPath", unzippedH5psPath}
+        };
+        
+        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+
+        // Warten, bis der Dialog geschlossen wird
+        var result = await dialog.Result;
+        var javaScriptAdapter = new CallJavaScriptAdapter(JsRuntime);
+        var dataAccess = new FileSystemDataAccess();
+        ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
+        // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
+        if (result.Canceled)
+        {
+            // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
+            Console.WriteLine("Der Dialog wurde abgebrochen oder geschlossen.");
+            
+            await terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+            try
+            {
+                 await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        else
+        {
+            // Der Dialog wurde mit einem Ergebnis geschlossen, hier können Sie das Ergebnis verarbeiten
+            var dialogData = result.Data;
+            Console.WriteLine("Dialog wurde mit Ergebnis geschlossen: " + dialogData);
+            await terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+           
+            try
+            {
+                await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    
+
+    
     private void ToggleSpinner()
     {
         Working = !Working;

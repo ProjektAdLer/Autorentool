@@ -61,6 +61,8 @@ jobs:
           - IntegrationTest
           - PresentationTest
           - SharedTest
+          - H5pPlayer/H5pPlayerTest
+          
     steps:
       # checkout the repo
       - uses: actions/checkout@v4
@@ -107,7 +109,7 @@ jobs:
         uses: coverallsapp/github-action@v2.3.0
         with:
           parallel-finished: true
-          carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest"
+          carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest, run-H5pPlayerTest"
           
   send-summary:
     runs-on: ubuntu-latest

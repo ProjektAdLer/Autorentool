@@ -28,6 +28,7 @@ using FluentValidation;
 using Generator.API;
 using Generator.ATF;
 using Generator.WorldExport;
+using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
@@ -290,6 +291,8 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
     {
+        CleanupH5pPlayer();
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -330,5 +333,16 @@ public class Startup
         });
         app.ConfigureElectronWindow(out var window);
         ElectronDialogManager.BackupBrowserWindow = window;
+    }
+
+    /// <summary>
+    /// During the start process of the authoring tool we trigger the cleanup of the h5p-player
+    /// For example, we delete the temporary files that are only needed to play the H5Ps and remain in the event of an uncontrolled crash. 
+    /// </summary>
+    private static void CleanupH5pPlayer()
+    {
+        var cleanupH5pPlayerPortFactory = new CleanupH5pPlayerPortFactory();
+        var cleanupH5pPlayerPort = cleanupH5pPlayerPortFactory.CreateCleanupH5pPlayerPort();
+        cleanupH5pPlayerPort.CleanDirectoryForTemporaryH5psInWwwroot();
     }
 }
