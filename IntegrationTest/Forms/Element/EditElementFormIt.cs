@@ -182,11 +182,11 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
             Throws.Nothing);
         systemUnderTest.WaitForAssertion(() =>
             {
-                assertionAttempts++;
                 Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+                assertionAttempts++;
             },
             TimeSpan.FromSeconds(3));
-        Console.WriteLine($@"Assertion attempts: {assertionAttempts}");
+        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
