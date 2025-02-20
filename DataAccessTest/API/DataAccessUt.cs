@@ -175,7 +175,10 @@ public class DataAccessUt
     // ANF-ID: [ASN0002]
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
-        var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        var fileSystem = Environment.OSVersion.Platform == PlatformID.Win32NT
+            ? ResourceHelper.PrepareWindowsFileSystemWithResources()
+            : ResourceHelper.PrepareUnixFileSystemWithResources();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
         xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
@@ -206,7 +209,9 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: fileSystem, contentHandler: contentFileHandler);
 
-        var loadedWorld = await systemUnderTest.ImportLearningWorldFromArchiveAsync("C:\\zips\\import_test.zip");
+        var loadedWorld =
+            await systemUnderTest.ImportLearningWorldFromArchiveAsync(Path.Combine(basePath, "zips",
+                "import_test.zip"));
 
         await contentFileHandler.Received()
             .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>());
@@ -226,6 +231,7 @@ public class DataAccessUt
     // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
     {
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
         var mapper = Substitute.For<IMapper>();
         var filesystem = new MockFileSystem();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -250,9 +256,10 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: filesystem);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld, "C:\\export_test.zip");
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld,
+            Path.Combine(basePath, "export_test.zip"));
 
-        var expectedZip = ZipExtensions.GetZipArchive(filesystem, "C:\\export_test.zip");
+        var expectedZip = ZipExtensions.GetZipArchive(filesystem, Path.Combine(basePath, "export_test.zip"));
         Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
 
         var png = expectedZip.Entries[1];
