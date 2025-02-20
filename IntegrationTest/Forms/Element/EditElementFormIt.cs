@@ -162,6 +162,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        var assertionAttempts = 0;
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
@@ -179,8 +180,13 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(
             () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-        systemUnderTest.WaitForAssertion(() => { Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel); },
+        systemUnderTest.WaitForAssertion(() =>
+            {
+                assertionAttempts++;
+                Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+            },
             TimeSpan.FromSeconds(3));
+        Console.WriteLine($@"Assertion attempts: {assertionAttempts}");
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
