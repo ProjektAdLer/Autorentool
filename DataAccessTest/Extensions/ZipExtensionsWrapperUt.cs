@@ -151,7 +151,7 @@ public class ZipExtensionsWrapperUt
     /// Implementing tested with OpenRead. It would be better if a mock file would be constructed using the TestingHelpers that we are not allowed to access.
     /// </summary>
     [Test]
-    public void GetZipArchiveFileCannotBeRead_ThrowsIOException()
+    public void GetZipArchive_FileCannotBeRead_ThrowsIOException()
     {
         var fileSystemMock = Substitute.For<IFileSystem>();
         string archivePath = Path.Combine(_basePath, "test.zip");
