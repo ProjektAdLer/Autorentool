@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +48,7 @@ public class LearningOutcomesSpaceOverviewUt
     {
         var learningOutcomeCollection = new LearningOutcomeCollectionViewModel
         {
-            LearningOutcomes = new List<ILearningOutcomeViewModel>()
+            LearningOutcomes = new ObservableCollection<ILearningOutcomeViewModel>()
                 { ViewModelProvider.GetLearningOutcome(true), ViewModelProvider.GetLearningOutcome() }
         };
 
