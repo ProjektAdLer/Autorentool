@@ -5,6 +5,7 @@
   },
   "name": "AuthoringTool",
   "author": "Team AdLer",
+  "aspCoreBackendPort": "random",
   "singleInstance": false,
   "environment": "Production",
   "build": {
