@@ -140,9 +140,13 @@ public class Startup
         var shellWrapper = new ShellWrapper();
         services.AddSingleton<IShellWrapper, ShellWrapper>(_ => shellWrapper);
 
+        var readAuthService = new ReadAuthService();
+        services.AddSingleton<IReadAuthService, ReadAuthService>(_ => readAuthService);
+
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)
         {
+            readAuthService.ReadAuth();
             services.AddSingleton<IShutdownManager, ElectronShutdownManager>();
             services.AddSingleton<IElectronDialogManager, ElectronDialogManager>();
         }

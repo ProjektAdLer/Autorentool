@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
+using ElectronSharp.API;
 
 namespace ElectronWrapper;
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -102,31 +102,5 @@ class DialogWrapper: IDialogWrapper
     {
         dialog.ShowErrorBox(title, content);
     }
-
-    /// <summary>
-    /// On macOS, this displays a modal dialog that shows a message and certificate information,
-    /// and gives the user the option of trusting/importing the certificate. If you provide a 
-    /// browserWindow argument the dialog will be attached to the parent window, making it modal.
-    /// </summary>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public Task ShowCertificateTrustDialogAsync(CertificateTrustDialogOptions options)
-    {
-        return dialog.ShowCertificateTrustDialogAsync(options);
-    }
-
-    /// <summary>
-    /// On macOS, this displays a modal dialog that shows a message and certificate information,
-    /// and gives the user the option of trusting/importing the certificate. If you provide a 
-    /// browserWindow argument the dialog will be attached to the parent window, making it modal.
-    /// </summary>
-    /// <param name="browserWindow"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public Task ShowCertificateTrustDialogAsync(BrowserWindow browserWindow, CertificateTrustDialogOptions options)
-    {
-        return dialog.ShowCertificateTrustDialogAsync(browserWindow.InnerBrowserWindow, options);
-    }
-
 
 }

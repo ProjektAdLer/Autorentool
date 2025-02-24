@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -17,88 +17,6 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     {
         autoUpdater = Electron.AutoUpdater;
     }
-
-    /// <summary>
-    /// Whether to automatically download an update when it is found. (Default is true)
-    /// </summary>
-    public bool AutoDownload
-    {
-        get => autoUpdater.AutoDownload;
-        set => autoUpdater.AutoDownload = value;
-    }
-
-    /// <summary>
-    /// Whether to automatically install a downloaded update on app quit (if `QuitAndInstall` was not called before).
-    /// 
-    /// Applicable only on Windows and Linux.
-    /// </summary>
-    public bool AutoInstallOnAppQuit
-    {
-        get => autoUpdater.AutoInstallOnAppQuit;
-
-        set => autoUpdater.AutoInstallOnAppQuit = value;
-    }
-
-    /// <summary>
-    /// *GitHub provider only.* Whether to allow update to pre-release versions. 
-    /// Defaults to "true" if application version contains prerelease components (e.g. "0.12.1-alpha.1", here "alpha" is a prerelease component), otherwise "false".
-    /// 
-    /// If "true", downgrade will be allowed("allowDowngrade" will be set to "true").
-    /// </summary>
-    public bool AllowPrerelease
-    {
-        get => autoUpdater.AllowPrerelease;
-        set => autoUpdater.AllowPrerelease = value;
-    }
-
-    /// <summary>
-    /// *GitHub provider only.* 
-    /// Get all release notes (from current version to latest), not just the latest (Default is false).
-    /// </summary>
-    public bool FullChangelog
-    {
-        get => autoUpdater.FullChangelog;
-        set => autoUpdater.FullChangelog = value;
-    }
-
-    /// <summary>
-    /// Whether to allow version downgrade (when a user from the beta channel wants to go back to the stable channel).
-    /// Taken in account only if channel differs (pre-release version component in terms of semantic versioning).
-    /// Default is false.
-    /// </summary>
-    public bool AllowDowngrade
-    {
-        get => autoUpdater.AllowDowngrade;
-        set => autoUpdater.AllowDowngrade = value;
-    }
-
-    /// <summary>
-    /// For test only.
-    /// </summary>
-    public string UpdateConfigPath => autoUpdater.UpdateConfigPath;
-
-    /// <summary>
-    /// The current application version
-    /// </summary>
-    public Task<SemVer> CurrentVersionAsync => autoUpdater.CurrentVersionAsync;
-
-    /// <summary>
-    /// Get the update channel. Not applicable for GitHub. 
-    /// Doesn’t return channel from the update configuration, only if was previously set.
-    /// </summary>
-    [Obsolete("Use the asynchronous version ChannelAsync instead")]
-    public string Channel => autoUpdater.Channel;
-
-    /// <summary>
-    /// Get the update channel. Not applicable for GitHub. 
-    /// Doesn’t return channel from the update configuration, only if was previously set.
-    /// </summary>
-    public Task<string> ChannelAsync => autoUpdater.ChannelAsync;
-
-    /// <summary>
-    /// The request headers.
-    /// </summary>
-    public Task<Dictionary<string, string>> RequestHeadersAsync => autoUpdater.RequestHeadersAsync;
 
     /// <summary>
     /// The request headers.
@@ -195,23 +113,5 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     public void QuitAndInstall(bool isSilent = false, bool isForceRunAfter = false)
     {
         autoUpdater.QuitAndInstall(isSilent, isForceRunAfter);
-    }
-
-    /// <summary>
-    /// Start downloading update manually. You can use this method if "AutoDownload" option is set to "false".
-    /// </summary>
-    /// <returns>Path to downloaded file.</returns>
-    public Task<string> DownloadUpdateAsync()
-    {
-        return autoUpdater.DownloadUpdateAsync();
-    }
-
-    /// <summary>
-    /// Feed URL.
-    /// </summary>
-    /// <returns>Feed URL.</returns>
-    public Task<string> GetFeedUrlAsync()
-    {
-        return autoUpdater.GetFeedURLAsync();
     }
 }

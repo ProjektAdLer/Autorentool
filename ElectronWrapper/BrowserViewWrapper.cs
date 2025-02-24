@@ -1,5 +1,5 @@
-﻿using ElectronNET.API;
-using ElectronNET.API.Entities;
+﻿using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 using System.Threading.Tasks;
 
 
@@ -39,18 +39,6 @@ class BrowserViewWrapper : IBrowserViewWrapper
 	/// Render and control web pages.
 	/// </summary>
 	public WebContents WebContents => browserView.WebContents;
-
-	//Set Methode ist Internal also hier nicht möglich?
-	/// <summary>
-	/// Resizes and moves the view to the supplied bounds relative to the window.
-	/// 
-	/// (experimental)
-	/// </summary>
-	public Rectangle Bounds
-	{
-		get => browserView.Bounds;
-		set => browserView.Bounds = value;
-	}
 	/*
 	/// <summary>
 	/// BrowserView

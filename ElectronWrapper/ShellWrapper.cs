@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -74,28 +74,5 @@ public class ShellWrapper : IShellWrapper
     public void Beep()
     {
         shell.Beep();
-    }
-
-    /// <summary>
-    /// Creates or updates a shortcut link at shortcutPath.
-    /// </summary>
-    /// <param name="shortcutPath">The path to the shortcut.</param>
-    /// <param name="operation">Default is <see cref="ShortcutLinkOperation.Create"/></param>
-    /// <param name="options">Structure of a shortcut.</param>
-    /// <returns>Whether the shortcut was created successfully.</returns>
-    public Task<bool> WriteShortcutLinkAsync(string shortcutPath, ShortcutLinkOperation operation, ShortcutDetails options)
-    {
-        return shell.WriteShortcutLinkAsync(shortcutPath, operation, options);
-    }
-
-    /// <summary>
-    /// Resolves the shortcut link at shortcutPath.
-    /// An exception will be thrown when any error happens.
-    /// </summary>
-    /// <param name="shortcutPath">The path tot the shortcut.</param>
-    /// <returns><see cref="ShortcutDetails"/> of the shortcut.</returns>
-    public Task<ShortcutDetails> ReadShortcutLinkAsync(string shortcutPath)
-    {
-        return shell.ReadShortcutLinkAsync(shortcutPath);
     }
 }

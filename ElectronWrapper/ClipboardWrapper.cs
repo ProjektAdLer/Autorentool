@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 
 namespace ElectronWrapper;
@@ -77,55 +77,6 @@ class ClipboardWrapper : IClipboardWrapper
     public void WriteRtf(string text, string type = "")
     {
         clipboard.WriteRTF(text, type);
-    }
-
-
-    /// <summary>
-    /// Returns an Object containing title and url keys representing 
-    /// the bookmark in the clipboard. The title and url values will 
-    /// be empty strings when the bookmark is unavailable.
-    /// </summary>
-    /// <returns></returns>
-    public Task<ReadBookmark> ReadBookmarkAsync()
-    {
-        return clipboard.ReadBookmarkAsync();
-    }
-
-    /// <summary>
-    /// Writes the title and url into the clipboard as a bookmark.
-    /// 
-    /// Note: Most apps on Windows don’t support pasting bookmarks
-    /// into them so you can use clipboard.write to write both a 
-    /// bookmark and fallback text to the clipboard.
-    /// </summary>
-    /// <param name="title"></param>
-    /// <param name="url"></param>
-    /// <param name="type"></param>
-    public void WriteBookmark(string title, string url, string type = "")
-    {
-        clipboard.WriteBookmark(title, url, type);
-    }
-
-
-    /// <summary>
-    /// macOS: The text on the find pasteboard. This method uses synchronous IPC
-    /// when called from the renderer process. The cached value is reread from the
-    /// find pasteboard whenever the application is activated.
-    /// </summary>
-    /// <returns></returns>
-    public Task<string> ReadFindTextAsync()
-    {
-        return clipboard.ReadFindTextAsync();
-    }
-
-    /// <summary>
-    /// macOS: Writes the text into the find pasteboard as plain text. This method uses 
-    /// synchronous IPC when called from the renderer process.
-    /// </summary>
-    /// <param name="text"></param>
-    public void WriteFindText(string text)
-    {
-        clipboard.WriteFindText(text);
     }
 
     /// <summary>

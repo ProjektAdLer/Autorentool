@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API.Entities;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -11,6 +11,4 @@ public interface IDialogWrapper
     Task<MessageBoxResult> ShowMessageBoxAsync(MessageBoxOptions messageBoxOptions);
     Task<MessageBoxResult> ShowMessageBoxAsync(BrowserWindow browserWindow, string message);
     Task<MessageBoxResult> ShowMessageBoxAsync(BrowserWindow browserWindow, MessageBoxOptions messageBoxOptions);
-    Task ShowCertificateTrustDialogAsync(CertificateTrustDialogOptions options);
-    Task ShowCertificateTrustDialogAsync(BrowserWindow browserWindow, CertificateTrustDialogOptions options);
 }

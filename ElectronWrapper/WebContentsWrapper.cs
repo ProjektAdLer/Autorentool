@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -37,16 +37,6 @@ class WebContentsWrapper : IWebContentsWrapper
     /// </summary>
     public Session Session => webContents.Session;
 
-
-    /// <summary>
-    /// Emitted when the renderer process crashes or is killed.
-    /// </summary>
-    public event Action<bool> OnCrashed
-    {
-        add => webContents.OnCrashed += value;
-        remove => webContents.OnCrashed -= value;
-    }
-
     /// <summary>
     /// Emitted when the navigation is done, i.e. the spinner of the tab has
     /// stopped spinning, and the onload event was dispatched.
@@ -72,15 +62,6 @@ class WebContentsWrapper : IWebContentsWrapper
     public void OpenDevTools(OpenDevToolsOptions openDevToolsOptions)
     {
         webContents.OpenDevTools(openDevToolsOptions);
-    }
-
-    /// <summary>
-    /// Get system printers.
-    /// </summary>
-    /// <returns>printers</returns>
-    public Task<PrinterInfo[]> GetPrintersAsync()
-    {
-        return webContents.GetPrintersAsync();
     }
 
     /// <summary>

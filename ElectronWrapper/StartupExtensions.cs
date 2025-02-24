@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ElectronWrapper;
 
 /// <summary>
-/// Indirection so we don't have to reference ElectronNET.API directly in AuthoringToolLib
+/// Indirection so we don't have to reference ElectronSharp.API directly in AuthoringToolLib
 /// </summary>
 public static class StartupExtensions
 {
@@ -30,6 +30,7 @@ public static class StartupExtensions
 
     public static IApplicationBuilder ConfigureElectronWindow(this IApplicationBuilder appBuilder, out BrowserWindow? window)
     {
+        
         window = null;
         if (!HybridSupport.IsElectronActive) return appBuilder;
         window = new BrowserWindow(Task.Run(async () =>

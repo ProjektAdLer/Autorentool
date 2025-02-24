@@ -1,5 +1,5 @@
 ﻿using System;
-using ElectronNET.API;
+using ElectronSharp.API;
 
 namespace ElectronWrapper;
 

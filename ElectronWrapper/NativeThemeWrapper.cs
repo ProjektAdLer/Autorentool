@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -95,25 +95,6 @@ class NativeThemeWrapper : INativeThemeWrapper
     public Task<bool> ShouldUseDarkColorsAsync()
     {
         return nativeTheme.ShouldUseDarkColorsAsync();
-    }
-
-    /// <summary>
-    /// A <see cref="bool"/> for if the OS / Chromium currently has high-contrast mode enabled or is
-    /// being instructed to show a high-contrast UI.
-    /// </summary>
-    public Task<bool> ShouldUseHighContrastColorsAsync()
-    {
-
-        return nativeTheme.ShouldUseHighContrastColorsAsync();
-    }
-
-    /// <summary>
-    /// A <see cref="bool"/> for if the OS / Chromium currently has an inverted color scheme or is
-    /// being instructed to use an inverted color scheme.
-    /// </summary>
-    public Task<bool> ShouldUseInvertedColorSchemeAsync()
-    {
-        return nativeTheme.ShouldUseInvertedColorSchemeAsync();
     }
 
     /// <summary>
