@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -532,25 +533,25 @@ public interface IPresentationLogic
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
     void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string questionText, ICollection<ChoiceFormModel> choices, ChoiceFormModel correctChoice,
         int expectedCompletionTime);
 
     void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        string questionText, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
 
     void EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestionViewModel question,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string questionText, ICollection<ChoiceFormModel> choices, ChoiceFormModel correctChoice,
         int expectedCompletionTime);
 
     void EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestionViewModel question,
-        string questionText, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        string questionText, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
     void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel task,
         IMultipleChoiceQuestionViewModel question, bool isSingleResponse, string text,
-        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        ICollection<ChoiceFormModel> choices, ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
     void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
 

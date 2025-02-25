@@ -55,13 +55,14 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         FormModel.LearningContent = LearningContentFormModels[1];
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
-        
+
         var learningContent = LearningContentFormModels[0];
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(learningContent));
 
         _dialogServiceMock = Substitute.For<IDialogService>();
-        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+        _dialogServiceMock
+            .ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
         Context.Services.AddSingleton(_dialogServiceMock);
@@ -155,13 +156,13 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     }
 
     [Test]
-    [Retry(3)]
     // ANF-ID: [AWA0015]
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        var assertionAttempts = 0;
 
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[2].Find("div.toggler").Click();
@@ -179,7 +180,13 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         Assert.That(
             () => WorldPresenter.Received().EditLearningElementFromFormModel(ElementVm.Parent, ElementVm, FormModel),
             Throws.Nothing);
-        Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+        systemUnderTest.WaitForAssertion(() =>
+            {
+                Mapper.Received(1).Map(ElementVm, FormDataContainer.FormModel);
+                assertionAttempts++;
+            },
+            TimeSpan.FromSeconds(3));
+        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
     }
 
     private void AssertFieldsSet(IRenderedFragment systemUnderTest)
@@ -203,10 +210,10 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        
+
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
-        
+
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);

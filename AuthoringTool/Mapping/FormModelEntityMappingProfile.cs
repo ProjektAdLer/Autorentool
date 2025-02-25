@@ -37,10 +37,10 @@ public class FormModelEntityMappingProfile : Profile
         CreateMap<AdaptivityContentFormModel, AdaptivityContent>()
             .ReverseMap();
         CreateMap<StoryContentFormModel, StoryContent>();
-        
+
         CreateMap<ILearningContentFormModel, ILearningContent>()
             .IncludeAllDerived();
-        
+
         CreateMap<LinkContentFormModel, ILearningContent>()
             .As<LinkContent>();
         CreateMap<FileContentFormModel, ILearningContent>()
@@ -82,5 +82,7 @@ public class FormModelEntityMappingProfile : Profile
             .ForMember(x => x.CorrectChoice, opt => opt.MapFrom(x => x.CorrectChoices.First()))
             .ForMember(x => x.Difficulty, opt => opt.Ignore())
             .ForMember(x => x.Rules, opt => opt.Ignore());
+
+        CreateMap<ChoiceFormModel, Choice>();
     }
 }

@@ -13,7 +13,8 @@
       "icon": "../../../wwwroot/favicon.ico"
     },
     "linux": {
-      "icon": "../../../wwwroot/favicon.png"
+      "icon": "../../../wwwroot/favicon.png",
+      "compression": null
     },
     "mac": {
       "icon": "../../../wwwroot/favicon_highres.ico"

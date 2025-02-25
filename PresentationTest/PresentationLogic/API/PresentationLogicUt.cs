@@ -40,6 +40,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -1951,11 +1952,11 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var mockAdaptivityTaskViewModel = ViewModelProvider.GetAdaptivityTask();
         var mockAdaptivityTaskEntity = EntityProvider.GetAdaptivityTask();
-        var mockQuestionViewModel = ViewModelProvider.GetMultipleChoiceSingleResponseQuestion();
         var mockQuestionEntity = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
-        var mockChoicesViewModel = mockQuestionViewModel.Choices;
+        var mockChoicesFormModel = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         var mockChoicesEntity = mockQuestionEntity.Choices;
-        var mockCorrectChoiceViewModel = mockQuestionViewModel.CorrectChoice;
+        var mockCorrectChoiceFormModel = mockChoicesFormModel.First();
         var mockCorrectChoiceEntity = mockQuestionEntity.CorrectChoice;
         const QuestionDifficulty difficulty = QuestionDifficulty.Easy;
         const string questionText = "questionText";
@@ -1965,10 +1966,10 @@ public class PresentationLogicUt
             .Map<AdaptivityTask>(mockAdaptivityTaskViewModel)
             .Returns(mockAdaptivityTaskEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockChoicesViewModel)
+            .Map<ICollection<Choice>>(mockChoicesFormModel)
             .Returns(mockChoicesEntity);
         mockMapper
-            .Map<Choice>(mockCorrectChoiceViewModel)
+            .Map<Choice>(mockCorrectChoiceFormModel)
             .Returns(mockCorrectChoiceEntity);
         mockQuestionCommandFactory
             .GetCreateMultipleChoiceSingleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty,
@@ -1981,11 +1982,11 @@ public class PresentationLogicUt
                 questionCommandFactory: mockQuestionCommandFactory);
 
         systemUnderTest.CreateMultipleChoiceSingleResponseQuestion(mockAdaptivityTaskViewModel, difficulty,
-            questionText, mockChoicesViewModel, mockCorrectChoiceViewModel, expectedCompletionTime);
+            questionText, mockChoicesFormModel, mockCorrectChoiceFormModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesViewModel);
-        mockMapper.Received().Map<Choice>(mockCorrectChoiceViewModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesFormModel);
+        mockMapper.Received().Map<Choice>(mockCorrectChoiceFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -1999,11 +2000,12 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var mockAdaptivityTaskViewModel = ViewModelProvider.GetAdaptivityTask();
         var mockAdaptivityTaskEntity = EntityProvider.GetAdaptivityTask();
-        var mockQuestionViewModel = ViewModelProvider.GetMultipleChoiceMultipleResponseQuestion();
         var mockQuestionEntity = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
-        var mockChoicesViewModel = mockQuestionViewModel.Choices;
+        var mockChoicesFormModel = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         var mockChoicesEntity = mockQuestionEntity.Choices;
-        var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
+        var mockCorrectChoicesFormModel = new List<ChoiceFormModel>
+            { mockChoicesFormModel.First(), mockChoicesFormModel.Last() };
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
         const QuestionDifficulty difficulty = QuestionDifficulty.Easy;
         const string questionText = "questionText";
@@ -2013,10 +2015,10 @@ public class PresentationLogicUt
             .Map<AdaptivityTask>(mockAdaptivityTaskViewModel)
             .Returns(mockAdaptivityTaskEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockChoicesViewModel)
+            .Map<ICollection<Choice>>(mockChoicesFormModel)
             .Returns(mockChoicesEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockCorrectChoicesViewModel)
+            .Map<ICollection<Choice>>(mockCorrectChoicesFormModel)
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
             .GetCreateMultipleChoiceMultipleResponseQuestionCommand(mockAdaptivityTaskEntity, difficulty,
@@ -2029,11 +2031,11 @@ public class PresentationLogicUt
                 questionCommandFactory: mockQuestionCommandFactory);
 
         systemUnderTest.CreateMultipleChoiceMultipleResponseQuestion(mockAdaptivityTaskViewModel, difficulty,
-            questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
+            questionText, mockChoicesFormModel, mockCorrectChoicesFormModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesViewModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesFormModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -2047,9 +2049,10 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var mockQuestionViewModel = ViewModelProvider.GetMultipleChoiceSingleResponseQuestion();
         var mockQuestionEntity = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
-        var mockChoicesViewModel = mockQuestionViewModel.Choices;
+        var mockChoicesFormModel = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         var mockChoicesEntity = mockQuestionEntity.Choices;
-        var mockCorrectChoiceViewModel = mockQuestionViewModel.CorrectChoice;
+        var mockCorrectChoiceFormModel = mockChoicesFormModel.First();
         var mockCorrectChoiceEntity = mockQuestionEntity.CorrectChoice;
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
@@ -2058,10 +2061,10 @@ public class PresentationLogicUt
             .Map<MultipleChoiceSingleResponseQuestion>(mockQuestionViewModel)
             .Returns(mockQuestionEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockChoicesViewModel)
+            .Map<ICollection<Choice>>(mockChoicesFormModel)
             .Returns(mockChoicesEntity);
         mockMapper
-            .Map<Choice>(mockCorrectChoiceViewModel)
+            .Map<Choice>(mockCorrectChoiceFormModel)
             .Returns(mockCorrectChoiceEntity);
         mockQuestionCommandFactory
             .GetEditMultipleChoiceSingleResponseQuestionCommand(mockQuestionEntity,
@@ -2073,11 +2076,11 @@ public class PresentationLogicUt
             questionCommandFactory: mockQuestionCommandFactory);
 
         systemUnderTest.EditMultipleChoiceSingleResponseQuestion(mockQuestionViewModel,
-            questionText, mockChoicesViewModel, mockCorrectChoiceViewModel, expectedCompletionTime);
+            questionText, mockChoicesFormModel, mockCorrectChoiceFormModel, expectedCompletionTime);
 
         mockMapper.Received().Map<MultipleChoiceSingleResponseQuestion>(mockQuestionViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesViewModel);
-        mockMapper.Received().Map<Choice>(mockCorrectChoiceViewModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesFormModel);
+        mockMapper.Received().Map<Choice>(mockCorrectChoiceFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -2091,9 +2094,11 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var mockQuestionViewModel = ViewModelProvider.GetMultipleChoiceMultipleResponseQuestion();
         var mockQuestionEntity = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
-        var mockChoicesViewModel = mockQuestionViewModel.Choices;
+        var mockChoicesFormModel = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         var mockChoicesEntity = mockQuestionEntity.Choices;
-        var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
+        var mockCorrectChoicesFormModel = new List<ChoiceFormModel>
+            { mockChoicesFormModel.First(), mockChoicesFormModel.Last() };
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
         const string questionText = "questionText";
         const int expectedCompletionTime = 10;
@@ -2102,10 +2107,10 @@ public class PresentationLogicUt
             .Map<MultipleChoiceMultipleResponseQuestion>(mockQuestionViewModel)
             .Returns(mockQuestionEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockChoicesViewModel)
+            .Map<ICollection<Choice>>(mockChoicesFormModel)
             .Returns(mockChoicesEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockCorrectChoicesViewModel)
+            .Map<ICollection<Choice>>(mockCorrectChoicesFormModel)
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
             .GetEditMultipleChoiceMultipleResponseQuestionCommand(mockQuestionEntity,
@@ -2117,11 +2122,11 @@ public class PresentationLogicUt
             questionCommandFactory: mockQuestionCommandFactory);
 
         systemUnderTest.EditMultipleChoiceMultipleResponseQuestion(mockQuestionViewModel,
-            questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
+            questionText, mockChoicesFormModel, mockCorrectChoicesFormModel, expectedCompletionTime);
 
         mockMapper.Received().Map<MultipleChoiceMultipleResponseQuestion>(mockQuestionViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesViewModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesFormModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
@@ -2137,9 +2142,11 @@ public class PresentationLogicUt
         var mockAdaptivityTaskEntity = EntityProvider.GetAdaptivityTask();
         var mockQuestionViewModel = ViewModelProvider.GetMultipleChoiceMultipleResponseQuestion();
         var mockQuestionEntity = EntityProvider.GetMultipleChoiceMultipleResponseQuestion();
-        var mockChoicesViewModel = mockQuestionViewModel.Choices;
+        var mockChoicesFormModel = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         var mockChoicesEntity = mockQuestionEntity.Choices;
-        var mockCorrectChoicesViewModel = mockQuestionViewModel.CorrectChoices;
+        var mockCorrectChoicesFormModel = new List<ChoiceFormModel>
+            { mockChoicesFormModel.First(), mockChoicesFormModel.Last() };
         var mockCorrectChoicesEntity = mockQuestionEntity.CorrectChoices;
         const bool isSingleResponse = true;
         const string questionText = "questionText";
@@ -2152,10 +2159,10 @@ public class PresentationLogicUt
             .Map<IMultipleChoiceQuestion>(mockQuestionViewModel)
             .Returns(mockQuestionEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockChoicesViewModel)
+            .Map<ICollection<Choice>>(mockChoicesFormModel)
             .Returns(mockChoicesEntity);
         mockMapper
-            .Map<ICollection<Choice>>(mockCorrectChoicesViewModel)
+            .Map<ICollection<Choice>>(mockCorrectChoicesFormModel)
             .Returns(mockCorrectChoicesEntity);
         mockQuestionCommandFactory
             .GetEditMultipleChoiceQuestionWithTypeChangeCommand(mockAdaptivityTaskEntity, mockQuestionEntity,
@@ -2169,12 +2176,12 @@ public class PresentationLogicUt
 
         systemUnderTest.EditMultipleChoiceQuestionWithTypeChange(mockAdaptivityTaskViewModel, mockQuestionViewModel,
             isSingleResponse,
-            questionText, mockChoicesViewModel, mockCorrectChoicesViewModel, expectedCompletionTime);
+            questionText, mockChoicesFormModel, mockCorrectChoicesFormModel, expectedCompletionTime);
 
         mockMapper.Received().Map<AdaptivityTask>(mockAdaptivityTaskViewModel);
         mockMapper.Received().Map<IMultipleChoiceQuestion>(mockQuestionViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesViewModel);
-        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesViewModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockChoicesFormModel);
+        mockMapper.Received().Map<ICollection<Choice>>(mockCorrectChoicesFormModel);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 
