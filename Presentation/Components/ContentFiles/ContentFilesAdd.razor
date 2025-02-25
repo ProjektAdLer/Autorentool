@@ -129,18 +129,20 @@
                 
                 await HandleFileAsync(file);
                 
-                // if (fileEnding.ToLowerInvariant()  == ".h5p")
-                // {
-                //     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                //     var baseUri = new Uri(Navigation.BaseUri); 
-                //     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
-                //     
-                //     Logger.LogTrace("Start H5P-Player with: " + 
-                //                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                //                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-                //      
-                //      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
-                // }
+#if DEBUG
+                 if (fileEnding.ToLowerInvariant()  == ".h5p")
+                 {
+                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                     var baseUri = new Uri(Navigation.BaseUri); 
+                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                     
+                     Logger.LogTrace("Start H5P-Player with: " + 
+                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                      
+                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                 }
+#endif
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -277,7 +279,7 @@
        
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -296,6 +298,7 @@
         var dataAccess = new FileSystemDataAccess();
         ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
         // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
+        if(result == null) return;
         if (result.Canceled)
         {
             // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
