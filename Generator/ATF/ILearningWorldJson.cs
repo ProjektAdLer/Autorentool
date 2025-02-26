@@ -6,7 +6,7 @@ namespace Generator.ATF;
 public interface ILearningWorldJson
 {
     string WorldName { get; set; }
-
+    // ReSharper disable once InconsistentNaming
     string WorldUUID { get; set; }
 
     string WorldDescription { get; set; }

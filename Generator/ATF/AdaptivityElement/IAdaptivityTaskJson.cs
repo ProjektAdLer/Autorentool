@@ -6,6 +6,7 @@ namespace Generator.ATF.AdaptivityElement;
 public interface IAdaptivityTaskJson
 {
     int TaskId { get; set; }
+    // ReSharper disable once InconsistentNaming
     string TaskUUID { get; set; }
     string TaskTitle { get; set; }
     bool Optional { get; set; }
