@@ -297,7 +297,7 @@ public class UserWebApiServicesUt
         response.Content = new StringContent(responseContent);
         mockedHttp
             .When("*")
-            .Respond(response);
+            .Respond(_ =>response);
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<ProgressMessageHandler>())
@@ -397,7 +397,7 @@ public class UserWebApiServicesUt
         response.Content = new StringContent("invalid response");
         mockedHttp
             .When("*")
-            .Respond(response);
+            .Respond(_=>response);
         var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
         mockHttpClientFactory
             .CreateClient(Arg.Any<HttpMessageHandler>())
@@ -497,7 +497,7 @@ public class UserWebApiServicesUt
             CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, fileSystem: mockfileSystem);
 
         // Act & Assert
-        var ex = Assert.ThrowsAsync<Exception>(async () =>
+        Assert.ThrowsAsync<Exception>(async () =>
             await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
     }
 
