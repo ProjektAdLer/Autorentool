@@ -21,24 +21,24 @@ class BrowserViewWrapper : IBrowserViewWrapper
 			Task.Delay(100).Wait();
 		}
 
-		browserView = tmp.Result;
+		_browserView = tmp.Result;
 	}
 
 
-	private BrowserView browserView;
+	private readonly BrowserView _browserView;
 	/// <summary>
 	/// Gets the identifier.
 	/// </summary>
 	/// <value>
 	/// The identifier.
 	/// </value>
-	public int Id => browserView.Id;
+	public int Id => _browserView.Id;
 
 	//Set Methode ist Internal also hier nicht möglich?
 	/// <summary>
 	/// Render and control web pages.
 	/// </summary>
-	public WebContents WebContents => browserView.WebContents;
+	public WebContents WebContents => _browserView.WebContents;
 	/*
 	/// <summary>
 	/// BrowserView
@@ -52,7 +52,7 @@ class BrowserViewWrapper : IBrowserViewWrapper
 	/// <param name="options"></param>
 	public void SetAutoResize(AutoResizeOptions options)
 	{
-		browserView.SetAutoResize(options);
+		_browserView.SetAutoResize(options);
 	}
 
 	/// <summary>
@@ -63,7 +63,7 @@ class BrowserViewWrapper : IBrowserViewWrapper
 	/// <param name="color">Color in #aarrggbb or #argb form. The alpha channel is optional.</param>
 	public void SetBackgroundColor(string color)
 	{
-		browserView.SetBackgroundColor(color);
+		_browserView.SetBackgroundColor(color);
 	}
 
 	// JsonSerializer nur im Original Objekt nötig.

@@ -10,7 +10,7 @@ namespace ElectronWrapper;
 /// </summary>
 class CookiesWrapper : ICookiesWrapper
 {
-    private Cookies cookies;
+    private readonly Cookies _cookies;
 
     public CookiesWrapper()
     {
@@ -20,7 +20,7 @@ class CookiesWrapper : ICookiesWrapper
         {
             Task.Delay(100).Wait();
         }
-        cookies = temp.Result.WebContents.Session.Cookies;
+        _cookies = temp.Result.WebContents.Session.Cookies;
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ class CookiesWrapper : ICookiesWrapper
     /// <value>
     /// The identifier.
     /// </value>
-    public int Id => cookies.Id;
+    public int Id => _cookies.Id;
 
 
     /// <summary>
@@ -37,8 +37,8 @@ class CookiesWrapper : ICookiesWrapper
     /// </summary>
     public event Action<Cookie, CookieChangedCause, bool> OnChanged
     {
-        add => cookies.OnChanged += value;
-        remove => cookies.OnChanged -= value;
+        add => _cookies.OnChanged += value;
+        remove => _cookies.OnChanged -= value;
     }
 
 
@@ -50,7 +50,7 @@ class CookiesWrapper : ICookiesWrapper
     /// <returns>A task which resolves an array of cookie objects.</returns>
     public Task<Cookie[]> GetAsync(CookieFilter filter)
     {
-        return cookies.GetAsync(filter);
+        return _cookies.GetAsync(filter);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ class CookiesWrapper : ICookiesWrapper
     /// <returns></returns>
     public Task SetAsync(CookieDetails details)
     {
-        return cookies.SetAsync(details);
+        return _cookies.SetAsync(details);
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ class CookiesWrapper : ICookiesWrapper
     /// <returns>A task which resolves when the cookie has been removed</returns>
     public Task RemoveAsync(string url, string name)
     {
-        return cookies.RemoveAsync(url, name);
+        return _cookies.RemoveAsync(url, name);
     }
 
     /// <summary>
@@ -80,6 +80,6 @@ class CookiesWrapper : ICookiesWrapper
     /// <returns>A task which resolves when the cookie store has been flushed</returns>
     public Task FlushStoreAsync()
     {
-        return cookies.FlushStoreAsync();
+        return _cookies.FlushStoreAsync();
     }
 }

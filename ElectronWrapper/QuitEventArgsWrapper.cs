@@ -7,17 +7,17 @@ namespace ElectronWrapper;
 /// </summary>
 class QuitEventArgsWrapper : IQuitEventArgsWrapper
 {
-    private QuitEventArgs quitEventArgs;
+    private readonly QuitEventArgs _quitEventArgs;
 
     public QuitEventArgsWrapper(QuitEventArgs args)
     {
-        quitEventArgs = args;
+        _quitEventArgs = args;
     }
     /// <summary>
     /// Will prevent the default behaviour, which is terminating the application.
     /// </summary>
     public void PreventDefault()
     {
-        quitEventArgs.PreventDefault();
+        _quitEventArgs.PreventDefault();
     }
 }

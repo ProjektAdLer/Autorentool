@@ -9,20 +9,16 @@ namespace ElectronWrapper;
 /// </summary>
 public class ShellWrapper : IShellWrapper
 {
-    private Shell shell;
+    private readonly Shell _shell = Electron.Shell;
 
 
-    public ShellWrapper()
-    {
-        shell = Electron.Shell;
-    }
     /// <summary>
     /// Show the given file in a file manager. If possible, select the file.
     /// </summary>
     /// <param name="fullPath">The full path to the directory / file.</param>
     public Task ShowItemInFolderAsync(string fullPath)
     {
-        return shell.ShowItemInFolderAsync(fullPath);
+        return _shell.ShowItemInFolderAsync(fullPath);
     }
 
     /// <summary>
@@ -32,7 +28,7 @@ public class ShellWrapper : IShellWrapper
     /// <returns>The error message corresponding to the failure if a failure occurred, otherwise <see cref="string.Empty"/>.</returns>
     public Task<string> OpenPathAsync(string path)
     {
-        return shell.OpenPathAsync(path);
+        return _shell.OpenPathAsync(path);
     }
 
     /// <summary>
@@ -43,7 +39,7 @@ public class ShellWrapper : IShellWrapper
     /// <returns>The error message corresponding to the failure if a failure occurred, otherwise <see cref="string.Empty"/>.</returns>
     public Task<string> OpenExternalAsync(string url)
     {
-        return shell.OpenExternalAsync(url);
+        return _shell.OpenExternalAsync(url);
     }
 
     /// <summary>
@@ -55,7 +51,7 @@ public class ShellWrapper : IShellWrapper
     /// <returns>The error message corresponding to the failure if a failure occurred, otherwise <see cref="string.Empty"/>.</returns>
     public Task<string> OpenExternalAsync(string url, OpenExternalOptions options)
     {
-        return shell.OpenExternalAsync(url, options);
+        return _shell.OpenExternalAsync(url, options);
     }
 
     /// <summary>
@@ -65,7 +61,7 @@ public class ShellWrapper : IShellWrapper
     /// <returns> Whether the item was successfully moved to the trash.</returns>
     public Task<bool> TrashItemAsync(string fullPath)
     {
-        return shell.TrashItemAsync(fullPath);
+        return _shell.TrashItemAsync(fullPath);
     }
 
     /// <summary>
@@ -73,6 +69,6 @@ public class ShellWrapper : IShellWrapper
     /// </summary>
     public void Beep()
     {
-        shell.Beep();
+        _shell.Beep();
     }
 }

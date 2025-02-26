@@ -11,11 +11,7 @@ namespace ElectronWrapper;
 /// </summary>
 class AppWrapper : IAppWrapper
 {
-    private App app;
-    public AppWrapper()
-    {
-        app = Electron.App;
-    }
+    private readonly App _app = Electron.App;
 
     /// <summary>
     /// Emitted when all windows have been closed.
@@ -28,8 +24,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action WindowAllClosed
     {
-        add => app.WindowAllClosed += value;
-        remove => app.WindowAllClosed -= value;
+        add => _app.WindowAllClosed += value;
+        remove => _app.WindowAllClosed -= value;
     }
 
     /// <summary>
@@ -42,8 +38,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<QuitEventArgs, Task> BeforeQuit
     {
-        add => app.BeforeQuit += value;
-        remove => app.BeforeQuit -= value;
+        add => _app.BeforeQuit += value;
+        remove => _app.BeforeQuit -= value;
     }
 
     /// <summary>
@@ -56,8 +52,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<QuitEventArgs, Task> WillQuit
     {
-        add => app.WillQuit += value;
-        remove => app.WillQuit -= value;
+        add => _app.WillQuit += value;
+        remove => _app.WillQuit -= value;
     }
 
     /// <summary>
@@ -67,8 +63,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<Task> Quitting
     {
-        add => app.Quitting += value;
-        remove => app.Quitting -= value;
+        add => _app.Quitting += value;
+        remove => _app.Quitting -= value;
     }
         
     /// <summary>
@@ -76,8 +72,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowBlur
     {
-        add => app.BrowserWindowBlur += value;
-        remove => app.BrowserWindowBlur -= value;
+        add => _app.BrowserWindowBlur += value;
+        remove => _app.BrowserWindowBlur -= value;
     }
 
     /// <summary>
@@ -85,8 +81,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowFocus
     {
-        add => app.BrowserWindowFocus += value;
-        remove => app.BrowserWindowFocus -= value;
+        add => _app.BrowserWindowFocus += value;
+        remove => _app.BrowserWindowFocus -= value;
     }
 
     /// <summary>
@@ -94,9 +90,9 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowCreated
     {
-        add => app.BrowserWindowCreated += value;
+        add => _app.BrowserWindowCreated += value;
 
-        remove => app.BrowserWindowCreated -= value;
+        remove => _app.BrowserWindowCreated -= value;
     }
 
     /// <summary>
@@ -104,8 +100,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action WebContentsCreated
     {
-        add => app.WebContentsCreated += value;
-        remove => app.WebContentsCreated -= value;
+        add => _app.WebContentsCreated += value;
+        remove => _app.WebContentsCreated -= value;
     }
 
     /// <summary>
@@ -113,14 +109,14 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action Ready
     {
-        add => app.Ready += value;
-        remove => app.Ready -= value;
+        add => _app.Ready += value;
+        remove => _app.Ready -= value;
     }
 
     /// <summary>
     /// Application host fully started.
     /// </summary>
-    public bool IsReady => app.IsReady;
+    public bool IsReady => _app.IsReady;
 
     /// <summary>
     /// Emitted when a MacOS user wants to open a URL with the application. Your application's Info.plist file must
@@ -128,8 +124,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action<string> OpenUrl
     {
-        add => app.OpenUrl += value;
-        remove => app.OpenUrl -= value;
+        add => _app.OpenUrl += value;
+        remove => _app.OpenUrl -= value;
     }
 
     /// <summary>
@@ -140,7 +136,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Quit()
     {
-        app.Quit();
+        _app.Quit();
     }
 
     /// <summary>
@@ -150,7 +146,7 @@ class AppWrapper : IAppWrapper
     /// <param name="exitCode">Exits immediately with exitCode. exitCode defaults to 0.</param>
     public void Exit(int exitCode = 0)
     {
-        app.Exit(exitCode);
+        _app.Exit(exitCode);
     }
 
     /// <summary>
@@ -165,7 +161,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Relaunch()
     {
-        app.Relaunch();
+        _app.Relaunch();
     }
 
     /// <summary>
@@ -183,7 +179,7 @@ class AppWrapper : IAppWrapper
     /// <param name="relaunchOptions">Options for the relaunch.</param>
     public void Relaunch(RelaunchOptions relaunchOptions)
     {
-        app.Relaunch(relaunchOptions);
+        _app.Relaunch(relaunchOptions);
     }
 
     /// <summary>
@@ -192,7 +188,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Focus()
     {
-        app.Focus();
+        _app.Focus();
     }
 
     /// <summary>
@@ -203,7 +199,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Focus(FocusOptions focusOptions)
     {
-        app.Focus();
+        _app.Focus();
     }
 
     /// <summary>
@@ -211,7 +207,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public async Task<string> GetAppPathAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetAppPathAsync(cancellationToken);
+        return await _app.GetAppPathAsync(cancellationToken);
     }
 
     /// <summary>
@@ -224,7 +220,7 @@ class AppWrapper : IAppWrapper
     /// <param name="path">A custom path for your logs. Must be absolute.</param>
     public void SetAppLogsPath(string path)
     {
-        app.SetAppLogsPath(path);
+        _app.SetAppLogsPath(path);
     }
 
     /// <summary>
@@ -237,7 +233,7 @@ class AppWrapper : IAppWrapper
     /// <returns>A path to a special directory or file associated with name.</returns>
     public async Task<string> GetPathAsync(PathName pathName, CancellationToken cancellationToken = default)
     {
-        return await app.GetPathAsync(pathName, cancellationToken);
+        return await _app.GetPathAsync(pathName, cancellationToken);
     }
 
     /// <summary>
@@ -254,7 +250,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void SetPath(PathName name, string path)
     {
-        app.SetPath(name, path);
+        _app.SetPath(name, path);
     }
 
     /// <summary>
@@ -264,7 +260,7 @@ class AppWrapper : IAppWrapper
     /// <returns>The version of the loaded application.</returns>
     public async Task<string> GetVersionAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetVersionAsync(cancellationToken);
+        return await _app.GetVersionAsync(cancellationToken);
     }
 
     /// <summary>
@@ -277,7 +273,7 @@ class AppWrapper : IAppWrapper
     /// <returns>The current application locale.</returns>
     public async Task<string> GetLocaleAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetLocaleAsync(cancellationToken);
+        return await _app.GetLocaleAsync(cancellationToken);
     }
 
     /// <summary>
@@ -303,7 +299,7 @@ class AppWrapper : IAppWrapper
     /// </returns>
     public async Task<bool> RequestSingleInstanceLockAsync(Action<string[], string> newInstanceOpened, CancellationToken cancellationToken = default)
     {
-        return await app.RequestSingleInstanceLockAsync(newInstanceOpened, cancellationToken);
+        return await _app.RequestSingleInstanceLockAsync(newInstanceOpened, cancellationToken);
     }
 
     /// <summary>
@@ -312,7 +308,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void ReleaseSingleInstanceLock()
     {
-        app.ReleaseSingleInstanceLock();
+        _app.ReleaseSingleInstanceLock();
     }
 
     /// <summary>
@@ -323,7 +319,7 @@ class AppWrapper : IAppWrapper
     /// <param name="cancellationToken">The cancellation token.</param>
     public async Task<bool> HasSingleInstanceLockAsync(CancellationToken cancellationToken = default)
     {
-        return await app.HasSingleInstanceLockAsync(cancellationToken);
+        return await _app.HasSingleInstanceLockAsync(cancellationToken);
     }
 
     /// <summary>
@@ -336,7 +332,7 @@ class AppWrapper : IAppWrapper
     /// </returns>
     public async Task<ProcessMetric[]> GetAppMetricsAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetAppMetricsAsync(cancellationToken);
+        return await _app.GetAppMetricsAsync(cancellationToken);
     }
 
     /// <summary>
@@ -347,13 +343,13 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public async Task<GPUFeatureStatus> GetGpuFeatureStatusAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetGpuFeatureStatusAsync(cancellationToken);
+        return await _app.GetGpuFeatureStatusAsync(cancellationToken);
     }
 
     /// <summary>
     /// A <see cref="CommandLine"/> object that allows you to read and manipulate the command line arguments that Chromium uses.
     /// </summary>
-    public CommandLine CommandLine => app.CommandLine;
+    public CommandLine CommandLine => _app.CommandLine;
 
     /// <summary>
     /// Show the app's about panel options. These options can be overridden with
@@ -361,7 +357,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void ShowAboutPanel()
     {
-        app.ShowAboutPanel();
+        _app.ShowAboutPanel();
     }
 
     /// <summary>
@@ -377,7 +373,7 @@ class AppWrapper : IAppWrapper
     /// <param name="options">About panel options.</param>
     public void SetAboutPanelOptions(AboutPanelOptions options)
     {
-        app.SetAboutPanelOptions(options);
+        _app.SetAboutPanelOptions(options);
     }
 
     /// <summary>
@@ -386,7 +382,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void On(string eventName, Action fn)
-        => app.On(eventName, fn);
+        => _app.On(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module.
@@ -394,7 +390,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void On(string eventName, Action<object> fn)
-        => app.On(eventName, fn);
+        => _app.On(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module once.
@@ -402,7 +398,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void Once(string eventName, Action fn)
-        => app.Once(eventName, fn);
+        => _app.Once(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module once.
@@ -410,5 +406,5 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void Once(string eventName, Action<object> fn)
-        => app.Once(eventName, fn);
+        => _app.Once(eventName, fn);
 }

@@ -11,19 +11,14 @@ namespace ElectronWrapper;
 /// </summary>
 class AutoUpdaterWrapper : IAutoUpdaterWrapper
 {
-    private AutoUpdater autoUpdater;
-
-    public AutoUpdaterWrapper()
-    {
-        autoUpdater = Electron.AutoUpdater;
-    }
+    private readonly AutoUpdater _autoUpdater = Electron.AutoUpdater;
 
     /// <summary>
     /// The request headers.
     /// </summary>
     public Dictionary<string, string> RequestHeaders
     {
-        set => autoUpdater.RequestHeaders = value;
+        set => _autoUpdater.RequestHeaders = value;
     }
 
     /// <summary>
@@ -31,8 +26,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action<string> OnError
     {
-        add => autoUpdater.OnError += value;
-        remove => autoUpdater.OnError -= value;
+        add => _autoUpdater.OnError += value;
+        remove => _autoUpdater.OnError -= value;
     }
 
     /// <summary>
@@ -40,8 +35,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action OnCheckingForUpdate
     {
-        add => autoUpdater.OnCheckingForUpdate += value;
-        remove => autoUpdater.OnCheckingForUpdate -= value;
+        add => _autoUpdater.OnCheckingForUpdate += value;
+        remove => _autoUpdater.OnCheckingForUpdate -= value;
     }
 
     /// <summary>
@@ -50,8 +45,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action<UpdateInfo> OnUpdateAvailable
     {
-        add => autoUpdater.OnUpdateAvailable += value;
-        remove => autoUpdater.OnUpdateAvailable -= value;
+        add => _autoUpdater.OnUpdateAvailable += value;
+        remove => _autoUpdater.OnUpdateAvailable -= value;
     }
 
     /// <summary>
@@ -59,8 +54,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action<UpdateInfo> OnUpdateNotAvailable
     {
-        add => autoUpdater.OnUpdateNotAvailable += value;
-        remove => autoUpdater.OnUpdateNotAvailable -= value;
+        add => _autoUpdater.OnUpdateNotAvailable += value;
+        remove => _autoUpdater.OnUpdateNotAvailable -= value;
     }
 
     /// <summary>
@@ -68,8 +63,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action<ProgressInfo> OnDownloadProgress
     {
-        add => autoUpdater.OnDownloadProgress += value;
-        remove => autoUpdater.OnDownloadProgress -= value;
+        add => _autoUpdater.OnDownloadProgress += value;
+        remove => _autoUpdater.OnDownloadProgress -= value;
     }
 
     /// <summary>
@@ -77,8 +72,8 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// </summary>
     public event Action<UpdateInfo> OnUpdateDownloaded
     {
-        add => autoUpdater.OnUpdateDownloaded += value;
-        remove => autoUpdater.OnUpdateDownloaded -= value;
+        add => _autoUpdater.OnUpdateDownloaded += value;
+        remove => _autoUpdater.OnUpdateDownloaded -= value;
     }
 
     /// <summary>
@@ -87,7 +82,7 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// <returns></returns>
     public Task<UpdateCheckResult> CheckForUpdatesAsync()
     {
-        return autoUpdater.CheckForUpdatesAsync();
+        return _autoUpdater.CheckForUpdatesAsync();
     }
 
     /// <summary>
@@ -98,7 +93,7 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// <returns></returns>
     public Task<UpdateCheckResult> CheckForUpdatesAndNotifyAsync()
     {
-        return autoUpdater.CheckForUpdatesAndNotifyAsync();
+        return _autoUpdater.CheckForUpdatesAndNotifyAsync();
     }
 
     /// <summary>
@@ -112,6 +107,6 @@ class AutoUpdaterWrapper : IAutoUpdaterWrapper
     /// <param name="isForceRunAfter">Run the app after finish even on silent install. Not applicable for macOS. Ignored if `isSilent` is set to `false`.</param>
     public void QuitAndInstall(bool isSilent = false, bool isForceRunAfter = false)
     {
-        autoUpdater.QuitAndInstall(isSilent, isForceRunAfter);
+        _autoUpdater.QuitAndInstall(isSilent, isForceRunAfter);
     }
 }

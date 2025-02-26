@@ -28,7 +28,7 @@ public static class StartupExtensions
         return services;
     }
 
-    public static IApplicationBuilder ConfigureElectronWindow(this IApplicationBuilder appBuilder, out BrowserWindow? window)
+    public static IApplicationBuilder ElectronWindow(this IApplicationBuilder appBuilder, out BrowserWindow? window)
     {
         
         window = null;

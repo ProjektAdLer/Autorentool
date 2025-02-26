@@ -10,12 +10,7 @@ namespace ElectronWrapper;
 /// </summary>
 class NativeThemeWrapper : INativeThemeWrapper
 {
-    private NativeTheme nativeTheme;
-
-    public NativeThemeWrapper()
-    {
-        nativeTheme = Electron.NativeTheme;
-    }
+    private readonly NativeTheme _nativeTheme = Electron.NativeTheme;
 
     /// <summary>
     /// Setting this property to <see cref="ThemeSourceMode.System"/> will remove the override and everything will be reset to the OS default. By default 'ThemeSource' is <see cref="ThemeSourceMode.System"/>.
@@ -75,7 +70,7 @@ class NativeThemeWrapper : INativeThemeWrapper
     /// <param name="themeSourceMode">The new ThemeSource.</param>
     public void SetThemeSource(ThemeSourceMode themeSourceMode)
     {
-        nativeTheme.SetThemeSource(themeSourceMode);
+        _nativeTheme.SetThemeSource(themeSourceMode);
     }
 
     /// <summary>
@@ -84,7 +79,7 @@ class NativeThemeWrapper : INativeThemeWrapper
     /// </summary>
     public Task<ThemeSourceMode> GetThemeSourceAsync()
     {
-        return nativeTheme.GetThemeSourceAsync();
+        return _nativeTheme.GetThemeSourceAsync();
     }
 
     /// <summary>
@@ -94,16 +89,22 @@ class NativeThemeWrapper : INativeThemeWrapper
     /// </summary>
     public Task<bool> ShouldUseDarkColorsAsync()
     {
-        return nativeTheme.ShouldUseDarkColorsAsync();
+        return _nativeTheme.ShouldUseDarkColorsAsync();
     }
 
     /// <summary>
     /// Emitted when something in the underlying NativeTheme has changed. This normally means that either the value of <see cref="ShouldUseDarkColorsAsync"/>,
-    /// <see cref="ShouldUseHighContrastColorsAsync"/> or <see cref="ShouldUseInvertedColorSchemeAsync"/> has changed. You will have to check them to determine which one has changed.
+    /// <see>
+    ///     <cref>ShouldUseHighContrastColorsAsync</cref>
+    /// </see>
+    /// or <see>
+    ///     <cref>ShouldUseInvertedColorSchemeAsync</cref>
+    /// </see>
+    /// has changed. You will have to check them to determine which one has changed.
     /// </summary>
     public event Action Updated
     {
-        add => nativeTheme.Updated += value;
-        remove => nativeTheme.Updated -= value;
+        add => _nativeTheme.Updated += value;
+        remove => _nativeTheme.Updated -= value;
     }
 }

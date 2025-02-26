@@ -9,12 +9,7 @@ namespace ElectronWrapper;
 /// </summary>
 class GlobalShortcutWrapper : IGlobalShortcutWrapper
 {
-    private GlobalShortcut globalShortcut;
-
-    public GlobalShortcutWrapper()
-    {
-        globalShortcut = Electron.GlobalShortcut;
-    }
+    private readonly GlobalShortcut _globalShortcut = Electron.GlobalShortcut;
 
     /// <summary>
     /// Registers a global shortcut of accelerator. 
@@ -26,7 +21,7 @@ class GlobalShortcutWrapper : IGlobalShortcutWrapper
     /// </summary>
     public void Register(string accelerator, Action function)
     {
-        globalShortcut.Register(accelerator, function);
+        _globalShortcut.Register(accelerator, function);
     }
 
     /// <summary>
@@ -37,7 +32,7 @@ class GlobalShortcutWrapper : IGlobalShortcutWrapper
     /// <returns>Whether this application has registered accelerator.</returns>
     public Task<bool> IsRegisteredAsync(string accelerator)
     {
-        return globalShortcut.IsRegisteredAsync(accelerator);
+        return _globalShortcut.IsRegisteredAsync(accelerator);
     }
 
     /// <summary>
@@ -45,7 +40,7 @@ class GlobalShortcutWrapper : IGlobalShortcutWrapper
     /// </summary>
     public void Unregister(string accelerator)
     {
-        globalShortcut.Unregister(accelerator);
+        _globalShortcut.Unregister(accelerator);
     }
 
     /// <summary>
@@ -53,6 +48,6 @@ class GlobalShortcutWrapper : IGlobalShortcutWrapper
     /// </summary>
     public void UnregisterAll()
     {
-        globalShortcut.UnregisterAll();
+        _globalShortcut.UnregisterAll();
     }
 }

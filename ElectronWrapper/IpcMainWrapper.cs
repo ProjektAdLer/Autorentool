@@ -8,11 +8,7 @@ namespace ElectronWrapper;
 /// </summary>
 class IpcMainWrapper : IIpcMainWrapper
 {
-    private IpcMain ipcMain;
-    public IpcMainWrapper()
-    {
-        ipcMain = Electron.IpcMain;
-    }
+    private readonly IpcMain _ipcMain = Electron.IpcMain;
 
     /// <summary>
     ///  Listens to channel, when a new message arrives listener would be called with 
@@ -22,7 +18,7 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="listener">Callback Method.</param>
     public void On(string channel, Action<object> listener)
     {
-        ipcMain.On(channel, listener);
+        _ipcMain.On(channel, listener);
     }
 
     /// <summary>
@@ -36,7 +32,7 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="listener"></param>
     public void OnSync(string channel, Func<object, object> listener)
     {
-        ipcMain.OnSync(channel, listener);
+        _ipcMain.OnSync(channel, listener);
     }
 
     /// <summary>
@@ -47,7 +43,7 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="listener">Callback Method.</param>
     public void Once(string channel, Action<object> listener)
     {
-        ipcMain.Once(channel, listener);
+        _ipcMain.Once(channel, listener);
     }
 
     /// <summary>
@@ -56,7 +52,7 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="channel">Channelname.</param>
     public void RemoveAllListeners(string channel)
     {
-        ipcMain.RemoveAllListeners(channel);
+        _ipcMain.RemoveAllListeners(channel);
     }
 
     /// <summary>
@@ -70,7 +66,7 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="data">Arguments data.</param>
     public void Send(BrowserWindow browserWindow, string channel, params object[] data)
     {
-        ipcMain.Send(browserWindow.InnerBrowserWindow, channel, data);
+        _ipcMain.Send(browserWindow.InnerBrowserWindow, channel, data);
 
     }
 
@@ -85,6 +81,6 @@ class IpcMainWrapper : IIpcMainWrapper
     /// <param name="data">Arguments data.</param>
     public void Send(BrowserView browserView, string channel, params object[] data)
     {
-        ipcMain.Send(browserView, channel, data);
+        _ipcMain.Send(browserView, channel, data);
     }
 }
