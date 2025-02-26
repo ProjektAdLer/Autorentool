@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -10,20 +10,16 @@ namespace ElectronWrapper;
 /// </summary>
 class ScreenWrapper : IScreenWrapper
 {
-    private Screen screen;
+    private readonly Screen _screen = Electron.Screen;
 
-    public ScreenWrapper()
-    {
-        screen = Electron.Screen;
-    }
     /// <summary>
     /// Emitted when an new Display has been added.
     /// </summary>
     public event Action<Display> OnDisplayAdded
     {
-        add => screen.OnDisplayAdded += value;
+        add => _screen.OnDisplayAdded += value;
 
-        remove => screen.OnDisplayAdded -= value;
+        remove => _screen.OnDisplayAdded -= value;
     }
 
     /// <summary>
@@ -31,8 +27,8 @@ class ScreenWrapper : IScreenWrapper
     /// </summary>
     public event Action<Display> OnDisplayRemoved
     {
-        add => screen.OnDisplayRemoved += value;
-        remove => screen.OnDisplayRemoved -= value;
+        add => _screen.OnDisplayRemoved += value;
+        remove => _screen.OnDisplayRemoved -= value;
     }
 
     /// <summary>
@@ -42,8 +38,8 @@ class ScreenWrapper : IScreenWrapper
     /// </summary>
     public event Action<Display, string[]> OnDisplayMetricsChanged
     {
-        add => screen.OnDisplayMetricsChanged += value;
-        remove => screen.OnDisplayMetricsChanged -= value;
+        add => _screen.OnDisplayMetricsChanged += value;
+        remove => _screen.OnDisplayMetricsChanged -= value;
     }
 
     /// <summary>
@@ -52,7 +48,7 @@ class ScreenWrapper : IScreenWrapper
     /// <returns></returns>
     public Task<Point> GetCursorScreenPointAsync()
     {
-        return screen.GetCursorScreenPointAsync();
+        return _screen.GetCursorScreenPointAsync();
     }
 
     /// <summary>
@@ -61,7 +57,7 @@ class ScreenWrapper : IScreenWrapper
     /// <returns>The height of the menu bar in pixels.</returns>
     public Task<int> GetMenuBarHeightAsync()
     {
-        return screen.GetMenuBarHeightAsync();
+        return _screen.GetMenuBarHeightAsync();
     }
 
     /// <summary>
@@ -70,7 +66,7 @@ class ScreenWrapper : IScreenWrapper
     /// <returns></returns>
     public Task<Display> GetPrimaryDisplayAsync()
     {
-        return screen.GetPrimaryDisplayAsync();
+        return _screen.GetPrimaryDisplayAsync();
     }
 
 
@@ -80,7 +76,7 @@ class ScreenWrapper : IScreenWrapper
     /// <returns>An array of displays that are currently available.</returns>
     public Task<Display[]> GetAllDisplaysAsync()
     {
-        return screen.GetAllDisplaysAsync();
+        return _screen.GetAllDisplaysAsync();
     }
 
     /// <summary>
@@ -89,7 +85,7 @@ class ScreenWrapper : IScreenWrapper
     /// <returns>The display nearest the specified point.</returns>
     public Task<Display> GetDisplayNearestPointAsync(Point point)
     {
-        return screen.GetDisplayNearestPointAsync(point);
+        return _screen.GetDisplayNearestPointAsync(point);
     }
 
 
@@ -100,6 +96,6 @@ class ScreenWrapper : IScreenWrapper
     /// <returns>The display that most closely intersects the provided bounds.</returns>
     public Task<Display> GetDisplayMatchingAsync(Rectangle rectangle)
     {
-        return screen.GetDisplayMatchingAsync(rectangle);
+        return _screen.GetDisplayMatchingAsync(rectangle);
     }
 }

@@ -21,7 +21,7 @@ else
             <MudButton Class="w-36 2xl:w-40 relative btn-standard font-bold text-xs 2xl:text-sm text-adlerdarkblue shadow rounded-lg bg-buttonbgblue hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="AddCommentAsync">@Localizer["Button.EditComment.Text"]
                 <MudText Class="flex justify-center items-center uppercase text-xs 2xl:text-sm"></MudText>
                 <div class="flex justify-end absolute w-2.5 h-1.5 top-0.5 -right-0.5 m-0.5">
-                    <MudIconButton Title="@Localizer["Tooltip.DeleteRule.Text"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-buttonbgblue p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRule"></MudIconButton>
+                    <MudIconButton title="@Localizer["Tooltip.DeleteRule.Text"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-buttonbgblue p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRule"></MudIconButton>
                 </div>
             </MudButton>
             break;
@@ -29,7 +29,7 @@ else
             <MudButton Class="w-36 2xl:w-40 relative btn-standard font-bold text-xs 2xl:text-sm text-adlerdarkblue shadow rounded-lg bg-buttonbgblue hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="AddReferenceAsync">@Localizer["Button.EditReference.Text"]
             <MudText Class="flex justify-center items-center uppercase text-xs 2xl:text-sm"></MudText>
                  <div class="flex justify-end absolute w-2.5 h-1.5 top-0.5 -right-0.5 m-0.5">
-                     <MudIconButton Title="@Localizer["Tooltip.DeleteRule.Text"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-buttonbgblue p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRule"></MudIconButton>
+                     <MudIconButton title="@Localizer["Tooltip.DeleteRule.Text"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-buttonbgblue p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteRule"></MudIconButton>
                  </div>
             </MudButton>
             break;
@@ -55,7 +55,7 @@ else
     private static DialogOptions DialogOptions => new()
     {
         CloseOnEscapeKey = true,
-        DisableBackdropClick = true,
+        BackdropClick = false,
         CloseButton = true,
         MaxWidth = MaxWidth.ExtraLarge,
     };

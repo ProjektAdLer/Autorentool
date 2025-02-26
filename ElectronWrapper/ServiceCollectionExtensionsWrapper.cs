@@ -1,4 +1,4 @@
-﻿using ElectronNET.API;
+﻿using ElectronSharp.API;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ElectronWrapper;

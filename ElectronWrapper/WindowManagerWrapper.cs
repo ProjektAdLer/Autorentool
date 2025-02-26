@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
 class WindowManagerWrapper : IWindowManagerWrapper
 { 
-    private WindowManager windowManager;
-
-    public WindowManagerWrapper()
-    {
-        windowManager = Electron.WindowManager;
-    }
+    private readonly WindowManager _windowManager = Electron.WindowManager;
 
     /// <summary>
     /// Quit when all windows are closed. (Default is true)
@@ -23,8 +18,8 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// </value>
     public bool IsQuitOnWindowAllClosed
     {
-        get => windowManager.IsQuitOnWindowAllClosed;
-        set => windowManager.IsQuitOnWindowAllClosed = value;
+        get => _windowManager.IsQuitOnWindowAllClosed;
+        set => _windowManager.IsQuitOnWindowAllClosed = value;
     }
 
     /// <summary>
@@ -34,7 +29,7 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// The browser windows.
     /// </value>
     public IReadOnlyCollection<BrowserWindow> BrowserWindows =>
-        windowManager.BrowserWindows.Select(bw => new BrowserWindow(bw)).ToList().AsReadOnly();
+        _windowManager.BrowserWindows.Select(bw => new BrowserWindow(bw)).ToList().AsReadOnly();
 
     /// <summary>
     /// Gets the browser views.
@@ -42,7 +37,7 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// <value>
     /// The browser view.
     /// </value>
-    public IReadOnlyCollection<BrowserView> BrowserViews => windowManager.BrowserViews;
+    public IReadOnlyCollection<BrowserView> BrowserViews => _windowManager.BrowserViews;
 
     /// <summary>
     /// Creates the window asynchronous.
@@ -51,7 +46,7 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// <returns></returns>
     public async Task<BrowserWindow> CreateWindowAsync(string loadUrl = "http://localhost")
     {
-        var innerBrowserWindow = await windowManager.CreateWindowAsync(loadUrl);
+        var innerBrowserWindow = await _windowManager.CreateWindowAsync(loadUrl);
         return new BrowserWindow(innerBrowserWindow);
     }
 
@@ -63,7 +58,7 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// <returns></returns>
     public async Task<BrowserWindow> CreateWindowAsync(BrowserWindowOptions options, string loadUrl = "http://localhost")
     {
-        var innerBrowserWindow = await windowManager.CreateWindowAsync(options, loadUrl);
+        var innerBrowserWindow = await _windowManager.CreateWindowAsync(options, loadUrl);
         return new BrowserWindow(innerBrowserWindow);
     }
 
@@ -75,7 +70,7 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// <returns></returns>
     public Task<BrowserView> CreateBrowserViewAsync()
     {
-        return windowManager.CreateBrowserViewAsync();
+        return _windowManager.CreateBrowserViewAsync();
     }
 
     /// <summary>
@@ -87,6 +82,6 @@ class WindowManagerWrapper : IWindowManagerWrapper
     /// <returns></returns>
     public Task<BrowserView> CreateBrowserViewAsync(BrowserViewConstructorOptions options)
     {
-        return windowManager.CreateBrowserViewAsync(options);
+        return _windowManager.CreateBrowserViewAsync(options);
     }
 }

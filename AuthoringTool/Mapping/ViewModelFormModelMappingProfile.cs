@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Internal;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
@@ -31,6 +32,7 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         cfg.AddProfile(new ViewModelFormModelMappingProfile());
         cfg.AddCollectionMappersOnce();
+        cfg.Internal().MethodMappingEnabled = false;
     };
 
     private void CreateContentMap()
@@ -101,14 +103,14 @@ public class ViewModelFormModelMappingProfile : Profile
         CreateMap<MultipleChoiceMultipleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
             .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => false))
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
-            .AfterMap((vm, fm, context) =>
+            .AfterMap((vm, fm, _) =>
                 fm.CorrectChoices = fm.Choices
                     .Where(choiceFm => vm.CorrectChoices.Any(choiceVm => choiceVm.Id.Equals(choiceFm.Id))).ToList())
             .ReverseMap();
         CreateMap<MultipleChoiceSingleResponseQuestionViewModel, MultipleChoiceQuestionFormModel>()
             .ForMember(x => x.IsSingleResponse, opt => opt.MapFrom(x => true))
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
-            .AfterMap((vm, fm, context) =>
+            .AfterMap((vm, fm, _) =>
                 fm.CorrectChoices = fm.Choices.Where(choiceFm => choiceFm.Id == vm.CorrectChoice.Id).ToList())
             .ReverseMap();
     }

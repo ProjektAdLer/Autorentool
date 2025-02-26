@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 using System.Threading;
 
 namespace ElectronWrapper;
@@ -11,11 +11,7 @@ namespace ElectronWrapper;
 /// </summary>
 class AppWrapper : IAppWrapper
 {
-    private App app;
-    public AppWrapper()
-    {
-        app = Electron.App;
-    }
+    private readonly App _app = Electron.App;
 
     /// <summary>
     /// Emitted when all windows have been closed.
@@ -28,8 +24,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action WindowAllClosed
     {
-        add => app.WindowAllClosed += value;
-        remove => app.WindowAllClosed -= value;
+        add => _app.WindowAllClosed += value;
+        remove => _app.WindowAllClosed -= value;
     }
 
     /// <summary>
@@ -42,8 +38,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<QuitEventArgs, Task> BeforeQuit
     {
-        add => app.BeforeQuit += value;
-        remove => app.BeforeQuit -= value;
+        add => _app.BeforeQuit += value;
+        remove => _app.BeforeQuit -= value;
     }
 
     /// <summary>
@@ -56,8 +52,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<QuitEventArgs, Task> WillQuit
     {
-        add => app.WillQuit += value;
-        remove => app.WillQuit -= value;
+        add => _app.WillQuit += value;
+        remove => _app.WillQuit -= value;
     }
 
     /// <summary>
@@ -67,8 +63,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Func<Task> Quitting
     {
-        add => app.Quitting += value;
-        remove => app.Quitting -= value;
+        add => _app.Quitting += value;
+        remove => _app.Quitting -= value;
     }
         
     /// <summary>
@@ -76,8 +72,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowBlur
     {
-        add => app.BrowserWindowBlur += value;
-        remove => app.BrowserWindowBlur -= value;
+        add => _app.BrowserWindowBlur += value;
+        remove => _app.BrowserWindowBlur -= value;
     }
 
     /// <summary>
@@ -85,8 +81,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowFocus
     {
-        add => app.BrowserWindowFocus += value;
-        remove => app.BrowserWindowFocus -= value;
+        add => _app.BrowserWindowFocus += value;
+        remove => _app.BrowserWindowFocus -= value;
     }
 
     /// <summary>
@@ -94,9 +90,9 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action BrowserWindowCreated
     {
-        add => app.BrowserWindowCreated += value;
+        add => _app.BrowserWindowCreated += value;
 
-        remove => app.BrowserWindowCreated -= value;
+        remove => _app.BrowserWindowCreated -= value;
     }
 
     /// <summary>
@@ -104,19 +100,8 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action WebContentsCreated
     {
-        add => app.WebContentsCreated += value;
-        remove => app.WebContentsCreated -= value;
-    }
-
-    /// <summary>
-    /// Emitted when Chrome’s accessibility support changes. This event fires when assistive technologies, such as
-    /// screen readers, are enabled or disabled. See https://www.chromium.org/developers/design-documents/accessibility for more details.
-    /// </summary>
-    /// <returns><see langword="true"/> when Chrome's accessibility support is enabled, <see langword="false"/> otherwise.</returns>
-    public event Action<bool> AccessibilitySupportChanged
-    {
-        add => app.AccessibilitySupportChanged += value;
-        remove => app.AccessibilitySupportChanged -= value;
+        add => _app.WebContentsCreated += value;
+        remove => _app.WebContentsCreated -= value;
     }
 
     /// <summary>
@@ -124,27 +109,14 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action Ready
     {
-        add => app.Ready += value;
-        remove => app.Ready -= value;
+        add => _app.Ready += value;
+        remove => _app.Ready -= value;
     }
 
     /// <summary>
     /// Application host fully started.
     /// </summary>
-    public bool IsReady => app.IsReady;
-
-    /// <summary>
-    /// Emitted when a MacOS user wants to open a file with the application. The open-file event is usually emitted
-    /// when the application is already open and the OS wants to reuse the application to open the file.
-    /// open-file is also emitted when a file is dropped onto the dock and the application is not yet running.
-    /// <para/>
-    /// On Windows, you have to parse the arguments using App.CommandLine to get the filepath.
-    /// </summary>
-    public event Action<string> OpenFile
-    {
-        add => app.OpenFile += value;
-        remove => app.OpenFile -= value;
-    }
+    public bool IsReady => _app.IsReady;
 
     /// <summary>
     /// Emitted when a MacOS user wants to open a URL with the application. Your application's Info.plist file must
@@ -152,34 +124,9 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public event Action<string> OpenUrl
     {
-        add => app.OpenUrl += value;
-        remove => app.OpenUrl -= value;
+        add => _app.OpenUrl += value;
+        remove => _app.OpenUrl -= value;
     }
-
-    /// <summary>
-    /// A <see cref="string"/> property that indicates the current application's name, which is the name in the
-    /// application's package.json file.
-    ///
-    /// Usually the name field of package.json is a short lowercase name, according to the npm modules spec. You
-    /// should usually also specify a productName field, which is your application's full capitalized name, and
-    /// which will be preferred over name by Electron.
-    /// </summary>
-    public string Name
-    {
-        [Obsolete("Use the asynchronous version NameAsync instead")]
-        get => app.Name;
-        set => app.Name = value;
-    }
-
-    /// <summary>
-    /// A <see cref="string"/> property that indicates the current application's name, which is the name in the
-    /// application's package.json file.
-    ///
-    /// Usually the name field of package.json is a short lowercase name, according to the npm modules spec. You
-    /// should usually also specify a productName field, which is your application's full capitalized name, and
-    /// which will be preferred over name by Electron.
-    /// </summary>
-    public Task<string> NameAsync => app.NameAsync;
 
     /// <summary>
     /// Try to close all windows. The <see cref="BeforeQuit"/> event will be emitted first. If all windows are successfully
@@ -189,7 +136,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Quit()
     {
-        app.Quit();
+        _app.Quit();
     }
 
     /// <summary>
@@ -199,7 +146,7 @@ class AppWrapper : IAppWrapper
     /// <param name="exitCode">Exits immediately with exitCode. exitCode defaults to 0.</param>
     public void Exit(int exitCode = 0)
     {
-        app.Exit(exitCode);
+        _app.Exit(exitCode);
     }
 
     /// <summary>
@@ -214,7 +161,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Relaunch()
     {
-        app.Relaunch();
+        _app.Relaunch();
     }
 
     /// <summary>
@@ -232,7 +179,7 @@ class AppWrapper : IAppWrapper
     /// <param name="relaunchOptions">Options for the relaunch.</param>
     public void Relaunch(RelaunchOptions relaunchOptions)
     {
-        app.Relaunch(relaunchOptions);
+        _app.Relaunch(relaunchOptions);
     }
 
     /// <summary>
@@ -241,7 +188,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Focus()
     {
-        app.Focus();
+        _app.Focus();
     }
 
     /// <summary>
@@ -252,23 +199,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void Focus(FocusOptions focusOptions)
     {
-        app.Focus();
-    }
-
-    /// <summary>
-    /// Hides all application windows without minimizing them.
-    /// </summary>
-    public void Hide()
-    {
-        app.Hide();
-    }
-
-    /// <summary>
-    /// Shows application windows after they were hidden. Does not automatically focus them.
-    /// </summary>
-    public void Show()
-    {
-        app.Show();
+        _app.Focus();
     }
 
     /// <summary>
@@ -276,7 +207,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public async Task<string> GetAppPathAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetAppPathAsync(cancellationToken);
+        return await _app.GetAppPathAsync(cancellationToken);
     }
 
     /// <summary>
@@ -289,7 +220,7 @@ class AppWrapper : IAppWrapper
     /// <param name="path">A custom path for your logs. Must be absolute.</param>
     public void SetAppLogsPath(string path)
     {
-        app.SetAppLogsPath(path);
+        _app.SetAppLogsPath(path);
     }
 
     /// <summary>
@@ -302,7 +233,7 @@ class AppWrapper : IAppWrapper
     /// <returns>A path to a special directory or file associated with name.</returns>
     public async Task<string> GetPathAsync(PathName pathName, CancellationToken cancellationToken = default)
     {
-        return await app.GetPathAsync(pathName, cancellationToken);
+        return await _app.GetPathAsync(pathName, cancellationToken);
     }
 
     /// <summary>
@@ -319,7 +250,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void SetPath(PathName name, string path)
     {
-        app.SetPath(name, path);
+        _app.SetPath(name, path);
     }
 
     /// <summary>
@@ -329,7 +260,7 @@ class AppWrapper : IAppWrapper
     /// <returns>The version of the loaded application.</returns>
     public async Task<string> GetVersionAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetVersionAsync(cancellationToken);
+        return await _app.GetVersionAsync(cancellationToken);
     }
 
     /// <summary>
@@ -342,258 +273,7 @@ class AppWrapper : IAppWrapper
     /// <returns>The current application locale.</returns>
     public async Task<string> GetLocaleAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetLocaleAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Adds path to the recent documents list. This list is managed by the OS. On Windows you can visit the
-    /// list from the task bar, and on macOS you can visit it from dock menu.
-    /// </summary>
-    /// <param name="path">Path to add.</param>
-    public void AddRecentDocument(string path)
-    {
-        app.AddRecentDocument(path);
-    }
-
-    /// <summary>
-    /// Clears the recent documents list.
-    /// </summary>
-    public void ClearRecentDocuments()
-    {
-        app.ClearRecentDocuments();
-    }
-
-    /// <summary>
-    /// Sets the current executable as the default handler for a protocol (aka URI scheme). It allows you to
-    /// integrate your app deeper into the operating system. Once registered, all links with your-protocol://
-    /// will be opened with the current executable. The whole link, including protocol, will be passed to your
-    /// application as a parameter.
-    /// <para/>
-    /// Note: On macOS, you can only register protocols that have been added to your app's info.plist, which
-    /// cannot be modified at runtime. However, you can change the file during build time via
-    /// <see href="https://www.electronforge.io/">Electron Forge</see>,
-    /// <see href="https://github.com/electron/electron-packager">Electron Packager</see>, or by editing info.plist
-    /// with a text editor. Please refer to
-    /// <see href="https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-102207-TPXREF115">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// Note: In a Windows Store environment (when packaged as an appx) this API will return true for all calls but
-    /// the registry key it sets won't be accessible by other applications. In order to register your Windows Store
-    /// application as a default protocol handler you <see href="https://docs.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-protocol">must declare the protocol in your manifest</see>.
-    /// <para/>
-    /// The API uses the Windows Registry and LSSetDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">
-    /// The name of your protocol, without ://. For example, if you want your app to handle electron:// links,
-    /// call this method with electron as the parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> SetAsDefaultProtocolClientAsync(string protocol, CancellationToken cancellationToken = default)
-    {
-        return await app.SetAsDefaultProtocolClientAsync(protocol, cancellationToken);
-    }
-
-    /// <summary>
-    /// Sets the current executable as the default handler for a protocol (aka URI scheme). It allows you to
-    /// integrate your app deeper into the operating system. Once registered, all links with your-protocol://
-    /// will be opened with the current executable. The whole link, including protocol, will be passed to your
-    /// application as a parameter.
-    /// <para/>
-    /// Note: On macOS, you can only register protocols that have been added to your app's info.plist, which
-    /// cannot be modified at runtime. However, you can change the file during build time via
-    /// <see href="https://www.electronforge.io/">Electron Forge</see>,
-    /// <see href="https://github.com/electron/electron-packager">Electron Packager</see>, or by editing info.plist
-    /// with a text editor. Please refer to
-    /// <see href="https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-102207-TPXREF115">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// Note: In a Windows Store environment (when packaged as an appx) this API will return true for all calls but
-    /// the registry key it sets won't be accessible by other applications. In order to register your Windows Store
-    /// application as a default protocol handler you <see href="https://docs.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-protocol">must declare the protocol in your manifest</see>.
-    /// <para/>
-    /// The API uses the Windows Registry and LSSetDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">
-    /// The name of your protocol, without ://. For example, if you want your app to handle electron:// links,
-    /// call this method with electron as the parameter.</param>
-    /// <param name="path">The path to the Electron executable. Defaults to process.execPath</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> SetAsDefaultProtocolClientAsync(string protocol, string path, CancellationToken cancellationToken = default)
-    {
-        return await app.SetAsDefaultProtocolClientAsync(protocol, path, cancellationToken);
-    }
-
-    /// <summary>
-    /// Sets the current executable as the default handler for a protocol (aka URI scheme). It allows you to
-    /// integrate your app deeper into the operating system. Once registered, all links with your-protocol://
-    /// will be opened with the current executable. The whole link, including protocol, will be passed to your
-    /// application as a parameter.
-    /// <para/>
-    /// Note: On macOS, you can only register protocols that have been added to your app's info.plist, which
-    /// cannot be modified at runtime. However, you can change the file during build time via
-    /// <see href="https://www.electronforge.io/">Electron Forge</see>,
-    /// <see href="https://github.com/electron/electron-packager">Electron Packager</see>, or by editing info.plist
-    /// with a text editor. Please refer to
-    /// <see href="https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-102207-TPXREF115">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// Note: In a Windows Store environment (when packaged as an appx) this API will return true for all calls but
-    /// the registry key it sets won't be accessible by other applications. In order to register your Windows Store
-    /// application as a default protocol handler you <see href="https://docs.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-protocol">must declare the protocol in your manifest</see>.
-    /// <para/>
-    /// The API uses the Windows Registry and LSSetDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">
-    /// The name of your protocol, without ://. For example, if you want your app to handle electron:// links,
-    /// call this method with electron as the parameter.</param>
-    /// <param name="path">The path to the Electron executable. Defaults to process.execPath</param>
-    /// <param name="args">Arguments passed to the executable. Defaults to an empty array.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> SetAsDefaultProtocolClientAsync(string protocol, string path, string[] args, CancellationToken cancellationToken = default)
-    {
-        return await app.SetAsDefaultProtocolClientAsync(protocol, path, args, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable as the default handler for a protocol (aka URI scheme).
-    /// If so, it will remove the app as the default handler.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> RemoveAsDefaultProtocolClientAsync(string protocol, CancellationToken cancellationToken = default)
-    {
-        return await app.RemoveAsDefaultProtocolClientAsync(protocol, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable as the default handler for a protocol (aka URI scheme).
-    /// If so, it will remove the app as the default handler.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="path">Defaults to process.execPath.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> RemoveAsDefaultProtocolClientAsync(string protocol, string path, CancellationToken cancellationToken = default)
-    {
-        return await app.RemoveAsDefaultProtocolClientAsync(protocol, path, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable as the default handler for a protocol (aka URI scheme).
-    /// If so, it will remove the app as the default handler.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="path">Defaults to process.execPath.</param>
-    /// <param name="args">Defaults to an empty array.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> RemoveAsDefaultProtocolClientAsync(string protocol, string path, string[] args, CancellationToken cancellationToken = default)
-    {
-        return await app.RemoveAsDefaultProtocolClientAsync(protocol, path, args, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable is the default handler for a protocol (aka URI scheme).
-    /// <para/>
-    /// Note: On macOS, you can use this method to check if the app has been registered as the default protocol
-    /// handler for a protocol. You can also verify this by checking ~/Library/Preferences/com.apple.LaunchServices.plist
-    /// on the macOS machine. Please refer to <see href="https://developer.apple.com/library/mac/documentation/Carbon/Reference/LaunchServicesReference/#//apple_ref/c/func/LSCopyDefaultHandlerForURLScheme">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// The API uses the Windows Registry and LSCopyDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the current executable is the default handler for a protocol (aka URI scheme).</returns>
-    public async Task<bool> IsDefaultProtocolClientAsync(string protocol, CancellationToken cancellationToken = default)
-    {
-        return await app.IsDefaultProtocolClientAsync(protocol, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable is the default handler for a protocol (aka URI scheme).
-    /// <para/>
-    /// Note: On macOS, you can use this method to check if the app has been registered as the default protocol
-    /// handler for a protocol. You can also verify this by checking ~/Library/Preferences/com.apple.LaunchServices.plist
-    /// on the macOS machine. Please refer to <see href="https://developer.apple.com/library/mac/documentation/Carbon/Reference/LaunchServicesReference/#//apple_ref/c/func/LSCopyDefaultHandlerForURLScheme">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// The API uses the Windows Registry and LSCopyDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="path">Defaults to process.execPath.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the current executable is the default handler for a protocol (aka URI scheme).</returns>
-    public async Task<bool> IsDefaultProtocolClientAsync(string protocol, string path, CancellationToken cancellationToken = default)
-    {
-        return await app.IsDefaultProtocolClientAsync(protocol, path, cancellationToken);
-    }
-
-    /// <summary>
-    /// This method checks if the current executable is the default handler for a protocol (aka URI scheme).
-    /// <para/>
-    /// Note: On macOS, you can use this method to check if the app has been registered as the default protocol
-    /// handler for a protocol. You can also verify this by checking ~/Library/Preferences/com.apple.LaunchServices.plist
-    /// on the macOS machine. Please refer to <see href="https://developer.apple.com/library/mac/documentation/Carbon/Reference/LaunchServicesReference/#//apple_ref/c/func/LSCopyDefaultHandlerForURLScheme">Apple's documentation</see>
-    /// for details.
-    /// <para/>
-    /// The API uses the Windows Registry and LSCopyDefaultHandlerForURLScheme internally.
-    /// </summary>
-    /// <param name="protocol">The name of your protocol, without ://.</param>
-    /// <param name="path">Defaults to process.execPath.</param>
-    /// <param name="args">Defaults to an empty array.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the current executable is the default handler for a protocol (aka URI scheme).</returns>
-    public async Task<bool> IsDefaultProtocolClientAsync(string protocol, string path, string[] args, CancellationToken cancellationToken = default)
-    {
-        return await app.IsDefaultProtocolClientAsync(protocol, path, args, cancellationToken);
-    }
-
-    /// <summary>
-    /// Adds tasks to the <see cref="UserTask"/> category of the JumpList on Windows.
-    /// <para/>
-    /// Note: If you'd like to customize the Jump List even more use <see cref="SetJumpList"/> instead.
-    /// </summary>
-    /// <param name="userTasks">Array of <see cref="UserTask"/> objects.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> SetUserTasksAsync(UserTask[] userTasks, CancellationToken cancellationToken = default)
-    {
-        return await app.SetUserTasksAsync(userTasks, cancellationToken);
-    }
-
-    /// <summary>
-    /// Jump List settings for the application.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Jump List settings.</returns>
-    public async Task<JumpListSettings> GetJumpListSettingsAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.GetJumpListSettingsAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Sets or removes a custom Jump List for the application. If categories is null the previously set custom
-    /// Jump List (if any) will be replaced by the standard Jump List for the app (managed by Windows).
-    /// <para/>
-    /// Note: If a <see cref="JumpListCategory"/> object has neither the <see cref="JumpListCategory.Type"/> nor
-    /// the <see cref="JumpListCategory.Name"/> property set then its <see cref="JumpListCategory.Type"/> is assumed
-    /// to be <see cref="JumpListCategoryType.tasks"/>. If the <see cref="JumpListCategory.Name"/> property is set but
-    /// the <see cref="JumpListCategory.Type"/> property is omitted then the <see cref="JumpListCategory.Type"/> is
-    /// assumed to be <see cref="JumpListCategoryType.custom"/>.
-    /// <para/>
-    /// Note: Users can remove items from custom categories, and Windows will not allow a removed item to be added
-    /// back into a custom category until after the next successful call to <see cref="SetJumpList"/>. Any attempt
-    /// to re-add a removed item to a custom category earlier than that will result in the entire custom category being
-    /// omitted from the Jump List. The list of removed items can be obtained using <see cref="GetJumpListSettingsAsync"/>.
-    /// </summary>
-    /// <param name="categories">Array of <see cref="JumpListCategory"/> objects.</param>
-    public void SetJumpList(JumpListCategory[] categories)
-    {
-        app.SetJumpList(categories);
+        return await _app.GetLocaleAsync(cancellationToken);
     }
 
     /// <summary>
@@ -619,7 +299,7 @@ class AppWrapper : IAppWrapper
     /// </returns>
     public async Task<bool> RequestSingleInstanceLockAsync(Action<string[], string> newInstanceOpened, CancellationToken cancellationToken = default)
     {
-        return await app.RequestSingleInstanceLockAsync(newInstanceOpened, cancellationToken);
+        return await _app.RequestSingleInstanceLockAsync(newInstanceOpened, cancellationToken);
     }
 
     /// <summary>
@@ -628,7 +308,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void ReleaseSingleInstanceLock()
     {
-        app.ReleaseSingleInstanceLock();
+        _app.ReleaseSingleInstanceLock();
     }
 
     /// <summary>
@@ -639,84 +319,7 @@ class AppWrapper : IAppWrapper
     /// <param name="cancellationToken">The cancellation token.</param>
     public async Task<bool> HasSingleInstanceLockAsync(CancellationToken cancellationToken = default)
     {
-        return await app.HasSingleInstanceLockAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Creates an NSUserActivity and sets it as the current activity. The activity is
-    /// eligible for <see href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/Handoff/HandoffFundamentals/HandoffFundamentals.html">Handoff</see>
-    /// to another device afterward.
-    /// </summary>
-    /// <param name="type">Uniquely identifies the activity. Maps to <see href="https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSUserActivity_Class/index.html#//apple_ref/occ/instp/NSUserActivity/activityType">NSUserActivity.activityType</see>.</param>
-    /// <param name="userInfo">App-specific state to store for use by another device.</param>
-    public void SetUserActivity(string type, object userInfo)
-    {
-        app.SetUserActivity(type, userInfo);
-    }
-
-    /// <summary>
-    /// Creates an NSUserActivity and sets it as the current activity. The activity is
-    /// eligible for <see href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/Handoff/HandoffFundamentals/HandoffFundamentals.html">Handoff</see>
-    /// to another device afterward.
-    /// </summary>
-    /// <param name="type">
-    /// Uniquely identifies the activity. Maps to <see href="https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSUserActivity_Class/index.html#//apple_ref/occ/instp/NSUserActivity/activityType">NSUserActivity.activityType</see>.
-    /// </param>
-    /// <param name="userInfo">App-specific state to store for use by another device.</param>
-    /// <param name="webpageUrl">
-    /// The webpage to load in a browser if no suitable app is installed on the resuming device. The scheme must be http or https.
-    /// </param>
-    public void SetUserActivity(string type, object userInfo, string webpageUrl)
-    {
-        app.SetUserActivity(type, userInfo, webpageUrl);
-    }
-
-    /// <summary>
-    /// The type of the currently running activity.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public async Task<string> GetCurrentActivityTypeAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.GetCurrentActivityTypeAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Invalidates the current <see href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/Handoff/HandoffFundamentals/HandoffFundamentals.html">Handoff</see> user activity.
-    /// </summary>
-    public void InvalidateCurrentActivity()
-    {
-        app.InvalidateCurrentActivity();
-    }
-
-    /// <summary>
-    /// Marks the current <see href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/Handoff/HandoffFundamentals/HandoffFundamentals.html">Handoff</see> user activity as inactive without invalidating it.
-    /// </summary>
-    public void ResignCurrentActivity()
-    {
-        app.ResignCurrentActivity();
-    }
-
-    /// <summary>
-    /// Changes the <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd378459(v=vs.85).aspx">Application User Model ID</see> to id.
-    /// </summary>
-    /// <param name="id">Model Id.</param>
-    public void SetAppUserModelId(string id)
-    {
-        app.SetAppUserModelId(id);
-    }
-
-    /// TODO: Check new parameter which is a function [App.ImportCertificate]
-    /// <summary>
-    /// Imports the certificate in pkcs12 format into the platform certificate store.
-    /// callback is called with the result of import operation, a value of 0 indicates
-    /// success while any other value indicates failure according to chromium net_error_list.
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Result of import. Value of 0 indicates success.</returns>
-    public async Task<int> ImportCertificateAsync(ImportCertificateOptions options, CancellationToken cancellationToken = default)
-    {
-        return await app.ImportCertificateAsync(options, cancellationToken);
+        return await _app.HasSingleInstanceLockAsync(cancellationToken);
     }
 
     /// <summary>
@@ -729,7 +332,7 @@ class AppWrapper : IAppWrapper
     /// </returns>
     public async Task<ProcessMetric[]> GetAppMetricsAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetAppMetricsAsync(cancellationToken);
+        return await _app.GetAppMetricsAsync(cancellationToken);
     }
 
     /// <summary>
@@ -740,103 +343,13 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public async Task<GPUFeatureStatus> GetGpuFeatureStatusAsync(CancellationToken cancellationToken = default)
     {
-        return await app.GetGpuFeatureStatusAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Sets the counter badge for current app. Setting the count to 0 will hide the badge.
-    /// On macOS it shows on the dock icon. On Linux it only works for Unity launcher.
-    /// <para/>
-    /// Note: Unity launcher requires the existence of a .desktop file to work, for more
-    /// information please read <see href="https://www.electronjs.org/docs/tutorial/desktop-environment-integration#unity-launcher">Desktop Environment Integration</see>.
-    /// </summary>
-    /// <param name="count">Counter badge.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>Whether the call succeeded.</returns>
-    public async Task<bool> SetBadgeCountAsync(int count, CancellationToken cancellationToken = default)
-    {
-        return await app.SetBadgeCountAsync(count, cancellationToken);
-    }
-
-    /// <summary>
-    /// The current value displayed in the counter badge.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public async Task<int> GetBadgeCountAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.GetBadgeCountAsync(cancellationToken);
+        return await _app.GetGpuFeatureStatusAsync(cancellationToken);
     }
 
     /// <summary>
     /// A <see cref="CommandLine"/> object that allows you to read and manipulate the command line arguments that Chromium uses.
     /// </summary>
-    public CommandLine CommandLine => app.CommandLine;
-
-    /// <summary>
-    /// Whether the current desktop environment is Unity launcher.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public async Task<bool> IsUnityRunningAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.IsUnityRunningAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// If you provided path and args options to <see cref="SetLoginItemSettings"/> then you need to pass the same
-    /// arguments here for <see cref="LoginItemSettings.OpenAtLogin"/> to be set correctly.
-    /// </summary>
-    public async Task<LoginItemSettings> GetLoginItemSettingsAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.GetLoginItemSettingsAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// If you provided path and args options to <see cref="SetLoginItemSettings"/> then you need to pass the same
-    /// arguments here for <see cref="LoginItemSettings.OpenAtLogin"/> to be set correctly.
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public async Task<LoginItemSettings> GetLoginItemSettingsAsync(LoginItemSettingsOptions options, CancellationToken cancellationToken = default)
-    {
-        return await app.GetLoginItemSettingsAsync(options, cancellationToken);
-    }
-
-    /// <summary>
-    /// Set the app's login item settings.
-    /// To work with Electron's autoUpdater on Windows, which uses <see href="https://github.com/Squirrel/Squirrel.Windows">Squirrel</see>,
-    /// you'll want to set the launch path to Update.exe, and pass arguments that specify your application name.
-    /// </summary>
-    /// <param name="loginSettings"></param>
-    public void SetLoginItemSettings(LoginSettings loginSettings)
-    {
-        app.SetLoginItemSettings(loginSettings);
-    }
-
-    /// <summary>
-    /// <see langword="true"/> if Chrome's accessibility support is enabled, <see langword="false"/> otherwise. This API will
-    /// return <see langword="true"/> if the use of assistive technologies, such as screen readers, has been detected.
-    /// See <see href="chromium.org/developers/design-documents/accessibility">Chromium's accessibility docs</see> for more details.
-    /// </summary>
-    /// <returns><see langword="true"/> if Chrome’s accessibility support is enabled, <see langword="false"/> otherwise.</returns>
-    public async Task<bool> IsAccessibilitySupportEnabledAsync(CancellationToken cancellationToken = default)
-    {
-        return await app.IsAccessibilitySupportEnabledAsync(cancellationToken);
-    }
-
-    /// <summary>
-    /// Manually enables Chrome's accessibility support, allowing to expose accessibility switch to users in application settings.
-    /// See <see href="chromium.org/developers/design-documents/accessibility">Chromium's accessibility docs</see> for more details.
-    /// Disabled (<see langword="false"/>) by default.
-    /// <para/>
-    /// This API must be called after the <see cref="Ready"/> event is emitted.
-    /// <para/>
-    /// Note: Rendering accessibility tree can significantly affect the performance of your app. It should not be enabled by default.
-    /// </summary>
-    /// <param name="enabled">Enable or disable <see href="https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/the-accessibility-tree">accessibility tree</see> rendering.</param>
-    public void SetAccessibilitySupportEnabled(bool enabled)
-    {
-        app.SetAccessibilitySupportEnabled(enabled);
-    }
+    public CommandLine CommandLine => _app.CommandLine;
 
     /// <summary>
     /// Show the app's about panel options. These options can be overridden with
@@ -844,7 +357,7 @@ class AppWrapper : IAppWrapper
     /// </summary>
     public void ShowAboutPanel()
     {
-        app.ShowAboutPanel();
+        _app.ShowAboutPanel();
     }
 
     /// <summary>
@@ -860,33 +373,8 @@ class AppWrapper : IAppWrapper
     /// <param name="options">About panel options.</param>
     public void SetAboutPanelOptions(AboutPanelOptions options)
     {
-        app.SetAboutPanelOptions(options);
+        _app.SetAboutPanelOptions(options);
     }
-
-    /// <summary>
-    /// A <see cref="string"/> which is the user agent string Electron will use as a global fallback.
-    /// <para/>
-    /// This is the user agent that will be used when no user agent is set at the webContents or
-    /// session level. It is useful for ensuring that your entire app has the same user agent. Set to a
-    /// custom value as early as possible in your app's initialization to ensure that your overridden value
-    /// is used.
-    /// </summary>
-    public string UserAgentFallback
-    {
-        [Obsolete("Use the asynchronous version UserAgentFallbackAsync instead")]
-        get => app.UserAgentFallback;
-        set => app.UserAgentFallback = value;
-    }
-
-    /// <summary>
-    /// A <see cref="string"/> which is the user agent string Electron will use as a global fallback.
-    /// <para/>
-    /// This is the user agent that will be used when no user agent is set at the webContents or
-    /// session level. It is useful for ensuring that your entire app has the same user agent. Set to a
-    /// custom value as early as possible in your app's initialization to ensure that your overridden value
-    /// is used.
-    /// </summary>
-    public Task<string> UserAgentFallbackAsync => app.UserAgentFallbackAsync;
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module.
@@ -894,7 +382,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void On(string eventName, Action fn)
-        => app.On(eventName, fn);
+        => _app.On(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module.
@@ -902,7 +390,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void On(string eventName, Action<object> fn)
-        => app.On(eventName, fn);
+        => _app.On(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module once.
@@ -910,7 +398,7 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void Once(string eventName, Action fn)
-        => app.Once(eventName, fn);
+        => _app.Once(eventName, fn);
 
     /// <summary>
     /// Subscribe to an unmapped event on the <see cref="App"/> module once.
@@ -918,5 +406,5 @@ class AppWrapper : IAppWrapper
     /// <param name="eventName">The event name</param>
     /// <param name="fn">The handler</param>
     public void Once(string eventName, Action<object> fn)
-        => app.Once(eventName, fn);
+        => _app.Once(eventName, fn);
 }

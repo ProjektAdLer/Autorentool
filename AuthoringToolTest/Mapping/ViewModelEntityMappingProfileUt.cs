@@ -39,8 +39,8 @@ public class ViewModelEntityMappingProfileUt
     private const string EnrolmentKey = "enrolmentKey";
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
-    private static readonly string Filepath = "bar/baz/buz.txt";
-    private static List<string> StoryText = new() { "storyText1", "storyText2", "storyText3" };
+    private const string Filepath = "bar/baz/buz.txt";
+    private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
@@ -59,8 +59,8 @@ public class ViewModelEntityMappingProfileUt
     private const string NewEnrolmentKey = "newEnrolmentKey";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
-    private static readonly string NewFilepath = "/foo/bar/baz.txt";
-    private static List<string> NewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+    private const string NewFilepath = "/foo/bar/baz.txt";
+    private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -418,7 +418,7 @@ public class ViewModelEntityMappingProfileUt
             new LearningElementViewModel("el1", new FileContentViewModel("foo", "bar", Filepath),
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
         var storyElementVm1 =
-            new LearningElementViewModel("sel1", new StoryContentViewModel("foo", StoryText), Description, Goals,
+            new LearningElementViewModel("sel1", new StoryContentViewModel("foo", ConfigureStoryText), Description, Goals,
                 Difficulty, ElementModel.a_npc_defaultnpc);
 
         var space = new LearningSpaceViewModel("space", Description, Theme.CampusAschaffenburg, RequiredPoints,
@@ -655,7 +655,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, StoryText);
+        return new StoryContent(Name, false, ConfigureStoryText);
     }
 
     private static FileContentViewModel GetTestableNewContentViewModel()
@@ -665,7 +665,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContentViewModel GetTestableNewStoryContentViewModel()
     {
-        return new StoryContentViewModel(NewName, NewStoryText);
+        return new StoryContentViewModel(NewName, ConfigureNewStoryText);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -814,7 +814,6 @@ public class ViewModelEntityMappingProfileUt
 
     private static void TestElementsList(object worldLearningElements, object? parent, bool useNewFields)
     {
-        var type = worldLearningElements.GetType();
         switch (worldLearningElements)
         {
             case ICollection<ILearningElementViewModel> learningElements:
@@ -901,14 +900,14 @@ public class ViewModelEntityMappingProfileUt
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             case StoryContentViewModel content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             default:

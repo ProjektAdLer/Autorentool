@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -10,7 +10,7 @@ namespace ElectronWrapper;
 /// </summary>
 class WebContentsWrapper : IWebContentsWrapper
 {
-    private WebContents webContents;
+    private readonly WebContents _webContents;
 
     public WebContentsWrapper()
     {
@@ -20,7 +20,7 @@ class WebContentsWrapper : IWebContentsWrapper
         {
             Task.Delay(100).Wait();
         }
-        webContents = temp.Result.WebContents;
+        _webContents = temp.Result.WebContents;
     }
 
 
@@ -30,22 +30,12 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <value>
     /// The identifier.
     /// </value>
-    public int Id => webContents.Id;
+    public int Id => _webContents.Id;
 
     /// <summary>
     /// Manage browser sessions, cookies, cache, proxy settings, etc.
     /// </summary>
-    public Session Session => webContents.Session;
-
-
-    /// <summary>
-    /// Emitted when the renderer process crashes or is killed.
-    /// </summary>
-    public event Action<bool> OnCrashed
-    {
-        add => webContents.OnCrashed += value;
-        remove => webContents.OnCrashed -= value;
-    }
+    public Session Session => _webContents.Session;
 
     /// <summary>
     /// Emitted when the navigation is done, i.e. the spinner of the tab has
@@ -53,8 +43,8 @@ class WebContentsWrapper : IWebContentsWrapper
     /// </summary>
     public event Action OnDidFinishLoad
     {
-        add => webContents.OnDidFinishLoad += value;
-        remove => webContents.OnDidFinishLoad -= value;
+        add => _webContents.OnDidFinishLoad += value;
+        remove => _webContents.OnDidFinishLoad -= value;
     }
 
     /// <summary>
@@ -62,7 +52,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// </summary>
     public void OpenDevTools()
     {
-        webContents.OpenDevTools();
+        _webContents.OpenDevTools();
     }
 
     /// <summary>
@@ -71,16 +61,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <param name="openDevToolsOptions"></param>
     public void OpenDevTools(OpenDevToolsOptions openDevToolsOptions)
     {
-        webContents.OpenDevTools(openDevToolsOptions);
-    }
-
-    /// <summary>
-    /// Get system printers.
-    /// </summary>
-    /// <returns>printers</returns>
-    public Task<PrinterInfo[]> GetPrintersAsync()
-    {
-        return webContents.GetPrintersAsync();
+        _webContents.OpenDevTools(openDevToolsOptions);
     }
 
     /// <summary>
@@ -90,7 +71,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <returns>success</returns>
     public Task<bool> PrintAsync(PrintOptions? options = null)
     {
-        return webContents.PrintAsync(options);
+        return _webContents.PrintAsync(options);
     }
 
 
@@ -105,7 +86,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <returns>success</returns>
     public Task<bool> PrintToPdfAsync(string path, PrintToPDFOptions? options = null)
     {
-        return webContents.PrintToPDFAsync(path, options);
+        return _webContents.PrintToPDFAsync(path, options);
     }
 
     /// <summary>
@@ -115,7 +96,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <returns>URL of the loaded page</returns>
     public Task<string> GetUrl()
     {
-        return webContents.GetUrl();
+        return _webContents.GetUrl();
     }
 
     /// <summary>
@@ -132,7 +113,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <param name="url"></param>
     public Task LoadUrlAsync(string url)
     {
-        return webContents.LoadURLAsync(url);
+        return _webContents.LoadURLAsync(url);
     }
 
     /// <summary>
@@ -150,7 +131,7 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <param name="options"></param>
     public Task LoadUrlAsync(string url, LoadURLOptions options)
     {
-        return webContents.LoadURLAsync(url, options);
+        return _webContents.LoadURLAsync(url, options);
     }
 
     /// <summary>
@@ -162,6 +143,6 @@ class WebContentsWrapper : IWebContentsWrapper
     /// <param name="path">Absolute path to the CSS file location</param>
     public void InsertCss(bool isBrowserWindow, string path)
     {
-        webContents.InsertCSS(isBrowserWindow, path);
+        _webContents.InsertCSS(isBrowserWindow, path);
     }
 }

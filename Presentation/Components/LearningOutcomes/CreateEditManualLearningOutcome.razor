@@ -46,7 +46,7 @@
     internal IStringLocalizer<CreateEditManualLearningOutcome> Localizer { get; set; }
 
     [CascadingParameter, AllowNull] //injected by MudDialog
-    public MudDialogInstance DialogInstance { get; set; }
+    public IMudDialogInstance DialogInstance { get; set; }
 
     [Inject, AllowNull] internal IPresentationLogic PresentationLogic { get; set; }
 

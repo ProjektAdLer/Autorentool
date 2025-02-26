@@ -13,7 +13,7 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     IDialogService DialogService { get; set; }
@@ -29,7 +29,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
         };
         var parameters = new DialogParameters
         {
@@ -39,8 +39,10 @@
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ReplaceCopyLmsWorldDialog.ConfirmationDialogTitle"].ToString(), parameters,
             options);
         var result = await dialog.Result;
+        
+        if(result == null) MudDialog!.Close(DialogResult.Cancel());
 
-        if (result.Data is bool && (bool)result.Data)
+        if (result!.Data is bool && (bool)result.Data)
         {
             MudDialog!.Close(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
         }

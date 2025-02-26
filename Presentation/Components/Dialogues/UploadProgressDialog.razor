@@ -15,7 +15,7 @@
 @code {
 
     [CascadingParameter]
-    public MudDialogInstance? MudDialog { get; set; }
+    public IMudDialogInstance? MudDialog { get; set; }
 
     [Inject, AllowNull] //allow null since injected - n.stich
     public IStringLocalizer<UploadProgressDialog> Localizer { get; set; }

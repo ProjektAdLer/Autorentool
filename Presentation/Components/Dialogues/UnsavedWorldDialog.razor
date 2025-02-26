@@ -19,7 +19,7 @@
     IStringLocalizer<UnsavedWorldDialog> Localizer { get; set; }
 
     [CascadingParameter]
-    public MudDialogInstance? MudDialog { get; set; }
+    public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public string WorldName { get; set; }

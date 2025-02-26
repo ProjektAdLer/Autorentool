@@ -64,7 +64,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureAuthoringToolRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllAuthoringToolServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureUtilitiesRequiredTypes =
@@ -76,7 +76,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureUtilitiesRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllUtilitiesServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
 
@@ -91,7 +91,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureDataAccessRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllDataAccessServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureApiAccessRequiredTypes =
@@ -103,7 +103,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureApiAccessRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllApiAccessServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
@@ -117,7 +117,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllPresentationLogicServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
 
@@ -130,7 +130,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureBusinessLogicRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllBusinessLogicServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureGeneratorRequiredTypes =
@@ -142,7 +142,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureGeneratorRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllGeneratorServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureAutoMapperRequiredTypes =
@@ -154,7 +154,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureAutoMapperRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllAutoMapperServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
 
@@ -167,7 +167,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureCommandFactoriesRequiredTypes =
@@ -182,7 +182,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureCommandFactoriesRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandFactoriesServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureValidationRequiredTypes =
@@ -200,7 +200,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllValidationServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
     private static readonly Type[] ConfigureNetworkingRequiredTypes =
@@ -212,7 +212,7 @@ public class StartupUt
     [TestCaseSource(nameof(ConfigureNetworkingRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllNetworkingServices(Type requiredType)
     {
-        ConfigureServicesCoreTest(requiredType);
+        ServicesCoreTest(requiredType);
     }
 
 
@@ -223,7 +223,7 @@ public class StartupUt
         return new Startup(configuration, environment);
     }
 
-    private void ConfigureServicesCoreTest(Type requiredType)
+    private void ServicesCoreTest(Type requiredType)
     {
         var systemUnderTest = GetStartupForTesting();
         //prepare provider

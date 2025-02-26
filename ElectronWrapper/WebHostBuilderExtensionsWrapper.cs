@@ -12,6 +12,6 @@ class WebHostBuilderExtensionsWrapper : IWebHostBuilderExtensionsWrapper
     /// <returns></returns>
     public IWebHostBuilder UseElectron(IWebHostBuilder builder, string[] args)
     {
-        return ElectronNET.API.WebHostBuilderExtensions.UseElectron(builder, args);
+        return ElectronSharp.API.WebHostBuilderExtensions.UseElectron(builder, args);
     }
 }

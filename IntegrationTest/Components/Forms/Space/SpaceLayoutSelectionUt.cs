@@ -26,6 +26,7 @@ public class SpaceLayoutSelectionUt : MudBlazorTestFixture<SpaceLayoutSelection>
         Context.AddLocalizerForTest<FloorPlanEnum>();
         Presenter = Substitute.For<ILearningSpacePresenter>();
         Context.Services.AddSingleton(Presenter);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     [Test]
@@ -58,7 +59,7 @@ public class SpaceLayoutSelectionUt : MudBlazorTestFixture<SpaceLayoutSelection>
         
         var sut = GetRenderedComponent(lsvm);
 
-        var listItems = sut.FindComponentsOrFail<MudListItem>();
+        var listItems = sut.FindComponentsOrFail<MudListItem<FloorPlanEnum>>();
         await listItems.ElementAt(1).Find("div").ClickAsync(new MouseEventArgs());
         
         Presenter.Received().SetLearningSpaceLayout(floorPlanValues[1]);

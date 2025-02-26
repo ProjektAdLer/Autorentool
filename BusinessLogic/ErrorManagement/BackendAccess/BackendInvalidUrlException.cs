@@ -11,7 +11,7 @@ public class BackendInvalidUrlException : Exception
     {
     }
 
-    protected BackendInvalidUrlException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected BackendInvalidUrlException(SerializationInfo info, StreamingContext context)
     {
     }
 

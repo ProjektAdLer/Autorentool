@@ -41,7 +41,7 @@
                         <p class="text-sm 2xl:text-base text-adlergrey-600 flex-initial space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
                         <MudIconButton OnClick="@ToggleOpen"
                                        Icon="@LearningOutcomeIcon"
-                                       Title="@Localizer["LearningSpace.SpaceGoals.Overview"]"
+                                       title="@Localizer["LearningSpace.SpaceGoals.Overview"]"
                                        Class="h-4 w-4 2xl:h-5 2xl:w-5 opacity-70">
                         </MudIconButton>
 
@@ -172,6 +172,7 @@
     {
         var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
         var result = await dialog.Result;
+        if(result == null) return;
         LearningSpaceP.OnReplaceLearningElementDialogClose(result);
     }
 
@@ -179,6 +180,7 @@
     {
         var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
         var result = await dialog.Result;
+        if(result == null) return;
         LearningSpaceP.OnReplaceStoryElementDialogClose(result);
     }
 

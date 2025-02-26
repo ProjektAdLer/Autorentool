@@ -59,14 +59,12 @@ public class SidebarItemUt
     public void IsActive_Setter_NotifiesSidebar()
     {
         var systemUnderTest = GetRenderedComponent(_ => { }, _ => { }, false);
-#pragma warning disable BL0005
-        systemUnderTest.Instance.IsActive = true;
+        systemUnderTest.SetParametersAndRender(parameters => parameters.Add(p => p.IsActive, true));
 
         SidebarSubstitute.Received(1).SetSidebarItem(systemUnderTest.Instance);
         SidebarSubstitute.CurrentItem.Returns(systemUnderTest.Instance);
 
-        systemUnderTest.Instance.IsActive = false;
-#pragma warning restore BL0005
+        systemUnderTest.SetParametersAndRender(parameters => parameters.Add(p => p.IsActive, false));
 
         SidebarSubstitute.Received(1).ClearSidebarItem();
     }

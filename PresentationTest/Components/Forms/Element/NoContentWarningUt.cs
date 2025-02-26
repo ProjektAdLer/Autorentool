@@ -1,5 +1,6 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;
@@ -22,6 +23,7 @@ public class NoContentWarningUt
         Mediator = Substitute.For<IMediator>();
         _testContext.Services.AddSingleton(Mediator);
         _testContext.AddLocalizerForTest<NoContentWarning>();
+        _testContext.AddMudBlazorTestServices();
     }
     
     [TearDown]

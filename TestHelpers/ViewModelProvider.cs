@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -61,9 +62,9 @@ public static class ViewModelProvider
         };
     }
 
-    public static List<ILearningOutcomeViewModel> GetLearningOutcomes()
+    public static ObservableCollection<ILearningOutcomeViewModel> GetLearningOutcomes()
     {
-        return new List<ILearningOutcomeViewModel>()
+        return new ObservableCollection<ILearningOutcomeViewModel>()
         {
             new ManualLearningOutcomeViewModel("Outcome"),
             new StructuredLearningOutcomeViewModel(TaxonomyLevel.Level1, "what", "whereby", "whatFor",

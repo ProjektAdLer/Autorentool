@@ -34,7 +34,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<DeleteMultipleContentConfirmationDialog> Localizer { get; set; }
 
-    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IEnumerable<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)> ContentWorldElementInUseList { get; set; }

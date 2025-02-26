@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 namespace ElectronWrapper;
 
 /// <summary>
@@ -8,7 +8,7 @@ namespace ElectronWrapper;
 /// </summary>
 class SessionWrapper : ISessionWrapper
 {
-    private Session session;
+    private readonly Session _session;
 
     public SessionWrapper()
     {
@@ -18,7 +18,7 @@ class SessionWrapper : ISessionWrapper
         {
             Task.Delay(100).Wait();
         }
-        session = temp.Result.WebContents.Session;
+        _session = temp.Result.WebContents.Session;
     }
 
     /// <summary>
@@ -27,13 +27,13 @@ class SessionWrapper : ISessionWrapper
     /// <value>
     /// The identifier.
     /// </value>
-    public int Id => session.Id;
+    public int Id => _session.Id;
 
 
     /// <summary>
     /// Query and modify a session's cookies.
     /// </summary>
-    public Cookies Cookies => session.Cookies;
+    public Cookies Cookies => _session.Cookies;
 
 
     /// <summary>
@@ -42,7 +42,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="domains">A comma-separated list of servers for which integrated authentication is enabled.</param>
     public void AllowNtlmCredentialsForDomains(string domains)
     {
-        session.AllowNTLMCredentialsForDomains(domains);
+        _session.AllowNTLMCredentialsForDomains(domains);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task ClearAuthCacheAsync(RemovePassword options)
     {
-        return session.ClearAuthCacheAsync(options);
+        return _session.ClearAuthCacheAsync(options);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ class SessionWrapper : ISessionWrapper
     /// </summary>
     public Task ClearAuthCacheAsync()
     {
-        return session.ClearAuthCacheAsync();
+        return _session.ClearAuthCacheAsync();
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task ClearCacheAsync()
     {
-        return session.ClearCacheAsync();
+        return _session.ClearCacheAsync();
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task ClearHostResolverCacheAsync()
     {
-        return session.ClearHostResolverCacheAsync();
+        return _session.ClearHostResolverCacheAsync();
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task ClearStorageDataAsync()
     {
-        return session.ClearStorageDataAsync();
+        return _session.ClearStorageDataAsync();
     }
     /// <summary>
     /// Clears the data of web storages.
@@ -96,7 +96,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task ClearStorageDataAsync(ClearStorageDataOptions options)
     {
-        return session.ClearStorageDataAsync(options);
+        return _session.ClearStorageDataAsync(options);
     }
     /// <summary>
     /// Allows resuming cancelled or interrupted downloads from previous Session. The
@@ -108,7 +108,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="options"></param>
     public void CreateInterruptedDownload(CreateInterruptedDownloadOptions options)
     {
-        session.CreateInterruptedDownload(options);
+        _session.CreateInterruptedDownload(options);
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ class SessionWrapper : ISessionWrapper
     /// </summary>
     public void DisableNetworkEmulation()
     {
-        session.DisableNetworkEmulation();
+        _session.DisableNetworkEmulation();
     }
     /// <summary>
     /// Emulates network with the given configuration for the session.
@@ -125,7 +125,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="options"></param>
     public void EnableNetworkEmulation(EnableNetworkEmulationOptions options)
     {
-        session.EnableNetworkEmulation(options);
+        _session.EnableNetworkEmulation(options);
     }
 
 
@@ -134,7 +134,7 @@ class SessionWrapper : ISessionWrapper
     /// </summary>
     public void FlushStorageData()
     {
-        session.FlushStorageData();
+        _session.FlushStorageData();
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<int[]> GetBlobDataAsync(string identifier)
     {
-        return session.GetBlobDataAsync(identifier);
+        return _session.GetBlobDataAsync(identifier);
     }
     /// <summary>
     /// Get session's current cache size.
@@ -152,7 +152,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns>Callback is invoked with the session's current cache size.</returns>
     public Task<int> GetCacheSizeAsync()
     {
-        return session.GetCacheSizeAsync();
+        return _session.GetCacheSizeAsync();
     }
     /// <summary>
     /// 
@@ -160,7 +160,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<string[]> GetPreloadsAsync()
     {
-        return session.GetPreloadsAsync();
+        return _session.GetPreloadsAsync();
     }
     /// <summary>
     /// 
@@ -168,7 +168,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<string> GetUserAgent()
     {
-        return session.GetUserAgent();
+        return _session.GetUserAgent();
     }
 
     /// <summary>
@@ -179,7 +179,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<string> ResolveProxyAsync(string url)
     {
-        return session.ResolveProxyAsync(url);
+        return _session.ResolveProxyAsync(url);
     }
     /// <summary>
     /// Sets download saving directory. By default, the download directory will be the
@@ -188,7 +188,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="path"></param>
     public void SetDownloadPath(string path)
     {
-        session.SetDownloadPath(path);
+        _session.SetDownloadPath(path);
     }
 
     /// <summary>
@@ -198,7 +198,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="preloads"></param>
     public void SetPreloads(string[] preloads)
     {
-        session.SetPreloads(preloads);
+        _session.SetPreloads(preloads);
     }
 
     /// <summary>
@@ -209,7 +209,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task SetProxyAsync(ProxyConfig config)
     {
-        return session.SetProxyAsync(config);
+        return _session.SetProxyAsync(config);
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="userAgent"></param>
     public void SetUserAgent(string userAgent)
     {
-        session.SetUserAgent(userAgent);
+        _session.SetUserAgent(userAgent);
     }
 
     /// <summary>
@@ -236,7 +236,7 @@ class SessionWrapper : ISessionWrapper
     /// example "en-US,fr,de,ko,zh-CN,ja".</param>
     public void SetUserAgent(string userAgent, string acceptLanguages)
     {
-        session.SetUserAgent(userAgent, acceptLanguages);
+        _session.SetUserAgent(userAgent, acceptLanguages);
     }
     /// <summary>
     /// The keys are the extension names and each value is an object containing name and version properties.
@@ -245,7 +245,7 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<ChromeExtensionInfo[]> GetAllExtensionsAsync()
     {
-        return session.GetAllExtensionsAsync();
+        return _session.GetAllExtensionsAsync();
     }
 
 
@@ -256,7 +256,7 @@ class SessionWrapper : ISessionWrapper
     /// <param name="name">Name of the Chrome extension to remove</param>
     public void RemoveExtension(string name)
     {
-        session.RemoveExtension(name);
+        _session.RemoveExtension(name);
     }
 
     /// <summary>
@@ -288,6 +288,6 @@ class SessionWrapper : ISessionWrapper
     /// <returns></returns>
     public Task<Extension> LoadExtensionAsync(string path, bool allowFileAccess = false)
     {
-        return session.LoadExtensionAsync(path, allowFileAccess);
+        return _session.LoadExtensionAsync(path, allowFileAccess);
     }
 }

@@ -38,7 +38,7 @@ public class DragDropLearningElementUt
         _ctx.ComponentFactories.AddStub<MudCardContent>();
         _ctx.ComponentFactories.AddStub<MudIcon>();
         _ctx.ComponentFactories.AddStub<MudIconButton>();
-        _ctx.ComponentFactories.AddStub<MudListItem>();
+        _ctx.ComponentFactories.AddStub<MudListItem<ILearningElementViewModel>>();
         _ctx.ComponentFactories.AddStub<MudMenuItem>();
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();

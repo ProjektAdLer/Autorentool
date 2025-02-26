@@ -3,6 +3,7 @@ using System.Linq;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
@@ -23,7 +24,7 @@ public class ElementModelGridSelectIt : MudBlazorTestFixture<ElementModelGridSel
 
         Context.Services.AddSingleton(Substitute.For<IStringLocalizer<ElementModelGridSelect>>());
         Context.Services.AddSingleton(_elementModelHandler);
-
+        Context.RenderComponent<MudPopoverProvider>();
         _systemUnderTest =
             Context.RenderComponent<ElementModelGridSelect>(
                 (nameof(ElementModelGridSelect.Elements), _elementModels));

@@ -23,6 +23,7 @@ public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<Create
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(PresentationLogic);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     [TearDown]

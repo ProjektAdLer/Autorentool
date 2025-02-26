@@ -1,16 +1,12 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
 class DialogWrapper: IDialogWrapper
 {
-    public DialogWrapper()
-    {
-        dialog = Electron.Dialog;
-    }
-    private Dialog dialog;
+    private readonly Dialog _dialog = Electron.Dialog;
 
     /// <summary>
     /// Note: On Windows and Linux an open dialog can not be both a file selector 
@@ -22,7 +18,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>An array of file paths chosen by the user</returns>
     public Task<string[]> ShowOpenDialogAsync(BrowserWindow browserWindow, OpenDialogOptions options)
     {
-        return dialog.ShowOpenDialogAsync(browserWindow.InnerBrowserWindow, options.InnerOpenDialogOptions);
+        return _dialog.ShowOpenDialogAsync(browserWindow.InnerBrowserWindow, options.InnerOpenDialogOptions);
     }
     /// <summary>
     /// Dialog for save files.
@@ -32,7 +28,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>Returns String, the path of the file chosen by the user, if a callback is provided it returns an empty string.</returns>
     public Task<string> ShowSaveDialogAsync(BrowserWindow browserWindow, SaveDialogOptions options)
     {
-        return dialog.ShowSaveDialogAsync(browserWindow.InnerBrowserWindow, options.InnerSaveDialogOptions);
+        return _dialog.ShowSaveDialogAsync(browserWindow.InnerBrowserWindow, options.InnerSaveDialogOptions);
     }
 
     /// <summary>
@@ -46,7 +42,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>The API call will be asynchronous and the result will be passed via MessageBoxResult.</returns>
     public async Task<MessageBoxResult> ShowMessageBoxAsync(string message)
     {
-        return await dialog.ShowMessageBoxAsync(message);
+        return await _dialog.ShowMessageBoxAsync(message);
     }
 
     /// <summary>
@@ -60,7 +56,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>The API call will be asynchronous and the result will be passed via MessageBoxResult.</returns>
     public async Task<MessageBoxResult> ShowMessageBoxAsync(MessageBoxOptions messageBoxOptions)
     {
-        return await dialog.ShowMessageBoxAsync(messageBoxOptions);
+        return await _dialog.ShowMessageBoxAsync(messageBoxOptions);
     }
 
     /// <summary>
@@ -73,7 +69,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>The API call will be asynchronous and the result will be passed via MessageBoxResult.</returns>
     public async Task<MessageBoxResult> ShowMessageBoxAsync(BrowserWindow browserWindow, string message)
     {
-        return await dialog.ShowMessageBoxAsync(browserWindow.InnerBrowserWindow, message);
+        return await _dialog.ShowMessageBoxAsync(browserWindow.InnerBrowserWindow, message);
     }
 
     /// <summary>
@@ -86,7 +82,7 @@ class DialogWrapper: IDialogWrapper
     /// <returns>The API call will be asynchronous and the result will be passed via MessageBoxResult.</returns>
     public Task<MessageBoxResult> ShowMessageBoxAsync(BrowserWindow browserWindow, MessageBoxOptions messageBoxOptions)
     {
-        return dialog.ShowMessageBoxAsync(browserWindow.InnerBrowserWindow, messageBoxOptions);
+        return _dialog.ShowMessageBoxAsync(browserWindow.InnerBrowserWindow, messageBoxOptions);
     }
     /// <summary>
     /// Displays a modal dialog that shows an error message.
@@ -100,33 +96,7 @@ class DialogWrapper: IDialogWrapper
     /// <param name="content">The text content to display in the error box.</param>
     public void ShowErrorBox(string title, string content)
     {
-        dialog.ShowErrorBox(title, content);
+        _dialog.ShowErrorBox(title, content);
     }
-
-    /// <summary>
-    /// On macOS, this displays a modal dialog that shows a message and certificate information,
-    /// and gives the user the option of trusting/importing the certificate. If you provide a 
-    /// browserWindow argument the dialog will be attached to the parent window, making it modal.
-    /// </summary>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public Task ShowCertificateTrustDialogAsync(CertificateTrustDialogOptions options)
-    {
-        return dialog.ShowCertificateTrustDialogAsync(options);
-    }
-
-    /// <summary>
-    /// On macOS, this displays a modal dialog that shows a message and certificate information,
-    /// and gives the user the option of trusting/importing the certificate. If you provide a 
-    /// browserWindow argument the dialog will be attached to the parent window, making it modal.
-    /// </summary>
-    /// <param name="browserWindow"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public Task ShowCertificateTrustDialogAsync(BrowserWindow browserWindow, CertificateTrustDialogOptions options)
-    {
-        return dialog.ShowCertificateTrustDialogAsync(browserWindow.InnerBrowserWindow, options);
-    }
-
 
 }

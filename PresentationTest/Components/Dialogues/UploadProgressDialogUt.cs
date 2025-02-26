@@ -34,7 +34,7 @@ public class UploadProgressDialogUt
     [Test]
     public void Render_ParametersSet()
     {
-        var mudDialogInstance = Substitute.For<MudDialogInstance>();
+        var mudDialogInstance = Substitute.For<IMudDialogInstance>();
         var progress = new Progress<int>();
 
         var systemUnderTest = GetRenderedComponent(mudDialogInstance, progress);
@@ -49,7 +49,7 @@ public class UploadProgressDialogUt
     [Test]
     public void Progress_Report_UpdatesProgressLinear()
     {
-        var mudDialogInstance = Substitute.For<MudDialogInstance>();
+        var mudDialogInstance = Substitute.For<IMudDialogInstance>();
         var synchronizationContext = Substitute.For<SynchronizationContext>();
         synchronizationContext
             .When(s => s.Post(Arg.Any<SendOrPostCallback>(), Arg.Any<object?>()))
@@ -75,7 +75,7 @@ public class UploadProgressDialogUt
     [Test]
     public void Progress_Report100_ClosesDialog()
     {
-        var mudDialogInstance = Substitute.For<MudDialogInstance>();
+        var mudDialogInstance = Substitute.For<IMudDialogInstance>();
         var synchronizationContext = Substitute.For<SynchronizationContext>();
         synchronizationContext
             .When(s => s.Post(Arg.Any<SendOrPostCallback>(), Arg.Any<object?>()))
@@ -99,10 +99,10 @@ public class UploadProgressDialogUt
         */
     }
 
-    private IRenderedComponent<UploadProgressDialog> GetRenderedComponent(MudDialogInstance? mudDialogInstance = null,
+    private IRenderedComponent<UploadProgressDialog> GetRenderedComponent(IMudDialogInstance? mudDialogInstance = null,
         Progress<int>? progress = null)
     {
-        mudDialogInstance ??= Substitute.For<MudDialogInstance>();
+        mudDialogInstance ??= Substitute.For<IMudDialogInstance>();
         progress ??= new Progress<int>();
 
         return _ctx.RenderComponent<UploadProgressDialog>(param => param

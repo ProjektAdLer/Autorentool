@@ -92,7 +92,6 @@ public class XmlResourceFactoryUt
         };
 
         mockReadAtf.GetResourceElementList().Returns(resourceList);
-        var space_1 = new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "", "");
         var fileString = Path.Join(currWorkDir, "XMLFilesForExport", "Document");
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "Document"),
             new MockFileData("Hello World"));

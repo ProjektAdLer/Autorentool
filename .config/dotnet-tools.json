@@ -6,7 +6,15 @@
       "version": "23.6.1",
       "commands": [
         "electronize"
-      ]
+      ],
+      "rollForward": false
+    },
+    "electronsharp.cli": {
+      "version": "34.0.1.55684",
+      "commands": [
+        "electron-sharp"
+      ],
+      "rollForward": false
     }
   }
 }

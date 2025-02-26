@@ -26,17 +26,6 @@ public class FormModelEntityMappingProfileUt
     // }
 
     [Test]
-    public void Debug()
-    {
-        var mapper = new MapperConfiguration(cfg =>
-        {
-            FormModelEntityMappingProfile.Configure(cfg);
-            ViewModelFormModelMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappersOnce();
-        });
-    }
-
-    [Test]
     public void MultipleChoiceQuestion_SingleResponse_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();

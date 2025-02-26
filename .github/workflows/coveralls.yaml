@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, windows-latest, macos-latest]
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
     steps:
       # checkout the repo
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -47,7 +47,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
     strategy:
@@ -73,7 +73,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
       
       # build only the specific test project we are testing   
       - name: Build test project

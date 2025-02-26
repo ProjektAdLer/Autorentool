@@ -14,7 +14,7 @@
             ? Localizer["MultipleChoiceQuestionForm.TitleContent.Create." + Difficulty]
             : Localizer["MultipleChoiceQuestionForm.TitleContent.Edit." + Difficulty])
     </MudText>
-    <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="() => OnSubmitted.InvokeAsync()"
+    <MudIconButton Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="() => OnSubmitted.InvokeAsync()"
                    ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
 </div>
 
@@ -29,8 +29,7 @@
     <Fields>
         <div class="border-4 border-adlerdarkblue rounded-lg w-[500px] p-2 bg-adlerbgbright">
             <div class="flex flex-col gap-1">
-                <MudText
-                    Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
+                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
                 <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                                   For="@(() => FormModel.Text)"
@@ -108,7 +107,7 @@
                                                        Disabled="FormModel.Choices.Count <= 2"
                                                        Size="Size.Small"
                                                        Class="w-10 h-10 button-delete-choice"
-                                                       Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
+                                                       title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
 
                                     </div>
                                 }
@@ -142,7 +141,7 @@
                                                    Disabled="FormModel.Choices.Count <= 2"
                                                    Size="Size.Small"
                                                    Class="w-10 h-10 button-delete-choice"
-                                                   Title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
+                                                   title="@Localizer["MultipleChoiceQuestionForm.Text.DeleteChoice"]"/>
                                 </div>
                             }
                         </div>
@@ -161,7 +160,7 @@
             </div>
         </div>
     </Fields>
-
+    
     <FooterButtons>
         <MudButton Class="btn-standard m-0" OnClick="() => { _questionForm?.SubmitAsync(); }">
             @(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Button.Create"] : Localizer["MultipleChoiceQuestionForm.Button.Edit"])

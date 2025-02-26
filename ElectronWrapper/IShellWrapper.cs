@@ -1,4 +1,4 @@
-﻿using ElectronNET.API.Entities;
+﻿using ElectronSharp.API.Entities;
 using System.Threading.Tasks;
 
 namespace ElectronWrapper;
@@ -13,10 +13,8 @@ public interface IShellWrapper
     /// <param name="path">The path to the directory / file.</param>
     /// <returns>The error message corresponding to the failure if a failure occurred, otherwise <see cref="string.Empty"/>.</returns>
     Task<string> OpenPathAsync(string path);
-    Task<ShortcutDetails> ReadShortcutLinkAsync(string shortcutPath);
     Task ShowItemInFolderAsync(string fullPath);
     Task<bool> TrashItemAsync(string fullPath);
-    Task<bool> WriteShortcutLinkAsync(string shortcutPath, ShortcutLinkOperation operation, ShortcutDetails options);
 
     /// <summary>
     /// Open the given external protocol URL in the desktop’s default manner. 

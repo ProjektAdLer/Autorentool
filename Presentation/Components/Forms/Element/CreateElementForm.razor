@@ -161,7 +161,7 @@
                                            Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
                                            OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
                                            Class="show-content-preview py-2"
-                                           Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+                                           title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
                                             
                             <MudTextField
                                 T="ILearningContentFormModel"
@@ -172,13 +172,13 @@
                                 For="@(() => FormModel.LearningContent!)"
                                 ReadOnly="true"
                                 Disabled="true"
-                                DisableUnderLine="true"
+                                Underline="false"
                                 Style="color: rgb(69,160,229);"
                                 Margin="Margin.Dense"
                                 Class="pb-3 px-1">
                             </MudTextField>
                             
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Edit"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Edit"]">
                             </MudIconButton>
                         </div>
                     </div>
@@ -258,7 +258,7 @@
                                                   Class="pl-2"/>
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                    OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
-                                                   Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
+                                                   title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
                                                    Size="Size.Small"
                                                    Class="p-2">
                                     </MudIconButton>
@@ -271,7 +271,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Add"
                                            Class="add-story-block-button p-2"
                                            OnClick="@(() => StoryContentModel.StoryText.Add(""))"
-                                           Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]
+                                           title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]
                                            Size="Size.Small">
                             </MudIconButton>
                         </div>
@@ -435,7 +435,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -453,7 +453,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -465,10 +465,11 @@
         };
         var dialog = await DialogService.ShowAsync<LearningContentDialog>(Localizer["CreateElementForm.LearningMaterial.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
+        if(dialog.Result.Result == null) return;
         if (dialog.Result.Result.Canceled)
             return;
 
-        if (!Equals(FormModel.LearningContent, dialog.Result.Result.Data))
+        if (!Equals(FormModel.LearningContent, dialog.Result.Result.Data) && dialog.Result.Result.Data != null)
         {
             var dialogResult = (ILearningContentFormModel)dialog.Result.Result.Data;
             FormModel.LearningContent = dialogResult;

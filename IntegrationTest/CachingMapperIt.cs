@@ -226,7 +226,7 @@ public class CachingMapperIt
                 Is.EqualTo(1));
             Assert.That(
                 workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningSpaceLayout.StoryElements.Values.First(),
-                Is.EqualTo(storyElementVm));
+                Is.EqualTo(storyElementVm).UsingPropertiesComparer());
         });
     }
 

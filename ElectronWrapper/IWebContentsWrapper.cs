@@ -1,5 +1,5 @@
-﻿using ElectronNET.API;
-using ElectronNET.API.Entities;
+﻿using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 using System;
 using System.Threading.Tasks;
 
@@ -10,10 +10,8 @@ interface IWebContentsWrapper
     int Id { get; }
     Session Session { get; }
 
-    event Action<bool> OnCrashed;
     event Action OnDidFinishLoad;
 
-    Task<PrinterInfo[]> GetPrintersAsync();
     Task<string> GetUrl();
     void InsertCss(bool isBrowserWindow, string path);
     Task LoadUrlAsync(string url);

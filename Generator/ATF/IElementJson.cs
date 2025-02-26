@@ -9,6 +9,7 @@ namespace Generator.ATF;
 public interface IElementJson
 {
     int ElementId { get; set; }
+    // ReSharper disable once InconsistentNaming
     string ElementUUID { get; set; }
     string ElementName { get; set; }
     string ElementCategory { get; set; }

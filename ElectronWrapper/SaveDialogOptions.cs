@@ -6,15 +6,15 @@ public class SaveDialogOptions
 {
     public SaveDialogOptions()
     {
-        InnerSaveDialogOptions = new ElectronNET.API.SaveDialogOptions();
+        InnerSaveDialogOptions = new ElectronSharp.API.SaveDialogOptions();
     }
 
-    internal SaveDialogOptions(ElectronNET.API.SaveDialogOptions innerSaveDialogOptions)
+    internal SaveDialogOptions(ElectronSharp.API.SaveDialogOptions innerSaveDialogOptions)
     {
         InnerSaveDialogOptions = innerSaveDialogOptions;
     }
     
-    internal readonly ElectronNET.API.SaveDialogOptions InnerSaveDialogOptions;
+    internal readonly ElectronSharp.API.SaveDialogOptions InnerSaveDialogOptions;
 
     public string Title
     {
