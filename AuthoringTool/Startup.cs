@@ -58,7 +58,7 @@ using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
-
+// ReSharper disable InconsistentNaming
 public class Startup
 {
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
@@ -349,4 +349,5 @@ public class Startup
         var cleanupH5pPlayerPort = cleanupH5pPlayerPortFactory.CreateCleanupH5pPlayerPort();
         cleanupH5pPlayerPort.CleanDirectoryForTemporaryH5psInWwwroot();
     }
+    // ReSharper restore InconsistentNaming
 }
