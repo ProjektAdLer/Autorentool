@@ -7,9 +7,9 @@ public static class MapperConfigurationExpressionExtensions
 {
     static MapperConfigurationExpressionExtensions()
     {
-        CollectionMappersAdded = new List<IMapperConfigurationExpression>();
+        ConfigureCollectionMappersAdded = new List<IMapperConfigurationExpression>();
     }
-    private static readonly List<IMapperConfigurationExpression> CollectionMappersAdded;
+    private static readonly List<IMapperConfigurationExpression> ConfigureCollectionMappersAdded;
     
     /// <summary>
     /// Adds collection mappers to the configuration only once.
@@ -17,8 +17,8 @@ public static class MapperConfigurationExpressionExtensions
     /// <param name="cfg">The configuration expression.</param>
     public static void AddCollectionMappersOnce(this IMapperConfigurationExpression cfg)
     {
-        if (CollectionMappersAdded.Contains(cfg)) return;
+        if (ConfigureCollectionMappersAdded.Contains(cfg)) return;
         cfg.AddCollectionMappers();
-        CollectionMappersAdded.Add(cfg);
+        ConfigureCollectionMappersAdded.Add(cfg);
     }
 }
