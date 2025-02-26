@@ -52,7 +52,6 @@
                   <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                 <div class="px-4 pb-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
-                               AnchorOrigin="Origin.BottomCenter"
                                OnKeyUp="HandleKeyEvent"
                                Text="@FormDataContainer.FormModel.Theme.ToString()"
                                For="@(() => FormModel.Theme)">

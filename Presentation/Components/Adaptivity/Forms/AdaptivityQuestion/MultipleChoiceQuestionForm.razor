@@ -29,8 +29,7 @@
     <Fields>
         <div class="border-4 border-adlerdarkblue rounded-lg w-[500px] p-2 bg-adlerbgbright">
             <div class="flex flex-col gap-1">
-                <MudText
-                    Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
+                <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Text"]</MudText>
                 <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                                   For="@(() => FormModel.Text)"
@@ -161,7 +160,7 @@
             </div>
         </div>
     </Fields>
-
+    
     <FooterButtons>
         <MudButton Class="btn-standard m-0" OnClick="() => { _questionForm?.SubmitAsync(); }">
             @(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Button.Create"] : Localizer["MultipleChoiceQuestionForm.Button.Edit"])
