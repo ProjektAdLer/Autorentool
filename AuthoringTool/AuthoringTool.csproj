@@ -47,15 +47,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Pages\Error.cshtml" />
-      <AdditionalFiles Include="Pages\Index.razor" />
-      <AdditionalFiles Include="Pages\_Host.cshtml" />
-      <AdditionalFiles Include="Pages\_Layout.cshtml" />
-      <AdditionalFiles Include="View\Shared\MainLayout.razor" />
-      <AdditionalFiles Include="View\Shared\NavMenu.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="View" />
       <Folder Include="wwwroot\fonts" />
       <Folder Include="wwwroot\H5pStandalone\h5p-folder\" />
