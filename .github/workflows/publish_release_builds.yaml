@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -47,8 +47,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            8.0.100
-            6.0.416
+            9.0.200
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -63,7 +62,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
         
       - name: Install npm dependencies
@@ -76,7 +75,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target osx
+        run: dotnet electron-sharp build /target osx
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -104,7 +103,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -120,7 +119,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -133,7 +132,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target win
+        run: dotnet electron-sharp build /target win
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -185,7 +184,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -200,7 +199,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -213,7 +212,7 @@ jobs:
         
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target linux
+        run: dotnet electron-sharp build /target linux
         
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -264,7 +263,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -279,7 +278,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -292,7 +291,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target custom "linux-arm64;linux" /electron-arch arm64
+        run: dotnet electron-sharp build /target custom "linux-arm64;linux" /electron-arch arm64
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -320,20 +319,20 @@ jobs:
           asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
           tag: ${{ github.ref }}
   
-  discord-notification:
-    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Prepare release body (description)
-        id: prep_body
-        run: |
-          echo "${{ github.event.release.body }}" > changes.md
-
-      - name: Discord notification
-        uses: appleboy/discord-action@master
-        with:
-          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
-          username: GitHub Releases
-          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
-          file: changes.md
+  #discord-notification:
+  #  needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
+  #  runs-on: ubuntu-22.04
+  #  steps:
+  #    - name: Prepare release body (description)
+  #      id: prep_body
+  #      run: |
+  #        echo "${{ github.event.release.body }}" > changes.md
+  #
+  #    - name: Discord notification
+  #      uses: appleboy/discord-action@master
+  #      with:
+  #        webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
+  #        webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
+  #        username: GitHub Releases
+  #        message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
+  #        file: changes.md
