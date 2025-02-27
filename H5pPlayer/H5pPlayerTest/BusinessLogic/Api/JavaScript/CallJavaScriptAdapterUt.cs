@@ -1,6 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
-using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using Microsoft.JSInterop;
 using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
@@ -101,11 +100,9 @@ public class CallJavaScriptAdapterUt
 
 
     private static CallJavaScriptAdapter CreateCallJavaScriptAdapter(
-        IJSRuntime? fakeJsInterop = null,
-        IValidateH5pUc fakeValidateH5pUc = null!)
+        IJSRuntime? fakeJsInterop = null!)
     {
         fakeJsInterop = fakeJsInterop ?? Substitute.For<IJSRuntime>();
-        fakeValidateH5pUc = fakeValidateH5pUc ?? Substitute.For<IValidateH5pUc>();
         var systemUnderTest = new CallJavaScriptAdapter(fakeJsInterop);
         return systemUnderTest;
     }

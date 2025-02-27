@@ -1,5 +1,4 @@
 ﻿using H5pPlayer.Presentation.PresentationLogic;
-using NSubstitute;
 
 namespace H5pPlayerTest.Presentation.PresentationLogic;
 

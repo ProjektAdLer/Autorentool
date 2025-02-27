@@ -1,8 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
-using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
-using Microsoft.JSInterop;
-using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.Api.JavaScript;

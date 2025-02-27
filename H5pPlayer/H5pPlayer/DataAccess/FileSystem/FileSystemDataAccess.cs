@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using System.IO.Compression;
 using DataAccess.Extensions;
 using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 using H5pPlayer.General.Path;

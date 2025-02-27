@@ -55,7 +55,7 @@ public class InvalidPathErrorViewModel
         } 
     }
     
-    private event Action OnChange;
+    private event Action? OnChange;
 
     private void NotifyStateChanged()
     {

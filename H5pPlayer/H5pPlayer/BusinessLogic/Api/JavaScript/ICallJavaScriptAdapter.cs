@@ -1,5 +1,4 @@
-﻿using H5pPlayer.BusinessLogic.Entities;
-using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
+﻿using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 
 namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 

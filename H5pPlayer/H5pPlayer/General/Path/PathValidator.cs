@@ -2,10 +2,7 @@
 
 public class PathValidator
 {
-    public PathValidator()
-    {
-    }
-
+ 
     public void ThrowArgumentExceptionIfPathIsNotRooted(string path, string message)
     {
         if(!System.IO.Path.IsPathFullyQualified(path))
