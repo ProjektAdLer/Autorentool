@@ -64,7 +64,7 @@
                            Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             </MudIconButton>
 
-            <MudIconButton OnClick="@GenerateLearningWorld"
+            <MudIconButton id="HeaderBar.GenerateLearningWorld.Button" OnClick="@GenerateLearningWorld"
                            title="@Localizer["3DWorld.Generate.Hover"].Value"
                            Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
                            Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"

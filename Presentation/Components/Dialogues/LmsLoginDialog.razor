@@ -7,10 +7,10 @@
 @using Shared.Configuration
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
-<MudPaper Height="450px" Style="overflow: hidden; position: relative;">
+<MudPaper id="LmsLoginDialog.Dialog.Paper" Height="450px" Style="overflow: hidden; position: relative;">
     <div class="w-full flex flex-row items-center justify-between">
         <MudText Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="CloseDialog"
+        <MudIconButton id="LmsLoginDialog.CloseDialog.Button" Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="CloseDialog"
                        ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
     </div>
 
@@ -49,9 +49,9 @@
                             </div>
 
                             <div class="logged-in-container flex flex-col justify-center gap-2 py-2">
-                                <div class="flex flex-row gap-1 justify-center">
-                                    <p class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
-                                    <p class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
+                                <div id="LmsLoginDialog.LoggedInContainer.Div" class="flex flex-row gap-1 justify-center">
+                                    <p id="LmsLoginDialog.LoggedInMessage.Text" class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
+                                    <p id="LmsLoginDialog.LoggedInUserName.Text" class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
                                 </div>
                                 <MudButton Class="btn-standard mx-36" title=@Localizer["DialogContent.Button.Logout.Title"]
                                            OnClick="Logout">
@@ -143,17 +143,17 @@
                         <div class="flex flex-col">
                             <MudForm>
                                 <div class="flex flex-col">
-                                    <MudTextField @bind-Value="BackendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
+                                    <MudTextField id="LmsLoginDialog.BackendUrl.TextField" @bind-Value="BackendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.BackendUrl.Required"]"/>
                                     @if (_errorInvalidUrlMessage != "")
                                     {
                                         <MudText Color="Color.Error" Typo="Typo.subtitle2">@_errorInvalidUrlMessage</MudText>
                                     }
-                                    <MudTextField @bind-Value="Username" Label=@Localizer["DialogContent.Field.Username"]
+                                    <MudTextField id="LmsLoginDialog.Username.TextField" @bind-Value="Username" Label=@Localizer["DialogContent.Field.Username"]
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
-                                    <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
+                                    <MudTextField id="LmsLoginDialog.Password.TextField" @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
                                                   OnKeyUp="OnKeyPress"
                                                   InputType=@PasswordInputType Adornment="Adornment.End"
                                                   AdornmentIcon=@ShowPasswordIcon
@@ -191,7 +191,7 @@
                                        title=@Localizer["DialogContent.Button.ForgotPassword.Title"] class="pb-2">
                                         @Localizer["DialogContent.Button.ForgotPassword"]
                                     </a>
-                                    <MudButton Class="mt-6 btn-standard mx-36" OnClick="SubmitForm"
+                                    <MudButton id="LmsLoginDialog.SubmitForm.Button" Class="mt-6 btn-standard mx-36" OnClick="SubmitForm"
                                                title="@Localizer["DialogContent.Button.Login.Title"]">
                                         <MudIcon Icon="@Icons.Material.Filled.Login"></MudIcon>
                                         <MudText Class="px-2 uppercase font-bold">@Localizer["DialogContent.Button.Login"]</MudText>
