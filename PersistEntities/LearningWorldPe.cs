@@ -103,8 +103,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 
         //LearningWorlds created in or before Version 2.0.0 have Goals instead of LearningOutcomeCollection
         //To ensure compatibility, we convert Goals to ManualLearningOutcomePe and add them to LearningOutcomeCollection - m.ho
-#pragma warning disable
-        if (!LearningSpaces.Any(x => x.LearningOutcomeCollection == null)) return;
+#pragma warning disable CS0618 // Type or member is obsolete
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (LearningSpaces.All(x => x.LearningOutcomeCollection != null)) return;
         foreach (var space in LearningSpaces)
         {
             space.LearningOutcomeCollection = new LearningOutcomeCollectionPe();
@@ -112,5 +113,5 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
                 space.LearningOutcomeCollection.LearningOutcomes.Add(new ManualLearningOutcomePe(space.Goals));
         }
     }
-#pragma warning restore
+#pragma warning restore CS0618 // Type or member is obsolete
 }

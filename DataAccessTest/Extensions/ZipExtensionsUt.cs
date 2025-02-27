@@ -14,7 +14,7 @@ public class ZipExtensionsUt
     {
     }
 
-    private IFileSystem _fileSystem;
+    private IFileSystem _fileSystem = null!;
 
     [Test]
     [Platform(Exclude = "Linux, Unix, MacOSX")]

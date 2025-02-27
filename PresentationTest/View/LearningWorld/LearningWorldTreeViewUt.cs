@@ -42,9 +42,9 @@ public class LearningWorldTreeViewUt
     private IMediator Mediator { get; set; }
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
     private LearningWorldViewModel? World { get; set; }
-    private LearningElementViewModel StoryEle1 { get; set; }
-    private LearningElementViewModel StoryEle2 { get; set; }
-    private LearningElementViewModel Ele1 { get; set; }
+    private LearningElementViewModel StoryEle1 { get; set; } = null!;
+    private LearningElementViewModel StoryEle2 { get; set; } = null!;
+    private LearningElementViewModel Ele1 { get; set; } = null!;
 
     [TearDown]
     public void Teardown()

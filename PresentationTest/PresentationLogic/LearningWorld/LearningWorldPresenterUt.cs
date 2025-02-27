@@ -27,7 +27,6 @@ namespace PresentationTest.PresentationLogic.LearningWorld;
 [TestFixture]
 public class LearningWorldPresenterUt
 {
-    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
 
     [Test]
     public void EditLearningWorld_CallsPresentationLogic()
@@ -58,7 +57,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public async Task SaveLearningWorldAsync_CallsSaveLearningWorldAsyncIfLearningWorldIsNotNull()
+    public void SaveLearningWorld_CallsSaveLearningWorldAsyncIfLearningWorldIsNotNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
@@ -82,7 +81,7 @@ public class LearningWorldPresenterUt
 
 
     [Test]
-    public async Task SaveLearningWorldAsync_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
+    public void SaveLearningWorld_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockErrorService = Substitute.For<IErrorService>();

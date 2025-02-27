@@ -177,18 +177,18 @@ public class DataAccess : IDataAccess
         //return world entity
         return world;
 
-        async Task<string> CopyContentAsync(ILearningWorld world)
+        async Task<string> CopyContentAsync(ILearningWorld worldToCopyFrom)
         {
             EnsureCreated(ApplicationPaths.ContentFolder);
-            var fileContents = world.LearningSpaces
+            var fileContents = worldToCopyFrom.LearningSpaces
                 .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
-                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+                .Concat(worldToCopyFrom.UnplacedLearningElements.Select(element => element.LearningContent))
                 .Where(content => content is FileContent)
                 .Cast<FileContent>()
                 .ToList();
             //copy content files into content folder (avoiding duplicates) and changing filepaths in world
-            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
-            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
+            var newContentFolder = FileSystem.Path.Join(tempFolder, "Content");
+            var contentFiles = FileSystem.Directory.GetFiles(newContentFolder).Where(filepath =>
                 !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
             foreach (var contentFile in contentFiles)
             {
@@ -214,7 +214,7 @@ public class DataAccess : IDataAccess
                 }
             }
 
-            return contentFolder;
+            return newContentFolder;
         }
     }
 

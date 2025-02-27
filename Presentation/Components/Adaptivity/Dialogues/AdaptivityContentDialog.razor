@@ -146,16 +146,17 @@
 
     [Parameter, EditorRequired] public AdaptivityContentFormModel MyContent { get; set; } = null!;
 
-    [Parameter] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ILearningContentViewModel? ContentToEdit { get; set; } = null;
+    [Parameter]
+    public ILearningContentViewModel? ContentToEdit { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
 
-
+    // ReSharper disable once NotAccessedField.Local
     private MudTable<IAdaptivityTaskViewModel>? _table;
 
     private readonly Dictionary<IAdaptivityTaskViewModel, MudForm> _nameMudFormRefs = new();
 
+    // ReSharper disable once CollectionNeverQueried.Local
     private readonly Dictionary<IAdaptivityTaskViewModel, string> _nameValues = new();
 
     protected override async Task OnParametersSetAsync()
@@ -228,7 +229,7 @@
             { nameof(AdaptivityQuestionDialog.Task), task },
             { nameof(AdaptivityQuestionDialog.Difficulty), difficulty }
         }, options);
-        var result = await dialog.Result;
+        _ = await dialog.Result;
         await InvokeAsync(StateHasChanged);
     }
 

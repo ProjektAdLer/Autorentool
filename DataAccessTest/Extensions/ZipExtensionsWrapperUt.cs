@@ -1,7 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
 using DataAccess.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

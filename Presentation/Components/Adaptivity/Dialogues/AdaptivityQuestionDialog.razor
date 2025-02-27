@@ -55,8 +55,9 @@
     public QuestionDifficulty Difficulty { get; set; }
 
     [CascadingParameter]
-    public IMudDialogInstance MudDialog { get; set; } = default!;
+    public IMudDialogInstance MudDialog { get; set; } = null!;
 
+    // ReSharper disable once RedundantDefaultMemberInitializer
     private bool _isSidePanelOpen = false;
 
     private void CloseDialog()

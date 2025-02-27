@@ -112,7 +112,8 @@ public class ContentFilesViewUt
 
                 var nameTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Name");
-                var name = nameTd.Children.First(child => child.Matches("div")).Children
+                Assert.That(nameTd, Is.Not.Null);
+                var name = nameTd!.Children.First(child => child.Matches("div")).Children
                     .First(child => child.Matches("p"))
                     .GetInnerText();
                 Assert.That(name, Is.EqualTo(item.Name));
