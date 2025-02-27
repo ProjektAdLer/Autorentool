@@ -46,10 +46,12 @@ public class FileContent : IFileContent
         return Equals((FileContent)obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Name, Type, Filepath);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(FileContent? left, FileContent? right)
     {

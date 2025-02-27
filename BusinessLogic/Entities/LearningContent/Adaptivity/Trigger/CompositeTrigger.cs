@@ -15,6 +15,7 @@ public class CompositeTrigger : IAdaptivityTrigger
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -60,10 +61,12 @@ public class CompositeTrigger : IAdaptivityTrigger
         return Equals((CompositeTrigger) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine((int) Condition, Left, Right);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(CompositeTrigger? left, CompositeTrigger? right)
     {

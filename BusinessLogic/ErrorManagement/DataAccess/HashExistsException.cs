@@ -2,7 +2,7 @@ namespace BusinessLogic.ErrorManagement.DataAccess;
 
 public class HashExistsException : Exception
 {
-    public HashExistsException(string duplicateFileName, string duplicateFilePath) : base()
+    public HashExistsException(string duplicateFileName, string duplicateFilePath)
     {
         DuplicateFileName = duplicateFileName;
         DuplicateFilePath = duplicateFilePath;

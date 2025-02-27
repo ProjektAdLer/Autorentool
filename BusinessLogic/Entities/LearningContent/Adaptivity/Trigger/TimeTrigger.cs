@@ -14,6 +14,7 @@ public class TimeTrigger : IAdaptivityTrigger
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -51,10 +52,12 @@ public class TimeTrigger : IAdaptivityTrigger
         return Equals((TimeTrigger) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Expected, (int) TimeFrameType);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(TimeTrigger? left, TimeTrigger? right)
     {

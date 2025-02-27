@@ -13,6 +13,7 @@ public class AdaptivityRule : IAdaptivityRule
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -52,10 +53,12 @@ public class AdaptivityRule : IAdaptivityRule
         return Equals((AdaptivityRule) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Trigger, Action);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(AdaptivityRule? left, AdaptivityRule? right)
     {
