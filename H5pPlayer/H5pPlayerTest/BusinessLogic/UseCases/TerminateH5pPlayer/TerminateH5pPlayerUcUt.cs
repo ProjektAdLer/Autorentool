@@ -17,7 +17,7 @@ public class TerminateH5pPlayerUcUt
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         mockFileSystemDataAccess.DirectoryExists(
             Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);
-        var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
+        var systemUnderTest = CreateSystemUnderTest(null!,mockFileSystemDataAccess);
         
         await systemUnderTest.TerminateH5pPlayer();
         
@@ -37,8 +37,8 @@ public class TerminateH5pPlayerUcUt
     }
 
     private static TerminateH5pPlayerUc CreateSystemUnderTest(
-        ICallJavaScriptAdapter iCallJavaScriptAdapter = null,
-        IFileSystemDataAccess fileSystemDataAccess = null)
+        ICallJavaScriptAdapter iCallJavaScriptAdapter = null!,
+        IFileSystemDataAccess fileSystemDataAccess = null!)
     {
         iCallJavaScriptAdapter = iCallJavaScriptAdapter ?? Substitute.For<ICallJavaScriptAdapter>();
         fileSystemDataAccess ??= Substitute.For<IFileSystemDataAccess>();

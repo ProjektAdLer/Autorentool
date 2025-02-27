@@ -33,7 +33,7 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
             try
             {
                 var pathOfH5pToPlay = GeneratePathOfH5PToPlay(callJavaScriptAdapterTo);
-                await _jsRuntime.InvokeVoidAsync(nameOfFunctionToCall, pathOfH5pToPlay);
+                await _jsRuntime!.InvokeVoidAsync(nameOfFunctionToCall, pathOfH5pToPlay);
             }
             catch (JSException jsEx)
             {
@@ -78,7 +78,7 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript
         {
             try
             {
-                await _jsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+                await _jsRuntime!.InvokeVoidAsync("terminateH5pStandalone");
             }
             catch (JSException jsEx)
             {

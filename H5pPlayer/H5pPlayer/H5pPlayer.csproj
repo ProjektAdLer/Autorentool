@@ -26,5 +26,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\DataAccess\DataAccess.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <EditorConfigFiles Remove=".editorconfig" />
+    </ItemGroup>
 
 </Project>

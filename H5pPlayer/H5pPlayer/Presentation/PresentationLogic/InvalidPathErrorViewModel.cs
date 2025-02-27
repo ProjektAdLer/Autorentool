@@ -12,10 +12,10 @@ public class InvalidPathErrorViewModel
     }
 
  
-    private string _errorTextForInvalidPath;
+    private string? _errorTextForInvalidPath;
     public string ErrorTextForInvalidPath
     {
-        get => _errorTextForInvalidPath;
+        get => _errorTextForInvalidPath!;
         set
         {
             if (_errorTextForInvalidPath != value)
@@ -26,10 +26,10 @@ public class InvalidPathErrorViewModel
         } 
     }
     
-    private string _invalidPath;
+    private string? _invalidPath;
     public string InvalidPath
     {
-        get => _invalidPath;
+        get => _invalidPath!;
         set
         {
             if (_invalidPath != value)

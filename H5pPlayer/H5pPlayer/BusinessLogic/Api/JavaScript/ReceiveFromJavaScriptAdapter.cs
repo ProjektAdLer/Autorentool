@@ -6,8 +6,10 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 
 public class ReceiveFromJavaScriptAdapter
 {
+
+
     
-    public static IValidateH5pUc ValidateH5pUc { get; set; }
+    public static IValidateH5pUc? ValidateH5pUc { get; set; }
 
 
     /// <summary>

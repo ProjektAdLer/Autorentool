@@ -102,7 +102,7 @@ public class CallJavaScriptAdapterUt
 
     private static CallJavaScriptAdapter CreateCallJavaScriptAdapter(
         IJSRuntime? fakeJsInterop = null,
-        IValidateH5pUc fakeValidateH5pUc = null)
+        IValidateH5pUc fakeValidateH5pUc = null!)
     {
         fakeJsInterop = fakeJsInterop ?? Substitute.For<IJSRuntime>();
         fakeValidateH5pUc = fakeValidateH5pUc ?? Substitute.For<IValidateH5pUc>();
