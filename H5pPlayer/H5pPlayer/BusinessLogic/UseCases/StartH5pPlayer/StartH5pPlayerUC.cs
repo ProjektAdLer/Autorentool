@@ -3,7 +3,6 @@ using H5pPlayer.BusinessLogic.BusinessRules;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
-using Shared.Configuration;
 
 namespace H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 
@@ -29,8 +28,8 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     }
 
     /// <summary>
-    /// Was für pfade kommen an:
-    /// ContentFIles
+    /// the paths:
+    /// ContentFiles
     ///     ZipSourcePath: C:\Users\%USERPROFILE%\AppData\Roaming\AdLerAuthoring\ContentFiles\Accordion_Test.h5p
     /// 
     /// UnzippedH5psPath: https://localhost:8001/H5pStandalone/h5p-folder
@@ -47,7 +46,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     private void MapTOtoEntity(StartH5pPlayerInputTO startH5pPlayerInputTo)
     {
         CreateH5pEntity();
-        H5pEntity.ActiveDisplayMode = startH5pPlayerInputTo.DisplayMode;
+        H5pEntity!.ActiveDisplayMode = startH5pPlayerInputTo.DisplayMode;
         MapPaths(startH5pPlayerInputTo);
     }
 
@@ -55,7 +54,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     {
         try
         {
-            H5pEntity.H5pZipSourcePath = startH5pPlayerInputTo.H5pZipSourcePath;
+            H5pEntity!.H5pZipSourcePath = startH5pPlayerInputTo.H5pZipSourcePath;
             H5pEntity.UnzippedH5psPath = startH5pPlayerInputTo.UnzippedH5psPath;
         }
         catch (ArgumentException e)
@@ -89,12 +88,12 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     /// </summary>
     private void ExtractZippedSourceH5pToTemporaryFolder()
     {
-        FileSystemDataAccess.ExtractZipFile(H5pEntity.H5pZipSourcePath, BuildTemporaryDirectoryFullNameForOneH5p());
+        FileSystemDataAccess.ExtractZipFile(H5pEntity!.H5pZipSourcePath, BuildTemporaryDirectoryFullNameForOneH5p());
     }
 
     private async Task IfUserWantsToValidateH5pStartToValidateElseStartToDisplay()
     {
-        if(H5pEntity.ActiveDisplayMode == H5pDisplayMode.Validate)
+        if(H5pEntity!.ActiveDisplayMode == H5pDisplayMode.Validate)
             await ValidateH5PUc.StartToValidateH5p(H5pEntity);
         else
             await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
@@ -104,7 +103,7 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     private string BuildTemporaryDirectoryFullNameForOneH5p()
     {
         return TemporaryH5pManager.BuildTemporaryDirectoryFullNameForOneH5p(
-            Path.GetFileNameWithoutExtension(H5pEntity.H5pZipSourcePath));
+            Path.GetFileNameWithoutExtension(H5pEntity!.H5pZipSourcePath));
     }
     
 
@@ -115,11 +114,11 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
     }
 
 
-    internal IValidateH5pUc ValidateH5PUc { get; }
-    internal IFileSystemDataAccess FileSystemDataAccess { get; }
-    internal IDisplayH5pUC DisplayH5pUC { get; }
-    internal H5pEntity? H5pEntity { get; set; }
-    internal IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
+    private IValidateH5pUc ValidateH5PUc { get; }
+    private IFileSystemDataAccess FileSystemDataAccess { get; }
+    private IDisplayH5pUC DisplayH5pUC { get; }
+    internal H5pEntity? H5pEntity { get; private set; }
+    private IStartH5pPlayerUCOutputPort StartH5pPlayerUcOutputPort { get;  }
     private TemporaryH5psInWwwrootManager TemporaryH5pManager { get; set; }
 
 }
