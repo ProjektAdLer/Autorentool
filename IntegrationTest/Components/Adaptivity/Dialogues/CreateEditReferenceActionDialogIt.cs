@@ -25,7 +25,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEditReferenceActionDialog>
 {
     [SetUp]
-    public async Task Setup()
+    public new async Task Setup()
     {
         ExistingAction = null;
         PresentationLogic = Substitute.For<IPresentationLogic>();

@@ -15,6 +15,7 @@ public class FileInfoFullNameComparer : IEqualityComparer<IFileInfo?>
 
     public int GetHashCode(IFileInfo obj)
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         return obj.FullName != null ? obj.FullName.GetHashCode() : 0;
     }
 }

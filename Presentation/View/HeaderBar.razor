@@ -96,14 +96,18 @@
     @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
         <div class="flex justify-center items-center gap-2 cursor-default">
+            @* ReSharper disable Html.PathError *@
             <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
+            @* ReSharper restore Html.PathError *@
             <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
         </div>
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
         <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
+            @* ReSharper disable Html.PathError *@
             <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>
+            @* ReSharper restore Html.PathError *@
             <p class="font-bold text-base 2xl:text-lg truncate opacity-80 text-adlerdarkblue-800" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
@@ -130,7 +134,7 @@
         <CultureSelector/>
         <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
-        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
+        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@_icon">
             
             <MudListItem T="object" title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenManual">@Localizer["HeaderBar.Help.UserManual"]</MudLink>
@@ -644,9 +648,9 @@
     
     private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
     
-    private string icon = help;
+    private string _icon = Help;
 
-    const string help =
+    const string Help =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
         <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
             <defs>

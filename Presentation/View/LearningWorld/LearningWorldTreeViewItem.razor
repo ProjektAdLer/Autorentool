@@ -6,7 +6,7 @@
 @using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningContent.Story
 @using Presentation.PresentationLogic.LearningElement
-<div @onclick="@(e => OnSelect.InvokeAsync(LearningElement))"
+<div @onclick="@(_ => OnSelect.InvokeAsync(LearningElement))"
      class="@GetElementDivCss()">
     <div class="flex flex-row gap-2 items-center p-2 ml-14">
         <MudIcon Class="w-5 h-5 2xl:w-6 2xl:h-6 opacity-60" Icon="@GetElementIcon()"></MudIcon>

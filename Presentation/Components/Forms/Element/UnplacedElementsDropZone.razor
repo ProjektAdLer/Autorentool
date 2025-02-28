@@ -24,7 +24,7 @@
                 <div class="grid grid-cols-3 justify-items-start gap-2">
                     <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
                         <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@elementsIcon" Icon="@elementsIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Element"]"></MudToggleIconButton>
+                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@_elementsIcon" Icon="@_elementsIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Element"]"></MudToggleIconButton>
                         </ActivatorContent>
                         <ChildContent>
                             <MudMenuItem
@@ -53,7 +53,7 @@
                     </MudMenu>
                     <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
                         <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@typeIcon" Icon="@typeIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Type"]"></MudToggleIconButton>
+                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@_typeIcon" Icon="@_typeIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Type"]"></MudToggleIconButton>
                         </ActivatorContent>
                         <ChildContent>
                             <MudMenuItem
@@ -310,17 +310,17 @@
         }
     }
 
-    private string elementsIcon = elements;
+    private string _elementsIcon = Elements;
 
-    const string elements =
+    const string Elements =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-d85349f9-9c23-477b-a0d6-c38ff7f36789"" data-name=""1-Element"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
   <path d=""M1450.45,1125.6h-646.65v439.97h758.91v271.43H467V203.08h1093.47v273.21h-756.67v388.52h646.65v260.79Z"" style=""fill: #575757; stroke-width: 0px;""/>
 </svg>";
 
-    private string typeIcon = types;
+    private string _typeIcon = Types;
 
-    const string types =
+    const string Types =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <svg id=""uuid-275ad285-95dd-43ff-9093-4f7abe675612"" data-name=""2-Typ_V2"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 2000 2000"">
   <defs>

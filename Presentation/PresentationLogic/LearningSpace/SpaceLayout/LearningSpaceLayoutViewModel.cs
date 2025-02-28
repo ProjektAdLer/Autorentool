@@ -72,7 +72,7 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     {
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index), index,
-                $"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
+                $@"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
         LearningElements[index] = element;
     }
 
@@ -80,14 +80,14 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     {
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index), index,
-                $"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
+                $@"Index is out of range for the current floor plan with max capacity of {FloorPlanViewModel.Capacity}");
         StoryElements[index] = element;
     }
 
     public void RemoveElement(int index)
     {
         if (!LearningElements.ContainsKey(index))
-            throw new ArgumentException("There was no element at the given index", nameof(index));
+            throw new ArgumentException(@"There was no element at the given index", nameof(index));
         LearningElements.Remove(index);
     }
 

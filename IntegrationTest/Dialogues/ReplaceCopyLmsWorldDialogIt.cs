@@ -14,7 +14,7 @@ namespace IntegrationTest.Dialogues;
 public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWorldDialog>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         var localizer = Substitute.For<IStringLocalizer<GenericCancellationConfirmationDialog>>();
         localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));

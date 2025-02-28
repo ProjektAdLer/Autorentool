@@ -43,7 +43,7 @@
 
     protected override void OnInitialized()
     {
-        LearningOutcomeCollection.LearningOutcomes.CollectionChanged += (s, e) =>
+        LearningOutcomeCollection.LearningOutcomes.CollectionChanged += (_, _) =>
         {
             InvokeAsync(StateHasChanged);
         };

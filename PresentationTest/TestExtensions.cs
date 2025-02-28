@@ -186,14 +186,14 @@ public static class TestExtensions
 
     public static string TrimmedText(this IElement self)
     {
-        return self.TextContent?.Trim();
+        return self.TextContent.Trim();
     }
 
     public class MockNavigationManager
         : NavigationManager
     {
-        public MockNavigationManager() : base() =>
-            this.Initialize("http://localhost:2112/", "http://localhost:2112/test");
+        public MockNavigationManager() =>
+            Initialize("http://localhost:2112/", "http://localhost:2112/test");
 
         public bool WasNavigateInvoked { get; private set; }
 

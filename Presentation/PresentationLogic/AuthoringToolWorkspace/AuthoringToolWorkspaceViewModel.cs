@@ -8,7 +8,7 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
 public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
 {
-    private IDictionary<string, string>? editDialogInitialValues;
+    private IDictionary<string, string>? _editDialogInitialValues;
 
     /// <summary>
     /// Constructor for both normal usage and Automapper
@@ -39,10 +39,10 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     
     public IDictionary<string, string>? EditDialogInitialValues
     {
-        get => editDialogInitialValues;
+        get => _editDialogInitialValues;
         set
         {
-            editDialogInitialValues = value;
+            _editDialogInitialValues = value;
             OnPropertyChanged();
         }
     }

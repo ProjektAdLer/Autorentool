@@ -155,7 +155,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsBackendApiUnreachableException_ShowsErrorMessage()
     {
-        _presentationLogic.IsLmsConnected().Throws(x => throw new BackendApiUnreachableException());
+        _presentationLogic.IsLmsConnected().Throws(_ => throw new BackendApiUnreachableException());
         
         Localizer["DialogContent.Error.APIUnreachable"]
             .Returns(new LocalizedString("DialogContent.Error.APIUnreachable","API is unreachable"));
@@ -178,7 +178,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     // ANF-ID: [AHO21]
     public async Task DialogCreated_IsLmsConnectedThrowsMoodleUnreachableException_ShowsErrorMessage()
     {
-        _presentationLogic.IsLmsConnected().Throws(x => throw new BackendMoodleApiUnreachableException());
+        _presentationLogic.IsLmsConnected().Throws(_ => throw new BackendMoodleApiUnreachableException());
         
         Localizer["DialogContent.Error.MoodleUnreachable"]
             .Returns(new LocalizedString("DialogContent.Error.MoodleUnreachable","Moodle is unreachable"));
@@ -202,7 +202,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     public async Task DialogCreated_IsLmsConnectedThrowsBackendInvalidTokenException_ShowsErrorMessageAndCallsLogout()
     {
         var exceptionThrown = false;
-        _presentationLogic.IsLmsConnected().ReturnsForAnyArgs(x =>
+        _presentationLogic.IsLmsConnected().ReturnsForAnyArgs(_ =>
         {
             if (exceptionThrown)
             {
@@ -307,7 +307,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         _presentationLogic.Login(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
         _presentationLogic.When(x => x.Login(Arg.Any<string>(), Arg.Any<string>()))
-            .Do(x => _presentationLogic.IsLmsConnected().Returns(true));
+            .Do(_ => _presentationLogic.IsLmsConnected().Returns(true));
 
         var worldList = new List<LmsWorldViewModel>();
         _presentationLogic.GetLmsWorldList().Returns(worldList);
@@ -521,7 +521,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         };
         _presentationLogic.GetLmsWorldList().Returns(worldList);
         var reference = await OpenDialogAndGetDialogReferenceAsync();
-        ((LmsLoginDialog)reference.Dialog).DialogService = dialogService;
+        ((LmsLoginDialog)reference.Dialog!).DialogService = dialogService;
 
 
         var mudListItems = DialogProvider.FindComponents<MudList<LmsWorldViewModel>>()[0].FindComponents<MudListItem<LmsWorldViewModel>>();
@@ -552,7 +552,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         };
         _presentationLogic.GetLmsWorldList().Returns(worldList);
         var reference = await OpenDialogAndGetDialogReferenceAsync();
-        ((LmsLoginDialog)reference.Dialog).DialogService = dialogService;
+        ((LmsLoginDialog)reference.Dialog!).DialogService = dialogService;
         await _presentationLogic.Received(1).GetLmsWorldList();
         _presentationLogic.ClearReceivedCalls();
 
@@ -591,7 +591,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         };
         _presentationLogic.GetLmsWorldList().Returns(worldList);
         var reference = await OpenDialogAndGetDialogReferenceAsync();
-        ((LmsLoginDialog)reference.Dialog).DialogService = dialogService;
+        ((LmsLoginDialog)reference.Dialog!).DialogService = dialogService;
 
         var mudListItems = DialogProvider.FindComponents<MudList<LmsWorldViewModel>>()[0].FindComponents<MudListItem<LmsWorldViewModel>>();
         Assert.That(mudListItems, Has.Count.EqualTo(3));
@@ -619,7 +619,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         var result = await dialog.Result;
         Assert.Multiple(() =>
         {
-            Assert.That(result.Canceled, Is.False);
+            Assert.That(result!.Canceled, Is.False);
             Assert.That(DialogProvider.Markup, Is.Empty);
         });
     }

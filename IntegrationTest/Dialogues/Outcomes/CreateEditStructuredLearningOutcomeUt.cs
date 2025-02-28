@@ -19,7 +19,7 @@ namespace IntegrationTest.Dialogues.Outcomes;
 public class CreateEditStructuredLearningOutcomeUt : MudDialogTestFixture<CreateEditStructuredLearningOutcome>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(PresentationLogic);

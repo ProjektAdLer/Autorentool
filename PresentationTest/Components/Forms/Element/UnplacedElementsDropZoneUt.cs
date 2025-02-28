@@ -552,7 +552,7 @@ public class UnplacedElementsDropZoneUt
         _testContext.RenderTree.Add<MudDropContainer<ILearningElementViewModel>>(parameterBuilder: builder =>
         {
             builder.Add(p => p.Items, _itemList);
-            builder.Add(p => p.ItemsSelector, (model, s) => true);
+            builder.Add(p => p.ItemsSelector, (_, _) => true);
         });
         return _testContext.RenderComponent<UnplacedElementsDropZone>();
     }

@@ -30,7 +30,7 @@ namespace IntegrationTest.Forms.Element;
 public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningElementFormModel, LearningElement>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         LearningContentViewModels = new ILearningContentViewModel[]

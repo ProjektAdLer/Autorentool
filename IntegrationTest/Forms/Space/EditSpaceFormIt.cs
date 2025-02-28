@@ -25,7 +25,7 @@ namespace IntegrationTest.Forms.Space;
 public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFormModel, LearningSpace>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
         Mapper = Substitute.For<IMapper>();
@@ -64,7 +64,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
@@ -76,7 +76,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
 
@@ -148,12 +148,12 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     [Test]
-    [Retry(3)]
     // ANF-ID: [AWA0023]
-    public async Task SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
+    public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var vm = ViewModelProvider.GetLearningSpace();
         SpacePresenter.LearningSpaceVm.Returns(vm);
+        var assertionAttempts = 0;
 
         var systemUnderTest = GetRenderedComponent(vm);
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
@@ -188,7 +188,13 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, 123, Theme.CampusAschaffenburg);
-        Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+        systemUnderTest.WaitForAssertion(() =>
+            {
+                Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
+                assertionAttempts++;
+            },
+            TimeSpan.FromSeconds(3));
+        Console.WriteLine($@"{nameof(SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm)}: Assertion attempts: {assertionAttempts}");
     }
 
     private void ConfigureValidatorAllMembersTestOr123OrCampus()

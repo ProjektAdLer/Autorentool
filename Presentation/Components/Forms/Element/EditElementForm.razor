@@ -35,7 +35,9 @@
                         <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart1"].ToString())</p>
                     </div>
 
+                    @* ReSharper disable Html.PathError *@
                     <img src="/CustomIcons/PositionFloorPlan.png" alt="@Localizer["EditElementForm.Tooltip.Image.Alt"]"/>
+                    @* ReSharper restore Html.PathError *@
                 </div>
                 <div class="flex flex-col gap-4">
                     <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart2"].ToString())</p>

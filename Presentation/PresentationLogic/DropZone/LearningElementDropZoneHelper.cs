@@ -139,7 +139,7 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(dropItem), dropItem.DropzoneIdentifier,
-                    "DropzoneIdentifier is not recognized");
+                    @"DropzoneIdentifier is not recognized");
         }
     }
 

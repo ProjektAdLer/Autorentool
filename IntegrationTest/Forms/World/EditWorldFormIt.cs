@@ -22,7 +22,7 @@ namespace IntegrationTest.Forms.World;
 public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFormModel, LearningWorld>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         Mapper = Substitute.For<IMapper>();

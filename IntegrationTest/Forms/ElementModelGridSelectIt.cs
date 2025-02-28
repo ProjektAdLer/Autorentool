@@ -31,7 +31,7 @@ public class ElementModelGridSelectIt : MudBlazorTestFixture<ElementModelGridSel
     }
 
     [TearDown]
-    public void TearDown()
+    public new void TearDown()
     {
         _systemUnderTest.Dispose();
     }

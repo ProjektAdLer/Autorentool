@@ -196,7 +196,7 @@
     {
         FileContentViewModel fileContent => LearningContents.OfType<FileContentViewModel>().SingleOrDefault(fc => fc.Equals(fileContent)),
         LinkContentViewModel question => LearningContents.OfType<LinkContentViewModel>().SingleOrDefault(q => q.Equals(question)),
-        _ => throw new ArgumentOutOfRangeException(nameof(actionContent), "Content must be File or Link")
+        _ => throw new ArgumentOutOfRangeException(nameof(actionContent), @"Content must be File or Link")
     };
 
 }

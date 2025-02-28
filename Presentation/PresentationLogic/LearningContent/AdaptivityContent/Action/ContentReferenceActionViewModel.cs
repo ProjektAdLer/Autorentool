@@ -11,7 +11,7 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
     public ContentReferenceActionViewModel(ILearningContentViewModel content, string comment)
     {
         if (content is IAdaptivityContentViewModel)
-            throw new ArgumentException("Content cannot be an adaptivity content", nameof(content));
+            throw new ArgumentException(@"Content cannot be an adaptivity content", nameof(content));
         Content = content;
         Comment = comment;
         Id = Guid.NewGuid();

@@ -20,7 +20,7 @@ namespace IntegrationTest.Forms.World;
 public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, LearningWorldFormModel, LearningWorld>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorkspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         WorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();

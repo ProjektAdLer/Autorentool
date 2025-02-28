@@ -19,7 +19,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestionDialog>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         Task = Substitute.For<IAdaptivityTaskViewModel>();
         Difficulty = QuestionDifficulty.Medium;

@@ -815,7 +815,7 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogError(
                 "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
             throw new ArgumentOutOfRangeException(nameof(learningElementVm),
-                "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
+                @"LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
         }
     }
 
@@ -829,7 +829,7 @@ public class PresentationLogic : IPresentationLogic
                 FileContentViewModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
                 LinkContentViewModel linkContentVm => ShowLinkContent(linkContentVm.Link),
                 _ => throw new ArgumentOutOfRangeException(nameof(content),
-                    "LearningContent is not of type FileContentViewModel or LinkContentViewModel")
+                    @"LearningContent is not of type FileContentViewModel or LinkContentViewModel")
             });
 
         if (error != "")

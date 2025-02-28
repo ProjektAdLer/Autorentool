@@ -13,14 +13,14 @@ namespace IntegrationTest.Dialogues;
 public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDialog>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         _shellwrapper = Substitute.For<IShellWrapper>();
         Context.Services.AddSingleton(_shellwrapper);
     }
 
     [TearDown]
-    public void TearDown()
+    public new void TearDown()
     {
         Context.Dispose();
     }

@@ -24,7 +24,7 @@ namespace IntegrationTest.Components.ContentFiles;
 public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         _dialogService = Substitute.For<IDialogService>();
         _presentationLogic = Substitute.For<IPresentationLogic>();

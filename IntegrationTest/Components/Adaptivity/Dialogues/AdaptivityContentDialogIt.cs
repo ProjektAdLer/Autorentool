@@ -23,7 +23,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class AdaptivityContentDialogIt : MudDialogTestFixture<AdaptivityContentDialog>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(PresentationLogic);
