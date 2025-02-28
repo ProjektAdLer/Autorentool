@@ -4,15 +4,15 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 
-<div class="grid grid-cols-5 gap-4 2xl:gap-8">
+<div class="grid grid-cols-5 gap-2 2xl:gap-8">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
-        <MudListItem OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
+        <MudListItem T="FloorPlanEnum" OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
                      Class="p-0">
-            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
+            <MudTooltip Class="bg-adlergrey-200" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
-                    <div class="flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-adlergrey-100 p-2">
-                        <MudIcon Class="inset-0 p-0 w-12 h-full"
+                    <div class="flex flex-col justify-center items-center gap-1 cursor-pointer p-2">
+                        <MudIcon Class="inset-0 p-0 w-10 h-full"
                                  Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
                                  Style="@GetStyle(floorPlan)"></MudIcon>
                     </div>

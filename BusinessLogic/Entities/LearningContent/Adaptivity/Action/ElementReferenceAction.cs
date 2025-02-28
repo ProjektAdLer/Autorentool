@@ -10,6 +10,7 @@ public class ElementReferenceAction : IAdaptivityAction
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -43,10 +44,12 @@ public class ElementReferenceAction : IAdaptivityAction
         return Equals((ElementReferenceAction) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(ElementId, Id, Comment);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(ElementReferenceAction? left, ElementReferenceAction? right)
     {

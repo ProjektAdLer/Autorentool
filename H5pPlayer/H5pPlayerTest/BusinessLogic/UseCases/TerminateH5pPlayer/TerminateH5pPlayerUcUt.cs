@@ -1,8 +1,6 @@
 ﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 using H5pPlayer.BusinessLogic.Api.JavaScript;
 using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer;
-using Microsoft.JSInterop;
-using Microsoft.JSInterop.Infrastructure;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.TerminateH5pPlayer;
@@ -17,7 +15,7 @@ public class TerminateH5pPlayerUcUt
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
         mockFileSystemDataAccess.DirectoryExists(
             Arg.Is<string>(path => path.Contains(directoryForCleaning))).Returns(true);
-        var systemUnderTest = CreateSystemUnderTest(null,mockFileSystemDataAccess);
+        var systemUnderTest = CreateSystemUnderTest(null!,mockFileSystemDataAccess);
         
         await systemUnderTest.TerminateH5pPlayer();
         
@@ -37,12 +35,12 @@ public class TerminateH5pPlayerUcUt
     }
 
     private static TerminateH5pPlayerUc CreateSystemUnderTest(
-        ICallJavaScriptAdapter iCallJavaScriptAdapter = null,
-        IFileSystemDataAccess fileSystemDataAccess = null)
+        ICallJavaScriptAdapter? callJavaScriptAdapter = null!,
+        IFileSystemDataAccess? fileSystemDataAccess = null!)
     {
-        iCallJavaScriptAdapter = iCallJavaScriptAdapter ?? Substitute.For<ICallJavaScriptAdapter>();
+        callJavaScriptAdapter  ??= Substitute.For<ICallJavaScriptAdapter>();
         fileSystemDataAccess ??= Substitute.For<IFileSystemDataAccess>();
-        var systemUnderTest = new TerminateH5pPlayerUc(iCallJavaScriptAdapter, fileSystemDataAccess);
+        var systemUnderTest = new TerminateH5pPlayerUc(callJavaScriptAdapter, fileSystemDataAccess);
         return systemUnderTest;
     }
 }

@@ -172,7 +172,7 @@ public class HeaderBarUt
         _presentationLogic.Received()
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>());
         _snackbar.Received().Add("Export.SnackBar.Message", Arg.Any<Severity>());
-        _dialogService.Received().Show<UploadSuccessfulDialog>(Arg.Any<string>(), Arg.Is<DialogParameters>(d =>
+        _dialogService.Received().ShowAsync<UploadSuccessfulDialog>(Arg.Any<string>(), Arg.Is<DialogParameters>(d =>
                 ReferenceEquals(d[nameof(UploadSuccessfulDialog.Url3D)], uploadResponseViewModel.World3DUrl) &&
                 ReferenceEquals(d[nameof(UploadSuccessfulDialog.UrlMoodle)], uploadResponseViewModel.WorldLmsUrl) &&
                 ReferenceEquals(d[nameof(UploadSuccessfulDialog.WorldName)], uploadResponseViewModel.WorldNameInLms)),

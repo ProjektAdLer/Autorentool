@@ -1,10 +1,8 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
+﻿using H5pPlayer.BusinessLogic.Api.FileSystemDataAccess;
 using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.DisplayH5p;
 using H5pPlayer.BusinessLogic.UseCases.StartH5pPlayer;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
-using H5pPlayer.DataAccess.FileSystem;
 using NSubstitute;
 
 namespace H5pPlayerTest.BusinessLogic.UseCases.StartH5pPlayer;
@@ -51,21 +49,21 @@ public class StartH5pPlayerUcUT
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
-        Assert.That(systemUnderTest.H5pEntity.H5pZipSourcePath, Is.EqualTo(validPath));
+        Assert.That(systemUnderTest.H5pEntity!.H5pZipSourcePath, Is.EqualTo(validPath));
     }
     
     [Test]
     public async Task NullH5pZipSourcePath()
     {
-        string invalidPath = null;
+        string? invalidPath = null;
         string validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp");
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
-        var startH5pPlayerInputTO = CreateNullableStartH5pPlayerInputT0(0, invalidPath, validPath);
+        var startH5pPlayerInputTO = CreateNullableStartH5pPlayerInputT0(0, invalidPath!, validPath);
 
         const string expectedErrorMessage = "Value cannot be null. (Parameter 'H5pZipSourcePath')";
-        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
+        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath!, expectedErrorMessage);
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
@@ -172,22 +170,22 @@ public class StartH5pPlayerUcUT
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockDisplayH5pOutputPort.DidNotReceive().ErrorOutput(Arg.Any<StartH5pPlayerErrorOutputTO>());
-        Assert.That(systemUnderTest.H5pEntity.UnzippedH5psPath, Is.EqualTo(validPath));
+        Assert.That(systemUnderTest.H5pEntity!.UnzippedH5psPath, Is.EqualTo(validPath));
     }
 
 
     [Test]
     public async Task NullUnzippedH5psPath()
     {
-        string invalidPath = null;
+        string? invalidPath = null;
         string validPath = Path.Combine(RootPathDueToOperatingSystem, "Temp" + H5pFileEnding);
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
         var systemUnderTest = CreateStandardSystemUnderTest(
             null, null, mockDisplayH5pOutputPort);
-        var startH5pPlayerInputTO = CreateNullableStartH5pPlayerInputT0(0, validPath, invalidPath);
+        var startH5pPlayerInputTO = CreateNullableStartH5pPlayerInputT0(0, validPath, invalidPath!);
 
         const string expectedErrorMessage = "Value cannot be null. (Parameter 'UnzippedH5psPath')";
-        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath, expectedErrorMessage);
+        var expectedOutputTo = CreateStartH5pPlayerErrorOutputTO(invalidPath!, expectedErrorMessage);
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
@@ -237,7 +235,7 @@ public class StartH5pPlayerUcUT
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
-        Assert.That(systemUnderTest.H5pEntity.ActiveDisplayMode,
+        Assert.That(systemUnderTest.H5pEntity!.ActiveDisplayMode,
             Is.EqualTo(displayMode));
     }
 
@@ -258,7 +256,7 @@ public class StartH5pPlayerUcUT
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
         mockFileSystemDataAccess.Received().ExtractZipFile(
-            systemUnderTest.H5pEntity.H5pZipSourcePath,
+            systemUnderTest.H5pEntity!.H5pZipSourcePath,
             Arg.Is<string>(path => path.Contains(Path.Combine("wwwroot", "H5pStandalone", "h5p-folder"))));
     }
 

@@ -40,11 +40,22 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     internal IStringLocalizer<LearningOutcomesSpaceOverview> Localizer { get; set; }
 
+
+    protected override void OnInitialized()
+    {
+        LearningOutcomeCollection.LearningOutcomes.CollectionChanged += (_, _) =>
+        {
+            InvokeAsync(StateHasChanged);
+        };
+
+        base.OnInitialized();
+    }
+
     private async Task CreateManualLearningOutcome()
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -63,7 +74,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,

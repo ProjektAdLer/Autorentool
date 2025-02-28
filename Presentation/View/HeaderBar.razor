@@ -30,7 +30,7 @@
         
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
-            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" title=@Localizer["LearningWorld.Home.Hover"] OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
 
         }
         else
@@ -39,7 +39,7 @@
         }
         <MudDivider Vertical="true" FlexItem="true"/>
         <div class="relative">
-            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
             </MudIconButton>
             @if (SaveButtonHighlighted)
             {
@@ -49,10 +49,10 @@
         </div>
         <div class="flex">
             <MudIconButton Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
-                           Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
+                           title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
             </MudIconButton>
             <MudIconButton Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo"
-                           Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
+                           title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
             </MudIconButton>
         </div>
 
@@ -60,12 +60,12 @@
             <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
                            Icon="@Icons.Material.Filled.Archive"
                            Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
-                           Title=@Localizer["ExportArchive.Hover"]
+                           title=@Localizer["ExportArchive.Hover"]
                            Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             </MudIconButton>
 
-            <MudIconButton OnClick="@GenerateLearningWorld"
-                           Title="@Localizer["3DWorld.Generate.Hover"].Value"
+            <MudIconButton id="HeaderBar.GenerateLearningWorld.Button" OnClick="@GenerateLearningWorld"
+                           title="@Localizer["3DWorld.Generate.Hover"].Value"
                            Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
                            Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
                            Icon="@Icons.Material.Filled.Publish">
@@ -96,14 +96,18 @@
     @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
     {
         <div class="flex justify-center items-center gap-2 cursor-default">
+            @* ReSharper disable Html.PathError *@
             <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
+            @* ReSharper restore Html.PathError *@
             <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
         </div>
     }
     @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
     {
         <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
+            @* ReSharper disable Html.PathError *@
             <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>
+            @* ReSharper restore Html.PathError *@
             <p class="font-bold text-base 2xl:text-lg truncate opacity-80 text-adlerdarkblue-800" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
         </div>
     }
@@ -128,31 +132,31 @@
         }
 
         <CultureSelector/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" Title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
-        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@icon">
+        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@_icon">
             
-            <MudListItem title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
+            <MudListItem T="object" title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenManual">@Localizer["HeaderBar.Help.UserManual"]</MudLink>
             </MudListItem>
 
-            <MudListItem title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
+            <MudListItem T="object" title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</MudLink>
             </MudListItem>
 
             <MudDivider></MudDivider>
 
-            <MudListItem title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+            <MudListItem T="object" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
             </MudListItem>
 
-            <MudListItem title="@Localizer["Feedback.Button.Technical.Hover"]">
+            <MudListItem T="object" title="@Localizer["Feedback.Button.Technical.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
             </MudListItem>
 
             <MudDivider></MudDivider>
 
-            <MudListItem title="@Localizer["HeaderBar.Help.About.Hover"]">
+            <MudListItem T="object" title="@Localizer["HeaderBar.Help.About.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
 
@@ -274,7 +278,7 @@
         var result = await dialog.Result;
 
         //if not cancelled, upload LearningWorld
-        if (result.Canceled) return;
+        if (result == null || result.Canceled) return;
 
         var existingLmsWorlds = await PresentationLogic.GetLmsWorldList();
         if (existingLmsWorlds.Any(lmsWorld => lmsWorld.WorldName == world.Name))
@@ -290,7 +294,7 @@
         {
             CloseButton = false,
             CloseOnEscapeKey = false,
-            DisableBackdropClick = true,
+            BackdropClick = false
         };
         parameters = new DialogParameters
         {
@@ -339,7 +343,7 @@
         var replaceCopyLmsWorldDialog = await DialogService.ShowAsync<ReplaceCopyLmsWorldDialog>(@Localizer["ConfirmReplaceOrCreateCopyDialog.Title"].ToString(), parameters, options);
         var result = await replaceCopyLmsWorldDialog.Result;
 
-        if (result.Canceled)
+        if (result == null || result.Data == null || result.Canceled)
         {
             return false;
         }
@@ -362,7 +366,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
         };
         return options;
     }
@@ -374,7 +378,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false,
+            BackdropClick = true,
         };
 
         var parameters = new DialogParameters
@@ -389,7 +393,7 @@
                 nameof(UploadSuccessfulDialog.WorldName), response.WorldNameInLms
             }
         };
-        DialogService.Show<UploadSuccessfulDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
+        DialogService.ShowAsync<UploadSuccessfulDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
     }
 
     private async Task ExportLearningWorldToArchiveAsync()
@@ -521,7 +525,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false,
+            BackdropClick = true,
         };
         await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
     }
@@ -582,7 +586,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false,
+            BackdropClick = true,
             FullWidth = true,
             MaxWidth = MaxWidth.Medium
         };
@@ -593,7 +597,7 @@
                 nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
             }
         };
-        DialogService.Show<LearningOutcomesWorldOverview>("", parameters, options);
+        DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
     }
 
     private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
@@ -644,9 +648,9 @@
     
     private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
     
-    private string icon = help;
+    private string _icon = Help;
 
-    const string help =
+    const string Help =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
         <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
             <defs>

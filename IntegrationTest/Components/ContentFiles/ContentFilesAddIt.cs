@@ -24,7 +24,7 @@ namespace IntegrationTest.Components.ContentFiles;
 public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         _dialogService = Substitute.For<IDialogService>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
@@ -32,6 +32,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         Context.Services.AddSingleton(_dialogService);
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_errorService);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IDialogService _dialogService = null!;

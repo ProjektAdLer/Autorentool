@@ -13,14 +13,14 @@ namespace IntegrationTest.Dialogues;
 public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDialog>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         _shellwrapper = Substitute.For<IShellWrapper>();
         Context.Services.AddSingleton(_shellwrapper);
     }
 
     [TearDown]
-    public void TearDown()
+    public new void TearDown()
     {
         Context.Dispose();
     }
@@ -59,7 +59,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
             { nameof(UploadSuccessfulDialog.WorldName), "This is the world name" }
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[0].Find("button").Click();
@@ -78,7 +78,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
             { nameof(UploadSuccessfulDialog.WorldName), "This is the world name" }
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[1].Find("button").Click();

@@ -25,7 +25,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEditReferenceActionDialog>
 {
     [SetUp]
-    public async Task Setup()
+    public new async Task Setup()
     {
         ExistingAction = null;
         PresentationLogic = Substitute.For<IPresentationLogic>();
@@ -40,6 +40,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(LearningWorldPresenter);
         Question = Substitute.For<IAdaptivityQuestionViewModel>();
+        Context.RenderComponent<MudPopoverProvider>();
         await GetDialogAsync();
     }
 

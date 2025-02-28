@@ -45,7 +45,7 @@ public class ContentFileHandlerUt
 
     [Test]
     // ANF-ID: [AWA0036]
-    public async Task LoadContentAsync_WithFilepath_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
+    public void LoadContentAsync_WithFilepath_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
     {
         const string filepath = "foobar.png";
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -144,7 +144,7 @@ public class ContentFileHandlerUt
 
     [Test]
     // ANF-ID: [AWA0036]
-    public async Task LoadContentAsync_WithStream_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
+    public void LoadContentAsync_WithStream_DuplicateFile_DoesNotCopyAndThrowsHashExistsException()
     {
         var fileSystem = new MockFileSystem();
         const string filepath = "foobar.png";

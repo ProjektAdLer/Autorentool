@@ -28,7 +28,7 @@ public class DeleteMultipleContentConfirmationDialogIt : MudDialogTestFixture<De
             { nameof(DeleteMultipleContentConfirmationDialog.ContentWorldElementInUseList), matches },
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
         var pInner = mudTexts[1].Find("p").InnerHtml;
@@ -37,14 +37,14 @@ public class DeleteMultipleContentConfirmationDialogIt : MudDialogTestFixture<De
         var tableRows = DialogProvider.FindAll("tbody tr");
         Assert.That(tableRows, Has.Count.EqualTo(1));
         var contentInner = tableRows.First().Children
-            .First(element => element.Attributes["data-label"].Value == "Content")
+            .First(ele => ele.Attributes["data-label"]!.Value == "Content")
             .InnerHtml;
         Assert.That(contentInner, Is.EqualTo(content.Name));
-        var worldInner = tableRows.First().Children.First(element => element.Attributes["data-label"].Value == "World")
+        var worldInner = tableRows.First().Children.First(ele => ele.Attributes["data-label"]!.Value == "World")
             .InnerHtml;
         Assert.That(worldInner, Is.EqualTo(world.Name));
         var elementInner = tableRows.First().Children
-            .First(element => element.Attributes["data-label"].Value == "Element")
+            .First(ele => ele.Attributes["data-label"]!.Value == "Element")
             .InnerHtml;
         Assert.That(elementInner, Is.EqualTo(element.Name));
     }
@@ -58,7 +58,7 @@ public class DeleteMultipleContentConfirmationDialogIt : MudDialogTestFixture<De
         buttons[2].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.Null);
+        Assert.That(result!.Data, Is.Null);
         Assert.That(result.Canceled, Is.True);
     }
 
@@ -71,7 +71,7 @@ public class DeleteMultipleContentConfirmationDialogIt : MudDialogTestFixture<De
         buttons[1].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.EqualTo(false));
+        Assert.That(result!.Data, Is.EqualTo(false));
         Assert.That(result.Canceled, Is.False);
     }
 
@@ -84,7 +84,7 @@ public class DeleteMultipleContentConfirmationDialogIt : MudDialogTestFixture<De
         buttons[0].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.EqualTo(true));
+        Assert.That(result!.Data, Is.EqualTo(true));
         Assert.That(result.Canceled, Is.False);
     }
 }

@@ -22,7 +22,7 @@ namespace IntegrationTest.Forms.World;
 public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFormModel, LearningWorld>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         Mapper = Substitute.For<IMapper>();
@@ -39,7 +39,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     public void Render_SetsParameters()
     {
         var vm = ViewModelProvider.GetLearningWorld();
-        var onNewClicked = EventCallback.Factory.Create(this, () => { });
 
         var systemUnderTest = GetRenderedComponent(vm);
 
@@ -52,7 +51,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var vm = ViewModelProvider.GetLearningWorld();
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
@@ -64,7 +63,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         var vm = ViewModelProvider.GetLearningWorld();
         WorldPresenter.LearningWorldVm.Returns(vm);
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
 
@@ -97,7 +96,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-
+        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();
@@ -161,7 +160,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var worldToMap = ViewModelProvider.GetLearningWorld();
         var systemUnderTest = GetRenderedComponent(worldToMap);
-
+        Context.RenderComponent<MudPopoverProvider>();
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
         Mapper.ClearReceivedCalls();
 
@@ -213,7 +212,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+            (string)FormModel.GetType().GetProperty(ci.Arg<string>())!.GetValue(FormModel)! == Expected
                 ? Enumerable.Empty<string>()
                 : new[] { "Must be test" }
         );

@@ -18,6 +18,7 @@ public class ContentReferenceAction : IAdaptivityAction
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -59,10 +60,12 @@ public class ContentReferenceAction : IAdaptivityAction
         return Equals((ContentReferenceAction)obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Content, Id, Comment);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(ContentReferenceAction? left, ContentReferenceAction? right)
     {

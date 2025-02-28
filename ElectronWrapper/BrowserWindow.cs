@@ -7,11 +7,11 @@ public class BrowserWindow
         
     }
 
-    internal BrowserWindow(ElectronNET.API.BrowserWindow innerBrowserWindow)
+    internal BrowserWindow(ElectronSharp.API.BrowserWindow innerBrowserWindow)
     {
         InnerBrowserWindow = innerBrowserWindow;
     }
     
-    internal ElectronNET.API.BrowserWindow? InnerBrowserWindow { get; }
+    internal ElectronSharp.API.BrowserWindow? InnerBrowserWindow { get; }
     
 }

@@ -66,8 +66,10 @@
 
     internal string? SubmitErrorMessage { get; set; }
 
-    private MudForm? _form; public async Task FocusField(MudTextField<string> focusField)
+    private MudForm? _form; 
+    public async Task FocusField(MudTextField<string> focusField)
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (focusField != null)
         {
             await focusField.FocusAsync();

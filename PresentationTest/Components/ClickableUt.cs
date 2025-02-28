@@ -26,7 +26,7 @@ public class ClickableUt
     [TearDown]
     public void TearDown() => _testContext.Dispose();
 
-    private Bunit.TestContext _testContext;
+    private TestContext _testContext;
     private IMouseService _mouseService;
 
     [Test]

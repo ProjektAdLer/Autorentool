@@ -11,8 +11,9 @@
 @code {
 
     [CascadingParameter]
-    public MudDialogInstance? MudDialog { get; set; }
+    public IMudDialogInstance? MudDialog { get; set; }
 
+    // ReSharper disable once RedundantNullableFlowAttribute
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public MarkupString DialogText { get; set; }
 

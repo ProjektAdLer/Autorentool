@@ -24,7 +24,9 @@
                         <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world" Size="Size.Small"></MudIcon>
                         <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                     </button>
+                    @* ReSharper disable Html.PathError *@
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
+                    @* ReSharper restore Html.PathError *@
                 </div>
                 <div class="btn-standard w-44 flex justify-center items-center import-world-button"
                      @onclick="ImportLearningWorldAsync"
@@ -33,15 +35,17 @@
                         <MudIcon Icon="@Icons.Material.Filled.SaveAlt" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world" Size="Size.Small"></MudIcon>
                         <p class="text-xs z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                     </button>
+                    @* ReSharper disable Html.PathError *@
                     <img src="CustomIcons/World/world-icon.png" class="z-0 pointer-events-none opacity-10 absolute w-8 h-8">
+                    @* ReSharper restore Html.PathError *@
                 </div>
             </section>
         </div>
         <section class="flex flex-col w-5/6 m-auto bg-blacktrans-100 h-[475px] 2xl:h-[500px] 3xl:h-[700px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded">
             <div class="flex flex-row gap-2 justify-between">
                 <div class="flex justify-start">
-                    <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByDate"]"/>
-                    <MudIconButton OnClick="() => _sortByDate = false" Icon="@Icons.Material.Filled.SortByAlpha" Class="@(SortByNameButtonClass.Build())" Title="@Localizer["Page.LearningWorld.SortByName"]"/>
+                    <MudIconButton OnClick="() => _sortByDate = true" Icon="@Icons.Material.Filled.DateRange" Class="@(SortByDateButtonClass.Build())" title="@Localizer["Page.LearningWorld.SortByDate"]"/>
+                    <MudIconButton OnClick="() => _sortByDate = false" Icon="@Icons.Material.Filled.SortByAlpha" Class="@(SortByNameButtonClass.Build())" title="@Localizer["Page.LearningWorld.SortByName"]"/>
                     <MudDivider Vertical="true" FlexItem="true"/>
                     <MudCheckBox @bind-Value="_showFileName" title="@Localizer["Page.LearningWorld.ShowFile.Checkbox"]">
                         <p class="text-sm">@Localizer["Checkbox.ShowFileName.Label"]</p>
@@ -64,14 +68,16 @@
                 }
             </MudGrid>
         </section>
-        <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
+        <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" position="DrawerPosition.Left">
             @if (_createLearningWorldDialogOpen)
             {
                 <CreateWorldForm OnSubmitted="OnNewLearningWorldCreated"/>
             }
         </MudDrawer>
     </article>
+    @* ReSharper disable Html.PathError *@
     <img class="pointer-events-none w-20 opacity-20 absolute bottom-1 right-1" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png"/>
+    @* ReSharper restore Html.PathError *@
 </main>
 
 @code {
@@ -183,7 +189,7 @@
         };
         var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ConfirmDeleteWorld.Title"], dialogParameters);
         var result = await dialogReference.Result;
-        if (result.Canceled) return;
+        if (result == null || result.Canceled) return;
         PresentationLogic.DeleteLearningWorldByPath(learningWorldViewModel.SavePath);
         PresentationLogic.DeleteLearningWorld(WorkspaceViewModel, learningWorldViewModel);
     }

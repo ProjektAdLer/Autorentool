@@ -112,7 +112,8 @@ public class ContentFilesViewUt
 
                 var nameTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Name");
-                var name = nameTd.Children.First(child => child.Matches("div")).Children
+                Assert.That(nameTd, Is.Not.Null);
+                var name = nameTd!.Children.First(child => child.Matches("div")).Children
                     .First(child => child.Matches("p"))
                     .GetInnerText();
                 Assert.That(name, Is.EqualTo(item.Name));
@@ -152,7 +153,7 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>();
         _presentationLogic.Received(1).RemoveContent(items.First());
@@ -266,13 +267,13 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
 
         Expression<Predicate<DialogParameters>> secondDialogParametersPredicate = d =>
-            (string)d[nameof(DeleteContentInUseConfirmationDialog.ContentName)] == "file1" &&
+            (string)d[nameof(DeleteContentInUseConfirmationDialog.ContentName)]! == "file1" &&
             ((IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)>)d[
-                nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples)])
+                nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples)]!)
             .Any(tup =>
                 tup.Item1 == world &&
                 tup.Item2 == world.LearningSpaces.First().ContainedLearningElements.First());
@@ -309,7 +310,7 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>(Arg.Any<string>(),
             Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
@@ -318,7 +319,7 @@ public class ContentFilesViewUt
     [Test]
     public void SelectionCheckbox_Click_ChangeToCorrectState()
     {
-        var items = PresentationLogicSetItems();
+        _ = PresentationLogicSetItems();
         var world = ViewModelProvider.GetLearningWorld();
         _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
 
@@ -576,7 +577,7 @@ public class ContentFilesViewUt
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
                 Arg.Is<DialogParameters>(
                     x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
     }
 
@@ -623,7 +624,7 @@ public class ContentFilesViewUt
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
                 Arg.Is<DialogParameters>(
                     x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
             .RemoveMultipleContents(Arg.Is<IEnumerable<ILearningContentViewModel>>(x => x.SequenceEqual(items)));
@@ -672,7 +673,7 @@ public class ContentFilesViewUt
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
                 Arg.Is<DialogParameters>(
                     x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
             .RemoveMultipleContents(

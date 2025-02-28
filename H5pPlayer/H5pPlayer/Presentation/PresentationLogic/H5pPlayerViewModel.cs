@@ -29,7 +29,7 @@ public class H5pPlayerViewModel
 
     private void NotifyStateChanged()
     {
-        OnChange?.Invoke();
+        OnChange.Invoke();
     }
 
 }

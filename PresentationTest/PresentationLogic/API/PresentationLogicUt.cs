@@ -757,7 +757,7 @@ public class PresentationLogicUt
         mockMapper.Map<ILearningContent>(learningContentViewModel).Returns(learningContent);
         mockElementCommandFactory
             .GetCreateStoryInSlotCommand(learningSpaceEntity, 0, "name", learningContent, "description", "goals",
-                LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 0, 0,
+                LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 5, 7,
                 Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
             .Returns(mockCommand);
         mockBusinessLogic
@@ -769,7 +769,7 @@ public class PresentationLogicUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateStoryElementInSlot(learningSpaceVm, 0, "name", learningContentViewModel, "description",
-            "goals", LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 0, 0);
+            "goals", LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, 123, 10, 5, 7);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -2722,15 +2722,16 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockContentViewModelEnumerable = Substitute.For<IEnumerable<ILearningContentViewModel>>();
         var mockContentEntityEnumerable = Substitute.For<IEnumerable<ILearningContent>>();
+        var mockContentEntityEnumerableList = mockContentEntityEnumerable.ToList();
         mockMapper.Map<IEnumerable<ILearningContent>>(mockContentViewModelEnumerable)
-            .Returns(mockContentEntityEnumerable);
+            .Returns(mockContentEntityEnumerableList);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         systemUnderTest.RemoveMultipleContents(mockContentViewModelEnumerable);
 
         mockMapper.Received().Map<IEnumerable<ILearningContent>>(mockContentViewModelEnumerable);
-        mockBusinessLogic.Received().RemoveMultipleContents(mockContentEntityEnumerable);
+        mockBusinessLogic.Received().RemoveMultipleContents(mockContentEntityEnumerableList);
     }
 
     [Test]

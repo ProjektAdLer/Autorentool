@@ -115,7 +115,7 @@ public class GenericCancellationConfirmationDialogIt : MudDialogTestFixture<Gene
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[0].Find("button").Click();
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.True);
+        Assert.That(result!.Canceled, Is.True);
         Assert.That(result.Data, Is.EqualTo(null));
     }
 
@@ -127,7 +127,7 @@ public class GenericCancellationConfirmationDialogIt : MudDialogTestFixture<Gene
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[1].Find("button").Click();
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.EqualTo(true));
     }
 }

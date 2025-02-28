@@ -17,7 +17,7 @@ namespace IntegrationTest.Components.Adaptivity;
 public class AdaptivityQuestionPreviewUt : MudBlazorTestFixture<AdaptivityQuestionPreview>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         _learningElementNamesProvider = Substitute.For<ILearningElementNamesProvider>();
         Context.Services.AddSingleton(_learningElementNamesProvider);

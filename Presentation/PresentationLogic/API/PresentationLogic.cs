@@ -815,11 +815,11 @@ public class PresentationLogic : IPresentationLogic
             Logger.LogError(
                 "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
             throw new ArgumentOutOfRangeException(nameof(learningElementVm),
-                "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
+                @"LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.ShowLearningContentAsync"/>
+    /// <inheritdoc cref="IPresentationLogic.ShowLearningContentAsync(ILearningContentViewModel)"/>
     public async Task ShowLearningContentAsync(ILearningContentViewModel content)
     {
         ElectronCheck();
@@ -829,7 +829,7 @@ public class PresentationLogic : IPresentationLogic
                 FileContentViewModel fileContentVm => ShowFileContent(fileContentVm.Filepath),
                 LinkContentViewModel linkContentVm => ShowLinkContent(linkContentVm.Link),
                 _ => throw new ArgumentOutOfRangeException(nameof(content),
-                    "LearningContent is not of type FileContentViewModel or LinkContentViewModel")
+                    @"LearningContent is not of type FileContentViewModel or LinkContentViewModel")
             });
 
         if (error != "")
@@ -909,7 +909,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask(AdaptivityContentFormModel, IAdaptivityTaskViewModel)"/>
     public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
@@ -920,7 +920,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask(AdaptivityContentViewModel, IAdaptivityTaskViewModel)"/>
     public void DeleteAdaptivityTask(AdaptivityContentViewModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {

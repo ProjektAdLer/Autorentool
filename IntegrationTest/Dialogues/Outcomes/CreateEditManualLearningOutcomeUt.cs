@@ -17,10 +17,10 @@ public class CreateEditManualLearningOutcomeUt : MudDialogTestFixture<CreateEdit
     private IPresentationLogic PresentationLogic { get; set; }
     private LearningOutcomeCollectionViewModel? Collection { get; set; }
     private ManualLearningOutcome? Outcome { get; set; }
-    public IDialogReference Dialog { get; set; }
+    public IDialogReference Dialog { get; set; } = null!;
 
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         PresentationLogic = Substitute.For<IPresentationLogic>();
         Context.Services.AddSingleton(PresentationLogic);

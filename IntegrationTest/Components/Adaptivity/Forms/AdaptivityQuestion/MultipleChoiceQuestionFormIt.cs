@@ -287,7 +287,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
     public void ChangeIsSingleResponse_KeepsTheCorrectCorrectChoices()
     {
         var systemUnderTest = GetRenderedComponent();
-        var mudCheckBox = systemUnderTest.FindComponent<MudSwitch<bool>>().Find("input");
+        _ = systemUnderTest.FindComponent<MudSwitch<bool>>().Find("input");
         var choice1 = FormModel.Choices.First();
         var choice2 = FormModel.Choices.Last();
         var choices = FormModel.Choices.ToList();
@@ -666,7 +666,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         mudButtonAddChoice.Click();
 
         // Get all components
-        var mudSubmitButton = systemUnderTest.FindComponents<MudButton>().Last();
+        _ = systemUnderTest.FindComponents<MudButton>().Last();
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         Assert.That(mudTextFields, Has.Count.EqualTo(4));
         var textFieldQuestionText = mudTextFields[0];

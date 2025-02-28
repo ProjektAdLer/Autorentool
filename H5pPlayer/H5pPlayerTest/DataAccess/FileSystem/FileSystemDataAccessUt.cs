@@ -267,7 +267,7 @@ public class FileSystemDataAccessUt
         Assert.That(ex.Message, Does.Contain("Access to the path"));
     }
 
-    private static FileSystemDataAccess CreateTestableFileSystemDataAccess(IFileSystem mockFileSystem = null)
+    private static FileSystemDataAccess CreateTestableFileSystemDataAccess(IFileSystem? mockFileSystem = null!)
     {
         mockFileSystem ??= Substitute.For<IFileSystem>();
         return new FileSystemDataAccess(mockFileSystem);

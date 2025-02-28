@@ -21,7 +21,7 @@ public class ZipExtensionsWrapper
     /// </summary>
     /// <param name="archivePath">The path to the zip archive file.</param>
     /// <returns>A <see cref="ZipArchive"/> instance representing the archive.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="fileSystemReference"/> or <paramref name="archivePath"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="archivePath"/> is null.</exception>
     /// <exception cref="FileNotFoundException">Thrown if the specified file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown if the caller does not have the required permissions.</exception>
     /// <exception cref="InvalidDataException">Thrown if the file is not a valid zip archive.</exception>
@@ -49,8 +49,8 @@ public class ZipExtensionsWrapper
     /// <param name="sourcePath">The source directory to compress.</param>
     /// <param name="destinationPath">The path of the resulting zip archive.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> or <paramref name="destination"/> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="source"/> or <paramref name="destination"/> is invalid. This includes paths with invalid characters, empty strings, or relative paths.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="sourcePath"/> or <paramref name="destinationPath"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="sourcePath"/> or <paramref name="destinationPath"/> is invalid. This includes paths with invalid characters, empty strings, or relative paths.</exception>
     /// <exception cref="DirectoryNotFoundException">Thrown if the source directory does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown if the caller does not have the required permissions.</exception>
     /// <exception cref="IOException">Thrown if an I/O error occurs during compression.</exception>

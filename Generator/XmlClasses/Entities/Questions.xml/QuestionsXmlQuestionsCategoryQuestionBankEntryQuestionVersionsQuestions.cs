@@ -5,10 +5,6 @@ namespace Generator.XmlClasses.Entities.Questions.xml;
 
 public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions
 {
-    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestions()
-    {
-    }
-
     [XmlElement(ElementName = "question")]
     public List<QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionsQuestion> Question
     {

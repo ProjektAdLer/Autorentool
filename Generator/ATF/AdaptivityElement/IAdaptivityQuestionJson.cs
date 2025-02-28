@@ -7,6 +7,7 @@ public interface IAdaptivityQuestionJson
 {
     ResponseType QuestionType { get; set; }
     int QuestionId { get; set; }
+    // ReSharper disable once InconsistentNaming
     string QuestionUUID { get; set; }
     int QuestionDifficulty { get; set; }
     string QuestionText { get; set; }

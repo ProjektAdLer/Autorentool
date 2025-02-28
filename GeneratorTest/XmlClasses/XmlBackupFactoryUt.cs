@@ -425,7 +425,6 @@ public class XmlBackupFactoryUt
     public void CreateOutcomesXml_Serializes()
     {
         //Arrange
-        var xsdFileProvider = new XsdFileProvider();
         var mockReadAtf = Substitute.For<IReadAtf>();
         var mockContextId = 12345;
         var learningWorldJson = new LearningWorldJson("", "world",
@@ -524,7 +523,6 @@ public class XmlBackupFactoryUt
 
         var mockAdaptivityElements = new List<IAdaptivityElementJson>()
             { adaptivityElementJson1, adaptivityElementJson2 };
-        ;
 
         var mockSpace = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2, 3, 4 }, 0, "", "");
 

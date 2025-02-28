@@ -62,7 +62,6 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoice = question.CorrectChoice;
-        var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
@@ -113,7 +112,6 @@ public class EditMultipleChoiceSingleResponseQuestionUt
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoice = question.CorrectChoice;
-        var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");

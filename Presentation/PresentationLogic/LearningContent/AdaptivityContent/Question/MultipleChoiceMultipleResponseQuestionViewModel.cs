@@ -23,6 +23,7 @@ public class MultipleChoiceMultipleResponseQuestionViewModel : IMultipleChoiceQu
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>

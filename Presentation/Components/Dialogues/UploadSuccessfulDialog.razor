@@ -3,7 +3,7 @@
 @using ElectronWrapper
 <MudDialog>
     <DialogContent>
-        @((MarkupString)Localizer["Dialog.UploadSuccessful.Text", WorldName].ToString())
+        <p id="UploadSuccessfulDialog.DialogContent.Text"> @((MarkupString)Localizer["Dialog.UploadSuccessful.Text", WorldName].ToString()) </p>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="Open3D">@Localizer["Button.Open3D.Text"]</MudButton>
@@ -14,7 +14,7 @@
 
 @code {
     [CascadingParameter]
-    public MudDialogInstance? MudDialog { get; set; }
+    public IMudDialogInstance? MudDialog { get; set; }
     
     [Inject, AllowNull]
     public IStringLocalizer<UploadSuccessfulDialog> Localizer { get; set; }

@@ -94,7 +94,7 @@ public class DataAccessUt
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
 
-        systemUnderTest.LoadLearningContentAsync("C:/nonsense");
+        _ = systemUnderTest.LoadLearningContentAsync("C:/nonsense");
 
         mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
@@ -106,7 +106,7 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
         var stream = Substitute.For<MemoryStream>();
 
-        systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
+        _ = systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
         mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }

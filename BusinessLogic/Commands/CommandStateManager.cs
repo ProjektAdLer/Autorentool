@@ -85,7 +85,7 @@ public sealed class CommandStateManager : ICommandStateManager, IOnUndoRedo
         return objects;
     }
 
-    private static object? GetObjectFromCommand(IUndoCommand command)
+    private static object? GetObjectFromCommand(ICommand command)
     {
         return command switch
         {

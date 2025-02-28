@@ -9,6 +9,7 @@ public class CommentAction : IAdaptivityAction
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -46,10 +47,12 @@ public class CommentAction : IAdaptivityAction
         return Equals((CommentAction)obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Comment, Id);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(CommentAction? left, CommentAction? right)
     {

@@ -15,6 +15,7 @@ public class AdaptivityTask : IAdaptivityTask
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -76,11 +77,13 @@ public class AdaptivityTask : IAdaptivityTask
         return Equals((AdaptivityTask) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Questions,
             MinimumRequiredDifficulty.HasValue ? (int) MinimumRequiredDifficulty.Value : -1, Id);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(AdaptivityTask? left, AdaptivityTask? right)
     {

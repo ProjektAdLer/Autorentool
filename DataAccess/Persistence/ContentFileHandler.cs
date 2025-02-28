@@ -223,6 +223,7 @@ public class ContentFileHandler : IContentFileHandler
     /// Calculates hash of file content and finds path of duplicate files in <see cref="ContentFilesFolderPath"/>.
     /// </summary>
     /// <param name="filepath">The path to the file which should be checked.</param>
+    /// <param name="hash">The SHA256 hash of the file at <paramref name="filepath"/>.</param>
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the file contents.</returns>
     /// <exception cref="IOException">The file has a length of 0 and is empty.</exception>
     /// <exception cref="ArgumentException">The <paramref name="filepath"/> was null or whitespace.</exception>
@@ -248,6 +249,7 @@ public class ContentFileHandler : IContentFileHandler
     /// Calculates hash of stream content and finds path of duplicate files in <see cref="ContentFilesFolderPath"/>.
     /// </summary>
     /// <param name="stream">The stream which should be checked.</param>
+    /// <param name="hash">The SHA256 hash of the <paramref name="stream"/>.</param>
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the stream contents.</returns>
     /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
     private async Task<(string?, byte[])> GetFilePathOfExistingCopyAndHashAsync(Stream stream, byte[]? hash = null)

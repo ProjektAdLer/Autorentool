@@ -8,6 +8,7 @@ public class ChoiceFormModel
         Id = Guid.NewGuid();
     }
 
+    // ReSharper disable once UnusedMember.Local
     private ChoiceFormModel()
     {
         Text = "";

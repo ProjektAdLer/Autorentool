@@ -21,11 +21,11 @@ public class LearningElementDifficultyHelperUt
     public void Localize_WhenNotInitialized_ThrowsException()
     {
         // Arrange
-        Shared.LearningElementDifficultyHelper.Initialize(null);
+        LearningElementDifficultyHelper.Initialize(null!);
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() =>
-            Shared.LearningElementDifficultyHelper.Localize(LearningElementDifficultyEnum.Medium));
+            LearningElementDifficultyHelper.Localize(LearningElementDifficultyEnum.Medium));
     }
 
     [Test]

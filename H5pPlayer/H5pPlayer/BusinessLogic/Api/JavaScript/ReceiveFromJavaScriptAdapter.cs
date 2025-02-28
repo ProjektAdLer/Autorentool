@@ -6,8 +6,10 @@ namespace H5pPlayer.BusinessLogic.Api.JavaScript;
 
 public class ReceiveFromJavaScriptAdapter
 {
+
+
     
-    public static IValidateH5pUc ValidateH5pUc { get; set; }
+    public static IValidateH5pUc? ValidateH5pUc { get; set; }
 
 
     /// <summary>
@@ -39,7 +41,7 @@ public class ReceiveFromJavaScriptAdapter
     private static void ValidateReceivedJsonData(string? verbId, JsonNode? statement)
     {
         var validateH5pTO = new ValidateH5pTO(IsCompleted(verbId, statement));
-        ValidateH5pUc.ValidateH5p(validateH5pTO);
+        ValidateH5pUc!.ValidateH5p(validateH5pTO);
     }
 
     private static bool IsCompleted(string? verbId, JsonNode? statement)

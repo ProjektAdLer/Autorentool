@@ -138,7 +138,7 @@ public class BusinessLogicUt
         var errorManager = Substitute.For<IErrorManager>();
         var dataAccess = Substitute.For<IDataAccess>();
         dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
-            .Do(_ => throw new ArgumentOutOfRangeException("test"));
+            .Do(_ => throw new ArgumentOutOfRangeException());
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
         var content = new FileContent("foo", "bar", "baz");
 
@@ -592,15 +592,15 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AWA0036]
-    public void LoadLearningContent_CallsDataAccess()
+    public  async Task LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningContentAsync("foobar");
+        await systemUnderTest.LoadLearningContentAsync("foobar");
 
-        mockDataAccess.Received().LoadLearningContentAsync("foobar");
+        await mockDataAccess.Received().LoadLearningContentAsync("foobar");
     }
 
     [Test]
@@ -641,7 +641,7 @@ public class BusinessLogicUt
 
         await systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
-        mockDataAccess.Received().LoadLearningContentAsync("filename.extension", stream);
+        await mockDataAccess.Received().LoadLearningContentAsync("filename.extension", stream);
     }
 
     [Test]
@@ -682,9 +682,9 @@ public class BusinessLogicUt
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
 
-        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz", out var iterations);
+        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz", out _);
 
-        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out iterations);
+        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out _);
     }
 
     [Test]
@@ -790,20 +790,20 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AHO022]
-    public void UploadLearningWorldToBackend_CallsWorldGenerator()
+    public  async Task UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
         const string filepath = "filepath";
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
 
-        systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
+        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
 
         worldGenerator.Received().ExtractAtfFromBackup(filepath);
     }
 
     [Test]
     // ANF-ID: [AHO022]
-    public void UploadLearningWorldToBackend_CallsBackendAccess()
+    public  async Task UploadLearningWorldToBackend_CallsBackendAccess()
     {
         const string filepath = "filepath";
         const string atfPath = "atfPath";
@@ -817,9 +817,9 @@ public class BusinessLogicUt
         var mockProgress = Substitute.For<IProgress<int>>();
         mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
 
-        systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
+        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
 
-        backendAccess.Received()
+        await backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
     }
 

@@ -52,7 +52,7 @@ public class ElementFormContainerUt
     [Test]
     public void OnParametersSet_RegistersToSelectedViewModelsProviderEvent()
     {
-        var sut = GetRenderedComponent();
+        _ = GetRenderedComponent();
         
         SelectedVmProvider.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
     }
@@ -170,7 +170,7 @@ public class ElementFormContainerUt
         SelectedVmProvider.LearningWorld.Returns(ViewModelProvider.GetLearningWorld());
         SelectedVmProvider.LearningElement.Returns(ViewModelProvider.GetLearningElement());
 
-        var sut = GetRenderedComponent();
+        _ = GetRenderedComponent();
         
         Mediator.OverwriteElementEdit = true;
         

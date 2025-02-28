@@ -35,7 +35,9 @@
                         <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart1"].ToString())</p>
                     </div>
 
+                    @* ReSharper disable Html.PathError *@
                     <img src="/CustomIcons/PositionFloorPlan.png" alt="@Localizer["EditElementForm.Tooltip.Image.Alt"]"/>
+                    @* ReSharper restore Html.PathError *@
                 </div>
                 <div class="flex flex-col gap-4">
                     <p>@((MarkupString)Localizer["EditElementForm.Tooltip.ExplanationLearnAdaptElementPart2"].ToString())</p>
@@ -157,7 +159,7 @@
                                            Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
                                            OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
                                            Class="show-content-preview py-2"
-                                           Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+                                           title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
 
                             <MudTooltip Text="@LearningContentName"
                                         Arrow="true"
@@ -174,16 +176,16 @@
                                     For="@(() => FormModel.LearningContent!)"
                                     ReadOnly="true"
                                     Disabled="true"
-                                    DisableUnderLine="true"
+                                    Underline="false"
                                     Style="color: rgb(69,160,229);"
-                                    Margin="Margin.Dense"
-                                    Class="pb-3">
+                                    Class="pt-1"
+                                    Margin="Margin.Dense">
                                 </MudTextField>
                     
                             </MudTooltip>
                         </div>
                         
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
                             </MudIconButton>
                     </div>
                 </div>
@@ -261,7 +263,7 @@
                                                   Class="pl-2"/>
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                    OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
-                                                   Title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
+                                                   title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
                                                    Size="Size.Small"
                                                    Class="p-2">
                                     </MudIconButton>
@@ -275,7 +277,7 @@
                                            OnClick="@(() => StoryContentModel.StoryText.Add(""))"
                                            Size="Size.Small"
                                            Class="p-2"
-                                           Title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.AddStory"]>
+                                           title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.AddStory"]>
                             </MudIconButton>
                         </div>
                     }
@@ -442,7 +444,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -461,7 +463,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -473,10 +475,10 @@
         };
         var dialog = await DialogService.ShowAsync<LearningContentDialog>(Localizer["EditElementForm.LearningMaterial.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
-        if (dialog.Result.Result.Canceled)
+        if (dialog.Result.Result == null || dialog.Result.Result.Canceled)
             return;
 
-        if (FormModel.LearningContent != null && !Equals(FormModel.LearningContent, dialog.Result.Result.Data))
+        if (FormModel.LearningContent != null && !Equals(FormModel.LearningContent, dialog.Result.Result.Data) && dialog.Result.Result.Data != null)
         {
             var dialogResult = (ILearningContentFormModel)dialog.Result.Result.Data;
             var propertyChangedEventArgs = new PropertyChangingWithValueEventArgs<ILearningContentFormModel>(nameof(FormModel.LearningContent), FormModel.LearningContent, dialogResult);

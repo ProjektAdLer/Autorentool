@@ -12,6 +12,7 @@ public class CorrectnessTriggerViewModel : IAdaptivityTriggerViewModel
         ExpectedAnswer = expectedAnswer;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>

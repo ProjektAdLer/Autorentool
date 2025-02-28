@@ -19,7 +19,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class CreateEditCommentActionDialogIt : MudDialogTestFixture<CreateEditCommentActionDialog>
 {
     [SetUp]
-    public async Task Setup()
+    public new async Task Setup()
     {
         ExistingAction = null;
         PresentationLogic = Substitute.For<IPresentationLogic>();

@@ -27,15 +27,15 @@ public class UploadProgressDialogIt : MudBlazorTestFixture<UploadProgressDialog>
 
         var service = (DialogService)Context.Services.GetService<IDialogService>()!;
         IDialogReference? dialogReference = null;
-        await provider.InvokeAsync(() =>
+        await provider.InvokeAsync(async () =>
         {
-            dialogReference = service.Show<UploadProgressDialog>("foo", dialogParameters);
+            dialogReference = await service.ShowAsync<UploadProgressDialog>("foo", dialogParameters);
         });
         Assert.That(dialogReference, Is.Not.Null);
 
         (progress as IProgress<int>).Report(100);
         var result = await dialogReference.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.EqualTo(true));
     }
 }

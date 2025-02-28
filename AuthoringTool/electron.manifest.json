@@ -5,6 +5,7 @@
   },
   "name": "AuthoringTool",
   "author": "Team AdLer",
+  "aspCoreBackendPort": "random",
   "singleInstance": false,
   "environment": "Production",
   "build": {
@@ -21,7 +22,7 @@
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2023 Team AdLer",
-    "buildVersion": "2.2.2",
+    "buildVersion": "2.2.3",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop_Publish"

@@ -59,7 +59,7 @@
         
         _h5pPlayerController = new H5pPlayerController(_h5pPlayerVm, JsRuntime);
         //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
-        await _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath, UnzippedH5psPath);
+        await _h5pPlayerController.StartH5pPlayer(H5pZipSourcePath!, UnzippedH5psPath!);
     }
 
    

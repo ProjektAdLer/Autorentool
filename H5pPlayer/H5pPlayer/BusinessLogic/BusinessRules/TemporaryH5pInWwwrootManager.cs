@@ -40,7 +40,7 @@ public class TemporaryH5psInWwwrootManager : ICleanupH5pPlayerPort
     
     private string BuildTemporaryDirectoryFullNameForAllH5ps()
     {
-        var paths = new string[]
+        var paths = new[]
         {
             Environment.CurrentDirectory,
             "wwwroot",

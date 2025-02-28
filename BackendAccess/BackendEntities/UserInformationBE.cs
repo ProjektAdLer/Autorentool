@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 namespace BackendAccess.BackendEntities;
-
+// ReSharper disable once InconsistentNaming
 [ExcludeFromCodeCoverage]
 public class UserInformationBE
 {

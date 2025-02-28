@@ -454,7 +454,7 @@ public class CachingMapperUt
         var systemUnderTest = CreateTestableCachingMapper();
 
         var spaceViewModel = ViewModelProvider.GetLearningSpace();
-        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        systemUnderTest.Map(spaceEntity, spaceViewModel);
 
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(1));
         Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(6));
@@ -472,7 +472,7 @@ public class CachingMapperUt
             EntityProvider.GetLearningSpaceLayout(FloorPlanEnum.R_20X30_8L);
         spaceEntity.LearningSpaceLayout.LearningElements[7] = elementEntity;
 
-        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        systemUnderTest.Map(spaceEntity, spaceViewModel);
 
         Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(8));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7], Is.Not.Null);

@@ -75,7 +75,7 @@ public class UnplacedElementsDropZoneUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IOnUndoRedo _undoRedoSource;
 
-    private List<ILearningElementViewModel> _itemList;
+    private List<ILearningElementViewModel> _itemList = null!;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -552,7 +552,7 @@ public class UnplacedElementsDropZoneUt
         _testContext.RenderTree.Add<MudDropContainer<ILearningElementViewModel>>(parameterBuilder: builder =>
         {
             builder.Add(p => p.Items, _itemList);
-            builder.Add(p => p.ItemsSelector, (model, s) => true);
+            builder.Add(p => p.ItemsSelector, (_, _) => true);
         });
         return _testContext.RenderComponent<UnplacedElementsDropZone>();
     }

@@ -8,6 +8,7 @@
 ### Added
 
 ### Changed
+- Migrated to .NET 9
 
 ### Deprecated
 

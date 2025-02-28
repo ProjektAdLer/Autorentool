@@ -1,8 +1,8 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Dialogues
-<MudIconButton OnClick="OpenLmsDialog" Icon="@Icons.Material.Filled.Person"
-               Title=@Localizer["LMS.Login.Hover"] Size="Size.Large"
+<MudIconButton id="LmsLoginButton.OpenLmsDialog.Button" OnClick="OpenLmsDialog" Icon="@Icons.Material.Filled.Person"
+               title=@Localizer["LMS.Login.Hover"] Size="Size.Large"
                Class="text-adlerdarkblue p-0 normal-case">
 </MudIconButton>
 
@@ -18,7 +18,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = true,
+            BackdropClick = false,
         };
         DialogService.ShowAsync<LmsLoginDialog>("Login", options);
         InvokeAsync(StateHasChanged);
