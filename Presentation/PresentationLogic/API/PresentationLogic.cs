@@ -819,7 +819,7 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.ShowLearningContentAsync"/>
+    /// <inheritdoc cref="IPresentationLogic.ShowLearningContentAsync(ILearningContentViewModel)"/>
     public async Task ShowLearningContentAsync(ILearningContentViewModel content)
     {
         ElectronCheck();
@@ -909,7 +909,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask(AdaptivityContentFormModel, IAdaptivityTaskViewModel)"/>
     public void DeleteAdaptivityTask(AdaptivityContentFormModel adaptivityContentFm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {
@@ -920,7 +920,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask"/>
+    /// <inheritdoc cref="IPresentationLogic.DeleteAdaptivityTask(AdaptivityContentViewModel, IAdaptivityTaskViewModel)"/>
     public void DeleteAdaptivityTask(AdaptivityContentViewModel adaptivityContentVm,
         IAdaptivityTaskViewModel adaptivityTaskVm)
     {

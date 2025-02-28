@@ -459,7 +459,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             && learningPathwayViewModel.TargetObject == targetObject
                 ? learningPathwayViewModel
                 : LearningWorldVm!.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
-        ;
 
 
         if (learningPathWay == null)

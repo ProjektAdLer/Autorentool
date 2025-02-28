@@ -2,6 +2,7 @@ namespace Presentation.PresentationLogic.LearningContent.Story;
 
 public class StoryContentViewModel : IStoryContentViewModel
 {
+    // ReSharper disable once UnusedMember.Local
     private StoryContentViewModel()
     {
         Name = "";

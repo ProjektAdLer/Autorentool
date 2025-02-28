@@ -6,6 +6,7 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
     /// Creates a new instance of <see cref="ContentReferenceActionViewModel"/>.
     /// </summary>
     /// <param name="content">Content to be referenced. Must not be <see cref="IAdaptivityContentViewModel"/>.</param>
+    /// <param name="comment">Comment for the action.</param>
     /// <exception cref="ArgumentException">Content was <see cref="IAdaptivityContentViewModel"/>.</exception>
     public ContentReferenceActionViewModel(ILearningContentViewModel content, string comment)
     {
@@ -17,6 +18,7 @@ public class ContentReferenceActionViewModel : IAdaptivityActionViewModel
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>

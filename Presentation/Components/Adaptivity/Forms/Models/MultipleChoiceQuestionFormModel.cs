@@ -1,5 +1,3 @@
-using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
-
 namespace Presentation.Components.Adaptivity.Forms.Models;
 
 public class MultipleChoiceQuestionFormModel

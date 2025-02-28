@@ -75,7 +75,7 @@ public class UnplacedElementsDropZoneUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IOnUndoRedo _undoRedoSource;
 
-    private List<ILearningElementViewModel> _itemList;
+    private List<ILearningElementViewModel> _itemList = null!;
 
     [Test]
     public void Constructor_InjectsDependencies()

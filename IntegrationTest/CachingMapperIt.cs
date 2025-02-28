@@ -236,7 +236,7 @@ public class CachingMapperIt
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
-        IQuestionCommandFactory questionCommandFactory = null!,
+        IQuestionCommandFactory? questionCommandFactory = null,
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,

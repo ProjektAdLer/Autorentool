@@ -37,6 +37,7 @@
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    // ReSharper disable once RedundantDefaultMemberInitializer
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
@@ -51,6 +52,7 @@
 
     [Parameter, EditorRequired] public EventCallback<IObjectInPathWayViewModel> OnDeleteObject { get; set; }
 
+    // ReSharper disable once RedundantDefaultMemberInitializer
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public ILearningWorldPresenter PositioningService { get; set; } = null!;

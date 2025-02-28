@@ -1,6 +1,5 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;

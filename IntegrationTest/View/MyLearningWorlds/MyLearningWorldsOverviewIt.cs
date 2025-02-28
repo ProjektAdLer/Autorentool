@@ -55,7 +55,7 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         Assert.That(systemUnderTest.Instance.Localizer, Is.Not.Null);
         Assert.That(systemUnderTest.Instance.MyLearningWorldsProvider, Is.EqualTo(MyLearningWorldsProvider));
         Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(PresentationLogic));
-        ;
+
         Assert.That(systemUnderTest.Instance.NavManager, Is.Not.Null);
     }
 
