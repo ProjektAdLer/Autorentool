@@ -260,6 +260,7 @@
     }
 
 
+    // ReSharper disable RedundantDefaultMemberInitializer
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
     private bool _showErrorInvalidCredentials = false;
@@ -278,6 +279,7 @@
     private List<LmsWorldViewModel> _lmsWorldList = new();
 
     private LmsWorldViewModel? _deleteWorld = null;
+    // ReSharper restore RedundantDefaultMemberInitializer
 
     protected override void OnParametersSet()
     {
@@ -286,24 +288,11 @@
         _password = "";
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
-        UpdateLmsIsConnected();
-        UpdateDialogOptions();
+        _ = UpdateLmsIsConnected();
+        MudDialog!.SetOptionsAsync(Options);
     }
 
-    private Task UpdateDialogOptions()
-    {
-        return MudDialog == null ? Task.CompletedTask : MudDialog.SetOptionsAsync(Options);
-    }
-
-    /*
-    private void UpdateFromConfiguration()
-    {
-        _backendUrl = Configuration[IApplicationConfiguration.BackendBaseUrl];
-        _username = Configuration[IApplicationConfiguration.BackendUsername];
-    }
-    */
-
-    private async void UpdateLmsIsConnected()
+    private async Task UpdateLmsIsConnected()
     {
         try
         {
@@ -380,13 +369,13 @@
         _showErrorApiUnreachable = false;
         _showErrorTokenInvalid = false;
         _errorInvalidUrlMessage = "";
-        UpdateLmsIsConnected();
+        _ = UpdateLmsIsConnected();
     }
 
     private void Logout()
     {
         PresentationLogic.Logout();
-        UpdateLmsIsConnected();
+        _ = UpdateLmsIsConnected();
     }
 
     private async void RefreshLmsWorldList()

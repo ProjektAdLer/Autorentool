@@ -39,7 +39,6 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     public void Render_SetsParameters()
     {
         var vm = ViewModelProvider.GetLearningWorld();
-        var onNewClicked = EventCallback.Factory.Create(this, () => { });
 
         var systemUnderTest = GetRenderedComponent(vm);
 
@@ -52,7 +51,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     {
         var vm = ViewModelProvider.GetLearningWorld();
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
@@ -64,7 +63,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         var vm = ViewModelProvider.GetLearningWorld();
         WorldPresenter.LearningWorldVm.Returns(vm);
 
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
 
@@ -213,7 +212,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+            (string)FormModel.GetType().GetProperty(ci.Arg<string>())!.GetValue(FormModel)! == Expected
                 ? Enumerable.Empty<string>()
                 : new[] { "Must be test" }
         );

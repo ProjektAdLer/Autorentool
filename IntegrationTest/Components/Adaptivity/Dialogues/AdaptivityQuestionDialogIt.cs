@@ -33,7 +33,7 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
         DialogProvider.Dispose();
     }
 
-    private IDialogReference Dialog { get; set; }
+    private IDialogReference Dialog { get; set; } = null!;
     private IAdaptivityTaskViewModel Task { get; set; }
     private QuestionDifficulty Difficulty { get; set; }
 
@@ -144,6 +144,6 @@ public class AdaptivityQuestionDialogIt : MudDialogTestFixture<AdaptivityQuestio
         await GetDialogAsync();
         var form = DialogProvider.FindComponent<Stub<MultipleChoiceQuestionForm>>();
         await DialogProvider.InvokeAsync(() => form.Instance.Parameters.Get(x => x.OnSubmitted).InvokeAsync(null));
-        Assert.That(Dialog.Result.Result.Data, Is.EqualTo(true));
+        Assert.That(Dialog.Result.Result!.Data, Is.EqualTo(true));
     }
 }

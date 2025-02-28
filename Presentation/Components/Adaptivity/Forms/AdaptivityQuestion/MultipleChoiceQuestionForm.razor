@@ -48,7 +48,7 @@
                         <MudSwitch T="bool"
                                    Style="margin-right: 0px; margin-left: 2px"
                                    Value="FormDataContainer.FormModel.IsSingleResponse"
-                                   ValueChanged="b => IsSingleResponseChanged((bool)b!)"
+                                   ValueChanged="b => IsSingleResponseChanged(b)"
                                    Color="Color.Info"
                                    UnCheckedColor="Color.Info"
                                    For="@(() => FormModel.IsSingleResponse)">
@@ -65,7 +65,7 @@
                         <MudSwitch T="bool"
                                    Style="margin-right: 0px; margin-left: 2px"
                                    Value="FormDataContainer.FormModel.IsSingleResponse"
-                                   ValueChanged="b => IsSingleResponseChanged((bool)b!)"
+                                   ValueChanged="b => IsSingleResponseChanged(b)"
                                    Color="Color.Info"
                                    UnCheckedColor="Color.Info"
                                    For="@(() => FormModel.IsSingleResponse)">
@@ -124,7 +124,7 @@
                                 <div class="flex flex-row justify-center items-center">
                                     <MudCheckBox T="bool"
                                                  Value="FormDataContainer.FormModel.CorrectChoices.Contains(choice)"
-                                                 ValueChanged="b => ChangeCorrectness(choice, (bool)b!)"
+                                                 ValueChanged="b => ChangeCorrectness(choice, b)"
                                                  Class="flex justify-center items-center m-0"
                                                  Size="Size.Small"/>
 

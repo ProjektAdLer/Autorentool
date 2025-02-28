@@ -104,7 +104,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     {
         var vm = ViewModelProvider.GetLearningElement();
         Context.RenderComponent<MudPopoverProvider>();
-        var systemUnderTest = GetRenderedComponent(vm);
+        _ = GetRenderedComponent(vm);
 
         Mapper.Received(1).Map(vm, FormDataContainer.FormModel);
     }
@@ -160,7 +160,6 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     public void SubmitThenRemapButton_CallsPresenterWithNewValues_ThenRemapsEntityIntoForm()
     {
         var systemUnderTest = GetFormWithPopoverProvider();
-        var mudForm = systemUnderTest.FindComponent<MudForm>();
         var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
         var assertionAttempts = 0;
 

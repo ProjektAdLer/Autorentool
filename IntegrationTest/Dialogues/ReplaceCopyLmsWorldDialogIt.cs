@@ -38,7 +38,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
         buttons[1].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.EqualTo(ReplaceCopyLmsWorldDialogResult.Copy));
+        Assert.That(result!.Data, Is.EqualTo(ReplaceCopyLmsWorldDialogResult.Copy));
         Assert.That(result.Canceled, Is.False);
     }
 
@@ -52,7 +52,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
         buttons[2].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.Null);
+        Assert.That(result!.Data, Is.Null);
         Assert.That(result.Canceled, Is.True);
     }
 
@@ -70,7 +70,7 @@ public class ReplaceCopyLmsWorldDialogIt : MudDialogTestFixture<ReplaceCopyLmsWo
         buttons2[4].Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Data, Is.EqualTo(ReplaceCopyLmsWorldDialogResult.Replace));
+        Assert.That(result!.Data, Is.EqualTo(ReplaceCopyLmsWorldDialogResult.Replace));
         Assert.That(result.Canceled, Is.False);
     }
 }

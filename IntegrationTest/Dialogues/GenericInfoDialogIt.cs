@@ -20,7 +20,7 @@ public class GenericInfoDialogIt : MudDialogTestFixture<GenericInfoDialog>
             { nameof(GenericInfoDialog.OkButtonColor), Color.Info }
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var mudText = DialogProvider.FindComponents<MudText>()[1];
         var pInner = mudText.Find("p").InnerHtml;
@@ -42,7 +42,7 @@ public class GenericInfoDialogIt : MudDialogTestFixture<GenericInfoDialog>
         buttons.Find("button").Click();
 
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.EqualTo(null));
     }
 }

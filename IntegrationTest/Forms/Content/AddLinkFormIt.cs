@@ -100,7 +100,6 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
     // ANF-ID: [AWA0042]
     public void SubmitButtonClicked_SerializationException_ErrorServiceCalled()
     {
-        var vm = ViewModelProvider.GetLinkContent();
         var systemUnderTest = GetRenderedComponent();
         PresentationLogic.When(x => x.SaveLink(Arg.Any<LinkContentViewModel>()))
             .Do(_ => throw new SerializationException());

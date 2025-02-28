@@ -59,7 +59,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
             { nameof(UploadSuccessfulDialog.WorldName), "This is the world name" }
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[0].Find("button").Click();
@@ -78,7 +78,7 @@ public class UploadSuccessfulDialogIt : MudDialogTestFixture<UploadSuccessfulDia
             { nameof(UploadSuccessfulDialog.WorldName), "This is the world name" }
         };
 
-        var dialog = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = await OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var buttons = DialogProvider.FindComponents<MudButton>();
         buttons[1].Find("button").Click();

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using BusinessLogic.Entities;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -86,7 +85,6 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
-        var onSubmitted = EventCallback.Factory.Create(this, () => { });
         Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent();
 
@@ -287,7 +285,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
         var systemUnderTest = GetFormWithPopoverProvider();
-        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        _ = systemUnderTest.FindComponent<MudPopoverProvider>();
 
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
     }

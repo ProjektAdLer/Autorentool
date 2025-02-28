@@ -23,7 +23,7 @@ public class ImportZipDialogIt : MudDialogTestFixture<ImportZipDialog>
             { nameof(ImportZipDialog.ErrorFiles), new List<string> { "TestFile7", "TestFile8" } },
         };
 
-        var dialog = OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var title = DialogProvider.Find("h6");
         Assert.That(title.InnerHtml, Is.EqualTo("title"));
@@ -74,7 +74,7 @@ public class ImportZipDialogIt : MudDialogTestFixture<ImportZipDialog>
         var result = await dialog.Result;
         Assert.Multiple(() =>
         {
-            Assert.That(result.Canceled, Is.False);
+            Assert.That(result!.Canceled, Is.False);
             Assert.That(DialogProvider.Markup, Is.Empty);
         });
     }
