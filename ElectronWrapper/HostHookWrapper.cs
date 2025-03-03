@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
+using ElectronSharp.API;
 
 namespace ElectronWrapper;
 
@@ -12,12 +12,7 @@ namespace ElectronWrapper;
 /// </summary>
 class HostHookWrapper : IHostHookWrapper
 {
-    private HostHook hostHook;
-
-    public HostHookWrapper()
-    {
-        hostHook = Electron.HostHook;
-    }
+    private readonly HostHook _hostHook = Electron.HostHook;
 
     /// <summary>
     /// Execute native JavaScript/TypeScript code.
@@ -26,7 +21,7 @@ class HostHookWrapper : IHostHookWrapper
     /// <param name="arguments">Optional parameters.</param>
     public void Call(string socketEventName, params dynamic[] arguments)
     {
-        hostHook.Call(socketEventName, arguments);
+        _hostHook.Call(socketEventName, arguments);
     }
 
     /// <summary>
@@ -38,6 +33,6 @@ class HostHookWrapper : IHostHookWrapper
     /// <returns></returns>
     public Task<T> CallAsync<T>(string socketEventName, params dynamic[] arguments)
     {
-        return hostHook.CallAsync<T>(socketEventName, arguments);
+        return _hostHook.CallAsync<T>(socketEventName, arguments);
     }
 }

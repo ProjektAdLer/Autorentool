@@ -154,11 +154,7 @@ public class CreateAtfUt
 
         var mockSpaces = new List<LearningSpacePe> { mockSpace1, mockSpace2, mockSpace3 };
 
-        var mockFileSystem = new MockFileSystem();
-        var mockLogger = Substitute.For<ILogger<CreateAtf>>();
-
         //Act
-        var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
         var learningSpaceList = CreateAtf.IncrementDuplicateLearningElementNames(mockSpaces);
 
         //Assert
@@ -302,8 +298,7 @@ public class CreateAtfUt
                 }
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", 5, Theme.CampusAschaffenburg,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space2 = new LearningSpacePe("b", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: null)
         {
             LearningSpaceLayout =
@@ -330,8 +325,7 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space3 = new LearningSpacePe("c", "ff", 5, Theme.CampusAschaffenburg,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space3 = new LearningSpacePe("c", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2)
         {
             LearningSpaceLayout =

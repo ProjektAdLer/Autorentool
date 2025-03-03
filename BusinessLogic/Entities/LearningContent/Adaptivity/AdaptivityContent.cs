@@ -9,6 +9,7 @@ public class AdaptivityContent : IAdaptivityContent
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -63,6 +64,7 @@ public class AdaptivityContent : IAdaptivityContent
         return Equals((AdaptivityContent) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Tasks, Name);

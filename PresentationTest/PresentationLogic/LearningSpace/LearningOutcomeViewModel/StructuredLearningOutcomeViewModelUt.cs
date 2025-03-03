@@ -18,8 +18,8 @@ public class StructuredLearningOutcomeViewModelUt
 
         var result = structuredLearningOutcomeViewModel.GetOutcome();
 
-        Assert.That("Sie können Programmieren lernen, \n indem Sie programmieren,\n um programmieren zu können.",
-            Is.EqualTo(result));
+        Assert.That(result,
+            Is.EqualTo("Sie können Programmieren lernen, \n indem Sie programmieren,\n um programmieren zu können."));
     }
 
     [Test]
@@ -31,8 +31,8 @@ public class StructuredLearningOutcomeViewModelUt
 
         var result = structuredLearningOutcomeViewModel.GetOutcome();
 
-        Assert.That("You will be able to learn Programing \n by programing \n to be able to program.",
-            Is.EqualTo(result));
+        Assert.That(result,
+            Is.EqualTo("You will be able to learn Programing \n by programing \n to be able to program."));
     }
 
     [Test]

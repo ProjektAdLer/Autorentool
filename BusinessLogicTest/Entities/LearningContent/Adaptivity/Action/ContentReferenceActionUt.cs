@@ -16,6 +16,7 @@ public class ContentReferenceActionUt
         var content = Substitute.For<IAdaptivityContent>();
 
         // Act & Assert
+        // ReSharper disable once ObjectCreationAsStatement
         Assert.Throws<ArgumentException>(() => new ContentReferenceAction(content, "Sample Comment"));
     }
 

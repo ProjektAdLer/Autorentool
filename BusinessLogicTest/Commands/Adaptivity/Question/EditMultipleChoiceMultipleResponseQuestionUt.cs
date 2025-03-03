@@ -68,7 +68,6 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoices = question.CorrectChoices;
-        var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");
@@ -125,7 +124,6 @@ public class EditMultipleChoiceMultipleResponseQuestionUt
         var oldQuestionText = question.Text;
         var oldChoices = question.Choices;
         var oldCorrectChoices = question.CorrectChoices;
-        var oldExpectedCompletionTime = question.ExpectedCompletionTime;
 
         var questionText = "NewQuestionText";
         var choice1 = new Choice("Choice1");

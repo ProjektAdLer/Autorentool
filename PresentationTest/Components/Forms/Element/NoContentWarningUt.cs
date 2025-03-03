@@ -22,6 +22,7 @@ public class NoContentWarningUt
         Mediator = Substitute.For<IMediator>();
         _testContext.Services.AddSingleton(Mediator);
         _testContext.AddLocalizerForTest<NoContentWarning>();
+        _testContext.AddMudBlazorTestServices();
     }
     
     [TearDown]

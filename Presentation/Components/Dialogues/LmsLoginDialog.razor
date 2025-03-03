@@ -8,18 +8,18 @@
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
 @inject ISnackbar Snackbar
-<MudPaper Height="450px" Style="overflow: hidden; position: relative;">
+<MudPaper id="LmsLoginDialog.Dialog.Paper" Height="450px" Style="overflow: hidden; position: relative;">
     <div class="w-full flex flex-row items-center justify-between">
         <MudText Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.Close" DisableElevation="true" OnClick="CloseDialog"
+        <MudIconButton id="LmsLoginDialog.CloseDialog.Button" Icon="@Icons.Material.Filled.Close" DropShadow="false" OnClick="CloseDialog"
                        ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
     </div>
 
     <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
         <div class="flex">
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
-                <MudList Clickable="false">
-                    <MudListItem Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
+                <MudList T="object" ReadOnly="true">
+                    <MudListItem T="object" Class="hover:none" title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@_moodle" OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)">
                     </MudListItem>
                 </MudList>
             </MudPaper>
@@ -50,9 +50,9 @@
                             </div>
 
                             <div class="logged-in-container flex flex-col justify-center gap-2 py-2">
-                                <div class="flex flex-row gap-1 justify-center">
-                                    <p class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
-                                    <p class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
+                                <div id="LmsLoginDialog.LoggedInContainer.Div" class="flex flex-row gap-1 justify-center">
+                                    <p id="LmsLoginDialog.LoggedInMessage.Text" class="cursor-default text-sm text-adlergrey-700">@Localizer["DialogContent.LoggedIn.Message"]</p>
+                                    <p id="LmsLoginDialog.LoggedInUserName.Text" class="cursor-default text-sm text-adlerblue-700">@(PresentationLogic.LoginName) (@BackendUrl)</p>
                                 </div>
                                 <MudButton Class="btn-standard mx-36" title=@Localizer["DialogContent.Button.Logout.Title"]
                                            OnClick="Logout">
@@ -83,12 +83,12 @@
                                 </MudTooltip>
                             </div>
 
-                            <MudList Class="border border-adlergrey-200 rounded">
+                            <MudList T="LmsWorldViewModel" Class="border border-adlergrey-200 rounded">
                                 <MudText Class="cursor-default pl-4 font-bold">@Localizer["DialogContent.Delete.Subtitle"]</MudText>
                                 <div class="h-28 overflow-y-scroll">
                                     @foreach (var lmsWorld in _lmsWorldList)
                                     {
-                                        <MudListItem Style="height: 48px" Class="py-0 cursor-default" Text="@lmsWorld.WorldName">
+                                        <MudListItem T="LmsWorldViewModel" Style="height: 48px" Class="py-0 cursor-default" Text="@lmsWorld.WorldName">
                                             <div class="flex flex-row justify-between items-center">
                                                 <p class="text-base truncate">@lmsWorld.WorldName</p>
                                                 @if (lmsWorld == _deleteWorld)
@@ -99,7 +99,7 @@
                                                 {
                                                     <MudIconButton OnClick="() => DeleteLmsWorld(lmsWorld)"
                                                                    Icon="@Icons.Material.Filled.Delete"
-                                                                   Title="@Localizer["DialogContent.Delete.MoodleCourse"]"
+                                                                   title="@Localizer["DialogContent.Delete.MoodleCourse"]"
                                                                    Class="text-adlergrey-200 hover:text-adlerdarkblue-700">
                                                     </MudIconButton>
                                                 }
@@ -144,18 +144,18 @@
                         <div class="flex flex-col">
                             <MudForm>
                                 <div class="flex flex-col">
-                                    <MudTextField @bind-Value="BackendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
+                                    <MudTextField id="LmsLoginDialog.BackendUrl.TextField" @bind-Value="BackendUrl" Label=@Localizer["DialogContent.Field.BackendUrl"]
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.BackendUrl.Required"]"/>
                                     @if (_errorInvalidUrlMessage != "")
                                     {
                                         <MudText Color="Color.Error" Typo="Typo.subtitle2">@_errorInvalidUrlMessage</MudText>
                                     }
-                                    <MudTextField @bind-Value="Username" Label=@Localizer["DialogContent.Field.Username"]
+                                    <MudTextField id="LmsLoginDialog.Username.TextField" @bind-Value="Username" Label=@Localizer["DialogContent.Field.Username"]
                                                   Required="true"
                                                   RequiredError="@Localizer["DialogContent.Field.Username.Required"]"/>
-                                    <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
-                                                  OnKeyPress="OnKeyPress"
+                                    <MudTextField id="LmsLoginDialog.Password.TextField" @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"]
+                                                  OnKeyUp="OnKeyPress"
                                                   InputType=@PasswordInputType Adornment="Adornment.End"
                                                   AdornmentIcon=@ShowPasswordIcon
                                                   OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
@@ -192,7 +192,7 @@
                                        title=@Localizer["DialogContent.Button.ForgotPassword.Title"] class="pb-2">
                                         @Localizer["DialogContent.Button.ForgotPassword"]
                                     </a>
-                                    <MudButton Class="mt-6 btn-standard mx-36" OnClick="SubmitForm"
+                                    <MudButton id="LmsLoginDialog.SubmitForm.Button" Class="mt-6 btn-standard mx-36" OnClick="SubmitForm"
                                                title="@Localizer["DialogContent.Button.Login.Title"]">
                                         <MudIcon Icon="@Icons.Material.Filled.Login"></MudIcon>
                                         <MudText Class="px-2 uppercase font-bold">@Localizer["DialogContent.Button.Login"]</MudText>
@@ -230,7 +230,7 @@
 
     [Parameter] public EventCallback OnSubmitted { get; set; }
 
-    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
@@ -261,6 +261,7 @@
     }
 
 
+    // ReSharper disable RedundantDefaultMemberInitializer
     private string _password = "";
     private string _errorInvalidUrlMessage = "";
     private bool _showErrorInvalidCredentials = false;
@@ -274,11 +275,12 @@
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
-    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
+    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = false, NoHeader = true };
 
     private List<LmsWorldViewModel> _lmsWorldList = new();
 
     private LmsWorldViewModel? _deleteWorld = null;
+    // ReSharper restore RedundantDefaultMemberInitializer
 
     protected override void OnParametersSet()
     {
@@ -287,19 +289,11 @@
         _password = "";
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
-        UpdateLmsIsConnected();
-        MudDialog?.SetOptions(Options);
+        _ = UpdateLmsIsConnected();
+        MudDialog!.SetOptionsAsync(Options);
     }
 
-    /*
-    private void UpdateFromConfiguration()
-    {
-        _backendUrl = Configuration[IApplicationConfiguration.BackendBaseUrl];
-        _username = Configuration[IApplicationConfiguration.BackendUsername];
-    }
-    */
-
-    private async void UpdateLmsIsConnected()
+    private async Task UpdateLmsIsConnected()
     {
         try
         {
@@ -376,13 +370,13 @@
         _showErrorApiUnreachable = false;
         _showErrorTokenInvalid = false;
         _errorInvalidUrlMessage = "";
-        UpdateLmsIsConnected();
+        _ = UpdateLmsIsConnected();
     }
 
     private void Logout()
     {
         PresentationLogic.Logout();
-        UpdateLmsIsConnected();
+        _ = UpdateLmsIsConnected();
     }
 
     private async void RefreshLmsWorldList()
@@ -411,7 +405,7 @@
 
         var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["ConfirmDeleteLmsWorld.Title"].Value, dialogParameters);
         var result = await dialogReference.Result;
-        if (result.Canceled) return;
+        if (result == null || result.Canceled) return;
 
         _deleteWorld = world;
         await InvokeAsync(StateHasChanged);
@@ -463,9 +457,9 @@
         return Task.CompletedTask;
     }
 
-    private string moodle = moodleIcon;
+    private readonly string _moodle = MoodleIcon;
 
-    const string moodleIcon =
+    const string MoodleIcon =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
             <svg id=""uuid-641fc258-3a7a-40b9-819a-ba6601463eb6"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
                 <path d=""m152.06,736.06l-135.43,4.15v-15.2s441.2-330.85,1307.28-397.99l5.53,13.82-315.07,229.4s86.52,60.15,124.37,113.32c0,0,24.89,7.2,49.75,41.46,0,0,80.72-117.85,362.06-107.79,281.34,10.06,420.73,153.85,436.68,378.64v677.13h-315.07l-2.76-655.02s-1.55-167.12-163.06-157.54c-161.52,9.58-154.77,157.54-154.77,157.54v655.02h-317.84v-655.02s-3.77-101.59-74.62-140.95c0,0-86.71,66.71-232.16,88.44,0,0-5.82,11.26-8.29,52.51-2.47,41.25,0,655.02,0,655.02h-317.84v-655.02s-.9-72.33,8.29-88.44c0,0-11.39-184.97-2.79-185.17,0,0-237.76-1.6-254.24-8.29"" style=""fill: #172d4d; fill-rule: evenodd; stroke-width: 0px;""/>

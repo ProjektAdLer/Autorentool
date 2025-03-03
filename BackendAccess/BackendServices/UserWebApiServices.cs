@@ -262,6 +262,10 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// Sends a POST request with the given headers and content to the given URL.
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
+    /// <param name="headers">A dictionary containing header key-value pairs to include in the request.</param>
+    /// <param name="content">The multipart form data content to be sent in the request body.</param>
+    /// <param name="progress">An optional progress reporter to track the progress of the HTTP request.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
         MultipartFormDataContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
@@ -307,6 +311,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     /// <param name="parameters">A dictionary of query parameters for the HTTP GET request, with each key-value pair representing one parameter.</param>
+    /// <param name="headers">Optional dictionary containing header key-value pairs to include in the request.</param>
     /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters,
         IDictionary<string, string>? headers = null)

@@ -22,7 +22,7 @@
      
             <div class="flex flex-col items-center">
       
-                <MudListItem Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-2 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-0" 
+                <MudListItem T="ILearningElementViewModel" Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-6 2xl:h-8 text-[8px] 2xl:text-xs 1080p:text-xs mt-2 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-0" 
                              Text="@LearningElement.Name"
                              OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                 </MudListItem>
@@ -48,7 +48,7 @@
      
             <div class="flex flex-col items-center">
                 
-                <MudListItem Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-4 2xl:h-4 text-[8px] 2xl:text-xs 1080p:text-xs mt-4 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-0" 
+                <MudListItem T="ILearningElementViewModel" Class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-4 2xl:h-4 text-[8px] 2xl:text-xs 1080p:text-xs mt-4 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-0" 
                              Text="@LearningElement.Name"
                              OnClick="() => OnClicked.InvokeAsync(LearningElement)">
                 </MudListItem>
@@ -173,7 +173,7 @@
 
         var dialogReference = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DragDropLearningElement.DeleteElementConfirmationDialog.Title"].Value, dialogParameters);
         var result = await dialogReference.Result;
-        if (result.Canceled)
+        if (result == null || result.Canceled)
         {
             return;
         }

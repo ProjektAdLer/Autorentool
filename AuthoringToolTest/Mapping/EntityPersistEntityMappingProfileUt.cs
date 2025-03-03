@@ -26,8 +26,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string EnrolmentKey = "enrolmentKey";
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
-    private static readonly string Filepath = "bar/baz/buz.txt";
-    private static List<string> StoryText = new() { "storyText1", "storyText2", "storyText3" };
+    private const string Filepath = "bar/baz/buz.txt";
+    private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
@@ -46,8 +46,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewEnrolmentKey = "newEnrolmentKey";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
-    private static readonly string NewFilepath = "/foo/bar/baz.txt";
-    private static List<string> NewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+    private const string NewFilepath = "/foo/bar/baz.txt";
+    private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -355,7 +355,7 @@ public class EntityPersistEntityMappingProfileUt
             new LearningElement(Name, new FileContent(Name, Type, Filepath), Description, Goals, Difficulty,
                 ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
         var storyElement1 =
-            new LearningElement(Name, new StoryContent(Name, false, StoryText), Description, Goals, Difficulty,
+            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText), Description, Goals, Difficulty,
                 ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
 
         var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
@@ -421,7 +421,7 @@ public class EntityPersistEntityMappingProfileUt
                     {
                         {
                             0,
-                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, NewStoryText),
+                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText),
                                 NewDescription, NewGoals,
                                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
                         }
@@ -624,7 +624,7 @@ public class EntityPersistEntityMappingProfileUt
         var elementPe = systemUnderTest.Map<LearningElementPe>(element);
 
         systemUnderTest.Map(elementPe, element);
-        var restoredElement = systemUnderTest.Map<LearningElement>(elementPe);
+        systemUnderTest.Map<LearningElement>(elementPe);
     }
 
     private static FileContent GetTestableContent()
@@ -634,7 +634,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, StoryText);
+        return new StoryContent(Name, false, ConfigureStoryText);
     }
 
     private static FileContentPe GetTestableNewContentPersistEntity()
@@ -644,7 +644,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContentPe GetTestableNewStoryContentPersistEntity()
     {
-        return new StoryContentPe(NewName, false, NewStoryText);
+        return new StoryContentPe(NewName, false, ConfigureNewStoryText);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -892,14 +892,14 @@ public class EntityPersistEntityMappingProfileUt
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             case StoryContentPe content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? NewStoryText : StoryText));
+                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             default:

@@ -38,7 +38,7 @@ public class WorldFormContainerUt
     [Test]
     public void OnParametersSet_RegistersToPresenterEvent()
     {
-        var sut = GetRenderedComponent();
+        _ = GetRenderedComponent();
 
         Presenter.Received().PropertyChanged += Arg.Any<PropertyChangedEventHandler>();
     }

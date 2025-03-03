@@ -6,16 +6,18 @@ jobs:
     name: Publish for MacOS
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.304'
+          dotnet-version: |
+            8.0.100
+            6.0.416
 
       - name: Cache Nuget Packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: macOS-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -23,17 +25,17 @@ jobs:
             macOS-nuget
 
       - name: Set up npm
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 
       - name: Install electronize
         run: dotnet tool restore
-
+        
       - name: Install npm dependencies
         working-directory: ./AuthoringTool
         run: npm install
-
+        
       - name: Run Tailwind build
         working-directory: ./AuthoringTool
         run: npm run tailwind-build
@@ -53,24 +55,26 @@ jobs:
     name: Publish for Windows
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
+      # install dependencies, build, and test
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.304'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
           key: Windows-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             Windows-nuget
 
       - name: Set up npm
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 
@@ -100,16 +104,16 @@ jobs:
     name: Publish for Linux
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.304'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -117,7 +121,7 @@ jobs:
             Linux-nuget
 
       - name: Set up npm
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 
@@ -131,7 +135,7 @@ jobs:
       - name: Run Tailwind build
         working-directory: ./AuthoringTool
         run: npm run tailwind-build
-
+        
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
         run: dotnet electronize build /target linux
@@ -142,22 +146,25 @@ jobs:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
           if-no-files-found: error
+
   publish-linux-arm64:
     name: Publish for Linux ARM64
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
+          
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v2
+        
       - name: Setup Dotnet for use with actions
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.304'
+          dotnet-version: '8.0.100'
 
       - name: Cache Nuget Packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -165,7 +172,7 @@ jobs:
             Linux-nuget
 
       - name: Set up npm
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 

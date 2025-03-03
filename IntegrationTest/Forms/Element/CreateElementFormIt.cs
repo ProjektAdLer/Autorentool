@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using BusinessLogic.Entities;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
@@ -65,17 +64,17 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         };
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[0]).Returns(LearningContentFormModels[0]);
         Mapper.Map<ILearningContentFormModel>(LearningContentViewModels[1]).Returns(LearningContentFormModels[1]);
-        
+
         var learningContent = LearningContentFormModels[0];
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(learningContent));
 
         _dialogServiceMock = Substitute.For<IDialogService>();
-        _dialogServiceMock.ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+        _dialogServiceMock
+            .ShowAsync<LearningContentDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
         Context.Services.AddSingleton(_dialogServiceMock);
-
     }
 
 
@@ -86,8 +85,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Test]
     public void Render_InjectsDependenciesAndParameters()
     {
-        var onSubmitted = EventCallback.Factory.Create(this, () => { });
-
+        Context.RenderComponent<MudPopoverProvider>();
         var systemUnderTest = GetRenderedComponent();
 
         Assert.That(systemUnderTest.Instance.WorldPresenter, Is.EqualTo(WorldPresenter));
@@ -102,7 +100,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     public void Initialize_SelectedViewModelsProviderContentSet_SetsInFormModelAndResetsProvider()
     {
         SelectedViewModelsProvider.LearningContent.Returns(LearningContentViewModels.First());
-
+        Context.RenderComponent<MudPopoverProvider>();
         GetRenderedComponent();
 
         Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels.First()));
@@ -287,43 +285,9 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     {
         WorldPresenter.GetAllContent().Returns(Enumerable.Empty<ILearningContentViewModel>());
         var systemUnderTest = GetFormWithPopoverProvider();
-        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
+        _ = systemUnderTest.FindComponent<MudPopoverProvider>();
 
         Assert.That(systemUnderTest.HasComponent<Stub<NoContentWarning>>(), Is.True);
-    }
-
-    [Test]
-    [Ignore(
-        "PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool.",
-        Until = "2024-12-31")]
-    // ANF-ID: [AWA0002]
-    public void H5PContentSelected_ShowsPrimitiveCheckbox()
-    {
-        var content = new[]
-        {
-            ViewModelProvider.GetFileContent("foo", "h5p", "somepath")
-        };
-        WorldPresenter.GetAllContent().Returns(content);
-        var contentFormModels = new[]
-        {
-            FormModelProvider.GetFileContent("foo", "h5p", "somepath")
-        };
-        Mapper.Map<ILearningContentFormModel>(content[0]).Returns(contentFormModels[0]);
-        var systemUnderTest = GetFormWithPopoverProvider();
-        var popover = systemUnderTest.FindComponent<MudPopoverProvider>();
-
-
-        Assert.That(FormModel.LearningContent, Is.EqualTo(contentFormModels.First()));
-        Assert.That(FormModel.LearningContent, Is.TypeOf<FileContentFormModel>());
-        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(false));
-
-        var checkbox = systemUnderTest.FindComponent<MudCheckBox<bool>>();
-        Assert.That(checkbox.Instance.Value, Is.EqualTo(false));
-
-        checkbox.Find("input").Change(true);
-
-        Assert.That(contentFormModels.First().PrimitiveH5P, Is.EqualTo(true));
-        Assert.That(checkbox.Instance.Value, Is.EqualTo(true));
     }
 
     [Test]
@@ -345,22 +309,24 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
     [Test]
     public void StoryMode_ShowsStoryContentCollapsable_SubmitsOnClick()
     {
+        Context.RenderComponent<MudPopoverProvider>();
         var sut = GetRenderedComponent(ElementMode.Story);
-        
+
         var collapsables = sut.FindComponents<Collapsable>();
 
-        var storyCollapsable = collapsables.First(collapsable => collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
-        
+        var storyCollapsable = collapsables.First(collapsable =>
+            collapsable.Instance.Title == "CreateStoryElementForm.Fields.Collapsable.Story.Title");
+
         var addButton = storyCollapsable.FindComponentWithMarkup<MudIconButton>("add-story-block-button");
         addButton.Find("button").Click();
-        
+
         var tfs = storyCollapsable.FindComponentsOrFail<MudTextField<string>>().ToList();
         tfs.ElementAt(0).Find("textarea").Change("a sob story");
         tfs.ElementAt(1).Find("textarea").Change("a happy story");
-        
+
         var submitButton = sut.FindComponent<DefaultSubmitButton>();
         submitButton.Find("button").Click();
-        
+
         SpacePresenter.Received().CreateStoryElementInSlotFromFormModel(FormModel);
         var storyContent = (StoryContentFormModel)FormModel.LearningContent!;
         Assert.That(storyContent.StoryText, Has.Count.EqualTo(2));
@@ -389,16 +355,16 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
-        
+
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
-        
+
         mudTextFields[0].Find("input").Change(Expected);
         mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
         mudNumericFields[1].Find("input").Change(123);
-        mudSelect.Find("div.mud-input-control").Click();
+        mudSelect.Find("div.mud-input-control").MouseDown();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
     }

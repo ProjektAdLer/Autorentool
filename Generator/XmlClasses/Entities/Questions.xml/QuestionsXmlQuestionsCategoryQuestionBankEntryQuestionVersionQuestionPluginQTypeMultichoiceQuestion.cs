@@ -4,10 +4,6 @@ namespace Generator.XmlClasses.Entities.Questions.xml;
 
 public class QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion
 {
-    public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestion()
-    {
-    }
-
     [XmlElement(ElementName = "answers")]
     public QuestionsXmlQuestionsCategoryQuestionBankEntryQuestionVersionQuestionPluginQTypeMultichoiceQuestionAnswers
         Answers { get; set; } = new();

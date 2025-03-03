@@ -189,4 +189,7 @@
     <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
         <value>Softwarekomponenten des Autorentools - Öffnet ein neues Browserfenster</value>
     </data>
+    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
+        <value>Diese Lernwelt enthält mehr als 50 Lernräume.</value>
+    </data>
 </root>

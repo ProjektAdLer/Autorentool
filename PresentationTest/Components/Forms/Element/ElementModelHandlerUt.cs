@@ -65,7 +65,7 @@ public class ElementModelHandlerUt
 
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
-        var iconDirectory = Path.Combine(projectDirectory, "AuthoringTool", "wwwroot");
+        var iconDirectory = Path.Combine(projectDirectory!, "AuthoringTool", "wwwroot");
 
         foreach (var elementModel in elementModels)
         {
@@ -99,28 +99,20 @@ public class ElementModelHandlerUt
     [Test]
     public void GetElementModelsForTheme_ContainsCaseForEachTheme([Values] Theme theme)
     {
-        var systemUnderTest = new ElementModelHandler();
-
-        Assert.DoesNotThrow(() =>
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            ElementModelHandler.GetElementModelsForTheme(theme).ToList());
+        Assert.DoesNotThrow(() => _ = ElementModelHandler.GetElementModelsForTheme(theme).ToList());
     }
 
     [Test]
     public void GetElementModelsForTheme_UnknownValueForTheme_ThrowsException()
     {
-        var systemUnderTest = new ElementModelHandler();
         var unknownEnumValue = Enum.GetValues(typeof(Theme)).Length;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            ElementModelHandler.GetElementModelsForTheme((Theme)unknownEnumValue).ToList());
+            _ = ElementModelHandler.GetElementModelsForTheme((Theme)unknownEnumValue).ToList());
     }
 
     [Test]
     public void GetElementModelsForTheme_ContainsEachElementModel()
     {
-        var systemUnderTest = new ElementModelHandler();
-
         var themes = (Theme[])Enum.GetValues(typeof(Theme));
 
         var elementModelsFromAllThemes = new List<ElementModel>();

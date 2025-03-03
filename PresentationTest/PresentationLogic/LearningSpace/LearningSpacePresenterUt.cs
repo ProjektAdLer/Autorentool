@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
@@ -642,66 +641,6 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public async Task LoadLearningElementAsync_SetsErrorWhenSelectedSpaceNull()
-    {
-        var mockErrorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
-
-        Assert.That(systemUnderTest.LearningSpaceVm, Is.Null);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-
-        mockErrorService.Received().SetError("Operation failed", "No learning space selected");
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_CallsPresentationLogic()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = ViewModelProvider.GetLearningSpace();
-        var element = ViewModelProvider.GetLearningElement(parent: space);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        await systemUnderTest.LoadLearningElementAsync(1);
-
-        await presentationLogic.Received().LoadLearningElementAsync(space, 1);
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_SerializationException_CallsErrorManager()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(_ => throw new SerializationException("test"));
-        var space = ViewModelProvider.GetLearningSpace();
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.SetLearningSpace(space);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-        errorService.Received(1).SetError("Error while loading learning element", "test");
-    }
-
-    [Test]
-    public async Task LoadLearningElementAsync_InvalidOperationException_CallsErrorManager()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.When(x => x.LoadLearningElementAsync(Arg.Any<ILearningSpaceViewModel>(), Arg.Any<int>()))
-            .Do(_ => throw new InvalidOperationException("test"));
-        var space = ViewModelProvider.GetLearningSpace();
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.SetLearningSpace(space);
-
-        await systemUnderTest.LoadLearningElementAsync(1);
-        errorService.Received(1).SetError("Error while loading learning element", "test");
-    }
-
-    [Test]
     public void SetLearningSpaceLayout_LearningSpaceVmIsNull_LogsErrorAndReturns()
     {
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -790,7 +729,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Cancel());
-        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result!);
 
         errorService.Received().SetError("Operation failed", "No learning space selected");
         presentationLogic.DidNotReceive().DragLearningElementFromUnplaced(Arg.Any<LearningWorldViewModel>(),
@@ -818,7 +757,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Cancel());
-        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result!);
 
         presentationLogic.DidNotReceive().DragLearningElementFromUnplaced(Arg.Any<LearningWorldViewModel>(),
             Arg.Any<LearningSpaceViewModel>(), Arg.Any<LearningElementViewModel>(), Arg.Any<int>());
@@ -847,7 +786,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
-        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceLearningElementDialogClose(dialogReference.Result.Result!);
 
         presentationLogic.Received()
             .DragLearningElementFromUnplaced(learningWorldVm, learningSpaceVm, learningElementVm, 1);
@@ -869,7 +808,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Cancel());
-        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result!);
 
         errorService.Received().SetError("Operation failed", "No learning space selected");
         presentationLogic.DidNotReceive().DragStoryElementFromUnplaced(Arg.Any<LearningWorldViewModel>(),
@@ -897,7 +836,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Cancel());
-        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result!);
 
         presentationLogic.DidNotReceive().DragStoryElementFromUnplaced(Arg.Any<LearningWorldViewModel>(),
             Arg.Any<LearningSpaceViewModel>(), Arg.Any<LearningElementViewModel>(), Arg.Any<int>());
@@ -926,7 +865,7 @@ public class LearningSpacePresenterUt
 
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
-        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result);
+        systemUnderTest.OnReplaceStoryElementDialogClose(dialogReference.Result.Result!);
 
         presentationLogic.Received()
             .DragStoryElementFromUnplaced(learningWorldVm, learningSpaceVm, learningElementVm, 1);

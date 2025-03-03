@@ -21,7 +21,7 @@ public class ThemeHelperUt
     public void Localize_WhenNotInitialized_ThrowsException()
     {
         // Arrange
-        ThemeHelper.Initialize(null);
+        ThemeHelper.Initialize(null!);
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() => ThemeHelper.Localize(Theme.Suburb));

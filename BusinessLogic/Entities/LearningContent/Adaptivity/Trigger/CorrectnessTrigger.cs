@@ -13,6 +13,7 @@ public class CorrectnessTrigger : IAdaptivityTrigger
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -44,6 +45,7 @@ public class CorrectnessTrigger : IAdaptivityTrigger
         return Equals((CorrectnessTrigger) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return (int) ExpectedAnswer;

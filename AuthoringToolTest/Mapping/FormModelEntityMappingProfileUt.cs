@@ -2,7 +2,7 @@ using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question;
+using Presentation.Components.Adaptivity.Forms.Models;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
@@ -26,23 +26,12 @@ public class FormModelEntityMappingProfileUt
     // }
 
     [Test]
-    public void Debug()
-    {
-        var mapper = new MapperConfiguration(cfg =>
-        {
-            FormModelEntityMappingProfile.Configure(cfg);
-            ViewModelFormModelMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappersOnce();
-        });
-    }
-
-    [Test]
     public void MultipleChoiceQuestion_SingleResponse_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
         var questionFm = FormModelProvider.GetMultipleChoiceQuestion();
-        var choices = new List<ChoiceViewModel>
-            { ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice() };
+        var choices = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         questionFm.IsSingleResponse = true;
         questionFm.Choices = choices;
         questionFm.CorrectChoices.Clear();
@@ -70,8 +59,8 @@ public class FormModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var questionFm = FormModelProvider.GetMultipleChoiceQuestion();
-        var choices = new List<ChoiceViewModel>
-            { ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice(), ViewModelProvider.GetChoice() };
+        var choices = new List<ChoiceFormModel>
+            { FormModelProvider.GetChoice(), FormModelProvider.GetChoice(), FormModelProvider.GetChoice() };
         questionFm.IsSingleResponse = false;
         questionFm.Choices = choices;
         questionFm.CorrectChoices.Clear();

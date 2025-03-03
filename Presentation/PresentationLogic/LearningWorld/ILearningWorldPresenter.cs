@@ -35,17 +35,9 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="requiredPoints">The required points for the learning space.</param>
     /// <param name="theme">The theme of the learning space.</param>
     /// <param name="topic">The topic of the learning space (optional).</param>
-    /// <param name="positionX">The X position of the learning space (default is 0).</param>
-    /// <param name="positionY">The Y position of the learning space (default is 0).</param>
     void CreateLearningSpace(string name, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
         int requiredPoints, Theme theme, TopicViewModel? topic = null);
-
-    /// <summary>
-    /// Asynchronously loads the learning space associated with the currently selected learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task LoadLearningSpaceAsync();
 
     /// <summary>
     /// Edits an existing learning world.
@@ -65,12 +57,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
     void SaveLearningWorld();
-
-    /// <summary>
-    /// Asynchronously saves the selected learning space associated with the current learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task SaveSelectedLearningSpaceAsync();
 
     /// <summary>
     /// Deletes the specified pathway condition from the current learning world.

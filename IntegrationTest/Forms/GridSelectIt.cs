@@ -95,8 +95,10 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
     [Test]
     public void ErrorSet_DisplaysError()
     {
+#pragma warning disable BL0005
         Component.Instance.Error = true;
         Component.Instance.ErrorText = "some error";
+#pragma warning restore BL0005
         Component.Render();
 
         var errorText = Component.FindComponent<MudText>();

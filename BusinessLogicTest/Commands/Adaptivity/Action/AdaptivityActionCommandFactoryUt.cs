@@ -4,11 +4,13 @@ using BusinessLogic.Commands.Adaptivity.Action.ContentReference;
 using BusinessLogic.Commands.Adaptivity.Action.ElementReference;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
-using NUnit.Framework;
-using NSubstitute;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
+using NUnit.Framework;
 using TestHelpers;
+
+namespace BusinessLogicTest.Commands.Adaptivity.Action;
 
 [TestFixture]
 class AdaptivityActionCommandFactoryUt

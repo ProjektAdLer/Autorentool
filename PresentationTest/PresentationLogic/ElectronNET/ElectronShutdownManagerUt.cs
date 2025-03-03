@@ -14,22 +14,22 @@ public class ElectronShutdownManagerUt
     // ANF-ID: [ASN0025]
     public void ElectronShutdownManager_BeginShutdown_CallsBeforeThenOnShutdownHandlers()
     {
-        var BeforeCallbackCalled = false;
-        var OnCallbackCalled = false;
+        var beforeCallbackCalled = false;
+        var onCallbackCalled = false;
 
         var systemUnderTest = CreateElectronShutdownManagerForTest();
         systemUnderTest.BeforeShutdown += (_, _) =>
         {
-            if (OnCallbackCalled) Assert.Fail("OnShutdown callback called before BeforeShutdown callback");
-            if (BeforeCallbackCalled) Assert.Fail("BeforeShutdown callback called twice");
-            BeforeCallbackCalled = true;
+            if (onCallbackCalled) Assert.Fail("OnShutdown callback called before BeforeShutdown callback");
+            if (beforeCallbackCalled) Assert.Fail("BeforeShutdown callback called twice");
+            beforeCallbackCalled = true;
             return Task.CompletedTask;
         };
         systemUnderTest.OnShutdown += _ =>
         {
-            if (!BeforeCallbackCalled) Assert.Fail("BeforeShutdown callback not called before OnShutdown callback");
-            if (OnCallbackCalled) Assert.Fail("OnShutdown callback called twice");
-            OnCallbackCalled = true;
+            if (!beforeCallbackCalled) Assert.Fail("BeforeShutdown callback not called before OnShutdown callback");
+            if (onCallbackCalled) Assert.Fail("OnShutdown callback called twice");
+            onCallbackCalled = true;
             return Task.CompletedTask;
         };
 
@@ -37,8 +37,8 @@ public class ElectronShutdownManagerUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(BeforeCallbackCalled, Is.True);
-            Assert.That(OnCallbackCalled, Is.True);
+            Assert.That(beforeCallbackCalled, Is.True);
+            Assert.That(onCallbackCalled, Is.True);
         });
     }
 

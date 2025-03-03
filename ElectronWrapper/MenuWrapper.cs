@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
@@ -16,12 +16,7 @@ interface IMenuWrapper
 
 class MenuWrapper: IMenuWrapper
 {
-    private Menu menu;
-
-    public MenuWrapper()
-    {
-        menu = Electron.Menu;
-    }
+    private readonly Menu _menu = Electron.Menu;
 
     /// <summary>
     /// Gets the menu items.
@@ -29,7 +24,7 @@ class MenuWrapper: IMenuWrapper
     /// <value>
     /// The menu items.
     /// </value>
-    public IReadOnlyCollection<MenuItem> MenuItems => menu.MenuItems;
+    public IReadOnlyCollection<MenuItem> MenuItems => _menu.MenuItems;
 
 
     /// <summary>
@@ -38,7 +33,7 @@ class MenuWrapper: IMenuWrapper
     /// <param name="menuItems">The menu items.</param>
     public void SetApplicationMenu(MenuItem[] menuItems)
     {
-        menu.SetApplicationMenu(menuItems);
+        _menu.SetApplicationMenu(menuItems);
     }
 
     /// <summary>
@@ -47,7 +42,7 @@ class MenuWrapper: IMenuWrapper
     /// <value>
     /// The context menu items.
     /// </value>
-    public IReadOnlyDictionary<int, ReadOnlyCollection<MenuItem>> ContextMenuItems => menu.ContextMenuItems;
+    public IReadOnlyDictionary<int, ReadOnlyCollection<MenuItem>> ContextMenuItems => _menu.ContextMenuItems;
 
     /// <summary>
     /// Sets the context menu.
@@ -56,7 +51,7 @@ class MenuWrapper: IMenuWrapper
     /// <param name="menuItems">The menu items.</param>
     public void SetContextMenu(BrowserWindow browserWindow, MenuItem[] menuItems)
     {
-        menu.SetContextMenu(browserWindow.InnerBrowserWindow, menuItems);
+        _menu.SetContextMenu(browserWindow.InnerBrowserWindow, menuItems);
     }
 
     /// <summary>
@@ -65,6 +60,6 @@ class MenuWrapper: IMenuWrapper
     /// <param name="browserWindow">The browser window.</param>
     public void ContextMenuPopup(BrowserWindow browserWindow)
     {
-        menu.ContextMenuPopup(browserWindow.InnerBrowserWindow);
+        _menu.ContextMenuPopup(browserWindow.InnerBrowserWindow);
     }
 }

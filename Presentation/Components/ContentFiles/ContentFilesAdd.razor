@@ -9,9 +9,17 @@
 @using System.IO.Compression
 @using BusinessLogic.Entities.LearningContent
 @using BusinessLogic.ErrorManagement.DataAccess
+@using H5pPlayer.Api
+@using H5pPlayer.BusinessLogic.Api.JavaScript
+@using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
+@using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
+@using Shared.Configuration
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Navigation
+
 <header class="py-4 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
+    <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
 </header>
 
 <MudStack Class="w-full px-2 2xl:px-3">
@@ -33,27 +41,29 @@
             <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
                                  Color="Color.Info" Size="Size.Large"/>
         }
-     
-            <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
-                           Accept="@AllowedFileEndings.EndingsCommaSeparated" @ref="_fileUpload" Class=""
-                           InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
-                           @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
-                           @ondragend="ClearDragClass" @ondrop="ClearDragClass"
-                           @onmouseover="SetHoverClass" @onmouseout="ClearHoverClass">
-                <ButtonTemplate>
-                <div class="@PaperClasses">
-                        <MudElement Class="h-full w-full grow shrink flex flex-col justify-center items-center">
-                            <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
-                            <div class="flex flex-row gap-2">
-                                <p class="flex justify-center text-xs 2xl:text-sm text-center break-word w-full mx-2 font-bold text-adlerdarkblue">@Localizer["FileUpload.ButtonTemplate.Text1"]</p>
-                            </div>
-                        </MudElement>
-                    </div>
 
-                </ButtonTemplate>
-            </MudFileUpload>
-        </div>
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
+                       Accept="@AllowedFileEndings.EndingsCommaSeparated" @ref="_fileUpload" Class=""
+                       InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
+                       @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
+                       @ondragend="ClearDragClass" @ondrop="ClearDragClass"
+                       @onmouseover="SetHoverClass" @onmouseout="ClearHoverClass">
+            <ActivatorContent>
+                <MudPaper Class="@PaperClasses" Outlined="true">
+                    <MudElement Class="h-full w-full grow shrink flex flex-col justify-center items-center">
+                        @* ReSharper disable Html.PathError *@
+                        <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
+                        @* ReSharper restore Html.PathError *@
+                        <div class="flex flex-row gap-2">
+                            <p class="flex justify-center text-xs 2xl:text-sm text-center break-word w-full mx-2 font-bold text-adlerdarkblue">@Localizer["FileUpload.ButtonTemplate.Text1"]</p>
+                        </div>
+                    </MudElement>
+                </MudPaper>
 
+            </ActivatorContent>
+        </MudFileUpload>
+
+    </div>
     <Collapsable Title=@Localizer["Collapsable.Title"] InitiallyCollapsed="true">
         <AddLinkForm/>
     </Collapsable>
@@ -121,6 +131,21 @@
                     continue;
                 }
                 await HandleFileAsync(file);
+                
+#if DEBUG
+                 if (fileEnding.ToLowerInvariant()  == ".h5p")
+                 {
+                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
+                     var baseUri = new Uri(Navigation.BaseUri); 
+                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                     
+                     Logger.LogTrace("Start H5P-Player with: " + 
+                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
+                      
+                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                 }
+#endif
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -136,7 +161,7 @@
         }
 
     }
-
+   
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
     {
         var zipStream = zipFile.OpenReadStream(1_000_000_000);
@@ -163,19 +188,21 @@
             if (entry.Length == 0) continue;
             var fileName = PathHelper.TrimFileName(entry.Name);
             var fileEnding = string.Concat(entry.Name.Split(".").Skip(1).Last().Prepend('.'));
-            if (!AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
+            fileEnding = fileEnding.Trim().ToLowerInvariant();
+            if (!AllowedFileEndings.Endings.Contains(fileEnding))
             {
+                
                 unsupportedFiles.Add(entry.FullName);
                 continue;
             }
-
+   
+                
             using var memoryStream = new MemoryStream();
             await entry.Open().CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
             try
             {
-
                 await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
                 successfulFiles.Add(entry.FullName);
             }
@@ -214,7 +241,7 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.ExtraSmall,
             FullWidth = true,
         };
@@ -226,7 +253,6 @@
     {
         if (file.Size == 0)
         {
-
             Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
             Snackbar.Add(@Localizer["ContentFilesAdd.EmptyFile.Snackbar"], Severity.Error);
             //we must run this on the UI thread, as it is a UI component
@@ -274,6 +300,72 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
+    private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
+    {
+        
+       
+        var options = new DialogOptions
+        {
+            BackdropClick = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+        var parameters = new DialogParameters()
+        {
+            {"H5pZipSourcePath", h5pZipSourcePath},
+            {"UnzippedH5psPath", unzippedH5psPath}
+        };
+        
+        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
+
+        // Warten, bis der Dialog geschlossen wird
+        var result = await dialog.Result;
+        var javaScriptAdapter = new CallJavaScriptAdapter(JsRuntime);
+        var dataAccess = new FileSystemDataAccess();
+        ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
+        // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
+        if(result == null) return;
+        if (result.Canceled)
+        {
+            // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
+            Logger.LogInformation("Der Dialog wurde abgebrochen oder geschlossen.");
+            
+            await terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+            try
+            {
+                 await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        else
+        {
+            // Der Dialog wurde mit einem Ergebnis geschlossen, hier können Sie das Ergebnis verarbeiten
+            var dialogData = result.Data;
+            Logger.LogInformation($"Dialog wurde mit Ergebnis geschlossen: {dialogData}");
+            await terminateH5pPlayer.TerminateH5pPlayer();
+            dialog.Close();
+           
+            try
+            {
+                await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+
+            }
+            catch (JSException ex)
+            {
+                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
+            }
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    
+
+    
     private void ToggleSpinner()
     {
         Working = !Working;

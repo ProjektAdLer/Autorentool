@@ -31,7 +31,7 @@ namespace IntegrationTest.Components.Adaptivity.Dialogues;
 public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEditReferenceActionDialog>
 {
     [SetUp]
-    public async Task Setup()
+    public new async Task Setup()
     {
         ExistingAction = null;
         ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
@@ -57,6 +57,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         Context.Services.AddSingleton(_selectedViewModelsProvider);
         Context.Services.AddSingleton(_elementModelHandler);
         Context.ComponentFactories.AddStub<TableSelect<ILearningContentViewModel>>();
+        Context.RenderComponent<MudPopoverProvider>();
         await GetDialogAsync();
     }
 

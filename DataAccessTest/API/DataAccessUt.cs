@@ -27,8 +27,6 @@ public class DataAccessUt
         //Arrange 
         var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var mockFileSaveHandlerLink = Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
         var mockContentHandler = Substitute.For<IContentFileHandler>();
         var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
@@ -36,17 +34,13 @@ public class DataAccessUt
 
         //Act 
         var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockFileSaveHandlerWorld,
-            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockFileSaveHandlerLink, mockContentHandler,
-            mockWorldSavePathsHandler,
-            mockFileSystem);
+            mockFileSaveHandlerLink, mockContentHandler, mockWorldSavePathsHandler, mockFileSystem);
 
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.XmlHandlerWorld, Is.EqualTo(mockFileSaveHandlerWorld));
-            Assert.That(systemUnderTest.XmlHandlerSpace, Is.EqualTo(mockFileSaveHandlerSpace));
-            Assert.That(systemUnderTest.XmlHandlerElement, Is.EqualTo(mockFileSaveHandlerElement));
             Assert.That(systemUnderTest.XmlHandlerLink, Is.EqualTo(mockFileSaveHandlerLink));
             Assert.That(systemUnderTest.ContentFileHandler, Is.EqualTo(mockContentHandler));
             Assert.That(systemUnderTest.WorldSavePathsHandler, Is.EqualTo(mockWorldSavePathsHandler));
@@ -95,87 +89,12 @@ public class DataAccessUt
     }
 
     [Test]
-    public void SaveLearningSpaceToFile_CallsFileSaveHandlerSpace()
-    {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
-
-        var learningSpace = EntityProvider.GetLearningSpace();
-        systemUnderTest.SaveLearningSpaceToFile(
-            learningSpace,
-            "C:/nonsense");
-
-        mockFileSaveHandlerSpace.Received().SaveToDisk(Arg.Any<LearningSpacePe>(), "C:/nonsense");
-    }
-
-    [Test]
-    public void LoadLearningSpaceFromFile_CallsFileSaveHandlerSpace()
-    {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
-
-        systemUnderTest.LoadLearningSpace("C:/nonsense");
-
-        mockFileSaveHandlerSpace.Received().LoadFromDisk("C:/nonsense");
-    }
-
-    [Test]
-    public void LoadLearningSpaceFromStream_CallsFileSaveHandlerWorld()
-    {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
-        var stream = Substitute.For<Stream>();
-
-        systemUnderTest.LoadLearningSpace(stream);
-
-        mockFileSaveHandlerSpace.Received().LoadFromStream(stream);
-    }
-
-    [Test]
-    public void SaveLearningElementToFile_CallsFileSaveHandlerElement()
-    {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
-
-        var learningContent = EntityProvider.GetFileContent();
-        var learningElement = EntityProvider.GetLearningElement(content: learningContent);
-        systemUnderTest.SaveLearningElementToFile(
-            learningElement,
-            "C:/nonsense");
-
-        mockFileSaveHandlerElement.Received().SaveToDisk(Arg.Any<LearningElementPe>(), "C:/nonsense");
-    }
-
-    [Test]
-    public void LoadLearningElementFromFile_CallsFileSaveHandlerElement()
-    {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
-
-        systemUnderTest.LoadLearningElement("C:/nonsense");
-
-        mockFileSaveHandlerElement.Received().LoadFromDisk("C:/nonsense");
-    }
-
-    [Test]
-    public void LoadLearningElementFromStream_CallsFileSaveHandlerElement()
-    {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
-        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
-        var stream = Substitute.For<Stream>();
-
-        systemUnderTest.LoadLearningElement(stream);
-
-        mockFileSaveHandlerElement.Received().LoadFromStream(stream);
-    }
-
-    [Test]
     public void LoadLearningContentFromFile_CallsFileSaveHandlerElement()
     {
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
 
-        systemUnderTest.LoadLearningContentAsync("C:/nonsense");
+        _ = systemUnderTest.LoadLearningContentAsync("C:/nonsense");
 
         mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
@@ -187,7 +106,7 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
         var stream = Substitute.For<MemoryStream>();
 
-        systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
+        _ = systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
         mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }
@@ -256,7 +175,10 @@ public class DataAccessUt
     // ANF-ID: [ASN0002]
     public async Task ImportLearningWorldFromArchiveAsync_CopiesContentOverCorrectly()
     {
-        var fileSystem = ResourceHelper.PrepareWindowsFileSystemWithResources();
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+        var fileSystem = Environment.OSVersion.Platform == PlatformID.Win32NT
+            ? ResourceHelper.PrepareWindowsFileSystemWithResources()
+            : ResourceHelper.PrepareUnixFileSystemWithResources();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
         xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
@@ -287,7 +209,9 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: fileSystem, contentHandler: contentFileHandler);
 
-        var loadedWorld = await systemUnderTest.ImportLearningWorldFromArchiveAsync("C:\\zips\\import_test.zip");
+        var loadedWorld =
+            await systemUnderTest.ImportLearningWorldFromArchiveAsync(Path.Combine(basePath, "zips",
+                "import_test.zip"));
 
         await contentFileHandler.Received()
             .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>());
@@ -307,6 +231,7 @@ public class DataAccessUt
     // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
     {
+        var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
         var mapper = Substitute.For<IMapper>();
         var filesystem = new MockFileSystem();
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
@@ -331,9 +256,10 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: filesystem);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld, "C:\\export_test.zip");
+        await systemUnderTest.ExportLearningWorldToArchiveAsync(learningWorld,
+            Path.Combine(basePath, "export_test.zip"));
 
-        var expectedZip = ZipExtensions.GetZipArchive(filesystem, "C:\\export_test.zip");
+        var expectedZip = ZipExtensions.GetZipArchive(filesystem, Path.Combine(basePath, "export_test.zip"));
         Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
 
         var png = expectedZip.Entries[1];
@@ -501,8 +427,6 @@ public class DataAccessUt
     private static DataAccess.API.DataAccess CreateTestableDataAccess(
         IApplicationConfiguration? configuration = null,
         IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
-        IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
-        IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
         IXmlFileHandler<List<LinkContentPe>>? fileSaveHandlerLink = null,
         IContentFileHandler? contentHandler = null,
         ILearningWorldSavePathsHandler? worldSavePathsHandler = null,
@@ -511,15 +435,12 @@ public class DataAccessUt
     {
         configuration ??= Substitute.For<IApplicationConfiguration>();
         fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
-        fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
-        fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();
         fileSaveHandlerLink ??= Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         worldSavePathsHandler ??= Substitute.For<ILearningWorldSavePathsHandler>();
         fileSystem ??= new MockFileSystem();
         mapper ??= Substitute.For<IMapper>();
-        return new DataAccess.API.DataAccess(configuration, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, fileSaveHandlerLink, contentHandler, worldSavePathsHandler,
-            fileSystem, mapper);
+        return new DataAccess.API.DataAccess(configuration, fileSaveHandlerWorld, fileSaveHandlerLink, contentHandler,
+            worldSavePathsHandler, fileSystem, mapper);
     }
 }

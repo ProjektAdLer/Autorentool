@@ -7,13 +7,13 @@ assignees: ''
 
 ---
 
-##Beschreibung des Ist-Zustands:
+## Beschreibung des Ist-Zustands:
 (kurze Beschreibung des aktuellen Verhaltens)
-##Vorschlag für verbessertes Verhalten:
+## Vorschlag für verbessertes Verhalten:
 (Erwartetes Verhalten nach eigenem Verständnis)
-##Ansprechpartner:
+## Ansprechpartner:
 (für weitere Fragen)
-##Lösung (erst bei Fix angeben):
+## Lösung (erst bei Fix angeben):
 (wird durch Team AMG ausgefüllt)
-##Commit, in dem die Verbesserung umgesetzt wurde:
+## Commit, in dem die Verbesserung umgesetzt wurde:
 (wird durch Team AMG ausgefüllt)

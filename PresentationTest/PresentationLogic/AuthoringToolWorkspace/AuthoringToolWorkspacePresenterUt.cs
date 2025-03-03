@@ -18,8 +18,6 @@ namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 [TestFixture]
 public class AuthoringToolWorkspacePresenterUt
 {
-    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
-
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
@@ -150,7 +148,7 @@ public class AuthoringToolWorkspacePresenterUt
 
     [Test]
     // ANF-ID: [ASE6]
-    public async Task SaveLearningWorldAsync_CallsPresentationLogic()
+    public void SaveLearningWorld_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f", "f");
@@ -165,7 +163,7 @@ public class AuthoringToolWorkspacePresenterUt
 
     [Test]
     // ANF-ID: [ASE6]
-    public async Task SaveLearningWorldAsync_SerializationException_CallsErrorService()
+    public void SaveLearningWorld_SerializationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f", "f");
@@ -183,7 +181,7 @@ public class AuthoringToolWorkspacePresenterUt
 
     [Test]
     // ANF-ID: [ASE6]
-    public async Task SaveLearningWorldAsync_InvalidOperationException_CallsErrorService()
+    public void SaveLearningWorld_InvalidOperationException_CallsErrorService()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "", "f", "f");
@@ -232,7 +230,7 @@ public class AuthoringToolWorkspacePresenterUt
                     Assert.That(parameters[nameof(UnsavedWorldDialog.WorldName)], Is.EqualTo(unsavedWorld.Name));
                     Assert.That(options.CloseButton, Is.True);
                     Assert.That(options.CloseOnEscapeKey, Is.True);
-                    Assert.That(options.DisableBackdropClick, Is.True);
+                    Assert.That(options.BackdropClick, Is.False);
                 });
                 wasCalled = true;
             });

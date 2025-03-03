@@ -150,7 +150,7 @@ public class XmlUrlFactoryUt
                 Is.EqualTo(systemUnderTest.UrlParentSpaceId));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber,
                 Is.EqualTo(systemUnderTest.UrlParentSpaceId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Completion, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Completion, Is.EqualTo("2"));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("url", systemUnderTest.UrlId);
 
             Assert.That(systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory, Is.EqualTo(mockGradehistory));

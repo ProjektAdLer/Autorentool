@@ -101,7 +101,7 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
             ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
-                "Icon not found for ElementModel")
+                @"Icon not found for ElementModel")
         };
     }
 

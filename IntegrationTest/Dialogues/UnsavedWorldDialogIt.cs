@@ -17,7 +17,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
             {nameof(UnsavedWorldDialog.WorldName), "TestWorld"},
         };
 
-        var dialog = OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
+        _ = OpenDialogAndGetDialogReferenceAsync(parameters: parameters);
 
         var mudText = DialogProvider.FindComponents<MudText>()[1];
         var pInner = mudText.Find("p").InnerHtml;
@@ -42,7 +42,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
         DialogProvider.FindComponents<MudButton>()[0].Find("button").Click();
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.True);
     }
 
@@ -53,7 +53,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
         DialogProvider.FindComponents<MudButton>()[1].Find("button").Click();
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.False);
     }
 
@@ -64,7 +64,7 @@ public class UnsavedWorldDialogIt : MudDialogTestFixture<UnsavedWorldDialog>
         var dialog = await OpenDialogAndGetDialogReferenceAsync();
         DialogProvider.FindComponents<MudButton>()[2].Find("button").Click();
         var result = await dialog.Result;
-        Assert.That(result.Canceled, Is.True);
+        Assert.That(result!.Canceled, Is.True);
         Assert.That(result.Data, Is.EqualTo(null));
     }
 }

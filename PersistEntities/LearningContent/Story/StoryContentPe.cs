@@ -2,6 +2,7 @@ namespace PersistEntities.LearningContent.Story;
 
 public class StoryContentPe : IStoryContentPe
 {
+    // ReSharper disable once UnusedMember.Local
     private StoryContentPe()
     {
         Name = "";

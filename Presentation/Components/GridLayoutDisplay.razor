@@ -34,6 +34,7 @@
         ItemsPerRow ??= 3;
     }
 
+    // ReSharper disable RedundantDefaultMemberInitializer
     //null! because Rider doesn't understand [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich combination sets parameters
     //before any of our code is executed.
     ///<summary>Items to be displayed in the grid layout display.</summary>
@@ -43,6 +44,7 @@
     ///<summary>Template component of how items should be rendered.</summary>
     [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
     public RenderFragment<TItem> ItemRenderTemplate { get; set; } = null!;
+    // ReSharper restore RedundantDefaultMemberInitializer
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

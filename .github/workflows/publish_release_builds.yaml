@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -47,8 +47,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            8.0.100
-            6.0.416
+            9.0.200
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -63,7 +62,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
         
       - name: Install npm dependencies
@@ -76,7 +75,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target osx
+        run: dotnet electron-sharp build /target osx
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -89,7 +88,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.dmg
-          asset_name: AuthoringTool-${{ github.ref_name }}.dmg
+          asset_name: AuthoringTool-${{ github.ref_name }}-macos.dmg
           tag: ${{ github.ref }}
           
   publish-windows:
@@ -104,7 +103,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -120,7 +119,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -133,7 +132,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target win
+        run: dotnet electron-sharp build /target win
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -147,12 +146,15 @@ jobs:
           files: ./AuthoringTool/bin/Desktop_Publish/win-unpacked
           dest: ./AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
 
+      - name: Pack windows-unpacked into 7z
+        run: 7z a -t7z -mx=8 ./AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.7z ./AuthoringTool/bin/Desktop_Publish/win-unpacked
+
       - name: Upload Windows installer to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: 'AuthoringTool\\bin\\Desktop_Publish\\AuthoringTool Setup ${{ github.ref_name }}.exe'
-          asset_name: AuthoringTool-${{ github.ref_name }}-Windows-Setup.exe
+          asset_name: AuthoringTool-${{ github.ref_name }}-windows-Setup.exe
           tag: ${{ github.ref }}
           
       - name: Upload win-unpacked zip to release
@@ -160,7 +162,15 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
-          asset_name: AuthoringTool-${{ github.ref_name }}-win-unpacked.zip
+          asset_name: AuthoringTool-${{ github.ref_name }}-windows-unpacked.zip
+          tag: ${{ github.ref }}
+      
+      - name: Upload win-unpacked 7z to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.7z
+          asset_name: AuthoringTool-${{ github.ref_name }}-windows-unpacked.7z
           tag: ${{ github.ref }}
   
   publish-linux:
@@ -174,7 +184,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -189,7 +199,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -202,7 +212,7 @@ jobs:
         
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target linux
+        run: dotnet electron-sharp build /target linux
         
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -210,17 +220,16 @@ jobs:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
       
-      - name: Pack linux-unpacked into gzipped tarball
+      - name: Pack linux-unpacked into xz
         working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: tar -cavf ${{ github.ref_name }}-linux-unpacked.tar.gz ./linux-unpacked
-        
+        run: tar cf - ./linux-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-unpacked.tar.xz
       
       - name: Upload linux snap to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref_name }}_amd64.snap
-          asset_name: AuthoringTool-${{ github.ref_name }}_amd64.snap
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.snap
           tag: ${{ github.ref }}
           
       - name: Upload linux appimage to release
@@ -228,15 +237,15 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.AppImage
-          asset_name: AuthoringTool-${{ github.ref_name }}.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux.AppImage
           tag: ${{ github.ref }}
-          
-      - name: Upload linux-unpacked tar to release
+
+      - name: Upload linux-unpacked tar.xz to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.gz
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.gz
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.xz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.xz
           tag: ${{ github.ref }}
           
   publish-linux-arm64:
@@ -254,7 +263,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.100'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -269,7 +278,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install electronize
+      - name: Install electron-sharp
         run: dotnet tool restore
 
       - name: Install npm dependencies
@@ -282,7 +291,7 @@ jobs:
 
       - name: Build AuthoringTool binary
         working-directory: ./AuthoringTool
-        run: dotnet electronize build /target custom "linux-arm64;linux" /electron-arch arm64
+        run: dotnet electron-sharp build /target custom "linux-arm64;linux" /electron-arch arm64
 
       - name: Save Build folder
         uses: actions/upload-artifact@v4
@@ -290,40 +299,40 @@ jobs:
           name: authoringtool-linux-arm64
           path: ./AuthoringTool/bin/Desktop_Publish/
 
-      - name: Pack linux-unpacked into gzipped tarball
+      - name: Pack linux-unpacked into xz tarball
         working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: tar -cavf ${{ github.ref_name }}-linux-arm64-unpacked.tar.gz ./linux-arm64-unpacked
+        run: tar cf - ./linux-arm64-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
 
       - name: Upload linux appimage to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}-arm64.AppImage
-          asset_name: AuthoringTool-${{ github.ref_name }}-arm64.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64.AppImage
           tag: ${{ github.ref }}
 
       - name: Upload linux-unpacked tar to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.gz
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.gz
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
           tag: ${{ github.ref }}
   
-  discord-notification:
-    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Prepare release body (description)
-        id: prep_body
-        run: |
-          echo "${{ github.event.release.body }}" > changes.md
-
-      - name: Discord notification
-        uses: appleboy/discord-action@master
-        with:
-          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
-          username: GitHub Releases
-          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
-          file: changes.md
+  #discord-notification:
+  #  needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
+  #  runs-on: ubuntu-22.04
+  #  steps:
+  #    - name: Prepare release body (description)
+  #      id: prep_body
+  #      run: |
+  #        echo "${{ github.event.release.body }}" > changes.md
+  #
+  #    - name: Discord notification
+  #      uses: appleboy/discord-action@master
+  #      with:
+  #        webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
+  #        webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
+  #        username: GitHub Releases
+  #        message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
+  #        file: changes.md

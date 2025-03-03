@@ -18,7 +18,7 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
     protected TForm FormModel { get; set; }
     
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         Snackbar = Substitute.For<ISnackbar>();
         Validator = Substitute.For<IValidationWrapper<TEntity>>();
@@ -36,7 +36,7 @@ public class MudFormTestFixture<TComponent, TForm, TEntity> : MudBlazorTestFixtu
     }
 
     [TearDown]
-    public void TearDown()
+    public new void TearDown()
     {
         Snackbar.Dispose();
     }

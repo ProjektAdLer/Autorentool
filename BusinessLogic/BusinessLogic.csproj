@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -19,8 +19,8 @@
       <Compile Remove="Validation\Validators\CustomValidators\AlphanumericValidator.cs" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.7.1" />
-      <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
+      <PackageReference Include="FluentValidation" Version="11.11.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Update="Resources\Validation\Validators\StoryContentValidator.de.resx">

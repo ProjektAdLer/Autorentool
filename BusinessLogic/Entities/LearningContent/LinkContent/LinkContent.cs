@@ -40,10 +40,12 @@ public class LinkContent : ILinkContent
         return Equals((LinkContent)obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Name, Link);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(LinkContent? left, LinkContent? right)
     {

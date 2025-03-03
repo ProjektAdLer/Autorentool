@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Forms.Models;
@@ -29,7 +27,6 @@ namespace PresentationTest.PresentationLogic.LearningWorld;
 [TestFixture]
 public class LearningWorldPresenterUt
 {
-    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
 
     [Test]
     public void EditLearningWorld_CallsPresentationLogic()
@@ -60,7 +57,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public async Task SaveLearningWorldAsync_CallsSaveLearningWorldAsyncIfLearningWorldIsNotNull()
+    public void SaveLearningWorld_CallsSaveLearningWorldAsyncIfLearningWorldIsNotNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
@@ -84,7 +81,7 @@ public class LearningWorldPresenterUt
 
 
     [Test]
-    public async Task SaveLearningWorldAsync_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
+    public void SaveLearningWorld_LogsErrorAndSetsErrorServiceIfLearningWorldIsNull()
     {
         var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockErrorService = Substitute.For<IErrorService>();
@@ -561,157 +558,6 @@ public class LearningWorldPresenterUt
         systemUnderTest.DeleteSelectedLearningObject();
 
         presentationLogic.Received().DeleteLearningPathWay(world, pathWay);
-    }
-
-    [Test]
-    public async Task SaveSelectedLearningSpaceAsync_SelectedWorldNull_CallsErrorService()
-    {
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
-        systemUnderTest.LearningWorldVm = null;
-
-        await systemUnderTest.SaveSelectedLearningSpaceAsync();
-
-        errorService.Received().SetError("Operation failed", "No learning world selected");
-    }
-
-    [Test]
-    public async Task SaveSelectedLearningSpaceAsync_SelectedSpaceNull_CallsErrorService()
-    {
-        var world = ViewModelProvider.GetLearningWorld();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var errorService = Substitute.For<IErrorService>();
-
-        var systemUnderTest = CreatePresenterForTesting(
-            selectedViewModelsProvider: selectedViewModelsProvider,
-            errorService: errorService);
-        systemUnderTest.LearningWorldVm = world;
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns((LearningSpaceViewModel)null!);
-
-        await systemUnderTest.SaveSelectedLearningSpaceAsync();
-
-        errorService.Received().SetError("Operation failed", "No object in pathway is selected");
-    }
-
-    [Test]
-    public async Task SaveSelectedLearningSpace_CallsPresentationLogic()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        world.LearningSpaces.Add(space);
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
-
-        var systemUnderTest =
-            CreatePresenterForTesting(presentationLogic, selectedViewModelsProvider: selectedViewModelsProvider);
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.SaveSelectedLearningSpaceAsync();
-
-        await presentationLogic.Received().SaveLearningSpaceAsync(space);
-    }
-
-    [Test]
-    public async Task SaveSelectedLearningSpace_SerializationException_CallsErrorService()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        world.LearningSpaces.Add(space);
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
-        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
-            .Do(_ => throw new SerializationException());
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest =
-            CreatePresenterForTesting(presentationLogic, errorService: errorService,
-                selectedViewModelsProvider: selectedViewModelsProvider);
-
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.SaveSelectedLearningSpaceAsync();
-        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
-    }
-
-    [Test]
-    public async Task SaveSelectedLearningSpace_InvalidOperationException_CallsErrorService()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        world.LearningSpaces.Add(space);
-        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
-        presentationLogic.When(x => x.SaveLearningSpaceAsync(space))
-            .Do(_ => throw new InvalidOperationException());
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest =
-            CreatePresenterForTesting(presentationLogic, errorService: errorService,
-                selectedViewModelsProvider: selectedViewModelsProvider);
-
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.SaveSelectedLearningSpaceAsync();
-        errorService.Received().SetError("Error while saving learning space", Arg.Any<string>());
-    }
-
-    [Test]
-    public void LoadLearningSpaceAsync_SelectedLearningWorldIsNull_CallsErrorService()
-    {
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
-        systemUnderTest.LearningWorldVm = null;
-
-        Assert.DoesNotThrowAsync(async () => await systemUnderTest.LoadLearningSpaceAsync());
-
-        errorService.Received().SetError("Operation failed", "No learning world selected");
-    }
-
-    [Test]
-    public async Task LoadLearningSpace_CallsPresentationLogic()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        world.LearningSpaces.Add(space);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.LoadLearningSpaceAsync();
-
-        await presentationLogic.Received().LoadLearningSpaceAsync(world);
-    }
-
-    [Test]
-    public async Task LoadLearningSpace_SerializationException_CallsErrorService()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        world.LearningSpaces.Add(space);
-        presentationLogic.LoadLearningSpaceAsync(world).Throws(new SerializationException());
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.LoadLearningSpaceAsync();
-        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
-    }
-
-    [Test]
-    public async Task LoadLearningSpace_InvalidOperationException_CallsErrorService()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = ViewModelProvider.GetLearningWorld();
-        var space = ViewModelProvider.GetLearningSpace();
-        world.LearningSpaces.Add(space);
-        presentationLogic.LoadLearningSpaceAsync(world).Throws(new InvalidOperationException());
-
-        var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic, errorService: errorService);
-        systemUnderTest.LearningWorldVm = world;
-        await systemUnderTest.LoadLearningSpaceAsync();
-        errorService.Received().SetError("Error while loading learning space", Arg.Any<string>());
     }
 
     [Test]

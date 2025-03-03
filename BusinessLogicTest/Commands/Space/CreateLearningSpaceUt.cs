@@ -1,6 +1,5 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
@@ -92,7 +91,6 @@ public class CreateLearningSpaceUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var name = "space1";
         var description = "space for learning";
-        var learningOutcomes = new List<ILearningOutcome>() { new ManualLearningOutcome("Outcome") };
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
         var positionX = 1;
@@ -122,7 +120,6 @@ public class CreateLearningSpaceUt
         world.LearningSpaces.Add(space);
         var name = "space1";
         var description = "space for learning";
-        var learningOutcomes = new List<ILearningOutcome>() { new ManualLearningOutcome("Outcome") };
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
         var positionX = 1;

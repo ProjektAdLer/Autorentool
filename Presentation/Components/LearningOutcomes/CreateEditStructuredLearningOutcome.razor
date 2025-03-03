@@ -297,7 +297,6 @@
         return "";
     }
 
-    [Parameter]
     public CultureInfo Culture
     {
         get => _culture;
@@ -310,7 +309,7 @@
     }
 
     [CascadingParameter, AllowNull] //injected by MudDialog
-    public MudDialogInstance DialogInstance { get; set; }
+    public IMudDialogInstance DialogInstance { get; set; }
 
     [Inject, AllowNull] //allow null as injected
     internal IPresentationLogic PresentationLogic { get; set; }
@@ -375,9 +374,11 @@
         _currentVerbOfVisibilityText = "";
     }
 
-    private async Task<IEnumerable<string>> SearchVerbOfVisibility(string value)
+    private async Task<IEnumerable<string>> SearchVerbOfVisibility(string value, CancellationToken cancellationToken)
     {
         var results = new List<string>();
+
+        if (cancellationToken.IsCancellationRequested) return results;
 
         results.AddRange(_learningOutcomesVerbManager.GetVerbsOfVisibility(_selectedTaxonomyLevel, Culture)
             .Where(verb => verb.ToString().Contains(value, StringComparison.InvariantCultureIgnoreCase))

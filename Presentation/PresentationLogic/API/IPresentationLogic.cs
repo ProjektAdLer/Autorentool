@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using BusinessLogic.API;
 using BusinessLogic.ErrorManagement.DataAccess;
 using Presentation.Components.Adaptivity.Dialogues;
+using Presentation.Components.Adaptivity.Forms.Models;
 using Presentation.Components.Forms.Models;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -189,28 +190,6 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Parent learning world of the learning space.</param>
     /// <param name="learningSpaceVm">Learning space to delete.</param>
     void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
-
-    /// <summary>
-    /// Asks user for path and saves <see cref="LearningSpaceViewModel"/> to disk.
-    /// </summary>
-    /// <param name="learningSpaceViewModel">The learning space which should be saved.</param>
-    /// <returns>Task indicating completion.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-    /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-    /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel);
-
-    /// <summary>
-    /// Asks user for path and loads <see cref="LearningSpaceViewModel"/> from disk.
-    /// </summary>
-    /// <param name="learningWorldVm">Learning world into which the learning space should be loaded.</param>
-    /// <returns>Task containing deserialized object.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-    /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-    /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
     /// <summary>
     /// Creates a new pathway condition in the given learning world with the corresponding command.
@@ -417,29 +396,6 @@ public interface IPresentationLogic
         ILearningElementViewModel learningElementVm);
 
     /// <summary>
-    /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.
-    /// </summary>
-    /// <param name="learningElementViewModel">The learning element which should be saved.</param>
-    /// <returns>Task indicating completion.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-    /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-    /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel);
-
-    /// <summary>
-    /// Asks user for path and loads <see cref="LearningElementViewModel"/> from disk.
-    /// </summary>
-    /// <param name="parentSpaceVm">Learning space into which the learning element should be loaded.</param>
-    /// <param name="slotIndex">Index of the slot in which the element should be loaded..</param>
-    /// <returns>Task containing deserialized object.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-    /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-    /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex);
-
-    /// <summary>
     /// Open the given content file of the learning element in the desktop's default manner.
     /// </summary>
     /// <param name="learningElementVm">Element which contains the content file to be opened.</param>
@@ -508,28 +464,6 @@ public interface IPresentationLogic
     /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents"/> weren't found.</exception>
     public void RemoveMultipleContents(IEnumerable<ILearningContentViewModel> contents);
 
-    /// <summary>
-    /// Loads a Learning World view model into the authoring tool workspace.
-    /// </summary>
-    /// <param name="authoringToolWorkspaceVm">The authoring tool workspace view model to load into.</param>
-    /// <param name="stream">The stream containing the data for the Learning World.</param>
-    void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
-
-    /// <summary>
-    /// Loads a Learning Space view model into a Learning World.
-    /// </summary>
-    /// <param name="learningWorldVm">The Learning World view model to load into.</param>
-    /// <param name="stream">The stream containing the data for the Learning Space.</param>
-    void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
-
-    /// <summary>
-    /// Loads a Learning Element view model into a Learning Space at a specified slot index.
-    /// </summary>
-    /// <param name="parentSpaceVm">The parent Learning Space view model to load into.</param>
-    /// <param name="slotIndex">The index at which to load the Learning Element.</param>
-    /// <param name="stream">The stream containing the data for the Learning Element.</param>
-    void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
-
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
 
     /// <summary>
@@ -539,14 +473,6 @@ public interface IPresentationLogic
     /// <param name="oldPositionX">The old X-coordinate of the object's position.</param>
     /// <param name="oldPositionY">The old Y-coordinate of the object's position.</param>
     void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm, double oldPositionX, double oldPositionY);
-
-    /// <summary>
-    /// Drags a Learning Element from its old position to its current position.
-    /// </summary>
-    /// <param name="learningElementVm">The view model of the Learning Element to be moved. The element's new position is determined by its current 'PositionX' and 'PositionY' properties.</param>
-    /// <param name="oldPositionX">The old X-coordinate of the element's position.</param>
-    /// <param name="oldPositionY">The old Y-coordinate of the element's position.</param>
-    void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
 
     /// <summary>
     /// Asynchronously shows the content of a Learning Content view model.
@@ -607,25 +533,25 @@ public interface IPresentationLogic
     void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 
     void CreateMultipleChoiceSingleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string questionText, ICollection<ChoiceFormModel> choices, ChoiceFormModel correctChoice,
         int expectedCompletionTime);
 
     void CreateMultipleChoiceMultipleResponseQuestion(IAdaptivityTaskViewModel task, QuestionDifficulty difficulty,
-        string questionText, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        string questionText, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
 
     void EditMultipleChoiceSingleResponseQuestion(MultipleChoiceSingleResponseQuestionViewModel question,
-        string questionText, ICollection<ChoiceViewModel> choices, ChoiceViewModel correctChoice,
+        string questionText, ICollection<ChoiceFormModel> choices, ChoiceFormModel correctChoice,
         int expectedCompletionTime);
 
     void EditMultipleChoiceMultipleResponseQuestion(MultipleChoiceMultipleResponseQuestionViewModel question,
-        string questionText, ICollection<ChoiceViewModel> choices,
-        ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        string questionText, ICollection<ChoiceFormModel> choices,
+        ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
     void EditMultipleChoiceQuestionWithTypeChange(IAdaptivityTaskViewModel task,
         IMultipleChoiceQuestionViewModel question, bool isSingleResponse, string text,
-        ICollection<ChoiceViewModel> choices, ICollection<ChoiceViewModel> correctChoices, int expectedCompletionTime);
+        ICollection<ChoiceFormModel> choices, ICollection<ChoiceFormModel> correctChoices, int expectedCompletionTime);
 
     void DeleteAdaptivityQuestion(IAdaptivityTaskViewModel task, IAdaptivityQuestionViewModel question);
 

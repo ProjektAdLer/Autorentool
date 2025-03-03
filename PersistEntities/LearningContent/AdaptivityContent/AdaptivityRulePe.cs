@@ -27,6 +27,7 @@ public class AdaptivityRulePe : IAdaptivityRulePe
         Action = null!;
     }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     public Guid Id { get; private set; }
     [DataMember] public IAdaptivityTriggerPe Trigger { get; set; }
     [DataMember] public IAdaptivityActionPe Action { get; set; }

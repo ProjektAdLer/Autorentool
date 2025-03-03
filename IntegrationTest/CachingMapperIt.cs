@@ -226,7 +226,7 @@ public class CachingMapperIt
                 Is.EqualTo(1));
             Assert.That(
                 workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningSpaceLayout.StoryElements.Values.First(),
-                Is.EqualTo(storyElementVm));
+                Is.EqualTo(storyElementVm).UsingPropertiesComparer());
         });
     }
 
@@ -236,7 +236,7 @@ public class CachingMapperIt
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
-        IQuestionCommandFactory questionCommandFactory = null!,
+        IQuestionCommandFactory? questionCommandFactory = null,
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,

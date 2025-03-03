@@ -46,6 +46,12 @@ public static class FormModelProvider
         return new MultipleChoiceQuestionFormModel();
     }
 
+    public static ChoiceFormModel GetChoice()
+    {
+        return new ChoiceFormModel("choice text");
+    }
+
+
     public static TForm Get<TForm>() where TForm : class, new() =>
         (typeof(TForm).Name switch
         {

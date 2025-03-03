@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using AutoMapper;
 using BusinessLogic.Validation;
 using Presentation.Components;
@@ -275,53 +274,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         _mediator.RequestOpenSpaceDialog();
     }
 
-    /// <inheritdoc cref="ILearningWorldPresenter.LoadLearningSpaceAsync"/>
-    public async Task LoadLearningSpaceAsync()
-    {
-        if (!CheckLearningWorldNotNull("LoadLearningSpaceAsync"))
-            return;
-        try
-        {
-            //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-            await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm!);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while loading learning space", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while loading learning space", e.Message);
-        }
-    }
-
-    /// <inheritdoc cref="ILearningWorldPresenter.SaveSelectedLearningSpaceAsync"/>
-    public async Task SaveSelectedLearningSpaceAsync()
-    {
-        if (!CheckLearningWorldNotNull("SaveLearningSpaceAsync"))
-            return;
-        if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
-        {
-            LogAndSetError("SaveLearningSpaceAsync", "SelectedLearningObjectInPathWay is null",
-                "No object in pathway is selected");
-            return;
-        }
-
-        try
-        {
-            await _presentationLogic.SaveLearningSpaceAsync(
-                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while saving learning space", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while saving learning space", e.Message);
-        }
-    }
-
     /// <inheritdoc cref="ILearningWorldPresenter.EditSelectedLearningSpace"/>
     public void EditSelectedLearningSpace()
     {
@@ -507,7 +459,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
             && learningPathwayViewModel.TargetObject == targetObject
                 ? learningPathwayViewModel
                 : LearningWorldVm!.LearningPathWays.LastOrDefault(lp => lp.TargetObject == targetObject);
-        ;
 
 
         if (learningPathWay == null)

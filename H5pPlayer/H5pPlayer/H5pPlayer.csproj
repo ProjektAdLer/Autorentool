@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <SupportedPlatform Include="browser"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="H5pPlayerTest" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\background.png" />
+    </ItemGroup>
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Presentation23\View\H5pPlayerView.razor" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\DataAccess\DataAccess.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <EditorConfigFiles Remove=".editorconfig" />
+    </ItemGroup>
+
+</Project>

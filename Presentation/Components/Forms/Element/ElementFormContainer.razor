@@ -1,7 +1,6 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
@@ -53,7 +52,7 @@
     }
 
     /// <summary>
-    /// Evaluates whether the passed <see cref="ElementMode"/> is correct for the currently selected <see cref="LearningElement"/>.
+    /// Evaluates whether the passed <see cref="ElementMode"/> is correct for the currently selected <see cref="Presentation.PresentationLogic.LearningElement.LearningElementViewModel"/>.
     /// </summary>
     private bool IsCorrectContentTypeForSelectedElement()
     {

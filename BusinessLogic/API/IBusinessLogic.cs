@@ -45,17 +45,10 @@ public interface IBusinessLogic
 
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
-    LearningWorld LoadLearningWorld(Stream stream);
-    void SaveLearningSpace(LearningSpace learningSpace, string filepath);
-    LearningSpace LoadLearningSpace(string filepath);
-    LearningSpace LoadLearningSpace(Stream stream);
-    void SaveLearningElement(LearningElement learningElement, string filepath);
-    LearningElement LoadLearningElement(string filepath);
-    LearningElement LoadLearningElement(Stream stream);
     Task<ILearningContent> LoadLearningContentAsync(string filepath);
 
     /// <summary>
-    /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
+    /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContent"/> object referencing it.
     /// </summary>
     /// <param name="name">The name of the file which is contained in the stream.</param>
     /// <param name="stream">The stream to be written.</param>

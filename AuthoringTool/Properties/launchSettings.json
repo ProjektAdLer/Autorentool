@@ -24,7 +24,7 @@
     "Electron" : {
       "commandName": "Executable",
       "executablePath": "dotnet",
-      "commandLineArgs": "electronize start watch",
+      "commandLineArgs": "electron-sharp start",
       "workingDirectory": "$(ProjectDir)",
       "environmentVariables": {
         "DOTNET_WATCH_RESTART_ON_RUDE_EDIT": "true"

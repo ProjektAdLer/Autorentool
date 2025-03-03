@@ -189,4 +189,7 @@
     <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
         <value>Operating steps available in the authoring tool</value>
     </data>
+    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
+        <value>Learning world contains more than 50 learning spaces.</value>
+    </data>
 </root>

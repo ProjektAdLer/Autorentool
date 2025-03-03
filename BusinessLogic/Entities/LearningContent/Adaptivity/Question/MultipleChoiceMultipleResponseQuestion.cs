@@ -21,6 +21,7 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>
@@ -95,10 +96,12 @@ public class MultipleChoiceMultipleResponseQuestion : IMultipleChoiceQuestion
         return Equals((MultipleChoiceMultipleResponseQuestion) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, ExpectedCompletionTime, (int) Difficulty, Rules, Choices, CorrectChoices, Text);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(MultipleChoiceMultipleResponseQuestion? left,
         MultipleChoiceMultipleResponseQuestion? right)

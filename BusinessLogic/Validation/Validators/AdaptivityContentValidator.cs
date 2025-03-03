@@ -5,7 +5,4 @@ namespace BusinessLogic.Validation.Validators;
 
 public class AdaptivityContentValidator : AbstractValidator<AdaptivityContent>
 {
-    public AdaptivityContentValidator()
-    {
-    }
 }
