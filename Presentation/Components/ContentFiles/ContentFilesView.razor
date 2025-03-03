@@ -11,10 +11,7 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
-@using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
 @inject ISnackbar Snackbar
-@using System.Runtime.Serialization
 
 <MudTable T="ILearningContentViewModel" 
           Items="Items" 
@@ -44,8 +41,8 @@
                                    Class="m-0 px-1 py-0"
                                    Disabled="@(!_deletionCandidates.Any())"
                                    OnClick="() => DeleteSelected()"
-                                   Title="@Localizer["Content.MudTd.Delete"]"/>
-                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" CheckedChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
+                                   title="@Localizer["Content.MudTd.Delete"]"/>
+                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
                     <MudMenu Dense="true">
                         <ActivatorContent>
                             <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Class="p-0 m-0"></MudIconButton>

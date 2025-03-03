@@ -147,10 +147,10 @@
                         </div>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudListItem>
+                        <MudListItem T="object">
                             <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.UserManual.SoftwareComponents.Hover"]" @onclick="@OpenManualSoftwareComponents">@Localizer["HeaderBar.Help.UserManual.SoftwareComponents"]</MudLink>
                         </MudListItem>
-                        <MudListItem>
+                        <MudListItem T="object">
                             <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.UserManual.Handling.Hover"]" @onclick="@OpenManualHandling">@Localizer["HeaderBar.Help.UserManual.Handling"]</MudLink>
                         </MudListItem>
                     </ChildContent>

@@ -129,7 +129,7 @@
                                        Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
                                        OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
                                        Class="show-content-preview"
-                                       Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+                                       title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
 
                         <div class="w-[100%] truncate">
                             <MudTooltip Text="@LearningContentName"
@@ -147,15 +147,15 @@
                                     For="@(() => FormModel.LearningContent!)"
                                     ReadOnly="true"
                                     Disabled="true"
-                                    DisableUnderLine="true"
-                                    Style="color: rgb(69,160,229); margin-top: 0px;"
+                                    UnderLine="false"
+                                    Style="color: rgb(69,160,229); margin-top: 0;"
                                     Margin="Margin.Dense"
                                     Class="w-96">
                                 </MudTextField>
                             </MudTooltip>
                         </div>
 
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" Title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OpenLearningContentDialog" title="@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Edit"]">
                         </MudIconButton>
                     </div>
                 </div>
