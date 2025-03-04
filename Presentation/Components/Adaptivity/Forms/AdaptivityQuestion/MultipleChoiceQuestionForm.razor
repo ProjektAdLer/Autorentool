@@ -18,7 +18,7 @@
                    ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
 </div>
 
-<MudText Class="p-2 text-sm cursor-default">@Localizer["MultipleChoiceQuestionForm.Create.Text"]</MudText>
+<MudText Class="text-sm cursor-default">@Localizer["MultipleChoiceQuestionForm.Create.Text"]</MudText>
 
 <BaseForm TForm="MultipleChoiceQuestionFormModel" TEntity="IMultipleChoiceQuestion" @ref="_questionForm"
           OnValidSubmit="OnValidSubmit"
@@ -174,7 +174,6 @@
             @(QuestionToEdit == null ? Localizer["MultipleChoiceQuestionForm.Button.Create"] : Localizer["MultipleChoiceQuestionForm.Button.Edit"])
         </MudButton>
     </FooterButtons>
-
 </BaseForm>
 
 
