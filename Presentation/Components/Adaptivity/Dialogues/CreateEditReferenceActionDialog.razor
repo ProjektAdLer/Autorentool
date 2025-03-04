@@ -180,15 +180,15 @@
     
     private string GetTabPanelClass(MudTabPanel panel)
     {
-        bool isSelected = _tabs?.ActivePanel == panel;
+        var isSelected = _tabs.ActivePanel == panel;
         
         @if(panel == _elementPanel)
         {
-            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold" : "text-adlergrey-300 bg-adlergrey-100";
+            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold panel-element" : "text-adlergrey-300 bg-adlergrey-100 panel-element";
         }
         @if(panel == _contentPanel)
         {
-            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold rounded-tr" : "text-adlergrey-300 bg-adlergrey-100 rounded-tr";
+            return isSelected ? "text-adlertextgrey bg-adlergrey-200 hover:bg-adlergrey-300 font-bold rounded-tr panel-content" : "text-adlergrey-300 bg-adlergrey-100 rounded-tr panel-content";
         }
         return "border-2 flex rounded-lg";
     }

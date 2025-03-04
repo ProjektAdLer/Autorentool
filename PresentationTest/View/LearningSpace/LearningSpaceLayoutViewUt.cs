@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningSpace;
@@ -23,6 +24,16 @@ public class LearningSpaceLayoutViewUt
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
+        _dimensions = new LearningSpaceLayoutView.Dimensions
+        {
+            Width = 1920,
+            Height = 1080
+        };
+        _jsRuntime = Substitute.For<IJSRuntime>();
+        _jsRuntime.InvokeAsync<LearningSpaceLayoutView.Dimensions>("getScreenDimensions")
+            .Returns(_dimensions);
+        _ctx.Services.AddSingleton(_jsRuntime);
+
     }
 
     [TearDown]
@@ -34,6 +45,8 @@ public class LearningSpaceLayoutViewUt
     private TestContext _ctx = null!;
     private ILearningSpacePresenter _learningSpacePresenter = null!;
     private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
+    private IJSRuntime _jsRuntime;
+    private LearningSpaceLayoutView.Dimensions _dimensions;
 
     private const string BackgroundOpen =
         @"<div class=""w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated"">";
@@ -41,18 +54,18 @@ public class LearningSpaceLayoutViewUt
     private const string ShadowOpen = @"<div class=""drop-shadow-xl w-full h-full"">";
 
     private const string FloorPlanClass =
-        @"<div class=""mt-5 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]"" style=""background-image: url('data:image/svg+xml;utf8,";
+        @"<div class=""flex flex-col w-full h-full""><div class=""h-full relative"" style=""background-image: url('data:image/svg+xml;utf8,";
 
     private const string FloorPlanStyleOpen =
-        @"&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;&gt;&lt;polygon points=&quot;";
+        @"&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;xMidYMid meet&quot; viewBox=&quot;-1 -1 34 34&quot;&gt;&lt;polygon points=&quot;";
 
     private const string FloorPlanStyleMid =
-        @"&quot; style=&quot;fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2&quot; />";
+        @"&quot; style=&quot;fill:%23e9f2fa; stroke:rgb(204,204,204); stroke-width:0.2&quot; />";
 
     private const string FloorPlanStyleClose =
         @"</svg>'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; "">";
 
-    private const string DivClose = @"</div>";
+    private const string DivClose = @"</div></div>";
 
 
     [Test]
@@ -62,10 +75,8 @@ public class LearningSpaceLayoutViewUt
 
         // These two MarkupMatches calls are equivalent
         systemUnderTest.MarkupMatches(
-            @"<div class=""w-full min-h-[265px]"">
-                  <div class=""drop-shadow-xl w-full h-full"">
-                      <div class=""mt-5 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]"" style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;none&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;&quot; style=&quot;fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2&quot; /></svg>'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ""></div>
-                  </div>
+            @"<div class=""flex flex-col w-full h-full"">
+                  <div class=""h-full relative"" style=""background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; preserveAspectRatio=&quot;xMidYMid meet&quot; viewBox=&quot;-1 -1 34 34&quot;><polygon points=&quot;&quot; style=&quot;fill:%23e9f2fa; stroke:rgb(204,204,204); stroke-width:0.2&quot; /></svg>'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;""></div>
               </div>"
         );
     }
@@ -81,7 +92,7 @@ public class LearningSpaceLayoutViewUt
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
             { (new Point { X = 8, Y = 9 }, new Point { X = 10, Y = 11 }) });
         const string expectedDoors =
-            "<line x1=&quot;8&quot; y1=&quot;9&quot; x2=&quot;10&quot; y2=&quot;11&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
+            "<line x1=&quot;8&quot; y1=&quot;9&quot; x2=&quot;10&quot; y2=&quot;11&quot; style=&quot;stroke:rgb(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
 
@@ -89,7 +100,7 @@ public class LearningSpaceLayoutViewUt
         var systemUnderTest = GetRenderedLearningSpaceLayoutView(learningSpaceViewModel);
 
         // Assert
-        var floorPlan = systemUnderTest.Find("div.mt-5");
+        var floorPlan = systemUnderTest.Find("div.w-full");
         floorPlan.MarkupMatches(FloorPlanClass + FloorPlanStyleOpen + expectedCorners + FloorPlanStyleMid +
                                 expectedDoors + FloorPlanStyleClose + DivClose);
     }
@@ -109,7 +120,7 @@ public class LearningSpaceLayoutViewUt
         var systemUnderTest = GetRenderedLearningSpaceLayoutView(learningSpaceViewModel);
 
         // Assert
-        var floorPlan = systemUnderTest.Find("div.mt-5");
+        var floorPlan = systemUnderTest.Find("div.w-full");
         floorPlan.MarkupMatches(FloorPlanClass + FloorPlanStyleOpen + expectedCorners + FloorPlanStyleMid +
                                 FloorPlanStyleClose + DivClose);
     }
@@ -122,7 +133,7 @@ public class LearningSpaceLayoutViewUt
         floorPlanViewModel.DoorPositions.Returns(new List<(Point, Point)>
             { (new Point { X = 0, Y = 1 }, new Point { X = 2, Y = 3 }) });
         const string expectedDoors =
-            "<line x1=&quot;0&quot; y1=&quot;1&quot; x2=&quot;2&quot; y2=&quot;3&quot; style=&quot;stroke:rgba(204,204,204);stroke-width:0.5&quot; />";
+            "<line x1=&quot;0&quot; y1=&quot;1&quot; x2=&quot;2&quot; y2=&quot;3&quot; style=&quot;stroke:rgb(204,204,204);stroke-width:0.5&quot; />";
         var learningSpaceViewModel = Substitute.For<ILearningSpaceViewModel>();
         learningSpaceViewModel.LearningSpaceLayout.FloorPlanViewModel.Returns(floorPlanViewModel);
 
@@ -130,7 +141,7 @@ public class LearningSpaceLayoutViewUt
         var systemUnderTest = GetRenderedLearningSpaceLayoutView(learningSpaceViewModel);
 
         // Assert
-        var floorPlan = systemUnderTest.Find("div.mt-5");
+        var floorPlan = systemUnderTest.Find("div.w-full");
         floorPlan.MarkupMatches(FloorPlanClass + FloorPlanStyleOpen + FloorPlanStyleMid + expectedDoors +
                                 FloorPlanStyleClose + DivClose);
     }
@@ -155,7 +166,6 @@ public class LearningSpaceLayoutViewUt
 
         // Act
         var systemUnderTest = GetRenderedLearningSpaceLayoutView(learningSpaceViewModel);
-
         // Assert
         Assert.That(jsRuntime.Invocations["mudDragAndDrop.initDropZone"], Has.Count.EqualTo(4));
         var dropZones = systemUnderTest.FindAll("div.mud-drop-zone");

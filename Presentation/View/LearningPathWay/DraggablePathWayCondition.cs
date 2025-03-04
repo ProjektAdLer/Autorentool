@@ -62,7 +62,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
     
-    [Inject, AllowNull] internal new IStringLocalizer<DraggablePathWayCondition> Localizer { get; set; }
+    [Inject, AllowNull] internal IStringLocalizer<DraggablePathWayCondition> Localizer { get; set; }
 
     protected override string DeleteObjectConfirmationDialogSubmitButtonText =>
         Localizer["DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;

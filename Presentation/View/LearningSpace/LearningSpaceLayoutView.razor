@@ -77,7 +77,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ILearningSpacePresenter LearningSpaceP { get; set; }
 
-    [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
     
     private double ScreenWidth { get; set; }
     
@@ -132,7 +132,7 @@
             polygonPointsString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
         }
 
-        polygonPointsString.Append("\" style=\"fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
+        polygonPointsString.Append("\" style=\"fill:%23e9f2fa; stroke:rgb(204,204,204); stroke-width:0.2\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
         return polygonPointsString.ToString();
     }
 
@@ -204,21 +204,21 @@
 
     private async Task<Dimensions> GetCurrentScreenDimensions()
     {
-        return await JSRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+        return await JsRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var dimensions = await JSRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+            var dimensions = await JsRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
             ScreenWidth = dimensions.Width;
             ScreenHeight = dimensions.Height;
 
             Console.WriteLine($"Initial Screen Dimensions: {ScreenWidth} x {ScreenHeight}");
 
             // Registriere den Resize-Listener
-            await JSRuntime.InvokeVoidAsync("subscribeToResize", DotNetObjectReference.Create(this));
+            await JsRuntime.InvokeVoidAsync("subscribeToResize", DotNetObjectReference.Create(this));
         }
     }
 

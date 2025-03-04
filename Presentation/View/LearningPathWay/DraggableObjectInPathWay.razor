@@ -1,5 +1,4 @@
 @using System.Diagnostics.CodeAnalysis
-@using Microsoft.Extensions.Localization
 @using Presentation.Components
 @inject ISnackbar Snackbar
 @using Presentation.Components.Dialogues
@@ -90,9 +89,6 @@
     protected abstract string DeleteObjectConfirmationDialogText { get; }
     
     protected abstract string DeleteObjectConfirmationDialogTitle { get; }
-    
-    [Inject, AllowNull] 
-    internal IStringLocalizer<DraggableObjectInPathWay> Localizer { get; set; }
     
     protected abstract string DeleteObjectConfirmationDialogSubmitButtonText { get; }
 

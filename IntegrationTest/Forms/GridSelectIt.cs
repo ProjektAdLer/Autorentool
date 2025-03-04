@@ -7,6 +7,7 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
+using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
 

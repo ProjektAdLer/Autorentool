@@ -27,6 +27,7 @@ public class DraggableObjectInPathWay
     public void Setup()
     {
         _dialogService = Substitute.For<IDialogService>();
+        _snackbar = Substitute.For<ISnackbar>();
         _draggableLearningSpaceStringLocalizer = Substitute.For<IStringLocalizer<DraggableLearningSpace>>();
         _draggableLearningSpaceStringLocalizer[Arg.Any<string>()]
             .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
@@ -44,6 +45,7 @@ public class DraggableObjectInPathWay
         _mouseService = Substitute.For<IMouseService>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_mouseService);
+        _ctx.Services.AddSingleton(_snackbar);
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
@@ -51,6 +53,7 @@ public class DraggableObjectInPathWay
     public void TearDown()
     {
         _ctx.Dispose();
+        _snackbar.Dispose();
     }
 
     private TestContext _ctx;
@@ -59,6 +62,7 @@ public class DraggableObjectInPathWay
     private IMouseService _mouseService;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IDialogService _dialogService;
+    private ISnackbar _snackbar;
 
     [Test]
     public void Constructor_SetsParametersCorrectly_LearningSpace()

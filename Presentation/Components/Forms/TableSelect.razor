@@ -111,9 +111,8 @@
 
     private async Task BeginSetValueAsync(T value)
     {
-        if(Value == null)
-            throw new ArgumentNullException($"{Value} is unexpectedly null in {nameof(BeginSetValueAsync)}");
-        await OnPropertyChangingWithValueAsync(new PropertyChangingWithValueEventArgs<T>(nameof(Value), Value, value));
+        //Suppress the nullability warning here as Value explicitly allows null
+        await OnPropertyChangingWithValueAsync(new PropertyChangingWithValueEventArgs<T>(nameof(Value), Value!, value));
         await SetValueAsync(value);
         await InvokeAsync(StateHasChanged);
     }

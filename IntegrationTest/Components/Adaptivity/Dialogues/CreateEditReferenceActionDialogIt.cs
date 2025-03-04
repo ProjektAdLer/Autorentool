@@ -43,6 +43,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         var element = Substitute.For<ILearningElementViewModel>();
         element.Id.Returns(Guid.NewGuid());
         element.LearningContent.Returns(Contents.First());
+        element.Name.Returns("elementname");
         World.AllLearningElements.Returns(new[] { element });
         LearningWorldPresenter.LearningWorldVm.Returns(World);
         Context.Services.AddSingleton(PresentationLogic);
@@ -99,7 +100,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     // ANF-ID: [AWA0026]
     public async Task NoExistingAction_ContentSelected_CallsCreateAdaptivityRuleWithContentReferenceAction()
     {
-        await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
+        await DialogProvider.Find("div.panel-content").ClickAsync(new MouseEventArgs());
         
         var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
         componentUnderTest.Instance.LearningContent = Contents[0];
@@ -119,7 +120,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
     // ANF-ID: [AWA0026]
     public async Task NoExistingAction_ElementSelected_CallsCreateAdaptivityRuleWithElementReferenceAction()
     {
-        await DialogProvider.Find("div.mud-tab.tab-panel-element").ClickAsync(new MouseEventArgs());
+        await DialogProvider.Find("div.panel-element").ClickAsync(new MouseEventArgs());
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
 
         await DialogProvider.FindComponent<MudButton>().Find("button").ClickAsync(new MouseEventArgs());
@@ -141,7 +142,6 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         ExistingRule = Substitute.For<IAdaptivityRuleViewModel>();
         await GetDialogAsync();
 
-        await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
             .ChangeAsync(new ChangeEventArgs { Value = "foo" });
 
@@ -211,7 +211,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
             .ChangeAsync(new ChangeEventArgs { Value = "foo" });
         
-        await DialogProvider.Find(".tab-panel-content").ClickAsync(new MouseEventArgs());
+        await DialogProvider.Find("div.panel-content").ClickAsync(new MouseEventArgs());
         
         var componentUnderTest = DialogProvider.FindComponent<CreateEditReferenceActionDialog>();
         componentUnderTest.Instance.LearningContent = Contents[0];
@@ -238,7 +238,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         await DialogProvider.FindComponent<MudTextField<string>>().Find("textarea")
             .ChangeAsync(new ChangeEventArgs { Value = "foo" });
         
-        await DialogProvider.Find(".tab-panel-element").ClickAsync(new MouseEventArgs());
+        await DialogProvider.Find("div.panel-element").ClickAsync(new MouseEventArgs());
         
         await DialogProvider.Find("div.mud-paper").ClickAsync(new MouseEventArgs());
 
