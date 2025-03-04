@@ -38,11 +38,13 @@
             <MudTh Class="cursor-default px-1">
                 <div class="flex flex-row items-center">
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Class="m-0 px-1 py-0"
+                                   Class="m-0 p-1"
                                    Disabled="@(!_deletionCandidates.Any())"
                                    OnClick="() => DeleteSelected()"
                                    title="@Localizer["Content.MudTd.Delete"]"/>
-                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
+                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-1 p-0" Size="Size.Small" 
+                                 Dense="true"></MudCheckBox>
+                    <MudText Class="m-0 pl-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                     <MudMenu Dense="true">
                         <ActivatorContent>
                             <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Class="p-0 m-0"></MudIconButton>
@@ -55,14 +57,14 @@
                         </ChildContent>
 
                     </MudMenu>
-                    <MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>
+                    @*<MudCheckBox T="bool?" TriState="true" Value="@MultipleSelected" ValueChanged="OnMultipleSelectedChanged" Class="m-2 p-0" Size="Size.Small" Dense="true"></MudCheckBox>*@
 
-                    <MudText Class="m-0 pl-1 pt-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
+                    @*<MudText Class="m-0 pl-1 pt-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                    Class="m-0 pl-2 py-0"
                                    Disabled="@(!_deletionCandidates.Any())"
                                    OnClick="() => DeleteSelected()"
-                                   title="@Localizer["Content.MudTd.Delete"]"/>
+                                   title="@Localizer["Content.MudTd.Delete"]"/>*@
 
                 </div>
             </MudTh>
@@ -84,25 +86,27 @@
         </MudTHeadRow>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="py-0 px-2 flex flex-row" DataLabel="Delete">
+        <MudTd Class="py-0 px-4 flex flex-row gap-6" DataLabel="Delete">
 
-            <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="m-0 pl-3.5 py-1.5"></MudCheckBox>
-
-             @if (GetUsage(context).Any())
-                        {
-                            <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
-                                <ActivatorContent>
+            <div class="flex justify-start">
+                @if (GetUsage(context).Any())
+                {
+                    <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft">
+                        <ActivatorContent>
             
-                                    <MudBadge Content="@GetUsage(context).Count().ToString()" Class="my-3 p-0" BadgeClass="text-white bg-adlerblue-200" Overlap="false" Origin="Origin.CenterRight">
-                                        <MudText></MudText>
-                                    </MudBadge>
-                                </ActivatorContent>
-                                <ChildContent >
-                                    <UsedContentFilesDialog LearningContent="@context" Usages="@GetUsage(context)"></UsedContentFilesDialog>
-                                </ChildContent>
-                            </MudMenu>
-                        }
-
+                            <MudBadge Content="@GetUsage(context).Count().ToString()" Class="my-3 p-0" BadgeClass="text-white bg-adlerblue-200" Overlap="false" Origin="Origin.CenterRight">
+                                <MudText></MudText>
+                            </MudBadge>
+                        </ActivatorContent>
+                        <ChildContent >
+                            <UsedContentFilesDialog LearningContent="@context" Usages="@GetUsage(context)"></UsedContentFilesDialog>
+                        </ChildContent>
+                    </MudMenu>
+                }
+            </div>
+            <div class="flex justify-start">
+                <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="flex justify-center m-0 py-1.5"></MudCheckBox>
+            </div>
         </MudTd>
         <MudTd Class="py-0 pl-2" DataLabel="Name">
             <MudTooltip Text="@context.Name"
@@ -159,7 +163,7 @@
         <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center" Class="px-0"/>
         <div class="w-full max-h-40% min-h-fit shrink grow flex flex-row items-center mb-2 justify-between">
             <div class="flex justify-center items-center">
-                <MudSwitch Class="pl-2 w-12" @bind-Value="_showFilepath" Color="Color.Info"></MudSwitch>
+                <MudSwitch Class="pl-2 w-2xs" @bind-Value="_showFilepath" Color="Color.Info"></MudSwitch>
                 <p class="text-xs flex justify-start">@Localizer["PagerContent.Filepath.Text"]</p>
             </div>
             <button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
