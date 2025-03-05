@@ -4,6 +4,7 @@
 @using System.Runtime.Serialization
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Utilities
+@inject ISnackbar Snackbar
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.World
 @using Presentation.PresentationLogic.API
@@ -68,7 +69,7 @@
                 }
             </MudGrid>
         </section>
-        <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" position="DrawerPosition.Left">
+        <MudDrawer Width="31%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" position="DrawerPosition.Left">
             @if (_createLearningWorldDialogOpen)
             {
                 <CreateWorldForm OnSubmitted="OnNewLearningWorldCreated"/>
@@ -170,8 +171,6 @@
         _createLearningWorldDialogOpen = false;
         NavigateToApp();
     }
-    
-   
 
     private void OpenLearningWorld(ILearningWorldViewModel learningWorldViewModel)
     {
@@ -192,6 +191,8 @@
         if (result == null || result.Canceled) return;
         PresentationLogic.DeleteLearningWorldByPath(learningWorldViewModel.SavePath);
         PresentationLogic.DeleteLearningWorld(WorkspaceViewModel, learningWorldViewModel);
+        
+        Snackbar.Add(@Localizer["MyLearningWorldsOverview.Snackbar.LearningWorldDelete"], Severity.Success);
     }
 
 }

@@ -46,8 +46,8 @@
     }
 
     private bool IsCurrentItem() => Sidebar?.CurrentItem == this;
-    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-none";
-    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-md";
+    private string BackgroundColour() => IsCurrentItem() ? "bg-blacktrans-100" : "bg-none";
+    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded";
 
     private string RoundedInFocus() => Sidebar?.Side switch
     {

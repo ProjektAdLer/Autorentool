@@ -12,14 +12,14 @@
     <section class="bg-adlerbgbright rounded p-2 w-full grow cursor-default">
         <div class="flex justify-start items-center space-x-2 py-1">
             @* ReSharper disable Html.PathError *@
-            <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-7 h-7">
+            <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-4 2xl:w-8" alt="Lernwelt-Icon">
             @* ReSharper restore Html.PathError *@
-            <p class="text-base 2xl:text-lg font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+            <p class="text-sm 2xl:text-base font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-        <p class="text-sm 2xl:text-base text-adlerblue-600">
+        <p class="text-xs 2xl:text-base text-adlerblue-600">
             <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
         </p>
-        <p class="text-sm 2xl:text-base text-adlerblue-600">
+        <p class="text-xs 2xl:text-base text-adlerblue-600">
             <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldPathwayView.Points.Summary"]</span>
         </p>
     </section>

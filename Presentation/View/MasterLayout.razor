@@ -24,7 +24,7 @@
                       Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                       ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                       ItemDropped="ElementDropZoneHelper.ItemUpdated"
-                      class="flex flex-row justify-between gap-1 items-start max-h-[calc(95dvh)] flex-auto">
+                      Class="flex flex-row justify-between gap-2 items-start max-h-[calc(95dvh)] flex-auto">
         <ChildContent>
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
@@ -115,23 +115,44 @@
                         </SidebarItem>
                     </Sidebar>
                 </SideContainer>
-                <div class="flex flex-col grow min-w-[30vw] max-w-[98vw] h-[98%]">
+                <div class="flex flex-col gap-2 w-full h-[98%]">
                     <CenterContainer>
                             @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
                             {
                                 <LearningSpaceView/>
                             }
-                        else
-                        {
-                            @* ReSharper disable Html.PathError *@
-                            <img class="w-64 2xl:w-96 opacity-5 inset-0 m-auto absolute" src="CustomIcons/autorentool-logo.png">
+                            else
+                            {
+                                @* ReSharper disable Html.PathError *@
+                            <div class="absolute inset-0 m-auto flex flex-col justify-center items-center">
+                                    <p class="px-4 text-center text-white font-bold text-base 2xl:text-xl z-30">@Localizer["CenterContainer.OpenLearningSpace.Text.One"]
+                                        <span class="inline-flex flex items-baseline">
+                                            <span class="text-[#8b96a7]">(Icon:</span>
+                                            <img src="CustomIcons/Space/space-icon_bright.png" class="opacity-50 w-5 h-5 self-center mx-1" alt="Lernraum-Icon"/>
+                                            <span class="text-[#8b96a7]">)</span>
+                                            </span>@Localizer["CenterContainer.OpenLearningSpace.Text.Two"]
+                                        <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                                            <TooltipContent>
+                                                <MudText Class="cursor-default text-xs">@Localizer["CenterContainer.OpenLearningSpace.Text.Tooltip"]</MudText>
+                                            </TooltipContent>
+                                            <ChildContent>
+                                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
+                                            </ChildContent>
+                                        </MudTooltip>
+                                    </p>
+                                <div class="flex flex-row justify-between mx-4 items-center w-full">
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Style="color: #8b96a7" Size="Size.Large" Class="animate-move-left-right"></MudIcon>
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Style="color: #8b96a7" Size="Size.Large" Class="animate-move-right-left"></MudIcon>
+                            </div>
+                                </div>
+                                    <img class="w-64 2xl:w-96 opacity-5 m-auto" src="CustomIcons/autorentool-logo.png" alt="Autorentool-Logo">
                             @* ReSharper restore Html.PathError *@
                         }
                     </CenterContainer>
                     <BottomContainer>
                         <UnplacedElementsDropZone/>
                     </BottomContainer>
-                    </div>
+                </div>
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem

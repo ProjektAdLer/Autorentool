@@ -85,8 +85,8 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Assert
         await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
-        await _dialogService.Received(1).ShowMessageBox("Duplicate file",
-            "File with same content as 'testFileName.txt' already exists in content folder in file 'duplicateFileName.txt'");
+        await _dialogService.Received(1).ShowMessageBox("DialogService.MessageBox.Duplicate.Title",
+            "DialogService.MessageBox.Duplicate.TexttestFileName.txt");
     }
 
     [Test]
@@ -106,7 +106,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Assert
         await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
-        _errorService.Received(1).SetError("Error while loading content", "Some error");
+        _errorService.Received(1).SetError("ContentFilesAdd.ErrorMessage.LoadingMaterial", "Some error");
     }
 
     [Test]
@@ -126,13 +126,8 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         await _presentationLogic.DidNotReceive()
             .LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
 
-        await _dialogService.Received(1).ShowAsync<ImportZipDialog>("Import Zip File", Arg.Is<DialogParameters>(p =>
-            p.Get<string>(nameof(ImportZipDialog.FileName)) == "testFileName.zip" &&
-            p.Get<List<string>>(nameof(ImportZipDialog.SuccessfulFiles))!.Count == 0 &&
-            p.Get<List<string>>(nameof(ImportZipDialog.DuplicateFiles))!.Count == 0 &&
-            p.Get<List<string>>(nameof(ImportZipDialog.UnsupportedFiles))!.Count == 0 &&
-            p.Get<List<string>>(nameof(ImportZipDialog.ErrorFiles))!.Count == 0
-        ), Arg.Any<DialogOptions>());
+        await _dialogService.Received(1).ShowMessageBox("ContentFilesAdd.EmptyFile.Title",
+            "ContentFilesAdd.EmptyFile.Text");
     }
 
     [Test]
@@ -160,7 +155,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         await _presentationLogic.Received(3)
             .LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
 
-        await _dialogService.Received(1).ShowAsync<ImportZipDialog>("Import Zip File", Arg.Is<DialogParameters>(p =>
+        await _dialogService.Received(1).ShowAsync<ImportZipDialog>("DialogService.MessageBox.Import.Title", Arg.Is<DialogParameters>(p =>
             p.Get<string>(nameof(ImportZipDialog.FileName)) == "testFileName.zip" &&
             p.Get<List<string>>(nameof(ImportZipDialog.SuccessfulFiles))!.Count == 1 &&
             p.Get<List<string>>(nameof(ImportZipDialog.SuccessfulFiles))![0] == "NEW_testFileName.txt" &&

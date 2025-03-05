@@ -3023,6 +3023,159 @@ public class PresentationLogicUt
         mockSelectedViewModelsProvider.Received().SetLearningContent(mockContentVm, null);
     }
 
+    [Test]
+    // ANF-ID: [AWA0027]
+    public void ReplaceContentReferenceActionByElementReferenceAction_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockAdaptivityRuleCommandFactory = Substitute.For<IAdaptivityRuleCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+
+        var mockDeleteCommand = Substitute.For<IDeleteAdaptivityRule>();
+        var mockCreateCommand = Substitute.For<ICreateAdaptivityRule>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+
+        var questionViewModel = Substitute.For<IAdaptivityQuestionViewModel>();
+        var ruleViewModel = Substitute.For<IAdaptivityRuleViewModel>();
+        var elementReferenceActionViewModel = ViewModelProvider.GetElementReferenceAction();
+        var triggerViewModel = Substitute.For<IAdaptivityTriggerViewModel>();
+
+        var questionEntity = Substitute.For<IAdaptivityQuestion>();
+        var ruleEntity = Substitute.For<IAdaptivityRule>();
+        var elementReferenceActionEntity = EntityProvider.GetElementReferenceAction();
+        var triggerEntity = Substitute.For<IAdaptivityTrigger>();
+
+        mockMapper.Map<IAdaptivityQuestion>(questionViewModel).Returns(questionEntity);
+        mockMapper.Map<IAdaptivityRule>(ruleViewModel).Returns(ruleEntity);
+        mockMapper.Map<ElementReferenceAction>(elementReferenceActionViewModel).Returns(elementReferenceActionEntity);
+        mockMapper.Map<IAdaptivityTrigger>(triggerViewModel).Returns(triggerEntity);
+
+        mockAdaptivityRuleCommandFactory.GetDeleteCommand(
+                questionEntity,
+                ruleEntity,
+                Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(mockDeleteCommand);
+
+        mockAdaptivityRuleCommandFactory.GetCreateCommand(
+                questionEntity,
+                triggerEntity,
+                elementReferenceActionEntity,
+                Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(mockCreateCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(
+                Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
+                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })))
+            .Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(
+            businessLogic: mockBusinessLogic,
+            mapper: mockMapper,
+            adaptivityRuleCommandFactory: mockAdaptivityRuleCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.ReplaceContentReferenceActionByElementReferenceAction(
+            questionViewModel,
+            ruleViewModel,
+            elementReferenceActionViewModel,
+            triggerViewModel);
+
+        mockAdaptivityRuleCommandFactory.Received().GetDeleteCommand(
+            questionEntity,
+            ruleEntity,
+            Arg.Any<Action<IAdaptivityQuestion>>());
+
+        mockAdaptivityRuleCommandFactory.Received().GetCreateCommand(
+            questionEntity,
+            triggerEntity,
+            elementReferenceActionEntity,
+            Arg.Any<Action<IAdaptivityQuestion>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(
+            Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
+                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
+    }
+    
+    [Test]
+    // ANF-ID: [AWA0028]
+    public void ReplaceElementReferenceActionByContentReferenceAction_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockAdaptivityRuleCommandFactory = Substitute.For<IAdaptivityRuleCommandFactory>();
+        var mockBatchCommandFactory = Substitute.For<IBatchCommandFactory>();
+
+        var mockDeleteCommand = Substitute.For<IDeleteAdaptivityRule>();
+        var mockCreateCommand = Substitute.For<ICreateAdaptivityRule>();
+        var mockBatchCommand = Substitute.For<IBatchCommand>();
+
+        var questionViewModel = Substitute.For<IAdaptivityQuestionViewModel>();
+        var ruleViewModel = Substitute.For<IAdaptivityRuleViewModel>();
+        var contentReferenceActionViewModel = ViewModelProvider.GetContentReferenceAction();
+        var triggerViewModel = Substitute.For<IAdaptivityTriggerViewModel>();
+
+        var questionEntity = Substitute.For<IAdaptivityQuestion>();
+        var ruleEntity = Substitute.For<IAdaptivityRule>();
+        var contentReferenceActionEntity = EntityProvider.GetContentReferenceAction();
+        var triggerEntity = Substitute.For<IAdaptivityTrigger>();
+
+        mockMapper.Map<IAdaptivityQuestion>(questionViewModel).Returns(questionEntity);
+        mockMapper.Map<IAdaptivityRule>(ruleViewModel).Returns(ruleEntity);
+        mockMapper.Map<ContentReferenceAction>(contentReferenceActionViewModel).Returns(contentReferenceActionEntity);
+        mockMapper.Map<IAdaptivityTrigger>(triggerViewModel).Returns(triggerEntity);
+
+        mockAdaptivityRuleCommandFactory.GetDeleteCommand(
+                questionEntity,
+                ruleEntity,
+                Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(mockDeleteCommand);
+
+        mockAdaptivityRuleCommandFactory.GetCreateCommand(
+                questionEntity,
+                triggerEntity,
+                contentReferenceActionEntity,
+                Arg.Any<Action<IAdaptivityQuestion>>())
+            .Returns(mockCreateCommand);
+
+        mockBatchCommandFactory.GetBatchCommand(
+                Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
+                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })))
+            .Returns(mockBatchCommand);
+
+        var systemUnderTest = CreateTestablePresentationLogic(
+            businessLogic: mockBusinessLogic,
+            mapper: mockMapper,
+            adaptivityRuleCommandFactory: mockAdaptivityRuleCommandFactory,
+            batchCommandFactory: mockBatchCommandFactory);
+
+        systemUnderTest.ReplaceElementReferenceActionByContentReferenceAction(
+            questionViewModel,
+            ruleViewModel,
+            contentReferenceActionViewModel,
+            triggerViewModel);
+
+        mockAdaptivityRuleCommandFactory.Received().GetDeleteCommand(
+            questionEntity,
+            ruleEntity,
+            Arg.Any<Action<IAdaptivityQuestion>>());
+
+        mockAdaptivityRuleCommandFactory.Received().GetCreateCommand(
+            questionEntity,
+            triggerEntity,
+            contentReferenceActionEntity,
+            Arg.Any<Action<IAdaptivityQuestion>>());
+
+        mockBatchCommandFactory.Received().GetBatchCommand(
+            Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
+                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })));
+
+        mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
+    }
+
+
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IApplicationConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,

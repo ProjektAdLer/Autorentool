@@ -182,7 +182,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", Arg.Any<string>());
     }
 
     [Test]
@@ -208,7 +208,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -234,7 +234,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -701,7 +701,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", Arg.Any<string>());
     }
 
     [Test]
@@ -725,7 +725,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -749,7 +749,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]

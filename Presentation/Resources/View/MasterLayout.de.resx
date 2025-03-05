@@ -71,4 +71,13 @@
     <data name="SideBarContent.StoryLearningElementMetadata.Alt" xml:space="preserve">
         <value>Storyelement-Metadaten-Icon</value>
     </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.One" xml:space="preserve">
+        <value>Erstellen oder öffnen Sie einen Lernraum</value>
+    </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.Two" xml:space="preserve">
+        <value>, um den Lernraum-Editor angezeigt zu bekommen.</value>
+    </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.Tooltip" xml:space="preserve">
+        <value>Im Lernraum-Editor wird der Grundriss eines Lernraums mit seinen verfügbaren Slots zum Platzieren von Elementen angezeigt.</value>
+    </data>
 </root>

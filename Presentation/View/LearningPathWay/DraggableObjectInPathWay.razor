@@ -1,5 +1,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components
+@inject ISnackbar Snackbar
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningWorld
@@ -100,6 +101,8 @@
         }
     }
     
+    protected abstract string SnackBarDeletionMessage { get; }
+    
     private async Task DeleteLearningObject()
     {
         var dialogParameters = new DialogParameters
@@ -117,6 +120,7 @@
         }
 
         await OnDeleteObject.InvokeAsync(ObjectInPathWay);
+        Snackbar.Add(SnackBarDeletionMessage, Severity.Success);
     }
 
 }

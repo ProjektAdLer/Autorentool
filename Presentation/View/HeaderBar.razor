@@ -26,7 +26,7 @@
 @inject ISnackbar Snackbar
 
 <header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
-    <div class="ml-1 flex justify-start items-center gap-2">
+    <div class="flex justify-start items-center ml-1 gap-1">
         
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
@@ -134,29 +134,64 @@
         <CultureSelector/>
         <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
 
-        <MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@_icon">
+        <MudMenu ListClass="px-2" Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@_icon">
+            <div class="flex flex-col">
+                
+                <MudMenu ListClass="mx-2" Class="w-full hover:bg-adlerbgbright" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight" title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
+                    <ActivatorContent>
+                        <div class="flex flex-row justify-between pl-4 py-3 w-full">
+                            <p @onclick="@OpenManual">@Localizer["HeaderBar.Help.UserManual"]</p>
+                            <button>
+                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small" Class="px-0 text-adlertextgrey opacity-60"></MudIcon>
+                            </button>
+                        </div>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudListItem T="object">
+                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.UserManual.SoftwareComponents.Hover"]" @onclick="@OpenManualSoftwareComponents">@Localizer["HeaderBar.Help.UserManual.SoftwareComponents"]</MudLink>
+                        </MudListItem>
+                        <MudListItem T="object">
+                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.UserManual.Handling.Hover"]" @onclick="@OpenManualHandling">@Localizer["HeaderBar.Help.UserManual.Handling"]</MudLink>
+                        </MudListItem>
+                    </ChildContent>
+                </MudMenu>
             
-            <MudListItem T="object" title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenManual">@Localizer["HeaderBar.Help.UserManual"]</MudLink>
-            </MudListItem>
-
-            <MudListItem T="object" title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</MudLink>
-            </MudListItem>
-
+                <MudMenu ListClass="mx-2" Class="w-full hover:bg-adlerbgbright" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight" title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
+                    <ActivatorContent>
+                        <div class="flex flex-row justify-between pl-4 py-3 w-full">
+                            <p @onclick="@OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</p>
+                            <button>
+                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small" Class="px-0 text-adlertextgrey opacity-60"></MudIcon>
+                            </button>
+                        </div>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudListItem T="object">
+                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.Didactic.AdaptivityElement.Hover"]" @onclick="@OpenDidacticAdaptivityElementGuide">@Localizer["HeaderBar.Help.Didactic.AdaptivityElement"]</MudLink>
+                        </MudListItem>
+                        <MudListItem T="object">
+                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover"]" @onclick="@OpenDidacticLearningOutcomeGuide">@Localizer["HeaderBar.Help.Didactic.LearningOutcomeGuide"]</MudLink>
+                        </MudListItem>
+                        <MudListItem T="object">
+                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" title="@Localizer["HeaderBar.Help.Didactic.StoryElement.Hover"]" @onclick="@OpenDidacticStoryElementGuide">@Localizer["HeaderBar.Help.Didactic.StoryElement"]</MudLink>
+                        </MudListItem>
+                    </ChildContent>
+                </MudMenu>
+            </div>
+            
             <MudDivider></MudDivider>
 
-            <MudListItem T="object" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+            <MudListItem T="object" Class="py-2" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
             </MudListItem>
 
-            <MudListItem T="object" title="@Localizer["Feedback.Button.Technical.Hover"]">
+            <MudListItem T="object" Class="py-2" title="@Localizer["Feedback.Button.Technical.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
             </MudListItem>
 
             <MudDivider></MudDivider>
 
-            <MudListItem T="object" title="@Localizer["HeaderBar.Help.About.Hover"]">
+            <MudListItem T="object" Class="py-2" title="@Localizer["HeaderBar.Help.About.Hover"]">
                 <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm" OnClick="OpenAdLer">@Localizer["HeaderBar.Help.About"]</MudLink>
             </MudListItem>
 
@@ -646,7 +681,17 @@
 
     private void OpenManual() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringautorentool.html");
     
+    private void OpenManualSoftwareComponents() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringsoftwarekomponenten.html");
+    
+    private void OpenManualHandling() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringbedienung.html");
+    
     private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
+    
+    private void OpenDidacticAdaptivityElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-adaptivitaetselement-bd.html");
+    
+    private void OpenDidacticLearningOutcomeGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-lernziele.html");
+    
+    private void OpenDidacticStoryElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-game-design-elemente-bd.html");
     
     private string _icon = Help;
 

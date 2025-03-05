@@ -13,7 +13,7 @@
     <Fields>
         <div class="px-3 2xl:px-4">
             
-            <p class="text-[12px] text-justify">@Localizer["AddLinkForm.Info.Text"]
+            <p class="text-[12px] text-justify pb-2">@Localizer["AddLinkForm.Info.Text"]
                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                     <TooltipContent>
                         <MudText Class="cursor-default text-xs">@Localizer["AddLinkForm.Info.Infotext"]</MudText>
@@ -29,17 +29,19 @@
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
                           Placeholder="@Localizer["AddLinkForm.Field.Name.Text"]"
-                          Margin="Margin.Dense">
+                          Margin="Margin.Dense"
+                          Style="margin-top: 0px;">
             </MudTextField>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
-                          Variant="Variant.Filled"
+                          Variant="Variant.Text"
                           For="@(() => FormModel.Link)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
                           Adornment="Adornment.End"
                           AdornmentIcon="@Icons.Material.Filled.Link"
                           Placeholder="@Localizer["AddLinkForm.Field.Link.Text"]"
-                          Margin="Margin.Dense">
+                          Margin="Margin.Dense"
+                          Style="margin-top: 0px;">
             </MudTextField>
         </div>
     </Fields>

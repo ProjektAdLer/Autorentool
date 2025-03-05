@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Localization;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace BusinessLogic.Validation.Validators;
@@ -11,15 +12,15 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
 {
     private readonly ILearningSpaceNamesProvider _learningSpaceNamesProvider;
 
-    public LearningSpaceValidator(ILearningSpaceNamesProvider learningSpaceNamesProvider)
+    public LearningSpaceValidator(ILearningSpaceNamesProvider learningSpaceNamesProvider, IStringLocalizer<LearningSpaceValidator> localizer)
     {
         _learningSpaceNamesProvider = learningSpaceNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsValidSpaceName()
+            .IsValidSpaceName(localizer["LearningSpaceValidator.Name.Valid"])
             .Must((space, name) => IsUniqueNameInWorld(space.Id, name))
-            .WithMessage("Already in use.");
+            .WithMessage(localizer["LearningSpaceValidator.Name.Duplicate"]);
         RuleFor(x => x.RequiredPoints)
             .GreaterThanOrEqualTo(0);
     }

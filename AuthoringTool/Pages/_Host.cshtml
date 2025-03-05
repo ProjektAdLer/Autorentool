@@ -6,6 +6,7 @@
 @{
     Layout = "_Layout";
 }
+
 @{
     this.HttpContext.Response.Cookies.Append(
         CookieRequestCultureProvider.DefaultCookieName,
@@ -14,4 +15,5 @@
                 CultureInfo.CurrentCulture,
                 CultureInfo.CurrentUICulture)));
 }
+<script src="script.js"></script> <!-- JavaScript einfügen -->
 <component type="typeof(App)" render-mode="ServerPrerendered"/>

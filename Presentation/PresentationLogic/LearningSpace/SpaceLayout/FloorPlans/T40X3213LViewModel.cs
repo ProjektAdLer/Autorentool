@@ -38,31 +38,50 @@ public class T40X3213LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 5, Y = 5 },
-        new() { X = 11, Y = 5 },
-        new() { X = 17, Y = 5 },
-        new() { X = 30, Y = 12 },
+        new() { X = 4, Y = 4 },
+        new() { X = 10, Y = 4 },
+        new() { X = 16, Y = 4 },
+        new() { X = 30, Y = 10 },
         new() { X = 30, Y = 26 },
-        new() { X = 17, Y = 33 },
-        new() { X = 11, Y = 33 },
-        new() { X = 5, Y = 33 },
-        new() { X = 5, Y = 22 },
-        new() { X = 11, Y = 22 },
-        new() { X = 17, Y = 19 },
-        new() { X = 11, Y = 16 },
-        new() { X = 5, Y = 16 }
+        new() { X = 16, Y = 32 },
+        new() { X = 10, Y = 32 },
+        new() { X = 4, Y = 32 },
+        new() { X = 4, Y = 22 },
+        new() { X = 10, Y = 22 },
+        new() { X = 16, Y = 18 },
+        new() { X = 10, Y = 15 },
+        new() { X = 4, Y = 15 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 2, Y = 9 },
-        new() { X = 33, Y = 17 }
+        new() { X = 4, Y = 10 },
+        new() { X = 30, Y = 18 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 0, Y = 5 }, new Point { X = 0, Y = 10 }),
-        (new Point { X = 32, Y = 13 }, new Point { X = 32, Y = 18 })
+        (new Point { X = 0, Y = 5 }, new Point { X = 0, Y = 11 }),
+        (new Point { X = 32, Y = 13 }, new Point { X = 32, Y = 19 })
+    };
+    
+    public IList<IList<Point>> ArrowCornerPoints { get; } = new List<IList<Point>>
+    {
+        new List<Point>
+        {
+            //Intro
+            new() { X = 0, Y = 8 },
+            new() { X = -1, Y = 7 },
+            new() { X = -1, Y = 9 }
+        },
+
+        new List<Point>
+        {
+            //Outro
+            new() { X = 33, Y = 16 },
+            new() { X = 32, Y = 15 },
+            new() { X = 32, Y = 17 }
+        }
     };
 
     public string GetIcon => Icon;

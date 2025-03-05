@@ -159,6 +159,36 @@
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Uploading the learning world...</value>
     </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivity element</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value>Information about the adaptivity element - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value>Information about the story element - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement" xml:space="preserve">
+        <value>Story element</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value>Input support</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value>Information on input support for formulate learning outcomes - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value>Software components</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value>Software components of the authoring tool - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling" xml:space="preserve">
+        <value>Operation</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value>Operating steps available in the authoring tool</value>
+    </data>
     <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
         <value>Learning world contains more than 50 learning spaces.</value>
     </data>

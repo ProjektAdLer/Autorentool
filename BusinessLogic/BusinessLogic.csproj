@@ -16,6 +16,7 @@
       <Compile Remove="Commands\Adaptivity\Action\IDeleteAdaptivityAction.cs" />
       <Compile Remove="Commands\Adaptivity\Action\DeleteAdaptivityAction.cs" />
       <Compile Remove="Commands\Adaptivity\Action\CommentAction\IEditCommentAction.cs" />
+      <Compile Remove="Validation\Validators\CustomValidators\AlphanumericValidator.cs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.11.0" />
@@ -29,6 +30,54 @@
       <EmbeddedResource Update="Resources\Validation\Validators\StoryContentValidator.en.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>StoryContentValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\MultipleChoiceQuestionValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MultipleChoiceQuestionValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\MultipleChoiceQuestionValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MultipleChoiceQuestionValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\ChoiceValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ChoiceValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\ChoiceValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ChoiceValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningElementValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningElementValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningElementValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningElementValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningSpaceValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningSpaceValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningSpaceValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningSpaceValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningWorldValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LearningWorldValidator.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LinkContentValidator.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LinkContentValidator.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Validation\Validators\LinkContentValidator.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LinkContentValidator.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 </Project>

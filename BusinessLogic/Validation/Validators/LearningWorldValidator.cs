@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Localization;
 
 namespace BusinessLogic.Validation.Validators;
 
@@ -10,20 +11,20 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
 {
     private readonly ILearningWorldNamesProvider _learningWorldNamesProvider;
 
-    public LearningWorldValidator(ILearningWorldNamesProvider learningWorldNamesProvider)
+    public LearningWorldValidator(ILearningWorldNamesProvider learningWorldNamesProvider, IStringLocalizer<LearningWorldValidator> localizer)
     {
         _learningWorldNamesProvider = learningWorldNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
             .Must((world, name) => IsUniqueName(world.Id, name))
-            .WithMessage("Already in use.")
-            .IsValidWorldName();
+            .WithMessage(localizer["LearningWorldValidator.Name.Duplicate"])
+            .IsValidWorldName(localizer["LearningWorldValidator.Name.Valid"]);
         RuleFor(x => x.Shortname)
             .MaximumLength(30)
-            .IsValidElementName()
+            .IsValidElementName(localizer["LearningWorldValidator.Shortname.Valid"])
             .Must((world, name) => IsUniqueShortname(world.Id, name))
-            .WithMessage("Already in use.");
+            .WithMessage(localizer["LearningWorldValidator.Shortname.Duplicate"]);
     }
 
     private bool IsUniqueName(Guid id, string name) =>
