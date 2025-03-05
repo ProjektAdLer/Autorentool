@@ -61,7 +61,18 @@ public enum ElementModel
     a_npc_dozentlukas,
     
     //SuburbTheme
-    a_npc_defaultnpc
+    a_npc_defaultnpc,
+    
+    //NPCs
+    
+    a_npc_bullyfemale,
+    a_npc_bullymale,
+    a_npc_oldman,
+    a_npc_hiphopfemale,
+    a_npc_hiphopmale,
+    a_npc_santafemale,
+    a_npc_santamale,
 
     // ReSharper restore InconsistentNaming
+    
 }
