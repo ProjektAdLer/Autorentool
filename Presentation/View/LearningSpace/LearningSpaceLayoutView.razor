@@ -237,26 +237,37 @@
 
     private string GetNoDropClass() => new CssBuilder("bg-formerror text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
 
-    private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int slotIndex)
     {
-        var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
+        var slotPosition = floorPlanViewModel.ElementSlotPositions[slotIndex];
+        return GetSlotPositionString(slotPosition);
+    }
+
+    private string GetStorySlotPositionString(int slotIndex)
+    {
+        var slotPosition = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[slotIndex];
+        return GetSlotPositionString(slotPosition);
+    }
+    
+    private string GetSlotPositionString(Point slotPosition)
+    {
         var slotPositionString = new StringBuilder();
 
-        // Hier wird die bereits abgerufene Breite genutzt
         double viewportWidth;
         double scaleFactor;
+        double adjustedWidth;
         
         if (ScreenWidth < 1536)
         {
             viewportWidth = 34.0;
             scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
             
-            double adjustedWidth = 20.0 * scaleFactor;
+            adjustedWidth = 20.0 * scaleFactor;
 
             slotPositionString.Append("position: absolute; ");
             slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 33)}%; ");
             slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -30%);");
+            slotPositionString.Append("transform: translate(-50%, -30%); ");
             slotPositionString.Append("scale: 0.6;");
         }
         
@@ -265,49 +276,12 @@
             viewportWidth = 50.0;
             scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);   
             
-            double adjustedWidth = 20.0 * scaleFactor;
+            adjustedWidth = 20.0 * scaleFactor;
 
             slotPositionString.Append("position: absolute; ");
             slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
             slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 22)}%; ");
-            slotPositionString.Append("transform: translate(180%, -60%);");
-            slotPositionString.Append("scale: 0.7;");
-        }
-        return slotPositionString.ToString();
-    }
-
-    private string GetStorySlotPositionString(int position)
-    {
-        var slotPos = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[position];
-        var slotPositionString = new StringBuilder();
-        
-        double viewportWidth;
-        double scaleFactor;
-        
-        if(ScreenWidth < 1536)
-        {
-            viewportWidth = 34.0;
-            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
-            
-            double adjustedWidth = 20.0 * scaleFactor;
-            
-            slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 33)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append("transform: translate(-50%, -30%);");
-            slotPositionString.Append("scale: 0.6;");
-        }
-        else
-        {
-            viewportWidth = 50.0;
-            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
-            
-            double adjustedWidth = 20.0 * scaleFactor;
-            
-            slotPositionString.Append("position: absolute; ");
-            slotPositionString.Append($"top: {(int)((slotPos.Y - 1) / adjustedWidth * 35)}%; ");
-            slotPositionString.Append($"left: {(int)((slotPos.X - 1) / adjustedWidth * 22)}%; ");
-            slotPositionString.Append("transform: translate(180%, -60%);");
+            slotPositionString.Append("transform: translate(180%, -60%); ");
             slotPositionString.Append("scale: 0.7;");
         }
         return slotPositionString.ToString();

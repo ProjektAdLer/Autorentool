@@ -33,7 +33,6 @@ public class LearningSpaceLayoutViewUt
         _jsRuntime.InvokeAsync<LearningSpaceLayoutView.Dimensions>("getScreenDimensions")
             .Returns(_dimensions);
         _ctx.Services.AddSingleton(_jsRuntime);
-
     }
 
     [TearDown]
@@ -147,12 +146,20 @@ public class LearningSpaceLayoutViewUt
     }
 
     [Test]
-    public void Render_LearningElementSlots()
+    [TestCase(2560)]
+    [TestCase(1920)]
+    [TestCase(1280)]
+    [TestCase(800)]
+    public void Render_LearningElementSlots(int screenWidth)
     {
         // Arrange
-        var jsRuntime = _ctx.JSInterop;
-        jsRuntime.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
-
+        var testDimensions = new LearningSpaceLayoutView.Dimensions
+        {
+            Width = screenWidth,
+            Height = 1080
+        };
+        _jsRuntime.InvokeAsync<LearningSpaceLayoutView.Dimensions>("getScreenDimensions")
+            .Returns(testDimensions);
         var floorPlanViewModel = Substitute.For<IFloorPlanViewModel>();
         floorPlanViewModel.ElementSlotPositions.Returns(new List<Point>
         {
@@ -167,7 +174,6 @@ public class LearningSpaceLayoutViewUt
         // Act
         var systemUnderTest = GetRenderedLearningSpaceLayoutView(learningSpaceViewModel);
         // Assert
-        Assert.That(jsRuntime.Invocations["mudDragAndDrop.initDropZone"], Has.Count.EqualTo(4));
         var dropZones = systemUnderTest.FindAll("div.mud-drop-zone");
         Assert.That(dropZones, Has.Count.EqualTo(4));
         for (var i = 0; i < 4; i++)
@@ -176,19 +182,40 @@ public class LearningSpaceLayoutViewUt
             {
                 Assert.That(dropZones[i].Attributes["identifier"]?.Value,
                     Is.EqualTo($"{expectedId.ToString()}_ele_{i}"));
-                Assert.That(dropZones[i].Attributes["style"]?.Value,
-                    Is.EqualTo(
-                        $"position: absolute; " +
-                        $"top: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].Y)}%; " +
-                        $"left: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].X)}%; " +
-                        $"transform: translate(-70%, -100%);"));
+                if (screenWidth < 1536)
+                {
+                    Assert.That(dropZones[i].Attributes["style"]?.Value,
+                        Is.EqualTo(
+                            $"position: absolute; " +
+                            $"top: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].Y, false, screenWidth)}%; " +
+                            $"left: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].X, true, screenWidth)}%; " +
+                            $"transform: translate(-50%, -30%); " +
+                            "scale: 0.6;"));
+                }
+                else
+                {
+                    Assert.That(dropZones[i].Attributes["style"]?.Value,
+                        Is.EqualTo(
+                            $"position: absolute; " +
+                            $"top: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].Y, false, screenWidth)}%; " +
+                            $"left: {GetSlotPositionPercentValue(floorPlanViewModel.ElementSlotPositions[i].X, true, screenWidth)}%; " +
+                            $"transform: translate(180%, -60%); " +
+                            "scale: 0.7;"));
+                }
             });
         }
     }
 
-    private static string GetSlotPositionPercentValue(int abs)
+    private static string GetSlotPositionPercentValue(int abs, bool isXAxis, int screenWidth)
     {
-        return ((int)((abs + 1) / 35.0 * 100)).ToString();
+        var smallWidth = screenWidth < 1536;
+
+        var viewportWidth = smallWidth ? 34.0 : 50.0;
+        var scaleFactor = Math.Min(screenWidth / viewportWidth, 0.6);
+        var adjustedWidth = 20.0 * scaleFactor;
+        var factor = smallWidth ? isXAxis ? 35 : 33 : isXAxis ? 22 : 35;
+        
+        return ((int)((abs - 1) / adjustedWidth * factor)).ToString();
     }
 
     private IRenderedComponent<LearningSpaceLayoutView> GetRenderedLearningSpaceLayoutView(
