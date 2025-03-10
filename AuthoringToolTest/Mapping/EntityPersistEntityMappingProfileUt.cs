@@ -265,7 +265,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
-            Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
+            Difficulty, SelectedElementModel, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -353,10 +353,10 @@ public class EntityPersistEntityMappingProfileUt
     {
         var element1 =
             new LearningElement(Name, new FileContent(Name, Type, Filepath), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
         var storyElement1 =
-            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
+            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText, NpcMood.Welcoming), Description, Goals, Difficulty,
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
 
         var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
@@ -421,7 +421,7 @@ public class EntityPersistEntityMappingProfileUt
                     {
                         {
                             0,
-                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText),
+                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText, NpcMood.Welcoming),
                                 NewDescription, NewGoals,
                                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
                         }
@@ -634,7 +634,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText);
+        return new StoryContent(Name, false, ConfigureStoryText, NpcMood.Welcoming);
     }
 
     private static FileContentPe GetTestableNewContentPersistEntity()
@@ -644,15 +644,15 @@ public class EntityPersistEntityMappingProfileUt
 
     private static StoryContentPe GetTestableNewStoryContentPersistEntity()
     {
-        return new StoryContentPe(NewName, false, ConfigureNewStoryText);
+        return new StoryContentPe(NewName, false, ConfigureNewStoryText, NpcMood.Welcoming);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
         return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel,
-            parent, Workload,
-            Points, PositionX,
-            PositionY);
+            parent, workload: Workload,
+            points: Points, positionX: PositionX,
+            positionY: PositionY);
     }
 
     private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)

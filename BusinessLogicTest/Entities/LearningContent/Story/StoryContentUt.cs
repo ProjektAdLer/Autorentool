@@ -3,6 +3,7 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Story;
 using NSubstitute;
 using NUnit.Framework;
+using Shared;
 
 namespace BusinessLogicTest.Entities.LearningContent.Story;
 
@@ -16,7 +17,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
         
         Assert.Multiple(() =>
         {
@@ -33,8 +34,8 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText);
-        var otherStoryContent = new StoryContent(name, unsavedChanges, storyText);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var otherStoryContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
 
         Assert.Multiple(() =>
         {
@@ -50,7 +51,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
         
         Assert.Multiple(() =>
         {
@@ -69,7 +70,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
         var otherStoryContent = Substitute.For<ILearningContent>();
 
         Assert.Multiple(() =>
@@ -102,8 +103,8 @@ public class StoryContentUt
     {
         public IEnumerator<StoryContent> GetEnumerator()
         {
-            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" });
-            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" });
+            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, NpcMood.Welcoming);
+            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, NpcMood.Welcoming);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -118,7 +119,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
         return storyContent;
     }
 }

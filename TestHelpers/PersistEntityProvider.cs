@@ -93,7 +93,7 @@ public static class PersistEntityProvider
         List<string>? story = null)
     {
         return new StoryContentPe(name ?? "a name", unsavedChanges,
-            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" });
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, NpcMood.Welcoming);
     }
 
     public static TopicPe GetTopic(string? name = null)

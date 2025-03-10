@@ -260,6 +260,12 @@
                                         Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
                                         Elements="GetElementModels()">
                 </ElementModelGridSelect>
+                @if (ElementMode == ElementMode.Story && StoryContentModel != null)
+                {
+                    <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)"
+                                   Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
+                    </NpcMoodSelect>
+                }
             </div>
         </Collapsable>
         

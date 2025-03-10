@@ -23,6 +23,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>FloorPlanEnum.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\NpcMood.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>NpcMood.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 

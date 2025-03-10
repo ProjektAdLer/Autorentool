@@ -326,6 +326,7 @@ public class Startup
         ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
+        NpcMoodHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<NpcMood>>());
 
         app.UseRouting();
 

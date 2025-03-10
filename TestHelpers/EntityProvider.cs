@@ -122,7 +122,7 @@ public static class EntityProvider
         bool unsavedChanges = false)
     {
         storyText ??= new List<string> { "a story" };
-        return new StoryContent(name, unsavedChanges, storyText);
+        return new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
     }
 
     public static Topic GetTopic(string append = "")

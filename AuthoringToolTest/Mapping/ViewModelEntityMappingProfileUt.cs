@@ -655,7 +655,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText);
+        return new StoryContent(Name, false, ConfigureStoryText, NpcMood.Welcoming);
     }
 
     private static FileContentViewModel GetTestableNewContentViewModel()
@@ -671,28 +671,28 @@ public class ViewModelEntityMappingProfileUt
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
         return new LearningElement(Name,
-            GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel, parent, Workload, Points,
-            PositionX,
-            PositionY);
+            GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel, parent, workload: Workload, points: Points,
+            positionX: PositionX,
+            positionY: PositionY);
     }
 
     private static LearningElement GetTestableStoryElementWithParent(LearningSpace parent)
     {
         return new LearningElement(Name, GetTestableStoryContent(), Description, Goals, Difficulty,
-            SelectedElementModel, parent, Workload, Points, PositionX, PositionY);
+            SelectedElementModel, parent, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
     }
 
     private static LearningElementViewModel GetTestableElementViewModelWithParent(LearningSpaceViewModel parent)
     {
         return new LearningElementViewModel(NewName,
             GetTestableNewContentViewModel(), NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, parent,
-            NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            workload: NewWorkload, points: NewPoints, positionX: NewPositionX, positionY: NewPositionY);
     }
 
     private static LearningElementViewModel GetTestableStoryElementViewModelWithParent(LearningSpaceViewModel parent)
     {
         return new LearningElementViewModel(NewName, GetTestableNewStoryContentViewModel(), NewDescription, NewGoals,
-            NewDifficulty, NewSelectedElementModel, parent, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            NewDifficulty, NewSelectedElementModel, parent, workload: NewWorkload, points: NewPoints, positionX: NewPositionX, positionY: NewPositionY);
     }
 
     private static LearningSpace GetTestableSpace()

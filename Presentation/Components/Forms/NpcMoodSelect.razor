@@ -1,0 +1,35 @@
+@using Shared
+@using MudBlazor.Utilities
+@inherits MudBaseInput<NpcMood>
+<div>
+    <MudText>Auswahl der Stimmung</MudText>
+    <MudText>@Value</MudText>
+    
+    <MudSelect T="NpcMood" ValueChanged="async mood => await OnItemClick(mood)" Value="Value">
+        @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
+        {
+            <MudSelectItem T="NpcMood" Value="@(npcMood)" Class="@BuildListItemCss(npcMood)">@npcMood</MudSelectItem>
+        }
+    </MudSelect>
+</div>
+
+@code {
+
+    private async Task OnItemClick(NpcMood npcMood)
+    {
+        await SetValueAsync(npcMood);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string BuildListItemCss(NpcMood npcMood)
+    {
+        var isSelected = npcMood == Value;
+        return new CssBuilder()
+            .AddClass("bg-adlerblue-600", isSelected)
+            .AddClass("hover:bg-adlergrey-100", !isSelected)
+            .Build();
+    }
+
+
+}
+
