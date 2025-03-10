@@ -262,7 +262,7 @@
                 </ElementModelGridSelect>
                 @if (ElementMode == ElementMode.Story && StoryContentModel != null)
                 {
-                    <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)"
+                    <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)" ElementModel="FormDataContainer.FormModel.ElementModel"
                                    Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
                     </NpcMoodSelect>
                 }

@@ -4,16 +4,21 @@
 <div>
     <MudText>Auswahl der Stimmung</MudText>
     <MudText>@Value</MudText>
-    
+    <img class="inset-0 w-1/3 drop-shadow-xl p-0"
+         src="@NpcMoodPreviewHandler.GetIconForNpcAndMood(ElementModel, Value)"
+         alt=""/>
     <MudSelect T="NpcMood" ValueChanged="async mood => await OnItemClick(mood)" Value="Value">
         @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
         {
-            <MudSelectItem T="NpcMood" Value="@(npcMood)" Class="@BuildListItemCss(npcMood)">@npcMood</MudSelectItem>
+            <MudSelectItem T="NpcMood" Value="@(npcMood)" Class="@BuildListItemCss(npcMood)">@NpcMoodHelper.Localize(npcMood)</MudSelectItem>
         }
     </MudSelect>
 </div>
 
 @code {
+    
+    [Parameter, EditorRequired]
+    public ElementModel ElementModel { get; set; }
 
     private async Task OnItemClick(NpcMood npcMood)
     {
