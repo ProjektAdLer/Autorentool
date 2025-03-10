@@ -103,16 +103,16 @@ public class ElementModelHandler : IElementModelHandler
             //Adaptivity
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
             //Story NPCs
-            ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/npc/a_npc_sheriffjustice.png",
-            ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/npc/a_npc_dozentlukas.png",
-            ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/npc/a_npc_defaultnpc.png",
-            ElementModel.a_npc_bullyfemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_bullyfemale.png",
-            ElementModel.a_npc_bullymale => "CustomIcons/AdaptivityElementModels/npc/a_npc_bullymale.png",
-            ElementModel.a_npc_oldman => "CustomIcons/AdaptivityElementModels/npc/a_npc_oldman.png",
-            ElementModel.a_npc_hiphopfemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_hiphopfemale.png",
-            ElementModel.a_npc_hiphopmale => "CustomIcons/AdaptivityElementModels/npc/a_npc_hiphopmale.png",
-            ElementModel.a_npc_santafemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_santafemale.png",
-            ElementModel.a_npc_santamale => "CustomIcons/AdaptivityElementModels/npc/a_npc_santamale.png",
+            ElementModel.a_npc_sheriffjustice => "CustomIcons/StoryElementModels/npc/a_npc_sheriffjustice.png",
+            ElementModel.a_npc_dozentlukas => "CustomIcons/StoryElementModels/npc/a_npc_dozentlukas.png",
+            ElementModel.a_npc_defaultnpc => "CustomIcons/StoryElementModels/npc/a_npc_defaultnpc.png",
+            ElementModel.a_npc_bullyfemale => "CustomIcons/StoryElementModels/npc/a_npc_bullyfemale.png",
+            ElementModel.a_npc_bullymale => "CustomIcons/StoryElementModels/npc/a_npc_bullymale.png",
+            ElementModel.a_npc_oldman => "CustomIcons/StoryElementModels/npc/a_npc_oldman.png",
+            ElementModel.a_npc_hiphopfemale => "CustomIcons/StoryElementModels/npc/a_npc_hiphopfemale.png",
+            ElementModel.a_npc_hiphopmale => "CustomIcons/StoryElementModels/npc/a_npc_hiphopmale.png",
+            ElementModel.a_npc_santafemale => "CustomIcons/StoryElementModels/npc/a_npc_santafemale.png",
+            ElementModel.a_npc_santamale => "CustomIcons/StoryElementModels/npc/a_npc_santamale.png",
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
                 @"Icon not found for ElementModel")
         };
