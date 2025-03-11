@@ -50,8 +50,10 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="goals">The goals of the learning world.</param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart"></param>
+    /// <param name="storyEnd"></param>
     void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey);
+        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected

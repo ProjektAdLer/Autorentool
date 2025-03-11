@@ -63,4 +63,22 @@
     <data name="EditWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>A password allows students access to the learning world to be restricted to only those who know the password. Students will be required to supply the password each time they access the learning world.</value>
     </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.End.Label" xml:space="preserve">
+        <value />
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
+        <value />
+    </data>
 </root>

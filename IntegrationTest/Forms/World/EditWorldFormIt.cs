@@ -101,6 +101,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -115,6 +116,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(FormModel.Goals, Is.EqualTo(""));
             Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
             Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
+            Assert.That(FormModel.StoryStart, Is.EqualTo(""));
+            Assert.That(FormModel.StoryEnd, Is.EqualTo(""));
         });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
@@ -149,6 +152,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
         });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
@@ -168,6 +173,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         foreach (var mudInput in mudInputs.Take(6))
@@ -198,6 +204,8 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
             Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
         });
 
         Mapper.ClearReceivedCalls();
@@ -205,7 +213,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, Expected, Expected);
+            Expected, Expected, Expected, Expected, Expected, Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }
 

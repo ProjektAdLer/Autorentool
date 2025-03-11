@@ -21,11 +21,13 @@ public class CreateLearningWorldUt
         var goals = "g";
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink, enrolmentKey,
+            evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>
@@ -61,7 +63,7 @@ public class CreateLearningWorldUt
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", "", _ => { },
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", "", "", "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -107,11 +109,13 @@ public class CreateLearningWorldUt
         var goals = "g";
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink, enrolmentKey,
+            evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -136,11 +140,13 @@ public class CreateLearningWorldUt
         var goals = "g";
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            evaluationLink, enrolmentKey,
+            evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>

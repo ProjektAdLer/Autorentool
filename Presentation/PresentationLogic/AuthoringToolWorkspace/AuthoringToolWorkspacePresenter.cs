@@ -68,10 +68,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey)
+        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey);
+            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>

@@ -20,6 +20,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         SavePath = "";
         EvaluationLink = "";
         EnrolmentKey = "";
+        StoryStart = "";
+        StoryEnd = "";
         LearningSpaces = new List<ILearningSpace>();
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
@@ -29,7 +31,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     }
 
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink = "", string enrolmentKey = "", string savePath = "",
+        string goals, string evaluationLink = "", string enrolmentKey = "", string storyStart = "",
+        string storyEnd = "", string savePath = "",
         List<ILearningSpace>? learningSpaces = null,
         List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
@@ -44,6 +47,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         SavePath = savePath;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
+        StoryStart = storyStart;
+        StoryEnd = storyEnd;
         LearningSpaces = learningSpaces ?? new List<ILearningSpace>();
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
@@ -72,6 +77,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Goals { get; set; }
     public string EvaluationLink { get; set; }
     public string EnrolmentKey { get; set; }
+    public string StoryStart { get; set; }
+    public string StoryEnd { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
     public string SavePath { get; set; }
 
@@ -91,7 +98,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
-            EnrolmentKey,
+            EnrolmentKey, StoryStart, StoryEnd,
             SavePath,
             LearningSpaces, PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges,
             UnplacedLearningElements);
@@ -112,6 +119,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         Goals = learningWorldMemento.Goals;
         EvaluationLink = learningWorldMemento.EvaluationLink;
         EnrolmentKey = learningWorldMemento.EnrolmentKey;
+        StoryStart = learningWorldMemento.StoryStart;
+        StoryEnd = learningWorldMemento.StoryEnd;
         SavePath = learningWorldMemento.SavePath;
         LearningSpaces = learningWorldMemento.LearningSpaces;
         PathWayConditions = learningWorldMemento.PathWayConditions;
@@ -124,7 +133,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, string evaluationLink, string enrolmentKey, string savePath,
+            string description, string goals, string evaluationLink, string enrolmentKey, string storyStart,
+            string storyEnd, string savePath,
             List<ILearningSpace> learningSpaces,
             List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
@@ -139,6 +149,8 @@ public class LearningWorld : ILearningWorld, IOriginator
             SavePath = savePath;
             EvaluationLink = evaluationLink;
             EnrolmentKey = enrolmentKey;
+            StoryStart = storyStart;
+            StoryEnd = storyEnd;
             UnsavedChanges = unsavedChanges;
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
@@ -159,6 +171,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Goals { get; }
         internal string EvaluationLink { get; }
         internal string EnrolmentKey { get; }
+        internal string StoryStart { get; }
+        internal string StoryEnd { get; }
         internal string SavePath { get; }
         public bool UnsavedChanges { get; }
         internal List<ILearningElement> UnplacedLearningElements { get; }
