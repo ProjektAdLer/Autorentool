@@ -1,14 +1,15 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
 @using Shared
 @using MudBlazor.Utilities
 @inherits MudBaseInput<NpcMood>
 <div>
     <MudText>Auswahl der Stimmung</MudText>
-    <MudText>@Value</MudText>
     <div class="flex items-center space-x-4">
         <img class="inset-0 w-1/3 drop-shadow-xl p-0"
              src="@NpcMoodPreviewHandler.GetIconForNpcAndMood(ElementModel, Value)"
              alt=""/>
-        <MudSelect T="NpcMood" ValueChanged="async mood => await OnItemClick(mood)" Value="Value">
+        <MudSelect T="NpcMood" ValueChanged="async mood => await OnItemClick(mood)" Value="Value" Label="@Localizer["NpcMoodSelect.MoodSelect.Label"]" Variant="Variant.Outlined">
             @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
             {
                 <MudSelectItem T="NpcMood" Value="@(npcMood)"
@@ -21,6 +22,9 @@
 @code {
 
     [Parameter, EditorRequired] public ElementModel ElementModel { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<NpcMoodSelect> Localizer { get; set; }
 
     private async Task OnItemClick(NpcMood npcMood)
     {
