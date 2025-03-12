@@ -14,4 +14,7 @@
     <data name="NpcMoodSelect.MoodSelect.Label" xml:space="preserve">
         <value>Mood</value>
     </data>
+    <data name="NpcMoodSelect.Header.Text" xml:space="preserve">
+        <value />
+    </data>
 </root>

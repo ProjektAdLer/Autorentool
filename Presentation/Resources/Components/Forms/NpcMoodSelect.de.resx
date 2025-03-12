@@ -21,4 +21,7 @@
     <data name="NpcMoodSelect.MoodSelect.Label" xml:space="preserve">
         <value>Stimmung</value>
     </data>
+    <data name="NpcMoodSelect.Header.Text" xml:space="preserve">
+        <value>Stimmung der Person</value>
+    </data>
 </root>
