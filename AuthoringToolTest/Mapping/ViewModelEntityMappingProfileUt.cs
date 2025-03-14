@@ -40,6 +40,8 @@ public class ViewModelEntityMappingProfileUt
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
+    private const string NameNpc = "nameNpc";
+    private const NpcMood MoodNpc = NpcMood.Welcoming;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -60,6 +62,8 @@ public class ViewModelEntityMappingProfileUt
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
+    private const string NewNameNpc = "newNameNpc";
+    private const NpcMood NewMoodNpc = NpcMood.Bored;
     private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
@@ -655,7 +659,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContent GetTestableStoryContent()
     {
-        return new StoryContent(Name, false, ConfigureStoryText, NpcMood.Welcoming);
+        return new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc);
     }
 
     private static FileContentViewModel GetTestableNewContentViewModel()
@@ -665,7 +669,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static StoryContentViewModel GetTestableNewStoryContentViewModel()
     {
-        return new StoryContentViewModel(NewName, ConfigureNewStoryText);
+        return new StoryContentViewModel(NewName, ConfigureNewStoryText, NewNameNpc, NewMoodNpc);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
@@ -901,6 +905,8 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             case StoryContentViewModel content:
@@ -908,6 +914,8 @@ public class ViewModelEntityMappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.NpcName, Is.EqualTo(useNewFields ? NewNameNpc : NameNpc));
+                    Assert.That(content.NpcMood, Is.EqualTo(useNewFields ? NewMoodNpc : MoodNpc));
                 });
                 break;
             default:

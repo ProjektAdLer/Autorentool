@@ -10,14 +10,16 @@ public class StoryContentPe : IStoryContentPe
         Name = "";
         UnsavedChanges = false;
         StoryText = new List<string>();
+        NpcName = "";
         NpcMood = NpcMood.Friendly;
     }
 
-    public StoryContentPe(string name, bool unsavedChanges, List<string> storyText, NpcMood npcMood)
+    public StoryContentPe(string name, bool unsavedChanges, List<string> storyText, string npcName, NpcMood npcMood)
     {
         Name = name;
         UnsavedChanges = unsavedChanges;
         StoryText = storyText;
+        NpcName = npcName;
         NpcMood = npcMood;
     }
 
@@ -25,6 +27,7 @@ public class StoryContentPe : IStoryContentPe
 
     public string Name { get; set; }
     public List<string> StoryText { get; set; }
+    public string NpcName { get; set; }
     public NpcMood NpcMood { get; set; }
 
     public bool Equals(ILearningContentPe? other)
@@ -32,6 +35,7 @@ public class StoryContentPe : IStoryContentPe
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         if (other is not StoryContentPe otherCast) return false;
-        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText) && NpcMood == otherCast.NpcMood;
+        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText) && NpcName == otherCast.NpcName &&
+               NpcMood == otherCast.NpcMood;
     }
 }

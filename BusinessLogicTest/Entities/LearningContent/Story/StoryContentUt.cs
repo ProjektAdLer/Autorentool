@@ -16,14 +16,18 @@ public class StoryContentUt
         var name = "a name";
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
+        var npcName = "a npc name";
+        var npcMood = NpcMood.Welcoming;
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         
         Assert.Multiple(() =>
         {
             Assert.That(storyContent.Name, Is.EqualTo(name));
             Assert.That(storyContent.UnsavedChanges, Is.EqualTo(unsavedChanges));
             Assert.That(storyContent.StoryText, Is.EquivalentTo(storyText));
+            Assert.That(storyContent.NpcName, Is.EqualTo(npcName));
+            Assert.That(storyContent.NpcMood, Is.EqualTo(npcMood));
         });
     }
     
@@ -33,9 +37,11 @@ public class StoryContentUt
         var name = "a name";
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
+        var npcName = "a npc name";
+        var npcMood = NpcMood.Welcoming;
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
-        var otherStoryContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
+        var otherStoryContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
 
         Assert.Multiple(() =>
         {
@@ -50,8 +56,10 @@ public class StoryContentUt
         var name = "a name";
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
+        var npcName = "a npc name";
+        var npcMood = NpcMood.Welcoming;
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         
         Assert.Multiple(() =>
         {
@@ -69,8 +77,10 @@ public class StoryContentUt
         var name = "a name";
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
+        var npcName = "a npc name";
+        var npcMood = NpcMood.Welcoming;
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         var otherStoryContent = Substitute.For<ILearningContent>();
 
         Assert.Multiple(() =>
@@ -103,8 +113,8 @@ public class StoryContentUt
     {
         public IEnumerator<StoryContent> GetEnumerator()
         {
-            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, NpcMood.Welcoming);
-            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, NpcMood.Welcoming);
+            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, "a npc name", NpcMood.Welcoming);
+            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, "different npc name", NpcMood.Bored);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -118,8 +128,10 @@ public class StoryContentUt
         var name = "a name";
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
+        var npcName = "a npc name";
+        var npcMood = NpcMood.Welcoming;
         
-        var storyContent = new StoryContent(name, unsavedChanges, storyText, NpcMood.Welcoming);
+        var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         return storyContent;
     }
 }

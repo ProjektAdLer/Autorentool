@@ -11,11 +11,13 @@ public class StoryContentFormModel : ILearningContentFormModel
     {
         Name = "";
         StoryText = new List<string>();
+        NpcName = "";
         NpcMood = NpcMood.Friendly;
     }
 
     public List<string> StoryText { get; set; }
 
+    public string NpcName { get; set; }
     public NpcMood NpcMood
     {
         get;

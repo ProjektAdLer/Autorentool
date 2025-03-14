@@ -10,14 +10,17 @@ public class StoryContentViewModel : IStoryContentViewModel
         Name = "";
         UnsavedChanges = false;
         StoryText = new List<string>();
+        NpcName = "";
         NpcMood = NpcMood.Friendly;
     }
 
-    public StoryContentViewModel(string name = "", List<string>? storyText = null, NpcMood npcMood = NpcMood.Friendly)
+    public StoryContentViewModel(string name = "", List<string>? storyText = null, string npcName = "",
+        NpcMood npcMood = NpcMood.Friendly)
     {
         Name = name;
         UnsavedChanges = true;
         StoryText = storyText ?? new List<string>();
+        NpcName = npcName;
         NpcMood = npcMood;
     }
 
@@ -25,6 +28,7 @@ public class StoryContentViewModel : IStoryContentViewModel
 
     public string Name { get; init; }
     public List<string> StoryText { get; set; }
+    public string NpcName { get; set; }
     public NpcMood NpcMood { get; set; }
 
     public bool Equals(ILearningContentViewModel? other)
@@ -32,6 +36,7 @@ public class StoryContentViewModel : IStoryContentViewModel
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         if (other is not StoryContentViewModel otherCast) return false;
-        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText) && NpcMood == otherCast.NpcMood;
+        return Name == other.Name && StoryText.SequenceEqual(otherCast.StoryText) && NpcName == otherCast.NpcName &&
+               NpcMood == otherCast.NpcMood;
     }
 }

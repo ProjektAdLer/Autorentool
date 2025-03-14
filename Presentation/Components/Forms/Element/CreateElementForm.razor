@@ -262,8 +262,17 @@
                 </ElementModelGridSelect>
                 @if (ElementMode == ElementMode.Story && StoryContentModel != null)
                 {
+                    <MudText>
+                        @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title"]
+                    </MudText>
+                    <MudTextField @bind-Value="StoryContentModel.NpcName"
+                                  For="@(() => StoryContentModel.NpcName)"
+                                  Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"
+                                  Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text"]"
+                                  Class="pb-2 mt-0"/>
                     <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)" ElementModel="FormDataContainer.FormModel.ElementModel"
-                                   Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
+                                   Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
                     </NpcMoodSelect>
                 }
             </div>

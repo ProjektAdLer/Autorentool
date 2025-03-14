@@ -6,4 +6,5 @@ public interface IStoryContentPe : ILearningContentPe
 {
     public List<string> StoryText { get; set; }
     NpcMood NpcMood { get; set; }
+    string NpcName { get; set; }
 }
