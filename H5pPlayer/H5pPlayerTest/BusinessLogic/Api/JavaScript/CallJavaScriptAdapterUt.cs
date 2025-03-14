@@ -11,6 +11,7 @@ public class CallJavaScriptAdapterUt
 {
     [Test]
     [TestCaseSource(nameof(GetTestCases))]
+    // ANF-ID: [HSE2]
     public async Task DisplayH5p(string h5pSourcePath, string unzippedH5psPath)
     {
         var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
@@ -24,6 +25,7 @@ public class CallJavaScriptAdapterUt
     
     [Test]
     [TestCaseSource(nameof(GetTestCases))]
+    // ANF-ID: [HSE4]
     public async Task ValidateH5p(string h5pSourcePath, string unzippedH5psPath)
     {
         var javaScriptAdapterTO = CreateCallJavaScriptAdapterTO(unzippedH5psPath, h5pSourcePath);
@@ -80,6 +82,7 @@ public class CallJavaScriptAdapterUt
 
 
     [Test]
+    // ANF-ID: [HSE8]
     public async Task TerminateH5pJavaScriptPlayer()
     {
         var mockJsRuntime = Substitute.For<IJSRuntime>();

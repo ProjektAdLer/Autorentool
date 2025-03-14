@@ -27,6 +27,7 @@ public class ValidateH5pUcUt
     /// to the CORRECT INSTANCE of <see cref="ValidateH5pUc"/>
     /// </summary>
     [Test]
+    // ANF-ID: [HSE3]
     public void EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc()
     {
         var systemUnderTest = CreateValidateH5PUc();
@@ -35,6 +36,7 @@ public class ValidateH5pUcUt
     }
 
     [Test]
+    // ANF-ID: [HSE3]
     public async Task StartToValidateH5p()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
@@ -52,6 +54,7 @@ public class ValidateH5pUcUt
 
 
     [Test]
+    // ANF-ID: [HSE4]
     public void SetH5pIsCompletable()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
@@ -64,6 +67,7 @@ public class ValidateH5pUcUt
     }
 
     [Test]
+    // ANF-ID: [HSE4]
     public void H5pIsNotCompletedAlready()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
