@@ -17,6 +17,7 @@ public class DisplayH5pUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE2]
     public async Task StartToDisplayH5p_CallJavaScriptAdapter()
     {
         var mockJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
