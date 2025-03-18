@@ -11,6 +11,7 @@ using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Content;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.LearningOutcomes;
@@ -243,6 +244,7 @@ public class CachingMapperIt
         ILayoutCommandFactory? layoutCommandFactory = null,
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
+        IContentCommandFactory? contentCommandFactory = null,
         ITopicCommandFactory? topicCommandFactory = null,
         ILearningOutcomeCommandFactory? learningOutcomeCommandFactory = null,
         IWorldCommandFactory? worldCommandFactory = null,
@@ -267,6 +269,7 @@ public class CachingMapperIt
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
+        contentCommandFactory ??= Substitute.For<IContentCommandFactory>();
         topicCommandFactory ??= Substitute.For<ITopicCommandFactory>();
         learningOutcomeCommandFactory ??= Substitute.For<ILearningOutcomeCommandFactory>();
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
@@ -277,10 +280,9 @@ public class CachingMapperIt
 
         return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider,
             serviceProvider, logger, hybridSupportWrapper, shellWrapper, questionCommandFactory, taskCommandFactory,
-            conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
-            spaceCommandFactory, topicCommandFactory, learningOutcomeCommandFactory, worldCommandFactory,
-            batchCommandFactory,
-            adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
+            conditionCommandFactory, elementCommandFactory, contentCommandFactory, layoutCommandFactory,
+            pathwayCommandFactory, spaceCommandFactory, topicCommandFactory, learningOutcomeCommandFactory,
+            worldCommandFactory, batchCommandFactory, adaptivityRuleCommandFactory, adaptivityActionCommandFactory,
             fileSystem);
     }
 }

@@ -18,6 +18,7 @@ using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Content;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.LearningOutcomes;
@@ -97,6 +98,7 @@ public class PresentationLogicUt
         var mockTaskCommandFactory = Substitute.For<ITaskCommandFactory>();
         var mockConditionCommandFactory = Substitute.For<IConditionCommandFactory>();
         var mockElementCommandFactory = Substitute.For<IElementCommandFactory>();
+        var mockContentCommandFactory = Substitute.For<IContentCommandFactory>();
         var mockLayoutCommandFactory = Substitute.For<ILayoutCommandFactory>();
         var mockPathwayCommandFactory = Substitute.For<IPathwayCommandFactory>();
         var mockSpaceCommandFactory = Substitute.For<ISpaceCommandFactory>();
@@ -109,7 +111,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper,
             mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger,
             mockHybridSupportWrapper, mockShellWrapper, mockQuestionCommandFactory, mockTaskCommandFactory,
-            mockConditionCommandFactory, mockElementCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory,
+            mockConditionCommandFactory, mockElementCommandFactory, mockContentCommandFactory, mockLayoutCommandFactory, mockPathwayCommandFactory,
             mockSpaceCommandFactory, mockTopicCommandFactory, mockLearningOutcomeCommandFactory,
             mockWorldCommandFactory, mockBatchCommandFactory);
         Assert.Multiple(() =>
@@ -1688,7 +1690,7 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
         var workspaceEntity =
-            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<ILearningWorld>());
+            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockServiceProvider
@@ -2708,7 +2710,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.DeleteContent(TODO, mockContentViewModel);
+        systemUnderTest.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), mockContentViewModel);
 
         mockMapper.Received().Map<ILearningContent>(mockContentViewModel);
         mockBusinessLogic.Received().RemoveContent(mockContentEntity);
@@ -3033,6 +3035,7 @@ public class PresentationLogicUt
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
+        IContentCommandFactory? contentCommandFactory = null,
         ILayoutCommandFactory? layoutCommandFactory = null,
         IPathwayCommandFactory? pathwayCommandFactory = null,
         ISpaceCommandFactory? spaceCommandFactory = null,
@@ -3059,6 +3062,7 @@ public class PresentationLogicUt
         taskCommandFactory ??= Substitute.For<ITaskCommandFactory>();
         conditionCommandFactory ??= Substitute.For<IConditionCommandFactory>();
         elementCommandFactory ??= Substitute.For<IElementCommandFactory>();
+        contentCommandFactory ??= Substitute.For<IContentCommandFactory>();
         layoutCommandFactory ??= Substitute.For<ILayoutCommandFactory>();
         pathwayCommandFactory ??= Substitute.For<IPathwayCommandFactory>();
         spaceCommandFactory ??= Substitute.For<ISpaceCommandFactory>();
@@ -3072,9 +3076,8 @@ public class PresentationLogicUt
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
             questionCommandFactory, taskCommandFactory, conditionCommandFactory, elementCommandFactory,
-            layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory, topicCommandFactory,
-            learningOutcomeCommandFactory,
-            worldCommandFactory,
-            batchCommandFactory, adaptivityRuleCommandFactory, adaptivityActionCommandFactory, fileSystem);
+            contentCommandFactory, layoutCommandFactory, pathwayCommandFactory, spaceCommandFactory,
+            topicCommandFactory, learningOutcomeCommandFactory, worldCommandFactory, batchCommandFactory,
+            adaptivityRuleCommandFactory, adaptivityActionCommandFactory, fileSystem);
     }
 }

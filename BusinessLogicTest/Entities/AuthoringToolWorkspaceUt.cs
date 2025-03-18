@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ public class AuthoringToolWorkspaceUt
         };
         
 
-        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds);
+        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds, new List<ILearningContent>());
         
         Assert.Multiple(() =>
         {
@@ -36,7 +37,7 @@ public class AuthoringToolWorkspaceUt
             world1, world2
         };
 
-        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds);
+        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds, new List<ILearningContent>());
         
         var memento = systemUnderTest.GetMemento();
 
@@ -65,7 +66,7 @@ public class AuthoringToolWorkspaceUt
     {
         var fakeMemento = Substitute.For<IMemento>();
         
-        var systemUnderTest = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var systemUnderTest = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         
         Assert.That(() => systemUnderTest.RestoreMemento(fakeMemento), Throws.ArgumentException);
     }
