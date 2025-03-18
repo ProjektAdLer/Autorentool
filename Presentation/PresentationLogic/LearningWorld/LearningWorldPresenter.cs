@@ -568,7 +568,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
         _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm!, learningElement);
     }
 
-    public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();
+    public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContentFromDir();
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateUnplacedLearningElement"/>
     public void CreateUnplacedLearningElement(string name,
