@@ -121,6 +121,11 @@
 
     private IEnumerable<(ILearningWorldViewModel, IFileInfo?)> OrderedWorldsWithFileinfos => _sortByDate ? WorldsWithFileinfos.OrderByDescending(tuple => tuple.Item2?.LastWriteTime) : WorldsWithFileinfos.OrderBy(tuple => tuple.Item1.Name);
 
+    protected override void OnInitialized()
+    {
+        WorkspaceViewModel.LearningContents = PresentationLogic.GetAllContentFromDir();
+    }
+    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();

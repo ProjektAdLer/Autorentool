@@ -9,6 +9,7 @@ using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Content;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.LearningOutcomes;
@@ -74,6 +75,7 @@ public class PresentationLogic : IPresentationLogic
         ITaskCommandFactory taskCommandFactory,
         IConditionCommandFactory conditionCommandFactory,
         IElementCommandFactory elementCommandFactory,
+        IContentCommandFactory contentCommandFactory,
         ILayoutCommandFactory layoutCommandFactory,
         IPathwayCommandFactory pathwayCommandFactory,
         ISpaceCommandFactory spaceCommandFactory,
@@ -98,6 +100,7 @@ public class PresentationLogic : IPresentationLogic
         TaskCommandFactory = taskCommandFactory;
         ConditionCommandFactory = conditionCommandFactory;
         ElementCommandFactory = elementCommandFactory;
+        ContentCommandFactory = contentCommandFactory;
         LayoutCommandFactory = layoutCommandFactory;
         PathwayCommandFactory = pathwayCommandFactory;
         SpaceCommandFactory = spaceCommandFactory;
@@ -123,6 +126,7 @@ public class PresentationLogic : IPresentationLogic
     public ITaskCommandFactory TaskCommandFactory { get; }
     public IConditionCommandFactory ConditionCommandFactory { get; }
     public IElementCommandFactory ElementCommandFactory { get; }
+    public IContentCommandFactory ContentCommandFactory { get; }
     public ILayoutCommandFactory LayoutCommandFactory { get; }
     public IPathwayCommandFactory PathwayCommandFactory { get; }
     public ISpaceCommandFactory SpaceCommandFactory { get; }
@@ -858,13 +862,19 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
-    public IEnumerable<ILearningContentViewModel> GetAllContent() =>
-        BusinessLogic.GetAllContent().Select(Mapper.Map<ILearningContentViewModel>);
+    /// <inheritdoc cref="IPresentationLogic.GetAllContentFromDir"/>
+    public IEnumerable<ILearningContentViewModel> GetAllContentFromDir() =>
+        BusinessLogic.GetAllContentFromDir().Select(Mapper.Map<ILearningContentViewModel>);
 
-    /// <inheritdoc cref="IPresentationLogic.RemoveContent"/>
-    public void RemoveContent(ILearningContentViewModel content) =>
-        BusinessLogic.RemoveContent(Mapper.Map<ILearningContent>(content));
+    /// <inheritdoc cref="IPresentationLogic.DeleteContent"/>
+    public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel,
+        ILearningContentViewModel contentViewModel)
+    { 
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(workspaceViewModel);
+        var contentEntity = Mapper.Map<ILearningContent>(contentViewModel);
+        var command = ContentCommandFactory.GetDeleteCommand(workspaceEntity, contentEntity, workspace => CMapper.Map(workspace, workspaceViewModel));
+        BusinessLogic.ExecuteCommand(command);
+    }
 
     /// <inheritdoc cref="IPresentationLogic.RemoveMultipleContents"/>
     public void RemoveMultipleContents(IEnumerable<ILearningContentViewModel> contents) =>

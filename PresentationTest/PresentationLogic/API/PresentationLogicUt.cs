@@ -2708,7 +2708,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.RemoveContent(mockContentViewModel);
+        systemUnderTest.DeleteContent(TODO, mockContentViewModel);
 
         mockMapper.Received().Map<ILearningContent>(mockContentViewModel);
         mockBusinessLogic.Received().RemoveContent(mockContentEntity);

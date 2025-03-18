@@ -448,14 +448,15 @@ public interface IPresentationLogic
     /// Gets all content files in the appdata folder.
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
-    IEnumerable<ILearningContentViewModel> GetAllContent();
+    IEnumerable<ILearningContentViewModel> GetAllContentFromDir();
 
     /// <summary>
     /// Deletes the file referenced by the given content object.
     /// </summary>
-    /// <param name="content">The content whos file shall be deleted.</param>
-    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
-    public void RemoveContent(ILearningContentViewModel content);
+    /// <param name="workspaceViewModel"></param>
+    /// <param name="contentViewModel">The content whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="contentViewModel"/> wasn't found.</exception>
+    public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel,ILearningContentViewModel contentViewModel);
 
     /// <summary>
     /// Deletes the files referenced by the given content objects.
