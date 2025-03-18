@@ -11,6 +11,7 @@
 @using BusinessLogic.ErrorManagement.DataAccess
 @using H5pPlayer.Api
 @using H5pPlayer.BusinessLogic.Api.JavaScript
+@using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
@@ -143,7 +144,7 @@
                                      "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
                                       "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
                       
-                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                  }
 #endif
             }
@@ -300,7 +301,10 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
-    private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
+    private async void OpenH5pPlayerDialog(
+        string h5pZipSourcePath, 
+        string unzippedH5psPath, 
+        H5pDisplayMode displayMode)
     {
         
        
@@ -314,7 +318,8 @@
         var parameters = new DialogParameters()
         {
             {"H5pZipSourcePath", h5pZipSourcePath},
-            {"UnzippedH5psPath", unzippedH5psPath}
+            {"UnzippedH5psPath", unzippedH5psPath},
+            {"DisplayMode", displayMode}
         };
         
         var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
