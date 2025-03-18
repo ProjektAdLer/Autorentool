@@ -11,6 +11,7 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Type = "";
         Filepath = "";
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
 
     public FileContentFormModel(string name, string type, string filepath, bool primitiveH5P = false)
@@ -19,12 +20,14 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Type = type;
         Filepath = filepath;
         PrimitiveH5P = primitiveH5P;
+        IsDeleted = false;
     }
 
     public string Name { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
     public bool PrimitiveH5P { get; set; }
+    public bool IsDeleted { get; set; }
 
     public bool Equals(FileContentFormModel? other)
     {

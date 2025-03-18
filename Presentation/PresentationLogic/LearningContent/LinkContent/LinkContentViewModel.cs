@@ -9,6 +9,7 @@ public class LinkContentViewModel : ILinkContentViewModel
         Name = name;
         Link = link;
         UnsavedChanges = true;
+        IsDeleted = false;
     }
     
     /// <summary>
@@ -20,11 +21,13 @@ public class LinkContentViewModel : ILinkContentViewModel
         Name = "";
         Link = "";
         UnsavedChanges = false;
+        IsDeleted = false;
     }
     
     public string Name { get; init; }
     public bool UnsavedChanges { get; set; }
     public string Link { get; init; }
+    public bool IsDeleted { get; set; }
     
     protected bool Equals(LinkContentViewModel other) => Name == other.Name && Link == other.Link;
 

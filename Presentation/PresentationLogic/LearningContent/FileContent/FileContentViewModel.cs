@@ -11,6 +11,7 @@ public class FileContentViewModel : IFileContentViewModel
         Filepath = filepath;
         UnsavedChanges = true;
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
     
     /// <summary>
@@ -24,6 +25,7 @@ public class FileContentViewModel : IFileContentViewModel
         Filepath = "";
         UnsavedChanges = false;
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
     
     public string Name { get; init; }
@@ -31,6 +33,7 @@ public class FileContentViewModel : IFileContentViewModel
     public string Type { get; init; }
     public string Filepath { get; init; }
     public bool PrimitiveH5P { get; set; }
+    public bool IsDeleted { get; set; }
 
     protected bool Equals(FileContentViewModel other) => Name == other.Name && Type == other.Type && Filepath == other.Filepath;
 

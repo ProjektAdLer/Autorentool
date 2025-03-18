@@ -11,6 +11,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Type = type;
         Filepath = filepath;
         PrimitiveH5P = primitiveH5P;
+        IsDeleted = false;
     }
 
     /// <summary>
@@ -23,6 +24,7 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Type = "";
         Filepath = "";
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
 
     public bool Equals(FileContentPe? other)
@@ -36,4 +38,5 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
     [DataMember] public string Filepath { get; set; }
     [DataMember] public string Name { get; set; }
     [DataMember] public bool PrimitiveH5P { get; set; }
+    [DataMember] public bool IsDeleted { get; set; }
 }

@@ -11,6 +11,7 @@ public class FileContent : IFileContent
         Filepath = filepath;
         UnsavedChanges = true;
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
 
     /// <summary>
@@ -24,6 +25,7 @@ public class FileContent : IFileContent
         Filepath = "";
         UnsavedChanges = false;
         PrimitiveH5P = false;
+        IsDeleted = false;
     }
 
     public string Name { get; set; }
@@ -31,6 +33,7 @@ public class FileContent : IFileContent
     public string Type { get; set; }
     public string Filepath { get; set; }
     public bool PrimitiveH5P { get; set; }
+    public bool IsDeleted { get; set; }
 
     public bool Equals(ILearningContent? other)
     {

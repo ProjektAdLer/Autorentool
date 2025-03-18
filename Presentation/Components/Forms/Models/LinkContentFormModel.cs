@@ -9,10 +9,12 @@ public class LinkContentFormModel : ILinkContentFormModel, IEquatable<LinkConten
     {
         Name = "";
         Link = "";
+        IsDeleted = false;
     }
 
     public string Name { get; set; }
     public string Link { get; set; }
+    public bool IsDeleted { get; set; }
 
     public bool Equals(LinkContentFormModel? other)
     {

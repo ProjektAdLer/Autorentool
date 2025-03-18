@@ -29,4 +29,5 @@ public class LinkContentPe : ILinkContentPe, IEquatable<LinkContentPe>
 
     [DataMember] public string Name { get; set; }
     [DataMember] public string Link { get; set; }
+    [DataMember] public bool IsDeleted { get; set; }
 }

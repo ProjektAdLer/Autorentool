@@ -4,4 +4,5 @@ public interface IFileContentFormModel : ILearningContentFormModel
 {
     public string Type { get; set; }
     public string Filepath { get; set; }
+    public bool IsDeleted { get; set; }
 }
