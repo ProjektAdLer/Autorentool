@@ -11,6 +11,7 @@ using BusinessLogic.Commands.Adaptivity.Question;
 using BusinessLogic.Commands.Adaptivity.Rule;
 using BusinessLogic.Commands.Adaptivity.Task;
 using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Content;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.LearningOutcomes;
@@ -281,6 +282,7 @@ public class Startup
         services.AddSingleton<ITaskCommandFactory, TaskCommandFactory>();
         services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
         services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
+        services.AddSingleton<IContentCommandFactory, ContentCommandFactory>();
         services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
         services.AddSingleton<IPathwayCommandFactory, PathwayCommandFactory>();
         services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
