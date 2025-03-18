@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using BusinessLogic.Validation;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -16,8 +17,11 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     public AuthoringToolWorkspaceViewModel()
     {
         _learningWorlds = new List<ILearningWorldViewModel>();
+        LearningContents = new List<ILearningContentViewModel>();
         EditDialogInitialValues = null;
     }
+    
+    public IEnumerable<ILearningContentViewModel> LearningContents { get; set; }
 
     internal List<ILearningWorldViewModel> _learningWorlds;
     

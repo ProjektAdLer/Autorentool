@@ -1,3 +1,4 @@
+using BusinessLogic.Entities.LearningContent;
 using JetBrains.Annotations;
 
 namespace BusinessLogic.Entities;
@@ -11,12 +12,15 @@ public class AuthoringToolWorkspace : IOriginator
     private AuthoringToolWorkspace()
     {
         LearningWorlds = new List<ILearningWorld>();
+        LearningContents = new List<ILearningContent>();
     }
-    public AuthoringToolWorkspace(List<ILearningWorld> learningWorlds)
+    public AuthoringToolWorkspace(List<ILearningWorld> learningWorlds, List<ILearningContent> learningContents)
     {
         LearningWorlds = learningWorlds;
+        LearningContents = learningContents;
     }
     public List<ILearningWorld> LearningWorlds { get; set; }
+    public List<ILearningContent> LearningContents { get; set; }
     
     public IMemento GetMemento()
     {
@@ -35,7 +39,9 @@ public class AuthoringToolWorkspace : IOriginator
         internal AuthoringToolWorkspaceMemento(AuthoringToolWorkspace workspace)
         {
             LearningWorlds = workspace.LearningWorlds.ToList();
+            LearningContents = workspace.LearningContents.ToList();
         }
         internal List<ILearningWorld> LearningWorlds { get; }
+        internal List<ILearningContent> LearningContents { get; }
     }
 }
