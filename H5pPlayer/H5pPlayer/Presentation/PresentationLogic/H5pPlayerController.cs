@@ -30,9 +30,9 @@ public class H5pPlayerController
         H5PPlayerPresenter = null;
     }
 
-    public async Task StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
+    public async Task StartH5pPlayer(H5pDisplayMode h5PDisplayMode, string h5pSourcePath, string unzippedH5psPath)
     {
-        var displayH5pTo = new StartH5pPlayerInputTO(H5pDisplayMode.Validate, h5pSourcePath, unzippedH5psPath);
+        var displayH5pTo = new StartH5pPlayerInputTO(h5PDisplayMode, h5pSourcePath, unzippedH5psPath);
         await StartH5PPlayerUc!.StartH5pPlayer(displayH5pTo);
     }
     
