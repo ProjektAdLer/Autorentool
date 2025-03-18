@@ -45,8 +45,8 @@ public class BusinessLogic : IBusinessLogic
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
 
-    /// <inheritdoc cref="IBusinessLogic.GetAllContent" />
-    public IEnumerable<ILearningContent> GetAllContent()
+    /// <inheritdoc cref="IBusinessLogic.GetAllContentFromDir" />
+    public IEnumerable<ILearningContent> GetAllContentFromDir()
     {
         return DataAccess.GetAllContent();
     }

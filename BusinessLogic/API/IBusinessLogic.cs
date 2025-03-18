@@ -60,7 +60,7 @@ public interface IBusinessLogic
     ///     Gets all content files in the appdata folder.
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
-    IEnumerable<ILearningContent> GetAllContent();
+    IEnumerable<ILearningContent> GetAllContentFromDir();
 
     /// <summary>
     ///     Deletes the file referenced by the given content object.
