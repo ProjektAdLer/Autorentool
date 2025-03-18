@@ -23,7 +23,9 @@ public class H5pPlayerController
             validateH5pUc, fileSystemDataAccess, displayH5pUC, H5PPlayerPresenter);
     }
     
-    
+    /// <summary>
+    /// Testable Constructor
+    /// </summary>
     public H5pPlayerController(IStartH5pPlayerUCInputPort? startH5pPlayerUc)
     {
         StartH5PPlayerUc = startH5pPlayerUc;
