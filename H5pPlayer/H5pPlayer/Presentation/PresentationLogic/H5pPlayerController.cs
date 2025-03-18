@@ -22,14 +22,21 @@ public class H5pPlayerController
         StartH5PPlayerUc = new StartH5pPlayerUC(
             validateH5pUc, fileSystemDataAccess, displayH5pUC, H5PPlayerPresenter);
     }
+    
+    
+    public H5pPlayerController(IStartH5pPlayerUCInputPort? startH5pPlayerUc)
+    {
+        StartH5PPlayerUc = startH5pPlayerUc;
+        H5PPlayerPresenter = null;
+    }
 
     public async Task StartH5pPlayer(string h5pSourcePath, string unzippedH5psPath)
     {
         var displayH5pTo = new StartH5pPlayerInputTO(H5pDisplayMode.Validate, h5pSourcePath, unzippedH5psPath);
-        await StartH5PPlayerUc.StartH5pPlayer(displayH5pTo);
+        await StartH5PPlayerUc!.StartH5pPlayer(displayH5pTo);
     }
     
-    internal IStartH5pPlayerUCInputPort StartH5PPlayerUc { get; }
-    internal H5pPlayerPresenter H5PPlayerPresenter { get; }
+    internal IStartH5pPlayerUCInputPort? StartH5PPlayerUc { get; }
+    internal H5pPlayerPresenter? H5PPlayerPresenter { get; }
 
 }
