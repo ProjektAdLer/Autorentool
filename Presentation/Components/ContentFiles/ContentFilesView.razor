@@ -11,6 +11,7 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
+@using Shared.Command
 <style type="text/css">  
    .mud-table-toolbar {
    padding:  0;
@@ -191,6 +192,20 @@
     private MudTable<ILearningContentViewModel>? _table;
     private IEnumerable<ILearningContentViewModel> _deletionCandidates = new List<ILearningContentViewModel>();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PresentationLogic.OnCommandUndoRedoOrExecute += OnCommandUndoRedoOrExecute;
+    }
+
+    private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
+    {
+        if (e.CommandName == "DeleteLearningContent")
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    
     private string debugClass(ILearningContentViewModel content)
     {
         switch (content)
