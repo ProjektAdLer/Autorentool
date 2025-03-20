@@ -30,13 +30,13 @@ public static class NpcMoodPreviewHandler
 
         iconPath += npcMood switch
         {
-            NpcMood.Friendly => "-happy.png",
-            NpcMood.Welcoming => "-welcome.png",
-            NpcMood.JoyOfSuccess => "-thumbsup.png",
+            NpcMood.Happy => "-happy.png",
+            NpcMood.Welcome => "-welcome.png",
+            NpcMood.Thumpsup => "-thumbsup.png",
             NpcMood.Shocked => "-shocked.png",
             NpcMood.Disappointed => "-disappointed.png",
             NpcMood.Angry => "-angry.png",
-            NpcMood.Bored => "-tired.png",
+            NpcMood.Tired => "-tired.png",
             _ => throw new ArgumentOutOfRangeException(nameof(npcMood), npcMood, null)
         };
 

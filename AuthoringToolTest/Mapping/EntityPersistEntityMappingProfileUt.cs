@@ -28,7 +28,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
     private const string NameNpc = "npcName";
-    private const NpcMood MoodNpc = NpcMood.Welcoming;
+    private const NpcMood MoodNpc = NpcMood.Welcome;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;

@@ -26,7 +26,7 @@ public class NpcMoodHelperUt
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() =>
-            NpcMoodHelper.Localize(NpcMood.Friendly));
+            NpcMoodHelper.Localize(NpcMood.Happy));
     }
 
     [Test]

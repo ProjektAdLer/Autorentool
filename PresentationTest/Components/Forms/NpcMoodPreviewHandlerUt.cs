@@ -20,7 +20,7 @@ public class NpcMoodPreviewHandlerUt
             foreach (var elementModel in notNpcElementModels)
             {
                 Assert.Throws<ArgumentException>(() =>
-                    NpcMoodPreviewHandler.GetIconForNpcAndMood(elementModel, NpcMood.Welcoming));
+                    NpcMoodPreviewHandler.GetIconForNpcAndMood(elementModel, NpcMood.Welcome));
             }
         });
     }
@@ -36,7 +36,7 @@ public class NpcMoodPreviewHandlerUt
             foreach (var elementModel in npcElementModels)
             {
                 Assert.DoesNotThrow(() =>
-                    NpcMoodPreviewHandler.GetIconForNpcAndMood(elementModel, NpcMood.Welcoming));
+                    NpcMoodPreviewHandler.GetIconForNpcAndMood(elementModel, NpcMood.Welcome));
             }
         });
     }

@@ -41,7 +41,7 @@ public class ViewModelEntityMappingProfileUt
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
     private const string NameNpc = "nameNpc";
-    private const NpcMood MoodNpc = NpcMood.Welcoming;
+    private const NpcMood MoodNpc = NpcMood.Welcome;
     private static readonly List<string> ConfigureStoryText = new() { "storyText1", "storyText2", "storyText3" };
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
@@ -63,7 +63,7 @@ public class ViewModelEntityMappingProfileUt
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
     private const string NewNameNpc = "newNameNpc";
-    private const NpcMood NewMoodNpc = NpcMood.Bored;
+    private const NpcMood NewMoodNpc = NpcMood.Tired;
     private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;

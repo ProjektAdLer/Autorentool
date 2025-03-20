@@ -17,7 +17,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
-        var npcMood = NpcMood.Welcoming;
+        var npcMood = NpcMood.Welcome;
         
         var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         
@@ -38,7 +38,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
-        var npcMood = NpcMood.Welcoming;
+        var npcMood = NpcMood.Welcome;
         
         var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         var otherStoryContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
@@ -57,7 +57,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
-        var npcMood = NpcMood.Welcoming;
+        var npcMood = NpcMood.Welcome;
         
         var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         
@@ -78,7 +78,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
-        var npcMood = NpcMood.Welcoming;
+        var npcMood = NpcMood.Welcome;
         
         var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         var otherStoryContent = Substitute.For<ILearningContent>();
@@ -113,8 +113,8 @@ public class StoryContentUt
     {
         public IEnumerator<StoryContent> GetEnumerator()
         {
-            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, "a npc name", NpcMood.Welcoming);
-            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, "different npc name", NpcMood.Bored);
+            yield return new StoryContent("different name", false, new List<string> { "a story", "and another story" }, "a npc name", NpcMood.Welcome);
+            yield return new StoryContent("a name", false, new List<string> { "a different story", "and another story" }, "different npc name", NpcMood.Tired);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -129,7 +129,7 @@ public class StoryContentUt
         var unsavedChanges = true;
         var storyText = new List<string> { "a story", "and another story" };
         var npcName = "a npc name";
-        var npcMood = NpcMood.Welcoming;
+        var npcMood = NpcMood.Welcome;
         
         var storyContent = new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
         return storyContent;

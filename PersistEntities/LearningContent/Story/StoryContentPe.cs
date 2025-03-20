@@ -11,7 +11,7 @@ public class StoryContentPe : IStoryContentPe
         UnsavedChanges = false;
         StoryText = new List<string>();
         NpcName = "";
-        NpcMood = NpcMood.Friendly;
+        NpcMood = NpcMood.Happy;
     }
 
     public StoryContentPe(string name, bool unsavedChanges, List<string> storyText, string npcName, NpcMood npcMood)

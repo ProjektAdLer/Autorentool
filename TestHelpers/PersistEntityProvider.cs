@@ -90,10 +90,10 @@ public static class PersistEntityProvider
     }
 
     public static StoryContentPe GetStoryContent(string? name = null, bool unsavedChanges = false,
-        List<string>? story = null, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcoming)
+        List<string>? story = null, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
     {
         return new StoryContentPe(name ?? "a name", unsavedChanges,
-            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, npcName, NpcMood.Welcoming);
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, npcName, NpcMood.Welcome);
     }
 
     public static TopicPe GetTopic(string? name = null)

@@ -3,11 +3,11 @@ namespace Shared;
 public enum NpcMood
 {
     // TODO: Check if these are the correct moods
-    Friendly,
-    Welcoming,
-    JoyOfSuccess,
+    Happy,
+    Welcome,
+    Thumpsup,
     Shocked,
     Disappointed,
     Angry,
-    Bored,
+    Tired,
 }

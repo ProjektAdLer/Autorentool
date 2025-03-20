@@ -11,11 +11,11 @@ public class StoryContentViewModel : IStoryContentViewModel
         UnsavedChanges = false;
         StoryText = new List<string>();
         NpcName = "";
-        NpcMood = NpcMood.Friendly;
+        NpcMood = NpcMood.Happy;
     }
 
     public StoryContentViewModel(string name = "", List<string>? storyText = null, string npcName = "",
-        NpcMood npcMood = NpcMood.Friendly)
+        NpcMood npcMood = NpcMood.Happy)
     {
         Name = name;
         UnsavedChanges = true;
