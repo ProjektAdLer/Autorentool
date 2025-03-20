@@ -747,6 +747,9 @@ public class CreateAtfUt
                 Is.EqualTo(ele7.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
+            
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryIntro, Is.EqualTo(storyStart));
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryOutro, Is.EqualTo(storyEnd));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
     }
