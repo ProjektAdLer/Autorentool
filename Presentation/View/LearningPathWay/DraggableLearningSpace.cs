@@ -69,4 +69,5 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 
     protected override string DeleteObjectConfirmationDialogSubmitButtonText => Localizer["DraggableLearningSpace.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
 
+    protected override string SnackBarDeletionMessage =>  Localizer["DraggableLearningSpace.SnackbarDeletionMessage"].Value;
 }

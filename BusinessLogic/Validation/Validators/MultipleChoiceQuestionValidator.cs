@@ -1,28 +1,29 @@
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Localization;
 
 namespace BusinessLogic.Validation.Validators;
 
 [UsedImplicitly]
 public class MultipleChoiceQuestionValidator : AbstractValidator<IMultipleChoiceQuestion>
 {
-    public MultipleChoiceQuestionValidator()
+    public MultipleChoiceQuestionValidator(IStringLocalizer<MultipleChoiceQuestionValidator> localizer)
     {
         RuleFor(x => x.Text)
             .NotEmpty()
-            .WithMessage("Question text is required.")
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.TextEmpty.ErrorMessage"])
             .MaximumLength(1000)
-            .WithMessage("Question text cannot be longer than 1000 characters.");
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.TextLength.ErrorMessage"]);
         RuleFor(x => x.Choices)
             .NotEmpty()
-            .WithMessage("Question must have at least two choice.")
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.Choices.ErrorMessage"])
             .Must(x => x.Count >= 2)
-            .WithMessage("Question must have at least two choices.")
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.Choices.ErrorMessage"])
             .Must(x => x.Count <= 10)
-            .WithMessage("Question cannot have more than ten choices.");
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.ChoiceLimit.ErrorMessage"]);
         RuleFor(x => x.CorrectChoices)
             .NotEmpty()
-            .WithMessage("Question must have at least one correct choice.");
+            .WithMessage(localizer["MultipleChoiceQuestionValidator.OneChoice.ErrorMessage"]);
     }
 }

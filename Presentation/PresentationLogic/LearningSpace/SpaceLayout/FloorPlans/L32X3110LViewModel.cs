@@ -35,28 +35,47 @@ public class L32X3110LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 8, Y = 5 },
-        new() { X = 18, Y = 5 },
-        new() { X = 28, Y = 5 },
-        new() { X = 30, Y = 14 },
-        new() { X = 30, Y = 22 },
-        new() { X = 30, Y = 30 },
-        new() { X = 22, Y = 30 },
-        new() { X = 22, Y = 22 },
-        new() { X = 15, Y = 17 },
-        new() { X = 6, Y = 17 }
+        new() { X = 4, Y = 4 },
+        new() { X = 18, Y = 4 },
+        new() { X = 28, Y = 4 },
+        new() { X = 30, Y = 12 },
+        new() { X = 30, Y = 19 },
+        new() { X = 30, Y = 26 },
+        new() { X = 20, Y = 26 },
+        new() { X = 20, Y = 19 },
+        new() { X = 14, Y = 17 },
+        new() { X = 4, Y = 17 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 2, Y = 10 },
-        new() { X = 26, Y = 33 }
+        new() { X = 4, Y = 11 },
+        new() { X = 25, Y = 31 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 0, Y = 11 }, new Point { X = 0, Y = 6 }),
-        (new Point { X = 22, Y = 31 }, new Point { X = 27, Y = 31 })
+        (new Point { X = 0, Y = 12 }, new Point { X = 0, Y = 6 }),
+        (new Point { X = 21, Y = 31 }, new Point { X = 27, Y = 31 })
+    };
+    
+    public IList<IList<Point>> ArrowCornerPoints { get; } = new List<IList<Point>>
+    {
+        new List<Point>
+        {
+            //Intro
+            new() { X = 0, Y = 9 },
+            new() { X = -1, Y = 8 },
+            new() { X = -1, Y = 10}
+        },
+
+        new List<Point>
+        {
+            //Outro
+            new() { X = 24, Y = 32 },
+            new() { X = 23, Y = 31 },
+            new() { X = 25, Y = 31 }
+        }
     };
 
     public string GetIcon => Icon;

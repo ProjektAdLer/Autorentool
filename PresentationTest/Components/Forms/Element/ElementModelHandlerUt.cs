@@ -38,14 +38,14 @@ public class ElementModelHandlerUt
     }
 
     [Test]
-    public void GetIconForElementModel_EachEnumValue_ReturnsIconPath()
+    public void GetIconForElementModel_ReturnsIconPath([Values] ElementModel elementModel)
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-        foreach (var elementModel in elementModels)
-        {
-            Assert.That(systemUnderTest.GetIconForElementModel(elementModel), Is.Not.Null);
-        }
+        string iconPath = null!;
+        Assert.DoesNotThrow(() => { iconPath = systemUnderTest.GetIconForElementModel(elementModel); },
+            $"The model {elementModel} might not have added to the methode {nameof(ElementModelHandler.GetIconForElementModel)} in {nameof(ElementModelHandler)}.");
+        Assert.That(iconPath, Is.Not.Null);
+        Assert.That(iconPath, Is.Not.Empty);
     }
 
     [Test]
@@ -58,21 +58,20 @@ public class ElementModelHandlerUt
     }
 
     [Test]
-    public void GetIconForElementModel_EachEnumValue_ReturnedIconPathExists()
+    public void GetIconForElementModel_ReturnedIconPathExists([Values] ElementModel elementModel)
     {
         var systemUnderTest = new ElementModelHandler();
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
 
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
         var iconDirectory = Path.Combine(projectDirectory!, "AuthoringTool", "wwwroot");
 
-        foreach (var elementModel in elementModels)
-        {
-            var iconPath = systemUnderTest.GetIconForElementModel(elementModel);
-            Assert.That(File.Exists(Path.Combine(iconDirectory, iconPath)), Is.True,
-                $"Icon file does not exist for enum value: {elementModel}");
-        }
+        string iconPath = null!;
+        Assert.DoesNotThrow(() => { iconPath = systemUnderTest.GetIconForElementModel(elementModel); },
+            $"See test {nameof(GetIconForElementModel_ReturnsIconPath)}");
+        Assert.That(File.Exists(Path.Combine(iconDirectory, iconPath)), Is.True,
+            $"Icon file does not exist for enum value {elementModel}. " +
+            $"The path is set to {iconPath} in {nameof(ElementModelHandler.GetIconForElementModel)} in {nameof(ElementModelHandler)}.");
     }
 
     [Test]
@@ -88,12 +87,15 @@ public class ElementModelHandlerUt
         var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
-        Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        foreach (var elementModel in elementModels)
+        Assert.Multiple(() =>
         {
-            Assert.That(elementModelsFromAllTypes.Contains(elementModel), Is.True,
-                $"ElementModel {elementModel} is not assigned to any type");
-        }
+            Assert.That(elementModelsFromAllTypes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
+            foreach (var elementModel in elementModels)
+            {
+                Assert.That(elementModelsFromAllTypes.Contains(elementModel), Is.True,
+                    $"ElementModel {elementModel} is not assigned to any type");
+            }
+        });
     }
 
     [Test]
@@ -125,10 +127,13 @@ public class ElementModelHandlerUt
         elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
 
         //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        foreach (var elementModel in elementModels)
+        Assert.Multiple(() =>
         {
-            Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
-                $"ElementModel {elementModel} is not assigned to any theme");
-        }
+            foreach (var elementModel in elementModels)
+            {
+                Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
+                    $"ElementModel {elementModel} is not assigned to any theme");
+            }
+        });
     }
 }

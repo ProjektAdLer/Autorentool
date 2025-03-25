@@ -41,6 +41,7 @@ public class MultipleChoiceQuestionFormIt : MudFormTestFixture<MultipleChoiceQue
         Context.Services.AddSingleton(MultipleResponseQuestionValidator);
         SingleResponseQuestionValidator = Substitute.For<IValidationWrapper<MultipleChoiceSingleResponseQuestion>>();
         Context.Services.AddSingleton(SingleResponseQuestionValidator);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IValidationWrapper<Choice> ChoiceValidator { get; set; } = null!;

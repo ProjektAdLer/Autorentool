@@ -1,10 +1,9 @@
-@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
-
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @if (!Question.Rules.Any())
 {
     <div class="flex flex-col justify-center pt-1">
@@ -86,6 +85,7 @@ else
         {
             { nameof(CreateEditReferenceActionDialog.Question), Question },
             { nameof(CreateEditReferenceActionDialog.ExistingAction), Rule?.Action },
+            { nameof(CreateEditReferenceActionDialog.ExistingRule), Rule}
         };
         
         var dialogReference = await DialogService.ShowAsync<CreateEditReferenceActionDialog>(@Localizer["ReferenceDialog.Title.Text"],

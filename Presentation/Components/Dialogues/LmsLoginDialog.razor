@@ -7,6 +7,7 @@
 @using Shared.Configuration
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
+@inject ISnackbar Snackbar
 <MudPaper id="LmsLoginDialog.Dialog.Paper" Height="450px" Style="overflow: hidden; position: relative;">
     <div class="w-full flex flex-row items-center justify-between">
         <MudText Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
@@ -422,6 +423,8 @@
             RefreshLmsWorldList();
             _deleteWorld = null;
         }
+        
+        Snackbar.Add(Localizer["DialogContent.AdLerServer.CourseDeleteSuccessful.Snackbar"], Severity.Success);
     }
 
     private void HandleInvalidLoginException()

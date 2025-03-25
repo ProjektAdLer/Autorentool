@@ -1,0 +1,139 @@
+@typeparam T where T : notnull
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Shared.Localization
+@using Shared.Observer
+@inherits MudBaseInput<T>
+
+<div class="flex flex-col w-[100%] h-52 bg-adlerbgbright border-adlergrey-100 border-4 rounded">
+    
+    @* ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract *@
+    @if (FilterFuncSearchableStrings is not null) 
+    {
+        <div class="w-full h-1/3 flex flex-row justify-between">
+            <div>
+                <MudTextField T="string"
+                              Class="fixed w-1/3 px-2 mt-0"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              @bind-Value="_searchString"/>
+            </div>
+            <div>
+                @if (Error)
+                {
+                    <MudText Class="text-formerror px-2 text-sm">@ErrorText</MudText>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="h-2/3 w-[100%]">
+        <MudTable Items="@Elements"
+                  Hover="true"
+                  @ref="_mudTable"
+                  Elevation="0"
+                  Height="135px"
+                  RowClassFunc="@SelectedRowClassFunc"
+                  OnRowClick="RowClickEvent" T="@T"
+                  Filter="Filter"
+                  Dense="true"
+                  Class="w-[99%]">
+            <RowTemplate>
+                @RowTemplate.Invoke(context)
+            </RowTemplate>
+        </MudTable>
+    </div>
+</div>
+
+
+
+@code {
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public IEnumerable<T> Elements { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public Func<T, IEnumerable<string>> FilterFuncSearchableStrings { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public RenderFragment HeaderContent { get; set; }
+
+    [Parameter, EditorRequired, AllowNull] //allow null since not providing the parameter produces a warning - n.stich
+    public RenderFragment<T> RowTemplate { get; set; }
+    
+    [Parameter]
+    public bool AllowDeselect { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<PropertyChangingWithValueEventArgs<T>> OnPropertyChangingWithValue { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IStringLocalizerFactory LocalizerFactory { get; set; }
+
+    private IStringLocalizer Localizer => LocalizerFactory.GetGenericLocalizer<TableSelect<T>>();
+    
+    private MudTable<T>? _mudTable;
+    
+    private string? _searchString;
+
+    private async Task RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
+    {
+        if (tableRowClickEventArgs.Item != null && tableRowClickEventArgs.Item.Equals(Value))
+        {
+            if (AllowDeselect)
+            {
+                await DeselectRowAsync();
+            }
+        }
+        else
+        {
+            await SelectRowAsync(tableRowClickEventArgs);
+        }
+    }
+
+    private async Task DeselectRowAsync()
+    {
+    // we have to suppress the nullability warning here as we specifically want to set the value to null
+    // if T is a reference type, but the compiler believes that the type T is not nullable
+    // The behaviour is basically set to null if T is a reference type, otherwise set to default(T),
+    // that way, enums and structs are also supported
+        await BeginSetValueAsync(default!);
+    }
+
+    private async Task SelectRowAsync(TableRowClickEventArgs<T> tableRowClickEventArgs)
+    {
+        if (tableRowClickEventArgs.Item == null)
+            throw new ArgumentNullException($"{tableRowClickEventArgs.Item} is unexpectedly null in {nameof(SelectRowAsync)}");
+            
+        await BeginSetValueAsync(tableRowClickEventArgs.Item);
+    }
+
+    private async Task BeginSetValueAsync(T value)
+    {
+        //Suppress the nullability warning here as Value explicitly allows null
+        await OnPropertyChangingWithValueAsync(new PropertyChangingWithValueEventArgs<T>(nameof(Value), Value!, value));
+        await SetValueAsync(value);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string SelectedRowClassFunc(T element, int rowNumber)
+    {
+        return element.Equals(Value) ? "bg-adlerblue-200" : string.Empty;
+    }
+
+    private bool Filter(T element) =>
+        FilterInternal(element, _searchString);
+
+    private bool FilterInternal(T element, string? searchString) => FilterInternal(FilterFuncSearchableStrings(element), searchString);
+
+    private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
+    {
+        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString.ToLower()));
+    }
+
+    protected virtual async Task OnPropertyChangingWithValueAsync(PropertyChangingWithValueEventArgs<T> e)
+    {
+        await OnPropertyChangingWithValue.InvokeAsync(e);
+    }
+}

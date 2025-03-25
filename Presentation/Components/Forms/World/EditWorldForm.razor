@@ -6,17 +6,25 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-    <div class="flex justify-center py-2 2xl:py-3">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
-    </div>
-</header>
 
-<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
-<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
-          SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer" @ref="_form">
+<div class="absolute w-full z-30 h-24">
+    <header class="py-4 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
+    </header>
+    <div class="flex justify-between items-start">
+        <MudText Class="text-adlergrey-200 p-2 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
+    </div>
+</div>
+
+<BaseForm TForm="LearningWorldFormModel"
+          TEntity="LearningWorld"
+          OnValidSubmit="OnValidSubmit"
+          OnValidFieldChange="OnValidFieldChange"
+          SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"]
+          FormDataContainer="FormDataContainer" @ref="_form">
+    
     <Fields>
-        <div class="px-4">
+        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mx-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -40,28 +48,25 @@
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
                                   Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
-                    </div>
-            </Collapsable>
-        </div>
-
-        <div class="px-4">
-            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                      <div class="flex flex-row items-center gap-1 py-2">
-                           <MudText Class="font-bold text-sm pl-1">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</MudText>
-                           <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
-                                 <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                           </MudTooltip>
-                      </div>
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
-                                      For="@(() => FormModel.EnrolmentKey)"
-                                      DebounceInterval="DebounceInterval"
-                                      Variant="Variant.Outlined"/>
                 </div>
             </Collapsable>
-        </div>    
-        
-        <div class="px-4">
+            
+            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-4">
+                    <div class="flex flex-row items-center gap-1 pt-1">
+                        <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</MudText>
+                        <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </MudTooltip>
+                    </div>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                                  For="@(() => FormModel.EnrolmentKey)"
+                                  DebounceInterval="DebounceInterval"
+                                  Variant="Variant.Outlined"
+                                  Class="mt-0"/>
+                </div>
+            </Collapsable>
+            
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
@@ -73,9 +78,7 @@
                                   Class="pb-2 mt-0"/>
                 </div>
             </Collapsable>
-        </div>
-        
-        <div class="px-4">
+            
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
@@ -88,14 +91,16 @@
                 </div>
             </Collapsable>
         </div>
-
     </Fields>
+    
     <FooterButtons>
-        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
-                       OnClick="@OnResetAsync"
-                       Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
-        </MudIconButton>
+        <div class="absolute flex flex-row justify-end left-0 w-full bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright">
+            <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
+                           OnClick="@OnResetAsync"
+                           Class="btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
+            </MudIconButton>
+        </div>
     </FooterButtons>
 </BaseForm>
 

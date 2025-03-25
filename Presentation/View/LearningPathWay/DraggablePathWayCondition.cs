@@ -57,7 +57,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
 
     protected override string DeleteObjectConfirmationDialogText => 
         Localizer["DraggablePathWayCondition.DeleteConfirmationDialog.Text", 
-            Localizer["DraggablePathWayCondition." + ((PathWayConditionViewModel)ObjectInPathWay).Condition].Value].Value;
+        Localizer["DraggablePathWayCondition." + ((PathWayConditionViewModel)ObjectInPathWay).Condition].Value].Value;
     protected override string DeleteObjectConfirmationDialogTitle  => Localizer["DraggablePathWayCondition.Delete"].Value;
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
@@ -67,4 +67,5 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
     protected override string DeleteObjectConfirmationDialogSubmitButtonText =>
         Localizer["DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
 
+    protected override string SnackBarDeletionMessage => Localizer["DraggablePathWayCondition.SnackbarDeletionMessage"].Value;
 }

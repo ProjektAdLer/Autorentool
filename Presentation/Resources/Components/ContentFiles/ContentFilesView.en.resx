@@ -84,4 +84,19 @@
     <data name="Content.Select.Option.AllUnused" xml:space="preserve">
         <value>All unused learning material</value>
     </data>
+    <data name="ContentFilesView.Snackbar.OneMaterialDelete" xml:space="preserve">
+        <value>External learning material successfully deleted</value>
+    </data>
+    <data name="ContentFilesView.Snackbar.MaterialDelete" xml:space="preserve">
+        <value>External learning material successfully deleted</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.MaterialDelete" xml:space="preserve">
+        <value>Error deleting external learning material</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.OpenMaterialFolder" xml:space="preserve">
+        <value>Error opening external learning material files folder</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.MaterialInUse" xml:space="preserve">
+        <value>Error deleting external learning material: File in use</value>
+    </data>
 </root>

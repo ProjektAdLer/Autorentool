@@ -72,4 +72,7 @@
     <data name="Page.LearningWorld.Error.ReloadLearningWorlds" xml:space="preserve">
         <value>Error while loading a learning world</value>
     </data>
+    <data name="MyLearningWorldsOverview.Snackbar.LearningWorldDelete" xml:space="preserve">
+        <value>Learning world successfully deleted.</value>
+    </data>
 </root>

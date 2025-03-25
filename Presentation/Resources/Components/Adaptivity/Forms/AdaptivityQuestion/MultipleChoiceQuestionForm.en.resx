@@ -72,4 +72,7 @@
     <data name="MultipleChoiceQuestionForm.Text.DeleteChoice" xml:space="preserve">
         <value>Delete answer</value>
     </data>
+    <data name="MultipleChoiceQuestionForm.Info.Infotext" xml:space="preserve">
+        <value>A maximum of ten possible answers are available for each question.</value>
+    </data>
 </root>

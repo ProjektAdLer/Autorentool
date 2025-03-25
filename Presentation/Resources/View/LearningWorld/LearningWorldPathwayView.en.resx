@@ -33,7 +33,7 @@
         <value>Import learning space</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Create and-/or-condition</value>
+        <value>Create condition</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
         <value>Create learning space</value>

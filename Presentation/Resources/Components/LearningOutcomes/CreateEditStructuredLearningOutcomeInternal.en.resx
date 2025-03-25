@@ -42,9 +42,12 @@
         <value>You will be able to {0} {1} &lt;br&gt; by {2}&lt;br&gt; to {3}. </value>
     </data>
     <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.2" xml:space="preserve">
-        <value>Whereby?</value>
+        <value>[Whereby?]</value>
     </data>
     <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.3" xml:space="preserve">
-        <value>What for?</value>
+        <value>[What for?]</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.1" xml:space="preserve">
+        <value>[What?]</value>
     </data>
 </root>

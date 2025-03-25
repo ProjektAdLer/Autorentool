@@ -63,4 +63,13 @@
     <data name="SideBarContent.StoryLearningElementMetadata.Alt" xml:space="preserve">
         <value>Story element metadata icon</value>
     </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.One" xml:space="preserve">
+        <value>Create or open a learning space</value>
+    </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.Two" xml:space="preserve">
+        <value> to display the learning space editor.</value>
+    </data>
+    <data name="CenterContainer.OpenLearningSpace.Text.Tooltip" xml:space="preserve">
+        <value>The learning space editor displays the floor plan of a learning space with its available slots for placing elements.</value>
+    </data>
 </root>

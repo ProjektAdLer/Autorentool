@@ -123,4 +123,7 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="DialogContent.Error.MoodleUnreachable" xml:space="preserve">
         <value>Couldn't reach Moodle.</value>
     </data>
+    <data name="DialogContent.AdLerServer.CourseDeleteSuccessful.Snackbar" xml:space="preserve">
+        <value>Moodle course successfully deleted.</value>
+    </data>
 </root>

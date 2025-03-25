@@ -1,6 +1,7 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared
+@inject ISnackbar Snackbar
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
@@ -15,14 +16,13 @@
 @using Presentation.Components.Dialogues
 @using Shared.Configuration
 @inject IJSRuntime JsRuntime
+@inject NavigationManager Navigation
 
-<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-    <div class="flex justify-center py-2 2xl:py-3">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
-    </div>
+<header class="py-4 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+    <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["Header.Text"].Value</h2>
 </header>
 
-<MudStack Class="w-full px-2 2xl:px-3 gap-0">
+<MudStack Class="w-full px-2 2xl:px-3">
     <div class="flex flex-col relative p-2">
 
         <div class="flex justify-end">
@@ -43,14 +43,14 @@
         }
 
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChangedAsync" Hidden="false"
-                       Accept="@AllowedFileEndings.EndingsCommaSeparated" @ref="_fileUpload"
+                       Accept="@AllowedFileEndings.EndingsCommaSeparated" @ref="_fileUpload" Class=""
                        InputClass="absolute w-full h-full opacity-0 z-10 cursor-pointer"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
-                       @ondragend="ClearDragClass">
+                       @ondragend="ClearDragClass" @ondrop="ClearDragClass"
+                       @onmouseover="SetHoverClass" @onmouseout="ClearHoverClass">
             <ActivatorContent>
                 <MudPaper Class="@PaperClasses" Outlined="true">
-
-                    <MudElement Class="h-full w-full grow flex flex-col justify-center items-center">
+                    <MudElement Class="h-full w-full grow shrink flex flex-col justify-center items-center">
                         @* ReSharper disable Html.PathError *@
                         <img class="w-6 2xl:w-8" src="CustomIcons/drag-and-drop-icon-nobg.png" alt="drag-and-drop">
                         @* ReSharper restore Html.PathError *@
@@ -69,7 +69,7 @@
     </Collapsable>
 
 </MudStack>
-@inject NavigationManager Navigation
+
 @code {
 
 
@@ -90,10 +90,11 @@
 
     [CascadingParameter(Name = "RerenderContentContainer")]
     public Func<Task>? RerenderContentFilesContainer { get; set; }
-
-
+    
+    private string PaperClasses => $"h-28 relative border-4 border-dotted border-adlerbggradientfrom bg-adlerbggradientto m-0 {DragClass} {HoverClass}";
     private string DragClass { get; set; } = "";
-    private string PaperClasses => $"h-28 relative border-4 border-dotted border-adlerbggradientfrom bg-buttonbgblue {DragClass}";
+    private string HoverClass { get; set; } = "";
+    
     private bool Working { get; set; } = false;
 
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
@@ -125,10 +126,10 @@
 
                 if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.Trim().ToLowerInvariant()))
                 {
+                    Snackbar.Add(@Localizer["ContentFilesAdd.UnsupportedFileEnding.Snackbar"], Severity.Error);
                     await InvokeAsync(async () => await DialogService.ShowMessageBox(@Localizer["Invocation.MessageBox.Title"], Localizer["Invocation.MessageBox.Message", file.Name]));
                     continue;
                 }
-                
                 await HandleFileAsync(file);
                 
 #if DEBUG
@@ -158,6 +159,7 @@
             ClearDragClass();
             await _fileUpload.ResetAsync();
         }
+
     }
    
     private async Task HandleZipFileAsync(IBrowserFile zipFile)
@@ -169,11 +171,18 @@
         mS.Position = 0;
         using var archive = new ZipArchive(mS, ZipArchiveMode.Read);
 
-
+        if (!archive.Entries.Any() || archive.Entries.All(entry => entry.Length == 0))
+        {
+            Snackbar.Add(@Localizer["ContentFilesAdd.EmptyFile.Snackbar"], Severity.Error);
+            await InvokeAsync(() => DialogService.ShowMessageBox(@Localizer["ContentFilesAdd.EmptyFile.Title"], @Localizer["ContentFilesAdd.EmptyFile.Text"]));
+            return; 
+        }
+        
         var successfulFiles = new List<string>();
         var unsupportedFiles = new List<string>();
         var errorFiles = new List<string>();
         var duplicateFiles = new List<string>();
+       
         foreach (var entry in archive.Entries)
         {
             if (entry.Length == 0) continue;
@@ -199,13 +208,25 @@
             }
             catch (IOException e)
             {
-                ErrorService.SetError("Error while loading content", e.Message);
+                ErrorService.SetError(Localizer["DialogService.MessageBox.Import.ErrorMessage"], e.Message);
+                Snackbar.Add(@Localizer["ContentFilesAdd.FileLoadingError.Snackbar"], Severity.Error);
                 errorFiles.Add(entry.FullName);
             }
             catch (HashExistsException)
             {
+                Snackbar.Add(@Localizer["ContentFilesAdd.DuplicatedFile.Snackbar"], Severity.Warning);
                 duplicateFiles.Add(entry.FullName);
             }
+        }
+        
+        if (unsupportedFiles.Count > 0)
+        {
+            Snackbar.Add(@Localizer["ContentFilesAdd.UnsupportedFileEnding.Snackbar"], Severity.Error);
+        }
+        
+        if (successfulFiles.Count > 0)
+        {
+            Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
 
         var parameters = new DialogParameters
@@ -220,9 +241,11 @@
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            BackdropClick = true
+            BackdropClick = true,
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = true,
         };
-        var dialog = await DialogService.ShowAsync<ImportZipDialog>("Import Zip File", parameters, options);
+        var dialog = await DialogService.ShowAsync<ImportZipDialog>(Localizer["DialogService.MessageBox.Import.Title"], parameters, options);
         await dialog.Result;
     }
 
@@ -231,10 +254,9 @@
         if (file.Size == 0)
         {
             Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
+            Snackbar.Add(@Localizer["ContentFilesAdd.EmptyFile.Snackbar"], Severity.Error);
             //we must run this on the UI thread, as it is a UI component
-            await InvokeAsync(() =>
-                DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Title"], Localizer["DialogService.MessageBox.Text", file.Name])
-            );
+            await InvokeAsync(() => DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Title"], Localizer["DialogService.MessageBox.Text", file.Name]));
             return;
         }
 
@@ -247,6 +269,7 @@
         }
         catch (IOException)
         {
+            Snackbar.Add(@Localizer["ContentFilesAdd.LargeFile.Snackbar"], Severity.Error);
             ErrorService.SetError(Localizer["FileTooBig.Error.Title"], Localizer["FileTooBig.Error.Text"]);
             return;
         }
@@ -262,16 +285,18 @@
         try
         {
             await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
         catch (IOException e)
         {
-            ErrorService.SetError("Error while loading content", e.Message);
+            ErrorService.SetError(@Localizer["ContentFilesAdd.ErrorMessage.LoadingMaterial"], e.Message);
         }
-        catch (HashExistsException hEEx)
+        catch (HashExistsException)
         {
-            await InvokeAsync(() => { DialogService.ShowMessageBox("Duplicate file", $"File with same content as '{file.Name}' already exists in content folder in file '{hEEx.DuplicateFileName}'"); });
+            await InvokeAsync(() => { DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Duplicate.Title"], Localizer["DialogService.MessageBox.Duplicate.Text", file.Name]);});
+            Snackbar.Add(@Localizer["ContentFilesAdd.DuplicatedFile.Snackbar"], Severity.Warning);
         }
-
+        
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
@@ -349,12 +374,22 @@
 
     private void SetDragClass()
     {
-        DragClass = "mud-border-dashed mud-border-primary";
+        DragClass = "bg-adlerblue-200 border-4 border-dotted border-adlerblue-500";
     }
-
+    
     private void ClearDragClass()
     {
         DragClass = "";
+    }
+
+    private void SetHoverClass()
+    {
+        HoverClass = "bg-adlerblue-200 border-4 border-dotted border-adlerblue-500";
+    }
+    
+    private void ClearHoverClass()
+    {
+        HoverClass = "";
     }
 
 }

@@ -7,6 +7,7 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
+using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
 
@@ -107,7 +108,7 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
 
     private IRefreshableElementCollection<IElement> FindAllMudcardDivs()
     {
-        return Component.FindAll("div.mud-card");
+        return Component.FindAll("div.cursor-pointer");
     }
 
     private IRenderedComponent<GridSelect<T>> GetRenderedComponent()

@@ -572,6 +572,28 @@ public interface IPresentationLogic
     void EditElementReferenceAction(ElementReferenceActionViewModel action, Guid elementGuid, string comment);
 
     /// <summary>
+    /// Replaces a ContentReferenceAction with an ElementReferenceAction in the specified question.
+    /// </summary>
+    /// <param name="question">The adaptivity question to be updated.</param>
+    /// <param name="ruleVm">The ViewModel of the adaptivity rule to be removed.</param>
+    /// <param name="elementReferenceActionVm">The ViewModel of the new ElementReferenceAction.</param>
+    /// <param name="triggerVm">The ViewModel of the CorrectnessTrigger for the new rule.</param>
+    void ReplaceContentReferenceActionByElementReferenceAction(IAdaptivityQuestionViewModel question,
+        IAdaptivityRuleViewModel ruleVm, ElementReferenceActionViewModel elementReferenceActionVm,
+        IAdaptivityTriggerViewModel triggerVm);
+
+    /// <summary>
+    /// Replaces an ElementReferenceAction with a ContentReferenceAction in the specified question.
+    /// </summary>
+    /// <param name="question">The adaptivity question to be updated.</param>
+    /// <param name="ruleVm">The ViewModel of the adaptivity rule to be removed.</param>
+    /// <param name="contentReferenceActionVm">The ViewModel of the new ContentReferenceAction.</param>
+    /// <param name="triggerVm">The ViewModel of the CorrectnessTrigger for the new rule.</param>
+    void ReplaceElementReferenceActionByContentReferenceAction(IAdaptivityQuestionViewModel question,
+        IAdaptivityRuleViewModel ruleVm, ContentReferenceActionViewModel contentReferenceActionVm,
+        IAdaptivityTriggerViewModel triggerVm);
+
+    /// <summary>
     /// Asynchronously retrieves a list of LMS World view models.
     /// </summary>
     /// <returns>A task representing the asynchronous operation, which upon completion, returns a list of LmsWorldViewModel objects.</returns>

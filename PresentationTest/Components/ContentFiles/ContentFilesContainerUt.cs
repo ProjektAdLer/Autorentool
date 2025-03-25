@@ -29,6 +29,7 @@ public class ContentFilesContainerUt
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         _localizer = Substitute.For<IStringLocalizer<ContentFilesView>>();
         _errorService = Substitute.For<IErrorService>();
+        _snackbar = Substitute.For<ISnackbar>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
@@ -36,6 +37,7 @@ public class ContentFilesContainerUt
         _testContext.Services.AddSingleton(_authoringToolWorkspaceViewModel);
         _testContext.Services.AddSingleton(_localizer);
         _testContext.Services.AddSingleton(_errorService);
+        _testContext.Services.AddSingleton(_snackbar);
 
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();
@@ -46,6 +48,7 @@ public class ContentFilesContainerUt
     public void TearDown()
     {
         _testContext.Dispose();
+        _snackbar.Dispose();
     }
 
     private TestContext _testContext;
@@ -56,6 +59,7 @@ public class ContentFilesContainerUt
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
     private IStringLocalizer<ContentFilesView> _localizer;
     private IErrorService _errorService;
+    private ISnackbar _snackbar;
 
     [Test]
     public void Constructor_SetsAllPropertiesAndRendersCorrectly()

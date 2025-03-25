@@ -33,26 +33,45 @@ public class R20X206LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 10, Y = 5 },
-        new() { X = 18, Y = 5 },
-        new() { X = 26, Y = 5 },
+        new() { X = 8, Y = 4 },
+        new() { X = 17, Y = 4 },
+        new() { X = 26, Y = 4 },
         new() { X = 26, Y = 14 },
         new() { X = 26, Y = 22 },
-        new() { X = 10, Y = 22 }
+        new() { X = 8, Y = 22 }
     };
     
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 3, Y = 12},
-        new() {X = 18, Y = 26}
+        new() {X = 8, Y = 13},
+        new() {X = 17, Y = 22}
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 4, Y = 13 }, new Point { X = 4, Y = 8 }),
-        (new Point { X = 14, Y = 22 }, new Point { X = 19, Y = 22 })
+        (new Point { X = 4, Y = 14 }, new Point { X = 4, Y = 8 }),
+        (new Point { X = 13, Y = 22 }, new Point { X = 19, Y = 22 })
     };
-
+    
+    public IList<IList<Point>> ArrowCornerPoints { get; } = new List<IList<Point>>
+    {
+        new List<Point>
+        {
+            //Intro
+            new() { X = 4, Y = 11 },
+            new() { X = 3, Y = 10 },
+            new() { X = 3, Y = 12 }
+        },
+        
+        new List<Point>
+        {
+            //Outro
+            new() { X = 16, Y = 23 },
+            new() { X = 15, Y = 22 },
+            new() { X = 17, Y = 22 }
+        }
+    };
+    
     public string GetIcon => Icon;
 
     public string GetPreviewImage => "CustomIcons/FloorPlans/R6-Floorplan-Example.png";

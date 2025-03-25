@@ -20,6 +20,7 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE9]
     public async Task CleanH5pFolderInWwwroot()
     {
         var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
@@ -39,6 +40,7 @@ public class StartH5pPlayerUcUT
 
     [Test] 
     [TestCaseSource(nameof(GetValidH5pZipSourcePaths))] 
+    // ANF-ID: [HSE7]
     public async Task ValidH5pZipSourcePath(string validPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -53,6 +55,7 @@ public class StartH5pPlayerUcUT
     }
     
     [Test]
+    // ANF-ID: [HSE7]
     public async Task NullH5pZipSourcePath()
     {
         string? invalidPath = null;
@@ -74,6 +77,7 @@ public class StartH5pPlayerUcUT
 
     [TestCase("")]
     [TestCase("   ")]
+    // ANF-ID: [HSE7]
     public async Task EmptyOrWhitespaceH5pZipSourcePath(string pathToCheck)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -90,6 +94,7 @@ public class StartH5pPlayerUcUT
 
     [Test]
     [TestCaseSource(nameof(GetInvalidPathChars))]
+    // ANF-ID: [HSE7]
     public async Task InvalidPathCharsInH5pZipSourcePath(char badChar)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -107,6 +112,7 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE7]
     public async Task MissingH5pExtensionInH5pZipSourcePath([Values] H5pDisplayMode displayMode)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -131,6 +137,7 @@ public class StartH5pPlayerUcUT
     [TestCase(@"../parent/path" + H5pFileEnding)] // Unix/macOS relative path with ..
     [TestCase(@"./relative/path" + H5pFileEnding)] // Unix/macOS relative path with .
     [TestCase(@"~/home/user/Tested" + H5pFileEnding)] // Unix/macOS relative path with ~
+    // ANF-ID: [HSE7]
     public async Task PathIsNotRootedInH5pZipSourcePath(string invalidPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -160,6 +167,7 @@ public class StartH5pPlayerUcUT
     [TestCase(@"https://example.com/path/to/resource/file.json")] // URL pointing to a JSON file
     [TestCase(@"https://example.com/path/to/resource/file.xml")] // URL pointing to an XML file
     [TestCase(@"https://example.com/api/v1/resource/123")] // API-style URL with versioning and ID
+    // ANF-ID: [HSE7]
     public async Task ValidUnzippedH5psPath(string validPath)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -175,6 +183,7 @@ public class StartH5pPlayerUcUT
 
 
     [Test]
+    // ANF-ID: [HSE7]
     public async Task NullUnzippedH5psPath()
     {
         string? invalidPath = null;
@@ -194,6 +203,7 @@ public class StartH5pPlayerUcUT
 
     [TestCase("")]
     [TestCase("   ")]
+    // ANF-ID: [HSE7]
     public async Task EmptyOrWhitespaceUnzippedH5psPath(string pathToCheck)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -211,6 +221,7 @@ public class StartH5pPlayerUcUT
 
     [Test]
     [TestCaseSource(nameof(GetInvalidPathChars))]
+    // ANF-ID: [HSE7]
     public async Task InvalidPathCharsInUnzippedH5psPath(char badChar)
     {
         var mockDisplayH5pOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
@@ -228,6 +239,7 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE7]
     public async Task MapDisplayMode([Values] H5pDisplayMode displayMode)
     {
         var systemUnderTest = CreateStandardSystemUnderTest();
@@ -246,6 +258,7 @@ public class StartH5pPlayerUcUT
     /// zip files is created if it does not already exist
     /// </summary>
     [Test]
+    // ANF-ID: [HSE7]
     public async Task ExtractZippedH5pToDirectoryForTemporaryH5ps()
     {
         var mockFileSystemDataAccess = Substitute.For<IFileSystemDataAccess>();
@@ -261,6 +274,8 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE7]
+    // ANF-ID: [HSE2]
     public async Task StartH5pPlayerToDisplayH5p()
     {
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
@@ -277,6 +292,9 @@ public class StartH5pPlayerUcUT
     }
 
     [Test]
+    // ANF-ID: [HSE7]
+    // ANF-ID: [HSE3]
+    // ANF-ID: [HSE1]
     public async Task StartH5pPlayerToValidateH5p()
     {
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();

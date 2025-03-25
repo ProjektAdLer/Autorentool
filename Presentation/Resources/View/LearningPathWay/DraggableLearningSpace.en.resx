@@ -27,4 +27,7 @@
     <data name="DraggableLearningSpace.DeleteConfirmationDialog.Text" xml:space="preserve">
         <value>Are you sure you want to delete the learning space &lt;b&gt;{0}&lt;/b&gt;?</value>
     </data>
+    <data name="DraggableLearningSpace.SnackbarDeletionMessage" xml:space="preserve">
+        <value>Learning space successfully deleted.</value>
+    </data>
 </root>

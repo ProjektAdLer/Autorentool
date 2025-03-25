@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="AddLinkForm.SnackbarMessage" xml:space="preserve">
-        <value>Link hinzugefügt</value>
+        <value>Video als Link hinzugefügt</value>
     </data>
     <data name="AddLinkForm.Field.Name.Text" xml:space="preserve">
         <value>Name für den Link</value>
@@ -33,7 +33,7 @@
         <value>Link</value>
     </data>
     <data name="AddLinkForm.Info.Text" xml:space="preserve">
-        <value>Videos können nicht als Datei importiert werden. Aus diesem Grund können Sie alternativ einen Link zu Ihrem Video hinzufügen.</value>
+        <value>Videos können nicht als Datei importiert werden. Fügen Sie stattdessen einen Link hinzu.</value>
     </data>
     <data name="AddLinkForm.Field.Link.ErrorMessage" xml:space="preserve">
         <value>Fehler beim Hinzufügen eines Links</value>

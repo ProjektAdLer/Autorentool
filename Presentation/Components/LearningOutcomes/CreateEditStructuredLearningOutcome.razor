@@ -5,7 +5,8 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel
 @using Shared.LearningOutcomes
-<div class="flex flex-row justify-between items-center gap-72 mb-3">
+
+<div class="flex flex-row justify-between items-center gap-72 mb-2 overflow-hidden">
     <div class="flex flex-row gap-1">
         <p class="cursor-default text-lg ml-4">
             @Localizer["CreateEditStructuredLearningOutcome.Title.Part1"]<span class="cursor-default font-bold text-adlertextgrey">@Localizer["CreateEditStructuredLearningOutcome.Title.Part2"]</span>
@@ -14,7 +15,7 @@
             <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="cursor-default text-adlergrey hover:text-adlerdarkblue"></MudIcon>
         </MudTooltip>
     </div>
-    <MudSelect T="CultureInfo" @bind-Value="Culture" Class="pr-4">
+    <MudSelect T="CultureInfo" @bind-Value="Culture" Class="pr-14">
         <MudSelectItem Value="@(new CultureInfo("de-DE"))">
             <div class="min-w-[15%] text-md break-keep text-adlergrey">Deutsch/German</div>
         </MudSelectItem>
@@ -24,13 +25,13 @@
     </MudSelect>
 </div>
 
-<div class="bg-adlerbgbright">
-    <MudForm @ref="_form" Class="flex flex-col border-3 border-adlerdarkblue rounded overflow-hidden px-4 py-2 border-t border-adlergrey-100">
-        <MudText Class="cursor-default text-sm 2xl:text-base text-adlertextgrey pt-2">@Localizer["CreateEditStructuredLearningOutcome.Text"]</MudText>
-
-        <div class="border-adlergrey-300 bg-white border-2 rounded py-2">
-            <div class="flex flex-row gap-4 m-2 pb-8">
-
+<div class="bg-adlergrey-100 overflow-y-scroll">
+    <MudForm @ref="_form" Class="flex flex-col rounded px-4 pt-2 border-t-2 border-adlergrey-100">
+        
+        <div class="border-adlergrey-300 bg-white border-2 rounded p-2">
+            <MudText Class="cursor-default text-sm 2xl:text-base text-adlertextgrey py-2">@Localizer["CreateEditStructuredLearningOutcome.Text"]</MudText>
+            
+            <div class="flex flex-row gap-4 pb-8">
                 <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlerblue-100 rounded">
                     <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.TaxonomyLevel"]</MudText>
                     <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.TaxonomyLevel.Info"]">
@@ -95,123 +96,152 @@
                 </MudSelect>
             </div>
 
-            <MudText
-                Class="ml-48 2xl:ml-52 cursor-default text-sm 2xl:text-base text-adlertextgrey">
-                @IntroText
-            </MudText>
+            <div class="border-t-2 border-adlergrey-200 border-dotted py-2">
+                <MudText Class="cursor-default text-sm 2xl:text-base text-adlertextgrey py-2">@Localizer["CreateEditStructuredLearningOutcome.Text.Two"]</MudText>
+                <MudText
+                    Class="ml-48 2xl:ml-52 cursor-default text-sm 2xl:text-base text-adlertextgrey">
+                    @IntroText
+                </MudText>
 
-            <GrammarOrder Culture="Culture">
-                <WhatContent>
-                    <div class="flex flex-row gap-4 m-2">
-                        <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
-                            <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.What"]</MudText>
-                            <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.What.Info"]">
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                            </MudTooltip>
+                <GrammarOrder Culture="Culture">
+                    <WhatContent>
+                        <div class="flex flex-row gap-4 my-2">
+                            <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
+                                <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.What"]</MudText>
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.What.Info"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                                </MudTooltip>
+                            </div>
+
+                            <MudTextField @bind-Value="_currentWhat"
+                                          Class="textfield-what"
+                                          DebounceInterval="@DebounceInterval"
+                                          Placeholder="@Localizer["CreateEditStructuredLearningOutcome.What.Placeholder"]"
+                                          Required="true"
+                                          RequiredError="@Localizer["CreateEditStructuredLearningOutcome.What.RequiredError"]"
+                                          Lines="2">
+                            </MudTextField>
                         </div>
+                    </WhatContent>
 
-                        <MudTextField @bind-Value="_currentWhat"
-                                      Class="textfield-what"
-                                      DebounceInterval="@DebounceInterval"
-                                      Placeholder="@Localizer["CreateEditStructuredLearningOutcome.What.Placeholder"]"
-                                      Required="true"
-                                      RequiredError="@Localizer["CreateEditStructuredLearningOutcome.What.RequiredError"]"
-                                      Lines="2">
-                        </MudTextField>
-                    </div>
-                </WhatContent>
+                    <VerbContent>
+                        <div class="flex flex-row gap-4 my-2">
+                            <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
+                                <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility"]</MudText>
+                                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.Info"]">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                                </MudTooltip>
+                            </div>
 
-                <VerbContent>
-                    <div class="flex flex-row gap-4 m-2">
-                        <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
-                            <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility"]</MudText>
-                            <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.Info"]">
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                            </MudTooltip>
+                            <MudAutocomplete T="string" Placeholder="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.Placeholder"]" MaxItems="1000"
+                                             @bind-Value="@_currentVerbOfVisibility"
+                                             @bind-Text="@_currentVerbOfVisibilityText"
+                                             CoerceText="true"
+                                             CoerceValue="true"
+                                             SearchFunc="@SearchVerbOfVisibility"
+                                             OnBlur="OnBlurVerbOfVisibility"
+                                             DebounceInterval="@DebounceInterval"
+                                             Required="true"
+                                             RequiredError="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.RequiredError"]"/>
                         </div>
+                    </VerbContent>
+                </GrammarOrder>
 
-                        <MudAutocomplete T="string" Placeholder="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.Placeholder"]" MaxItems="1000"
-                                         @bind-Value="@_currentVerbOfVisibility"
-                                         @bind-Text="@_currentVerbOfVisibilityText"
-                                         CoerceText="true"
-                                         CoerceValue="true"
-                                         SearchFunc="@SearchVerbOfVisibility"
-                                         OnBlur="OnBlurVerbOfVisibility"
-                                         DebounceInterval="@DebounceInterval"
-                                         Required="true"
-                                         RequiredError="@Localizer["CreateEditStructuredLearningOutcome.VerbOfVisibility.RequiredError"]"/>
+                <div class="flex flex-row gap-4 my-2">
+                    <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
+                        <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.Whereby"]</MudText>
+                        <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Info"]">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </MudTooltip>
                     </div>
-                </VerbContent>
-            </GrammarOrder>
-
-            <div class="flex flex-row gap-4 m-2">
-                <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
-                    <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.Whereby"]</MudText>
-                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Info"]">
-                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                    </MudTooltip>
+                    <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WherebyText</MudText>
+                    <MudTextField @bind-Value="_currentWhereby"
+                                  Class="textfield-whereby"
+                                  DebounceInterval="@DebounceInterval"
+                                  Placeholder="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Placeholder"]"
+                                  Lines="2">
+                    </MudTextField>
                 </div>
-                <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WherebyText</MudText>
-                <MudTextField @bind-Value="_currentWhereby"
-                              Class="textfield-whereby"
-                              DebounceInterval="@DebounceInterval"
-                              Placeholder="@Localizer["CreateEditStructuredLearningOutcome.Whereby.Placeholder"]"
-                              Lines="2">
-                </MudTextField>
-            </div>
 
-            <div class="flex flex-row gap-4 m-2">
-                <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
-                    <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.WhatFor"]</MudText>
-                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Info"]">
-                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                    </MudTooltip>
+                <div class="flex flex-row gap-4 my-2">
+                    <div class="min-w-32 sm:w-44 2xl:w-48 flex flex-row items-center justify-center gap-2 p-2 bg-adlergrey-100 rounded">
+                        <MudText Class="pt-1 cursor-default text-xs 2xl:text-sm text-adlertextgrey font-bold break-all">@Localizer["CreateEditStructuredLearningOutcome.WhatFor"]</MudText>
+                        <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Info"]">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </MudTooltip>
+                    </div>
+                    <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WhatForText</MudText>
+                    <MudTextField @bind-Value="_currentWhatFor"
+                                  Class="textfield-whatfor"
+                                  DebounceInterval="@DebounceInterval"
+                                  Placeholder="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Placeholder"]"
+                                  Lines="2">
+                    </MudTextField>
                 </div>
-                <MudText Class="cursor-default w-24 flex items-center text-sm 2xl:text-base text-adlergrey-800">@WhatForText</MudText>
-                <MudTextField @bind-Value="_currentWhatFor"
-                              Class="textfield-whatfor"
-                              DebounceInterval="@DebounceInterval"
-                              Placeholder="@Localizer["CreateEditStructuredLearningOutcome.WhatFor.Placeholder"]"
-                              Lines="2">
-                </MudTextField>
             </div>
-            <MudText Class="px-2 cursor-default flex justify-start text-xs text-adlergrey-300">@Localizer["CreateEditStructuredLearningOutcome.Required"]</MudText>
         </div>
     </MudForm>
 
-    <div class="flex flex-row justify-end items-center mx-4">
+    <div class="flex flex-row justify-between mx-4">
+        <MudText Class="cursor-default flex justify-start items-start text-xs text-adlergrey-400">@Localizer["CreateEditStructuredLearningOutcome.Required"]</MudText>
         <MudButton OnClick="ResetInputFields">
             <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Refresh"></MudIcon>
-            <MudText Class="uppercase pl-1 text-sm text-adlergrey-700 font-bold">@Localizer["CreateEditStructuredLearningOutcome.Reset"]</MudText>
+            <MudText Class="uppercase text-sm text-adlergrey-700 font-bold">@Localizer["CreateEditStructuredLearningOutcome.Reset"]</MudText>
         </MudButton>
     </div>
 
     <div class="flex flex-col gap-2 mx-4">
         <MudText Class="cursor-default text-adlertextgrey text-sm font-bold">@Localizer["CreateEditStructuredLearningOutcome.Preview"]</MudText>
-        <div class="bg-white border border-adlergrey-300 border-2 rounded px-4 p-5">
+        <div class="bg-white border-adlergrey-300 border-2 rounded p-2">
             @GetMarkDownFormattedOutcome()
         </div>
     </div>
 
-    <div class="flex flex-row justify-between">
+    <div class="flex flex-col gap-4 mx-4 pt-2 pb-4">
+        <MudExpansionPanels Elevation="2">
+            <MudExpansionPanel Class="bg-adlergold-100" Text="@Localizer["CreateEditStructuredLearningOutcome.QualityCheck.Title"]">
+                <div class="flex flex-col gap-2 mx-2">
+                    <div class="flex flex-row gap-2 items-center">
+                        <MudIcon Color="Color.Success" Icon="@Icons.Material.Filled.WorkspacePremium"></MudIcon>
+                        <MudText Typo="Typo.body2" Class="font-bold cursor-default">@Localizer["CreateEditStructuredLearningOutcome.QualityCheck.Subtitle"]</MudText>
+                    </div>
+        
+                    <div class="flex flex-col">
+                        <ul class="px-8">
+                            @foreach (var question in _qualityCheck.Keys.ToList())
+                            {
+                                <li class="flex flex-row items-center justify-between cursor-default text-adlergrey-800">
+                                    <p>@Localizer[question]</p>
+                                    <MudCheckBox Dense="true" @bind-Value="_qualityCheck[question]" Color="Color.Default" UnCheckedColor="Color.Default"></MudCheckBox>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </div>
+</div>
 
-        <div class="flex items-end">
-            <button class="h-8 m-2 hover:bg-adlergrey-100 hover:rounded">
-                <a class="mx-2 text-xs text-adlergrey-300" target="_blank"
-                   href="@GetLearningOutcomeExampleImagePath()">
-                    @Localizer["CreateEditStructuredLearningOutcome.Example"]
-                </a>
-            </button>
+<footer>
+<div class="flex flex-row justify-between">
 
-        </div>
-
-        <MudButton Class="flex items-center btn-standard sticky m-6"
-                   OnClick="SubmitAsync">
-            @(CurrentLearningOutcome == null ? Localizer["CreateEditStructuredLearningOutcome.Button.Create"] : Localizer["CreateEditStructuredLearningOutcome.Button.Edit"])
-        </MudButton>
+    <div class="flex items-end">
+        <button class="h-8 m-2 hover:bg-adlergrey-100 hover:rounded">
+            <a class="mx-2 text-xs text-adlergrey-300" target="_blank"
+               href="@GetLearningOutcomeExampleImagePath()">
+                @Localizer["CreateEditStructuredLearningOutcome.Example"]
+            </a>
+        </button>
     </div>
 
+    <MudButton Class="flex items-center btn-standard sticky m-4"
+               OnClick="SubmitAsync">
+        @(CurrentLearningOutcome == null ? Localizer["CreateEditStructuredLearningOutcome.Button.Create"] : Localizer["CreateEditStructuredLearningOutcome.Button.Edit"])
+    </MudButton>
 </div>
+</footer>
+
 
 @code {
     private LearningOutcomesVerbManager _learningOutcomesVerbManager = new();
@@ -241,6 +271,17 @@
         var localizedString = InternalResourceManager.GetString(key, _culture) ?? "String not found";
         return args.Length > 0 ? string.Format(localizedString, args) : localizedString;
     }
+    
+    private Dictionary<string, bool> _qualityCheck = new Dictionary<string, bool>
+    {
+        { "CreateEditStructuredLearningOutcome.QualityCheck.One", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Two", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Three", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Four", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Five", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Six", false },
+        { "CreateEditStructuredLearningOutcome.QualityCheck.Seven", false }
+    };
 
     private string GetLearningOutcomeExampleImagePath()
     {
@@ -291,8 +332,8 @@
     {
         var formattedText = GetInternalLocalizerString
         ("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.Result",
-            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentWhat, "[Was?]") : FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]"),
-            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]") : FormatWithPlaceholder(_currentWhat, "[Was?]"),
+            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentWhat, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.1")) : FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]"),
+            Culture.Name == "de-DE" ? FormatWithPlaceholder(_currentVerbOfVisibilityText, "[Verb]") : FormatWithPlaceholder(_currentWhat, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.1")),
             FormatWithPlaceholder(_currentWhereby, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.2")),
             FormatWithPlaceholder(_currentWhatFor, GetInternalLocalizerString("CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.3")));
 
