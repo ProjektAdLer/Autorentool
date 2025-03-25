@@ -28,7 +28,7 @@
         <value>Wollen Sie wirklich &lt;b&gt;{0}&lt;/b&gt; löschen?</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
-        <value>Diese Datei wird momentan in den folgenden Lernelementen verwendet:</value>
+        <value>Die folgenden Lernelemente, die diese Datei verwenden, werden dadurch ebenfalls gelöscht.</value>
     </data>
     <data name="Dialog.Header.World" xml:space="preserve">
         <value>Lernwelt</value>

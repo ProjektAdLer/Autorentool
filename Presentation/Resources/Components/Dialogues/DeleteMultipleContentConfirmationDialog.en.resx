@@ -30,7 +30,7 @@
         <value>Delete</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
-        <value>The files are currently in use in the following learning elements:</value>
+        <value>The following learning elements that use this contents will also be deleted.</value>
     </data>
     <data name="Dialog.Text1" xml:space="preserve">
         <value>Are you really sure you want to delete the following files?</value>
