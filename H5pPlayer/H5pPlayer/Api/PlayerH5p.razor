@@ -1,4 +1,5 @@
-﻿@using H5pPlayer.Presentation.View
+﻿@using H5pPlayer.BusinessLogic.Entities
+@using H5pPlayer.Presentation.View
 
 <h3>H5P-Player</h3>
 
@@ -11,17 +12,19 @@
 
 <H5pPlayerView 
     H5pZipSourcePath="@H5pZipSourcePath"
-    UnzippedH5psPath="@UnzippedH5psPath">
+    UnzippedH5psPath="@UnzippedH5psPath"
+    DisplayMode="@DisplayMode">
 </H5pPlayerView>
 
 @code {
 
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
-    
-    
 
     [Parameter] 
     public string? UnzippedH5psPath{ get; set; }
+    
+    [Parameter]
+    public H5pDisplayMode DisplayMode { get; set; }
 
 }

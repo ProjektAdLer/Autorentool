@@ -1,4 +1,5 @@
 ﻿@using H5pPlayer.BusinessLogic.Entities
+@using H5pPlayer.Main
 @using H5pPlayer.Presentation.PresentationLogic
 @using Microsoft.JSInterop
 @inject IJSRuntime JsRuntime
@@ -11,12 +12,12 @@
     <div id="h5p-container"></div>
     <div style="margin-top: 20px;"></div>
 
-    @if (_h5pPlayerVm != null)
+    @if (H5pPlayerVm != null)
     {
-        <InvalidPathErrorView InvalidPathErrorVm="_h5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
+        <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
 
         
-        @if (_h5pPlayerVm.IsCompletable)
+        @if (H5pPlayerVm.IsCompletable)
         {
             <div style="color: green; display: flex; align-items: center;">
                 <span>&#10003;</span> <!-- Grüner Haken -->
@@ -40,30 +41,33 @@
     [Parameter] 
     public H5pDisplayMode DisplayMode{ get; set; }
     
-    private H5pPlayerController? _h5pPlayerController;
-    private H5pPlayerViewModel? _h5pPlayerVm;
+    [Inject]
+    public IStartH5pPlayerFactory? StartH5pPlayerFactory{ get; set; }
+
+    internal H5pPlayerController? H5pPlayerController { get; private set; }
+    internal H5pPlayerViewModel? H5pPlayerVm { get; set; }
 
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            CreateH5pPlayerVm();
+            InitializeStartH5pPlayer();
             await StartH5pPlayer();
         }
     }
 
-    private void CreateH5pPlayerVm()
+    internal void InitializeStartH5pPlayer()
     {
-        _h5pPlayerVm = new H5pPlayerViewModel(StateHasChanged);
+        StartH5pPlayerFactory!.InitializeStartH5pPlayer(StateHasChanged, JsRuntime);
+        H5pPlayerController = StartH5pPlayerFactory.H5pPlayerController;
+        H5pPlayerVm = StartH5pPlayerFactory.H5pPlayerVm;
     }
 
     private async Task StartH5pPlayer()
     {
-        
-        _h5pPlayerController = new H5pPlayerController(_h5pPlayerVm, JsRuntime);
         //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
-        await _h5pPlayerController.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
+        await H5pPlayerController!.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
     }
 
    
