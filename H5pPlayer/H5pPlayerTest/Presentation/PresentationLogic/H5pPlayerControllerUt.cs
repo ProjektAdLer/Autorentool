@@ -20,7 +20,7 @@ public class H5pPlayerControllerUt
         
         await systemUnderTest.StartH5pPlayer(displayMode, h5pSourcePath, unzippedH5psPath);
         
-        var displayH5pTo = new StartH5pPlayerInputTO(displayMode, h5pSourcePath, unzippedH5psPath);
-        await mockStartH5pPlayerUcInputPort.Received().StartH5pPlayer(displayH5pTo);
+        var startTo = new StartH5pPlayerInputTO(displayMode, h5pSourcePath, unzippedH5psPath);
+        await mockStartH5pPlayerUcInputPort.Received().StartH5pPlayer(startTo);
     }
 }

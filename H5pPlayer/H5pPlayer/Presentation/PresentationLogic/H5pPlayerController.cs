@@ -34,8 +34,8 @@ public class H5pPlayerController
 
     public async Task StartH5pPlayer(H5pDisplayMode h5PDisplayMode, string h5pSourcePath, string unzippedH5psPath)
     {
-        var displayH5pTo = new StartH5pPlayerInputTO(h5PDisplayMode, h5pSourcePath, unzippedH5psPath);
-        await StartH5PPlayerUc!.StartH5pPlayer(displayH5pTo);
+        var startTo = new StartH5pPlayerInputTO(h5PDisplayMode, h5pSourcePath, unzippedH5psPath);
+        await StartH5PPlayerUc!.StartH5pPlayer(startTo);
     }
     
     internal IStartH5pPlayerUCInputPort? StartH5PPlayerUc { get; }
