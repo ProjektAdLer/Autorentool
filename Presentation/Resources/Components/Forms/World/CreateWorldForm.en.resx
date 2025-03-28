@@ -67,21 +67,21 @@
         <value>An enrolment key enables access to the learning world to be restricted to only those who know the key. &lt;br&gt; &lt;br&gt; If the field is left blank, any user may enrol in the learning world. &lt;br&gt; &lt;br&gt; If an enrolment key is specified, any user attempting to enrol in the learning world will be restricted to supply the key. Note that users only need to supply the enrolment key once, when they enrol in the learning world.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
-        <value />
+        <value>Framework for the story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value />
+        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a coherent framework.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
-        <value />
+        <value>Introduction</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder" xml:space="preserve">
-        <value />
+        <value>It began with...</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Label" xml:space="preserve">
-        <value />
+        <value>Ending</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
-        <value />
+        <value>And so it ended...</value>
     </data>
 </root>

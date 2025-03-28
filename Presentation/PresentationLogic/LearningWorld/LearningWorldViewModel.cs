@@ -67,8 +67,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
-    /// <param name="storyStart"></param>
-    /// <param name="storyEnd"></param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
