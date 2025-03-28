@@ -124,7 +124,7 @@
                         @onmouseover="() => { _cursorInsidePopover = true; }"
                         @onmouseleave="() => { _cursorInsidePopover = false; _rowShowingPopover = null; }">
 
-                <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
+                <MudIconButton OnClick="() => PresentationLogic.ShowLearningContentAsync((ILearningContentViewModel)context)"
                                Icon="@Icons.Material.Filled.RemoveRedEye" Class="m-0 p-1 text-white hover:text-adlerbggradientfrom" title=@Localizer["Content.MudTd.Preview"]>
                 </MudIconButton>
                 <MudIconButton OnClick="() => NewElementWithContent(context)"

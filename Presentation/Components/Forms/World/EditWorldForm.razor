@@ -90,6 +90,28 @@
                                   Class="pb-4 mt-0"/>
                 </div>
             </Collapsable>
+
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Story.Title"] InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-4">
+                    <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.StoryStart"
+                                  For="@(() => FormModel.StoryStart)"
+                                  Lines="3"
+                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Start.Label"]"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder"]"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4 mt-0"/>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.StoryEnd"
+                                  For="@(() => FormModel.StoryEnd)"
+                                  Lines="3"
+                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.End.Label"]"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder"]"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4 mt-0"/>
+                </div>
+            </Collapsable>
         </div>
     </Fields>
     
@@ -142,7 +164,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
     }
 
     private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);

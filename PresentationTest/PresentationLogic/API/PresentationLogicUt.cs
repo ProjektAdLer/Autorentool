@@ -322,14 +322,14 @@ public class PresentationLogicUt
         var mockWorldVm = ViewModelProvider.GetLearningWorld();
         Substitute.For<ILogger<WorldCommandFactory>>();
         workspaceVm.LearningWorlds.Add(mockWorldVm);
-        mockWorldCommandFactory.GetCreateCommand(workspaceEntity, "f", "f", "f", "f", "f", "f", "f", "f",
+        mockWorldCommandFactory.GetCreateCommand(workspaceEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.AuthoringToolWorkspace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: mockSelectedViewModelsProvider, worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
         mockSelectedViewModelsProvider.Received().SetLearningWorld(workspaceVm.LearningWorlds.Last(), mockCommand);
@@ -350,14 +350,14 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(worldEntity);
         mockWorldCommandFactory
-            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f",
+            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -377,14 +377,14 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(worldEntity);
         mockWorldCommandFactory
-            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f",
+            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
 
         mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }

@@ -8,7 +8,7 @@ public class LearningWorldJson : ILearningWorldJson
     [JsonConstructor]
     public LearningWorldJson(string worldName, string worldUuid, List<ITopicJson> topics,
         List<ILearningSpaceJson> spaces, List<IElementJson> elements, string? worldDescription = null,
-        string[]? worldGoals = null, string? evaluationLink = null, string? enrolmentKey = null)
+        string[]? worldGoals = null, string? evaluationLink = null, string? enrolmentKey = null, IFrameStoryJson? frameStory = null)
     {
         WorldName = worldName;
         WorldUUID = worldUuid;
@@ -19,6 +19,7 @@ public class LearningWorldJson : ILearningWorldJson
         Topics = topics;
         Spaces = spaces;
         Elements = elements;
+        FrameStory = frameStory ?? new FrameStoryJson("","");
     }
 
     public string EvaluationLink { get; set; }
@@ -41,4 +42,6 @@ public class LearningWorldJson : ILearningWorldJson
 
     // for the correct structure the elements are added to the learning World
     public List<IElementJson> Elements { get; set; }
+    
+    public IFrameStoryJson FrameStory { get; set; }
 }
