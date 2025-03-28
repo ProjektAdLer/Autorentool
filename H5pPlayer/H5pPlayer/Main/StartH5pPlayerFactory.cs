@@ -16,7 +16,7 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
         H5pPlayerVm = null;
         H5pPlayerController = null;
     }
-    public void InitializeStartH5pPlayer(
+    public void CreateStartH5pPlayerPresentationAndUseCaseStructure(
         Action viewStateNotificationMethod,
         IJSRuntime jsRuntime)
     {
@@ -25,6 +25,8 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
         var startH5PPlayerUc = CreateStartH5pPlayerUc(h5pPlayerPresenter, jsRuntime);
         H5pPlayerController = new H5pPlayerController(startH5PPlayerUc, h5pPlayerPresenter);
     }
+
+
     private StartH5pPlayerUC CreateStartH5pPlayerUc(H5pPlayerPresenter h5pPlayerPresenter, IJSRuntime jsRuntime)
     {
         ICallJavaScriptAdapter callJavaScriptAdapter = new CallJavaScriptAdapter(jsRuntime);

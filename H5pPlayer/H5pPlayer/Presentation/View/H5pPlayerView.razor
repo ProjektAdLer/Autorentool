@@ -59,7 +59,7 @@
 
     internal void InitializeStartH5pPlayer()
     {
-        StartH5pPlayerFactory!.InitializeStartH5pPlayer(StateHasChanged, JsRuntime);
+        StartH5pPlayerFactory!.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
         H5pPlayerController = StartH5pPlayerFactory.H5pPlayerController;
         H5pPlayerVm = StartH5pPlayerFactory.H5pPlayerVm;
     }

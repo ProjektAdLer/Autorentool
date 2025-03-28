@@ -5,7 +5,7 @@ namespace H5pPlayer.Main;
 
 public interface IStartH5pPlayerFactory
 {
-    void InitializeStartH5pPlayer(
+    void CreateStartH5pPlayerPresentationAndUseCaseStructure(
         Action viewStateNotificationMethod,
         IJSRuntime jsRuntime);
 
