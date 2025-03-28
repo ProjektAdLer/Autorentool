@@ -15,8 +15,10 @@ public class H5pPlayerViewModelUt
     {
         var systemUnderTest = CreateH5pPlayerVm();
 
-        Assert.That(systemUnderTest.IsCompletable , Is.False);
         Assert.That(systemUnderTest.InvalidPathErrorVm , Is.Not.Null);
+        Assert.That(systemUnderTest.IsCompletable , Is.False);
+        Assert.That(systemUnderTest.IsDisplayModeActive , Is.False);
+        Assert.That(systemUnderTest.IsValidationModeActive , Is.False);
     }
 
     [Test]
@@ -45,7 +47,61 @@ public class H5pPlayerViewModelUt
         Assert.That(eventTriggered, Is.False);
     }
 
-   
+    [Test]
+    // ANF-ID: [HSE2]
+    public void IsDisplayModeActive_SetToDifferentValue_ShouldTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
+
+        systemUnderTest.IsDisplayModeActive = true;
+
+        Assert.That(eventTriggered, Is.True);
+    }
+
+    [Test]
+    // ANF-ID: [HSE2]
+    public void IsDisplayModeActive_SetToSameValue_ShouldNotTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
+        
+        systemUnderTest.IsDisplayModeActive = false;
+
+        Assert.That(eventTriggered, Is.False);
+    }
+
+    [Test]
+    // ANF-ID: [HSE3]
+    // ANF-ID: [HSE4]
+    public void IsValidationModeActive_SetToDifferentValue_ShouldTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
+
+        systemUnderTest.IsValidationModeActive = true;
+
+        Assert.That(eventTriggered, Is.True);
+    }
+
+    [Test]
+    // ANF-ID: [HSE3]
+    // ANF-ID: [HSE4]
+    public void IsValidationModeActive_SetToSameValue_ShouldNotTriggerOnChangeEvent()
+    {
+        var eventTriggered = false;
+        Action action = () => { eventTriggered = true; };
+        var systemUnderTest = CreateH5pPlayerVm(action);
+        
+        systemUnderTest.IsValidationModeActive = false;
+
+        Assert.That(eventTriggered, Is.False);
+    }
+
+
 
     private H5pPlayerViewModel CreateH5pPlayerVm(
         Action? fakeAction = null)

@@ -280,13 +280,16 @@ public class StartH5pPlayerUcUT
     {
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
-        var systemUnderTest = CreateStandardSystemUnderTest(mockValidateH5pUc, mockDisplayH5pUC);
+        var mockStartH5pPlayerUcOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(
+            mockValidateH5pUc, mockDisplayH5pUC,mockStartH5pPlayerUcOutputPort);
         string h5pZipSourcePath = Path.Combine(RootPathDueToOperatingSystem, "PathToZip", "Source" + H5pFileEnding);
         var displayMode = H5pDisplayMode.Display;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode, h5pZipSourcePath);
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
+        mockStartH5pPlayerUcOutputPort.Received().StartToDisplayH5p();
         await mockDisplayH5pUC.Received().StartToDisplayH5p(Arg.Any<H5pEntity>());
         await mockValidateH5pUc.DidNotReceive().StartToValidateH5p(Arg.Any<H5pEntity>());
     }
@@ -299,13 +302,16 @@ public class StartH5pPlayerUcUT
     {
         var mockValidateH5pUc = Substitute.For<IValidateH5pUc>();
         var mockDisplayH5pUC = Substitute.For<IDisplayH5pUC>();
-        var systemUnderTest = CreateStandardSystemUnderTest(mockValidateH5pUc, mockDisplayH5pUC);
+        var mockStartH5pPlayerUcOutputPort = Substitute.For<IStartH5pPlayerUCOutputPort>();
+        var systemUnderTest = CreateStandardSystemUnderTest(
+            mockValidateH5pUc, mockDisplayH5pUC,mockStartH5pPlayerUcOutputPort);
         string h5pZipSourcePath = Path.Combine(RootPathDueToOperatingSystem, "PathToZip", "Source" + H5pFileEnding);
         var displayMode = H5pDisplayMode.Validate;
         var startH5pPlayerInputTO = CreateStartH5pPlayerInputT0(displayMode, h5pZipSourcePath);
 
         await systemUnderTest.StartH5pPlayer(startH5pPlayerInputTO);
 
+        mockStartH5pPlayerUcOutputPort.Received().StartToValidateH5p();
         await mockValidateH5pUc.Received().StartToValidateH5p(Arg.Any<H5pEntity>());
         await mockDisplayH5pUC.DidNotReceive().StartToDisplayH5p(Arg.Any<H5pEntity>());
     }

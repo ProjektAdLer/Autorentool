@@ -19,8 +19,22 @@ public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOut
         H5pPlayerVm!.InvalidPathErrorVm.InvalidPathErrorIsActive = true;
     }
 
+ 
+
     public void SetH5pIsCompletable()
     {
         H5pPlayerVm!.IsCompletable = true;
+    }
+    
+    public void StartToDisplayH5p()
+    {
+        H5pPlayerVm!.IsValidationModeActive = false;
+        H5pPlayerVm!.IsDisplayModeActive = true;
+    }
+
+    public void StartToValidateH5p()
+    {
+        H5pPlayerVm!.IsDisplayModeActive = false;
+        H5pPlayerVm!.IsValidationModeActive = true;
     }
 }

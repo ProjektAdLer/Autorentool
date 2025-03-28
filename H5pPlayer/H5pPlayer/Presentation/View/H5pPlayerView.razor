@@ -14,6 +14,8 @@
 
     @if (H5pPlayerVm != null)
     {
+    
+      //Todo H5pPlayerVm.IsValidation actige -> open Vali view els diplay view
         <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
 
         
@@ -38,6 +40,11 @@
     [Parameter] 
     public string? UnzippedH5psPath{ get; set; }
     
+    /// <summary>
+    /// Do never use directly this DisplayMode this is only for StartupPurpose
+    /// The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
+    /// and calls the OutputPort(Presenter) Presenter sets DisplayMode in Viewmodel -> View Updates!
+    /// </summary>
     [Parameter] 
     public H5pDisplayMode DisplayMode{ get; set; }
     
