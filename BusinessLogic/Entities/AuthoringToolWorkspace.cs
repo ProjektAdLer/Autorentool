@@ -32,6 +32,7 @@ public class AuthoringToolWorkspace : IOriginator
         if (memento is not AuthoringToolWorkspaceMemento workspaceMemento)
             throw new ArgumentException("incorrect IMemento implementation", nameof(memento));
         LearningWorlds = workspaceMemento.LearningWorlds;
+        LearningContents = workspaceMemento.LearningContents;
     }
 
     private record AuthoringToolWorkspaceMemento : IMemento

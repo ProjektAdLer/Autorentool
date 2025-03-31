@@ -48,7 +48,7 @@ public interface IPresentationLogic
     bool CanUndo { get; }
 
     /// <summary>
-    /// Whether or not undo can be run.
+    /// Whether or not redo can be run.
     /// </summary>
     bool CanRedo { get; }
 
@@ -451,15 +451,17 @@ public interface IPresentationLogic
     IEnumerable<ILearningContentViewModel> GetAllContentFromDir();
 
     /// <summary>
-    /// Deletes the file referenced by the given content object.
+    /// Marks the file referenced by the given content object as deleted.
     /// </summary>
-    /// <param name="workspaceViewModel"></param>
+    /// <param name="workspaceViewModel">The workspace that contains the learningContent.</param>
     /// <param name="contentViewModel">The content whos file shall be deleted.</param>
+    /// <param name="inUse">A bool that indicates whether a content is used or not.</param>
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="contentViewModel"/> wasn't found.</exception>
-    public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel,ILearningContentViewModel contentViewModel);
+    public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel, 
+        ILearningContentViewModel contentViewModel, bool inUse);
 
     /// <summary>
-    /// Deletes the files referenced by the given content objects.
+    /// Marks the files referenced by the given content objects as deleted.
     /// </summary>
     /// <param name="contents">The contents whos file shall be deleted.</param>
     /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents"/> weren't found.</exception>

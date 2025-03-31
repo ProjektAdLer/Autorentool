@@ -439,7 +439,7 @@ public class PresentationLogic : IPresentationLogic
 
         listOfCommands.Add(deleteTopic);
 
-        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands, "DeleteTopic");
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
@@ -517,7 +517,7 @@ public class PresentationLogic : IPresentationLogic
                 collection => Mapper.Map(collection, learningOutcomes), index)
         };
 
-        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands, "EditStructuredLearningOutcome");
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
@@ -540,7 +540,7 @@ public class PresentationLogic : IPresentationLogic
                 collection => Mapper.Map(collection, learningOutcomes), index)
         };
 
-        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands);
+        var batchCommand = BatchCommandFactory.GetBatchCommand(listOfCommands, "EditManualLearningOutcome");
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
@@ -868,12 +868,64 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.DeleteContent"/>
     public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel,
-        ILearningContentViewModel contentViewModel)
-    { 
+        ILearningContentViewModel contentViewModel, bool inUse)
+    {
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(workspaceViewModel);
         var contentEntity = Mapper.Map<ILearningContent>(contentViewModel);
-        var command = ContentCommandFactory.GetDeleteCommand(workspaceEntity, contentEntity, workspace => CMapper.Map(workspace, workspaceViewModel));
-        BusinessLogic.ExecuteCommand(command);
+        var command = ContentCommandFactory.GetDeleteCommand(workspaceEntity, contentEntity,
+            workspace => CMapper.Map(workspace, workspaceViewModel));
+
+        if (!inUse)
+        {
+            BusinessLogic.ExecuteCommand(command);
+            return;
+        }
+
+        var deleteElementCommands = CollectDeleteElementCommands(workspaceViewModel, workspaceEntity, contentEntity);
+
+        deleteElementCommands.Add(command);
+        var batchCommand = BatchCommandFactory.GetBatchCommand(deleteElementCommands, "DeleteContent");
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
+    /// <summary>
+    /// Collects all required delete commands (IUndoCommand) to remove every LearningElement referencing
+    /// the specified contentEntity from all LearningWorlds and LearningSpaces within the given workspace.
+    /// </summary>
+    private List<IUndoCommand> CollectDeleteElementCommands(IAuthoringToolWorkspaceViewModel workspaceViewModel,
+        BusinessLogic.Entities.AuthoringToolWorkspace workspaceEntity, ILearningContent contentEntity)
+    {
+        var result = new List<IUndoCommand>();
+        foreach (var worldEntity in workspaceEntity.LearningWorlds)
+        {
+            var worldViewModel = workspaceViewModel.LearningWorlds
+                .First(w => w.Id == worldEntity.Id);
+            var unplacedDeleteCommands = worldEntity.UnplacedLearningElements
+                .Where(element => element.LearningContent.Equals(contentEntity))
+                .Select(element =>
+                    ElementCommandFactory.GetDeleteInWorldCommand(
+                        (BusinessLogic.Entities.LearningElement)element,
+                        (BusinessLogic.Entities.LearningWorld)worldEntity,
+                        updatedWorld => CMapper.Map(updatedWorld, worldViewModel)));
+
+            result.AddRange(unplacedDeleteCommands);
+
+            foreach (var spaceEntity in worldEntity.LearningSpaces)
+            {
+                var spaceViewModel = worldViewModel.LearningSpaces.First(s => s.Id == spaceEntity.Id);
+
+                var spaceDeleteCommands = spaceEntity.ContainedLearningElements
+                    .Where(element => element.LearningContent.Equals(contentEntity))
+                    .Select(element =>
+                        ElementCommandFactory.GetDeleteInSpaceCommand(
+                            (BusinessLogic.Entities.LearningElement)element,
+                            (BusinessLogic.Entities.LearningSpace)spaceEntity,
+                            updatedSpace => CMapper.Map(updatedSpace, spaceViewModel)));
+
+                result.AddRange(spaceDeleteCommands);
+            }
+        }
+        return result;
     }
 
     /// <inheritdoc cref="IPresentationLogic.RemoveMultipleContents"/>
@@ -1089,17 +1141,20 @@ public class PresentationLogic : IPresentationLogic
         var elementReferenceActionEntity = Mapper.Map<ElementReferenceAction>(elementReferenceActionVm);
         var triggerEntity = Mapper.Map<IAdaptivityTrigger>(triggerVm);
 
-        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity,
             entity => CMapper.Map(entity, question));
-        
-        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity, elementReferenceActionEntity,
+
+        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity,
+            elementReferenceActionEntity,
             entity => CMapper.Map(entity, question));
-        
-        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(
+            new List<IUndoCommand> { deleteRuleCommand, createRuleCommand },
+            "ReplaceContentReferenceActionByElementReferenceAction");
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
-    
+
     /// <inheritdoc cref="IPresentationLogic.ReplaceElementReferenceActionByContentReferenceAction"/>
     public void ReplaceElementReferenceActionByContentReferenceAction(IAdaptivityQuestionViewModel question,
         IAdaptivityRuleViewModel ruleVm, ContentReferenceActionViewModel contentReferenceActionVm,
@@ -1110,13 +1165,15 @@ public class PresentationLogic : IPresentationLogic
         var craE = Mapper.Map<ContentReferenceAction>(contentReferenceActionVm);
         var triggerE = Mapper.Map<IAdaptivityTrigger>(triggerVm);
 
-        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity,
             entity => CMapper.Map(entity, question));
-        
+
         var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerE, craE,
             entity => CMapper.Map(entity, question));
-        
-        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        var batchCommand = BatchCommandFactory.GetBatchCommand(
+            new List<IUndoCommand> { deleteRuleCommand, createRuleCommand },
+            "ReplaceElementReferenceActionByContentReferenceAction");
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }

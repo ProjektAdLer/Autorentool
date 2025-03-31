@@ -301,7 +301,7 @@
         //not cancelled, delete content
         try
         {
-            PresentationLogic.DeleteContent(WorkspaceViewModel, item);
+            PresentationLogic.DeleteContent(WorkspaceViewModel, item, matches.Any());
             Snackbar.Add(@Localizer["ContentFilesView.Snackbar.OneMaterialDelete"], Severity.Success);
         }
         catch (ArgumentOutOfRangeException e)
