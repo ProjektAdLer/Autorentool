@@ -2,7 +2,9 @@
 
 public enum H5PContentStateEnum
 {
-    NOT_VALIDATED = 0,
-    NOT_COMPLETABLE = 1,
-    COMPLETABLE = 2,
+    UNKNOWN = 0,
+    NOT_VALIDATED =1 ,
+    NOT_COMPLETABLE = 2,
+    COMPLETABLE = 3,
+    PRIMITIVE = 4,
 }
