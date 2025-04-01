@@ -6,6 +6,11 @@ public class H5PContent
 
     public H5PContent(H5PContentStateEnum state)
     {
+        if (!Enum.IsDefined(typeof(H5PContentStateEnum), state))
+        {
+            throw new ArgumentOutOfRangeException(nameof(state), state, "Invalid enum value provided.");
+        }
+
         _state = state;
     }
 
