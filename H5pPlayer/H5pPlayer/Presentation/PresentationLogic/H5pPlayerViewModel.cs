@@ -11,6 +11,7 @@ public class H5pPlayerViewModel
         IsDisplayModeActive = false;
         IsValidationModeActive = false;
     }
+    
     public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
     
     private bool _isCompletable;
@@ -41,6 +42,9 @@ public class H5pPlayerViewModel
         }
     }
     private bool _isValidationModeActive;
+
+
+
     public bool IsValidationModeActive
     {
         get => _isValidationModeActive;

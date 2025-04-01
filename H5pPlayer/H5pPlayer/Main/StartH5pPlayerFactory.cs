@@ -15,6 +15,8 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
     {
         H5pPlayerVm = null;
         H5pPlayerController = null;
+        DisplayH5pUc = null;
+        ValidateH5pUc = null;
     }
     public void CreateStartH5pPlayerPresentationAndUseCaseStructure(
         Action viewStateNotificationMethod,
@@ -30,14 +32,16 @@ public class StartH5pPlayerFactory : IStartH5pPlayerFactory
     private StartH5pPlayerUC CreateStartH5pPlayerUc(H5pPlayerPresenter h5pPlayerPresenter, IJSRuntime jsRuntime)
     {
         ICallJavaScriptAdapter callJavaScriptAdapter = new CallJavaScriptAdapter(jsRuntime);
-        IDisplayH5pUC displayH5pUC = new DisplayH5pUC(callJavaScriptAdapter);
-        IValidateH5pUc validateH5pUc = new ValidateH5pUc(h5pPlayerPresenter ,callJavaScriptAdapter);
+        DisplayH5pUc = new DisplayH5pUC(callJavaScriptAdapter);
+        ValidateH5pUc = new ValidateH5pUc(h5pPlayerPresenter ,callJavaScriptAdapter);
         var fileSystemDataAccess = new FileSystemDataAccess();
         var startH5PPlayerUc = new StartH5pPlayerUC(
-            validateH5pUc, fileSystemDataAccess, displayH5pUC, h5pPlayerPresenter);
+            ValidateH5pUc, fileSystemDataAccess, DisplayH5pUc, h5pPlayerPresenter);
         return startH5PPlayerUc;
     }
     
     public H5pPlayerViewModel? H5pPlayerVm { get; set; }
     public H5pPlayerController? H5pPlayerController { get; set; }
+    public IDisplayH5pUC? DisplayH5pUc { get; set; }
+    public IValidateH5pUc? ValidateH5pUc { get; set; }
 }

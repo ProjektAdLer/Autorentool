@@ -15,7 +15,11 @@
     @if (H5pPlayerVm != null)
     {
     
-      //Todo H5pPlayerVm.IsValidation actige -> open Vali view els diplay view
+     
+        @if (H5pPlayerVm.IsDisplayModeActive)
+        {
+            <DisplayH5pView></DisplayH5pView>
+        }
         <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
 
         
@@ -32,7 +36,7 @@
 
 @code {
 
-    
+    internal RenderFragment? ActiveView { get; set; }
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
     
@@ -49,24 +53,30 @@
     public H5pDisplayMode DisplayMode{ get; set; }
     
     [Inject]
-    public IStartH5pPlayerFactory? StartH5pPlayerFactory{ get; set; }
+    public required IStartH5pPlayerFactory StartH5pPlayerFactory{ get; set; }
+    
+    [Inject]
+    public required IDisplayH5pFactory DisplayH5pFactory{ get; set; }
 
     internal H5pPlayerController? H5pPlayerController { get; private set; }
     internal H5pPlayerViewModel? H5pPlayerVm { get; set; }
 
     protected override async void OnAfterRender(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
             InitializeStartH5pPlayer();
             await StartH5pPlayer();
         }
-    }
+        
+        StartToDisplayH5pIfDisplayModeIsActive();
+        await base.OnAfterRenderAsync(firstRender);
 
+    }
+    
     internal void InitializeStartH5pPlayer()
     {
-        StartH5pPlayerFactory!.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
+        StartH5pPlayerFactory.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
         H5pPlayerController = StartH5pPlayerFactory.H5pPlayerController;
         H5pPlayerVm = StartH5pPlayerFactory.H5pPlayerVm;
     }
@@ -77,5 +87,25 @@
         await H5pPlayerController!.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
     }
 
-   
+    private void StartToDisplayH5pIfDisplayModeIsActive()
+    {
+        if (H5pPlayerVm?.IsDisplayModeActive == true)
+        {
+            DisplayH5pFactory.CreateDisplayH5pPresentationStructure(StartH5pPlayerFactory.DisplayH5pUc);
+            ActiveView = builder =>
+            {
+                
+                builder.OpenComponent(0, typeof(DisplayH5pView)); 
+                builder.AddAttribute(1, "DisplayH5pVm", DisplayH5pFactory.DisplayH5pVm);
+                builder.AddAttribute(2, "DisplayH5pController", DisplayH5pFactory.DisplayH5pController);
+                builder.CloseComponent();
+            };
+        }
+    }
+
+
+
+
+  
+
 }

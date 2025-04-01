@@ -14,6 +14,7 @@ public class StartH5pPlayerIt
 {
     private TestContext _testContext;
     private IStartH5pPlayerFactory _startH5pPlayerFactory;
+    private IDisplayH5pFactory _displayH5pFactory;
     
     [Test]
     public void CreateViewControllerPresenterViewModelStructure()
@@ -37,8 +38,10 @@ public class StartH5pPlayerIt
     {
         _testContext = new TestContext();
         _startH5pPlayerFactory = new StartH5pPlayerFactory();
+        _displayH5pFactory = new DisplayH5pFactory();
 
         _testContext.Services.AddTransient(_ => _startH5pPlayerFactory);
+        _testContext.Services.AddTransient(_ => _displayH5pFactory);
         
     }
 
