@@ -20,6 +20,6 @@ public class DisplayH5pFactory : IDisplayH5pFactory
 
 
     
-    public DisplayH5pViewModel? DisplayH5pVm { get; set; }
-    public DisplayH5pController? DisplayH5pController { get; set; }
+    public IDisplayH5pViewModel? DisplayH5pVm { get; set; }
+    public IDisplayH5pController? DisplayH5pController { get; set; }
 }

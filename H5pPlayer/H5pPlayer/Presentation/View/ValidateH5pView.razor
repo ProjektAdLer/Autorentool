@@ -1,32 +1,28 @@
-﻿@using H5pPlayer.Presentation.PresentationLogic.DisplayH5p
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+
 
 
 <div style="margin-top: 20px;"></div>
 <div id="h5p-container"></div>
 <div style="margin-top: 20px;"></div>
 
-
-
-
-
 @code {
-  
+    
     [Parameter]
-    public IDisplayH5pViewModel? DisplayH5pVm { get;  set; }
+    public IValidateH5pViewModel? ValidateH5pVm { get;  set; }
    
     [Parameter]
-    public IDisplayH5pController? DisplayH5pController { get; set; }
+    public IValidateH5pController? ValidateH5pController { get; set; }
     
     protected override async void OnAfterRender(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-         //todo if needed
-         // DisplayH5pVm.OnAction += this.StateHasChanged 
+            //todo if needed
+            // DisplayH5pVm.OnAction += this.StateHasChanged 
         }
     }
-    
-    
+
 
 }

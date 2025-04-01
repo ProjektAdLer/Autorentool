@@ -7,6 +7,6 @@ public interface IDisplayH5pFactory
 {
     void CreateDisplayH5pPresentationStructure(IDisplayH5pUC displayH5pUC);
 
-    DisplayH5pViewModel? DisplayH5pVm { get; set; }
-    DisplayH5pController? DisplayH5pController { get; set; }
+    IDisplayH5pViewModel? DisplayH5pVm { get; set; }
+    IDisplayH5pController? DisplayH5pController { get; set; }
 }

@@ -15,11 +15,8 @@
     @if (H5pPlayerVm != null)
     {
     
-     
-        @if (H5pPlayerVm.IsDisplayModeActive)
-        {
-            <DisplayH5pView></DisplayH5pView>
-        }
+        @ActiveView
+        
         <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
 
         
@@ -36,7 +33,7 @@
 
 @code {
 
-    internal RenderFragment? ActiveView { get; set; }
+    private RenderFragment? ActiveView { get; set; }
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
     
@@ -45,9 +42,15 @@
     public string? UnzippedH5psPath{ get; set; }
     
     /// <summary>
+    /// <para>
     /// Do never use directly this DisplayMode this is only for StartupPurpose
-    /// The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
+    /// Use -> <see cref="H5pPlayerViewModel.IsDisplayModeActive"/> 
+    /// Or <see cref="H5pPlayerViewModel.IsValidationModeActive"/>
+    /// </para>
+    /// <para>
+    /// Bacause: The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
     /// and calls the OutputPort(Presenter) Presenter sets DisplayMode in Viewmodel -> View Updates!
+    /// </para>
     /// </summary>
     [Parameter] 
     public H5pDisplayMode DisplayMode{ get; set; }
@@ -57,6 +60,9 @@
     
     [Inject]
     public required IDisplayH5pFactory DisplayH5pFactory{ get; set; }
+    
+    [Inject]
+    public required IValidateH5pFactory ValidateH5pFactory{ get; set; }
 
     internal H5pPlayerController? H5pPlayerController { get; private set; }
     internal H5pPlayerViewModel? H5pPlayerVm { get; set; }
@@ -69,11 +75,22 @@
             await StartH5pPlayer();
         }
         
-        StartToDisplayH5pIfDisplayModeIsActive();
+        if (IsDisplayModeActive())
+        {
+            InitializeDisplayH5pView();
+        }
+        else if(IsValidationModeActive())
+        {
+            InitializeValidateH5p();
+        }
         await base.OnAfterRenderAsync(firstRender);
 
     }
-    
+
+ 
+
+
+
     internal void InitializeStartH5pPlayer()
     {
         StartH5pPlayerFactory.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
@@ -87,25 +104,39 @@
         await H5pPlayerController!.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
     }
 
-    private void StartToDisplayH5pIfDisplayModeIsActive()
+    private void InitializeDisplayH5pView()
     {
-        if (H5pPlayerVm?.IsDisplayModeActive == true)
+        DisplayH5pFactory.CreateDisplayH5pPresentationStructure(StartH5pPlayerFactory.DisplayH5pUc);
+        ActiveView = builder =>
         {
-            DisplayH5pFactory.CreateDisplayH5pPresentationStructure(StartH5pPlayerFactory.DisplayH5pUc);
-            ActiveView = builder =>
-            {
-                
-                builder.OpenComponent(0, typeof(DisplayH5pView)); 
-                builder.AddAttribute(1, "DisplayH5pVm", DisplayH5pFactory.DisplayH5pVm);
-                builder.AddAttribute(2, "DisplayH5pController", DisplayH5pFactory.DisplayH5pController);
-                builder.CloseComponent();
-            };
-        }
+            builder.OpenComponent(0, typeof(DisplayH5pView)); 
+            builder.AddAttribute(1, "DisplayH5pVm", DisplayH5pFactory.DisplayH5pVm);
+            builder.AddAttribute(2, "DisplayH5pController", DisplayH5pFactory.DisplayH5pController);
+            builder.CloseComponent();
+        };
+    }
+    private void InitializeValidateH5p()
+    {
+        ValidateH5pFactory.CreateValidateH5pPresentationStructure(StartH5pPlayerFactory.ValidateH5pUc);
+        ActiveView = builder =>
+        {
+            builder.OpenComponent(0, typeof(ValidateH5pView)); 
+            builder.AddAttribute(1, "ValidateH5pVm", ValidateH5pFactory.ValidateH5pVm);
+            builder.AddAttribute(2, "ValidateH5pController", ValidateH5pFactory.ValidateH5pController);
+            builder.CloseComponent();
+        };
     }
 
 
+    private bool IsValidationModeActive()
+    {
+        return H5pPlayerVm?.IsValidationModeActive == true;
+    }
 
-
+    private bool IsDisplayModeActive()
+    {
+        return H5pPlayerVm?.IsDisplayModeActive == true;
+    }
   
 
 }

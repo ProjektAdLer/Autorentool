@@ -9,6 +9,7 @@ public static class H5pPlayerStartup
     {
         services.AddTransient<IStartH5pPlayerFactory, StartH5pPlayerFactory>();
         services.AddTransient<IDisplayH5pFactory, DisplayH5pFactory>();
+        services.AddTransient<IValidateH5pFactory, ValidateH5pFactory>();
 
     }
 

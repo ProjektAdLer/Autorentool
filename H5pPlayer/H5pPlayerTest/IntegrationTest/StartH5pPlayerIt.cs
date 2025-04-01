@@ -12,9 +12,7 @@ namespace H5pPlayerTest.IntegrationTest;
 [TestFixture]
 public class StartH5pPlayerIt
 {
-    private TestContext _testContext;
-    private IStartH5pPlayerFactory _startH5pPlayerFactory;
-    private IDisplayH5pFactory _displayH5pFactory;
+
     
     [Test]
     public void CreateViewControllerPresenterViewModelStructure()
@@ -32,6 +30,11 @@ public class StartH5pPlayerIt
         
     }
 
+    
+    private TestContext _testContext;
+    private IStartH5pPlayerFactory _startH5pPlayerFactory;
+    private IDisplayH5pFactory _displayH5pFactory;
+    private IValidateH5pFactory _validateH5pFactory;
 
     [SetUp]
     public void Setup()
@@ -39,9 +42,11 @@ public class StartH5pPlayerIt
         _testContext = new TestContext();
         _startH5pPlayerFactory = new StartH5pPlayerFactory();
         _displayH5pFactory = new DisplayH5pFactory();
+        _validateH5pFactory = new ValidateH5pFactory();
 
         _testContext.Services.AddTransient(_ => _startH5pPlayerFactory);
         _testContext.Services.AddTransient(_ => _displayH5pFactory);
+        _testContext.Services.AddTransient(_ => _validateH5pFactory);
         
     }
 

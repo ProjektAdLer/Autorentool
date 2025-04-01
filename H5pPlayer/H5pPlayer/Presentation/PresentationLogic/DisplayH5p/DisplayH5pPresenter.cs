@@ -2,7 +2,7 @@
 
 public class DisplayH5pPresenter : IDisplayH5pPresenter
 {
-    public DisplayH5pPresenter(DisplayH5pViewModel displayH5pVm)
+    public DisplayH5pPresenter(IDisplayH5pViewModel displayH5pVm)
     {
     }
 }
