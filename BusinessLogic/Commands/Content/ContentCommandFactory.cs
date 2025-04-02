@@ -15,4 +15,7 @@ public class ContentCommandFactory : IContentCommandFactory
     
     public IDeleteLearningContent GetDeleteCommand(AuthoringToolWorkspace workspace, ILearningContent content, Action<AuthoringToolWorkspace> mappingAction)
         => new DeleteLearningContent(workspace, content, mappingAction, LoggerFactory.CreateLogger<DeleteLearningContent>());
+
+    public IAddLearningContent GetAddCommand(AuthoringToolWorkspace workspace, ILearningContent content, Action<AuthoringToolWorkspace> mappingAction)
+        => new AddLearningContent(workspace, content, mappingAction, LoggerFactory.CreateLogger<AddLearningContent>());
 }

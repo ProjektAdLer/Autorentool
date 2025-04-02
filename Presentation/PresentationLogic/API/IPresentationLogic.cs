@@ -405,11 +405,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Loads a Learning Content view model from a given stream.
     /// </summary>
+    /// <param name="workspaceViewModel">The workspace, that contains all learning contents in a list.</param>
     /// <param name="name">The name of the Learning Content.</param>
     /// <param name="stream">The stream containing the data for the Learning Content.</param>
     /// <returns>The loaded Learning Content view model.</returns>
     /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
-    Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
+    Task LoadLearningContentViewModelAsync(
+        IAuthoringToolWorkspaceViewModel workspaceViewModel, string name, Stream stream);
 
     /// <summary>
     /// Creates a Adaptivity Task in the given Adaptivity Content.

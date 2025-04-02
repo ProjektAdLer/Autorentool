@@ -7,4 +7,7 @@ public interface IContentCommandFactory
 {
     IDeleteLearningContent GetDeleteCommand(AuthoringToolWorkspace workspace, ILearningContent content,
         Action<AuthoringToolWorkspace> mappingAction);
+    
+    IAddLearningContent GetAddCommand(AuthoringToolWorkspace workspace, ILearningContent content,
+        Action<AuthoringToolWorkspace> mappingAction);
 }

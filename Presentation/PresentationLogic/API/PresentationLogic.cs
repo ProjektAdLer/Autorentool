@@ -24,8 +24,11 @@ using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
+using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningOutcome;
+using BusinessLogic.ErrorManagement.DataAccess;
+using BusinessLogic.ErrorManagement.PresentationLogic;
 using ElectronWrapper;
 using Presentation.Components.Adaptivity.Dialogues;
 using Presentation.Components.Adaptivity.Forms.Models;
@@ -945,11 +948,42 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningContentViewModelAsync"/>
-    public async Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream)
+    public async Task LoadLearningContentViewModelAsync(IAuthoringToolWorkspaceViewModel workspaceViewModel,
+        string name, Stream stream)
     {
-        var entity = await BusinessLogic.LoadLearningContentAsync(name, stream);
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(workspaceViewModel);
 
-        return Mapper.Map<ILearningContentViewModel>(entity);
+        ILearningContent contentEntity;
+
+        try
+        {
+            contentEntity = await BusinessLogic.LoadLearningContentAsync(name, stream);
+        }
+        catch (HashExistsException ex)
+        {
+            var existingContent = workspaceEntity.LearningContents
+                                      .FirstOrDefault(c => c.Name == ex.DuplicateFileName)
+                                  ?? throw new ContentNotExistingInWorkspaceException(
+                                      $"Duplicate Content '{ex.DuplicateFileName}' does not exist in workspace.");
+
+            if (existingContent is FileContent fileContent)
+            {
+                if (!fileContent.IsDeleted)
+                {
+                    throw;
+                }
+                contentEntity = fileContent;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(existingContent),
+                    $@"Content '{ex.DuplicateFileName}' is not of type FileContent.");
+            }
+        }
+        var command = ContentCommandFactory.GetAddCommand(workspaceEntity, contentEntity,
+            workspace => CMapper.Map(workspace, workspaceViewModel));
+        BusinessLogic.ExecuteCommand(command);
+        
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateAdaptivityTask"/>

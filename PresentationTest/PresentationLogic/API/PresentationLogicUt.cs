@@ -1499,8 +1499,8 @@ public class PresentationLogicUt
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
-            ))
+                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })), "TestBatchCommand"
+            )
             .Returns(mockBatchCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
@@ -1529,8 +1529,8 @@ public class PresentationLogicUt
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
                 i.SequenceEqual(new IUndoCommand[]
-                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })
-            ));
+                    { mockEditSpaceCommand1, mockEditSpaceCommand2, mockEditSpaceCommand3, mockDeleteTopicCommand })), "TestBatchCommand"
+            );
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
 
@@ -1770,7 +1770,7 @@ public class PresentationLogicUt
 
     [Test]
     // ANF-ID: [AWA0036, AWA0047]
-    public async Task PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
+    public async Task PresentationLogic_LoadLearningContentViewModel_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningContent = EntityProvider.GetFileContent();
@@ -1787,11 +1787,10 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        var result = await systemUnderTest.LoadLearningContentViewModelAsync(filename, stream);
+        await systemUnderTest.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>(),filename, stream);
 
         await mockBusinessLogic.Received().LoadLearningContentAsync(filename, stream);
         mockMapper.Received().Map<ILearningContentViewModel>(mockLearningContent);
-        Assert.That(result, Is.EqualTo(mockLearningContentViewModel));
     }
 
     [Test]
@@ -1807,7 +1806,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
         var ex = Assert.ThrowsAsync<Exception>(async () =>
-            await systemUnderTest.LoadLearningContentViewModelAsync(filename, stream));
+            await systemUnderTest.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,filename, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
@@ -2578,7 +2577,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
             i.SequenceEqual(new IUndoCommand[]
-                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+                { mockDeleteCommand, mockAddCommand })), "TestBatchCommand").Returns(mockBatchCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
@@ -2599,7 +2598,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
             i.SequenceEqual(new IUndoCommand[]
-                { mockDeleteCommand, mockAddCommand })));
+                { mockDeleteCommand, mockAddCommand })), "TestBatchCommand");
 
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -2638,7 +2637,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
             i.SequenceEqual(new IUndoCommand[]
-                { mockDeleteCommand, mockAddCommand }))).Returns(mockBatchCommand);
+                { mockDeleteCommand, mockAddCommand })), "TestBatchCommand").Returns(mockBatchCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, learningOutcomeCommandFactory: mockLearningOutcomeCommandFactory,
@@ -2656,7 +2655,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.Received().GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
             i.SequenceEqual(new IUndoCommand[]
-                { mockDeleteCommand, mockAddCommand })));
+                { mockDeleteCommand, mockAddCommand })), "BatchCommand");
 
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -2710,7 +2709,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), mockContentViewModel);
+        systemUnderTest.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), mockContentViewModel, false);
 
         mockMapper.Received().Map<ILearningContent>(mockContentViewModel);
         mockBusinessLogic.Received().RemoveContent(mockContentEntity);
@@ -3068,7 +3067,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.GetBatchCommand(
                 Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
-                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })))
+                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })), "TestBatchCommand")
             .Returns(mockBatchCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(
@@ -3096,7 +3095,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.Received().GetBatchCommand(
             Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
-                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })));
+                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })), "TestBatchCommand");
 
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }
@@ -3144,7 +3143,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.GetBatchCommand(
                 Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
-                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })))
+                    cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })), "BatchCommand")
             .Returns(mockBatchCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(
@@ -3172,7 +3171,7 @@ public class PresentationLogicUt
 
         mockBatchCommandFactory.Received().GetBatchCommand(
             Arg.Is<IEnumerable<IUndoCommand>>(cmds =>
-                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })));
+                cmds.SequenceEqual(new IUndoCommand[] { mockDeleteCommand, mockCreateCommand })), "BatchCommand");
 
         mockBusinessLogic.Received().ExecuteCommand(mockBatchCommand);
     }

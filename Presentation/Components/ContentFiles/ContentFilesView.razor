@@ -203,7 +203,7 @@
 
     private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
     {
-        if (e.CommandName == "DeleteLearningContent")
+        if (e.CommandName == "DeleteLearningContent" || e.CommandName == "AddLearningContent")
         {
             await InvokeAsync(StateHasChanged);
         }
