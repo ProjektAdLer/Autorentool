@@ -192,4 +192,7 @@
     <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
         <value>Learning world contains more than 50 learning spaces.</value>
     </data>
+    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>
+    </data>
 </root>

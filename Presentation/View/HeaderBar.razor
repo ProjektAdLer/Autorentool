@@ -463,6 +463,14 @@
             {
                 errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
             }
+
+            foreach (var element in space.ContainedLearningElements)
+            {
+                if(!PresentationLogic.GetAllContent().Contains(element.LearningContent)) 
+                {
+                    errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
+                }
+            }
         }
 
         foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
