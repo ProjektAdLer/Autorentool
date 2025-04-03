@@ -3,7 +3,7 @@
 namespace H5pPlayerTest.Presentation.PresentationLogic;
 
 [TestFixture]
-public class H5pPlayerViewModelUt
+public class H5pPlayerVmUt
 {
 
     /// <summary>
