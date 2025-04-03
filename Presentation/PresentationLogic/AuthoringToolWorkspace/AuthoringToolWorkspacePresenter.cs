@@ -3,6 +3,9 @@ using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningContent.FileContent;
+using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 
@@ -25,7 +28,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
         ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
-        IDialogService dialogService, IErrorService errorService, IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
+        IDialogService dialogService, IErrorService errorService,
+        IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
     {
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
@@ -111,6 +115,16 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
     }
 
+    private void RemoveDeletedContent()
+    {
+        var contentToRemove = AuthoringToolWorkspaceVm.LearningContents
+            .Where(vm =>
+                vm is IFileContentViewModel { IsDeleted: true } or ILinkContentViewModel { IsDeleted: true })
+            .ToList();
+
+        if (contentToRemove.Count > 0) _presentationLogic.RemoveMultipleContents(contentToRemove);
+    }
+
 
     internal async Task OnBeforeShutdownAsync(object? sender, BeforeShutdownEventArgs args)
     {
@@ -133,8 +147,12 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 return;
             }
 
-            if (result.Data is true) SaveLearningWorld(world);
+            if (result.Data is true)
+            {
+                SaveLearningWorld(world);
+            }
         }
+        RemoveDeletedContent();
     }
 
     private async Task<DialogResult> AskForSaveWorld(ILearningWorldViewModel world)
@@ -151,7 +169,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             CloseOnEscapeKey = true,
             BackdropClick = false
         };
-        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(_localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
+        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(
+            _localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
         var result = await dialog.Result;
         if (result == null) return DialogResult.Cancel();
         return result;
