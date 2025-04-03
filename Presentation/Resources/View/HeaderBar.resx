@@ -44,4 +44,10 @@
     <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
         <value />
     </data>
+    <data name="ErrorString.FileContentDeleted.Message" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ErrorString.LinkContentDeleted.Message" xml:space="preserve">
+        <value />
+    </data>
 </root>
