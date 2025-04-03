@@ -240,8 +240,6 @@ public class HeaderBarUt
         adaptivityContent.Tasks.Clear();
 
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {adaptivityContent });
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -269,8 +267,6 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
 
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {adaptivityContent });
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -300,8 +296,6 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
 
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {adaptivityContent });
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -336,7 +330,7 @@ public class HeaderBarUt
         element.LearningContent = adaptivityContent;
 
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {laterElement.LearningContent, adaptivityContent });
+            {laterElement.LearningContent});
 
         _selectedViewModelsProvider.LearningWorld.Returns(world);
 

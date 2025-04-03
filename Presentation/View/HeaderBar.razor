@@ -14,6 +14,8 @@
 @using Presentation.PresentationLogic.Extensions
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
@@ -466,6 +468,7 @@
 
             foreach (var element in space.ContainedLearningElements)
             {
+                if (element.LearningContent is not (IFileContentViewModel or ILinkContentViewModel)) continue;
                 if(!PresentationLogic.GetAllContent().Contains(element.LearningContent)) 
                 {
                     errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
