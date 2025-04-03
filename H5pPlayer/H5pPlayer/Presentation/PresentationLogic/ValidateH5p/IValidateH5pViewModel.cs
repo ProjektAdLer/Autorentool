@@ -2,5 +2,6 @@
 
 public interface IValidateH5pViewModel
 {
-    
+    event Action OnChange;
+    bool IsCompletable { get; set; }
 }

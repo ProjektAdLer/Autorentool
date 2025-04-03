@@ -37,7 +37,6 @@
     <ItemGroup>
       <Folder Include="BusinessLogic\BusinessRules\" />
       <Folder Include="Presentation\PresentationLogic\DisplayH5p\" />
-      <Folder Include="Presentation\PresentationLogic\ValidateH5p\" />
     </ItemGroup>
 
 </Project>
