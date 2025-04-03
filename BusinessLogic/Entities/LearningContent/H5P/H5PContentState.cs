@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogic.Entities.LearningContent.H5P;
 
-public enum H5PContentStateEnum
+public enum H5PContentState
 {
     UNKNOWN = 0,
     NOT_VALIDATED =1 ,
