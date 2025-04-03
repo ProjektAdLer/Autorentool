@@ -1,10 +1,5 @@
-﻿using H5pPlayer.Presentation.PresentationLogic.DisplayH5p;
-using H5pPlayer.Presentation.View;
-using NSubstitute;
-using Bunit;
-using Microsoft.Extensions.DependencyInjection;
-using TestContext = Bunit.TestContext;
-namespace H5pPlayerTest.Presentation.PresentationLogic.DisplayH5p;
+﻿using TestContext = Bunit.TestContext;
+namespace H5pPlayerTest.Presentation.View;
 
 
 [TestFixture]
