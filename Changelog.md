@@ -6,9 +6,16 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+- Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material 
+- Added a header and footer to the left sidebar
+- Added a arrow icon for doors in the floor plans
 
 ### Changed
 - Migrated to .NET 9
+- Changed design for element cards in reference dialog of adaptivity elements
+- Changed design for the dropzone to drag and drop learning material
+- Changed size and design for the learning space editor and unplaced elements
+- Changed design for the story element slots
 
 ### Deprecated
 
