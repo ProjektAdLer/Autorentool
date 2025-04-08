@@ -324,7 +324,7 @@ public class DataAccessUt
         var adaPng = expectedZip.Entries[3];
         using var adaPngMemStream = new MemoryStream();
         adaPng.Open().CopyTo(adaPngMemStream);
-        var adapngResult = adaPngMemStream.ToArray();
+        var adaPngResult = adaPngMemStream.ToArray();
         var adaHash = expectedZip.Entries[4];
         using var adaHashMemStream = new MemoryStream();
         adaHash.Open().CopyTo(adaHashMemStream);
@@ -344,7 +344,7 @@ public class DataAccessUt
             Assert.That(hashData1, Is.EqualTo(expectedHashData));
             Assert.That(adaPng.Name, Is.EqualTo("adafile.png"));
             Assert.That(adaPng.Length, Is.EqualTo(4));
-            Assert.That(adapngResult, Is.EqualTo(adaPngData));
+            Assert.That(adaPngResult, Is.EqualTo(adaPngData));
             Assert.That(adaHash.Name, Is.EqualTo("adafile.png.hash"));
             Assert.That(adaHash.Length, Is.EqualTo(4));
             Assert.That(adaHashResult, Is.EqualTo(adaHashData));
