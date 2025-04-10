@@ -3,7 +3,7 @@
 /// <summary>
 /// https://projektadler.github.io/Documentation/h5p-zust%C3%A4nde.html
 /// </summary>
-public enum H5pState
+public enum H5pValidationState
 {
     Unknown,
     NotUsable,
