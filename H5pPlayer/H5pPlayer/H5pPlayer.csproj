@@ -29,5 +29,10 @@
     <ItemGroup>
       <EditorConfigFiles Remove=".editorconfig" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Update="Presentation\View\H5pStateView.razor.css">
+        <DependentUpon>H5pStateNativView.razor</DependentUpon>
+      </Content>
+    </ItemGroup>
 
 </Project>

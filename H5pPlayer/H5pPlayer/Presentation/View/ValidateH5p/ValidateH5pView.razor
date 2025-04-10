@@ -9,6 +9,7 @@
 
 <ValidationNecessaryView></ValidationNecessaryView>
 
+<H5pStateView CurrentState="H5pStateView.H5pState.Unknown"></H5pStateView>
 
 <div style="margin-top: 20px;"></div>
 <div id="h5p-container"></div>
@@ -25,6 +26,16 @@
         </div>
     }
 }
+<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
+    <p class="pl-1 font-bold uppercase">H5P ist primitiv</p>
+</button>
+
+<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
+    <p class="pl-1 font-bold uppercase">H5P ist nicht verwendbar</p>
+</button>
+
+
+
 @code {
     
     [Parameter]
@@ -36,5 +47,11 @@
     protected override async Task OnInitializedAsync()
     {
         ValidateH5pVm.OnChange += StateHasChanged;
+    }
+    
+    
+    private void OpenContentFilesFolder()
+    {
+
     }
 }
