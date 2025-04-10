@@ -1,0 +1,27 @@
+﻿<div class="border bg-adlerblue-600 rounded-xl shadow p-4 max-w-xl">
+    <button @onclick="Toggle" 
+            class="flex items-center justify-between w-full text-left font-semibold text-lg text-adlergrey-700 hover:text-adlergrey-700">
+        <span>Zweck der Validierung</span>
+        <svg class="w-5 h-5 transform transition-transform duration-300 @(isOpen ? "rotate-180" : "")" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    @if (isOpen)
+    {
+        <div class="mt-4 text-gray-700">
+            
+        </div>
+    }
+
+</div>
+
+@code {
+    private bool isOpen = false;
+
+    private void Toggle()
+    {
+        isOpen = !isOpen;
+    }
+}

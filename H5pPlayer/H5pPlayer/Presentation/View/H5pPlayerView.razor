@@ -2,13 +2,11 @@
 @using H5pPlayer.Main
 @using H5pPlayer.Presentation.PresentationLogic
 @using Microsoft.JSInterop
+@using H5pPlayer.Presentation.View.ValidateH5p
 @inject IJSRuntime JsRuntime
 
 
-<div>
-    <p style="color: red">Dieses Fenster muss geöffnet bleiben bis die Validierung abgeschlossen ist!</p>
-    <p>Bitte prüfen Sie das H5P, indem Sie die darin enthaltenen Aufgaben lösen.</p>
-
+<div class="p-6 m-4 bg-adlerblue-300 border  rounded-lg shadow">
     @if (IsDisplayModeActive())
     {
         <DisplayH5pView
@@ -23,12 +21,6 @@
             ValidateH5pController="StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pController">
         </ValidateH5pView>
     }
-
-    @if (H5pPlayerVm != null)
-    {
-        <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
-    }
-
 </div>
 
 @code {
