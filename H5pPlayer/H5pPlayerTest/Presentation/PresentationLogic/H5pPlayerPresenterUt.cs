@@ -22,22 +22,7 @@ public class H5pPlayerPresenterUt
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPath, Is.EqualTo(errorTo.InvalidPath));
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPathErrorIsActive, Is.True);
     }
-    
-    
-    /// <summary>
-    /// todo: test for State has changed 
-    /// </summary>
-    [Test]
-    // ANF-ID: [HSE6]
-    public void SetH5pIsCompletable()
-    {
-        var h5pPlayerVm = CreateH5pPlayerVm();
-        var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
-        
-        systemUnderTest.SetH5pIsCompletable();
-        
-        Assert.That(h5pPlayerVm.IsCompletable, Is.True);
-    }
+
 
     [Test]
     // ANF-ID: [HSE2]

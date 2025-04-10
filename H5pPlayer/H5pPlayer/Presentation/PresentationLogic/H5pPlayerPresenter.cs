@@ -3,7 +3,7 @@ using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 
 namespace H5pPlayer.Presentation.PresentationLogic;
 
-public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOutputPort
+public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort
 {
     public H5pPlayerViewModel? H5pPlayerVm { get; }
 
@@ -21,10 +21,7 @@ public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOut
 
  
 
-    public void SetH5pIsCompletable()
-    {
-        H5pPlayerVm!.IsCompletable = true;
-    }
+
     
     public void StartToDisplayH5p()
     {

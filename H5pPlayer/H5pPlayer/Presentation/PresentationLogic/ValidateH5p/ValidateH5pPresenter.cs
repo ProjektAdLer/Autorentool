@@ -8,7 +8,7 @@ public class ValidateH5pPresenter : IValidateH5pPresenter, IValidateH5pUcOutputP
     {
         ValidateH5pVm = validateH5pVm;
     }
-    public IValidateH5pViewModel ValidateH5pVm { get; set; }
+    public IValidateH5pViewModel ValidateH5pVm { get; private set; }
 
     public void SetH5pIsCompletable()
     {

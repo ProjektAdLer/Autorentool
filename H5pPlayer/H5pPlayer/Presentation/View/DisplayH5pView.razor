@@ -6,27 +6,12 @@
 <div style="margin-top: 20px;"></div>
 
 
-
-
-
 @code {
   
-    [Parameter]
-    public IDisplayH5pViewModel? DisplayH5pVm { get;  set; }
-   
-    [Parameter]
-    public IDisplayH5pController? DisplayH5pController { get; set; }
+     [Parameter]
+     public IDisplayH5pViewModel? DisplayH5pVm { get;  set; }
     
-    protected override async void OnAfterRender(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-         //todo if needed
-         // DisplayH5pVm.OnAction += this.StateHasChanged 
-        }
-    }
+     [Parameter]
+     public IDisplayH5pController? DisplayH5pController { get; set; }
     
-    
-
 }

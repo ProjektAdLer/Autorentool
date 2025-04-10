@@ -8,35 +8,47 @@
 <div>
     <p style="color: red">Dieses Fenster muss geöffnet bleiben bis die Validierung abgeschlossen ist!</p>
     <p>Bitte prüfen Sie das H5P, indem Sie die darin enthaltenen Aufgaben lösen.</p>
-    <div style="margin-top: 20px;"></div>
-    <div id="h5p-container"></div>
-    <div style="margin-top: 20px;"></div>
+
+    @if (IsDisplayModeActive())
+    {
+        <DisplayH5pView
+            DisplayH5pVm="StartH5pPlayerFactory.DisplayH5PFactory.DisplayH5pVm"
+            DisplayH5pController="StartH5pPlayerFactory.DisplayH5PFactory.DisplayH5pController">
+        </DisplayH5pView>
+    }
+    else if (IsValidationModeActive())
+    {
+        <ValidateH5pView
+            ValidateH5pVm="StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pVm"
+            ValidateH5pController="StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pController">
+        </ValidateH5pView>
+    }
 
     @if (H5pPlayerVm != null)
     {
-    
-        @ActiveView
-        
         <InvalidPathErrorView InvalidPathErrorVm="H5pPlayerVm.InvalidPathErrorVm"></InvalidPathErrorView>
-
-        
-        @if (H5pPlayerVm.IsCompletable)
-        {
-            <div style="color: green; display: flex; align-items: center;">
-                <span>&#10003;</span> <!-- Grüner Haken -->
-                <span style="margin-left: 5px;">H5P ist abschließbar</span>
-            </div>
-        }
     }
-  
+
 </div>
 
 @code {
+    private RenderFragment? _activeView;
 
-    private RenderFragment? ActiveView { get; set; }
+    internal RenderFragment? ActiveView
+    {
+        get => _activeView;
+        set
+        {
+            if (_activeView != value)
+            {
+                _activeView = value;
+                StateHasChanged();
+            }
+        }
+    }
+    
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
-    
     
     [Parameter] 
     public string? UnzippedH5psPath{ get; set; }
@@ -48,7 +60,7 @@
     /// Or <see cref="H5pPlayerViewModel.IsValidationModeActive"/>
     /// </para>
     /// <para>
-    /// Bacause: The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
+    /// Because: The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
     /// and calls the OutputPort(Presenter) Presenter sets DisplayMode in Viewmodel -> View Updates!
     /// </para>
     /// </summary>
@@ -58,39 +70,22 @@
     [Inject]
     public required IStartH5pPlayerFactory StartH5pPlayerFactory{ get; set; }
     
-    [Inject]
-    public required IDisplayH5pFactory DisplayH5pFactory{ get; set; }
-    
-    [Inject]
-    public required IValidateH5pFactory ValidateH5pFactory{ get; set; }
-
     internal H5pPlayerController? H5pPlayerController { get; private set; }
     internal H5pPlayerViewModel? H5pPlayerVm { get; set; }
-
+    
+    protected override async Task OnInitializedAsync()
+    {
+        InitializeStartH5pPlayer(); 
+    }
+    
     protected override async void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            InitializeStartH5pPlayer();
-            await StartH5pPlayer();
-        }
-        
-        if (IsDisplayModeActive())
-        {
-            InitializeDisplayH5pView();
-        }
-        else if(IsValidationModeActive())
-        {
-            InitializeValidateH5p();
+            await StartH5pPlayer();   
         }
         await base.OnAfterRenderAsync(firstRender);
-
     }
-
- 
-
-
-
     internal void InitializeStartH5pPlayer()
     {
         StartH5pPlayerFactory.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
@@ -100,34 +95,8 @@
 
     private async Task StartH5pPlayer()
     {
-        //"https://localhost:8001/H5pStandalone/h5p-folder/AbfrageDefinitionen"
         await H5pPlayerController!.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
     }
-
-    private void InitializeDisplayH5pView()
-    {
-        DisplayH5pFactory.CreateDisplayH5pPresentationStructure(StartH5pPlayerFactory.DisplayH5pUc);
-        ActiveView = builder =>
-        {
-            builder.OpenComponent(0, typeof(DisplayH5pView)); 
-            builder.AddAttribute(1, "DisplayH5pVm", DisplayH5pFactory.DisplayH5pVm);
-            builder.AddAttribute(2, "DisplayH5pController", DisplayH5pFactory.DisplayH5pController);
-            builder.CloseComponent();
-        };
-    }
-    private void InitializeValidateH5p()
-    {
-        ValidateH5pFactory.CreateValidateH5pPresentationStructure(StartH5pPlayerFactory.ValidateH5pUc);
-        ActiveView = builder =>
-        {
-            builder.OpenComponent(0, typeof(ValidateH5pView)); 
-            builder.AddAttribute(1, "ValidateH5pVm", ValidateH5pFactory.ValidateH5pVm);
-            builder.AddAttribute(2, "ValidateH5pController", ValidateH5pFactory.ValidateH5pController);
-            builder.CloseComponent();
-        };
-    }
-
-
     private bool IsValidationModeActive()
     {
         return H5pPlayerVm?.IsValidationModeActive == true;
@@ -137,6 +106,4 @@
     {
         return H5pPlayerVm?.IsDisplayModeActive == true;
     }
-  
-
 }

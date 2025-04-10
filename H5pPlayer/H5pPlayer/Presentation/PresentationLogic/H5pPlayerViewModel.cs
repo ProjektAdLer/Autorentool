@@ -7,26 +7,12 @@ public class H5pPlayerViewModel
     {
         InvalidPathErrorVm = new InvalidPathErrorViewModel(viewStateNotificationMethod);
         OnChange += viewStateNotificationMethod;
-        IsCompletable = false;
         IsDisplayModeActive = false;
         IsValidationModeActive = false;
     }
     
     public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
-    
-    private bool _isCompletable;
-    public bool IsCompletable
-    {
-        get => _isCompletable;
-        set
-        {
-            if (_isCompletable != value)
-            {
-                _isCompletable = value;
-                NotifyStateChanged();
-            }
-        }
-    }
+
     
     private bool _isDisplayModeActive;
     public bool IsDisplayModeActive

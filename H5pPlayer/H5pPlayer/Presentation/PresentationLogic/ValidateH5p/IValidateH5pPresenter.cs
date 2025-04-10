@@ -2,5 +2,5 @@
 
 public interface IValidateH5pPresenter
 {
-    
+     IValidateH5pViewModel ValidateH5pVm { get;  }
 }

@@ -14,8 +14,8 @@ public class H5pPlayerController
         IStartH5pPlayerUCInputPort startH5pPlayerUc,
         H5pPlayerPresenter h5pPlayerPresenter)
     {
-        StartH5PPlayerUc = startH5pPlayerUc;
-        H5PPlayerPresenter = h5pPlayerPresenter;
+        StartH5pPlayerUc = startH5pPlayerUc;
+        H5pPlayerPresenter = h5pPlayerPresenter;
     }
 
 
@@ -25,17 +25,17 @@ public class H5pPlayerController
     /// </summary>
     public H5pPlayerController(IStartH5pPlayerUCInputPort? startH5pPlayerUc)
     {
-        StartH5PPlayerUc = startH5pPlayerUc;
-        H5PPlayerPresenter = null;
+        StartH5pPlayerUc = startH5pPlayerUc;
+        H5pPlayerPresenter = null;
     }
 
     public async Task StartH5pPlayer(H5pDisplayMode h5PDisplayMode, string h5pSourcePath, string unzippedH5psPath)
     {
         var startTo = new StartH5pPlayerInputTO(h5PDisplayMode, h5pSourcePath, unzippedH5psPath);
-        await StartH5PPlayerUc!.StartH5pPlayer(startTo);
+        await StartH5pPlayerUc!.StartH5pPlayer(startTo);
     }
     
-    internal IStartH5pPlayerUCInputPort? StartH5PPlayerUc { get; }
-    internal H5pPlayerPresenter? H5PPlayerPresenter { get; }
+    internal IStartH5pPlayerUCInputPort? StartH5pPlayerUc { get; }
+    internal H5pPlayerPresenter? H5pPlayerPresenter { get; }
 
 }
