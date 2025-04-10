@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using System.Data;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using DataAccess.Extensions;
@@ -179,32 +182,48 @@ public class DataAccessUt
         var fileSystem = Environment.OSVersion.Platform == PlatformID.Win32NT
             ? ResourceHelper.PrepareWindowsFileSystemWithResources()
             : ResourceHelper.PrepareUnixFileSystemWithResources();
+
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
         xmlHandlerWorlds.LoadFromDisk(Arg.Any<string>()).Returns(learningWorldPe);
+
         var mapper = Substitute.For<IMapper>();
         var learningWorld = EntityProvider.GetLearningWorldWithSpaceWithElement();
         mapper.Map<LearningWorld>(learningWorldPe).Returns(learningWorld);
         learningWorld.Name = "import_test";
+
         var ele1 = learningWorld.LearningSpaces.First().ContainedLearningElements.First();
         ele1.LearningContent = new FileContent("adler_logo.png", "png", "C:\\bogus_path\\adler_logo.png");
+
         var ele2 = EntityProvider.GetLearningElement();
         ele2.LearningContent = new LinkContent("rick", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
         learningWorld.LearningSpaces.First().LearningSpaceLayout.LearningElements.Add(3, ele2);
+
         var space2 = EntityProvider.GetLearningSpaceWithElement();
         space2.ContainedLearningElements.First().LearningContent =
             new FileContent("regex.txt", "txt", "C:\\bogus_path\\regex.txt");
         learningWorld.LearningSpaces.Add(space2);
 
+        var adaptivityElement = EntityProvider.GetLearningElement();
+        var adaptivityContent = EntityProvider.GetAdaptivityContentFullStructure();
+        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
+            new ContentReferenceAction(new FileContent("adafile.png", "png", "C:\\bogus_path\\adafile.png"), "comment");
+        adaptivityElement.LearningContent = adaptivityContent;
+        learningWorld.LearningSpaces.First().LearningSpaceLayout.LearningElements.Add(4, adaptivityElement);
+        
         var contentFileHandler = Substitute.For<IContentFileHandler>();
         var logoFcPe = PersistEntityProvider.GetFileContent("adler_logo.png", "png",
             Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png"));
         var regexFcPe = PersistEntityProvider.GetFileContent("regex.txt", "txt",
             Path.Join(ApplicationPaths.ContentFolder, "regex.txt"));
+        var adaptivityFcPe = PersistEntityProvider.GetFileContent("adafile.png", "png",
+            Path.Join(ApplicationPaths.ContentFolder, "adafile.png"));
         contentFileHandler.LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>())
             .Returns(logoFcPe);
         contentFileHandler.LoadContentAsync(Arg.Is<string>(s => s.EndsWith("regex.txt")), Arg.Any<byte[]>())
             .Returns(regexFcPe);
+        contentFileHandler.LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adafile.png")), Arg.Any<byte[]>())
+            .Returns(adaptivityFcPe);
 
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: fileSystem, contentHandler: contentFileHandler);
@@ -217,6 +236,8 @@ public class DataAccessUt
             .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adler_logo.png")), Arg.Any<byte[]>());
         await contentFileHandler.Received()
             .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("regex.txt")), Arg.Any<byte[]>());
+        await contentFileHandler.Received()
+            .LoadContentAsync(Arg.Is<string>(s => s.EndsWith("adafile.png")), Arg.Any<byte[]>());
 
         Assert.That(loadedWorld, Is.EqualTo(learningWorld));
         Assert.That(
@@ -225,6 +246,15 @@ public class DataAccessUt
         Assert.That(
             (loadedWorld.LearningSpaces.ElementAt(1).ContainedLearningElements.First().LearningContent as FileContent)!
             .Filepath, Is.EqualTo(Path.Join(ApplicationPaths.ContentFolder, "regex.txt")));
+        
+        var actualAdaptivityElement = loadedWorld.LearningSpaces.First().ContainedLearningElements.First(x => x.LearningContent is AdaptivityContent);
+        var actualAdaptivityContent = actualAdaptivityElement.LearningContent as AdaptivityContent;
+        var referenceAction = (ContentReferenceAction)actualAdaptivityContent!.Tasks.First().Questions.First()
+            .Rules.First().Action;
+        var adaptivityFileContent = (FileContent)referenceAction.Content!;
+        Assert.That(adaptivityFileContent.Filepath, 
+            Is.EqualTo(Path.Join(ApplicationPaths.ContentFolder, "adafile.png")));
+
     }
 
     [Test]
@@ -232,14 +262,26 @@ public class DataAccessUt
     public async Task ExportLearningWorldToArchive_ConstructsZipCorrectly()
     {
         var basePath = Environment.OSVersion.Platform == PlatformID.Win32NT ? "C:" : "/";
+
         var mapper = Substitute.For<IMapper>();
         var filesystem = new MockFileSystem();
+        
         var xmlHandlerWorlds = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var learningWorldPe = PersistEntityProvider.GetLearningWorld();
+        
         var learningWorld = EntityProvider.GetLearningWorldWithSpaceWithElement();
+        
         var element = learningWorld.LearningSpaces.First().ContainedLearningElements.First();
         element.LearningContent = new FileContent("adler_logo.png", "png",
             Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png"));
+        
+        var adaptivityElement = EntityProvider.GetLearningElement();
+        var adaptivityContent = EntityProvider.GetAdaptivityContentFullStructure();
+        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
+            new ContentReferenceAction(new FileContent("adafile.png", "png", Path.Join(ApplicationPaths.ContentFolder, "adafile.png")), "comment");
+        adaptivityElement.LearningContent = adaptivityContent;
+        learningWorld.LearningSpaces.First().LearningSpaceLayout.LearningElements.Add(4, adaptivityElement);
+        
         mapper.Map<LearningWorldPe>(learningWorld).Returns(learningWorldPe);
         var expectedWorldData = new byte[] { 21, 22 };
         xmlHandlerWorlds
@@ -252,6 +294,15 @@ public class DataAccessUt
             new MockFileData(expectedPngData));
         filesystem.AddFile(Path.Join(ApplicationPaths.ContentFolder, "adler_logo.png.hash"),
             new MockFileData(expectedHashData));
+        
+        var adaPngData = new byte[] { 10, 20, 30, 40 };
+        var adaHashData = new byte[] { 88, 88, 88, 88 };
+        filesystem.AddFile(
+            Path.Join(ApplicationPaths.ContentFolder, "adafile.png"),
+            new MockFileData(adaPngData));
+        filesystem.AddFile(
+            Path.Join(ApplicationPaths.ContentFolder, "adafile.png.hash"),
+            new MockFileData(adaHashData));
 
         var systemUnderTest = CreateTestableDataAccess(mapper: mapper, fileSaveHandlerWorld: xmlHandlerWorlds,
             fileSystem: filesystem);
@@ -260,16 +311,24 @@ public class DataAccessUt
             Path.Combine(basePath, "export_test.zip"));
 
         var expectedZip = ZipExtensions.GetZipArchive(filesystem, Path.Combine(basePath, "export_test.zip"));
-        Assert.That(expectedZip.Entries, Has.Count.EqualTo(3));
+        Assert.That(expectedZip.Entries, Has.Count.EqualTo(5));
 
-        var png = expectedZip.Entries[1];
+        var png1 = expectedZip.Entries[1];
         using var pngMemStream = new MemoryStream();
-        png.Open().CopyTo(pngMemStream);
-        var pngData = pngMemStream.ToArray();
-        var hash = expectedZip.Entries[2];
+        png1.Open().CopyTo(pngMemStream);
+        var pngData1 = pngMemStream.ToArray();
+        var hash1 = expectedZip.Entries[2];
         using var hashMemStream = new MemoryStream();
-        hash.Open().CopyTo(hashMemStream);
-        var hashData = hashMemStream.ToArray();
+        hash1.Open().CopyTo(hashMemStream);
+        var hashData1 = hashMemStream.ToArray();
+        var adaPng = expectedZip.Entries[3];
+        using var adaPngMemStream = new MemoryStream();
+        adaPng.Open().CopyTo(adaPngMemStream);
+        var adaPngResult = adaPngMemStream.ToArray();
+        var adaHash = expectedZip.Entries[4];
+        using var adaHashMemStream = new MemoryStream();
+        adaHash.Open().CopyTo(adaHashMemStream);
+        var adaHashResult = adaHashMemStream.ToArray();
         var world = expectedZip.Entries[0];
         using var worldMemStream = new MemoryStream();
         world.Open().CopyTo(worldMemStream);
@@ -277,12 +336,18 @@ public class DataAccessUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(png.Name, Is.EqualTo("adler_logo.png"));
-            Assert.That(png.Length, Is.EqualTo(4));
-            Assert.That(pngData, Is.EqualTo(expectedPngData));
-            Assert.That(hash.Name, Is.EqualTo("adler_logo.png.hash"));
-            Assert.That(hash.Length, Is.EqualTo(4));
-            Assert.That(hashData, Is.EqualTo(expectedHashData));
+            Assert.That(png1.Name, Is.EqualTo("adler_logo.png"));
+            Assert.That(png1.Length, Is.EqualTo(4));
+            Assert.That(pngData1, Is.EqualTo(expectedPngData));
+            Assert.That(hash1.Name, Is.EqualTo("adler_logo.png.hash"));
+            Assert.That(hash1.Length, Is.EqualTo(4));
+            Assert.That(hashData1, Is.EqualTo(expectedHashData));
+            Assert.That(adaPng.Name, Is.EqualTo("adafile.png"));
+            Assert.That(adaPng.Length, Is.EqualTo(4));
+            Assert.That(adaPngResult, Is.EqualTo(adaPngData));
+            Assert.That(adaHash.Name, Is.EqualTo("adafile.png.hash"));
+            Assert.That(adaHash.Length, Is.EqualTo(4));
+            Assert.That(adaHashResult, Is.EqualTo(adaHashData));
             Assert.That(world.Name, Is.EqualTo("world.awf"));
             Assert.That(world.Length, Is.EqualTo(2));
             Assert.That(worldData, Is.EqualTo(expectedWorldData));
