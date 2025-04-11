@@ -13,7 +13,8 @@
 <H5pPlayerView 
     H5pZipSourcePath="@H5pZipSourcePath"
     UnzippedH5psPath="@UnzippedH5psPath"
-    DisplayMode="@DisplayMode">
+    DisplayMode="@DisplayMode"
+    OnPlayerFinished="OnPlayerFinished">
 </H5pPlayerView>
 
 @code {
@@ -26,5 +27,8 @@
     
     [Parameter]
     public H5pDisplayMode DisplayMode { get; set; }
+    
+    [Parameter]
+    public Action<H5pPlayerResultTO>? OnPlayerFinished { get; set; }
 
 }
