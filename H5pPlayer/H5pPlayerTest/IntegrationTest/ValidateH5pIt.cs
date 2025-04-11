@@ -1,4 +1,5 @@
 ﻿using H5pPlayer.BusinessLogic.Api.JavaScript;
+using H5pPlayer.BusinessLogic.Entities;
 using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 using H5pPlayer.Main;
 using H5pPlayer.Presentation.PresentationLogic.ValidateH5p;
@@ -35,8 +36,27 @@ public class ValidateH5pIt
         Assert.That(_validateH5pVm!.IsCompletable, Is.True);
     }
 
-
     
+
+
+    [Test]
+    public void SetActiveH5pStateToNotUsable()
+    {
+        _validateH5pController!.SetActiveH5pStateToNotUsable();
+
+        Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.NotUsable));
+    }
+
+    [Test]
+    public void SetActiveH5pStateToPrimitive()
+    {
+        _validateH5pController!.SetActiveH5pStateToPrimitive();
+
+        Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.Primitive));
+    }
+
+
+    private string _basePath;
     private TestContext _testContext;
     private IValidateH5pUc? _validateH5pUc;
     private IValidateH5pViewModel? _validateH5pVm;
@@ -47,11 +67,16 @@ public class ValidateH5pIt
     [SetUp]
     public void Setup()
     {
+        _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
         _testContext = new TestContext();
         var fakeJavaScriptAdapter = Substitute.For<ICallJavaScriptAdapter>();
         _validateH5pFactory = new ValidateH5pFactory();
         _validateH5pFactory.CreateValidateH5pStructure(fakeJavaScriptAdapter);
         _validateH5pUc = _validateH5pFactory.ValidateH5pUc;
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        _validateH5pUc!.H5pEntity = h5pEntity;
         _validateH5pVm = _validateH5pFactory.ValidateH5pVm;
         Action fakeAction = () => { };
         _validateH5pVm!.OnChange += fakeAction;
@@ -59,6 +84,15 @@ public class ValidateH5pIt
         _validateH5pPresenter = _validateH5pFactory.ValidateH5pPresenter;
     }
 
+    private static H5pEntity CreateH5pEntity(
+        string unzippedH5psPath, string h5pZipSourcePath)
+    {
+        var h5pEntity = new H5pEntity();
+        h5pEntity.UnzippedH5psPath = unzippedH5psPath;
+        h5pEntity.H5pZipSourcePath = h5pZipSourcePath;
+        return h5pEntity;
+    }
+    
     [TearDown]
     public void TearDown()
     {
