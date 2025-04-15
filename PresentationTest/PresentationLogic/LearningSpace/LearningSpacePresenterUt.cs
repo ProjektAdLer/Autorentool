@@ -18,6 +18,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;

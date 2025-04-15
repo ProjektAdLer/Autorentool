@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
 using Shared;
+using Shared.Theme;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;

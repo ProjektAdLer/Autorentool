@@ -33,6 +33,7 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Shared;
 using Shared.Exceptions;
+using Shared.Theme;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 

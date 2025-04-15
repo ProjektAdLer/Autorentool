@@ -9,6 +9,7 @@ using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace TestHelpers;
 

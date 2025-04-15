@@ -25,6 +25,7 @@ using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.API;
 

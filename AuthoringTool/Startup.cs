@@ -53,6 +53,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Shared.Networking;
+using Shared.Theme;
 using Tailwind;
 using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;

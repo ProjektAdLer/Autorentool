@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Shared;
+namespace Shared.Theme;
 
 [DataContract]
 public enum Theme

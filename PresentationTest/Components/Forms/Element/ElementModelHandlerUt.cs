@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using Presentation.Components.Forms.Element;
 using Shared;
+using Shared.Theme;
 
 namespace PresentationTest.Components.Forms.Element;
 

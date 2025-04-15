@@ -2,6 +2,7 @@ using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 
 namespace SharedTest;
 

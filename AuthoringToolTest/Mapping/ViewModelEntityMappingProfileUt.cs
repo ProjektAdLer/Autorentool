@@ -22,6 +22,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using Shared.Adaptivity;
+using Shared.Theme;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;

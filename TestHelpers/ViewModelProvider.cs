@@ -20,6 +20,7 @@ using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace TestHelpers;
 

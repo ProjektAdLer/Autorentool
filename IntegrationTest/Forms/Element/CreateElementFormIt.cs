@@ -22,6 +22,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using PresentationTest;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.Element;

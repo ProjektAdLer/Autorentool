@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.Space;
 

@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningOutcome;
 using Shared;
+using Shared.Theme;
 
 namespace PersistEntities;
 

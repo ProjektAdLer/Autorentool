@@ -15,6 +15,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Configuration;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 using TestHelpers;
 
 namespace GeneratorTest.ATF;

@@ -63,6 +63,7 @@ using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.API;

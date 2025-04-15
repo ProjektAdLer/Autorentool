@@ -17,6 +17,7 @@ using Presentation.Components.Forms.Space;
 using Presentation.PresentationLogic.LearningSpace;
 using PresentationTest;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.Space;

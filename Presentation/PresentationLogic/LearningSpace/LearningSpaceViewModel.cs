@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 

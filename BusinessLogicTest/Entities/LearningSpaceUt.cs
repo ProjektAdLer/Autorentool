@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Entities;

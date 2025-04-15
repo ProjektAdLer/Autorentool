@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.Space;
 

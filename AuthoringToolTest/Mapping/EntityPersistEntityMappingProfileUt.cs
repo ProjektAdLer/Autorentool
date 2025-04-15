@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Story;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;

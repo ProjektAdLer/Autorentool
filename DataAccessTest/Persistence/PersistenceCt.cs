@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Question;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace DataAccessTest.Persistence;

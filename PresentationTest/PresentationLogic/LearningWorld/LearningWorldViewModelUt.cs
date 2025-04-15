@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;

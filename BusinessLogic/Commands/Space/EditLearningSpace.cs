@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.Space;
 

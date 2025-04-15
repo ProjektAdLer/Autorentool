@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Entities;

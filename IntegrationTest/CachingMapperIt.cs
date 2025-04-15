@@ -28,6 +28,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest;

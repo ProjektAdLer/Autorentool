@@ -5,6 +5,7 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;

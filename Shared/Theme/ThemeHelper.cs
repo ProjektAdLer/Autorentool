@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Localization;
 
-namespace Shared;
+namespace Shared.Theme;
 
 public static class ThemeHelper
 {

@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Entities.LearningOutcome;
 using JetBrains.Annotations;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Entities;
 
