@@ -33,7 +33,7 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
+        return new LearningSpace("a", "d", 4, SpaceTheme.CampusAschaffenburg, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }

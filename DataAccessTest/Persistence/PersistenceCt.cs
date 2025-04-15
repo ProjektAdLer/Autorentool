@@ -287,7 +287,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg)
+        var space = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg)
         {
             LearningSpaceLayout =
             {
@@ -355,7 +355,7 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -364,7 +364,7 @@ public class PersistenceCt
                     element
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -395,7 +395,7 @@ public class PersistenceCt
         var content = PersistEntityProvider.GetFileContent();
         var element1 = PersistEntityProvider.GetLearningElement(content: content);
         var element2 = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -404,7 +404,7 @@ public class PersistenceCt
                     element1
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -434,7 +434,7 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {

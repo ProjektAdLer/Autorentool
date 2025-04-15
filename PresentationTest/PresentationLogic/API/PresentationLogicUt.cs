@@ -474,7 +474,7 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         learningWorldVm.LearningSpaces.Add(mockSpaceVm);
         mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", learningOutcomeCollection, 5,
-                Theme.CampusAschaffenburg,
+                SpaceTheme.CampusAschaffenburg,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
         mockCommand.NewSpace.Id.Returns(mockSpaceVm.Id);
@@ -483,7 +483,7 @@ public class PresentationLogicUt
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
 
         systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", ViewModelProvider.GetLearningOutcomeCollection(),
-            5, Theme.CampusAschaffenburg, 6, 7,
+            5, SpaceTheme.CampusAschaffenburg, 6, 7,
             topicVm);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -502,14 +502,14 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
-        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.CampusAschaffenburg, null,
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, SpaceTheme.CampusAschaffenburg, null,
                 Arg.Any<Action<ILearningSpace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, SpaceTheme.CampusAschaffenburg, null);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -528,14 +528,14 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
-        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.CampusAschaffenburg, null,
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, SpaceTheme.CampusAschaffenburg, null,
                 Arg.Any<Action<ILearningSpace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, SpaceTheme.CampusAschaffenburg, null);
 
         mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }
@@ -1485,15 +1485,15 @@ public class PresentationLogicUt
             .Returns(mockDeleteTopicCommand);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand1);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand2);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand3);
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
@@ -1515,15 +1515,15 @@ public class PresentationLogicUt
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockBatchCommandFactory
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>

@@ -50,13 +50,13 @@
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
                   <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                 <div class="px-4 pb-2">
-                    <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
                                OnKeyUp="HandleKeyEvent"
-                               Text="@FormDataContainer.FormModel.Theme.ToString()"
-                               For="@(() => FormModel.Theme)">
+                               Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
+                               For="@(() => FormModel.SpaceTheme)">
                         @foreach (var theme in _themes)
                         {
-                            <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
+                            <MudSelectItem Value="@(theme)">@(ThemeHelper<SpaceTheme>.Localize(theme))</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
@@ -116,7 +116,7 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
-    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+    private SpaceTheme[] _themes = (SpaceTheme[])Enum.GetValues(typeof(SpaceTheme));
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
     private MudTextField<string> _nameField = null!;
@@ -133,7 +133,7 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.LearningOutcomeCollection, model.RequiredPoints, model.Theme);
+            model.LearningOutcomeCollection, model.RequiredPoints, model.SpaceTheme);
     }
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)

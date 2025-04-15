@@ -187,7 +187,7 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "o", 0, Theme.CampusAschaffenburg,
+        SpaceParent = new LearningSpace("l", "o", 0, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L))

@@ -19,17 +19,17 @@ public class CreateLearningPathWayUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space3 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space3 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
@@ -83,9 +83,9 @@ public class CreateLearningPathWayUt
     public void Execute_LearningPathWayAlreadyExists_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space2 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -113,7 +113,7 @@ public class CreateLearningPathWayUt
     public void Execute_SourceSpaceIsTargetSpace_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
         world.LearningSpaces.Add(space);
         var actionWasInvoked = false;
@@ -137,11 +137,11 @@ public class CreateLearningPathWayUt
     public void Execute_TargetSpaceAlreadyHasInboundSpace_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space0 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space0 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space2 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
         world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space1);
@@ -169,13 +169,13 @@ public class CreateLearningPathWayUt
     public void Execute_PathWayIsCircular_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space2 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space3 = new LearningSpace("n", "e", 6, Theme.CampusAschaffenburg,
+        var space3 = new LearningSpace("n", "e", 6, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space4 = new LearningSpace("t", "l", 6, Theme.CampusAschaffenburg,
+        var space4 = new LearningSpace("t", "l", 6, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -215,9 +215,9 @@ public class CreateLearningPathWayUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
-        var space2 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection());
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -243,12 +243,12 @@ public class CreateLearningPathWayUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", 3, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 3, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false

@@ -16,7 +16,7 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }
-    Theme Theme { get; set; }
+    SpaceTheme SpaceTheme { get; set; }
     new string Name { get; set; }
     string Description { get; set; }
     LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }

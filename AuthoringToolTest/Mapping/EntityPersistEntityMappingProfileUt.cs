@@ -127,10 +127,10 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -156,14 +156,14 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -195,14 +195,14 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithStoryElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.StoryElements[0] = GetTestableStoryElementWithParent(source);
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -311,7 +311,7 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
         var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
@@ -336,7 +336,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+            new(NewName, NewDescription, NewRequiredPoints, SpaceTheme.CampusAschaffenburg,
                 positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };
@@ -361,7 +361,7 @@ public class EntityPersistEntityMappingProfileUt
             new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText), Description, Goals, Difficulty,
                 ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
 
-        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>
                 {
@@ -409,7 +409,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+            new(NewName, NewDescription, NewRequiredPoints, SpaceTheme.CampusAschaffenburg,
                 PersistEntityProvider.GetLearningOutcomeCollection(),
                 new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
                     {
@@ -683,7 +683,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
@@ -695,7 +695,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+        return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, SpaceTheme.CampusAschaffenburg,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(
                 new Dictionary<int, ILearningElementPe>

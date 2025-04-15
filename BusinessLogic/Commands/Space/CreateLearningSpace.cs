@@ -12,10 +12,10 @@ public class CreateLearningSpace : ICreateLearningSpace
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string description,
         LearningOutcomeCollection learningOutcomes,
-        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, SpaceTheme spaceTheme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction, ILogger<CreateLearningSpace> logger)
     {
-        LearningSpace = new LearningSpace(name, description, requiredPoints, theme, learningOutcomes,
+        LearningSpace = new LearningSpace(name, description, requiredPoints, spaceTheme, learningOutcomes,
             positionX: positionX,
             positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
@@ -48,7 +48,7 @@ public class CreateLearningSpace : ICreateLearningSpace
             "Created LearningSpace {LearningSpaceName} ({LearningSpaceId}). Name: {Name}, Description: {Description}, Goals: {Goals}, RequiredPoints: {RequiredPoints}, Theme: {Theme}, PositionX: {PositionX}, PositionY: {PositionY}, Topic: {Topic}",
             LearningSpace.Name, LearningSpace.Id, LearningSpace.Name, LearningSpace.Description,
             LearningSpace.LearningOutcomeCollection,
-            LearningSpace.RequiredPoints, LearningSpace.Theme, LearningSpace.PositionX, LearningSpace.PositionY,
+            LearningSpace.RequiredPoints, LearningSpace.SpaceTheme, LearningSpace.PositionX, LearningSpace.PositionY,
             LearningSpace.AssignedTopic?.Name);
 
         MappingAction.Invoke(LearningWorld);

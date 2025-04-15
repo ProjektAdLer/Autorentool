@@ -40,9 +40,9 @@ public class LearningSpaceViewUt
             .Returns(_dimensions);
         _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        ThemeHelper.Initialize(themeLocalizer);
+        ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         _ctx.Services.AddSingleton(_jsRuntime);
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);

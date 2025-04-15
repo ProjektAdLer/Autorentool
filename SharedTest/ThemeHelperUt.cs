@@ -12,32 +12,32 @@ public class ThemeHelperUt
     [SetUp]
     public void Setup()
     {
-        _localizer = Substitute.For<IStringLocalizer<Theme>>();
+        _localizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
     }
 
-    private IStringLocalizer<Theme> _localizer = null!;
+    private IStringLocalizer<SpaceTheme> _localizer = null!;
 
     [Test]
     public void Localize_WhenNotInitialized_ThrowsException()
     {
         // Arrange
-        ThemeHelper.Initialize(null!);
+        ThemeHelper<SpaceTheme>.Initialize(null!);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => ThemeHelper.Localize(Theme.Suburb));
+        Assert.Throws<InvalidOperationException>(() => ThemeHelper<SpaceTheme>.Localize(SpaceTheme.Suburb));
     }
 
     [Test]
     public void Localize_WhenInitialized_ReturnsLocalizedValue()
     {
         // Arrange
-        ThemeHelper.Initialize(_localizer);
+        ThemeHelper<SpaceTheme>.Initialize(_localizer);
 
-        foreach (Theme theme in Enum.GetValues(typeof(Theme)))
+        foreach (SpaceTheme theme in Enum.GetValues(typeof(SpaceTheme)))
         {
             // Act
-            var localizedValue = ThemeHelper.Localize(theme);
+            var localizedValue = ThemeHelper<SpaceTheme>.Localize(theme);
 
             // Assert
             Assert.That(localizedValue, Is.EqualTo($"Enum.Theme.{theme}"));

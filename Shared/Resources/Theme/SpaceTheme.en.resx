@@ -15,16 +15,16 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Enum.Theme.Suburb" xml:space="preserve">
+    <data name="Enum.SpaceTheme.Suburb" xml:space="preserve">
         <value>Suburb</value>
     </data>
-    <data name="Enum.Theme.Arcade" xml:space="preserve">
+    <data name="Enum.SpaceTheme.Arcade" xml:space="preserve">
         <value>Arcade</value>
     </data>
-    <data name="Enum.Theme.CampusAschaffenburg" xml:space="preserve">
+    <data name="Enum.SpaceTheme.CampusAschaffenburg" xml:space="preserve">
         <value>Campus Aschaffenburg</value>
     </data>
-    <data name="Enum.Theme.CampusKempten" xml:space="preserve">
+    <data name="Enum.SpaceTheme.CampusKempten" xml:space="preserve">
         <value>Campus Kempten</value>
     </data>
 </root>

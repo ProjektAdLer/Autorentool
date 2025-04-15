@@ -34,11 +34,11 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="description">The description of the learning space.</param>
     /// <param name="learningOutcomeCollectionVm">The learning outcomes of the learning space.</param>
     /// <param name="requiredPoints">The required points for the learning space.</param>
-    /// <param name="theme">The theme of the learning space.</param>
+    /// <param name="spaceTheme">The theme of the learning space.</param>
     /// <param name="topic">The topic of the learning space (optional).</param>
     void CreateLearningSpace(string name, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
-        int requiredPoints, Theme theme, TopicViewModel? topic = null);
+        int requiredPoints, SpaceTheme spaceTheme, TopicViewModel? topic = null);
 
     /// <summary>
     /// Edits an existing learning world.

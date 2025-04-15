@@ -19,7 +19,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)
@@ -95,7 +95,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY);
@@ -120,7 +120,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)

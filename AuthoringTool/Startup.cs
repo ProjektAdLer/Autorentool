@@ -324,7 +324,7 @@ public class Startup
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
-        ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
+        ThemeHelper<SpaceTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<SpaceTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
 

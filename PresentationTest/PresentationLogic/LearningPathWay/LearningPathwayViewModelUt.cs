@@ -13,7 +13,7 @@ public class LearningPathwayViewModelUt
     public void Constructor_InitializesAllProperties()
     {
         var sourceCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
-        var targetSpace = new LearningSpaceViewModel("a", "b", Theme.CampusAschaffenburg, 3);
+        var targetSpace = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg, 3);
 
         var systemUnderTest = new LearningPathwayViewModel(sourceCondition, targetSpace);
 

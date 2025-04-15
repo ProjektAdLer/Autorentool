@@ -140,10 +140,10 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             positionX: PositionX,
             positionY: PositionY);
-        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
+        var destination = new LearningSpaceViewModel("", "", SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -167,13 +167,13 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
+        var destination = new LearningSpaceViewModel("", "", SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -205,13 +205,13 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithStoryElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.StoryElements[0] = GetTestableStoryElementWithParent(source);
-        var destination = new LearningSpaceViewModel("", "", Theme.CampusAschaffenburg);
+        var destination = new LearningSpaceViewModel("", "", SpaceTheme.CampusAschaffenburg);
 
         systemUnderTest.Map(source, destination);
 
@@ -277,7 +277,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             positionX: PositionX,
             positionY: PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "", "", "");
@@ -304,7 +304,7 @@ public class ViewModelEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>
         {
-            new LearningSpaceViewModel(NewName, NewDescription, Theme.CampusAschaffenburg, NewRequiredPoints,
+            new LearningSpaceViewModel(NewName, NewDescription, SpaceTheme.CampusAschaffenburg, NewRequiredPoints,
                 positionX: NewPositionX, positionY: NewPositionY)
         };
 
@@ -434,7 +434,7 @@ public class ViewModelEntityMappingProfileUt
             new LearningElementViewModel("sel1", new StoryContentViewModel("foo", ConfigureStoryText), Description, Goals,
                 Difficulty, ElementModel.a_npc_defaultnpc);
 
-        var space = new LearningSpaceViewModel("space", Description, Theme.CampusAschaffenburg, RequiredPoints,
+        var space = new LearningSpaceViewModel("space", Description, SpaceTheme.CampusAschaffenburg, RequiredPoints,
                 ViewModelProvider.GetLearningOutcomeCollection(),
                 new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L)
                 {
@@ -710,7 +710,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.CampusAschaffenburg,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
@@ -722,7 +722,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
-        var space = new LearningSpaceViewModel(NewName, NewDescription, Theme.CampusAschaffenburg,
+        var space = new LearningSpaceViewModel(NewName, NewDescription, SpaceTheme.CampusAschaffenburg,
             NewRequiredPoints, ViewModelProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L), positionX: NewPositionX,
             positionY: NewPositionY);

@@ -26,9 +26,9 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
     public void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
-        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        ThemeHelper.Initialize(themeLocalizer);
+        ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         Context.Services.AddSingleton(WorldPresenter);
     }
 
@@ -64,24 +64,24 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Assert.That(FormModel.Name, Is.EqualTo(""));
         Assert.That(FormModel.Description, Is.EqualTo(""));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(0));
-        Assert.That(FormModel.Theme, Is.EqualTo(default(Theme)));
+        Assert.That(FormModel.SpaceTheme, Is.EqualTo(default(SpaceTheme)));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
-        var mudSelect = systemUnderTest.FindComponent<MudSelect<Theme>>();
+        var mudSelect = systemUnderTest.FindComponent<MudSelect<SpaceTheme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
         mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
-        mudSelect.Find("input").Change(Theme.CampusAschaffenburg);
+        mudSelect.Find("input").Change(SpaceTheme.CampusAschaffenburg);
 
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
         Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
-        Assert.That(FormModel.Theme, Is.EqualTo(Theme.CampusAschaffenburg));
+        Assert.That(FormModel.SpaceTheme, Is.EqualTo(SpaceTheme.CampusAschaffenburg));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
     }
@@ -123,7 +123,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         submitButton.Find("button").Click();
         WorldPresenter.DidNotReceive().CreateLearningSpace(Expected, Arg.Any<string>(),
             Arg.Any<LearningOutcomeCollectionViewModel>(),
-            Arg.Any<int>(), Arg.Any<Theme>());
+            Arg.Any<int>(), Arg.Any<SpaceTheme>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
@@ -136,7 +136,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         submitButton.Find("button").Click();
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
             Arg.Any<LearningOutcomeCollectionViewModel>(),
-            Arg.Any<int>(), Arg.Any<Theme>());
+            Arg.Any<int>(), Arg.Any<SpaceTheme>());
     }
 
     [Test]
@@ -157,14 +157,14 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         input.KeyUp(Key.Enter);
         WorldPresenter.DidNotReceive().CreateLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<LearningOutcomeCollectionViewModel>(),
-            Arg.Any<int>(), Arg.Any<Theme>());
+            Arg.Any<int>(), Arg.Any<SpaceTheme>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         WorldPresenter.Received().CreateLearningSpace(Expected, Arg.Any<string>(),
             Arg.Any<LearningOutcomeCollectionViewModel>(),
-            Arg.Any<int>(), Arg.Any<Theme>());
+            Arg.Any<int>(), Arg.Any<SpaceTheme>());
     }
 
     private void ConfigureValidatorNameIsTest()
@@ -189,7 +189,7 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
                     string str => str == Expected,
                     int i => i == 123,
                     //TODO: once we have more themes, change to a different theme and test that
-                    Theme t => t == Theme.CampusAschaffenburg,
+                    SpaceTheme t => t == SpaceTheme.CampusAschaffenburg,
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 return valid ? Enumerable.Empty<string>() : new[] { "Must be test or 123" };

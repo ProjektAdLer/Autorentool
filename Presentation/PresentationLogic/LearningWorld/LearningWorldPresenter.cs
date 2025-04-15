@@ -254,7 +254,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     public void CreateLearningSpace(string name, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
         int requiredPoints,
-        Theme theme, TopicViewModel? topic = null)
+        SpaceTheme spaceTheme, TopicViewModel? topic = null)
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
@@ -263,7 +263,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
         _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomeCollectionVm,
-            requiredPoints, theme, 0, positionY, topic);
+            requiredPoints, spaceTheme, 0, positionY, topic);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>

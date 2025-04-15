@@ -49,7 +49,7 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", Theme.CampusAschaffenburg);
+        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveElementSlotInSpace(1, null);
@@ -73,8 +73,8 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var space1 = new LearningSpaceViewModel("a", "b", Theme.CampusAschaffenburg);
-        var space2 = new LearningSpaceViewModel("c", "d", Theme.CampusAschaffenburg);
+        var space1 = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg);
+        var space2 = new LearningSpaceViewModel("c", "d", SpaceTheme.CampusAschaffenburg);
         var learningObjectInPathWay = new LearningPathwayViewModel(space1, space2);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 

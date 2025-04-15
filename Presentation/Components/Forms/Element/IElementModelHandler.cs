@@ -8,7 +8,7 @@ public interface IElementModelHandler
     string GetIconForElementModel(ElementModel elementModel);
 
     IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
-        Theme? theme = null);
+        SpaceTheme? theme = null);
 
     ElementModel GetElementModelRandom();
 }

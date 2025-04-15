@@ -12,7 +12,7 @@ public class LearningSpaceFormModel
         Description = "";
         LearningOutcomeCollection = new LearningOutcomeCollectionViewModel();
         RequiredPoints = 0;
-        Theme = default;
+        SpaceTheme = default;
     }
 
     public Guid Id { get; set; }
@@ -20,5 +20,5 @@ public class LearningSpaceFormModel
     public string Description { get; set; }
     public LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }
     public int RequiredPoints { get; set; }
-    public Theme Theme { get; set; }
+    public SpaceTheme SpaceTheme { get; set; }
 }

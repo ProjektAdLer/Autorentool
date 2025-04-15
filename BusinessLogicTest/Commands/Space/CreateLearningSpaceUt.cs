@@ -19,7 +19,7 @@ public class CreateLearningSpaceUt
         var name = "space1";
         var description = "space for learning";
         var requiredPoints = 10;
-        var theme = Theme.CampusAschaffenburg;
+        var theme = SpaceTheme.CampusAschaffenburg;
         var positionX = 1;
         var positionY = 2;
         var topic = new BusinessLogic.Entities.Topic("topic1");
@@ -52,7 +52,7 @@ public class CreateLearningSpaceUt
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.LearningOutcomeCollection.LearningOutcomes, Is.Not.Empty);
             Assert.That(space.RequiredPoints, Is.EqualTo(10));
-            Assert.That(space.Theme, Is.EqualTo(Theme.CampusAschaffenburg));
+            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.CampusAschaffenburg));
             Assert.That(space.PositionX, Is.EqualTo(1));
             Assert.That(space.PositionY, Is.EqualTo(2));
             Assert.That(space.AssignedTopic, Is.EqualTo(topic));
@@ -64,7 +64,7 @@ public class CreateLearningSpaceUt
     public void Execute_AddsLearningSpaceAndSetAsSelectedLearningObject()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z", "w", 5, Theme.CampusAschaffenburg);
+        var space = new LearningSpace("z", "w", 5, SpaceTheme.CampusAschaffenburg);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -101,7 +101,7 @@ public class CreateLearningSpaceUt
 
         var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
             requiredPoints,
-            Theme.CampusAschaffenburg, positionX, positionY, topic, mappingAction,
+            SpaceTheme.CampusAschaffenburg, positionX, positionY, topic, mappingAction,
             new NullLogger<CreateLearningSpace>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -117,7 +117,7 @@ public class CreateLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", 5, Theme.CampusAschaffenburg);
+        var space = new LearningSpace("g", "j", 5, SpaceTheme.CampusAschaffenburg);
         world.LearningSpaces.Add(space);
         var name = "space1";
         var description = "space for learning";
@@ -130,7 +130,7 @@ public class CreateLearningSpaceUt
 
         var command = new CreateLearningSpace(world, name, description, EntityProvider.GetLearningOutcomeCollection(),
             requiredPoints,
-            Theme.CampusAschaffenburg, positionX,
+            SpaceTheme.CampusAschaffenburg, positionX,
             positionY, topic, mappingAction, new NullLogger<CreateLearningSpace>());
 
         Assert.Multiple(() =>

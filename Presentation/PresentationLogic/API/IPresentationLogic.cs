@@ -160,13 +160,13 @@ public interface IPresentationLogic
     /// <param name="description">The description of the Learning Space.</param>
     /// <param name="learningOutcomeCollectionVm">The learning outcomes of the Learning Space.</param>
     /// <param name="requiredPoints">The points required to access the Learning Space.</param>
-    /// <param name="theme">The theme of the Learning Space.</param>
+    /// <param name="spaceTheme">The theme of the Learning Space.</param>
     /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints,
-        Theme theme,
+        SpaceTheme spaceTheme,
         double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
@@ -177,10 +177,10 @@ public interface IPresentationLogic
     /// <param name="name">The new name of the Learning Space.</param>
     /// <param name="description">The new description of the Learning Space.</param>
     /// <param name="requiredPoints">The new points required to access the Learning Space.</param>
-    /// <param name="theme">The new theme of the Learning Space.</param>
+    /// <param name="spaceTheme">The new theme of the Learning Space.</param>
     /// <param name="topicVm">The new topic associated with the Learning Space. Can be null.</param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
+        string description, int requiredPoints, SpaceTheme spaceTheme, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.

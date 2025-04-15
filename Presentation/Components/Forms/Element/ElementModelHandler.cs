@@ -19,7 +19,7 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
-        Theme? theme = null)
+        SpaceTheme? theme = null)
     {
         var type = contentType switch
         {
@@ -31,7 +31,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.CampusAschaffenburg);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? SpaceTheme.CampusAschaffenburg);
 
         switch (type)
         {
@@ -212,11 +212,11 @@ public class ElementModelHandler : IElementModelHandler
         }
     }
 
-    internal static IEnumerable<ElementModel> GetElementModelsForTheme(Theme theme)
+    internal static IEnumerable<ElementModel> GetElementModelsForTheme(SpaceTheme spaceTheme)
     {
-        switch (theme)
+        switch (spaceTheme)
         {
-            case Theme.Arcade:
+            case SpaceTheme.Arcade:
                 yield return ElementModel.l_h5p_blackslotmachine_1;
                 yield return ElementModel.l_h5p_deskpc_2;
                 yield return ElementModel.l_h5p_greyslotmachine_1;
@@ -229,8 +229,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_comicshelfsmall_1;
                 yield return ElementModel.l_video_vrdesk_1;
                 break;
-            case Theme.CampusAschaffenburg:
-            case Theme.CampusKempten:
+            case SpaceTheme.CampusAschaffenburg:
+            case SpaceTheme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;
@@ -241,7 +241,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
                 break;
-            case Theme.Suburb:
+            case SpaceTheme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
                 yield return ElementModel.l_h5p_deskpc_1;
                 yield return ElementModel.l_h5p_drawingtable_1;
@@ -254,7 +254,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
+                throw new ArgumentOutOfRangeException(nameof(spaceTheme), spaceTheme, null);
         }
 
         // Models that are in all themes
@@ -273,14 +273,14 @@ public class ElementModelHandler : IElementModelHandler
 
     private class ElementModelComparer : Comparer<ElementModel>
     {
-        private readonly Theme _theme;
+        private readonly SpaceTheme _spaceTheme;
 
         private readonly ContentTypeEnum _type;
 
-        public ElementModelComparer(ContentTypeEnum type, Theme theme)
+        public ElementModelComparer(ContentTypeEnum type, SpaceTheme spaceTheme)
         {
             _type = type;
-            _theme = theme;
+            _spaceTheme = spaceTheme;
         }
 
         public override int Compare(ElementModel x, ElementModel y)
@@ -289,8 +289,8 @@ public class ElementModelHandler : IElementModelHandler
             if (x == ElementModel.l_random) return -1;
             if (y == ElementModel.l_random) return 1;
 
-            var xInTheme = GetElementModelsForTheme(_theme).Contains(x);
-            var yInTheme = GetElementModelsForTheme(_theme).Contains(y);
+            var xInTheme = GetElementModelsForTheme(_spaceTheme).Contains(x);
+            var yInTheme = GetElementModelsForTheme(_spaceTheme).Contains(y);
             var xInType = GetElementModelsForModelType(_type).Contains(x);
             var yInType = GetElementModelsForModelType(_type).Contains(y);
 
