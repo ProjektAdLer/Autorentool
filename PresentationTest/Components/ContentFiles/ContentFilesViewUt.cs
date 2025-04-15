@@ -156,7 +156,7 @@ public class ContentFilesViewUt
             Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>();
-        _presentationLogic.Received(1).RemoveContent(items.First());
+        _presentationLogic.Received(1).DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), items.First(), false);
     }
 
     [Test]
@@ -169,7 +169,7 @@ public class ContentFilesViewUt
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
-        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new ArgumentOutOfRangeException());
+        _presentationLogic.When(x => x.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), items.First(), false)).Throw(new ArgumentOutOfRangeException());
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -195,7 +195,7 @@ public class ContentFilesViewUt
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
-        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new FileNotFoundException("test"));
+        _presentationLogic.When(x => x.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), items.First(), false)).Throw(new FileNotFoundException("test"));
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -221,7 +221,7 @@ public class ContentFilesViewUt
                 Arg.Any<DialogOptions>())
             .Returns(dialogReference);
 
-        _presentationLogic.When(x => x.RemoveContent(items.First())).Throw(new SerializationException("test"));
+        _presentationLogic.When(x => x.DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), items.First(), false)).Throw(new SerializationException("test"));
 
         var systemUnderTest = GetRenderedComponent();
 
@@ -281,7 +281,7 @@ public class ContentFilesViewUt
         _dialogService.Received(1).ShowAsync<DeleteContentInUseConfirmationDialog>("WarningDialog.Title",
             Arg.Is(secondDialogParametersPredicate),
             Arg.Any<DialogOptions>());
-        _presentationLogic.DidNotReceiveWithAnyArgs().RemoveContent(Arg.Any<ILearningContentViewModel>());
+        _presentationLogic.DidNotReceiveWithAnyArgs().DeleteContent(Arg.Any<IAuthoringToolWorkspaceViewModel>(), Arg.Any<ILearningContentViewModel>(), false);
     }
 
     [Test]
@@ -843,7 +843,7 @@ public class ContentFilesViewUt
             new FileContentViewModel("file2", "type2", "path2"),
             new LinkContentViewModel("link1", "http://link1.com")
         };
-        _presentationLogic.GetAllContent().Returns(items);
+        _presentationLogic.GetAllContentFromDir().Returns(items);
         return items;
     }
 

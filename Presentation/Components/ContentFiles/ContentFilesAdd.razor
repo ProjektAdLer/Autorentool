@@ -78,6 +78,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IPresentationLogic PresentationLogic { get; set; }
+    
+    [Inject, AllowNull] 
+    internal IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ILogger<ContentFilesAdd> Logger { get; set; }
@@ -203,7 +206,7 @@
 
             try
             {
-                await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+                await PresentationLogic.LoadLearningContentViewModelAsync(WorkspaceViewModel, fileName, memoryStream);
                 successfulFiles.Add(entry.FullName);
             }
             catch (IOException e)
@@ -284,7 +287,7 @@
         Logger.LogTrace("Calling LoadLearningContentViewModel");
         try
         {
-            await PresentationLogic.LoadLearningContentViewModelAsync(fileName, memoryStream);
+            await PresentationLogic.LoadLearningContentViewModelAsync(WorkspaceViewModel, fileName, memoryStream);
             Snackbar.Add(@Localizer["ContentFilesAdd.AddedMaterial.Success"]);
         }
         catch (IOException e)

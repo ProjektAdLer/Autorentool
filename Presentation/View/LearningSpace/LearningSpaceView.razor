@@ -149,7 +149,8 @@
             commandName.StartsWith("PlaceLearningElement") ||
             commandName.StartsWith("PlaceStoryElement") ||
             commandName.StartsWith("DeleteLearningElement") ||
-            commandName.StartsWith("DeleteStoryElement"))
+            commandName.StartsWith("DeleteContent") ||
+            commandName.StartsWith("DeleteStoryElement")) 
         {
             await InvokeAsync(TriggerMasterLayoutStateHasChanged!);
         }

@@ -1,5 +1,7 @@
 using System.ComponentModel;
+using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Validation;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -13,6 +15,8 @@ public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged, ILea
     /// Read-only list of the LearningWorlds contained in the Workspace ViewModel.
     /// </summary>
     IList<ILearningWorldViewModel> LearningWorlds { get; }
+    
+    IEnumerable<ILearningContentViewModel> LearningContents { get; set; }
 
     
     /// <summary>

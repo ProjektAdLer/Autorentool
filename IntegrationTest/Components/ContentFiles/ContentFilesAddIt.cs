@@ -65,7 +65,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
             fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
-        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
+        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>());
     }
 
     [Test]
@@ -76,7 +76,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         var systemUnderTest = GetRenderedComponent();
         var browserFile = new MockBrowserFile("testFileName.txt");
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
-        _presentationLogic.LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>())
+        _presentationLogic.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>())
             .Throws(new HashExistsException("duplicateFileName.txt", "/bogus/path/to/duplicateFileName.txt"));
 
         // Act
@@ -84,7 +84,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
             fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
-        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
+        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>());
         await _dialogService.Received(1).ShowMessageBox("DialogService.MessageBox.Duplicate.Title",
             "DialogService.MessageBox.Duplicate.TexttestFileName.txt");
     }
@@ -97,7 +97,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         var systemUnderTest = GetRenderedComponent();
         var browserFile = new MockBrowserFile("testFileName.txt");
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
-        _presentationLogic.LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>())
+        _presentationLogic.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>())
             .Throws(new IOException("Some error"));
 
         // Act
@@ -105,7 +105,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
             fileUpload.Instance.OnFilesChanged.InvokeAsync(new InputFileChangeEventArgs(new[] { browserFile })));
 
         // Assert
-        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
+        await _presentationLogic.Received(1).LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>());
         _errorService.Received(1).SetError("ContentFilesAdd.ErrorMessage.LoadingMaterial", "Some error");
     }
 
@@ -124,7 +124,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Assert
         await _presentationLogic.DidNotReceive()
-            .LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
+            .LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>());
 
         await _dialogService.Received(1).ShowMessageBox("ContentFilesAdd.EmptyFile.Title",
             "ContentFilesAdd.EmptyFile.Text");
@@ -141,10 +141,10 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
             new List<string> { "errorFileName.txt" });
         var fileUpload = systemUnderTest.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
         _presentationLogic.When(x =>
-                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("DUP_")), Arg.Any<Stream>()))
+                x.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Is<string>(s => s.StartsWith("DUP_")), Arg.Any<Stream>()))
             .Throw(args => new HashExistsException(args.ArgAt<string>(0), "/bogus/path"));
         _presentationLogic.When(x =>
-                x.LoadLearningContentViewModelAsync(Arg.Is<string>(s => s.StartsWith("ERR_")), Arg.Any<Stream>()))
+                x.LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Is<string>(s => s.StartsWith("ERR_")), Arg.Any<Stream>()))
             .Throw(args => new IOException(args.ArgAt<string>(0)));
 
         // Act
@@ -153,7 +153,7 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
 
         // Assert
         await _presentationLogic.Received(3)
-            .LoadLearningContentViewModelAsync(Arg.Any<string>(), Arg.Any<Stream>());
+            .LoadLearningContentViewModelAsync(Arg.Any<AuthoringToolWorkspaceViewModel>() ,Arg.Any<string>(), Arg.Any<Stream>());
 
         await _dialogService.Received(1).ShowAsync<ImportZipDialog>("DialogService.MessageBox.Import.Title", Arg.Is<DialogParameters>(p =>
             p.Get<string>(nameof(ImportZipDialog.FileName)) == "testFileName.zip" &&

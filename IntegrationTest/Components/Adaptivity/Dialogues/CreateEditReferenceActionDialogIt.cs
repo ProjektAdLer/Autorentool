@@ -38,7 +38,7 @@ public class CreateEditReferenceActionDialogIt : MudDialogTestFixture<CreateEdit
         PresentationLogic = Substitute.For<IPresentationLogic>();
         LearningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
         Contents = new ILearningContentViewModel[] { ViewModelProvider.GetFileContent(type: "png") };
-        PresentationLogic.GetAllContent().Returns(Contents);
+        PresentationLogic.GetAllContentFromDir().Returns(Contents);
         World = Substitute.For<ILearningWorldViewModel>();
         var element = Substitute.For<ILearningElementViewModel>();
         element.Id.Returns(Guid.NewGuid());

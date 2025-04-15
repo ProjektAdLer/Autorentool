@@ -1371,7 +1371,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 
         systemUnderTest.GetAllContent();
-        presentationLogic.Received().GetAllContent();
+        presentationLogic.Received().GetAllContentFromDir();
     }
 
     [Test]

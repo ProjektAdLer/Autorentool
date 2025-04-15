@@ -4,6 +4,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
@@ -190,7 +191,7 @@ public class CommandStateManagerUt
         learningElement.LearningContent = EntityProvider.GetFileContent();
         var learningSpace = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X30_8L);
         var learningWorld = EntityProvider.GetLearningWorld();
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(),new List<ILearningContent>());
         var createLearningElementCommand = new CreateLearningElementInSlot(learningSpace, 0, learningElement, _ => { },
             new NullLogger<CreateLearningElementInSlot>());
         var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { },

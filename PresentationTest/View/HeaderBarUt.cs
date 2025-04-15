@@ -151,7 +151,7 @@ public class HeaderBarUt
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
+        _presentationLogic.GetAllContentFromDir().Returns(new List<ILearningContentViewModel>
             {element.LearningContent });
         var uploadResponseViewModel = new UploadResponseViewModel
         {
@@ -329,7 +329,7 @@ public class HeaderBarUt
             new ElementReferenceActionViewModel(laterElement.Id, "foobar");
         element.LearningContent = adaptivityContent;
 
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
+        _presentationLogic.GetAllContentFromDir().Returns(new List<ILearningContentViewModel>
             {laterElement.LearningContent});
 
         _selectedViewModelsProvider.LearningWorld.Returns(world);
@@ -364,7 +364,7 @@ public class HeaderBarUt
         _presentationLogic
             .ConstructAndUploadBackupAsync(world, Arg.Any<IProgress<int>>(), Arg.Any<CancellationToken>())
             .Throws(new OperationCanceledException());
-        _presentationLogic.GetAllContent().Returns([element.LearningContent]);
+        _presentationLogic.GetAllContentFromDir().Returns([element.LearningContent]);
         var dialogReference = Substitute.For<IDialogReference>();
         dialogReference.Result.Returns(DialogResult.Ok(true));
         _dialogService
@@ -389,7 +389,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
+        _presentationLogic.GetAllContentFromDir().Returns(new List<ILearningContentViewModel>
             {element.LearningContent });
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
@@ -490,7 +490,7 @@ public class HeaderBarUt
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(genericCancellationConfirmationDialogReference);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>(){element.LearningContent});
+        _presentationLogic.GetAllContentFromDir().Returns(new List<ILearningContentViewModel>(){element.LearningContent});
         var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
         replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Replace));
         _dialogService
@@ -528,7 +528,7 @@ public class HeaderBarUt
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(),
                 Arg.Any<DialogOptions>())
             .Returns(genericCancellationConfirmationDialogReference);
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>(){element.LearningContent });
+        _presentationLogic.GetAllContentFromDir().Returns(new List<ILearningContentViewModel>(){element.LearningContent });
         var replaceCopyLmsWorldDialogReference = Substitute.For<IDialogReference>();
         replaceCopyLmsWorldDialogReference.Result.Returns(DialogResult.Ok(ReplaceCopyLmsWorldDialogResult.Copy));
         _dialogService

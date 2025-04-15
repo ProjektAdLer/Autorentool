@@ -17,9 +17,9 @@ namespace TestHelpers;
 
 public static class EntityProvider
 {
-    public static AuthoringToolWorkspace GetAuthoringToolWorkspace(List<ILearningWorld>? worlds = null)
+    public static AuthoringToolWorkspace GetAuthoringToolWorkspace(List<ILearningWorld>? worlds = null, List<ILearningContent>? contents = null)
     {
-        return new AuthoringToolWorkspace(worlds ?? new List<ILearningWorld>());
+        return new AuthoringToolWorkspace(worlds ?? new List<ILearningWorld>(), contents ?? new List<ILearningContent>());
     }
 
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")

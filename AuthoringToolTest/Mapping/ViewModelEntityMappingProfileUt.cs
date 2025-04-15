@@ -1,6 +1,7 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
@@ -498,7 +499,7 @@ public class ViewModelEntityMappingProfileUt
             EnrolmentKey, StoryStart, StoryEnd);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey, StoryStart, StoryEnd);
-        var source = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
+        var source = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 }, new List<ILearningContent>());
         var destination = new AuthoringToolWorkspaceViewModel();
 
         systemUnderTest.Map(source, destination);

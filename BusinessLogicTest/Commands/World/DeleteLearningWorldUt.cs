@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
@@ -12,7 +13,7 @@ public class DeleteLearningWorldUt
     // ANF-ID: [ASE4]
     public void Execute_DeletesLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
         var actionWasInvoked = false;
@@ -39,7 +40,7 @@ public class DeleteLearningWorldUt
     // ANF-ID: [ASE4]
     public void Execute_DeletesLearningWorldAndSetsAnotherLearningWorldAsSelected()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         workspace.LearningWorlds.Add(world);

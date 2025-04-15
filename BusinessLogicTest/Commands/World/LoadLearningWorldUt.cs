@@ -1,6 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ public class LoadLearningWorldUt
     // ANF-ID: [ASE2]
     public void Execute_LoadsLearningWorld()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         const string filepath = "c:\\temp\\test";

@@ -11,6 +11,7 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
+@using Shared.Command
 @inject ISnackbar Snackbar
 
 <MudTable T="ILearningContentViewModel" 
@@ -101,12 +102,12 @@
             </div>
         </MudTd>
         <MudTd Class="py-0 pl-2" DataLabel="Name">
-            <MudTooltip Text="@context.Name"
+            <MudTooltip Text="@IsDeleted(context)"
                         Arrow="true"
                         Placement="Placement.Top"
                         Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                         Duration="Double.Epsilon">
-                <p class="pt-2 cursor-default max-w-[8rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
+                <p class=@debugClass(context)>@context.Name</p>
             </MudTooltip>
         </MudTd>
 
@@ -186,7 +187,7 @@
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
 
-    private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
+    private IEnumerable<ILearningContentViewModel> Items => WorkspaceViewModel.LearningContents;
 
     internal string? SearchString { get; set; }
 
@@ -194,6 +195,43 @@
     private MudTable<ILearningContentViewModel>? _table;
     private IEnumerable<ILearningContentViewModel> _deletionCandidates = new List<ILearningContentViewModel>();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PresentationLogic.OnCommandUndoRedoOrExecute += OnCommandUndoRedoOrExecute;
+    }
+
+    private async void OnCommandUndoRedoOrExecute(object? sender, CommandUndoRedoOrExecuteArgs e)
+    {
+        if (e.CommandName == "DeleteLearningContent" || e.CommandName == "AddLearningContent")
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    
+    private string debugClass(ILearningContentViewModel content)
+    {
+        switch (content)
+        {
+            case IFileContentViewModel fileContentViewModel:
+                return fileContentViewModel.IsDeleted ? content.Name + "pt-2 cursor-default text-formerror max-w-[8rem] truncate text-ellipsis overflow-hidden" : content.Name + "pt-2 cursor-default max-w-[8rem] truncate text-ellipsis overflow-hidden";
+            case ILinkContentViewModel linkContentViewModel:
+                return linkContentViewModel.IsDeleted ? content.Name + "pt-2 cursor-default text-formerror max-w-[8rem] truncate text-ellipsis overflow-hidden" : content.Name + "pt-2 cursor-default max-w-[8rem] truncate text-ellipsis overflow-hidden";
+            default:
+                return "";
+        }
+    }
+
+    private string IsDeleted(ILearningContentViewModel content)
+    {
+        return content switch
+        {
+            IFileContentViewModel fileContentViewModel => fileContentViewModel.IsDeleted ? content.Name + "- Deleted" : content.Name + "- Not Deleted",
+            ILinkContentViewModel linkContentViewModel => linkContentViewModel.IsDeleted ? content.Name + "- Deleted" : content.Name + "- Not Deleted",
+            _ => "False Type"
+        };
+    }
+    
     private bool? MultipleSelected
     {
         get
@@ -249,7 +287,6 @@
         if(result == null) return;
 
         if (result.Canceled) return;
-        Snackbar.Add(@Localizer["ContentFilesView.Snackbar.OneMaterialDelete"], Severity.Success);
         
         var matches = WorkspaceViewModel.LearningWorlds
             .SelectMany(world => world.AllLearningElements
@@ -264,7 +301,8 @@
         //not cancelled, delete content
         try
         {
-            PresentationLogic.RemoveContent(item);
+            PresentationLogic.DeleteContent(WorkspaceViewModel, item, matches.Any());
+            Snackbar.Add(@Localizer["ContentFilesView.Snackbar.OneMaterialDelete"], Severity.Success);
         }
         catch (ArgumentOutOfRangeException e)
         {

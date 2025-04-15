@@ -1,5 +1,6 @@
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 
@@ -12,7 +13,7 @@ public class CreateLearningWorldUt
     // ANF-ID: [ASE1]
     public void Execute_CreatesLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -61,7 +62,7 @@ public class CreateLearningWorldUt
     {
         var world1 = new LearningWorld("Foo", "", "", "", "", "");
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 }, new List<ILearningContent>());
 
         var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", "", "", "", _ => { },
             new NullLogger<CreateLearningWorld>());
@@ -74,7 +75,7 @@ public class CreateLearningWorldUt
     // ANF-ID: [ASE1]
     public void Execute_AddsLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var world = new LearningWorld("n", "sn", "a", "l", "d", "g", "el");
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
@@ -100,7 +101,7 @@ public class CreateLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -129,7 +130,7 @@ public class CreateLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f", "g");
         workspace.LearningWorlds.Add(world);
         var name = "n";

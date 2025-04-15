@@ -141,7 +141,7 @@
         LearningWorldPresenter.LearningWorldVm!.AllLearningElements
             .Where(ele => ele.LearningContent is not AdaptivityContentViewModel);
 
-    private IEnumerable<ILearningContentViewModel> LearningContents => PresentationLogic.GetAllContent();
+    private IEnumerable<ILearningContentViewModel> LearningContents => PresentationLogic.GetAllContentFromDir();
 
     private MudForm _form = null!;
     private MudTabs _tabs = null!;

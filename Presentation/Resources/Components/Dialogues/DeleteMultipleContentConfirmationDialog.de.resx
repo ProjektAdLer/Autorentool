@@ -33,7 +33,7 @@
         <value>Wollen Sie wirklich die folgenden Dateien löschen?</value>
     </data>
     <data name="Dialog.Text2" xml:space="preserve">
-        <value>Die Dateien werden momentan in den folgenden Lernelementen verwendet:</value>
+        <value>Die folgenden Lernelemente, die diese Dateien verwenden, werden dadurch ebenfalls gelöscht.</value>
     </data>
     <data name="Dialog.Header.World" xml:space="preserve">
         <value>Lernwelt</value>

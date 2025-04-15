@@ -43,7 +43,7 @@ public class BusinessLogicUt
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
 
-        systemUnderTest.GetAllContent();
+        systemUnderTest.GetAllContentFromDir();
         dataAccess.Received().GetAllContent();
     }
 

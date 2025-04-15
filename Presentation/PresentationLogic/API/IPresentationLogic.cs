@@ -48,7 +48,7 @@ public interface IPresentationLogic
     bool CanUndo { get; }
 
     /// <summary>
-    /// Whether or not undo can be run.
+    /// Whether or not redo can be run.
     /// </summary>
     bool CanRedo { get; }
 
@@ -411,11 +411,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Loads a Learning Content view model from a given stream.
     /// </summary>
+    /// <param name="workspaceViewModel">The workspace, that contains all learning contents in a list.</param>
     /// <param name="name">The name of the Learning Content.</param>
     /// <param name="stream">The stream containing the data for the Learning Content.</param>
     /// <returns>The loaded Learning Content view model.</returns>
     /// <exception cref="HashExistsException">There is already a file with the same hash inside the content folder.</exception>
-    Task<ILearningContentViewModel> LoadLearningContentViewModelAsync(string name, Stream stream);
+    Task LoadLearningContentViewModelAsync(
+        IAuthoringToolWorkspaceViewModel workspaceViewModel, string name, Stream stream);
 
     /// <summary>
     /// Creates a Adaptivity Task in the given Adaptivity Content.
@@ -454,17 +456,20 @@ public interface IPresentationLogic
     /// Gets all content files in the appdata folder.
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
-    IEnumerable<ILearningContentViewModel> GetAllContent();
+    IEnumerable<ILearningContentViewModel> GetAllContentFromDir();
 
     /// <summary>
-    /// Deletes the file referenced by the given content object.
+    /// Marks the file referenced by the given content object as deleted.
     /// </summary>
-    /// <param name="content">The content whos file shall be deleted.</param>
-    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
-    public void RemoveContent(ILearningContentViewModel content);
+    /// <param name="workspaceViewModel">The workspace that contains the learningContent.</param>
+    /// <param name="contentViewModel">The content whos file shall be deleted.</param>
+    /// <param name="inUse">A bool that indicates whether a content is used or not.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="contentViewModel"/> wasn't found.</exception>
+    public void DeleteContent(IAuthoringToolWorkspaceViewModel workspaceViewModel, 
+        ILearningContentViewModel contentViewModel, bool inUse);
 
     /// <summary>
-    /// Deletes the files referenced by the given content objects.
+    /// Marks the files referenced by the given content objects as deleted.
     /// </summary>
     /// <param name="contents">The contents whos file shall be deleted.</param>
     /// <exception cref="FileNotFoundException">Files corresponding to <paramref name="contents"/> weren't found.</exception>

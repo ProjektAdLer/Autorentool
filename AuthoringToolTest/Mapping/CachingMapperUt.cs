@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -20,7 +21,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
-        var entity = new AuthoringToolWorkspace(new List<ILearningWorld>());
+        var entity = new AuthoringToolWorkspace(new List<ILearningWorld>(), new List<ILearningContent>());
         var mockViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var mapper = Substitute.For<IMapper>();
         var logger = Substitute.For<ILogger<CachingMapper>>();

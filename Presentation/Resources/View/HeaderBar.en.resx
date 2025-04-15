@@ -195,4 +195,10 @@
     <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>
     </data>
+    <data name="ErrorString.FileContentDeleted.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a deleted external learning material.</value>
+    </data>
+    <data name="ErrorString.LinkContentDeleted.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a deleted external learning material.</value>
+    </data>
 </root>
