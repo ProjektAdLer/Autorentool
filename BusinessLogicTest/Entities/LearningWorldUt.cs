@@ -19,6 +19,8 @@ public class LearningWorldUt
         const string goals = "learn very many things";
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -34,8 +36,8 @@ public class LearningWorldUt
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
-            savePath: savePath, learningSpaces, pathWayConditions, pathWays, topics);
+            enrolmentKey, storyStart, storyEnd,
+            savePath: savePath, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions, learningPathways: pathWays, topics: topics);
 
         Assert.Multiple(() =>
         {
@@ -46,6 +48,10 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
+            Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
+            Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEnd));
+            Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePath));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
             Assert.That(systemUnderTest.LearningPathways, Is.EqualTo(pathWays));
@@ -66,6 +72,8 @@ public class LearningWorldUt
         const string goals = "learn very many things";
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
@@ -77,7 +85,7 @@ public class LearningWorldUt
         var topics = new List<Topic> { topic1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
@@ -89,6 +97,9 @@ public class LearningWorldUt
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var evaluationLinkChanged = "new evaluation link";
+        var enrolmentKeyChanged = "new enrolment key";
+        var storyStartChanged = "new story start";
+        var storyEndChanged = "new story end";
         var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
         var newElement = EntityProvider.GetLearningElement();
         var space2 = new LearningSpace("gg", "gg", 5, Theme.CampusAschaffenburg);
@@ -104,6 +115,9 @@ public class LearningWorldUt
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.EvaluationLink = evaluationLinkChanged;
+        systemUnderTest.EnrolmentKey = enrolmentKeyChanged;
+        systemUnderTest.StoryStart = storyStartChanged;
+        systemUnderTest.StoryEnd = storyEndChanged;
         systemUnderTest.SavePath = savePathChanged;
         systemUnderTest.LearningSpaces.Add(space2);
         systemUnderTest.PathWayConditions.Add(condition2);
@@ -121,6 +135,9 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLinkChanged));
+            Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKeyChanged));
+            Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStartChanged));
+            Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEndChanged));
             Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePathChanged));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
@@ -147,6 +164,9 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.EnrolmentKey, Is.EqualTo(enrolmentKey));
+            Assert.That(systemUnderTest.StoryStart, Is.EqualTo(storyStart));
+            Assert.That(systemUnderTest.StoryEnd, Is.EqualTo(storyEnd));
             Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePath));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
@@ -170,13 +190,15 @@ public class LearningWorldUt
         const string goals = "learn very many things";
         const string evaluationLink = "https://";
         const string enrolmentKey = "enrolmentkey";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
         var learningSpaces = new List<ILearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
-            savePath: savePath, learningSpaces);
+            enrolmentKey, storyStart, storyEnd,
+            savePath: savePath, learningSpaces: learningSpaces);
 
 
         var mementoMock = new MementoMock();

@@ -14,6 +14,7 @@ public interface IWorldCommandFactory
     ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
         string authors, string language, string description, string goals, string evaluationLink,
         string enrolmentKey,
+        string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction);
 
     /// <summary>
@@ -33,6 +34,7 @@ public interface IWorldCommandFactory
     /// </summary>
     IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
         string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction);
 
     /// <summary>

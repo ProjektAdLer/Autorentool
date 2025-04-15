@@ -66,4 +66,22 @@
     <data name="CreateWorldForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Beschreibung</value>
     </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Rahmenhandlung zur Story</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
+        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine stimmige Rahmenhandlung einzubetten.</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
+        <value>Einleitung</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder" xml:space="preserve">
+        <value>Es begann mit...</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Label" xml:space="preserve">
+        <value>Schluss</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
+        <value>Und so endete es...</value>
+    </data>
 </root>

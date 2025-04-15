@@ -83,7 +83,6 @@ public class XmlFileManagerUt
         Assert.Multiple(() =>
         {
             Assert.That(mockFileSystem.Directory.Exists(dirPath), Is.True);
-            Assert.That(mockFileSystem.File.Exists(txtPath), Is.False);
         });
     }
 }

@@ -38,6 +38,8 @@ public class ViewModelEntityMappingProfileUt
     private const string Goals = "goals";
     private const string EvaluationLink = "evaluationLink";
     private const string EnrolmentKey = "enrolmentKey";
+    private const string StoryStart = "storyStart";
+    private const string StoryEnd = "storyEnd";
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
@@ -58,6 +60,8 @@ public class ViewModelEntityMappingProfileUt
     private const string NewGoals = "newGoals";
     private const string NewEvaluationLink = "newEvaluationLink";
     private const string NewEnrolmentKey = "newEnrolmentKey";
+    private const string NewStoryStart = "newStoryStart";
+    private const string NewStoryEnd = "newStoryEnd";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
@@ -240,8 +244,8 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            evaluationLink: EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "");
+            evaluationLink: EvaluationLink, enrolmentKey: EnrolmentKey, storyStart: StoryStart, storyEnd: StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
+        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -256,6 +260,8 @@ public class ViewModelEntityMappingProfileUt
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
         destination.EnrolmentKey = NewEnrolmentKey;
+        destination.StoryStart = NewStoryStart;
+        destination.StoryEnd = NewStoryEnd;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>();
 
@@ -270,11 +276,11 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
             positionX: PositionX,
             positionY: PositionY));
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -293,6 +299,8 @@ public class ViewModelEntityMappingProfileUt
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
         destination.EnrolmentKey = NewEnrolmentKey;
+        destination.StoryStart = NewStoryStart;
+        destination.StoryEnd = NewStoryEnd;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>
         {
@@ -315,9 +323,9 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         source.LearningSpaces.Add(GetTestableSpace());
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -336,6 +344,8 @@ public class ViewModelEntityMappingProfileUt
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
         destination.EnrolmentKey = NewEnrolmentKey;
+        destination.StoryStart = NewStoryStart;
+        destination.StoryEnd = NewStoryEnd;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel> { GetTestableNewSpaceViewModel() };
 
@@ -354,12 +364,12 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
-        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "");
+        var destination = new LearningWorldViewModel("", "", "", "", "", "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
 
@@ -385,6 +395,8 @@ public class ViewModelEntityMappingProfileUt
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
         destination.EnrolmentKey = NewEnrolmentKey;
+        destination.StoryStart = NewStoryStart;
+        destination.StoryEnd = NewStoryEnd;
         destination.SavePath = NewSavePath;
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
@@ -446,7 +458,7 @@ public class ViewModelEntityMappingProfileUt
         storyElementVm1.Parent = space;
 
         var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, SavePath,
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             true,
             new List<ILearningSpaceViewModel> { space });
 
@@ -484,9 +496,9 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var world1 = new LearningWorld("world1", Shortname, Authors, Language, Description, Goals, EvaluationLink,
-            EnrolmentKey);
+            EnrolmentKey, StoryStart, StoryEnd);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals, EvaluationLink,
-            EnrolmentKey);
+            EnrolmentKey, StoryStart, StoryEnd);
         var source = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 }, new List<ILearningContent>());
         var destination = new AuthoringToolWorkspaceViewModel();
 
@@ -734,6 +746,8 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
                     Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
+                    Assert.That(world.StoryStart, Is.EqualTo(useNewFields ? NewStoryStart : StoryStart));
+                    Assert.That(world.StoryEnd, Is.EqualTo(useNewFields ? NewStoryEnd : StoryEnd));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                 });
@@ -750,6 +764,8 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
                     Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
+                    Assert.That(world.StoryStart, Is.EqualTo(useNewFields ? NewStoryStart : StoryStart));
+                    Assert.That(world.StoryEnd, Is.EqualTo(useNewFields ? NewStoryEnd : StoryEnd));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                 });
