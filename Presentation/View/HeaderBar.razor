@@ -518,7 +518,7 @@
                         continue;
                 }
                 if (learningElement.LearningContent is not (IFileContentViewModel or ILinkContentViewModel)) continue;
-                if(!PresentationLogic.GetAllContent().Contains(learningElement.LearningContent)) 
+                if(!PresentationLogic.GetAllContentFromDir().Contains(learningElement.LearningContent)) 
                 {
                     errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", learningElement.Name]} </li>");
                 }
