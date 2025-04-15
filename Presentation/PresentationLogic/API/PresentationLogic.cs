@@ -887,7 +887,7 @@ public class PresentationLogic : IPresentationLogic
         var deleteElementCommands = CollectDeleteElementCommands(workspaceViewModel, workspaceEntity, contentEntity);
 
         deleteElementCommands.Add(command);
-        var batchCommand = BatchCommandFactory.GetBatchCommand(deleteElementCommands, "DeleteContent");
+        var batchCommand = BatchCommandFactory.GetBatchCommand(deleteElementCommands, "DeleteLearningContent");
         BusinessLogic.ExecuteCommand(batchCommand);
     }
 
