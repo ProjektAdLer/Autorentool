@@ -10,6 +10,7 @@
 - Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material
 - Added a header and footer to the left sidebar
 - Added a arrow icon for doors in the floor plans
+- Implemented a validation for export to archive
 
 ### Changed
 

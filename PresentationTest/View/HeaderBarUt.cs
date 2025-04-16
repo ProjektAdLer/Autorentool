@@ -191,14 +191,14 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
+        
+        var errors = new List<string>();
+        
+        errors.Add("<li> ErrorString.Missing.LearningSpace.Message </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.Append("<ul><li>");
-        mockStringBuilder.AppendLine(" ErrorString.Missing.LearningSpace.Message </li>");
-        mockStringBuilder.Append("</ul>");
-
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
@@ -217,16 +217,17 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
+        
+        var errors = new List<string>();
+        
+        errors.Add($"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>");
+        errors.Add($"<li> ErrorString.Missing.LearningContent.Message {element1.Name} </li>");
+        errors.Add($"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>");
+        errors.Add($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Missing.LearningContent.Message {element1.Name} </li>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
-        mockStringBuilder.Append("</ul>");
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
@@ -245,14 +246,14 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
+        
+        var errors = new List<string>();
+        
+        errors.Add($"<li> ErrorString.NoTasks.Message {element.Name} </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        var mockStringBuilder = new StringBuilder();
-
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.NoTasks.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
@@ -272,14 +273,14 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
+        
+        var errors = new List<string>();
+        
+        errors.Add($"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        var mockStringBuilder = new StringBuilder();
-
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
@@ -301,14 +302,14 @@ public class HeaderBarUt
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
+        
+        var errors = new List<string>();
+        
+        errors.Add($"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        var mockStringBuilder = new StringBuilder();
-
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine($"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>");
-        mockStringBuilder.Append("</ul>");
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
@@ -339,14 +340,13 @@ public class HeaderBarUt
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         await button.ClickAsync(new MouseEventArgs());
 
-        var mockStringBuilder = new StringBuilder();
+        var errors = new List<string>();
+        
+        errors.Add($"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>");
+        
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
 
-        mockStringBuilder.Append("<ul>");
-        mockStringBuilder.AppendLine(
-            $"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>");
-        mockStringBuilder.Append("</ul>");
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
     }
 
     [Test]
