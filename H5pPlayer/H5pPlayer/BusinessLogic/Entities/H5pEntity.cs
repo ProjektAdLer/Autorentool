@@ -12,6 +12,7 @@ public class H5pEntity
     public H5pEntity()
     {
         ActiveDisplayMode = H5pDisplayMode.Display;
+        ActiveH5pState = H5pState.Unknown;
         // init by empty cause of unix mac windows usage. 
         // -> otherwise we must deside the OS here 
         _h5pZipSourcePath = string.Empty;
@@ -22,6 +23,9 @@ public class H5pEntity
     
     public H5pDisplayMode ActiveDisplayMode { get; set; }
 
+    public H5pState ActiveH5pState { get; set; }
+
+    
     
     /// <summary>
     /// Path to "H5P-Filename.h5p" for playing in H5P-Player.

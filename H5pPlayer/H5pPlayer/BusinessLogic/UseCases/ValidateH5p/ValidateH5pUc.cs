@@ -10,7 +10,7 @@ public class ValidateH5pUc : IValidateH5pUc
     internal ValidateH5pUc(IValidateH5pUcOutputPort validateH5PUcOutputPort,
         ICallJavaScriptAdapter iCallJavaScriptAdapter)
     {
-        ValidateH5PUcOutputPort = validateH5PUcOutputPort;
+        ValidateH5pUcOutputPort = validateH5PUcOutputPort;
         ICallJavaScriptAdapter = iCallJavaScriptAdapter;
         EnsureBackCallOpportunityOfJsAdapterToCorrectInstanceOfValidateUc();
     }
@@ -22,6 +22,7 @@ public class ValidateH5pUc : IValidateH5pUc
 
     public async Task  StartToValidateH5p(H5pEntity h5pEntity)
     {
+        H5pEntity = h5pEntity;
         var javaScriptAdapterTO = new CallJavaScriptAdapterTO(h5pEntity.UnzippedH5psPath, h5pEntity.H5pZipSourcePath);
         await ICallJavaScriptAdapter.ValidateH5p(javaScriptAdapterTO);
     }
@@ -31,15 +32,34 @@ public class ValidateH5pUc : IValidateH5pUc
     ///
     /// in this first try we don't set the completed flag to the <see cref="H5pEntity"/>
     /// </summary>
-    public void ValidateH5p(ValidateH5pTO validateH5PTo)
+    public void ValidateH5p(ValidateH5pTO validateH5pTo)
     {
-        if(validateH5PTo.IsValidationCompleted)
-            ValidateH5PUcOutputPort.SetH5pIsCompletable();
+        if(validateH5pTo.IsValidationCompleted)
+            ValidateH5pUcOutputPort.SetH5pIsCompletable();
     }
 
+    public void SetActiveH5pStateToNotUsable()
+    {
+        H5pEntity.ActiveH5pState = H5pState.NotUsable;
+        ValidateH5pUcOutputPort.SetH5pActiveStateToNotUsable();
+    }
 
-    public IValidateH5pUcOutputPort ValidateH5PUcOutputPort { get; }
+    public void SetActiveH5pStateToPrimitive()
+    {
+        H5pEntity.ActiveH5pState = H5pState.Primitive;
+        ValidateH5pUcOutputPort.SetH5pActiveStateToPrimitive();
+    }
+
+    public IValidateH5pUcOutputPort ValidateH5pUcOutputPort { get; }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
+    public H5pEntity H5pEntity { get; set; }
 
+
+
+ 
     
+    
+
+
+
 }

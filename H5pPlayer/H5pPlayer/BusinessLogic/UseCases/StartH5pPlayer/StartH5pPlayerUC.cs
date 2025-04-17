@@ -93,10 +93,18 @@ public class StartH5pPlayerUC : IStartH5pPlayerUCInputPort
 
     private async Task IfUserWantsToValidateH5pStartToValidateElseStartToDisplay()
     {
-        if(H5pEntity!.ActiveDisplayMode == H5pDisplayMode.Validate)
+        if (H5pEntity!.ActiveDisplayMode == H5pDisplayMode.Validate)
+        {
+            // first build GUI because we need the <div id="h5p-container"></div> active in DOM
+            StartH5pPlayerUcOutputPort.StartToValidateH5p();
             await ValidateH5PUc.StartToValidateH5p(H5pEntity);
+        }
         else
+        {
+            // first build GUI because we need the <div id="h5p-container"></div> active in DOM
+            StartH5pPlayerUcOutputPort.StartToDisplayH5p();
             await DisplayH5pUC.StartToDisplayH5p(H5pEntity);
+        }
     }
 
     

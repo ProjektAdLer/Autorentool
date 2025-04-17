@@ -3,27 +3,47 @@
 public class H5pPlayerViewModel
 {
 
-    public H5pPlayerViewModel(Action stateHasChanged)
+    public H5pPlayerViewModel(Action viewStateNotificationMethod)
     {
-        IsCompletable = false;
-        InvalidPathErrorVm = new InvalidPathErrorViewModel(stateHasChanged);
-        OnChange += stateHasChanged;
+        InvalidPathErrorVm = new InvalidPathErrorViewModel(viewStateNotificationMethod);
+        OnChange += viewStateNotificationMethod;
+        IsDisplayModeActive = false;
+        IsValidationModeActive = false;
     }
-    public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
     
-    private bool _isCompletable;
-    public bool IsCompletable
+    public InvalidPathErrorViewModel InvalidPathErrorVm { get; }
+
+    
+    private bool _isDisplayModeActive;
+    public bool IsDisplayModeActive
     {
-        get => _isCompletable;
+        get => _isDisplayModeActive;
         set
         {
-            if (_isCompletable != value)
+            if (_isDisplayModeActive != value)
             {
-                _isCompletable = value;
+                _isDisplayModeActive = value;
                 NotifyStateChanged();
             }
         }
     }
+    private bool _isValidationModeActive;
+
+
+
+    public bool IsValidationModeActive
+    {
+        get => _isValidationModeActive;
+        set
+        {
+            if (_isValidationModeActive != value)
+            {
+                _isValidationModeActive = value;
+                NotifyStateChanged();
+            }
+        }
+    }
+    
     
     private event Action OnChange;
 
@@ -32,4 +52,5 @@ public class H5pPlayerViewModel
         OnChange.Invoke();
     }
 
+ 
 }

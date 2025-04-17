@@ -3,7 +3,7 @@ using H5pPlayer.BusinessLogic.UseCases.ValidateH5p;
 
 namespace H5pPlayer.Presentation.PresentationLogic;
 
-public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOutputPort
+public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort
 {
     public H5pPlayerViewModel? H5pPlayerVm { get; }
 
@@ -19,8 +19,19 @@ public class H5pPlayerPresenter : IStartH5pPlayerUCOutputPort, IValidateH5pUcOut
         H5pPlayerVm!.InvalidPathErrorVm.InvalidPathErrorIsActive = true;
     }
 
-    public void SetH5pIsCompletable()
+ 
+
+
+    
+    public void StartToDisplayH5p()
     {
-        H5pPlayerVm!.IsCompletable = true;
+        H5pPlayerVm!.IsValidationModeActive = false;
+        H5pPlayerVm!.IsDisplayModeActive = true;
+    }
+
+    public void StartToValidateH5p()
+    {
+        H5pPlayerVm!.IsDisplayModeActive = false;
+        H5pPlayerVm!.IsValidationModeActive = true;
     }
 }
