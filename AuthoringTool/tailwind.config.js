@@ -106,6 +106,7 @@ module.exports = {
                 nodehandlecolor: "#e9d6b3",
                 adlerbronze: "#bf8970",
                 adlertitleblue: "#8b96a7",
+                adlertitledarkblue: "#747e8c",
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
