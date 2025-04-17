@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Handlers;
 using System.Net.Sockets;
 using System.Security.Authentication;
+using System.Text;
 using System.Text.Json;
 using System.Web;
 using BackendAccess.BackendEntities;
@@ -51,15 +52,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
     {
-        var parameters = new Dictionary<string, string>
-        {
-            { "username", username },
-            { "password", password }
-        };
+        var body = new StringContent(JsonSerializer.Serialize(new { Username = username, Password = password }),
+            Encoding.UTF8, "application/json");
 
         try
         {
-            return await SendHttpGetRequestAsync<UserTokenBE>("Users/Login", parameters);
+            return await SendHttpPostRequestAsync<UserTokenBE>("Users/Login", new Dictionary<string, string>(), body);
         }
         catch (HttpRequestException e)
         {
@@ -184,11 +182,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         {
             var responseHeaders = healthResponse.Headers;
             var redirect = responseHeaders.Location;
-            if (redirect is null) 
+            if (redirect is null)
                 throw new BackendException("Got 301 response from backend but no redirect URL");
             var newUri = redirect.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
             Configuration[IApplicationConfiguration.BackendBaseUrl] = newUri;
         }
+
         PreflightDomain = Configuration[IApplicationConfiguration.BackendBaseUrl];
     }
 
@@ -267,7 +266,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// <param name="progress">An optional progress reporter to track the progress of the HTTP request.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
-        MultipartFormDataContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
+        HttpContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
         cancellationToken ??= CancellationToken.None;
         var uri = new Uri(GetApiBaseUrl(), url);
