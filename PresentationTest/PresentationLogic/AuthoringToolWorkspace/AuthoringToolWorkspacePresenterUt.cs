@@ -40,9 +40,9 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.AuthoringToolWorkspaceVm.LearningWorlds.Add(
             new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo", "Foo", "Foo", "Foo", "Foo"));
 
-        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g", "e", "f", "ss", "se");
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g", TODO, "e", "f", "ss", "se");
 
-        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g", "e", "f", "ss", "se");
+        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g", TODO, "e", "f", "ss", "se");
     }
 
     [Test]

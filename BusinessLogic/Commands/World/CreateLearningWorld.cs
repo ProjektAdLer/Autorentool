@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using Shared.Extensions;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.World;
 
@@ -9,12 +10,12 @@ public class CreateLearningWorld : ICreateLearningWorld
     private IMemento? _memento;
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey,
         string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction,
         ILogger<CreateLearningWorld> logger)
     {
-        LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+        LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals, worldTheme, evaluationLink,
             enrolmentKey, storyStart, storyEnd);
         AuthoringToolWorkspace = authoringToolWorkspace;
         MappingAction = mappingAction;
@@ -49,9 +50,9 @@ public class CreateLearningWorld : ICreateLearningWorld
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
         Logger.LogTrace(
-            "Created LearningWorld ({Id}). Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
+            "Created LearningWorld ({Id}). Name: {Name}, Shortname: {Shortname}, Authors: {Authors}, Language: {Language}, Description: {Description}, Goals: {Goals}, Theme: {WorldTheme}, EvaluationLink: {EvaluationLink}, EnrolmentKey: {EnrolmentKey}, StoryStart: {StoryStart}, StoryEnd: {StoryEnd}",
             LearningWorld.Id, LearningWorld.Name, LearningWorld.Shortname, LearningWorld.Authors,
-            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals, LearningWorld.EvaluationLink,
+            LearningWorld.Language, LearningWorld.Description, LearningWorld.Goals, LearningWorld.WorldTheme, LearningWorld.EvaluationLink,
             LearningWorld.EnrolmentKey, LearningWorld.StoryStart, LearningWorld.StoryEnd);
 
         MappingAction.Invoke(AuthoringToolWorkspace);

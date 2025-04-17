@@ -23,6 +23,14 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>FloorPlanEnum.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Theme\WorldTheme.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>WorldTheme.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Theme\WorldTheme.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>WorldTheme.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 

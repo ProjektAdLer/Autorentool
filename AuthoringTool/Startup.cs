@@ -325,6 +325,7 @@ public class Startup
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
         ThemeHelper<SpaceTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<SpaceTheme>>());
+        ThemeHelper<WorldTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<WorldTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
 

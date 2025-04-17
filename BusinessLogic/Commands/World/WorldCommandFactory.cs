@@ -1,6 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.World;
 
@@ -16,10 +17,11 @@ public class WorldCommandFactory : IWorldCommandFactory
     public IUnsavedChangesResetHelper UnsavedChangesResetHelper { get; }
 
     public ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name,
-        string shortname, string authors, string language, string description, string goals,
+        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme,
         string evaluationLink, string enrolmentKey, string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction) =>
         new CreateLearningWorld(authoringToolWorkspace, name, shortname, authors, language, description, goals,
+            worldTheme,
             evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<CreateLearningWorld>());
 
@@ -34,10 +36,11 @@ public class WorldCommandFactory : IWorldCommandFactory
             LoggerFactory.CreateLogger<DeleteLearningWorld>());
 
     public IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink,
+        string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
         string enrolmentKey, string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction) =>
-        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals, evaluationLink,
+        new EditLearningWorld(learningWorld, name, shortname, authors, language, description, goals, worldTheme,
+            evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             mappingAction, LoggerFactory.CreateLogger<EditLearningWorld>());
 

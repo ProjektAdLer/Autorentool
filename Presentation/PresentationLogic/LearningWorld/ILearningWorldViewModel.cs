@@ -3,6 +3,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -23,6 +24,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Language { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     bool UnsavedChanges { get; set; }
     IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }

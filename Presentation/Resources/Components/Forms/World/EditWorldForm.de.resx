@@ -89,4 +89,10 @@
     <data name="EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
         <value>Und so endete es...</value>
     </data>
+    <data name="EditWorldForm.Theme.Text" xml:space="preserve">
+        <value>Theme</value>
+    </data>
+    <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
+    </data>
 </root>
