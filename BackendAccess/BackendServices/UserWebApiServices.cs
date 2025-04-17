@@ -52,9 +52,9 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
     {
-        var body = new StringContent(JsonSerializer.Serialize(new {Username = username, Password = password}),
+        var body = new StringContent(JsonSerializer.Serialize(new { Username = username, Password = password }),
             Encoding.UTF8, "application/json");
-        
+
         try
         {
             return await SendHttpPostRequestAsync<UserTokenBE>("Users/Login", new Dictionary<string, string>(), body);
@@ -99,7 +99,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     {
         var parameters = new Dictionary<string, string>
         {
-            {"WebServiceToken", token}
+            { "WebServiceToken", token }
         };
 
         try
@@ -127,8 +127,8 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
 
         var headers = new Dictionary<string, string>
         {
-            {"token", token},
-            {"Accept", "text/plain"}
+            { "token", token },
+            { "Accept", "text/plain" }
         };
         var content = new MultipartFormDataContent();
         content.Add(new StreamContent(_fileSystem.File.OpenRead(backupPath)),
@@ -202,10 +202,10 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     {
         var parameter = new Dictionary<string, string>()
         {
-            {"authorId", authorId.ToString()}
+            { "authorId", authorId.ToString() }
         };
 
-        var header = new Dictionary<string, string>() {{"token", token}};
+        var header = new Dictionary<string, string>() { { "token", token } };
 
         var apiResp =
             await SendHttpGetRequestAsync<LmsWorldsBE>($"Worlds/author/{authorId}", parameter, headers: header);
@@ -222,7 +222,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     {
         var header = new Dictionary<string, string>()
         {
-            {"token", token}
+            { "token", token }
         };
 
         var result = await SendHttpDeleteRequestAsync<bool>($"Worlds/{worldId}", headers: header);
