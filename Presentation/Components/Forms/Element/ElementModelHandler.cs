@@ -19,7 +19,7 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
-        SpaceTheme? theme = null)
+        WorldTheme? theme = null)
     {
         var type = contentType switch
         {
@@ -31,7 +31,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? SpaceTheme.CampusAschaffenburg);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? WorldTheme.CampusAschaffenburg);
 
         switch (type)
         {
@@ -212,25 +212,15 @@ public class ElementModelHandler : IElementModelHandler
         }
     }
 
-    internal static IEnumerable<ElementModel> GetElementModelsForTheme(SpaceTheme spaceTheme)
+    internal static IEnumerable<ElementModel> GetElementModelsForTheme(WorldTheme worldTheme)
     {
-        switch (spaceTheme)
+        switch (worldTheme)
         {
-            case SpaceTheme.Arcade:
-                yield return ElementModel.l_h5p_blackslotmachine_1;
-                yield return ElementModel.l_h5p_deskpc_2;
-                yield return ElementModel.l_h5p_greyslotmachine_1;
-                yield return ElementModel.l_h5p_purpleslotmachine_1;
-                yield return ElementModel.l_h5p_redslotmachine_1;
-                yield return ElementModel.l_image_cardboardcutout_1;
-                yield return ElementModel.l_image_gameposter_1;
-                yield return ElementModel.l_image_gameposter_2;
-                yield return ElementModel.l_text_comicshelfbig_1;
-                yield return ElementModel.l_text_comicshelfsmall_1;
-                yield return ElementModel.l_video_vrdesk_1;
+            #pragma warning disable CS0612 //
+            case WorldTheme.Company:
                 break;
-            case SpaceTheme.CampusAschaffenburg:
-            case SpaceTheme.CampusKempten:
+            case WorldTheme.CampusAschaffenburg:
+            case WorldTheme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;
@@ -241,7 +231,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
                 break;
-            case SpaceTheme.Suburb:
+            case WorldTheme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
                 yield return ElementModel.l_h5p_deskpc_1;
                 yield return ElementModel.l_h5p_drawingtable_1;
@@ -254,7 +244,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(spaceTheme), spaceTheme, null);
+                throw new ArgumentOutOfRangeException(nameof(worldTheme), worldTheme, null);
         }
 
         // Models that are in all themes
@@ -269,15 +259,16 @@ public class ElementModelHandler : IElementModelHandler
         yield return ElementModel.a_npc_hiphopmale;
         yield return ElementModel.a_npc_santafemale;
         yield return ElementModel.a_npc_santamale;
+        #pragma warning restore CS0612 //
     }
 
     private class ElementModelComparer : Comparer<ElementModel>
     {
-        private readonly SpaceTheme _spaceTheme;
+        private readonly WorldTheme _spaceTheme;
 
         private readonly ContentTypeEnum _type;
 
-        public ElementModelComparer(ContentTypeEnum type, SpaceTheme spaceTheme)
+        public ElementModelComparer(ContentTypeEnum type, WorldTheme spaceTheme)
         {
             _type = type;
             _spaceTheme = spaceTheme;

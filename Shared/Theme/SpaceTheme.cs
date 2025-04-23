@@ -5,8 +5,13 @@ namespace Shared.Theme;
 [DataContract]
 public enum SpaceTheme
 {
-    [EnumMember(Value = "Campus")] CampusAschaffenburg,
-    [EnumMember] CampusKempten,
-    [EnumMember] Suburb,
-    [EnumMember] Arcade
+    [Obsolete][EnumMember(Value = "Campus")] CampusAschaffenburg,
+    [Obsolete][EnumMember] CampusKempten,
+    [Obsolete][EnumMember] Suburb,
+    [Obsolete][EnumMember] Arcade,
+    [EnumMember] LearningArea,
+    [EnumMember] EatingArea,
+    [EnumMember] FnE,
+    [EnumMember] SocialArea,
+    [EnumMember] TechnicalArea
 }

@@ -11,16 +11,19 @@ public static class ThemeHelper<TEnum> where TEnum : struct, Enum
         _localizer = localizer;
     }
 
-    public static string Localize(TEnum enumValue)
+    public static string Localize(TEnum enumValue, string? context = null)
     {
         if (_localizer == null)
         {
             throw new InvalidOperationException("ThemeHelper has not been initialized.");
         }
 
-        string enumName = typeof(TEnum).Name;
-        var valueString = enumValue.ToString();
+        var baseKey = $"Enum.{typeof(TEnum).Name}.{enumValue}";
+        Console.WriteLine(context);
 
-        return _localizer[$"Enum.{enumName}.{valueString}"];
+        if (string.IsNullOrWhiteSpace(context)) return _localizer[baseKey];
+        var res = _localizer[$"{baseKey}.{context}"];
+        Console.WriteLine(res);
+        return !res.ResourceNotFound ? res.Value : _localizer[baseKey];
     }
 }

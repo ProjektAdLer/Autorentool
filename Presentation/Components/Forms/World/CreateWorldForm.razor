@@ -82,7 +82,9 @@
                                For="@(() => FormModel.WorldTheme)">
                         @foreach (var theme in _themes)
                         {
-                            <MudSelectItem Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                            <!-- WorldTheme.Company is disabled because it is not yet supported -->
+                            <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
+                                Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
