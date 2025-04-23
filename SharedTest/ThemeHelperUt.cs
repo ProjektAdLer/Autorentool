@@ -25,7 +25,7 @@ public class ThemeHelperUt
         ThemeHelper<SpaceTheme>.Initialize(null!);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => ThemeHelper<SpaceTheme>.Localize(SpaceTheme.Suburb));
+        Assert.Throws<InvalidOperationException>(() => ThemeHelper<SpaceTheme>.Localize(SpaceTheme.LearningArea));
     }
 
     [Test]

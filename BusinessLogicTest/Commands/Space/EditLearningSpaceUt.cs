@@ -15,7 +15,7 @@ public class EditLearningSpaceUt
     // ANF-ID: [AWA0023]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "d", 5, SpaceTheme.Arcade, EntityProvider.GetLearningOutcomeCollection())
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.LearningArea, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
@@ -36,7 +36,7 @@ public class EditLearningSpaceUt
             Assert.That(space.Name, Is.EqualTo("a"));
             Assert.That(space.Description, Is.EqualTo("d"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
-            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.Arcade));
+            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
         });
@@ -58,7 +58,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "d", 5, SpaceTheme.Arcade, EntityProvider.GetLearningOutcomeCollection());
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.LearningArea, EntityProvider.GetLearningOutcomeCollection());
         var name = "space1";
         var description = "space for learning";
         var requiredPoints = 10;
@@ -81,7 +81,7 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "j", 5, SpaceTheme.Arcade, EntityProvider.GetLearningOutcomeCollection())
+        var space = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea, EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
@@ -102,7 +102,7 @@ public class EditLearningSpaceUt
             Assert.That(space.Name, Is.EqualTo("g"));
             Assert.That(space.Description, Is.EqualTo("j"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
-            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.Arcade));
+            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
         });
@@ -129,7 +129,7 @@ public class EditLearningSpaceUt
             Assert.That(space.Name, Is.EqualTo("g"));
             Assert.That(space.Description, Is.EqualTo("j"));
             Assert.That(space.RequiredPoints, Is.EqualTo(5));
-            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.Arcade));
+            Assert.That(space.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
             Assert.That(space.AssignedTopic, Is.EqualTo(null));
             Assert.That(space.UnsavedChanges, Is.False);
         });

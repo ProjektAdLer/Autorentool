@@ -19,11 +19,9 @@ public static class ThemeHelper<TEnum> where TEnum : struct, Enum
         }
 
         var baseKey = $"Enum.{typeof(TEnum).Name}.{enumValue}";
-        Console.WriteLine(context);
 
         if (string.IsNullOrWhiteSpace(context)) return _localizer[baseKey];
         var res = _localizer[$"{baseKey}.{context}"];
-        Console.WriteLine(res);
         return !res.ResourceNotFound ? res.Value : _localizer[baseKey];
     }
 }

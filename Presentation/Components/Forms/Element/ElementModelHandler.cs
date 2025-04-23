@@ -264,14 +264,14 @@ public class ElementModelHandler : IElementModelHandler
 
     private class ElementModelComparer : Comparer<ElementModel>
     {
-        private readonly WorldTheme _spaceTheme;
+        private readonly WorldTheme _worldTheme;
 
         private readonly ContentTypeEnum _type;
 
-        public ElementModelComparer(ContentTypeEnum type, WorldTheme spaceTheme)
+        public ElementModelComparer(ContentTypeEnum type, WorldTheme worldTheme)
         {
             _type = type;
-            _spaceTheme = spaceTheme;
+            _worldTheme = worldTheme;
         }
 
         public override int Compare(ElementModel x, ElementModel y)
@@ -280,8 +280,8 @@ public class ElementModelHandler : IElementModelHandler
             if (x == ElementModel.l_random) return -1;
             if (y == ElementModel.l_random) return 1;
 
-            var xInTheme = GetElementModelsForTheme(_spaceTheme).Contains(x);
-            var yInTheme = GetElementModelsForTheme(_spaceTheme).Contains(y);
+            var xInTheme = GetElementModelsForTheme(_worldTheme).Contains(x);
+            var yInTheme = GetElementModelsForTheme(_worldTheme).Contains(y);
             var xInType = GetElementModelsForModelType(_type).Contains(x);
             var yInType = GetElementModelsForModelType(_type).Contains(y);
 
