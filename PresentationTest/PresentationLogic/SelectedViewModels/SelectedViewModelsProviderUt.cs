@@ -23,7 +23,7 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f", "h", "i", "j", "k", "g");
+        var learningWorld = new LearningWorldViewModel("a", "b", "c", "d", "e", "f",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k", "g");
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveElementSlotInSpace(1, null);
@@ -49,7 +49,7 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg);
+        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", SpaceTheme.LearningArea);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 
         systemUnderTest.SetActiveElementSlotInSpace(1, null);
@@ -73,8 +73,8 @@ public class SelectedViewModelsProviderUt
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var logger = Substitute.For<ILogger<SelectedViewModelsProvider>>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo, logger);
-        var space1 = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg);
-        var space2 = new LearningSpaceViewModel("c", "d", SpaceTheme.CampusAschaffenburg);
+        var space1 = new LearningSpaceViewModel("a", "b", SpaceTheme.LearningArea);
+        var space2 = new LearningSpaceViewModel("c", "d", SpaceTheme.LearningArea);
         var learningObjectInPathWay = new LearningPathwayViewModel(space1, space2);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
 

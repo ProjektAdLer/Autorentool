@@ -33,13 +33,13 @@ public static class ViewModelProvider
 
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", "LWVMev", "LWVMek", "LWVMss", "LWVMse");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", WorldTheme.CampusAschaffenburg,"LWVMev", "LWVMek", "LWVMss", "LWVMse");
     }
 
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("LSVMn", "LSVMd", SpaceTheme.CampusAschaffenburg, 4,
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", SpaceTheme.LearningArea, 4,
             GetLearningOutcomeCollection(),
             floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan), positionX: positionX,
             positionY: positionY) { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };

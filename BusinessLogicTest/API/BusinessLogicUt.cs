@@ -15,6 +15,7 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.API;
@@ -517,7 +518,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_CallsDataAccess()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -531,7 +532,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_SerializationException_CallsErrorManager()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.When(x => x.SaveLearningWorldToFile(Arg.Any<LearningWorld>(), Arg.Any<string>()))
             .Do(_ => throw new SerializationException());
@@ -563,7 +564,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE2]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 

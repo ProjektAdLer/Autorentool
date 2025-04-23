@@ -35,7 +35,7 @@ public class LearningSpaceUt
                 floorPlan: FloorPlanEnum.R_20X20_6L);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         Assert.Multiple(() =>
@@ -76,7 +76,7 @@ public class LearningSpaceUt
         var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
@@ -164,7 +164,7 @@ public class LearningSpaceUt
             EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
                 floorPlan: FloorPlanEnum.R_20X20_6L);
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();

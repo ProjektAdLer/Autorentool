@@ -18,7 +18,7 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, "LWPev" + append, "LWPek" + append, "LWPss" + append, "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPek" + append, "LWPss" + append, "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,
@@ -27,7 +27,7 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
-            SpaceTheme.CampusAschaffenburg, GetLearningOutcomeCollection(),
+            SpaceTheme.LearningArea, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
             outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);

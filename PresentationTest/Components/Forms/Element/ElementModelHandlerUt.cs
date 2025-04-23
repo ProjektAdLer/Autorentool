@@ -17,7 +17,7 @@ public class ElementModelHandlerUt
     {
         var systemUnderTest = new ElementModelHandler();
         var elementModels =
-            systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", SpaceTheme.CampusAschaffenburg);
+            systemUnderTest.GetElementModels(ElementModelContentType.File, "txt", WorldTheme.CampusAschaffenburg);
         var enumerable = elementModels.ToList();
         Assert.That(enumerable, Is.Not.Null);
         Assert.That(enumerable, Is.Not.Empty);
@@ -29,7 +29,7 @@ public class ElementModelHandlerUt
     {
         var systemUnderTest = new ElementModelHandler();
         var elementModels =
-            systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", SpaceTheme.CampusAschaffenburg);
+            systemUnderTest.GetElementModels(ElementModelContentType.Adaptivity, "txt", WorldTheme.CampusAschaffenburg);
         var expectedModels = new[]
         {
             ElementModel.a_npc_alerobot
@@ -100,23 +100,23 @@ public class ElementModelHandlerUt
     }
 
     [Test]
-    public void GetElementModelsForTheme_ContainsCaseForEachTheme([Values] SpaceTheme spaceTheme)
+    public void GetElementModelsForTheme_ContainsCaseForEachTheme([Values] WorldTheme worldTheme)
     {
-        Assert.DoesNotThrow(() => _ = ElementModelHandler.GetElementModelsForTheme(spaceTheme).ToList());
+        Assert.DoesNotThrow(() => _ = ElementModelHandler.GetElementModelsForTheme(worldTheme).ToList());
     }
 
     [Test]
     public void GetElementModelsForTheme_UnknownValueForTheme_ThrowsException()
     {
-        var unknownEnumValue = Enum.GetValues(typeof(SpaceTheme)).Length;
+        var unknownEnumValue = Enum.GetValues(typeof(WorldTheme)).Length;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            _ = ElementModelHandler.GetElementModelsForTheme((SpaceTheme)unknownEnumValue).ToList());
+            _ = ElementModelHandler.GetElementModelsForTheme((WorldTheme)unknownEnumValue).ToList());
     }
 
     [Test]
     public void GetElementModelsForTheme_ContainsEachElementModel()
     {
-        var themes = (SpaceTheme[])Enum.GetValues(typeof(SpaceTheme));
+        var themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
         var elementModelsFromAllThemes = new List<ElementModel>();
         foreach (var theme in themes)

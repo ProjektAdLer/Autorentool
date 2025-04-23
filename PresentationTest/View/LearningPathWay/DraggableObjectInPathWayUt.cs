@@ -68,7 +68,7 @@ public class DraggableObjectInPathWay
     [Test]
     public void Constructor_SetsParametersCorrectly_LearningSpace()
     {
-        var learningSpace = new LearningSpaceViewModel("a", "b", SpaceTheme.CampusAschaffenburg, 1);
+        var learningSpace = new LearningSpaceViewModel("a", "b", SpaceTheme.LearningArea, 1);
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });

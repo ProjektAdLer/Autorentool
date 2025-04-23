@@ -187,14 +187,14 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "o", 0, SpaceTheme.CampusAschaffenburg,
+        SpaceParent = new LearningSpace("l", "o", 0, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L))
         {
             UnsavedChanges = false
         };
-        WorldParent = new LearningWorld("q", "r", "s", "t", "u", "o")
+        WorldParent = new LearningWorld("q", "r", "s", "t", "u", "o", WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false,
             LearningSpaces = new List<ILearningSpace>
