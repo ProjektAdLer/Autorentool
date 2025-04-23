@@ -8,22 +8,27 @@
 @using Direction = Shared.Direction
 @ChildContent
 
-<article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] h-full grow">
-    <section class="bg-adlerbgbright rounded p-2 w-full grow cursor-default">
-        <div class="flex justify-start items-center space-x-2 py-1">
-            @* ReSharper disable Html.PathError *@
-            <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-4 2xl:w-8" alt="Lernwelt-Icon">
-            @* ReSharper restore Html.PathError *@
-            <p class="text-sm 2xl:text-base font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+<article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] max-h-[128rem] grow">
+    <section class="bg-adlerbgbright rounded-b w-full grow cursor-default">
+        <header class="py-2 2xl:py-3 border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+            <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">Lernwelt-Übersicht</h2>
+        </header>
+        <div class="px-2 mb-1">
+            <div class="flex justify-start items-center space-x-2 py-2">
+                @* ReSharper disable Html.PathError *@
+                <img src="CustomIcons/World/world-icon.png" class="opacity-50 w-4 2xl:w-6" alt="Lernwelt-Icon">
+                @* ReSharper restore Html.PathError *@
+                <p class="text-sm 2xl:text-base font-bold text-adlertitledarkblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+            </div>
+            <p class="text-xs 2xl:text-base text-adlerblue-600">
+                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
+            </p>
+            <p class="text-xs 2xl:text-base text-adlerblue-600">
+                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldPathwayView.Points.Summary"]</span>
+            </p>
         </div>
-        <p class="text-xs 2xl:text-base text-adlerblue-600">
-            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
-        </p>
-        <p class="text-xs 2xl:text-base text-adlerblue-600">
-            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldPathwayView.Points.Summary"]</span>
-        </p>
     </section>
-    <section class="flex flex-row justify-around py-3">
+    <section class="flex flex-row justify-around py-2">
         <div class="btn-standard w-40 2xl:w-44 flex justify-center items-center create-space-button"
              @onclick="AddNewLearningSpace"
              title=@Localizer["LearningWorldView.NewLearningSpace.Title"]>

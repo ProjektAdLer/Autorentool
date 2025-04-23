@@ -15,24 +15,30 @@
 @implements IDisposable
 @if (LearningWorldP.LearningWorldVm != null)
 {
-    <div class="flex flex-col h-full grow">
-        <article class="flex flex-col justify-content mb-2 cursor-default">
-            <section class="bg-adlerbgbright rounded p-2 w-[334px] xl:w-[334px] 2xl:w-[384px] 3xl:w-[384px] 1080p:w-[434px] 2500p:w-[584px] 3000p:w-[584px] 3700p:w-[584px] grow">
-                <div class="flex justify-start items-center space-x-2 py-1">
-                    @* ReSharper disable Html.PathError *@
-                    <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-4 2xl:w-8">
-                    @* ReSharper restore Html.PathError *@
-                    <p class="text-sm 2xl:text-base font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+    <div class="flex flex-col max-h-[128rem] grow">
+        <div class="flex flex-col bg-adlerbgbright rounded-b mb-1.5 2xl:mb-2">
+            <header class="py-2 2xl:py-3 border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+                <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">Lernwelt-Übersicht</h2>
+            </header>
+            <article class="flex flex-col justify-content cursor-default mb-1 py-2">
+                <div class="bg-adlerbgbright rounded-b px-2 w-full overflow-hidden truncate">
+                    <div class="flex justify-start items-center space-x-2 py-2">
+                        @* ReSharper disable Html.PathError *@
+                        <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-4 2xl:w-6">
+                        @* ReSharper restore Html.PathError *@
+                        <p class="text-sm 2xl:text-base font-bold text-adlertitleblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+                    </div>
+                    <p class="text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
+                    </p>
+                    <p class="text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["OverView.Points"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldTreeView.Points.Summary"]</span>
+                    </p>
                 </div>
-                <p class="text-xs 2xl:text-base text-adlerblue-600">
-                    <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
-                </p>
-                <p class="text-xs 2xl:text-base text-adlerblue-600">
-                    <span class="text-adlergrey-600">@Localizer["OverView.Points"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldTreeView.Points.Summary"]</span>
-                </p>
-            </section>
-        </article>
-        <section class="bg-white rounded w-full overflow-scroll grow pt-2">
+            </article>
+        </div>
+        
+        <section class="bg-white rounded w-full overflow-scroll grow">
             <div class="cursor-pointer flex flex-col justify-start">
                 @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
@@ -75,11 +81,11 @@
                             <TogglerContent>
                                 @if (context)
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                                    <MudIcon Class="text-adlertitleblue" Icon="@Icons.Material.Filled.ArrowRight"/>
                                 }
                                 else
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                                    <MudIcon Class="text-adlertitleblue" Icon="@Icons.Material.Filled.ArrowDropDown"/>
                                 }
                             </TogglerContent>
                         </Collapsable>
