@@ -78,6 +78,6 @@
         <value>Beschreibung</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Subtitle" xml:space="preserve">
-        <value>Auswahl an Grundrissen für den Lernraum. Die Zahl gibt an, wie viele Slots zum Platzieren von Lern- und Adaptivitätselementen zur Verfügung stehen</value>
+        <value>Auswahl an Grundrissen für den Lernraum. Die Zahl gibt an, wie viele Slots zum Platzieren von Adaptivitäts- und Lernelementen zur Verfügung stehen</value>
     </data>
 </root>

@@ -16,18 +16,18 @@
 <MudTable T="ILearningContentViewModel" 
           Items="Items" 
           RowClass="bg-white" 
-          Class="w-[95%] h-full flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-4"
+          Class="w-[95%] h-full flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-2"
           Virtualize="true" 
           Filter="Filter" 
           Hover="true" 
-          HeaderClass="table-head-bordered" 
+          HeaderClass="table-head-bordered border-t-2 border-adlergrey-100" 
           CustomHeader="true" 
           FixedHeader="true"
           OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
           OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
     <ToolBarContent>
         <div class="flex flex-row gap-8">
-            <p class="flex items-center text-sm 2xl:text-base font-bold leading-tight">@Localizer["Header"]</p>
+            <p class="flex items-center text-sm 2xl:text-base font-bold leading-tight text-adlertitledarkblue">@Localizer["Header"]</p>
             <MudSpacer />
             <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Outlined.Search" Style="margin-top: 0px;"/>
@@ -47,7 +47,7 @@
                     <MudText Class="m-0 pl-1 text-sm text-adlergrey-500">@_deletionCandidates.Count()</MudText>
                     <MudMenu Dense="true">
                         <ActivatorContent>
-                            <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowDown" Class="p-0 m-0"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown" Class="p-0 m-0"></MudIconButton>
                         </ActivatorContent>
                         <ChildContent>
                             <MudText Class="text-sm py-2 px-4">@Localizer["Content.Select.Text"]</MudText>

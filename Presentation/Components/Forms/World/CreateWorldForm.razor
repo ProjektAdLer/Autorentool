@@ -4,10 +4,10 @@
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
-<div class="absolute w-full z-30 h-24">
+<div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
         <div class="flex justify-center py-2 2xl:py-3">
-            <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
+            <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
         </div>
     </header>
     <div class="flex justify-between items-start">
@@ -19,42 +19,52 @@
           SnackbarMessage=@Localizer["CreateWorldForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mx-2 border-t border-dotted">
+        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] InitiallyCollapsed="false">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-6">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
                                   @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label="@Localizer["CreateWorldForm.General.Field.Name.Text"]"/>
+                                  Placeholder="@Localizer["CreateWorldForm.General.Field.Name.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                                   For="@(() => FormModel.Shortname)"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label="@Localizer["CreateWorldForm.General.Field.Shortname.Text"]"/>
+                                  Placeholder="@Localizer["CreateWorldForm.General.Field.Shortname.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                                   For="@(() => FormModel.Authors)"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label="@Localizer["CreateWorldForm.General.Field.Authors.Text"]"/>
+                                  Placeholder="@Localizer["CreateWorldForm.General.Field.Authors.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                                   For="@(() => FormModel.Language)"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label="@Localizer["CreateWorldForm.General.Field.Language.Text"]"/>
+                                  Placeholder="@Localizer["CreateWorldForm.General.Field.Language.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
-                                  Label="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"/>
+                                  Placeholder="@Localizer["CreateWorldForm.General.Field.EvaluationLink.Text"]"
+                                  Typo="Typo.body1"
+                                  Margin="Margin.Normal"/>
                 </div>
             </Collapsable>
             
             <Collapsable Title="@Localizer["CreateWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                    <div class="flex flex-row items-center gap-1 py-2">
-                        <MudText Class="font-bold text-sm pl-1">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <div class="flex flex-row items-center gap-1">
+                        <p class="text-xs pt-3">@Localizer["CreateWorldForm.General.Field.EnrolmentKey.Text"]</p>
                         <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                             <TooltipContent>
                                 <MudText Class="text-xs">@((MarkupString)Localizer["CreateWorldForm.EnrolmentKey.Tooltip"].ToString())</MudText>
@@ -73,7 +83,7 @@
             </Collapsable>
             
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
+                <div class="rounded-lg w-4/4 px-6 pt-3">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
@@ -85,7 +95,7 @@
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
+                <div class="rounded-lg w-4/4 px-6 pt-3">
                     <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"

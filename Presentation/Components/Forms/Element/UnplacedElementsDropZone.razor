@@ -12,102 +12,90 @@
 @using Presentation.View.LearningElement
 @using Shared
 @using Shared.Command
-<div class="flex flex-col bg-adlerbgbright h-full rounded m-1.5 2xl:m-2">
+<div class="flex flex-col h-full bg-white mb-1.5 2xl:mb-2 mx-1.5 2xl:mx-2">
 
-    <div class="flex shrink grow basis-2/12 justify-between w-full py-1 border-b-2 border-adlergrey-100 h-fit">
-
-        <div class="grid grid-rows-2 items-center justify-start gap-2 p-1">
-            <p class="cursor-default text-xs 2xl:text-sm text-adlergrey-500 font-bold">@Localizer["UnplacedElementsDropZone.Title"]</p>
-            <div class="grid grid-cols-2">
-                <MudText Class="cursor-default text-xs 2xl:text-sm text-adlergrey-500">@Localizer["UnplacedElementsDropZone.Filter.Text"]</MudText>
-
-                <div class="grid grid-cols-3 justify-items-start gap-2">
-                    <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
+    <div class="flex shrink grow basis-2/12 w-full h-fit">
+        
+        <div class="flex flex-col items-center w-full">
+            <div class="flex w-full justify-center py-2 2xl:py-3 border-b-2 bg-adlerbgbright border-adlergrey-100">
+                <p class="cursor-default text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["UnplacedElementsDropZone.Title"]</p>
+            </div>
+            
+            <div class="flex flex-row items-center justify-between w-full px-1">
+                <div class="flex flex-row justify-start items-center w-24">
+                    <MudText Class="cursor-default text-xs 2xl:text-sm text-adlergrey-500">@Localizer["UnplacedElementsDropZone.Filter.Text"]</MudText>
+                    <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true" ListClass="w-56" Size="Size.Small">
                         <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@_elementsIcon" Icon="@_elementsIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Element"]"></MudToggleIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" Size="Size.Small"></MudIconButton>
                         </ActivatorContent>
                         <ChildContent>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ResetElementTypeFilter()" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.All"]
-                            </MudMenuItem>
-                            <MudDivider Class="p-0"></MudDivider>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(FileContentViewModel)) || _elementTypeFilter.Contains(typeof(LinkContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => { ToggleElementTypeFilter(typeof(FileContentViewModel)); ToggleElementTypeFilter(typeof(LinkContentViewModel)); }" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.LearningElement"]
-                            </MudMenuItem>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(AdaptivityContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ToggleElementTypeFilter(typeof(AdaptivityContentViewModel))" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.AdaptivityElement"]
-                            </MudMenuItem>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(StoryContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ToggleElementTypeFilter(typeof(StoryContentViewModel))" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.StoryElement"]
-                            </MudMenuItem>
-
-                        </ChildContent>
-                    </MudMenu>
-                    <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
-                        <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small" ToggledIcon="@_typeIcon" Icon="@_typeIcon" Class="p-0" title="@Localizer["UnplacedElementsDropZone.Filter.Type"]"></MudToggleIconButton>
-                        </ActivatorContent>
-                        <ChildContent>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ResetContentTypeFilter()" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.All"]
-                            </MudMenuItem>
-                            <MudDivider Class="p-0"></MudDivider>
-                            @foreach (ContentTypeEnum type in Enum.GetValues(typeof(ContentTypeEnum)))
-                            {
+                            <MudMenu Label="Art des Elements">
                                 <MudMenuItem
-                                    Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                    OnClick="() => ToggleContentTypeFilter(type)" AutoClose="false">
-                                    @Localizer[$"UnplacedElementsDropZone.Type.{type}"]
+                                    Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ResetElementTypeFilter()" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.All"]
                                 </MudMenuItem>
-                            }
-                        </ChildContent>
-                    </MudMenu>
-                    <MudMenu AnchorOrigin="Origin.TopCenter" Dense="true">
-                        <ActivatorContent>
-                            <MudToggleIconButton ToggledSize="Size.Small" Size="Size.Small"
-                                                 ToggledIcon="@_difficultyIcon" Icon="@_difficultyIcon" Class="p-0"
-                                                 title="@Localizer["UnplacedElementsDropZone.Filter.Difficulty"]">
-                            </MudToggleIconButton>
-                        </ActivatorContent>
-                        <ChildContent>
-                            <MudMenuItem
-                                Class="px-2 text-xs" IconColor="@(_difficultyFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                OnClick="() => ResetDifficultyFilter()" AutoClose="false">
-                                @Localizer["UnplacedElementsDropZone.Filter.All"]
-                            </MudMenuItem>
-                            <MudDivider Class="p-0"></MudDivider>
-                            @foreach (LearningElementDifficultyEnum difficulty in Enum.GetValues(typeof(LearningElementDifficultyEnum)))
-                            {
+                                <MudDivider Class="p-0"></MudDivider>
                                 <MudMenuItem
-                                    Class="px-2 text-xs" IconColor="@(_difficultyFilter.Contains(difficulty) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
-                                    OnClick="() => ToggleDifficultyFilter(difficulty)" AutoClose="false">
-                                    @LearningElementDifficultyHelper.Localize(difficulty)
+                                    Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(FileContentViewModel)) || _elementTypeFilter.Contains(typeof(LinkContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => { ToggleElementTypeFilter(typeof(FileContentViewModel)); ToggleElementTypeFilter(typeof(LinkContentViewModel)); }" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.LearningElement"]
                                 </MudMenuItem>
-                            }
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(AdaptivityContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ToggleElementTypeFilter(typeof(AdaptivityContentViewModel))" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.AdaptivityElement"]
+                                </MudMenuItem>
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Contains(typeof(StoryContentViewModel)) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ToggleElementTypeFilter(typeof(StoryContentViewModel))" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.StoryElement"]
+                                </MudMenuItem>
+                            </MudMenu>
+                            <MudMenu Label="Inhalt des Elements">
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ResetContentTypeFilter()" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.All"]
+                                </MudMenuItem>
+                                <MudDivider Class="p-0"></MudDivider>
+                                @foreach (ContentTypeEnum type in Enum.GetValues(typeof(ContentTypeEnum)))
+                                {
+                                    <MudMenuItem
+                                        Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Contains(type) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                        OnClick="() => ToggleContentTypeFilter(type)" AutoClose="false">
+                                        @Localizer[$"UnplacedElementsDropZone.Type.{type}"]
+                                    </MudMenuItem>
+                                }
+                            </MudMenu>
+                            <MudMenu Label="Schwierigkeit des Elements">
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_difficultyFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ResetDifficultyFilter()" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.All"]
+                                </MudMenuItem>
+                                <MudDivider Class="p-0"></MudDivider>
+                                @foreach (LearningElementDifficultyEnum difficulty in Enum.GetValues(typeof(LearningElementDifficultyEnum)))
+                                {
+                                    <MudMenuItem
+                                        Class="px-2 text-xs" IconColor="@(_difficultyFilter.Contains(difficulty) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                        OnClick="() => ToggleDifficultyFilter(difficulty)" AutoClose="false">
+                                        @LearningElementDifficultyHelper.Localize(difficulty)
+                                    </MudMenuItem>
+                                }
+                            </MudMenu>
                         </ChildContent>
                     </MudMenu>
-
+                </div>
+                <div class="flex justify-end px-2 w-36">
+                    <MudTextField @bind-Value="SearchString" Margin="Margin.Dense" Immediate="true" Style="font-size: 13px;" Placeholder="@Localizer["UnplacedElementsDropZone.SearchBar.PlaceHolder"]" Adornment="Adornment.Start"
+                                  IconSize="Size.Small" AdornmentIcon="@Icons.Material.Outlined.Search" Clearable="true"/>
                 </div>
             </div>
         </div>
-
-        <div class="grid justify-items-end px-2">
-            <MudTextField @bind-Value="SearchString" Immediate="true" Style="font-size: 14px;" Placeholder="@Localizer["UnplacedElementsDropZone.SearchBar.PlaceHolder"]" Adornment="Adornment.Start"
-                          IconSize="Size.Small" AdornmentIcon="@Icons.Material.Outlined.Search" Clearable="true"/>
-        </div>
     </div>
 
-    <div class="grow shrink basis-10/12 overflow-y-scroll bg-white w-full rounded-b-lg">
+    <div class="grow shrink basis-10/12 overflow-y-scroll bg-white w-full rounded-b-lg border-t border-dotted">
         <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
                      Class="z-30 flex flex-wrap gap-3 2xl:gap-4 justify-start items-center pl-1 2xl:pl-4 w-full min-h-full max-h-[calc(2vh)]">
             <ItemRenderer>
@@ -309,62 +297,4 @@
             _contentTypeFilter.Add(type);
         }
     }
-
-    private string _elementsIcon = Elements;
-
-    const string Elements =
-        @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<svg id=""uuid-d85349f9-9c23-477b-a0d6-c38ff7f36789"" data-name=""1-Element"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
-  <path d=""M1450.45,1125.6h-646.65v439.97h758.91v271.43H467V203.08h1093.47v273.21h-756.67v388.52h646.65v260.79Z"" style=""fill: #575757; stroke-width: 0px;""/>
-</svg>";
-
-    private string _typeIcon = Types;
-
-    const string Types =
-        @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<svg id=""uuid-275ad285-95dd-43ff-9093-4f7abe675612"" data-name=""2-Typ_V2"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" viewBox=""0 0 2000 2000"">
-  <defs>
-    <clipPath id=""uuid-7879819b-6adc-4f27-801f-bc7a2094b382"">
-      <rect x=""138"" y=""219.4"" width=""1698"" height=""1632.09"" style=""fill: none; stroke-width: 0px;""/>
-    </clipPath>
-  </defs>
-  <path d=""M1836,284.7c0-36.04-30.45-65.27-67.91-65.27H205.91c-37.49,0-67.91,29.26-67.91,65.27v1501.51c0,36.04,30.45,65.27,67.91,65.27h1562.15c37.49,0,67.91-29.26,67.91-65.27V284.7h.03Z"" style=""fill: none; stroke-width: 0px;""/>
-  <g id=""uuid-67e2a618-a80c-473a-acef-0c6dcf8d92ac"" data-name=""bild-icon"">
-    <rect x=""138"" y=""219.4"" width=""1698"" height=""1632.09"" style=""fill: none; stroke-width: 0px;""/>
-    <g style=""clip-path: url(#uuid-7879819b-6adc-4f27-801f-bc7a2094b382);"">
-      <g>
-        <g id=""uuid-8c3353d1-009d-45e2-95be-cfece02d793d"" data-name=""Berge"">
-          <g>
-            <path d=""M406.65,838.67c204.46-46.01,1291.22,835.97,1291.22,835.97l-668.99,176.85-577.78-321.53s-229.08-649.74-44.45-691.29h0Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-            <path d=""M1122.44,1050.15c229.75-30.64,1487.71,663.81,1487.71,663.81l-743.34,137.55-641.96-250.1s-320.66-522.18-102.41-551.27Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-            <path d=""M1122.44,1050.15c180.21,0,744.38,801.37,744.38,801.37H785.61s156.62-801.37,336.83-801.37Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-            <path d=""M410.86,838.67c162.18,0,618.01,1012.82,618.01,1012.82H55.78s192.9-1012.82,355.1-1012.82h-.03Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-          </g>
-        </g>
-        <g id=""uuid-2a90a21d-57f0-41f9-9142-42d36de17a3d"" data-name=""Sonne"">
-          <ellipse cx=""369.4"" cy=""429.38"" rx=""157.87"" ry=""151.75"" style=""fill: #575757; stroke-width: 0px;""/>
-          <path d=""M349.17,614.76v160.34c0,4.6,9.06,8.36,20.23,8.36s20.23-3.75,20.23-8.36v-160.34c0-4.6-9.06-8.36-20.23-8.36s-20.23,3.75-20.23,8.36Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-          <path d=""M524.28,605.76l118.15,113.57c3.39,3.25,12.57-.23,20.47-7.83,7.9-7.59,11.56-16.39,8.15-19.68l-118.15-113.57c-3.39-3.25-12.57.23-20.47,7.83-7.9,7.59-11.56,16.39-8.15,19.68Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-          <path d=""M588.59,448.82h166.75c4.79,0,8.69-8.71,8.69-19.44s-3.91-19.44-8.69-19.44h-166.75c-4.79,0-8.69,8.71-8.69,19.44s3.91,19.44,8.69,19.44Z"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-        </g>
-      </g>
-    </g>
-  </g>
-</svg>";
-
-    private string _difficultyIcon = Difficulty;
-
-    const string Difficulty =
-        @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<svg id=""uuid-a8486736-dfcf-4006-8de7-6917980e5230"" data-name=""3-Schwierigkeit"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 1978.87 1978.87"">
-  <g>
-    <polygon points=""1310.44 994.96 1181.92 1361.61 1490.9 1597.14 1102.48 1588.21 973.96 1954.86 862.43 1582.69 474.01 1573.75 793.5 1352.67 681.97 980.5 990.95 1216.04 1310.44 994.96"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-    <polygon points=""908.02 885.15 1076.4 1235.29 1461.43 1183.35 1180.46 1451.68 1348.84 1801.82 1006.81 1617.52 725.84 1885.86 795.43 1503.62 453.4 1319.32 838.44 1267.38 908.02 885.15"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-    <polygon points=""1079.55 883.32 1129.31 1268.64 1511.15 1340.39 1160.06 1506.78 1209.81 1892.1 943.07 1609.62 591.98 1776.01 778.22 1435.03 511.48 1152.54 893.32 1224.29 1079.55 883.32"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-  </g>
-  <polygon points=""1463.51 25.37 1583.57 394.87 1972.09 394.87 1657.77 623.24 1777.83 992.75 1463.51 764.38 1149.19 992.75 1269.25 623.24 954.93 394.87 1343.45 394.87 1463.51 25.37"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-  <polygon points=""515.13 80.37 395.13 448.87 26.91 568.51 395.13 688.87 515.66 1058.26 636.13 688.87 1004.41 569.51 636.13 448.87 515.13 80.37"" style=""fill: #575757; fill-rule: evenodd; stroke-width: 0px;""/>
-</svg>";
-
-
 }
