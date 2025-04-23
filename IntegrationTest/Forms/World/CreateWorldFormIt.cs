@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -25,6 +27,9 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     {
         WorkspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         WorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<WorldTheme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper<WorldTheme>.Initialize(themeLocalizer);
         FormModel = FormModelProvider.GetLearningWorld();
         Entity = EntityProvider.GetLearningWorld();
         FormDataContainer = Substitute.For<IFormDataContainer<LearningWorldFormModel, LearningWorld>>();
@@ -66,6 +71,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -224,9 +230,16 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>())!.GetValue(FormModel)! == Expected
-                ? Enumerable.Empty<string>()
-                : new[] { "Must be test" }
+            {
+                var value = FormModel.GetType().GetProperty(ci.Arg<string>())?.GetValue(FormModel);
+                var valid = value switch
+                {
+                    string str => str == Expected,
+                    WorldTheme t => t == WorldTheme.CampusAschaffenburg,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test" };
+            }
         );
     }
 

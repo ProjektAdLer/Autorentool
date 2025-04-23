@@ -15,6 +15,7 @@ using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.Space;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using PresentationTest;
 using Shared;
 using Shared.Theme;
@@ -29,11 +30,13 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     public new void Setup()
     {
         SpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        WorldPresenter = Substitute.For<ILearningWorldPresenter>();
         Mapper = Substitute.For<IMapper>();
         var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         Context.Services.AddSingleton(SpacePresenter);
+        Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(Mapper);
         Context.AddLocalizerForTest<SpaceLayoutSelection>();
         Context.AddLocalizerForTest<FloorPlanEnum>();
@@ -42,6 +45,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
     }
 
     private ILearningSpacePresenter SpacePresenter { get; set; }
+    private ILearningWorldPresenter WorldPresenter { get; set; }
     private IMapper Mapper { get; set; }
     private const string Expected = "test";
 

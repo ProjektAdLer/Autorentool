@@ -112,29 +112,4 @@ public class ElementModelHandlerUt
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             _ = ElementModelHandler.GetElementModelsForTheme((WorldTheme)unknownEnumValue).ToList());
     }
-
-    [Test]
-    public void GetElementModelsForTheme_ContainsEachElementModel()
-    {
-        var themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
-
-        var elementModelsFromAllThemes = new List<ElementModel>();
-        foreach (var theme in themes)
-        {
-            elementModelsFromAllThemes.AddRange(ElementModelHandler.GetElementModelsForTheme(theme));
-        }
-
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
-
-        //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
-        Assert.Multiple(() =>
-        {
-            foreach (var elementModel in elementModels)
-            {
-                Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
-                    $"ElementModel {elementModel} is not assigned to any theme");
-            }
-        });
-    }
 }

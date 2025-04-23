@@ -40,7 +40,7 @@ public class ThemeHelperUt
             var localizedValue = ThemeHelper<SpaceTheme>.Localize(theme);
 
             // Assert
-            Assert.That(localizedValue, Is.EqualTo($"Enum.Theme.{theme}"));
+            Assert.That(localizedValue, Is.EqualTo($"Enum.SpaceTheme.{theme}"));
         }
     }
 }

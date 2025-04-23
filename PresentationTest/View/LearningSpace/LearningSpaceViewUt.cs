@@ -123,7 +123,7 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("p.space-theme");
         elementName.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.CampusAschaffenburg</p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.SpaceTheme.LearningArea</p>");
     }
 
     [Test]
