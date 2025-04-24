@@ -107,6 +107,7 @@ module.exports = {
                 adlerbronze: "#bf8970",
                 adlertitleblue: "#8b96a7",
                 adlertitledarkblue: "#747e8c",
+                adlerheaderblue: "#2e394d",
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
