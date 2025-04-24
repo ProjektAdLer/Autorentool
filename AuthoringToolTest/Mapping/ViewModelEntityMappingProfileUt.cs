@@ -423,7 +423,7 @@ public class ViewModelEntityMappingProfileUt
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
         var storyElementVm1 =
             new LearningElementViewModel("sel1", new StoryContentViewModel("foo", ConfigureStoryText), Description, Goals,
-                Difficulty, ElementModel.a_npc_defaultnpc);
+                Difficulty, ElementModel.a_npc_defaultdark_female);
 
         var space = new LearningSpaceViewModel("space", Description, Theme.CampusAschaffenburg, RequiredPoints,
                 ViewModelProvider.GetLearningOutcomeCollection(),

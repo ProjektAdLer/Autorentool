@@ -30,7 +30,7 @@ public class NpcMoodPreviewHandlerUt
     {
         var npcElementModels = Enum.GetValues<ElementModel>()
             .Where(model => model.ToString().Contains("a_npc")).ToList();
-        npcElementModels.Remove(ElementModel.a_npc_defaultnpc);
+        npcElementModels.Remove(ElementModel.a_npc_defaultdark_female);
         Assert.Multiple(() =>
         {
             foreach (var elementModel in npcElementModels)
@@ -46,7 +46,7 @@ public class NpcMoodPreviewHandlerUt
     {
         var npcElementModels = Enum.GetValues<ElementModel>()
             .Where(model => model.ToString().Contains("a_npc")).ToList();
-        npcElementModels.Remove(ElementModel.a_npc_defaultnpc);
+        npcElementModels.Remove(ElementModel.a_npc_defaultdark_female);
         Assert.Multiple(() =>
         {
             foreach (var elementModel in npcElementModels)
@@ -72,7 +72,6 @@ public class NpcMoodPreviewHandlerUt
     {
         var npcElementModels = Enum.GetValues<ElementModel>()
             .Where(model => model.ToString().Contains("a_npc")).ToList();
-        npcElementModels.Remove(ElementModel.a_npc_defaultnpc);
         Assert.Multiple(() =>
         {
             foreach (var elementModel in npcElementModels)

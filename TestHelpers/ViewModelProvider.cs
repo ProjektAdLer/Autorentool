@@ -93,7 +93,7 @@ public static class ViewModelProvider
         int points = 1)
     {
         return new LearningElementViewModel("LEVMn" + append, content ?? GetStoryContent(), "LEVMd" + append,
-            "LEVMg" + append, LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultnpc, parent: parent,
+            "LEVMg" + append, LearningElementDifficultyEnum.Easy, ElementModel.a_npc_defaultdark_female, parent: parent,
             workload: workload, points: points);
     }
 

@@ -84,8 +84,11 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Story))
             .ToList();
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
+        var elementModels = Enum.GetValues<ElementModel>();
+        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random &&
+                                                            typeof(ElementModel).GetMember(elementModel.ToString())[0]
+                                                                .GetCustomAttributes(typeof(ObsoleteAttribute), false)
+                                                                .Length == 0).ToArray();
 
         Assert.Multiple(() =>
         {
@@ -123,8 +126,11 @@ public class ElementModelHandlerUt
             elementModelsFromAllThemes.AddRange(ElementModelHandler.GetElementModelsForTheme(theme));
         }
 
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
+        var elementModels = Enum.GetValues<ElementModel>();
+        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random &&
+                                                            typeof(ElementModel).GetMember(elementModel.ToString())[0]
+                                                                .GetCustomAttributes(typeof(ObsoleteAttribute), false)
+                                                                .Length == 0).ToArray();
 
         //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
         Assert.Multiple(() =>

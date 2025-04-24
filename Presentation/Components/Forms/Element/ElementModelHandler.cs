@@ -1,4 +1,4 @@
-﻿using Shared;
+using Shared;
 
 namespace Presentation.Components.Forms.Element;
 
@@ -54,6 +54,12 @@ public class ElementModelHandler : IElementModelHandler
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
+        // if the elementModel is a story element model, return the path to the icon
+        if (elementModel.ToString().StartsWith("a_npc_") && elementModel != ElementModel.a_npc_alerobot)
+        {
+            return GetStoryElementModelPreviewPath(elementModel);
+        }
+
         return elementModel switch
         {
             ElementModel.l_random => "CustomIcons/ElementModels/random-icon-nobg.png",
@@ -102,17 +108,7 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
             //Adaptivity
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
-            //Story NPCs
-            ElementModel.a_npc_sheriffjustice => "CustomIcons/StoryElementModels/npc/a_npc_sheriffjustice.png",
-            ElementModel.a_npc_dozentlukas => "CustomIcons/StoryElementModels/npc/a_npc_dozentlukas.png",
-            ElementModel.a_npc_defaultnpc => "CustomIcons/StoryElementModels/npc/a_npc_defaultnpc.png",
-            ElementModel.a_npc_bullyfemale => "CustomIcons/StoryElementModels/npc/a_npc_bullyfemale.png",
-            ElementModel.a_npc_bullymale => "CustomIcons/StoryElementModels/npc/a_npc_bullymale.png",
-            ElementModel.a_npc_oldman => "CustomIcons/StoryElementModels/npc/a_npc_oldman.png",
-            ElementModel.a_npc_hiphopfemale => "CustomIcons/StoryElementModels/npc/a_npc_hiphopfemale.png",
-            ElementModel.a_npc_hiphopmale => "CustomIcons/StoryElementModels/npc/a_npc_hiphopmale.png",
-            ElementModel.a_npc_santafemale => "CustomIcons/StoryElementModels/npc/a_npc_santafemale.png",
-            ElementModel.a_npc_santamale => "CustomIcons/StoryElementModels/npc/a_npc_santamale.png",
+            //Story NPCs are handled above
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
                 @"Icon not found for ElementModel")
         };
@@ -123,6 +119,26 @@ public class ElementModelHandler : IElementModelHandler
         return ElementModel.l_random;
     }
 
+    private static string GetStoryElementModelPreviewPath(ElementModel elementModel)
+    {
+        var name = elementModel.ToString();
+        var value = (int)elementModel;
+        var elementModelName = elementModel.ToString().ToLower().Replace("_", "-");
+        if ((elementModelName.EndsWith("female")) ||
+            (elementModelName.EndsWith("male")))
+        {
+            var index = elementModelName.LastIndexOf(elementModelName.EndsWith("female") ? "female" : "male");
+            var charAtIndex = elementModelName[index - 1];
+            if (elementModelName[index - 1] != '-')
+            {
+                elementModelName = elementModelName.Insert(index, "-");
+            }
+        }
+
+        return "CustomIcons/StoryElementModels/" + elementModelName +
+               "/" + elementModelName + "-preview.png";
+    }
+
     public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
         return modelType switch
@@ -130,6 +146,12 @@ public class ElementModelHandler : IElementModelHandler
             ContentTypeEnum.Adaptivity => ElementModel.a_npc_alerobot,
             _ => ElementModel.l_random
         };
+    }
+
+    private static bool IsObsolete(ElementModel model)
+    {
+        var memberInfo = typeof(ElementModel).GetMember(model.ToString()).FirstOrDefault();
+        return memberInfo?.GetCustomAttributes(typeof(ObsoleteAttribute), false).Length > 0;
     }
 
     internal static IEnumerable<ElementModel> GetElementModelsForModelType(ContentTypeEnum modelType)
@@ -191,21 +213,15 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.a_npc_alerobot;
                 break;
             case ContentTypeEnum.Story:
-                //campus
-                yield return ElementModel.a_npc_dozentlukas;
-                //arcade
-                yield return ElementModel.a_npc_sheriffjustice;
-                //suburb
-                yield return ElementModel.a_npc_defaultnpc;
-                //npc
-                yield return ElementModel.a_npc_bullyfemale;
-                yield return ElementModel.a_npc_bullymale;
-                yield return ElementModel.a_npc_oldman;
-                yield return ElementModel.a_npc_hiphopfemale;
-                yield return ElementModel.a_npc_hiphopmale;
-                yield return ElementModel.a_npc_santafemale;
-                yield return ElementModel.a_npc_santamale;
+                foreach (var model in Enum.GetValues<ElementModel>()
+                             .Where(e => e.ToString().StartsWith("a_npc_") &&
+                                         e != ElementModel.a_npc_alerobot && !IsObsolete(e)))
+                {
+                    yield return model;
+                }
+
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
         }
@@ -257,17 +273,12 @@ public class ElementModelHandler : IElementModelHandler
         }
 
         // Models that are in all themes
-        yield return ElementModel.a_npc_alerobot;
-        yield return ElementModel.a_npc_defaultnpc;
-        yield return ElementModel.a_npc_dozentlukas;
-        yield return ElementModel.a_npc_sheriffjustice;
-        yield return ElementModel.a_npc_bullyfemale;
-        yield return ElementModel.a_npc_bullymale;
-        yield return ElementModel.a_npc_oldman;
-        yield return ElementModel.a_npc_hiphopfemale;
-        yield return ElementModel.a_npc_hiphopmale;
-        yield return ElementModel.a_npc_santafemale;
-        yield return ElementModel.a_npc_santamale;
+        // return all NPC ElementModels
+        foreach (var model in Enum.GetValues<ElementModel>().Where(e => e.ToString().StartsWith("a_npc_") && 
+                                                                        !IsObsolete(e)))
+        {
+            yield return model;
+        }
     }
 
     private class ElementModelComparer : Comparer<ElementModel>
