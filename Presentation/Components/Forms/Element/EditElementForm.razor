@@ -256,17 +256,32 @@
         throw new InvalidOperationException($"{nameof(ElementMode)} is out of range");
 }
 
-<Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
-    <div class="rounded-lg w-4/4 px-6 pt-3">
-        <div class="overflow-y-scroll h-56 border-adlergrey-200 border rounded">
+@if (ElementMode == ElementMode.Normal)
+{
+    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
+        <div class="rounded-lg w-4/4 px-6 pt-3">
+            <div class="overflow-y-scroll h-56 border-adlergrey-200 border rounded">
+                <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                                        For="@(() => FormModel.ElementModel)"
+                                        Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                        Elements="GetElementModels()">
+                </ElementModelGridSelect>
+            </div>
+        </div>
+    </Collapsable>
+}
+@if (ElementMode != ElementMode.Normal)
+{
+    <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
+        <div class="rounded-lg w-4/4 px-6 pt-3">
             <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                                     For="@(() => FormModel.ElementModel)"
                                     Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
                                     Elements="GetElementModels()">
             </ElementModelGridSelect>
         </div>
-    </div>
-</Collapsable>
+    </Collapsable>
+}
 
 @if (ElementMode != ElementMode.Story)
 {
