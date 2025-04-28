@@ -99,20 +99,6 @@
                                 <ElementFormContainer ElementMode="ElementMode.Adaptivity"/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem
-                            IsActive="Mediator.ContentDialogOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
-                            <SidebarContent>
-                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.ImportFiles.Title"]>
-                                    @* ReSharper disable Html.PathError *@
-                                    <img class="w-full" src="CustomIcons/LeftSidebar/all-data-icon.png" alt=@Localizer["SideBarContent.ImportFiles.Alt"]>
-                                    @* ReSharper restore Html.PathError *@
-                                </div>
-                            </SidebarContent>
-                            <MainContent>
-                                <ContentFilesContainer/>
-                            </MainContent>
-                        </SidebarItem>
                     </Sidebar>
                 </SideContainer>
                 <div class="flex flex-col w-full h-[98%]">
