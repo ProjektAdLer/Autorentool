@@ -85,25 +85,35 @@ public enum ElementModel
     
     //TODO Check if this is correct
     [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
-    a_npc_defaultnpc=a_npc_defaultdark_female,
+    [AlternateValue(a_npc_defaultdark_female)]
+    a_npc_defaultnpc,
     [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
-    a_npc_defaultfemale=a_npc_defaultdark_female,
+    [AlternateValue(a_npc_defaultdark_female)]
+    a_npc_defaultfemale,
     [Obsolete("Use a_npc_defaultdark_male instead", error: false)]
-    a_npc_defaultmale = a_npc_defaultdark_male,
+    [AlternateValue(a_npc_defaultdark_male)]
+    a_npc_defaultmale,
     [Obsolete("Use a_npc_bully_female instead", error: false)]
-    a_npc_bullyfemale = a_npc_bully_female,
+    [AlternateValue(a_npc_bully_female)]
+    a_npc_bullyfemale,
     [Obsolete("Use a_npc_bully_male instead", error: false)]
-    a_npc_bullymale = a_npc_bully_male,
+    [AlternateValue(a_npc_bully_male)]
+    a_npc_bullymale,
     [Obsolete("Use a_npc_oldiedark_male instead", error: false)]
-    a_npc_oldman = a_npc_oldiedark_male,
+    [AlternateValue(a_npc_oldiedark_male)]
+    a_npc_oldman,
     [Obsolete("Use a_npc_hiphop_female instead", error: false)]
-    a_npc_hiphopfemale = a_npc_hiphop_female,
+    [AlternateValue(a_npc_hiphop_female)]
+    a_npc_hiphopfemale,
     [Obsolete("Use a_npc_hiphop_male instead", error: false)]
-    a_npc_hiphopmale = a_npc_hiphop_male,
+    [AlternateValue(a_npc_hiphop_male)]
+    a_npc_hiphopmale,
     [Obsolete("Use a_npc_santa_female instead", error: false)]
-    a_npc_santafemale = a_npc_santa_female,
+    [AlternateValue(a_npc_santa_female)]
+    a_npc_santafemale,
     [Obsolete("Use a_npc_santa_male instead", error: false)]
-    a_npc_santamale = a_npc_santa_male,
+    [AlternateValue(a_npc_santa_male)]
+    a_npc_santamale,
 
     // ReSharper restore InconsistentNaming
     

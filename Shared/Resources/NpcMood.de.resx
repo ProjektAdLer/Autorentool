@@ -22,7 +22,7 @@
         <value>Freundlich</value>
     </data>
     <data name="Enum.NpcMood.Welcome" xml:space="preserve">
-        <value>Wilkommen</value>
+        <value>Willkommen</value>
     </data>
     <data name="Enum.NpcMood.Thumpsup" xml:space="preserve">
         <value>Freude über Erfolg</value>
