@@ -42,7 +42,7 @@
         <value>Grundriss</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Theme</value>
+        <value>Lernraum-Theme</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Lernziele</value>

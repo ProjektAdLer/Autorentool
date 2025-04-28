@@ -85,7 +85,7 @@
         <value>And so it ended...</value>
     </data>
     <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
-        <value>Theme</value>
+        <value>Learning world theme</value>
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Selection of themes with different theme worlds for the learning world</value>
