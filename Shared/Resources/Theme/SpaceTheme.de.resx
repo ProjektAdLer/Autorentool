@@ -110,4 +110,19 @@
     <data name="Enum.SpaceTheme.TechnicalArea.Suburb" xml:space="preserve">
         <value>Serverraum im Rathaus</value>
     </data>
+    <data name="Enum.SpaceTheme.Presentation" xml:space="preserve">
+        <value>Vortrag</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.CampusAschaffenburg" xml:space="preserve">
+        <value>Hörsaal</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.CampusKempten" xml:space="preserve">
+        <value>Hörsaal</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.Company" xml:space="preserve">
+        <value>Konferenzraum</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.Suburb" xml:space="preserve">
+        <value>Gemeindezentrum</value>
+    </data>
 </root>

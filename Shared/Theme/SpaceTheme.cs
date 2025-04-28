@@ -7,6 +7,7 @@ public enum SpaceTheme
 {
     [EnumMember] LearningArea,
     [EnumMember] EatingArea,
+    [EnumMember] Presentation,
     [EnumMember] FnE,
     [EnumMember] SocialArea,
     [EnumMember] TechnicalArea,
