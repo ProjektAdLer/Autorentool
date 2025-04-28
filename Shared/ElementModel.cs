@@ -83,7 +83,6 @@ public enum ElementModel
     a_npc_dozentjoerg,
     a_npc_dozentlukas,
     
-    //TODO Check if this is correct
     [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
     [AlternateValue(a_npc_defaultdark_female)]
     a_npc_defaultnpc,
