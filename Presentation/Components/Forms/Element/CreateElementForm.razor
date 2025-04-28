@@ -122,7 +122,7 @@
                         <p class="text-xs px-6 pt-3">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
                         @if (!WorldPresenter.GetAllContent().Any())
                         {
-                            <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
+                            <NoContentWarning ContentFilesChanged="OnFilesChanged" For="@(() => FormModel.LearningContent!)"/>
                         }
                         else
                         {
@@ -458,6 +458,12 @@
 
         StateHasChanged();
     }
+    
+    private void OnFilesChanged()
+    {
+        StateHasChanged();
+    }
+
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)
     {

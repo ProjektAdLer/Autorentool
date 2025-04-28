@@ -25,10 +25,9 @@
     [Inject, AllowNull] 
     internal IDialogService DialogService { get; set; }
     
-    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
-    private Action? TriggerMasterLayoutStateHasChanged { get; set; }
-
-    private void OpenContentFilesDialog()
+    [Parameter] public EventCallback ContentFilesChanged { get; set; }
+    
+    private async void OpenContentFilesDialog()
     {
         var options = new DialogOptions
         {
@@ -37,9 +36,11 @@
             FullWidth = true,
             MaxWidth = MaxWidth.Large,
         };
-            DialogService.ShowAsync<ContentFilesContainer>(@Localizer["Header.ContentFilesAdd.Title"].Value, options);
-            InvokeAsync(StateHasChanged);
-            InvokeAsync(TriggerMasterLayoutStateHasChanged!);
+        var dialog = await DialogService.ShowAsync<ContentFilesContainer>(@Localizer["Header.ContentFilesAdd.Title"].Value, options);
+
+        _ = await dialog.Result;
+        
+        await ContentFilesChanged.InvokeAsync();
     }
     
     private CssBuilder ButtonCssClass => new CssBuilder("w-64").AddClass("btn-standard");
