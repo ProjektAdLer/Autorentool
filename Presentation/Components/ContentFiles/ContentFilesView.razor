@@ -22,7 +22,7 @@
         <MudTable T="ILearningContentViewModel" 
                   Items="Items" 
                   RowClass="bg-white" 
-                  Class="w-full flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-2"
+                  Class="max-w-5xl flex flex-col flex-nowrap shadow-none bg-adlerbgbright rounded border-adlergrey-100 border-2"
                   Height="220px"
                   Virtualize="true" 
                   Filter="Filter" 
@@ -63,7 +63,7 @@
 
                         </div>
                     </MudTh>
-                    <MudTh Class="px-2 p-1 h-8">
+                    <MudTh Class="px-2 p-1 h-8" Style="width: 50%;">
                         <MudTableSortLabel InitialDirection="SortDirection.Ascending"
                                            SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
                             @Localizer["Content.MudTh.Name"]
@@ -103,13 +103,13 @@
                         <MudCheckBox T="bool" Value="_deletionCandidates.Contains(context)" ValueChanged="b => OnCheckedChange(context, b)" Class="flex justify-center m-0 py-1.5"></MudCheckBox>
                     </div>
                 </MudTd>
-                <MudTd Class="py-0 pl-2" DataLabel="Name">
+                <MudTd Class="py-0 pl-2" Style="max-width: 600px;" DataLabel="Name">
                     <MudTooltip Text="@context.Name"
                                 Arrow="true"
                                 Placement="Placement.Top"
                                 Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
                                 Duration="Double.Epsilon">
-                        <p class="pt-2 cursor-default max-w-[8rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
+                        <p class="pt-2 cursor-default truncate" style="max-width: 550px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@context.Name</p>
                     </MudTooltip>
                 </MudTd>
 

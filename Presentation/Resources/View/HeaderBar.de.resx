@@ -25,10 +25,10 @@
         <value>Autorentool</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
-        <value>Veröffentlichen der Lernwelt</value>
+        <value>Lernwelt hochladen</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Lernwelt als Moodle-Lernwelt-Datei (.mbz) veröffentlichen</value>
+        <value>Lernwelt auf den AdLer-Server hochladen</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
@@ -55,7 +55,7 @@
         <value>Schließen</value>
     </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
-        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; veröffentlichen?</value>
+        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; hochladen?</value>
     </data>
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
