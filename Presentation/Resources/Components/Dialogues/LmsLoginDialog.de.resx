@@ -216,4 +216,16 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
         <value>Lernwelt erfolgreich archiviert</value>
     </data>
+    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert externes Lernmaterial, welches nicht existiert</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes externes Lernmaterial. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Lernwelt ist ungültig</value>
+    </data>
 </root>

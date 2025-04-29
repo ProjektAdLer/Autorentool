@@ -204,4 +204,16 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
         <value>Learning world successfully archived</value>
     </data>
+    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant external learning material. Plase check the element references you have set in this element.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant element. Plase check the element references you have set in this element.</value>
+    </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Learning world is not valid</value>
+    </data>
 </root>

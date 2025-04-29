@@ -14,36 +14,6 @@
     <data name="Functionality.Button.Redo.Hover" xml:space="preserve">
         <value />
     </data>
-    <data name="DialogContent.Help.UserManual.SoftwareComponents" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.UserManual.Handling" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.UserManual.Handling.Hover" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.AdaptivityElement" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.StoryElement" xml:space="preserve">
-        <value />
-    </data>
-    <data name="DialogContent.Help.Didactic.StoryElement.Hover" xml:space="preserve">
-        <value />
-    </data>
     <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
         <value />
     </data>
