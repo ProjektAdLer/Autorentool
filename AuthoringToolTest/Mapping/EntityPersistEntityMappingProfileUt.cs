@@ -899,6 +899,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
+                    Assert.That(content.IsH5P, Is.EqualTo(useNewFields ? NewIsH5P : IsH5P));
                     Assert.That(content.H5PState, Is.EqualTo(useNewFields ? NewH5PState : H5PState));
                 });
                 break;
