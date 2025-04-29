@@ -65,6 +65,8 @@ public class CreateAtf : ICreateAtf
         MapTopicsToLearningWorldJson(learningWorld.Topics);
 
         MapLearningSpacesToLearningWorldJson(learningWorld.ObjectsInPathWaysPe);
+        
+        WriteFrameStoryToLearningWorldJson(learningWorld.StoryStart, learningWorld.StoryEnd);
 
         var rootJson = CreateRootJson();
         var jsonFile = SerializeRootJson(rootJson);
@@ -276,6 +278,16 @@ public class CreateAtf : ICreateAtf
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
+    }
+
+    /// <summary>
+    /// Writes the frame story start and end of the learning world to the FrameStory of LearningWorldJson.
+    /// </summary>
+    /// <param name="storyStart"></param>
+    /// <param name="storyEnd"></param>
+    private void WriteFrameStoryToLearningWorldJson(string storyStart, string storyEnd)
+    {
+        LearningWorldJson.FrameStory = new FrameStoryJson(storyStart, storyEnd);
     }
 
     private ISpaceStoryJson GetSpaceStoryJson(LearningSpacePe space)
@@ -665,7 +677,10 @@ public class CreateAtf : ICreateAtf
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
                     MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
-                ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                if (!ListFileContent.Any(x => x.Item1.Filepath == fileContentPe.Filepath && x.Item2 == fileContentPe.Name))
+                {
+                    ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                }
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),

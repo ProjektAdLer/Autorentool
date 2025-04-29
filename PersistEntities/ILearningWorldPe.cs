@@ -13,4 +13,6 @@ public interface ILearningWorldPe
     ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
     string EvaluationLink { get; set; }
     string EnrolmentKey { get; set; }
+    string StoryStart { get; set; }
+    string StoryEnd { get; set; }
 }

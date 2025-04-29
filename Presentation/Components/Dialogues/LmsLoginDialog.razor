@@ -6,6 +6,12 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.Components.Culture
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent
+@using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
+@using Presentation.PresentationLogic.LearningWorld
 @using Shared.Configuration
 @using Shared.Exceptions
 @using Size = MudBlazor.Size
@@ -546,8 +552,89 @@
     private async Task ExportLearningWorldToArchiveAsync()
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
-        await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld);
-        Snackbar.Add(@Localizer["LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);
+        if (IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld))
+        {
+            await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
+            Snackbar.Add(@Localizer["LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);
+        }
+    }
+    
+    private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel? learningWorld)
+    {
+        if (learningWorld is null) return false;
+
+        var errors = new List<string>();
+
+        foreach (var space in learningWorld.LearningSpaces)
+        {
+            foreach (var element in space.ContainedLearningElements)
+            {
+                if (element.LearningContent is not (IFileContentViewModel or ILinkContentViewModel))
+                    continue;
+
+                if (!PresentationLogic.GetAllContent().Contains(element.LearningContent))
+                {
+                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
+                }
+            }
+        }
+
+        foreach (var (adaptivityContent, learningElement) in learningWorld.AllLearningElements
+                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
+                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
+        {
+            if (TaskReferencesNonExistantElement(adaptivityContent, learningWorld))
+            {
+                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
+            }
+
+            if (TaskReferencesNonExistantContent(adaptivityContent, learningWorld))
+            {
+                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
+            }
+        }
+
+        if (!errors.Any()) return true;
+
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
+
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
+        return false;
+    }
+    
+    private bool TaskReferencesNonExistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
+    {
+        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
+        return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
+    }
+
+    private bool TaskReferencesNonExistantContent(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
+    {
+        var contentReferencedByAdaptivityContent = GetContentReferencesByAdaptivityContent(adaptivityContent);
+        return contentReferencedByAdaptivityContent.Any(adaContent => !PresentationLogic.GetAllContent().Contains(adaContent));
+    }
+    
+    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
+    {
+        return adaptivityContent.Tasks
+            .SelectMany(task => task.Questions
+                .SelectMany(question => question.Rules
+                    .Select(rule => rule.Action)
+                    .Where(action => action is ElementReferenceActionViewModel)
+                    .Cast<ElementReferenceActionViewModel>()
+                    .Select(action => action.ElementId)));
+    }
+
+    private IEnumerable<ILearningContentViewModel> GetContentReferencesByAdaptivityContent(IAdaptivityContentViewModel adaptivityContent)
+    {
+        return adaptivityContent.Tasks
+            .SelectMany(task => task.Questions
+                .SelectMany(question => question.Rules
+                    .Select(rule => rule.Action)
+                    .Where(action => action is ContentReferenceActionViewModel)
+                    .Cast<ContentReferenceActionViewModel>()
+                    .Select(action => action.Content)));
     }
 
     private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");

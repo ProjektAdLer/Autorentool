@@ -1,19 +1,21 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
-@using System.Text
+@using BusinessLogic.ErrorManagement.BackendAccess
 @using ElectronWrapper
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
-@using Presentation.Components.Culture
 @using Presentation.Components.Dialogues
 @using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Extensions
+@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Action
+@using Presentation.PresentationLogic.LearningContent.FileContent
+@using Presentation.PresentationLogic.LearningContent.LinkContent
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
@@ -31,12 +33,14 @@
     <div class="flex justify-start items-center w-14">
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
-            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" title=@Localizer["LearningWorld.Home.Hover"] OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
-
+            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large"
+                           title=@Localizer["LearningWorld.Home.Hover"]
+                           OnClick="OnClickMyLearningWorldsOverview"></MudIconButton>
         }
         else
         {
-            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Disabled="true"></MudIconButton>
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Home" Size="Size.Large"
+                           Disabled="true"></MudIconButton>
         }
     </div>
     
@@ -203,11 +207,19 @@
     {
         var world = SelectedViewModelsProvider.LearningWorld;
         if (world == null) return;
-        if (!IsLearningWorldValid(world)) return;
+        if (!IsLearningWorldValidForGeneration(world)) return;
         //check if lms is connected here before generating the backup just to save time
-        if (!await PresentationLogic.IsLmsConnected())
+        try
         {
-            await ShowNotLoggedInDialog();
+            if (!await PresentationLogic.IsLmsConnected())
+            {
+                await ShowNotLoggedInDialog();
+                return;
+            }
+        }
+        catch (BackendApiUnreachableException e)
+        {
+            ErrorService.SetError("An error occurred while checking the LMS connection", e.Message);
             return;
         }
 
@@ -346,37 +358,34 @@
         DialogService.ShowAsync<UploadSuccessfulDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
     }
 
-    private async Task ExportLearningWorldToArchiveAsync()
+    private bool IsLearningWorldValidForGeneration(ILearningWorldViewModel world)
     {
-        if (SelectedViewModelsProvider.LearningWorld is null) return;
-        await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld);
-    }
-
-    private bool IsLearningWorldValid(ILearningWorldViewModel world)
-    {
-        var errorString = new StringBuilder();
-        errorString.Append("<ul>");
+        var errors = new List<string>();
 
         if (world.LearningSpaces.Count == 0)
         {
-            errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
+            errors.Add($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
         }
-        
-        if (world.LearningSpaces.Count > 50)
+        else if (world.LearningSpaces.Count > 50)
         {
-            errorString.AppendLine($"<li> {Localizer["ErrorString.TooMany.LearningSpaces.Message"]} </li>");
+            errors.Add($"<li> {Localizer["ErrorString.TooMany.LearningSpaces.Message"]} </li>");
         }
 
         foreach (var space in world.LearningSpaces)
         {
             if (!space.ContainedLearningElements.Any())
-            {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
-            }
+                errors.Add($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
 
             if (space.Points < space.RequiredPoints)
+                errors.Add($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
+
+            foreach (var element in space.ContainedLearningElements)
             {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
+                if (element.LearningContent is (IFileContentViewModel or ILinkContentViewModel)
+                    && !PresentationLogic.GetAllContent().Contains(element.LearningContent))
+                {
+                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
+                }
             }
         }
 
@@ -384,31 +393,38 @@
                      .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
                      .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
         {
-            if (adaptivityContent.Tasks.Count <= 0) errorString.AppendLine($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
-            if (TaskReferencesNonexistantElement(adaptivityContent, world))
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
+            if (adaptivityContent.Tasks.Count == 0)
+                errors.Add($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
+
+            if (TaskReferencesNonExistantElement(adaptivityContent, world))
+                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
+            if (TaskReferencesNonExistantContent(adaptivityContent, world))
+                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
             if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
+                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
+
             var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
-            foreach (var referenceTuple in invalidSpaceReferences)
-            {
-                errorString.AppendLine($"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, referenceTuple.Space.Name, referenceTuple.Element.Name]} </li>");
-            }
+            errors.AddRange(invalidSpaceReferences.Select(reference => $"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, reference.Space.Name, reference.Element.Name]} </li>"));
         }
 
-        if (errorString.Length == "<ul>".Length) return true;
+        if (!errors.Any()) return true;
 
-        errorString.Append("</ul>");
-
+        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
         Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString);
         return false;
     }
 
-    private bool TaskReferencesNonexistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
+    private bool TaskReferencesNonExistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
     {
         var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
         return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
+    }
+
+    private bool TaskReferencesNonExistantContent(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
+    {
+        var contentReferencedByAdaptivityContent = GetContentReferencesByAdaptivityContent(adaptivityContent);
+        return contentReferencedByAdaptivityContent.Any(adaContent => !PresentationLogic.GetAllContent().Contains(adaContent));
     }
 
     private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
@@ -457,6 +473,17 @@
                     .Where(action => action is ElementReferenceActionViewModel)
                     .Cast<ElementReferenceActionViewModel>()
                     .Select(action => action.ElementId)));
+    }
+
+    private IEnumerable<ILearningContentViewModel> GetContentReferencesByAdaptivityContent(IAdaptivityContentViewModel adaptivityContent)
+    {
+        return adaptivityContent.Tasks
+            .SelectMany(task => task.Questions
+                .SelectMany(question => question.Rules
+                    .Select(rule => rule.Action)
+                    .Where(action => action is ContentReferenceActionViewModel)
+                    .Cast<ContentReferenceActionViewModel>()
+                    .Select(action => action.Content)));
     }
 
     private async Task ShowNotLoggedInDialog()

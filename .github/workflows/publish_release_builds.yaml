@@ -319,20 +319,20 @@ jobs:
           asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
           tag: ${{ github.ref }}
   
-  #discord-notification:
-  #  needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
-  #  runs-on: ubuntu-22.04
-  #  steps:
-  #    - name: Prepare release body (description)
-  #      id: prep_body
-  #      run: |
-  #        echo "${{ github.event.release.body }}" > changes.md
-  #
-  #    - name: Discord notification
-  #      uses: appleboy/discord-action@master
-  #      with:
-  #        webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
-  #        webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
-  #        username: GitHub Releases
-  #        message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
-  #        file: changes.md
+  discord-notification:
+    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Prepare release body (description)
+        id: prep_body
+        run: |
+          echo "${{ github.event.release.body }}" > changes.md
+  
+      - name: Discord notification
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_RELEASE_CHANNEL_WEBHOOK_TOKEN }}
+          username: GitHub Releases
+          message: "New release of **${{ github.repository }}**\nVersion: ${{ github.ref_name }} (${{github.event.release.name}})\n<${{ github.event.release.html_url }}>"
+          file: changes.md

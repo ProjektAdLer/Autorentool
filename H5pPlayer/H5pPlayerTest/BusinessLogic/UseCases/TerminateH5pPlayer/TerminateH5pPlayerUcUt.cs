@@ -9,6 +9,7 @@ namespace H5pPlayerTest.BusinessLogic.UseCases.TerminateH5pPlayer;
 public class TerminateH5pPlayerUcUt
 {
     [Test]
+    // ANF-ID: [HSE9]
     public async Task  CleanH5pFolderInWwwroot()
     {
         var directoryForCleaning = Path.Combine("wwwroot", "H5pStandalone", "h5p-folder");
@@ -24,6 +25,7 @@ public class TerminateH5pPlayerUcUt
     }
     
     [Test]
+    // ANF-ID: [HSE8]
     public async Task TerminateH5pJavaScriptPlayer()
     {
         var mockJavaScriptAdapter= Substitute.For<ICallJavaScriptAdapter>();

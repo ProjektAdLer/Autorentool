@@ -12,6 +12,8 @@ public class LearningWorldFormModel
         Goals = "";
         EvaluationLink = "";
         EnrolmentKey = "";
+        StoryStart = "";
+        StoryEnd = "";
     }
 
     public Guid Id { get; set; }
@@ -23,4 +25,6 @@ public class LearningWorldFormModel
     public string Goals { get; set; }
     public string EvaluationLink { get; set; }
     public string EnrolmentKey { get; set; }
+    public string StoryStart { get; set; }
+    public string StoryEnd { get; set; }
 }

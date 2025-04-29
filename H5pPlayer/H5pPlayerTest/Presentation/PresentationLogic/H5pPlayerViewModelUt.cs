@@ -20,6 +20,7 @@ public class H5pPlayerViewModelUt
     }
 
     [Test]
+    // ANF-ID: [HSE6]
     public void IsCompletable_SetToDifferentValue_ShouldTriggerOnChangeEvent()
     {
         var eventTriggered = false;
@@ -32,6 +33,7 @@ public class H5pPlayerViewModelUt
     }
 
     [Test]
+    // ANF-ID: [HSE6]
     public void IsCompletable_SetToSameValue_ShouldNotTriggerOnChangeEvent()
     {
         var eventTriggered = false;

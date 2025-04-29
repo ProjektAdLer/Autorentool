@@ -1,7 +1,6 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared
-@inject ISnackbar Snackbar
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
@@ -17,6 +16,7 @@
 @using Shared.Configuration
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigation
+@inject ISnackbar Snackbar
 
 <MudStack Class="w-full h-full border-r-2 border-dotted border-adlergrey-200 bg-adlerbgbright">
     <header class="py-2 bg-adlerbgbright border-y-2 border-adlergrey-100 overflow-hidden flex justify-center">

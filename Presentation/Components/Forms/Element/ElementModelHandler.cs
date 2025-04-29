@@ -2,7 +2,14 @@
 
 namespace Presentation.Components.Forms.Element;
 
-public enum ElementModelContentType {Any, File, Link, Adaptivity, Story}
+public enum ElementModelContentType
+{
+    Any,
+    File,
+    Link,
+    Adaptivity,
+    Story
+}
 
 public class ElementModelHandler : IElementModelHandler
 {
@@ -39,11 +46,11 @@ public class ElementModelHandler : IElementModelHandler
         }
     }
 
-    internal static readonly IEnumerable<ElementModel> NpcModels = new[]
-        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
-    
-    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_alerobot };
+    internal static readonly IEnumerable<ElementModel> NpcModels =
+        GetElementModelsForModelType(ContentTypeEnum.Story).ToArray();
+
+    internal static readonly IEnumerable<ElementModel> AdaptivityModels =
+        GetElementModelsForModelType(ContentTypeEnum.Adaptivity).ToArray();
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
@@ -96,10 +103,16 @@ public class ElementModelHandler : IElementModelHandler
             //Adaptivity
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
             //Story NPCs
-            ElementModel.a_npc_sheriffjustice =>
-                "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
-            ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
-            ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
+            ElementModel.a_npc_sheriffjustice => "CustomIcons/AdaptivityElementModels/npc/a_npc_sheriffjustice.png",
+            ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/npc/a_npc_dozentlukas.png",
+            ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/npc/a_npc_defaultnpc.png",
+            ElementModel.a_npc_bullyfemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_bullyfemale.png",
+            ElementModel.a_npc_bullymale => "CustomIcons/AdaptivityElementModels/npc/a_npc_bullymale.png",
+            ElementModel.a_npc_oldman => "CustomIcons/AdaptivityElementModels/npc/a_npc_oldman.png",
+            ElementModel.a_npc_hiphopfemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_hiphopfemale.png",
+            ElementModel.a_npc_hiphopmale => "CustomIcons/AdaptivityElementModels/npc/a_npc_hiphopmale.png",
+            ElementModel.a_npc_santafemale => "CustomIcons/AdaptivityElementModels/npc/a_npc_santafemale.png",
+            ElementModel.a_npc_santamale => "CustomIcons/AdaptivityElementModels/npc/a_npc_santamale.png",
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
                 @"Icon not found for ElementModel")
         };
@@ -109,7 +122,7 @@ public class ElementModelHandler : IElementModelHandler
     {
         return ElementModel.l_random;
     }
-    
+
     public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
         return modelType switch
@@ -184,6 +197,14 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.a_npc_sheriffjustice;
                 //suburb
                 yield return ElementModel.a_npc_defaultnpc;
+                //npc
+                yield return ElementModel.a_npc_bullyfemale;
+                yield return ElementModel.a_npc_bullymale;
+                yield return ElementModel.a_npc_oldman;
+                yield return ElementModel.a_npc_hiphopfemale;
+                yield return ElementModel.a_npc_hiphopmale;
+                yield return ElementModel.a_npc_santafemale;
+                yield return ElementModel.a_npc_santamale;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
@@ -206,8 +227,6 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_comicshelfbig_1;
                 yield return ElementModel.l_text_comicshelfsmall_1;
                 yield return ElementModel.l_video_vrdesk_1;
-                yield return ElementModel.a_npc_sheriffjustice;
-                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.CampusAschaffenburg:
             case Theme.CampusKempten:
@@ -220,8 +239,6 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_image_sciencewhiteboard_1;
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
-                yield return ElementModel.a_npc_dozentlukas;
-                yield return ElementModel.a_npc_alerobot;
                 break;
             case Theme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
@@ -234,12 +251,23 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_bookshelf_1;
                 yield return ElementModel.l_text_bookshelf_2;
                 yield return ElementModel.l_video_television_1;
-                yield return ElementModel.a_npc_defaultnpc;
-                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
         }
+
+        // Models that are in all themes
+        yield return ElementModel.a_npc_alerobot;
+        yield return ElementModel.a_npc_defaultnpc;
+        yield return ElementModel.a_npc_dozentlukas;
+        yield return ElementModel.a_npc_sheriffjustice;
+        yield return ElementModel.a_npc_bullyfemale;
+        yield return ElementModel.a_npc_bullymale;
+        yield return ElementModel.a_npc_oldman;
+        yield return ElementModel.a_npc_hiphopfemale;
+        yield return ElementModel.a_npc_hiphopmale;
+        yield return ElementModel.a_npc_santafemale;
+        yield return ElementModel.a_npc_santamale;
     }
 
     private class ElementModelComparer : Comparer<ElementModel>

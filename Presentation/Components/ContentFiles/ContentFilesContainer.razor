@@ -1,6 +1,3 @@
-@using Microsoft.Extensions.Localization
-@using System.Diagnostics.CodeAnalysis
-
 <MudPaper Class="relative w-full h-full shadow-none">
     <CascadingValue Value="@RerenderAsync" Name="RerenderContentContainer">
         <div class="flex flex-row w-full">
@@ -18,9 +15,6 @@
 
     private ContentFilesView? ContentFilesView { get; set; }
 
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    internal IStringLocalizer<ContentFilesAdd> Localizer { get; set; }
-    
     /// <summary>Rerenders this component as well as the <see cref="ContentFilesView"/> inside of it.</summary>
     internal async Task RerenderAsync()
     {

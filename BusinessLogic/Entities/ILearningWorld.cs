@@ -20,4 +20,6 @@ public interface ILearningWorld
     bool InternalUnsavedChanges { get; }
     string EvaluationLink { get; set; }
     string EnrolmentKey { get; set; }
+    string StoryStart { get; set; }
+    string StoryEnd { get; set; }
 }
