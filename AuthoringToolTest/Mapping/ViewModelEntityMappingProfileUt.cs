@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Question;
 using BusinessLogic.Entities.LearningContent.Adaptivity.Trigger;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.H5P;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.Entities.LearningContent.Story;
 using NUnit.Framework;
@@ -50,6 +51,8 @@ public class ViewModelEntityMappingProfileUt
     private const int RequiredPoints = 3;
     private const double PositionX = 1.0;
     private const double PositionY = 2.0;
+    private const H5PContentState H5PState = H5PContentState.Primitive;
+    private const bool IsH5P = false;
 
     private const string NewName = "newName";
     private const string NewShortname = "newShortname";
@@ -72,7 +75,13 @@ public class ViewModelEntityMappingProfileUt
     private const int NewRequiredPoints = 4;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
+    private const H5PContentState NewH5PState = H5PContentState.Completable;
+    private const bool NewIsH5P = true;
 
+
+
+
+   
 
     [Test]
     public void Constructor_TestConfigurationIsValid()
@@ -90,7 +99,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningContentAndLearningContentViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new FileContent(Name, Type, Filepath);
+        var source = CreateFileContent();
         var destination = new FileContentViewModel("", "", "bar/baz/buz.txt");
 
         systemUnderTest.Map(source, destination);
@@ -106,7 +115,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningElementAndLearningElementViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var content = GetTestableContent();
+        var content = CreateFileContent();
         var source = new LearningElement(Name, content, Description, Goals,
             Difficulty, ElementModel.l_h5p_slotmachine_1, workload: Workload, points: Points, positionX: PositionX,
             positionY: PositionY);
@@ -120,7 +129,7 @@ public class ViewModelEntityMappingProfileUt
         Assert.That(destination.Id, Is.EqualTo(source.Id));
 
         destination.Name = NewName;
-        destination.LearningContent = new FileContentViewModel(NewName, NewType, NewFilepath);
+        destination.LearningContent = GetTestableNewFileContentVm();
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.Difficulty = NewDifficulty;
@@ -134,6 +143,8 @@ public class ViewModelEntityMappingProfileUt
         TestElement(source, null, true);
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
+
+
 
     [Test]
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
@@ -660,9 +671,13 @@ public class ViewModelEntityMappingProfileUt
         });
     }
 
-    private static FileContent GetTestableContent()
+
+    private static FileContent CreateFileContent()
     {
-        return new FileContent(Name, Type, Filepath);
+        var fileContent = new FileContent(Name, Type, Filepath);
+        fileContent.IsH5P = IsH5P;
+        fileContent.H5PState = H5PState;
+        return fileContent;
     }
 
     private static StoryContent GetTestableStoryContent()
@@ -670,9 +685,13 @@ public class ViewModelEntityMappingProfileUt
         return new StoryContent(Name, false, ConfigureStoryText);
     }
 
-    private static FileContentViewModel GetTestableNewContentViewModel()
+
+    private static FileContentViewModel GetTestableNewFileContentVm()
     {
-        return new FileContentViewModel(NewName, NewType, NewFilepath);
+        var content = new FileContentViewModel(NewName, NewType, NewFilepath);
+        content.IsH5P = NewIsH5P;
+        content.H5PState = NewH5PState;
+        return content;
     }
 
     private static StoryContentViewModel GetTestableNewStoryContentViewModel()
@@ -683,7 +702,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
         return new LearningElement(Name,
-            GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel, parent, Workload, Points,
+            CreateFileContent(), Description, Goals, Difficulty, SelectedElementModel, parent, Workload, Points,
             PositionX,
             PositionY);
     }
@@ -697,7 +716,7 @@ public class ViewModelEntityMappingProfileUt
     private static LearningElementViewModel GetTestableElementViewModelWithParent(LearningSpaceViewModel parent)
     {
         return new LearningElementViewModel(NewName,
-            GetTestableNewContentViewModel(), NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, parent,
+            GetTestableNewFileContentVm(), NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, parent,
             NewWorkload, NewPoints, NewPositionX, NewPositionY);
     }
 
@@ -902,6 +921,8 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
+                    Assert.That(content.IsH5P, Is.EqualTo(useNewFields ? NewIsH5P : IsH5P));
+                    Assert.That(content.H5PState, Is.EqualTo(useNewFields ? NewH5PState : H5PState));
                 });
                 break;
             case FileContent content:
