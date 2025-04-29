@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.H5P;
 using BusinessLogic.Entities.LearningContent.Story;
 using FluentAssertions;
 using NUnit.Framework;
@@ -37,6 +38,8 @@ public class EntityPersistEntityMappingProfileUt
     private const int RequiredPoints = 3;
     private const double PositionX = 1.0;
     private const double PositionY = 2.0;
+    private const H5PContentState H5PState = H5PContentState.Primitive;
+    private const bool IsH5P = false;
 
     private const string NewName = "newName";
     private const string NewShortname = "newShortname";
@@ -57,6 +60,10 @@ public class EntityPersistEntityMappingProfileUt
     private const int NewRequiredPoints = 4;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
+    private const H5PContentState NewH5PState = H5PContentState.Completable;
+    private const bool NewIsH5P = true;
+
+
 
     [Test]
     public void Constructor_TestConfigurationIsValid()
@@ -74,7 +81,7 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningContentAndLearningContentPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new FileContent(Name, Type, Filepath);
+        var source = CreateFileContent();
         var destination = new FileContentPe("", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -84,17 +91,21 @@ public class EntityPersistEntityMappingProfileUt
         destination.Name = NewName;
         destination.Type = NewType;
         destination.Filepath = NewFilepath;
+        destination.IsH5P = NewIsH5P;
+        destination.H5PState = NewH5PState;
 
         systemUnderTest.Map(destination, source);
 
         TestContent(source, true);
     }
 
+
+
     [Test]
     public void MapLearningElementAndLearningElementPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var content = GetTestableContent();
+        var content = CreateFileContent();
         var source = new LearningElement(Name, content, Description, Goals,
             Difficulty, SelectedElementModel, workload: Workload, points: Points, positionX: PositionX,
             positionY: PositionY);
@@ -106,7 +117,7 @@ public class EntityPersistEntityMappingProfileUt
         TestElement(destination, null, false);
 
         destination.Name = NewName;
-        destination.LearningContent = new FileContentPe(NewName, NewType, NewFilepath);
+        destination.LearningContent = GetTestableNewContentPersistEntity();
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.Difficulty = NewDifficulty;
@@ -121,6 +132,8 @@ public class EntityPersistEntityMappingProfileUt
 
         TestElement(source, null, true);
     }
+
+
 
     [Test]
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
@@ -266,7 +279,7 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey, savePath: SavePath);
-        source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
+        source.UnplacedLearningElements.Add(new LearningElement(Name, CreateFileContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
@@ -629,9 +642,12 @@ public class EntityPersistEntityMappingProfileUt
         systemUnderTest.Map<LearningElement>(elementPe);
     }
 
-    private static FileContent GetTestableContent()
+    private static FileContent CreateFileContent()
     {
-        return new FileContent(Name, Type, Filepath);
+        var fileContent = new FileContent(Name, Type, Filepath);
+        fileContent.IsH5P = IsH5P;
+        fileContent.H5PState = H5PState;
+        return fileContent;
     }
 
     private static StoryContent GetTestableStoryContent()
@@ -641,7 +657,10 @@ public class EntityPersistEntityMappingProfileUt
 
     private static FileContentPe GetTestableNewContentPersistEntity()
     {
-        return new FileContentPe(NewName, NewType, NewFilepath);
+        var content = new FileContentPe(NewName, NewType, NewFilepath);
+        content.IsH5P = NewIsH5P;
+        content.H5PState = NewH5PState;
+        return content;
     }
 
     private static StoryContentPe GetTestableNewStoryContentPersistEntity()
@@ -651,7 +670,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
-        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel,
+        return new LearningElement(Name, CreateFileContent(), Description, Goals, Difficulty, SelectedElementModel,
             parent, Workload,
             Points, PositionX,
             PositionY);
@@ -880,6 +899,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
+                    Assert.That(content.H5PState, Is.EqualTo(useNewFields ? NewH5PState : H5PState));
                 });
                 break;
             case FileContentPe content:
@@ -915,4 +935,10 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = mapper.CreateMapper();
         return systemUnderTest;
     }
+    
+
+    
+
+
+
 }

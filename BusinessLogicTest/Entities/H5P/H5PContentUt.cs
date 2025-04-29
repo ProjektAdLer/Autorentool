@@ -13,16 +13,16 @@ public class H5PContentUt
         _basePath = OperatingSystem.IsWindows() ? "C:" : "/";
     }
     [Test]
-    public void H5PContent_ConstructorWithValidParameter_ConstructsH5PContent(
-        [Values] H5PContentState state)
+    public void H5PContent_ConstructorWithValidParameter_ConstructsH5PContent()
     {
         var name= "name";
         bool unsavedChanges = false;
         string type= "type";
         string filePath= Path.Combine(_basePath, name);
         bool primitiveH5P = false;
+        H5PContentState h5PState = H5PContentState.Unknown;
         
-        var systemUnderTest = new H5PContent(state, name, unsavedChanges, type, filePath, primitiveH5P);
+        var systemUnderTest = new H5PContent(h5PState, name, unsavedChanges, type, filePath, primitiveH5P);
         
         Assert.Multiple(() =>
         {
@@ -30,9 +30,9 @@ public class H5PContentUt
             Assert.That(systemUnderTest.Type, Is.EqualTo(type));
             Assert.That(systemUnderTest.Filepath, Is.EqualTo(filePath));
             Assert.That(systemUnderTest.UnsavedChanges, Is.EqualTo(unsavedChanges));
-            Assert.That(systemUnderTest.State, Is.EqualTo(state));
-            Assert.That(systemUnderTest.PrimitiveH5P, Is.EqualTo(primitiveH5P));
-           // Assert.That(systemUnderTest.PrimitiveH5P, Is.EqualTo(false));
+            Assert.That(systemUnderTest.H5PState, Is.EqualTo(h5PState));
+            Assert.That(systemUnderTest.IsH5P, Is.EqualTo(primitiveH5P));
+            Assert.That(systemUnderTest.IsH5P, Is.EqualTo(false));
         });
     }
     

@@ -1,16 +1,23 @@
 using System.Runtime.Serialization;
+using BusinessLogic.Entities.LearningContent.H5P;
 using JetBrains.Annotations;
 
 namespace PersistEntities.LearningContent;
 
 public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
 {
-    public FileContentPe(string name, string type, string filepath, bool primitiveH5P = false)
+    public FileContentPe(
+        string name, 
+        string type, 
+        string filepath,
+        bool isH5P = false,
+        H5PContentState h5pState = H5PContentState.Unknown)
     {
         Name = name;
         Type = type;
         Filepath = filepath;
-        PrimitiveH5P = primitiveH5P;
+        IsH5P = isH5P;
+        H5PState = h5pState;
     }
 
     /// <summary>
@@ -22,7 +29,8 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
         Name = "";
         Type = "";
         Filepath = "";
-        PrimitiveH5P = false;
+        IsH5P = false;
+        H5PState = H5PContentState.Unknown;
     }
 
     public bool Equals(FileContentPe? other)
@@ -35,5 +43,6 @@ public class FileContentPe : IFileContentPe, IEquatable<FileContentPe>
     [DataMember] public string Type { get; set; }
     [DataMember] public string Filepath { get; set; }
     [DataMember] public string Name { get; set; }
-    [DataMember] public bool PrimitiveH5P { get; set; }
+    [DataMember] public bool IsH5P { get; set; }
+    [DataMember] public H5PContentState H5PState { get; set; }
 }

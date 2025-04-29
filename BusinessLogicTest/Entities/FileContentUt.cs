@@ -1,4 +1,5 @@
 using BusinessLogic.Entities.LearningContent.FileContent;
+using BusinessLogic.Entities.LearningContent.H5P;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Entities;
@@ -20,7 +21,8 @@ public class FileContentUt
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Type, Is.EqualTo(type));
             Assert.That(systemUnderTest.Filepath, Is.EqualTo(content));
-            Assert.That(systemUnderTest.PrimitiveH5P, Is.EqualTo(false));
+            Assert.That(systemUnderTest.IsH5P, Is.EqualTo(false));
+            Assert.That(systemUnderTest.H5PState, Is.EqualTo(H5PContentState.Unknown));
         });
     }
 
