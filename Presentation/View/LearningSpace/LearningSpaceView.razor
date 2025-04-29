@@ -33,7 +33,7 @@
                     
                        
                         <p class="text-xs 2xl:text-base text-adlerblue-600 space-theme">
-                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.SpaceTheme is { } theme ? ThemeHelper<SpaceTheme>.Localize(theme) : "")
+                            <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(ThemeHelper<SpaceTheme>.Localize(LearningSpaceP.LearningSpaceVm.SpaceTheme, SelectedViewModelsProvider.LearningWorld!.WorldTheme.ToString()))
                         </p>
                         <p class="text-xs 2xl:text-base text-adlerblue-600 space-points">
                             <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.RequiredPoints
