@@ -15,8 +15,8 @@
 @implements IDisposable
 @if (LearningWorldP.LearningWorldVm != null)
 {
-    <div class="flex flex-col max-h-[128rem] grow">
-        <div class="flex flex-col bg-adlerbgbright rounded-b mb-1.5 2xl:mb-2">
+    <div class="flex flex-col h-full grow">
+        <div class="flex flex-col bg-adlerbgbright rounded-b">
             <header class="py-2 2xl:py-3 border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
                 <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["OverView.Title"]</h2>
             </header>
@@ -26,7 +26,7 @@
                         @* ReSharper disable Html.PathError *@
                         <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-4 2xl:w-6">
                         @* ReSharper restore Html.PathError *@
-                        <p class="text-sm 2xl:text-base font-bold text-adlertitleblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+                        <p class="text-sm 2xl:text-base font-bold text-adlertitledarkblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
                     </div>
                     <p class="text-xs 2xl:text-base text-adlerblue-600">
                         <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
@@ -38,7 +38,7 @@
             </article>
         </div>
         
-        <section class="bg-white rounded w-full overflow-scroll grow">
+        <section class="bg-white rounded w-full overflow-scroll grow mt-1.5 2xl:mt-2">
             <div class="cursor-pointer flex flex-col justify-start">
                 @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {

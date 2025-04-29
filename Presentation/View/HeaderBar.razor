@@ -71,9 +71,9 @@
         {
             <div class="flex justify-center items-center gap-2 cursor-default">
                 @* ReSharper disable Html.PathError *@
-                <img class="w-5 h-5 drop-shadow opacity-70" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
+                <img class="w-5 h-5 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
                 @* ReSharper restore Html.PathError *@
-                <p class="font-bold text-base 2xl:text-lg text-adlerdarkblue">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
+                <p class="font-bold text-base 2xl:text-lg text-adlertitledarkblue">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
             </div>
         }
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
@@ -82,7 +82,7 @@
                 @* ReSharper disable Html.PathError *@
                 @*<img class="w-5 h-5 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>*@
                 @* ReSharper restore Html.PathError *@
-                <p class="font-bold text-base 2xl:text-lg truncate text-adlerdarkblue" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
+                <p class="font-bold text-base 2xl:text-lg truncate text-adlertitledarkblue" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
                 <MudIconButton Size="Size.Small" Class="flex items-center h-5 w-5 text-adlerdarkblue opacity-70" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
             </div>
         }
@@ -91,7 +91,7 @@
     <div class="flex flex-row w-60 gap-2 items-center justify-end">
 
         <div class="bg-none w-60 flex flex-row justify-center items-center cursor-pointer">
-            <MudButton Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto disabled:text-adlergrey-200 text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600" id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld" title=@Localizer["3DWorld.Generate.Hover"].Value Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <MudButton Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600" id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld" title=@Localizer["3DWorld.Generate.Hover"].Value Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
                 <MudIcon Icon="@Icons.Material.Filled.Publish" Title="@Localizer["3DWorld.Generate.Hover"].Value" Size="Size.Small"></MudIcon>
                 <p class="text-xs font-bold uppercase pl-2">@Localizer["3DWorld.Generate.Button.Title"]</p>
             </MudButton>
