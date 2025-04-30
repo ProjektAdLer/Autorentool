@@ -12,7 +12,7 @@
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
     </header>
     <div class="flex justify-between items-start">
-        <MudText Class="text-adlergrey-200 p-2 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
+        <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["EditWorldForm.Text"]</MudText>
     </div>
 </div>
 
@@ -24,7 +24,7 @@
           FormDataContainer="FormDataContainer" @ref="_form">
     
     <Fields>
-        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mt-2 border-t border-dotted">
+        <div class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -72,8 +72,7 @@
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
                                   For="@(() => FormModel.EnrolmentKey)"
                                   DebounceInterval="DebounceInterval"
-                                  Variant="Variant.Outlined"
-                                  Class="mt-0"/>
+                                  Variant="Variant.Outlined"/>
                 </div>
             </Collapsable>
             
@@ -84,8 +83,7 @@
                                   For="@(() => FormModel.Goals)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="mt-0"/>
+                                  DebounceInterval="DebounceInterval"/>
                 </div>
             </Collapsable>
             
@@ -96,14 +94,13 @@
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  DebounceInterval="DebounceInterval"/>
                 </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Story.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.StoryStart"
                                   For="@(() => FormModel.StoryStart)"
                                   Lines="3"
@@ -111,7 +108,7 @@
                                   Variant="Variant.Outlined"
                                   Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder"]"
                                   DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  Class="pb-2"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.StoryEnd"
                                   For="@(() => FormModel.StoryEnd)"
                                   Lines="3"
@@ -119,7 +116,7 @@
                                   Variant="Variant.Outlined"
                                   Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder"]"
                                   DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  Class="pb-4"/>
                 </div>
             </Collapsable>
         </div>

@@ -5,13 +5,11 @@
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
 <div class="absolute w-full z-30">
-    <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-        <div class="flex justify-center py-2 2xl:py-3">
-            <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
-        </div>
+    <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+        <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
     </header>
     <div class="flex justify-between items-start">
-        <MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["CreateWorldForm.Text"]</MudText>
+        <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["CreateWorldForm.Text"]</MudText>
     </div>
 </div>
 
@@ -19,7 +17,7 @@
           SnackbarMessage=@Localizer["CreateWorldForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mt-2 border-t border-dotted">
+        <div class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -83,32 +81,30 @@
             </Collapsable>
             
             <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-6 pt-3">
-                    <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-2 mt-0"/>
+                                  DebounceInterval="DebounceInterval"/>
                 </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-6 pt-3">
-                    <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="text-adlergrey-800 pb-4 mt-0"/>
+                                  DebounceInterval="DebounceInterval"/>
                 </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["CreateWorldForm.Fields.Collapsable.Story.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.StoryStart"
                                   For="@(() => FormModel.StoryStart)"
                                   Lines="3"
@@ -116,7 +112,7 @@
                                   Variant="Variant.Outlined"
                                   Placeholder="@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder"]"
                                   DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  Class="pb-2"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.StoryEnd"
                                   For="@(() => FormModel.StoryEnd)"
                                   Lines="3"
@@ -124,7 +120,7 @@
                                   Variant="Variant.Outlined"
                                   Placeholder="@Localizer["CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder"]"
                                   DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  Class="pb-4"/>
                 </div>
             </Collapsable>
         </div>
