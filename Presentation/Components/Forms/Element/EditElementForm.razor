@@ -256,7 +256,7 @@
         throw new InvalidOperationException($"{nameof(ElementMode)} is out of range");
 }
 
-@if (ElementMode == ElementMode.Normal)
+@if (ElementMode != ElementMode.Adaptivity)
 {
     <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
         <div class="rounded-lg w-4/4 px-6 pt-3">
@@ -270,7 +270,7 @@
         </div>
     </Collapsable>
 }
-@if (ElementMode != ElementMode.Normal)
+@if (ElementMode == ElementMode.Adaptivity)
 {
     <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
         <div class="rounded-lg w-4/4 px-6 pt-3">
