@@ -48,7 +48,6 @@
 
     <ItemGroup>
       <Folder Include="View" />
-      <Folder Include="wwwroot\CustomIcons\StoryElementModels\Moods\" />
       <Folder Include="wwwroot\fonts" />
       <Folder Include="wwwroot\H5pStandalone\h5p-folder\" />
     </ItemGroup>

@@ -6,7 +6,7 @@ public static class NpcMoodPreviewHandler
 {
     public static string GetIconForNpcAndMood(ElementModel elementModel, NpcMood npcMood)
     {
-        if (!elementModel.ToString().Contains("a_npc"))
+        if (!elementModel.ToString().StartsWith("a_npc"))
         {
             throw new ArgumentException("ElementModel is not an NPC", nameof(elementModel));
         }

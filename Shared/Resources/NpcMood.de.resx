@@ -24,7 +24,7 @@
     <data name="Enum.NpcMood.Welcome" xml:space="preserve">
         <value>Willkommen</value>
     </data>
-    <data name="Enum.NpcMood.Thumpsup" xml:space="preserve">
+    <data name="Enum.NpcMood.ThumbsUp" xml:space="preserve">
         <value>Freude über Erfolg</value>
     </data>
     <data name="Enum.NpcMood.Shocked" xml:space="preserve">

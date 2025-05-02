@@ -123,20 +123,14 @@ public class ElementModelHandler : IElementModelHandler
     {
         var name = elementModel.ToString();
         var value = (int)elementModel;
-        var elementModelName = elementModel.ToString().ToLower().Replace("_", "-");
-        if ((elementModelName.EndsWith("female")) ||
-            (elementModelName.EndsWith("male")))
+        if (ElementModelHelper.IsObsolete(elementModel))
         {
-            var index = elementModelName.LastIndexOf(elementModelName.EndsWith("female") ? "female" : "male");
-            var charAtIndex = elementModelName[index - 1];
-            if (elementModelName[index - 1] != '-')
-            {
-                elementModelName = elementModelName.Insert(index, "-");
-            }
+            elementModel = ElementModelHelper.GetAlternateValue(elementModel);
         }
+        var elementModelName = elementModel.ToString().ToLower().Replace("_", "-");
 
         return "CustomIcons/StoryElementModels/" + elementModelName +
-               "/" + elementModelName + "-preview.png";
+               "/" + elementModelName + "-default.png";
     }
 
     public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
@@ -146,12 +140,6 @@ public class ElementModelHandler : IElementModelHandler
             ContentTypeEnum.Adaptivity => ElementModel.a_npc_alerobot,
             _ => ElementModel.l_random
         };
-    }
-
-    private static bool IsObsolete(ElementModel model)
-    {
-        var memberInfo = typeof(ElementModel).GetMember(model.ToString()).FirstOrDefault();
-        return memberInfo?.GetCustomAttributes(typeof(ObsoleteAttribute), false).Length > 0;
     }
 
     internal static IEnumerable<ElementModel> GetElementModelsForModelType(ContentTypeEnum modelType)
@@ -215,7 +203,7 @@ public class ElementModelHandler : IElementModelHandler
             case ContentTypeEnum.Story:
                 foreach (var model in Enum.GetValues<ElementModel>()
                              .Where(e => e.ToString().StartsWith("a_npc_") &&
-                                         e != ElementModel.a_npc_alerobot && !IsObsolete(e)))
+                                         e != ElementModel.a_npc_alerobot && !ElementModelHelper.IsObsolete(e)))
                 {
                     yield return model;
                 }
@@ -275,7 +263,7 @@ public class ElementModelHandler : IElementModelHandler
         // Models that are in all themes
         // return all NPC ElementModels
         foreach (var model in Enum.GetValues<ElementModel>().Where(e => e.ToString().StartsWith("a_npc_") && 
-                                                                        !IsObsolete(e)))
+                                                                        !ElementModelHelper.IsObsolete(e)))
         {
             yield return model;
         }
