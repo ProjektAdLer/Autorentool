@@ -73,7 +73,5 @@ public class XmlFileManager : IXmlFileManager
         {
             _fileSystem.File.Copy(filepath, fileDestination);
         }
-
-        _fileSystem.File.Delete(filepath);
     }
 }

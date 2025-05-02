@@ -33,11 +33,13 @@ public class WorldCommandFactoryUt
         var evaluationLink = "WorldEvaluationLink";
         var enrolmentKey = "WorldEnrolmentKey";
         var goals = "WorldGoals";
+        var storyStart = "WorldStoryStart";
+        var storyEnd = "WorldStoryEnd";
         Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey, mappingAction);
+            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -52,6 +54,9 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.LearningWorld.Description, Is.EqualTo(description));
             Assert.That(resultCasted.LearningWorld.Goals, Is.EqualTo(goals));
             Assert.That(resultCasted.LearningWorld.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(resultCasted.LearningWorld.EnrolmentKey, Is.EqualTo(enrolmentKey));
+            Assert.That(resultCasted.LearningWorld.StoryStart, Is.EqualTo(storyStart));
+            Assert.That(resultCasted.LearningWorld.StoryEnd, Is.EqualTo(storyEnd));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }
@@ -115,11 +120,13 @@ public class WorldCommandFactoryUt
         var evaluationLink = "NewEvaluationLink";
         var enrolmentKey = "NewEnrolmentKey";
         var goals = "NewGoals";
+        var storyStart = "NewStoryStart";
+        var storyEnd = "NewStoryEnd";
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey, mappingAction);
+            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());
@@ -134,6 +141,9 @@ public class WorldCommandFactoryUt
             Assert.That(resultCasted.Description, Is.EqualTo(description));
             Assert.That(resultCasted.Goals, Is.EqualTo(goals));
             Assert.That(resultCasted.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(resultCasted.EnrolmentKey, Is.EqualTo(enrolmentKey));
+            Assert.That(resultCasted.StoryStart, Is.EqualTo(storyStart));
+            Assert.That(resultCasted.StoryEnd, Is.EqualTo(storyEnd));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
         });
     }

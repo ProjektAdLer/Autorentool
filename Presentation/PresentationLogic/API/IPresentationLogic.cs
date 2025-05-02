@@ -82,8 +82,11 @@ public interface IPresentationLogic
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey);
+        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string storyStart, string storyEnd);
 
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
@@ -97,8 +100,11 @@ public interface IPresentationLogic
     /// <param name="goals"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink, string enrolmentKey);
+        string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string storyStart, string storyEnd);
 
     /// <summary>
     /// Deletes the given learning world in the authoring tool workspace.

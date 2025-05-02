@@ -190,6 +190,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const string evaluationLink = "http://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\foo\\bar";
 
         var content1 = PersistEntityProvider.GetFileContent(name: "FileName", type: "h5p",
@@ -372,7 +374,7 @@ public class CreateAtfUt
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces, conditions, topics: topics);
 
@@ -745,6 +747,9 @@ public class CreateAtfUt
                 Is.EqualTo(ele7.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
+            
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryIntro, Is.EqualTo(storyStart));
+            Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryOutro, Is.EqualTo(storyEnd));
         });
         Assert.Multiple(() => { Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True); });
     }
@@ -766,6 +771,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var content1 = PersistEntityProvider.GetFileContent("FileName", "mp3", "/foo/bar.txt");
@@ -790,7 +797,7 @@ public class CreateAtfUt
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
 
@@ -828,6 +835,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
@@ -842,7 +851,7 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
 
@@ -880,6 +889,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
@@ -894,7 +905,7 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
 
@@ -922,6 +933,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
+        const string storyStart = "story start";
+        const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
@@ -944,7 +957,7 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
-            enrolmentKey,
+            enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
 

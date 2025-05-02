@@ -15,6 +15,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _authors;
     private string _description;
     private string _enrolmentKey;
+    private string _storyStart;
+    private string _storyEnd;
     private string _evaluationLink;
     private string _goals;
     private string _language;
@@ -43,6 +45,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = "";
         _evaluationLink = "";
         _enrolmentKey = "";
+        _storyStart = "";
+        _storyEnd = "";
         _savePath = "";
         InternalUnsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
@@ -63,16 +67,19 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
-    /// Should be used when loading a saved learnign world into the application.</param>
+    ///     Should be used when loading a saved learnign world into the application.</param>
     /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string savePath = "", bool unsavedChanges = true,
+        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, 
+        string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
         List<ILearningPathWayViewModel>? learningPathWays = null,
@@ -88,6 +95,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = goals;
         _evaluationLink = evaluationLink;
         _enrolmentKey = enrolmentKey;
+        _storyStart = storyStart;
+        _storyEnd = storyEnd;
         _savePath = savePath;
         InternalUnsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
@@ -203,6 +212,18 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _enrolmentKey;
         set => SetField(ref _enrolmentKey, value);
+    }
+    
+    public string StoryStart
+    {
+        get => _storyStart;
+        set => SetField(ref _storyStart, value);
+    }
+    
+    public string StoryEnd
+    {
+        get => _storyEnd;
+        set => SetField(ref _storyEnd, value);
     }
 
     public string SavePath

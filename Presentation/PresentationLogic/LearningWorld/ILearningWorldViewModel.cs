@@ -32,4 +32,6 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string EvaluationLink { get; set; }
     string EnrolmentKey { get; set; }
     IEnumerable<ILearningElementViewModel> AllStoryElements { get; }
+    string StoryStart { get; set; }
+    string StoryEnd { get; set; }
 }

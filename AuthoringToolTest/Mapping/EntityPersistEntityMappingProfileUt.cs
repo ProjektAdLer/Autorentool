@@ -24,6 +24,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string Goals = "goals";
     private const string EvaluationLink = "https://www.projekt-alder.eu/evaluation";
     private const string EnrolmentKey = "enrolmentKey";
+    private const string StoryStart = "storyStart";
+    private const string StoryEnd = "storyEnd";
     private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private const string Filepath = "bar/baz/buz.txt";
@@ -237,8 +239,8 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
             EnrolmentKey,
-            savePath: SavePath, new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+            savePath: SavePath, learningSpaces: new List<ILearningSpace>());
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -311,11 +313,11 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -383,8 +385,8 @@ public class EntityPersistEntityMappingProfileUt
         storyElement1.Parent = space;
 
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, SavePath, new List<ILearningSpace> { space });
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath, new List<ILearningSpace> { space });
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
         var systemUnderTest = CreateTestableMapper();
 
@@ -449,14 +451,14 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         var space2 = GetTestableSpace();
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
@@ -559,7 +561,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, new List<ILearningSpace>());
+            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         space1.Name = "space1";
         var space2 = GetTestableSpace();

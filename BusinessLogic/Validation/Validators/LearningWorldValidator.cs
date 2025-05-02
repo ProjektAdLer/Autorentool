@@ -25,6 +25,10 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
             .IsValidElementName(localizer["LearningWorldValidator.Shortname.Valid"])
             .Must((world, name) => IsUniqueShortname(world.Id, name))
             .WithMessage(localizer["LearningWorldValidator.Shortname.Duplicate"]);
+        RuleFor(x => x.StoryStart)
+            .Length(0, 1200);
+        RuleFor(x => x.StoryEnd)
+            .Length(0, 1200);
     }
 
     private bool IsUniqueName(Guid id, string name) =>
