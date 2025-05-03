@@ -29,7 +29,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" Size="Size.Small"></MudIconButton>
                         </ActivatorContent>
                         <ChildContent>
-                            <MudMenu Label="Art des Elements">
+                            <MudMenu Label="@Localizer["UnplacedElementsDropZone.Filter.Element"]">
                                 <MudMenuItem
                                     Class="px-2 text-xs" IconColor="@(_elementTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
                                     OnClick="() => ResetElementTypeFilter()" AutoClose="false">
@@ -52,7 +52,7 @@
                                     @Localizer["UnplacedElementsDropZone.Filter.StoryElement"]
                                 </MudMenuItem>
                             </MudMenu>
-                            <MudMenu Label="Inhalt des Elements">
+                            <MudMenu Label="@Localizer["UnplacedElementsDropZone.Filter.Type"]">
                                 <MudMenuItem
                                     Class="px-2 text-xs" IconColor="@(_contentTypeFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
                                     OnClick="() => ResetContentTypeFilter()" AutoClose="false">
@@ -68,7 +68,7 @@
                                     </MudMenuItem>
                                 }
                             </MudMenu>
-                            <MudMenu Label="Schwierigkeit des Elements">
+                            <MudMenu Label="@Localizer["UnplacedElementsDropZone.Filter.Difficulty"]">
                                 <MudMenuItem
                                     Class="px-2 text-xs" IconColor="@(_difficultyFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
                                     OnClick="() => ResetDifficultyFilter()" AutoClose="false">
