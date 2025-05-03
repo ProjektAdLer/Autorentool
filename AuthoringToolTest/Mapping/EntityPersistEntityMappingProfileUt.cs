@@ -272,7 +272,7 @@ public class EntityPersistEntityMappingProfileUt
             EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
