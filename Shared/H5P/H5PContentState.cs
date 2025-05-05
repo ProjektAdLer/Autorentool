@@ -1,4 +1,4 @@
-﻿namespace BusinessLogic.Entities.LearningContent.H5P;
+﻿namespace Shared.H5P;
 
 public enum H5PContentState
 {

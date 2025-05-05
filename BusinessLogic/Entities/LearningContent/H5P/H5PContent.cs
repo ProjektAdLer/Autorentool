@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using BusinessLogic.Entities.LearningContent.FileContent;
+using Shared.H5P;
 
 namespace BusinessLogic.Entities.LearningContent.H5P;
 

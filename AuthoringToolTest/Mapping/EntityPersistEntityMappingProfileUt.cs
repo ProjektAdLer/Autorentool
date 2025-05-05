@@ -10,6 +10,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Story;
 using Shared;
+using Shared.H5P;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;

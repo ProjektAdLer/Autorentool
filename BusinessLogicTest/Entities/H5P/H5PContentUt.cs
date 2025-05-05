@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Entities.LearningContent.H5P;
 using NUnit.Framework;
+using Shared.H5P;
 
 namespace BusinessLogicTest.Entities.H5P;
 

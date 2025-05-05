@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using BusinessLogic.Entities.LearningContent.H5P;
 using JetBrains.Annotations;
+using Shared.H5P;
 
 namespace PersistEntities.LearningContent;
 
