@@ -677,7 +677,10 @@ public class CreateAtf : ICreateAtf
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
                     MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
-                ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                if (!ListFileContent.Any(x => x.Item1.Filepath == fileContentPe.Filepath && x.Item2 == fileContentPe.Name))
+                {
+                    ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                }
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),

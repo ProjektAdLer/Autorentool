@@ -328,7 +328,6 @@
 
         if (result == null) return;
         if (result.Canceled) return;
-        Snackbar.Add(@Localizer["ContentFilesView.Snackbar.MaterialDelete"], Severity.Success);
         
         var contentInUse = GetContentInUseFromDeletionCandidates();
 
@@ -349,6 +348,7 @@
         try
         {
             PresentationLogic.RemoveMultipleContents(doNotFilterForUnused ? _deletionCandidates : _deletionCandidates.Where(x => !contentInUse.Any(y => y.Item1.Equals(x))));
+            Snackbar.Add(@Localizer["ContentFilesView.Snackbar.MaterialDelete"], Severity.Success);
         }
         catch (ArgumentOutOfRangeException e)
         {

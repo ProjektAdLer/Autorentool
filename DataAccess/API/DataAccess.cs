@@ -3,6 +3,8 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
@@ -186,6 +188,22 @@ public class DataAccess : IDataAccess
                 .Where(content => content is FileContent)
                 .Cast<FileContent>()
                 .ToList();
+            var referenceContents = worldToCopyFrom.LearningSpaces
+                .SelectMany(space => space.ContainedLearningElements)
+                .Concat(worldToCopyFrom.UnplacedLearningElements)
+                .Select(el => el.LearningContent)
+                .OfType<AdaptivityContent>()                
+                .SelectMany(adco => adco.Tasks)            
+                .SelectMany(task => task.Questions)         
+                .SelectMany(question => question.Rules)     
+                .Select(rule => rule.Action)
+                .OfType<ContentReferenceAction>()
+                .Select(cra => cra.Content)
+                .OfType<FileContent>()
+                .ToList();
+
+            fileContents.AddRange(referenceContents);
+            
             //copy content files into content folder (avoiding duplicates) and changing filepaths in world
             var newContentFolder = FileSystem.Path.Join(tempFolder, "Content");
             var contentFiles = FileSystem.Directory.GetFiles(newContentFolder).Where(filepath =>
@@ -238,13 +256,33 @@ public class DataAccess : IDataAccess
     private void CopyContentFiles(ILearningWorld world, string contentFolder)
     {
         var contentInWorld = world.LearningSpaces
-            .SelectMany(space =>
-                space.ContainedLearningElements.Select(element => element.LearningContent)
-            )
-            .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+            .SelectMany(space => space.ContainedLearningElements.Select(e => e.LearningContent))
+            .Concat(world.UnplacedLearningElements.Select(e => e.LearningContent))
             .ToList();
-        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>().Distinct();
-        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().Distinct()
+        
+        var referencedContents = world.LearningSpaces
+            .SelectMany(space => space.ContainedLearningElements)
+            .Where(el => el.LearningContent is AdaptivityContent)
+            .Select(el => (AdaptivityContent)el.LearningContent)
+            .SelectMany(adco => adco.Tasks)
+            .SelectMany(task => task.Questions)
+            .SelectMany(question => question.Rules)
+            .Select(rule => rule.Action)
+            .OfType<ContentReferenceAction>()
+            .Select(cfa => cfa.Content)
+            .Distinct()
+            .ToList();
+        
+        contentInWorld.AddRange(referencedContents);
+        
+        var fileContent = contentInWorld
+            .OfType<FileContent>()
+            .Distinct()
+            .ToList();
+
+        var linkContent = contentInWorld
+            .OfType<LinkContent>()
+            .Distinct()
             .ToList();
 
         //copy files
