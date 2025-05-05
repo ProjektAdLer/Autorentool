@@ -6,21 +6,6 @@ namespace H5pPlayerTest.Presentation.PresentationLogic;
 [TestFixture]
 public class H5pPlayerPresenterUt
 {
-    /// <summary>
-    /// todo: test for State has changed 
-    /// </summary>
-    [Test]
-    // ANF-ID: [HSE6]
-    public void SetH5pIsCompletable()
-    {
-        var h5pPlayerVm = CreateH5pPlayerVm();
-        var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
-        
-        systemUnderTest.SetH5pIsCompletable();
-        
-        Assert.That(h5pPlayerVm.IsCompletable, Is.True);
-    }
-
 
 
     [Test]
@@ -37,6 +22,37 @@ public class H5pPlayerPresenterUt
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPath, Is.EqualTo(errorTo.InvalidPath));
         Assert.That(h5pPlayerVm.InvalidPathErrorVm.InvalidPathErrorIsActive, Is.True);
     }
+
+
+    [Test]
+    // ANF-ID: [HSE2]
+    public void StartToDisplayH5p()
+    {
+        var h5pPlayerVm = CreateH5pPlayerVm();
+        var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
+        
+        systemUnderTest.StartToDisplayH5p();
+        
+        Assert.That(h5pPlayerVm.IsDisplayModeActive, Is.True);
+        Assert.That(h5pPlayerVm.IsValidationModeActive, Is.False);
+    }
+
+    [Test]
+    // ANF-ID: [HSE3]
+    // ANF-ID: [HSE4]
+    public void StartToValidateH5p()
+    {
+        var h5pPlayerVm = CreateH5pPlayerVm();
+        var systemUnderTest = CreateH5pPlayerPresenter(h5pPlayerVm);
+        
+        systemUnderTest.StartToValidateH5p();
+        
+        Assert.That(h5pPlayerVm.IsDisplayModeActive, Is.False);
+        Assert.That(h5pPlayerVm.IsValidationModeActive, Is.True);
+    }
+
+
+    
 
     private static StartH5pPlayerErrorOutputTO CreateErrorOutputTO(
         string errorTextForInvalidPath,
