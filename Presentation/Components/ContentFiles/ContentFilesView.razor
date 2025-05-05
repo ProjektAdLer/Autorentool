@@ -33,7 +33,7 @@
                   OnRowMouseEnter="args => { _rowShowingPopover = args.Item; }"
                   OnRowMouseLeave=" _ => { if (!_cursorInsidePopover) _rowShowingPopover = null; }" @ref="_table">
             <ToolBarContent>
-                <MudTextField @bind-Value="SearchString" Immediate="true" Placeholder="@Localizer["MudTextField.Search.Placeholder"]" Adornment="Adornment.Start"
+                <MudTextField @bind-Value="SearchString" Immediate="true" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Outlined.Search" Style="margin-top: 0px; width: 200px; font-size: 14px;" Margin="Margin.Dense"/>
             </ToolBarContent>
             <HeaderContent>

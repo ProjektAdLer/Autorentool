@@ -63,7 +63,4 @@
     <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
         <value>Story element</value>
     </data>
-    <data name="UnplacedElementsDropZone.SearchBar.PlaceHolder" xml:space="preserve">
-        <value>Search</value>
-    </data>
 </root>

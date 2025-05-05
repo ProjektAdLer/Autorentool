@@ -69,7 +69,4 @@
     <data name="Reference.Material.Element.Text.Selected" xml:space="preserve">
         <value>Selected: </value>
     </data>
-    <data name="TableSelect.Placeholder" xml:space="preserve">
-        <value>Search</value>
-    </data>
 </root>
