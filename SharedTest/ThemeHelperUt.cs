@@ -43,4 +43,47 @@ public class ThemeHelperUt
             Assert.That(localizedValue, Is.EqualTo($"Enum.SpaceTheme.{theme}"));
         }
     }
+    
+    [Test]
+    public void Localize_WithContext_KeyFound_ReturnsContextSpecificValue()
+    {
+        // Arrange
+        ThemeHelper<SpaceTheme>.Initialize(_localizer);
+
+        var theme = SpaceTheme.LearningArea;
+        var context = "Card";
+
+        var contextKey = $"Enum.SpaceTheme.{theme}.{context}";
+
+        _localizer[contextKey].Returns(new LocalizedString(contextKey, "Localized with context", false));
+
+        // Act
+        var result = ThemeHelper<SpaceTheme>.Localize(theme, context);
+
+        // Assert
+        Assert.That(result, Is.EqualTo("Localized with context"));
+    }
+
+    [Test]
+    public void Localize_WithContext_KeyNotFound_ReturnsBaseKeyValue()
+    {
+        // Arrange
+        ThemeHelper<SpaceTheme>.Initialize(_localizer);
+
+        var theme = SpaceTheme.LearningArea;
+        var context = "Card";
+
+        var contextKey = $"Enum.SpaceTheme.{theme}.{context}";
+        var baseKey = $"Enum.SpaceTheme.{theme}";
+
+        _localizer[contextKey].Returns(new LocalizedString(contextKey, "Missing", true)); // ResourceNotFound = true
+        _localizer[baseKey].Returns(new LocalizedString(baseKey, "Base Value", false));
+
+        // Act
+        var result = ThemeHelper<SpaceTheme>.Localize(theme, context);
+
+        // Assert
+        Assert.That(result, Is.EqualTo("Base Value"));
+    }
+
 }
