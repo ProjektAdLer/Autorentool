@@ -5,6 +5,7 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared.H5P
+@using Presentation.H5P
 @inherits MudBaseInput<ILearningContentFormModel>
 
 
@@ -61,21 +62,7 @@
 
                         @if (fileContentContext.Type == "h5p")
                         {
-                            @switch (fileContentContext.H5PState)
-                            {
-                                case H5PContentState.Unknown:
-                                    <MudIcon Icon="@Icons.Material.Filled.Logout" />
-                                    break;
-                                case H5PContentState.Completable:
-                                    <MudIcon Icon="@Icons.Material.Filled.Check" />
-                                    break;
-                                case H5PContentState.Primitive:
-                                    <MudIcon Icon="@Icons.Material.Filled.Preview" />
-                                    break;
-                                case H5PContentState.NotUsable:
-                                    <MudIcon Icon="@Icons.Material.Filled.Delete" />
-                                    break;
-                            }
+                            <H5PStateIcon State="@fileContentContext.H5PState" />
                         }
                     </div>
                 }
