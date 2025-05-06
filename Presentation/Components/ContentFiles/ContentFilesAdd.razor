@@ -362,6 +362,31 @@
         await InvokeAsync(StateHasChanged);
     }
     
+    private async Task ShowImportH5PDialog(List<string> h5pFiles)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(ImportH5PDialog.UnvalidatedH5Ps), h5pFiles },
+            { nameof(ImportH5PDialog.OnValidateClicked), EventCallback.Factory.Create<string>(this, ValidateH5P) }
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+        };
+
+        await DialogService.ShowAsync<ImportH5PDialog>("", parameters, options);
+    }
+
+    private async Task ValidateH5P(string fileName)
+    {
+        // TODO: logic to launch the H5P Player
+        Logger.LogInformation("Validating H5P: {File}", fileName);
+        await Task.CompletedTask;
+    }
 
     
     private void ToggleSpinner()
