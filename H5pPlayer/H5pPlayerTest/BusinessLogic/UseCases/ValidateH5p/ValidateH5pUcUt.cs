@@ -79,6 +79,58 @@ public class ValidateH5pUcUt
         mockValidateH5pUcOutputPort.DidNotReceive().SetH5pIsCompletable();
     }
 
+    
+    [Test]
+    public async Task StartToValidateH5p_SetsH5pEntity()
+    {
+        var systemUnderTest = CreateValidateH5PUc();
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        
+        await systemUnderTest.StartToValidateH5p(h5pEntity);
+
+
+        Assert.That(systemUnderTest.H5pEntity, Is.EqualTo(h5pEntity));
+    }
+
+    [Test]
+    public async Task SetActiveH5pStateToNotUsable()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        systemUnderTest.H5pEntity = h5pEntity;
+        
+        systemUnderTest.SetActiveH5pStateToNotUsable();
+        
+        Assert.That(systemUnderTest.H5pEntity.ActiveH5pState, Is.EqualTo(H5pState.NotUsable));
+        mockValidateH5pUcOutputPort.Received().SetH5pActiveStateToNotUsable();
+    }
+    
+    [Test]
+    public async Task SetActiveH5pStateToPrimitive()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        systemUnderTest.H5pEntity = h5pEntity;
+        
+        systemUnderTest.SetActiveH5pStateToPrimitive();
+        
+        Assert.That(systemUnderTest.H5pEntity.ActiveH5pState, Is.EqualTo(H5pState.Primitive)); 
+        mockValidateH5pUcOutputPort.Received().SetH5pActiveStateToPrimitive();
+    }
+    
+
+
+
+
+
 
     private static ValidateH5pUc CreateValidateH5PUc(
         IValidateH5pUcOutputPort? mockValidateH5PUcOutputPort = null,
