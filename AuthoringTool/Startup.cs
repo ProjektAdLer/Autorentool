@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
+using Presentation.Components.ContentFiles;
 using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
@@ -200,6 +201,7 @@ public class Startup
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
         services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
+        services.AddScoped<IH5PPlayerDialogViewModel, H5PPlayerDialogViewModel>();
     }
 
     internal static void ConfigureBusinessLogic(IServiceCollection services)
