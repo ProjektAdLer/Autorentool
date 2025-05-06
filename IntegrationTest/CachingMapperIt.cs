@@ -182,7 +182,7 @@ public class CachingMapperIt
 
         systemUnderTest.CreateStoryElementInSlot(spaceVm, 0, "q",
             ViewModelProvider.GetStoryContent(), "r", "s", LearningElementDifficultyEnum.Easy,
-            ElementModel.a_npc_defaultnpc, 2, 3);
+            ElementModel.a_npc_defaultdark_female, 2, 3);
 
         Assert.That(spaceVm.LearningSpaceLayout.StoryElements.Count, Is.EqualTo(1));
 
