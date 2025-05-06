@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Story;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace AuthoringToolTest.Mapping;
@@ -22,6 +23,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Language = "language";
     private const string Description = "description";
     private const string Goals = "goals";
+    private const WorldTheme WorldThemeVar = WorldTheme.CampusAschaffenburg;
     private const string EvaluationLink = "https://www.projekt-alder.eu/evaluation";
     private const string EnrolmentKey = "enrolmentKey";
     private const string StoryStart = "storyStart";
@@ -44,12 +46,16 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewLanguage = "newLanguage";
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
+    private const WorldTheme NewWorldThemeVar = WorldTheme.CampusKempten;
     private const string NewEvaluationLink = "https://www.projekt-alder.eu/newEvaluation";
     private const string NewEnrolmentKey = "newEnrolmentKey";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
-    private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+
+    private static readonly List<string> ConfigureNewStoryText =
+        new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -126,10 +132,10 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.LearningArea);
 
         systemUnderTest.Map(source, destination);
 
@@ -155,14 +161,14 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.LearningArea);
 
         systemUnderTest.Map(source, destination);
 
@@ -194,14 +200,14 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithStoryElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var source = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.StoryElements[0] = GetTestableStoryElementWithParent(source);
-        var destination = new LearningSpacePe("", "", 0, Theme.CampusAschaffenburg);
+        var destination = new LearningSpacePe("", "", 0, SpaceTheme.LearningArea);
 
         systemUnderTest.Map(source, destination);
 
@@ -233,10 +239,11 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithoutLearningSpaces_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
+            EvaluationLink,
             EnrolmentKey,
             savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -264,11 +271,12 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithUnplacedLearningElements_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
+            EvaluationLink,
             EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -309,11 +317,12 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            learningSpaces: new List<ILearningSpace>());
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -335,7 +344,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+            new(NewName, NewDescription, NewRequiredPoints, SpaceTheme.LearningArea,
                 positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };
@@ -360,7 +369,7 @@ public class EntityPersistEntityMappingProfileUt
             new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText), Description, Goals, Difficulty,
                 ElementModel.l_h5p_slotmachine_1, null, Workload, Points, PositionX, PositionY);
 
-        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>
                 {
@@ -381,8 +390,9 @@ public class EntityPersistEntityMappingProfileUt
         storyElement1.Parent = space;
 
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath, new List<ILearningSpace> { space });
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
+            WorldThemeVar, EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
+            new List<ILearningSpace> { space });
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
         var systemUnderTest = CreateTestableMapper();
 
@@ -408,7 +418,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
         {
-            new(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+            new(NewName, NewDescription, NewRequiredPoints, SpaceTheme.LearningArea,
                 PersistEntityProvider.GetLearningOutcomeCollection(),
                 new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
                     {
@@ -447,14 +457,15 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
+            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         var space2 = GetTestableSpace();
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
@@ -557,7 +568,8 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            EvaluationLink, EnrolmentKey, savePath: SavePath, learningSpaces: new List<ILearningSpace>());
+            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         space1.Name = "space1";
         var space2 = GetTestableSpace();
@@ -599,7 +611,7 @@ public class EntityPersistEntityMappingProfileUt
     [Test]
     public void MapLearningWorldToPeAndBack_EquivalentObjectsExceptUnsavedChangesFalse()
     {
-        var world = new LearningWorld("saveme", "", "", "", "", "");
+        var world = new LearningWorld("saveme", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
         Assert.That(world.UnsavedChanges);
 
         var systemUnderTest = CreateTestableMapper();
@@ -682,7 +694,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, RequiredPoints, Theme.CampusAschaffenburg,
+        var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), new Dictionary<int, ILearningElement>(),
                 FloorPlanEnum.R_20X30_8L),
@@ -694,7 +706,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, Theme.CampusAschaffenburg,
+        return new LearningSpacePe(NewName, NewDescription, NewRequiredPoints, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(
                 new Dictionary<int, ILearningElementPe>
@@ -894,14 +906,16 @@ public class EntityPersistEntityMappingProfileUt
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.StoryText,
+                        Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             case StoryContentPe content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
-                    Assert.That(content.StoryText, Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
+                    Assert.That(content.StoryText,
+                        Is.EqualTo(useNewFields ? ConfigureNewStoryText : ConfigureStoryText));
                 });
                 break;
             default:

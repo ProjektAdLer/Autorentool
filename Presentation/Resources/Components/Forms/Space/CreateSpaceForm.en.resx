@@ -27,7 +27,7 @@
         <value>Learning outcomes</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Theme</value>
+        <value>Learning space theme</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
         <value>Completion condition</value>

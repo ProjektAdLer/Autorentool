@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Entities.LearningOutcome;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Entities;
 
@@ -11,7 +12,7 @@ public interface ILearningSpace : IObjectInPathWay
     LearningOutcomeCollection LearningOutcomeCollection { get; }
     int RequiredPoints { get; set; }
 
-    Theme Theme { get; set; }
+    SpaceTheme SpaceTheme { get; set; }
 
     //bool UnsavedChanges { get; set; }
     ILearningSpaceLayout LearningSpaceLayout { get; set; }

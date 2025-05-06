@@ -4,6 +4,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Shared.Theme;
 
 namespace PresentationTest.PresentationLogic.SelectedViewModels;
 
@@ -14,7 +15,7 @@ public class SelectedLearningWorldViewModelStackEntryUt
     public void Apply_InvokesActionWithCorrectParameter()
     {
         var command = Substitute.For<ICommand>();
-        var world = new LearningWorldViewModel("Test", "s", "f", "f", "d", "e", "f", "g", "h", "i");
+        var world = new LearningWorldViewModel("Test", "s", "f", "f", "d", "e",WorldTheme.CampusAschaffenburg, "f", "g", "h", "i");
         Action<ILearningWorldViewModel?> action = Substitute.For<Action<ILearningWorldViewModel?>>();
 
         var systemUnderTest = new SelectedLearningWorldViewModelStackEntry(command, world, action);

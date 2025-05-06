@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
+@using Shared.Theme
 <div class="absolute w-full z-30 h-24">
     <header class="py-4 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
@@ -19,8 +20,10 @@
           OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
           FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mx-2 border-t border-dotted">
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
+        <div
+            class="px-2 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[96%] mx-2 border-t border-dotted">
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
+                         InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-4 2xl:px-4">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
@@ -30,8 +33,9 @@
                                   Label="@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]"/>
                 </div>
             </Collapsable>
-            
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"] InitiallyCollapsed="true">
+
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
+                         InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4 pb-2">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
@@ -45,32 +49,36 @@
                                      Margin="Margin.Dense"/>
                 </div>
             </Collapsable>
-      
+
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"] InitiallyCollapsed="true">
-                  <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
+                <p class="text-xs pl-4">@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]</p>
                 <div class="px-4 pb-2">
-                    <MudSelect @bind-Value="FormDataContainer.FormModel.Theme"
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.SpaceTheme"
                                OnKeyUp="HandleKeyEvent"
-                               Text="@FormDataContainer.FormModel.Theme.ToString()"
-                               For="@(() => FormModel.Theme)">
+                               Text="@FormDataContainer.FormModel.SpaceTheme.ToString()"
+                               For="@(() => FormModel.SpaceTheme)">
                         @foreach (var theme in _themes)
                         {
-                            <MudSelectItem Value="@(theme)">@ThemeHelper.Localize(theme)</MudSelectItem>
+                            <MudSelectItem
+                                Value="@(theme)">@(ThemeHelper<SpaceTheme>.Localize(theme, LearningWorldPresenter.LearningWorldVm?.WorldTheme.ToString()))</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
             </Collapsable>
-            
+
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
                 <div class="w-4/4 px-4 flex flex-col">
-                    <MudText Class="cursor-default text-justify" Typo="Typo.caption">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                    <MudText Class="cursor-default text-justify"
+                             Typo="Typo.caption">@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                     <div class="flex justify-center">
-                        <MudButton Class="w-72 btn-standard" OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
+                        <MudButton Class="w-72 btn-standard"
+                                   OnClick="OpenLearningOutcomesOverview">@Localizer["CreateSpaceForm.Goals.Button"]</MudButton>
                     </div>
                 </div>
             </Collapsable>
-      
-            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
+
+            <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Description.Title"]
+                         InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-4">
                     <MudText Typo="Typo.caption">
                         @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
@@ -87,7 +95,8 @@
 
     </Fields>
     <FooterButtons>
-        <div class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+        <div
+            class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
             <DefaultSubmitButton/>
             <DefaultResetButton/>
         </div>
@@ -115,7 +124,13 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
-    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+    private SpaceTheme[] _themes = Enum.GetValues<SpaceTheme>().Where(v => !IsObsolete(v)).ToArray();
+
+    private static bool IsObsolete<TEnum>(TEnum value) where TEnum : Enum
+    {
+        var field = typeof(TEnum).GetField(value.ToString())!;
+        return Attribute.IsDefined(field, typeof(ObsoleteAttribute));
+    }
 
     private BaseForm<LearningSpaceFormModel, LearningSpace> _form = null!;
     private MudTextField<string> _nameField = null!;
@@ -132,7 +147,7 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.LearningOutcomeCollection, model.RequiredPoints, model.Theme);
+            model.LearningOutcomeCollection, model.RequiredPoints, model.SpaceTheme);
     }
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)

@@ -4,6 +4,7 @@
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
+@using Shared.Theme
 <div class="absolute w-full z-30 h-24">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
         <div class="flex justify-center py-2 2xl:py-3">
@@ -69,6 +70,23 @@
                                   DebounceInterval="DebounceInterval"
                                   OnKeyUp="HandleKeyEvent"
                                   Variant="Variant.Outlined"/>
+                </div>
+            </Collapsable>
+
+            <Collapsable Title=@Localizer["CreateWorldForm.Theme.Text"] InitiallyCollapsed="true">
+                <p class="text-xs pl-4">@Localizer["CreateWorldForm.Theme.Field.Theme.Text"]</p>
+                <div class="px-4 pb-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
+                               Text="@FormDataContainer.FormModel.WorldTheme.ToString()"
+                               OnKeyUp="HandleKeyEvent"
+                               For="@(() => FormModel.WorldTheme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <!-- WorldTheme.Company is disabled because it is not yet supported -->
+                            <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
+                                Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                        }
+                    </MudSelect>
                 </div>
             </Collapsable>
             
@@ -153,6 +171,8 @@
 
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
+    
+    private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -165,7 +185,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
         OnSubmitted.InvokeAsync();
     }
 

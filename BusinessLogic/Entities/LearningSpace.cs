@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Entities.LearningOutcome;
 using JetBrains.Annotations;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Entities;
 
@@ -28,7 +29,7 @@ public class LearningSpace : ILearningSpace
     }
 
     public LearningSpace(string name, string description,
-        int requiredPoints, Theme theme, LearningOutcomeCollection? learningOutcomes = null,
+        int requiredPoints, SpaceTheme spaceTheme, LearningOutcomeCollection? learningOutcomes = null,
         LearningSpaceLayout? learningSpaceLayout = null,
         double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null,
@@ -40,7 +41,7 @@ public class LearningSpace : ILearningSpace
         Description = description;
         LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollection();
         RequiredPoints = requiredPoints;
-        Theme = theme;
+        SpaceTheme = spaceTheme;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
                               ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(),
@@ -59,7 +60,7 @@ public class LearningSpace : ILearningSpace
     public string Description { get; set; }
     public int RequiredPoints { get; set; }
 
-    public Theme Theme { get; set; }
+    public SpaceTheme SpaceTheme { get; set; }
 
     public bool UnsavedChanges
     {
@@ -84,7 +85,7 @@ public class LearningSpace : ILearningSpace
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, LearningOutcomeCollection, RequiredPoints, Theme,
+        return new LearningSpaceMemento(Name, Description, LearningOutcomeCollection, RequiredPoints, SpaceTheme,
             LearningSpaceLayout,
             InBoundObjects,
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
@@ -101,7 +102,7 @@ public class LearningSpace : ILearningSpace
         Description = learningSpaceMemento.Description;
         LearningOutcomeCollection = learningSpaceMemento.LearningOutcomeCollection;
         RequiredPoints = learningSpaceMemento.RequiredPoints;
-        Theme = learningSpaceMemento.Theme;
+        SpaceTheme = learningSpaceMemento.SpaceTheme;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
         InBoundObjects = learningSpaceMemento.InBoundObjects;
         OutBoundObjects = learningSpaceMemento.OutBoundObjects;
@@ -114,7 +115,7 @@ public class LearningSpace : ILearningSpace
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            LearningOutcomeCollection learningOutcomeCollection, int requiredPoints, Theme theme,
+            LearningOutcomeCollection learningOutcomeCollection, int requiredPoints, SpaceTheme spaceTheme,
             ILearningSpaceLayout learningSpaceLayout,
             List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX, double positionY,
@@ -124,7 +125,7 @@ public class LearningSpace : ILearningSpace
             Description = description;
             LearningOutcomeCollection = learningOutcomeCollection;
             RequiredPoints = requiredPoints;
-            Theme = theme;
+            SpaceTheme = spaceTheme;
             LearningSpaceLayout = learningSpaceLayout;
             InBoundObjects = inBoundSpaces.ToList();
             OutBoundObjects = outBoundSpaces.ToList();
@@ -140,7 +141,7 @@ public class LearningSpace : ILearningSpace
         internal int RequiredPoints { get; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local TODO: use Theme property in future
-        internal Theme Theme { get; }
+        internal SpaceTheme SpaceTheme { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }

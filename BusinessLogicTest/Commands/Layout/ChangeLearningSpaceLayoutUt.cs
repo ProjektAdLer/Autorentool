@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Layout;
@@ -34,7 +35,7 @@ public class ChangeLearningSpaceLayoutUt
             { 6, element7 },
             { 7, element8 },
         }, new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L);
-        var space = new LearningSpace("", "", 0, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("", "", 0, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(), layout)
         {
             UnsavedChanges = false
@@ -102,7 +103,7 @@ public class ChangeLearningSpaceLayoutUt
             { 17, element8 },
         }, new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L);
 
-        var space = new LearningSpace("", "", 0, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("", "", 0, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(), layout)
         {
             UnsavedChanges = false
@@ -159,7 +160,7 @@ public class ChangeLearningSpaceLayoutUt
             { 6, element7 },
             { 7, element8 },
         }, new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L);
-        var space = new LearningSpace("", "", 0, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("", "", 0, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(), layout)
         {
             UnsavedChanges = false
