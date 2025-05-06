@@ -216,7 +216,6 @@ public class ElementModelHandler : IElementModelHandler
     {
         switch (worldTheme)
         {
-            #pragma warning disable CS0612 //
             case WorldTheme.Company:
                 break;
             case WorldTheme.CampusAschaffenburg:
@@ -259,7 +258,6 @@ public class ElementModelHandler : IElementModelHandler
         yield return ElementModel.a_npc_hiphopmale;
         yield return ElementModel.a_npc_santafemale;
         yield return ElementModel.a_npc_santamale;
-        #pragma warning restore CS0612 //
     }
 
     private class ElementModelComparer : Comparer<ElementModel>
