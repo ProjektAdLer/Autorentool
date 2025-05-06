@@ -29,6 +29,7 @@ using Generator.API;
 using Generator.ATF;
 using Generator.WorldExport;
 using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
+using H5pPlayer.Main;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
@@ -130,6 +131,7 @@ public class Startup
         ConfigureMediator(services);
         ConfigureSelectedViewModelsProvider(services);
         ConfigureNetworking(services);
+        H5pPlayerStartup.ConfigureH5pPlayer(services);
 
 
         //Electron Wrapper layer

@@ -1,0 +1,17 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.DisplayH5p
+
+
+<div style="margin-top: 20px;"></div>
+<div id="h5p-container"></div>
+<div style="margin-top: 20px;"></div>
+
+
+@code {
+  
+     [Parameter]
+     public IDisplayH5pViewModel? DisplayH5pVm { get;  set; }
+    
+     [Parameter]
+     public IDisplayH5pController? DisplayH5pController { get; set; }
+    
+}
