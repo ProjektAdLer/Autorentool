@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.SelectedViewModels;
 using PresentationTest;
 using Shared.Configuration;
 using Shared.Exceptions;
@@ -31,10 +33,14 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         _errorService = Substitute.For<IErrorService>();
         _logger = Substitute.For<ILogger<LmsLoginDialog>>();
+        _shellWrapper = Substitute.For<IShellWrapper>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_applicationConfiguration);
         Context.Services.AddSingleton(_errorService);
         Context.Services.AddSingleton(_logger);
+        Context.Services.AddSingleton(_shellWrapper);
+        Context.Services.AddSingleton(_selectedViewModelsProvider);
         Context.RenderComponent<MudPopoverProvider>();
     }
 
@@ -42,6 +48,8 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     private IApplicationConfiguration _applicationConfiguration = null!;
     private IErrorService _errorService = null!;
     private ILogger<LmsLoginDialog> _logger = null!;
+    private IShellWrapper _shellWrapper = null!;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
 
     [Test]
     public async Task DialogCreated_DependenciesInjected()

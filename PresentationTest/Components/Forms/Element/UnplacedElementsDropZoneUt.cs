@@ -124,9 +124,10 @@ public class UnplacedElementsDropZoneUt
         var searchBar = systemUnderTest.FindComponentOrFail<MudTextField<string>>();
 
         Assert.That(mudMenu, Has.Count.EqualTo(1));
-        
-        var mudMenus = _testContext.Render((RenderFragment)mudMenu[0].Instance.Parameters["ChildContent"]).FindComponentsOrFail<Stub<MudMenu>>().ToList();
-        
+
+        var mudMenus = _testContext.Render((RenderFragment)mudMenu[0].Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
+
         Assert.That(mudMenus, Has.Count.EqualTo(3));
 
         // Element Type Filter
@@ -202,7 +203,7 @@ public class UnplacedElementsDropZoneUt
         });
 
         // Search Bar
-        Assert.That(searchBar.Instance.Placeholder, Is.EqualTo("UnplacedElementsDropZone.SearchBar.PlaceHolder"));
+        Assert.That(searchBar.Instance.AdornmentIcon, Is.EqualTo(Icons.Material.Outlined.Search));
     }
 
     [Test]
