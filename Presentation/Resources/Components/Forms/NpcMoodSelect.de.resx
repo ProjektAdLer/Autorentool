@@ -24,4 +24,7 @@
     <data name="NpcMoodSelect.Header.Text" xml:space="preserve">
         <value>Stimmung der Person</value>
     </data>
+    <data name="NpcMoodSelect.Preview.Title" xml:space="preserve">
+        <value>Darstellung in der 3D-Lernumgebung</value>
+    </data>
 </root>
