@@ -18,6 +18,7 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -66,14 +67,14 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.EditLearningSpace"/>
-    public void EditLearningSpace(string name, string description, int requiredPoints, Theme theme,
+    public void EditLearningSpace(string name, string description, int requiredPoints, SpaceTheme spaceTheme,
         ITopicViewModel? topic)
     {
         if (!CheckLearningSpaceNotNull("EditLearningSpace"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
         _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description,
-            requiredPoints, theme, topic);
+            requiredPoints, spaceTheme, topic);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ReplaceLearningElementDialogOpen"/>

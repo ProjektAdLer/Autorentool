@@ -100,28 +100,6 @@
                                                                       + GetSvgArrowsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + "</svg>";
 
-    private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
-    {
-        var cornerPointsString = new StringBuilder();
-        cornerPointsString.Append("clip-path: polygon(");
-        foreach (var cornerPoint in floorPlan.CornerPoints)
-        {
-            cornerPointsString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
-        }
-
-        if (floorPlan.CornerPoints.Any())
-        {
-            cornerPointsString.Length -= 2;
-        }
-        else
-        {
-            cornerPointsString.Append("0% 0%");
-        }
-
-        cornerPointsString.Append(");");
-        return cornerPointsString.ToString();
-    }
-
     private string GetSvgPolygonString(IFloorPlanViewModel floorPlan)
     {
         var polygonPointsString = new StringBuilder();
@@ -145,34 +123,6 @@
         }
 
         return doorsString.ToString();
-    }
-    
-    private string GetCornerPointsArrowString(IFloorPlanViewModel floorPlan)
-    {
-        var cornerPointsArrowString = new StringBuilder();
-
-        foreach (var arrow in floorPlan.ArrowCornerPoints)
-        {
-            cornerPointsArrowString.Append("clip-path: polygon(");
-
-            foreach (var cornerPoint in arrow)
-            {
-                cornerPointsArrowString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
-            }
-
-            if (arrow.Any())
-            {
-                cornerPointsArrowString.Length -= 2;
-            }
-            else
-            {
-                cornerPointsArrowString.Append("0% 0%");
-            }
-
-            cornerPointsArrowString.Append(");");
-        }
-
-        return cornerPointsArrowString.ToString();
     }
 
     private string GetSvgArrowsString(IFloorPlanViewModel floorPlan)

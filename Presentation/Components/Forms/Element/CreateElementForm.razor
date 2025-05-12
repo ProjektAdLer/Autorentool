@@ -394,13 +394,13 @@
         {
             case ElementMode.Adaptivity:
                 FormDataContainer.FormModel.LearningContent = new AdaptivityContentFormModel();
-                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: WorldPresenter.LearningWorldVm?.WorldTheme).First();
                 break;
             case ElementMode.Story:
                 var storyContentFormModel = new StoryContentFormModel();
                 storyContentFormModel.StoryText.Add("");
                 FormDataContainer.FormModel.LearningContent = storyContentFormModel;
-                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: WorldPresenter.LearningWorldVm?.WorldTheme).First();
                 break;
             case ElementMode.Normal:
                 if (SelectedViewModelsProvider.LearningContent == null) return;
@@ -503,7 +503,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null);
+            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? WorldPresenter.LearningWorldVm?.WorldTheme : null);
     }
 
 

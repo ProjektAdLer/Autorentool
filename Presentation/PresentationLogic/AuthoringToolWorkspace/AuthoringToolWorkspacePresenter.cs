@@ -5,6 +5,7 @@ using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
@@ -68,10 +69,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
+        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd);
+            description, goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>

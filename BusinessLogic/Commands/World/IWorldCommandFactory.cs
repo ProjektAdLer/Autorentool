@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.World;
 
@@ -12,7 +13,7 @@ public interface IWorldCommandFactory
     /// Creates a command to create a learning world.
     /// </summary>
     ICreateLearningWorld GetCreateCommand(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink,
+        string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
         string enrolmentKey,
         string storyStart, string storyEnd,
         Action<AuthoringToolWorkspace> mappingAction);
@@ -33,7 +34,8 @@ public interface IWorldCommandFactory
     /// Creates a command to edit a learning world.
     /// </summary>
     IEditLearningWorld GetEditCommand(LearningWorld learningWorld, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey,
         string storyStart, string storyEnd,
         Action<LearningWorld> mappingAction);
 

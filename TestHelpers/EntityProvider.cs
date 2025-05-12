@@ -12,6 +12,7 @@ using BusinessLogic.Entities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace TestHelpers;
 
@@ -25,6 +26,7 @@ public static class EntityProvider
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
         return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
+                WorldTheme.CampusAschaffenburg,
                 "g" + append)
             { UnsavedChanges = unsavedChanges };
     }
@@ -32,7 +34,7 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
+        return new LearningSpace("a", "d", 4, SpaceTheme.LearningArea, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }

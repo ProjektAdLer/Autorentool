@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -5,6 +6,7 @@ using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,6 +16,7 @@ using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.LearningWorld;
 using PresentationTest;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.World;
@@ -25,6 +28,9 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
     public new void Setup()
     {
         WorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<WorldTheme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper<WorldTheme>.Initialize(themeLocalizer);
         Mapper = Substitute.For<IMapper>();
         Context.Services.AddSingleton(WorldPresenter);
         Context.Services.AddSingleton(Mapper);
@@ -102,6 +108,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -174,6 +181,7 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
         foreach (var mudInput in mudInputs.Take(6))
@@ -213,16 +221,23 @@ public class EditWorldFormIt : MudFormTestFixture<EditWorldForm, LearningWorldFo
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
         WorldPresenter.Received(2).EditLearningWorld(Expected, Expected, Expected, Expected,
-            Expected, Expected, Expected, Expected, Expected, Expected);
+            Expected, Expected, WorldTheme.CampusAschaffenburg, Expected, Expected, Expected, Expected);
         Mapper.Received(1).Map(worldToMap, FormDataContainer.FormModel);
     }
 
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>())!.GetValue(FormModel)! == Expected
-                ? Enumerable.Empty<string>()
-                : new[] { "Must be test" }
+            {
+                var value = FormModel.GetType().GetProperty(ci.Arg<string>())?.GetValue(FormModel);
+                var valid = value switch
+                {
+                    string str => str == Expected,
+                    WorldTheme t => t == WorldTheme.CampusAschaffenburg,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test" };
+            }
         );
     }
 

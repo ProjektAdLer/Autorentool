@@ -2,6 +2,7 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.Topic;
 
@@ -11,7 +12,7 @@ public class DeleteTopicUt
     [Test]
     public void Execute_Undo_Redo_DeletesTopic()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
@@ -63,7 +64,7 @@ public class DeleteTopicUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var topic = new BusinessLogic.Entities.Topic("Topic1");
         world.Topics.Add(topic);
         var actionWasInvoked = false;

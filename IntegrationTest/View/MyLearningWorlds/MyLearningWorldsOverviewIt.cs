@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.Dialogues;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -30,11 +31,13 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         WorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         ErrorService = Substitute.For<IErrorService>();
+        DialogService = Substitute.For<IDialogService>();
         Context.Services.AddSingleton(MyLearningWorldsProvider);
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(WorkspaceVm);
         Context.Services.AddSingleton(SelectedViewModelsProvider);
         Context.Services.AddSingleton(ErrorService);
+        Context.Services.AddSingleton(DialogService);
         Context.ComponentFactories.AddStub<HeaderBar>();
         Context.ComponentFactories.AddStub<CreateWorldForm>();
         Context.ComponentFactories.AddStub<LearningWorldCard>();
@@ -46,6 +49,8 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
     private IAuthoringToolWorkspaceViewModel WorkspaceVm { get; set; }
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
     private IErrorService ErrorService { get; set; }
+    
+    private IDialogService DialogService { get; set; }
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -94,6 +99,29 @@ public class MyLearningWorldsOverviewIt : MudBlazorTestFixture<MyLearningWorldsO
         await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(worlds[0]));
 
         SelectedViewModelsProvider.Received().SetLearningWorld(worlds[0], null);
+    }
+
+    [Test]
+    public async Task DeleteWorldButtonOnCard_Clicked_CallsSelectedViewModelsProvider()
+    {
+        IList<ILearningWorldViewModel> worlds = new List<ILearningWorldViewModel>
+        {
+            ViewModelProvider.GetLearningWorld(),
+            ViewModelProvider.GetLearningWorld(),
+        };
+        WorkspaceVm.LearningWorlds.Returns(worlds);
+        var systemUnderTest = GetRenderedComponent();
+        var learningWorldCard = systemUnderTest.FindComponent<Stub<LearningWorldCard>>().Instance;
+        var callback = (EventCallback<ILearningWorldViewModel>)learningWorldCard.Parameters["OnCloseLearningWorld"];
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok);
+        DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>())
+            .Returns(dialogReference);
+        
+        await systemUnderTest.InvokeAsync(() => callback.InvokeAsync(worlds[0]));
+        await DialogService.Received().ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>());
+        PresentationLogic.Received().DeleteLearningWorldByPath(worlds[0].SavePath);
+        PresentationLogic.Received().DeleteLearningWorld(WorkspaceVm, worlds[0]);
     }
 
     [Test]

@@ -22,6 +22,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using PresentationTest;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.Element;
@@ -42,7 +43,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         SelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         SelectedViewModelsProvider.LearningContent.Returns((ILearningContentViewModel?)null);
         ElementModelHandler = Substitute.For<IElementModelHandler>();
-        ElementModelHandler.GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<Theme?>())
+        ElementModelHandler.GetElementModels(Arg.Any<ElementModelContentType>(), Arg.Any<string>(), Arg.Any<WorldTheme?>())
             .Returns(new[]
             {
                 ElementModel.l_random

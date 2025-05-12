@@ -1,4 +1,5 @@
 using Shared;
+using Shared.Theme;
 
 namespace Presentation.Components.Forms.Element;
 
@@ -18,7 +19,7 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
-        Theme? theme = null)
+        WorldTheme? theme = null)
     {
         var type = contentType switch
         {
@@ -30,7 +31,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.CampusAschaffenburg);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? WorldTheme.CampusAschaffenburg);
 
         switch (type)
         {
@@ -215,25 +216,14 @@ public class ElementModelHandler : IElementModelHandler
         }
     }
 
-    internal static IEnumerable<ElementModel> GetElementModelsForTheme(Theme theme)
+    internal static IEnumerable<ElementModel> GetElementModelsForTheme(WorldTheme worldTheme)
     {
-        switch (theme)
+        switch (worldTheme)
         {
-            case Theme.Arcade:
-                yield return ElementModel.l_h5p_blackslotmachine_1;
-                yield return ElementModel.l_h5p_deskpc_2;
-                yield return ElementModel.l_h5p_greyslotmachine_1;
-                yield return ElementModel.l_h5p_purpleslotmachine_1;
-                yield return ElementModel.l_h5p_redslotmachine_1;
-                yield return ElementModel.l_image_cardboardcutout_1;
-                yield return ElementModel.l_image_gameposter_1;
-                yield return ElementModel.l_image_gameposter_2;
-                yield return ElementModel.l_text_comicshelfbig_1;
-                yield return ElementModel.l_text_comicshelfsmall_1;
-                yield return ElementModel.l_video_vrdesk_1;
+            case WorldTheme.Company:
                 break;
-            case Theme.CampusAschaffenburg:
-            case Theme.CampusKempten:
+            case WorldTheme.CampusAschaffenburg:
+            case WorldTheme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;
@@ -244,7 +234,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
                 break;
-            case Theme.Suburb:
+            case WorldTheme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
                 yield return ElementModel.l_h5p_deskpc_1;
                 yield return ElementModel.l_h5p_drawingtable_1;
@@ -257,7 +247,7 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
+                throw new ArgumentOutOfRangeException(nameof(worldTheme), worldTheme, null);
         }
 
         // Models that are in all themes
@@ -271,14 +261,14 @@ public class ElementModelHandler : IElementModelHandler
 
     private class ElementModelComparer : Comparer<ElementModel>
     {
-        private readonly Theme _theme;
+        private readonly WorldTheme _worldTheme;
 
         private readonly ContentTypeEnum _type;
 
-        public ElementModelComparer(ContentTypeEnum type, Theme theme)
+        public ElementModelComparer(ContentTypeEnum type, WorldTheme worldTheme)
         {
             _type = type;
-            _theme = theme;
+            _worldTheme = worldTheme;
         }
 
         public override int Compare(ElementModel x, ElementModel y)
@@ -287,8 +277,8 @@ public class ElementModelHandler : IElementModelHandler
             if (x == ElementModel.l_random) return -1;
             if (y == ElementModel.l_random) return 1;
 
-            var xInTheme = GetElementModelsForTheme(_theme).Contains(x);
-            var yInTheme = GetElementModelsForTheme(_theme).Contains(y);
+            var xInTheme = GetElementModelsForTheme(_worldTheme).Contains(x);
+            var yInTheme = GetElementModelsForTheme(_worldTheme).Contains(y);
             var xInType = GetElementModelsForModelType(_type).Contains(x);
             var yInType = GetElementModelsForModelType(_type).Contains(y);
 

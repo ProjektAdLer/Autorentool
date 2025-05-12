@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="bunit" Version="1.38.5" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -35,7 +36,7 @@
 
     <ItemGroup>
       <Folder Include="BusinessLogic\BusinessRules\" />
-      <Folder Include="Presentation\View\" />
+      <Folder Include="Presentation\PresentationLogic\DisplayH5p\" />
     </ItemGroup>
 
 </Project>

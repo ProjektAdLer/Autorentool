@@ -29,6 +29,7 @@ using Generator.API;
 using Generator.ATF;
 using Generator.WorldExport;
 using H5pPlayer.BusinessLogic.Api.CleanupH5pPlayer;
+using H5pPlayer.Main;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
@@ -53,6 +54,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Shared.Networking;
+using Shared.Theme;
 using Tailwind;
 using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
@@ -129,6 +131,7 @@ public class Startup
         ConfigureMediator(services);
         ConfigureSelectedViewModelsProvider(services);
         ConfigureNetworking(services);
+        H5pPlayerStartup.ConfigureH5pPlayer(services);
 
 
         //Electron Wrapper layer
@@ -323,7 +326,8 @@ public class Startup
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
-        ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
+        ThemeHelper<SpaceTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<SpaceTheme>>());
+        ThemeHelper<WorldTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<WorldTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
         NpcMoodHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<NpcMood>>());
