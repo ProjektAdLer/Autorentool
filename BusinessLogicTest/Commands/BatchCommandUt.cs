@@ -6,6 +6,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands;
@@ -16,7 +17,7 @@ public class BatchCommandUt
     [Test]
     public void Execute_Undo_Redo_BatchCommand()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var name = "topic1";
         var actionWasInvoked1 = false;
         var actionWasInvoked2 = false;
@@ -26,7 +27,7 @@ public class BatchCommandUt
         Action<LearningWorld> mappingAction3 = _ => actionWasInvoked3 = true;
 
         var command1 = new CreateLearningSpace(world, "a", "b", EntityProvider.GetLearningOutcomeCollection(), 2,
-            Theme.CampusAschaffenburg,
+            SpaceTheme.LearningArea,
             0, 0, null, mappingAction: mappingAction1, new NullLogger<CreateLearningSpace>());
         var command2 = new CreateTopic(world, name, mappingAction2, new NullLogger<CreateTopic>());
         var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3,

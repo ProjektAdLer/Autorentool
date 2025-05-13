@@ -4,6 +4,7 @@ using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -15,7 +16,7 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }
-    Theme Theme { get; set; }
+    SpaceTheme SpaceTheme { get; set; }
     new string Name { get; set; }
     string Description { get; set; }
     LearningOutcomeCollectionViewModel LearningOutcomeCollection { get; set; }

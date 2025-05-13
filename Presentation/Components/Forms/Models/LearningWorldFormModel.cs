@@ -1,3 +1,5 @@
+using Shared.Theme;
+
 namespace Presentation.Components.Forms.Models;
 
 public class LearningWorldFormModel
@@ -10,6 +12,7 @@ public class LearningWorldFormModel
         Language = "";
         Description = "";
         Goals = "";
+        WorldTheme = default;
         EvaluationLink = "";
         EnrolmentKey = "";
         StoryStart = "";
@@ -23,6 +26,7 @@ public class LearningWorldFormModel
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
     public string EnrolmentKey { get; set; }
     public string StoryStart { get; set; }

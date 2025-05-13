@@ -2,6 +2,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -19,6 +20,7 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
         var storyStart = "ss";
@@ -26,7 +28,7 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
             evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
@@ -52,6 +54,7 @@ public class CreateLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
         });
     }
@@ -59,11 +62,11 @@ public class CreateLearningWorldUt
     [Test]
     public void Execute_WithDuplicateName_CreatesWorldWithNewUniqueName()
     {
-        var world1 = new LearningWorld("Foo", "", "", "", "", "");
-        var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
+        var world1 = new LearningWorld("Foo", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
+        var world2 = new LearningWorld("Foo(1)", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", "", "", "", "", _ => { },
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", default, "", "", "", "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -75,7 +78,7 @@ public class CreateLearningWorldUt
     public void Execute_AddsLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("n", "sn", "a", "l", "d", "g", "el");
+        var world = new LearningWorld("n", "sn", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el");
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -107,6 +110,7 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
         var storyStart = "ss";
@@ -114,7 +118,7 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
             evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
@@ -130,7 +134,7 @@ public class CreateLearningWorldUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "g");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f",default, "g");
         workspace.LearningWorlds.Add(world);
         var name = "n";
         var shortname = "sn";
@@ -138,6 +142,7 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
         var storyStart = "ss";
@@ -145,7 +150,7 @@ public class CreateLearningWorldUt
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
+        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
             evaluationLink, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 

@@ -15,6 +15,7 @@ using Shared;
 using Shared.Adaptivity;
 using Shared.Configuration;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 using TestHelpers;
 
 namespace GeneratorTest.ATF;
@@ -188,6 +189,7 @@ public class CreateAtfUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "http://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
@@ -267,7 +269,7 @@ public class CreateAtfUt
             "whatForEn",
             "verbOfVisibilityEn", new CultureInfo("en-DE"));
 
-        var space1 = new LearningSpacePe("a", "ff", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("a", "ff", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
                 { structuredLearningOutcome1 }),
             positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
@@ -300,7 +302,7 @@ public class CreateAtfUt
                 }
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space2 = new LearningSpacePe("b", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: null)
         {
             LearningSpaceLayout =
@@ -327,7 +329,7 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space3 = new LearningSpacePe("c", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
+        var space3 = new LearningSpacePe("c", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2)
         {
             LearningSpaceLayout =
@@ -346,7 +348,7 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.L_32X31_10L
             }
         };
-        var space4 = new LearningSpacePe("d", "ff", 5, Theme.CampusAschaffenburg,
+        var space4 = new LearningSpacePe("d", "ff", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(new List<ILearningOutcomePe>()
                 { structuredLearningOutcome2, manualLearningOutcome }),
             PersistEntityProvider.GetLearningSpaceLayout(learningElements: new Dictionary<int, ILearningElementPe>(),
@@ -373,7 +375,7 @@ public class CreateAtfUt
         var topics = new List<TopicPe> { topic1, topic2 };
 
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces, conditions, topics: topics);
@@ -404,6 +406,7 @@ public class CreateAtfUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson.WorldName, Is.EqualTo(learningWorld.Name));
+            Assert.That(systemUnderTest.LearningWorldJson.Theme, Is.EqualTo(learningWorld.WorldTheme.ToString()));
             Assert.That(systemUnderTest.ListFileContent, Is.EquivalentTo(listFileContent));
             Assert.That(systemUnderTest.LearningWorldJson.Topics.Count, Is.EqualTo(2));
             Assert.That(systemUnderTest.LearningWorldJson.Topics[0].TopicName, Is.EqualTo(topic1.Name));
@@ -769,6 +772,7 @@ public class CreateAtfUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
@@ -779,7 +783,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: content1);
 
-        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -796,7 +800,7 @@ public class CreateAtfUt
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
@@ -833,13 +837,14 @@ public class CreateAtfUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
-        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -850,7 +855,7 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
@@ -887,13 +892,14 @@ public class CreateAtfUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Desktop\\test";
 
-        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -904,7 +910,7 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);
@@ -931,6 +937,7 @@ public class CreateAtfUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
@@ -939,7 +946,7 @@ public class CreateAtfUt
 
         var ele1 = PersistEntityProvider.GetLearningElement(name: "a", content: null);
 
-        var space1 = new LearningSpacePe("ff", "ff", 5, Theme.CampusAschaffenburg, positionX: 0, positionY: 0,
+        var space1 = new LearningSpacePe("ff", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
             inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
@@ -956,7 +963,7 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, evaluationLink,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath,
             learningSpaces);

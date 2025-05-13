@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -14,7 +15,7 @@ public class SaveLearningWorldUt
     public void Setup()
     {
         _mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        _world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        _world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         _unsavedChangesResetHelper = Substitute.For<IUnsavedChangesResetHelper>();
     }
 

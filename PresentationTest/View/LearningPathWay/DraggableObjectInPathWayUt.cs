@@ -16,6 +16,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningPathWay;
 using Shared;
+using Shared.Theme;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningPathWay;
@@ -67,7 +68,7 @@ public class DraggableObjectInPathWay
     [Test]
     public void Constructor_SetsParametersCorrectly_LearningSpace()
     {
-        var learningSpace = new LearningSpaceViewModel("a", "b", Theme.CampusAschaffenburg, 1);
+        var learningSpace = new LearningSpaceViewModel("a", "b", SpaceTheme.LearningArea, 1);
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_, _) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
