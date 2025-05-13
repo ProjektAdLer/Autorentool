@@ -54,23 +54,64 @@ public enum ElementModel
     //Adaptivity
     a_npc_alerobot,
     
-    //ArcadeTheme
-    a_npc_sheriffjustice,
-    
-    //CampusTheme
-    a_npc_dozentlukas,
-    
-    //SuburbTheme
-    a_npc_defaultnpc,
-    
     //NPCs
     
+    a_npc_defaultdark_female,
+    a_npc_defaultdark_male,
+    a_npc_bully_female,
+    a_npc_bully_male,
+    a_npc_studentdark_female,
+    a_npc_studentdark_male,
+    a_npc_studentlight_female,
+    a_npc_studentlight_male,
+    a_npc_oldiedark_female,
+    a_npc_oldiedark_male,
+    a_npc_oldielight_female,
+    a_npc_oldielight_male,
+    a_npc_nerddark_female,
+    a_npc_nerddark_male,
+    a_npc_nerdlight_female,
+    a_npc_nerdlight_male,
+    a_npc_hiphop_female,
+    a_npc_hiphop_male,
+    a_npc_santa_female,
+    a_npc_santa_male,
+    a_npc_sheriffjustice,
+    a_npc_dozentantonia,
+    a_npc_dozentdaniel,
+    a_npc_dozentgeorg,
+    a_npc_dozentjoerg,
+    a_npc_dozentlukas,
+    
+    [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
+    [AlternateValue(a_npc_defaultdark_female)]
+    a_npc_defaultnpc,
+    [Obsolete("Use a_npc_defaultdark_female instead", error: false)]
+    [AlternateValue(a_npc_defaultdark_female)]
+    a_npc_defaultfemale,
+    [Obsolete("Use a_npc_defaultdark_male instead", error: false)]
+    [AlternateValue(a_npc_defaultdark_male)]
+    a_npc_defaultmale,
+    [Obsolete("Use a_npc_bully_female instead", error: false)]
+    [AlternateValue(a_npc_bully_female)]
     a_npc_bullyfemale,
+    [Obsolete("Use a_npc_bully_male instead", error: false)]
+    [AlternateValue(a_npc_bully_male)]
     a_npc_bullymale,
+    [Obsolete("Use a_npc_oldiedark_male instead", error: false)]
+    [AlternateValue(a_npc_oldiedark_male)]
     a_npc_oldman,
+    [Obsolete("Use a_npc_hiphop_female instead", error: false)]
+    [AlternateValue(a_npc_hiphop_female)]
     a_npc_hiphopfemale,
+    [Obsolete("Use a_npc_hiphop_male instead", error: false)]
+    [AlternateValue(a_npc_hiphop_male)]
     a_npc_hiphopmale,
+    [Obsolete("Use a_npc_santa_female instead", error: false)]
+    [AlternateValue(a_npc_santa_female)]
     a_npc_santafemale,
+    [Obsolete("Use a_npc_santa_male instead", error: false)]
+    [AlternateValue(a_npc_santa_male)]
     a_npc_santamale,
 
     // ReSharper restore InconsistentNaming
