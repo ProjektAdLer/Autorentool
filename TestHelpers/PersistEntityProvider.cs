@@ -61,10 +61,10 @@ public static class PersistEntityProvider
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
-        string name = "")
+        string name = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1)
     {
         return new LearningElementPe(name != "" ? name : "a" + append, content!, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1);
+            LearningElementDifficultyEnum.Easy, elementModel);
     }
 
     public static PathWayConditionPe GetPathWayCondition(ConditionEnum condition = ConditionEnum.And,
