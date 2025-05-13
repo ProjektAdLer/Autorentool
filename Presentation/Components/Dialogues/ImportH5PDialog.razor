@@ -17,17 +17,18 @@
         {
             <MudText Class="mt-4 mb-2" Typo="Typo.subtitle2">@Localizer["Dialog.UnvalidatedFilesHeading"]</MudText>
 
-            <MudList Dense="true">
+            <MudList T="string" Dense="true">
                 @foreach (var h5p in UnvalidatedH5Ps)
                 {
-                    <MudListItem>
-                        <MudListItemText>@h5p</MudListItemText>
+                    <MudListItem T="string">
+                        @h5p
                         <MudTooltip Text="H5P validieren">
-                            <MudIcon Icon="@Icons.Material.Filled.HourglassBottom" Color="Color.Default" />
+                            <MudIcon Icon="@Icons.Material.Filled.HourglassBottom" />
                         </MudTooltip>
                     </MudListItem>
                 }
             </MudList>
+
         }
         else
         {
