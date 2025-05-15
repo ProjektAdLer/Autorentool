@@ -79,13 +79,12 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(4));
+        Assert.That(mudTexts, Has.Count.EqualTo(3));
         Assert.Multiple(() =>
         {
             Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
             Assert.That(mudTexts[1].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[2].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Login"));
+            Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Login"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -99,12 +98,6 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         var mudButtons = DialogProvider.FindComponents<MudButton>();
         Assert.That(mudButtons, Has.Count.EqualTo(1));
-
-        var mudLists = DialogProvider.FindComponents<MudList<object>>();
-        //Left sidebar (LoginDialog)
-        Assert.That(mudLists, Has.Count.EqualTo(1));
-        var mudListItems = mudLists[0].FindComponents<MudListItem<object>>();
-        Assert.That(mudListItems, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -124,17 +117,16 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(8));
+        Assert.That(mudTexts, Has.Count.EqualTo(7));
         Assert.Multiple(() =>
         {
             Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
             Assert.That(mudTexts[1].Markup, Contains.Substring(""));
-            Assert.That(mudTexts[2].Markup, Contains.Substring("Header.Moodle.Text"));
-            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Logout"));
-            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
+            Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Logout"));
+            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
+            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
             Assert.That(mudTexts[5].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
             Assert.That(mudTexts[6].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
-            Assert.That(mudTexts[7].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -171,7 +163,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        Assert.That(mudTexts, Has.Count.EqualTo(4));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
@@ -194,7 +186,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        Assert.That(mudTexts, Has.Count.EqualTo(4));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
@@ -223,7 +215,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(5));
+        Assert.That(mudTexts, Has.Count.EqualTo(4));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
