@@ -10,6 +10,7 @@
 @using BusinessLogic.ErrorManagement.DataAccess
 @using H5pPlayer.Api
 @using H5pPlayer.BusinessLogic.Api.JavaScript
+@using H5pPlayer.BusinessLogic.Entities
 @using H5pPlayer.BusinessLogic.UseCases.TerminateH5pPlayer
 @using H5pPlayer.DataAccess.FileSystem
 @using Presentation.Components.Dialogues
@@ -142,7 +143,7 @@
                                      "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
                                       "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
                       
-                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri);
+                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                  }
 #endif
             }
@@ -299,10 +300,26 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
-    private async void OpenH5pPlayerDialog(string h5pZipSourcePath, string unzippedH5psPath)
+    private async void OpenH5pPlayerDialog(
+        string h5pZipSourcePath, 
+        string unzippedH5psPath, 
+        H5pDisplayMode displayMode)
     {
         
-       
+        H5pPlayerResultTO? finalResult = null;
+
+        var parameters = new DialogParameters
+        {
+            { "H5pZipSourcePath", h5pZipSourcePath },
+            { "UnzippedH5psPath", unzippedH5psPath },
+            { "DisplayMode", displayMode },
+            { "OnPlayerFinished", new Action<H5pPlayerResultTO>(result =>
+                {
+                    finalResult = result;
+                    Logger.LogInformation("Ergebnis erhalten vom Player: {@result}", result);
+                })
+            }
+        };
         var options = new DialogOptions
         {
             BackdropClick = true,
@@ -310,56 +327,37 @@
             FullWidth = true,
             CloseButton = true,
         };
-        var parameters = new DialogParameters()
-        {
-            {"H5pZipSourcePath", h5pZipSourcePath},
-            {"UnzippedH5psPath", unzippedH5psPath}
-        };
+    
         
         var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
 
-        // Warten, bis der Dialog geschlossen wird
         var result = await dialog.Result;
+        
         var javaScriptAdapter = new CallJavaScriptAdapter(JsRuntime);
         var dataAccess = new FileSystemDataAccess();
         ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
-        // Überprüfen, ob der Dialog abgebrochen oder mit einem Ergebnis geschlossen wurde
-        if(result == null) return;
-        if (result.Canceled)
+        await terminateH5pPlayer.TerminateH5pPlayer();
+        
+        try
         {
-            // Der Benutzer hat den Dialog abgebrochen oder geschlossen (z.B. durch das Schließen-X)
-            Logger.LogInformation("Der Dialog wurde abgebrochen oder geschlossen.");
-            
-            await terminateH5pPlayer.TerminateH5pPlayer();
-            dialog.Close();
-            try
-            {
-                 await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
+            await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
 
-            }
-            catch (JSException ex)
-            {
-                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-            }
         }
-        else
+        catch (JSException ex)
         {
-            // Der Dialog wurde mit einem Ergebnis geschlossen, hier können Sie das Ergebnis verarbeiten
-            var dialogData = result.Data;
-            Logger.LogInformation($"Dialog wurde mit Ergebnis geschlossen: {dialogData}");
-            await terminateH5pPlayer.TerminateH5pPlayer();
-            dialog.Close();
-           
-            try
-            {
-                await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
-
-            }
-            catch (JSException ex)
-            {
-                Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-            }
+            Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
         }
+        
+        
+        if (result?.Canceled == true)
+        {
+            Logger.LogInformation("Dialog wurde abgebrochen.");
+        }
+        else if (result != null)
+        {
+            Logger.LogInformation("Dialog wurde mit Ergebnis geschlossen: {@Data}", result.Data);
+        }
+        
         await InvokeAsync(StateHasChanged);
     }
     

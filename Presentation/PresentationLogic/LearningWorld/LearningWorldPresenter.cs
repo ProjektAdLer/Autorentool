@@ -20,6 +20,7 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -141,13 +142,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
     /// <inheritdoc cref="ILearningWorldPresenter.EditLearningWorld"/>
     public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
+        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
     {
         if (!CheckLearningWorldNotNull("EditLearningWorld"))
             return;
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
-        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals,
+        _presentationLogic.EditLearningWorld(LearningWorldVm!, name, shortname, authors, language, description, goals, worldTheme,
             evaluationLink, enrolmentKey, storyStart, storyEnd);
     }
 
@@ -253,7 +254,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
     public void CreateLearningSpace(string name, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
         int requiredPoints,
-        Theme theme, TopicViewModel? topic = null)
+        SpaceTheme spaceTheme, TopicViewModel? topic = null)
     {
         if (!CheckLearningWorldNotNull("CreateLearningSpace"))
             return;
@@ -262,7 +263,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter,
 
         //Nullability of LearningWorldVm is checked in CheckLearningWorldNotNull
         _presentationLogic.CreateLearningSpace(LearningWorldVm!, name, description, learningOutcomeCollectionVm,
-            requiredPoints, theme, 0, positionY, topic);
+            requiredPoints, spaceTheme, 0, positionY, topic);
     }
 
     /// <inheritdoc cref="ILearningWorldPresenter.AddNewLearningSpace"/>

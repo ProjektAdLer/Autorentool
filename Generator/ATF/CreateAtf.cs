@@ -211,6 +211,7 @@ public class CreateAtf : ICreateAtf
         LearningWorldJson.WorldGoals = learningWorld.Goals.Split("\n");
         LearningWorldJson.EvaluationLink = learningWorld.EvaluationLink;
         LearningWorldJson.EnrolmentKey = learningWorld.EnrolmentKey;
+        LearningWorldJson.Theme = learningWorld.WorldTheme.ToString();
     }
 
     /// <summary>
@@ -270,7 +271,7 @@ public class CreateAtf : ICreateAtf
 
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
                 space.Name, _listLearningSpaceElements, space.RequiredPoints,
-                space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
+                space.LearningSpaceLayout.FloorPlanName.ToString(), space.SpaceTheme.ToString(),
                 spaceStoryJson, space.Description, spaceGoals,
                 _booleanAlgebraRequirements));
 

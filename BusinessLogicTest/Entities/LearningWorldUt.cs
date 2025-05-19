@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
@@ -17,12 +18,13 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
+        var space1 = new LearningSpace("ff", "ff", 5, SpaceTheme.LearningArea);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWay = new LearningPathway(space1, pathWayCondition);
         var learningSpaces = new List<ILearningSpace> { space1 };
@@ -35,7 +37,7 @@ public class LearningWorldUt
 
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath: savePath, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions, learningPathways: pathWays, topics: topics);
 
@@ -70,12 +72,13 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "eva";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
+        var space1 = new LearningSpace("ff", "ff", 5, SpaceTheme.LearningArea);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWayConditions = new List<PathWayCondition> { pathWayCondition };
         var learningSpaces = new List<ILearningSpace> { space1 };
@@ -84,7 +87,7 @@ public class LearningWorldUt
         var topic1 = new Topic("topic1");
         var topics = new List<Topic> { topic1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
@@ -102,7 +105,7 @@ public class LearningWorldUt
         var storyEndChanged = "new story end";
         var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
         var newElement = EntityProvider.GetLearningElement();
-        var space2 = new LearningSpace("gg", "gg", 5, Theme.CampusAschaffenburg);
+        var space2 = new LearningSpace("gg", "gg", 5, SpaceTheme.LearningArea);
         var condition2 = new PathWayCondition(ConditionEnum.Or, 2, 1);
         var pathWay2 = new LearningPathway(space2, condition2);
         var topic2 = new Topic("topic2");
@@ -188,15 +191,16 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://";
         const string enrolmentKey = "enrolmentkey";
         const string storyStart = "story start";
         const string storyEnd = "story end";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", 5, Theme.CampusAschaffenburg);
+        var space1 = new LearningSpace("ff", "ff", 5, SpaceTheme.LearningArea);
         var learningSpaces = new List<ILearningSpace> { space1 };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, evaluationLink,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,theme, evaluationLink,
             enrolmentKey, storyStart, storyEnd,
             savePath: savePath, learningSpaces: learningSpaces);
 

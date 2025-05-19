@@ -3,7 +3,7 @@
 namespace H5pPlayerTest.Presentation.PresentationLogic;
 
 [TestFixture]
-public class InvalidPathErrorViewModelUt
+public class InvalidPathErrorVmUt
 {
     [Test]
     public void ErrorTextForInvalidPath_SetToDifferentValue_ShouldTriggerOnChangeEvent()

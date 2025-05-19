@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningOutcome;
+using Shared.Theme;
 
 namespace PersistEntities;
 
@@ -10,7 +11,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
+        string goals, WorldTheme worldTheme,
+        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
         List<LearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
@@ -22,6 +24,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = language;
         Description = description;
         Goals = goals;
+        WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
         StoryStart = storyStart;
@@ -46,6 +49,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = "";
         Description = "";
         Goals = "";
+        WorldTheme = default;
         EvaluationLink = "";
         EnrolmentKey = "";
         StoryStart = "";
@@ -85,6 +89,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember] public string Description { get; set; }
 
     [DataMember] public string Goals { get; set; }
+    
+    [DataMember] public WorldTheme WorldTheme { get; set; }
 
     [DataMember] public string EvaluationLink { get; set; }
 

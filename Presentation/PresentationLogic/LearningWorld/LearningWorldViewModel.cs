@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -19,6 +20,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _storyEnd;
     private string _evaluationLink;
     private string _goals;
+    private WorldTheme _worldTheme;
     private string _language;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
@@ -43,6 +45,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = "";
         _description = "";
         _goals = "";
+        _worldTheme = default;
         _evaluationLink = "";
         _enrolmentKey = "";
         _storyStart = "";
@@ -78,7 +81,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, 
+        string goals, WorldTheme worldTheme,
+        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, 
         string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
@@ -93,6 +97,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = language;
         _description = description;
         _goals = goals;
+        _worldTheme = worldTheme;
         _evaluationLink = evaluationLink;
         _enrolmentKey = enrolmentKey;
         _storyStart = storyStart;
@@ -200,6 +205,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _goals;
         set => SetField(ref _goals, value);
+    }
+    
+    public WorldTheme WorldTheme
+    {
+        get => _worldTheme;
+        set => SetField(ref _worldTheme, value);
     }
 
     public string EvaluationLink

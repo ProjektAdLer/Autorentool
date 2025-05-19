@@ -4,8 +4,8 @@
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Shared
 @using Shared.Command
+@using Shared.Theme
 @implements IDisposable
 
 @if (LearningSpaceP.LearningSpaceVm != null)
@@ -31,7 +31,7 @@
                     <section class="flex flex-row justify-between items-center w-full">
                         <div class="flex flex-col justify-start">
                             <p class="text-xs 2xl:text-base text-adlerblue-600 space-theme">
-                                <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(LearningSpaceP.LearningSpaceVm?.Theme is { } theme ? ThemeHelper.Localize(theme) : "")
+                                <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(ThemeHelper<SpaceTheme>.Localize(LearningSpaceP.LearningSpaceVm.SpaceTheme, SelectedViewModelsProvider.LearningWorld!.WorldTheme.ToString()))
                             </p>
                             <p class="text-xs 2xl:text-base text-adlerblue-600 space-workload">
                                 <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>

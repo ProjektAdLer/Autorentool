@@ -503,7 +503,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            ElementToEdit.Parent?.Theme);
+            WorldPresenter.LearningWorldVm?.WorldTheme);
     }
 
     private void OnContentChanging(PropertyChangingWithValueEventArgs<ILearningContentFormModel> e)
