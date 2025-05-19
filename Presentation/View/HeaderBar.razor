@@ -20,6 +20,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.Components.ContentFiles
+@using Presentation.Components.Dialogues.AdministrationDialog
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
@@ -29,7 +30,7 @@
 @inject ISnackbar Snackbar
 
 <header class="flex flex-row w-full bg-buttonbgblue items-center gap-1 justify-between h-8">
-    
+
     <div class="flex justify-start items-center w-14">
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
@@ -43,39 +44,47 @@
                            Disabled="true"></MudIconButton>
         }
     </div>
-    
+
     <div class="flex justify-start items-center h-6 w-56 gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@_content" title=@Localizer["Header.ContentFilesAdd.Title"] OnClick="OpenContentFilesDialog">
+        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@_content"
+                       title=@Localizer["Header.ContentFilesAdd.Title"] OnClick="OpenContentFilesDialog">
         </MudIconButton>
 
-        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Save" title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
+        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Save"
+                       title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
         </MudIconButton>
         @if (SaveButtonHighlighted)
         {
-            <span class="absolute inline-flex items-center justify-center text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0">
+            <span
+                class="absolute inline-flex items-center justify-center text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0">
             </span>
         }
 
-        <MudIconButton Size="Size.Small" Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo"
+        <MudIconButton Size="Size.Small" Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo"
+                       Disabled="!CanUndo"
                        title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
         </MudIconButton>
-        <MudIconButton Size="Size.Small" Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo"
+        <MudIconButton Size="Size.Small" Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo"
+                       Disabled="!CanRedo"
                        title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
         </MudIconButton>
         @if (_debugBuild)
         {
-            <button @onclick="DebugButtonClick" class="relative btn-standard w-12 h-6 my-1 p-1 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <button @onclick="DebugButtonClick"
+                    class="relative btn-standard w-12 h-6 my-1 p-1 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto"
+                    disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
                 <p class="absolute left-1 hover:-translate-x-[30%] transition-all duration-1000">DEBUG BACKUP</p>
             </button>
         }
     </div>
-    
+
     <div class="flex justify-center w-full">
         @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
         {
             <div class="flex justify-center items-center gap-2 cursor-default">
                 @* ReSharper disable Html.PathError *@
-                <img class="w-5 h-5 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png" alt="authoringtool-logo"/>
+                <img class="w-5 h-5 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png"
+                     alt="authoringtool-logo"/>
                 @* ReSharper restore Html.PathError *@
                 <p class="font-bold text-base 2xl:text-lg text-adlertitledarkblue">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
             </div>
@@ -86,31 +95,46 @@
                 @* ReSharper disable Html.PathError *@
                 @*<img class="w-5 h-5 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>*@
                 @* ReSharper restore Html.PathError *@
-                <p class="font-bold text-base 2xl:text-lg truncate text-adlertitledarkblue" title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
-                <MudIconButton Size="Size.Small" Class="flex items-center h-5 w-5 text-adlerdarkblue opacity-70" OnClick="@ShowLearningOutcomesOverview" Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon" title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
+                <p class="font-bold text-base 2xl:text-lg truncate text-adlertitledarkblue"
+                   title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
+                <MudIconButton Size="Size.Small" Class="flex items-center h-5 w-5 text-adlerdarkblue opacity-70"
+                               OnClick="@ShowLearningOutcomesOverview"
+                               Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
+                               Icon="@learningOutcomeIcon"
+                               title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
             </div>
         }
     </div>
-    
+
     <div class="flex flex-row w-60 gap-2 items-center justify-end">
 
         <div class="bg-none w-60 flex flex-row justify-center items-center cursor-pointer">
-            <MudButton Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600" id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld" title=@Localizer["3DWorld.Generate.Hover"].Value Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-                <MudIcon Icon="@Icons.Material.Filled.Publish" Title="@Localizer["3DWorld.Generate.Hover"].Value" Size="Size.Small"></MudIcon>
+            <MudButton
+                Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600"
+                id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld"
+                title=@Localizer["3DWorld.Generate.Hover"].Value
+                Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                <MudIcon Icon="@Icons.Material.Filled.Publish" Title="@Localizer["3DWorld.Generate.Hover"].Value"
+                         Size="Size.Small"></MudIcon>
                 <p class="text-xs font-bold uppercase pl-2">@Localizer["3DWorld.Generate.Button.Title"]</p>
             </MudButton>
         </div>
-        
-        <LmsLoginButton/>
+
+        <MudIconButton id="LmsLoginButton.OpenLmsDialog.Button" OnClick="OpenAdministrationDialog"
+                       Icon="@Icons.Material.Filled.Settings"
+                       title=@Localizer["LMS.Login.Hover"]
+                       Class="text-adlerdarkblue normal-case p-1 w-8"
+                       Size="Size.Medium"/>
+
     </div>
-    
+
     <div class="flex justify-end w-16">
         @if (PresentationLogic.RunningElectron)
         {
             <CloseAppButton/>
         }
     </div>
-    
+
 </header>
 
 @code {
@@ -577,6 +601,16 @@
         DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
     }
 
+    private void OpenAdministrationDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+        };
+        DialogService.ShowAsync<AdministrationDialog>("Administration", options);
+        InvokeAsync(StateHasChanged);
+    }
+
     private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
 
     const string learningOutcomeIconActivated =
@@ -616,8 +650,8 @@
                                                                 <line x1=""0"" y1=""1005.85"" x2=""817.09"" y2=""1005.85"" style=""fill: none; stroke:rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                     <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                         </svg>";
-    
-    
+
+
     private readonly string _content = ContentIcon;
 
     const string ContentIcon =
@@ -656,4 +690,5 @@
     <polygon points=""94 1955 1592.72 1955 1975 953.21 474.86 953.21 94 1955"" style=""fill: #363f4d; fill-rule: evenodd;""/>
   </g>
 </svg>";
+
 }

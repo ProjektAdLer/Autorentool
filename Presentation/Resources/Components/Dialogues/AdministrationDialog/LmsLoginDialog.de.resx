@@ -105,9 +105,6 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.LoggedIn.Info" xml:space="preserve">
         <value>Damit Sie Ihre im Autorentool erstellte Lernwelt Ihren Studierenden als 3D-Lernumgebung zur Verfügung stellen können, ist zunächst eine Anmeldung auf dem AdLer-Server notwendig.</value>
     </data>
-    <data name="DialogContent.Header" xml:space="preserve">
-        <value>Administration</value>
-    </data>
     <data name="DialogContent.LeftSidebar.AdLerServer" xml:space="preserve">
         <value>AdLer-Server</value>
     </data>

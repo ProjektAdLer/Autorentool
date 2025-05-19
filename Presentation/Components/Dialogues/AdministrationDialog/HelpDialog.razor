@@ -1,0 +1,97 @@
+@using System.Diagnostics.CodeAnalysis
+@using ElectronWrapper
+@using Microsoft.Extensions.Localization
+<div class="flex flex-col w-full">
+    <p class="text-adlerheaderblue text-lg font-bold py-2 text-center cursor-default">@Localizer["DialogContent.Help.UserManual.Title"]</p>
+    <div class="flex flex-col h-[320px] overflow-y-scroll w-full py-2">
+        <MudList T="string">
+            <MudListItem ExpandMoreIcon="@Icons.Material.Filled.ArrowDropDown"
+                         ExpandLessIcon="@Icons.Material.Filled.ArrowDropUp">
+                <ChildContent>
+                    <p class="text-sm 2xl:text-base"
+                       @onclick="@OpenManual">@Localizer["DialogContent.Help.UserManual"]</p>
+                </ChildContent>
+                <NestedList>
+                    <MudListItem>
+                        <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                                 title="@Localizer["DialogContent.Help.UserManual.SoftwareComponents.Hover"]"
+                                 @onclick="@OpenManualSoftwareComponents">@Localizer["DialogContent.Help.UserManual.SoftwareComponents"]</MudLink>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                                 title="@Localizer["DialogContent.Help.UserManual.Handling.Hover"]"
+                                 @onclick="@OpenManualHandling">@Localizer["DialogContent.Help.UserManual.Handling"]</MudLink>
+                    </MudListItem>
+                </NestedList>
+            </MudListItem>
+            <MudListItem ExpandMoreIcon="@Icons.Material.Filled.ArrowDropDown"
+                         ExpandLessIcon="@Icons.Material.Filled.ArrowDropUp">
+                <ChildContent>
+                    <p class="text-sm 2xl:text-base"
+                       @onclick="@OpenDidacticGuide">@Localizer["DialogContent.Help.Tutorial"]</p>
+                </ChildContent>
+                <NestedList>
+                    <MudListItem>
+                        <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                                 title="@Localizer["DialogContent.Help.Didactic.AdaptivityElement.Hover"]"
+                                 @onclick="@OpenDidacticAdaptivityElementGuide">@Localizer["DialogContent.Help.Didactic.AdaptivityElement"]</MudLink>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                                 title="@Localizer["DialogContent.Help.Didactic.LearningOutcomeGuide.Hover"]"
+                                 @onclick="@OpenDidacticLearningOutcomeGuide">@Localizer["DialogContent.Help.Didactic.LearningOutcomeGuide"]</MudLink>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                                 title="@Localizer["DialogContent.Help.Didactic.StoryElement.Hover"]"
+                                 @onclick="@OpenDidacticStoryElementGuide">@Localizer["DialogContent.Help.Didactic.StoryElement"]</MudLink>
+                    </MudListItem>
+                </NestedList>
+            </MudListItem>
+            <MudDivider></MudDivider>
+            <MudListItem T="object" Class="py-2" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                         OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
+            </MudListItem>
+
+            <MudListItem T="object" Class="py-2" title="@Localizer["Feedback.Button.Technical.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                         OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
+            </MudListItem>
+            <MudDivider></MudDivider>
+            <MudListItem T="object" Class="py-2" title="@Localizer["DialogContent.Help.About.Hover"]">
+                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm 2xl:text-base"
+                         OnClick="OpenAdLer">@Localizer["DialogContent.Help.About"]</MudLink>
+            </MudListItem>
+        </MudList>
+    </div>
+</div>
+
+@code {
+
+
+    [Inject, AllowNull] public IShellWrapper ShellWrapper { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<HelpDialog> Localizer { get; set; }
+
+    private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
+
+    private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
+
+    private void OpenManual() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringautorentool.html");
+
+    private void OpenManualSoftwareComponents() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringsoftwarekomponenten.html");
+
+    private void OpenManualHandling() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringbedienung.html");
+
+    private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
+
+    private void OpenDidacticAdaptivityElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-adaptivitaetselement-bd.html");
+
+    private void OpenDidacticLearningOutcomeGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-lernziele.html");
+
+    private void OpenDidacticStoryElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-game-design-elemente-bd.html");
+
+    private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
+}
