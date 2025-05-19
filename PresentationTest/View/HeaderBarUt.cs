@@ -47,8 +47,6 @@ public class HeaderBarUt
     {
         _testContext = new TestContext();
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
-        _testContext.ComponentFactories.AddStub<CultureSelector>();
-        _testContext.ComponentFactories.AddStub<LmsLoginButton>();
         _testContext.ComponentFactories.AddStub<MudPopover>();
         _testContext.ComponentFactories.AddStub<MudDivider>();
         _testContext.ComponentFactories.AddStub<MudMenu>();
@@ -107,22 +105,6 @@ public class HeaderBarUt
 
         Assert.That(() => systemUnderTest.FindComponent<Stub<CloseAppButton>>(),
             Throws.TypeOf<ComponentNotFoundException>());
-    }
-
-    [Test]
-    public void Render_ContainsCultureSelectorStub()
-    {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(() => systemUnderTest.FindComponent<Stub<CultureSelector>>(), Throws.Nothing);
-    }
-
-    [Test]
-    public void Render_ContainsLmsLoginButtonStub()
-    {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(() => systemUnderTest.FindComponent<Stub<LmsLoginButton>>(), Throws.Nothing);
     }
 
     [Test]
