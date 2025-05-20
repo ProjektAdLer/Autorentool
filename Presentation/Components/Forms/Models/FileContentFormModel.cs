@@ -1,3 +1,6 @@
+using BusinessLogic.Entities.LearningContent.H5P;
+using Shared.H5P;
+
 namespace Presentation.Components.Forms.Models;
 
 public class FileContentFormModel : IFileContentFormModel, IEquatable<FileContentFormModel>
@@ -10,21 +13,21 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
         Name = "";
         Type = "";
         Filepath = "";
-        PrimitiveH5P = false;
+        H5PState = H5PContentState.Unknown;
     }
 
-    public FileContentFormModel(string name, string type, string filepath, bool primitiveH5P = false)
+    public FileContentFormModel(string name, string type, string filepath)
     {
         Name = name;
         Type = type;
         Filepath = filepath;
-        PrimitiveH5P = primitiveH5P;
+        H5PState = H5PContentState.Unknown;
     }
 
     public string Name { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
-    public bool PrimitiveH5P { get; set; }
+    public H5PContentState H5PState { get; set; }
 
     public bool Equals(FileContentFormModel? other)
     {

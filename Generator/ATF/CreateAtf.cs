@@ -523,7 +523,7 @@ public class CreateAtf : ICreateAtf
         {
             { } type when FileContentIsTextType(type) => "text",
             { } type when FileContentIsImageType(type) => "image",
-            "h5p" => fileContent.PrimitiveH5P ? "primitiveH5P" : "h5p",
+            "h5p" => fileContent.IsH5P ? "primitiveH5P" : "h5p",
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
                 $"The given LearningContent Type of file {fileContent.Name} is not supported")

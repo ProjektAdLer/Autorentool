@@ -1,5 +1,6 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
+@using BusinessLogic.Entities.LearningContent.H5P
 @using Microsoft.Extensions.Localization
 @using MudBlazor.Extensions
 @using Presentation.Components.Dialogues
@@ -11,6 +12,8 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
+@using Shared.H5P
+@using Presentation.H5P
 @inject ISnackbar Snackbar
 
 <MudTable T="ILearningContentViewModel" 
@@ -113,7 +116,14 @@
         <MudTd DataLabel="Type" Class="py-0 pl-0 cursor-default">
             @if (context is FileContentViewModel fileContentContext)
             {
-                @fileContentContext.Type
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span>@fileContentContext.Type</span>
+
+                    @if (fileContentContext.Type == "h5p")
+                    {
+                        <H5PStateIcon State="@fileContentContext.H5PState" />
+                    }
+                </div>
             }
             else
             {

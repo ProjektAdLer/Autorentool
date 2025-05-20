@@ -1,8 +1,11 @@
 @using System.Diagnostics.CodeAnalysis
 @using AutoMapper
+@using BusinessLogic.Entities.LearningContent.H5P
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningWorld
+@using Shared.H5P
+@using Presentation.H5P
 @inherits MudBaseInput<ILearningContentFormModel>
 
 
@@ -54,7 +57,14 @@
             <MudTd Class="p-0 cursor-default" DataLabel="Type">
                 @if (context is FileContentFormModel fileContentContext)
                 {
-                    @fileContentContext.Type
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>@fileContentContext.Type</span>
+
+                        @if (fileContentContext.Type == "h5p")
+                        {
+                            <H5PStateIcon State="@fileContentContext.H5PState" />
+                        }
+                    </div>
                 }
                 else
                 {

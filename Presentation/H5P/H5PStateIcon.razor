@@ -1,0 +1,30 @@
+﻿@using Shared.H5P
+
+@code {
+    [Parameter]
+    public H5PContentState State { get; set; }
+}
+
+@switch (State)
+{
+    case H5PContentState.Unknown:
+        <MudTooltip Text="Unbekannter Inhalt">
+            <MudIconButton Icon="@Icons.Material.Filled.HelpOutline" Color="Color.Default" />
+        </MudTooltip>
+        break;
+    case H5PContentState.Completable:
+        <MudTooltip Text="Abschließbar">
+            <MudIconButton Icon="@Icons.Material.Filled.TaskAlt" Color="Color.Success" />
+        </MudTooltip>
+        break;
+    case H5PContentState.Primitive:
+        <MudTooltip Text="Primitive Einheit">
+            <MudIconButton Icon="@Icons.Material.Filled.Extension" Color="Color.Primary" />
+        </MudTooltip>
+        break;
+    case H5PContentState.NotUsable:
+        <MudTooltip Text="Nicht nutzbar">
+            <MudIconButton Icon="@Icons.Material.Filled.Block" Color="Color.Error" />
+        </MudTooltip>
+        break;
+}

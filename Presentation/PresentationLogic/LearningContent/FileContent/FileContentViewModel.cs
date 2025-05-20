@@ -1,4 +1,6 @@
+using BusinessLogic.Entities.LearningContent.H5P;
 using JetBrains.Annotations;
+using Shared.H5P;
 
 namespace Presentation.PresentationLogic.LearningContent.FileContent;
 
@@ -10,7 +12,8 @@ public class FileContentViewModel : IFileContentViewModel
         Type = type;
         Filepath = filepath;
         UnsavedChanges = true;
-        PrimitiveH5P = false;
+        IsH5P = false;
+        H5PState = H5PContentState.Unknown;
     }
     
     /// <summary>
@@ -23,14 +26,16 @@ public class FileContentViewModel : IFileContentViewModel
         Type = "";
         Filepath = "";
         UnsavedChanges = false;
-        PrimitiveH5P = false;
+        IsH5P = false;
+        H5PState = H5PContentState.Unknown;
     }
     
     public string Name { get; init; }
     public bool UnsavedChanges { get; set; }
     public string Type { get; init; }
     public string Filepath { get; init; }
-    public bool PrimitiveH5P { get; set; }
+    public bool IsH5P { get; set; }
+    public H5PContentState H5PState { get; set; }
 
     protected bool Equals(FileContentViewModel other) => Name == other.Name && Type == other.Type && Filepath == other.Filepath;
 

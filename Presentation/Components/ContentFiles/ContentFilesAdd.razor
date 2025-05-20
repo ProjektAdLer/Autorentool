@@ -88,6 +88,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IErrorService ErrorService { get; set; }
+    [Inject, AllowNull] 
+    internal  IH5PPlayerDialogViewModel H5PPlayerDialogViewModel { get; set; }
+
 
     [CascadingParameter(Name = "RerenderContentContainer")]
     public Func<Task>? RerenderContentFilesContainer { get; set; }
@@ -143,8 +146,8 @@
                      Logger.LogTrace("Start H5P-Player with: " + 
                                      "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
                                       "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
-                      
-                      OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
+
+                     H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                  }
 #endif
             }
@@ -301,94 +304,7 @@
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
-    private async void OpenH5pPlayerDialog(
-        string h5pZipSourcePath, 
-        string unzippedH5psPath, 
-        H5pDisplayMode displayMode)
-    {
-        
-        H5pPlayerResultTO? finalResult = null;
 
-        var parameters = new DialogParameters
-        {
-            { "H5pZipSourcePath", h5pZipSourcePath },
-            { "UnzippedH5psPath", unzippedH5psPath },
-            { "DisplayMode", displayMode },
-            { "OnPlayerFinished", new Action<H5pPlayerResultTO>(result =>
-                {
-                    finalResult = result;
-                    Logger.LogInformation("Ergebnis erhalten vom Player: {@result}", result);
-                })
-            }
-        };
-        var options = new DialogOptions
-        {
-            BackdropClick = true,
-            MaxWidth = MaxWidth.Large,
-            FullWidth = true,
-            CloseButton = true,
-        };
-    
-        
-        var dialog = await DialogService.ShowAsync<PlayerH5p>("H5P-Player", parameters, options);
-
-        var result = await dialog.Result;
-        
-        var javaScriptAdapter = new CallJavaScriptAdapter(JsRuntime);
-        var dataAccess = new FileSystemDataAccess();
-        ITerminateH5pPlayerUcPort terminateH5pPlayer = new TerminateH5pPlayerUc(javaScriptAdapter, dataAccess);
-        await terminateH5pPlayer.TerminateH5pPlayer();
-        
-        try
-        {
-            await JsRuntime.InvokeVoidAsync("terminateH5pStandalone");
-
-        }
-        catch (JSException ex)
-        {
-            Logger.LogError("JSException: Could not call 'terminateH5pStandalone': {Message}", ex.Message);
-        }
-        
-        
-        if (result?.Canceled == true)
-        {
-            Logger.LogInformation("Dialog wurde abgebrochen.");
-        }
-        else if (result != null)
-        {
-            Logger.LogInformation("Dialog wurde mit Ergebnis geschlossen: {@Data}", result.Data);
-        }
-        
-        await InvokeAsync(StateHasChanged);
-    }
-    
-    private async Task ShowImportH5PDialog(List<string> h5pFiles)
-    {
-        var parameters = new DialogParameters
-        {
-            { nameof(ImportH5PDialog.UnvalidatedH5Ps), h5pFiles },
-            { nameof(ImportH5PDialog.OnValidateClicked), EventCallback.Factory.Create<string>(this, ValidateH5P) }
-        };
-
-        var options = new DialogOptions
-        {
-            CloseButton = true,
-            CloseOnEscapeKey = true,
-            MaxWidth = MaxWidth.Medium,
-            FullWidth = true,
-        };
-
-        await DialogService.ShowAsync<ImportH5PDialog>("", parameters, options);
-    }
-
-    private async Task ValidateH5P(string fileName)
-    {
-        // TODO: logic to launch the H5P Player
-        Logger.LogInformation("Validating H5P: {File}", fileName);
-        await Task.CompletedTask;
-    }
-
-    
     private void ToggleSpinner()
     {
         Working = !Working;
@@ -414,5 +330,8 @@
     {
         HoverClass = "";
     }
+
+
+  
 
 }
