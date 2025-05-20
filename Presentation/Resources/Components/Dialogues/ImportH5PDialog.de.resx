@@ -25,4 +25,7 @@ Klicken Sie in der unteren Auflistung auf das jeweilige nebenstehende Symbol, um
     <data name="Dialog.NoUnvalidatedH5Ps" xml:space="preserve">
     <value>Es gibt keine ungeprüften H5Ps.</value>
   </data>
+  <data name="Dialog.OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

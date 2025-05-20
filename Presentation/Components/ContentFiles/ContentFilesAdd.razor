@@ -100,8 +100,9 @@
     private string HoverClass { get; set; } = "";
     
     private bool Working { get; set; } = false;
-
+    
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
+    private readonly List<string> _unvalidatedH5PFiles = new();
 
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
@@ -139,17 +140,17 @@
 #if DEBUG
                  if (fileEnding.ToLowerInvariant()  == ".h5p")
                  {
-                     var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder , file.Name);
-                     var baseUri = new Uri(Navigation.BaseUri); 
-                     var unzippedH5ps= new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+                   
+                     _unvalidatedH5PFiles.Add(file.Name);
                      
-                     Logger.LogTrace("Start H5P-Player with: " + 
-                                     "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                                      "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri );
 
-                     H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri,H5pDisplayMode.Validate);
                  }
 #endif
+            }
+            if (_unvalidatedH5PFiles.Any())
+            {
+                await ShowImportH5PDialog(_unvalidatedH5PFiles.ToList());
+                _unvalidatedH5PFiles.Clear();
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
@@ -303,8 +304,41 @@
         
         Logger.LogTrace("LoadLearningContentViewModel returned");
     }
+    
+    private async Task ShowImportH5PDialog(List<string> h5pFiles)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(ImportH5PDialog.UnvalidatedH5Ps), h5pFiles },
+            { nameof(ImportH5PDialog.OnValidateClicked), EventCallback.Factory.Create<string>(this, ValidateH5P) }
+        };
 
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+        };
 
+        await DialogService.ShowAsync<ImportH5PDialog>("", parameters, options);
+    }
+
+    private async Task ValidateH5P(string fileName)
+    {
+            var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder, fileName);
+            var baseUri = new Uri(Navigation.BaseUri); 
+            var unzippedH5ps = new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+
+            Logger.LogTrace("Start H5P-Player with: " +
+                            "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
+                            "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri);
+
+            H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri, H5pDisplayMode.Validate);
+
+            await Task.CompletedTask;
+
+    }
     private void ToggleSpinner()
     {
         Working = !Working;

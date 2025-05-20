@@ -37,9 +37,9 @@
     </DialogContent>
 
     <DialogActions>
-        <MudButton OnClick="Cancel" Color="Color.Secondary">@Localizer["Dialog.OkButton"]</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary">@Localizer["Dialog.CancelButton"]</MudButton>
         <MudButton OnClick="ValidateFirstH5P" Disabled="@(!UnvalidatedH5Ps?.Any() ?? true)" Color="Color.Primary">
-            @Localizer["Dialog.ValidateAllButton"]
+            @Localizer["Dialog.BeginValidationButton"]
         </MudButton>
     </DialogActions>
 </MudDialog>
