@@ -111,28 +111,12 @@
         <value>Is this a non-finishable H5P?</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Info.Text" xml:space="preserve">
-        <value>&lt;p class="py-1 text-sm 2xl:text-base"&gt;H5P files are a container format for building multimedia learning content. They can be used to create a variety of types of learning content, such as quizzes, word search games or collections of terms.&lt;/p&gt;
-
-&lt;p class="py-1 text-sm 2xl:text-base"&gt;
-As so many different types of content can be created with H5P files, it is necessary to classify them in the authoring tool: 
-&lt;/p&gt;
-
-&lt;ul class="py-2 mx-4 list-disc list-outside text-sm 2xl:text-base"&gt;&lt;li class="py-1"&gt;
-If it is a H5P element that can be completed (correctly or incorrectly), such as a quiz or video, you should not check this box.&lt;/li&gt;
-
-
-&lt;li class="py-1"&gt;
-However, if it is a H5P element that cannot be completed, such as a collection of terms, you should check this box so that students can still complete this item by simply opening it and receive points for editing.
-&lt;/li&gt;&lt;/ul&gt;
-
-&lt;p class="py-1 text-sm 2xl:text-base"&gt;
-If you are not sure which category an H5P file belongs in, then it is better to check this box. This will allow students to edit the content and still definitely keep playing your world.&lt;/p&gt;
-
-
-&lt;p class="py-1 text-sm 2xl:text-base"&gt;
-For more information on H5P files, please read the user documentation of the authoring tool.&lt;/p&gt;
-
-</value>
+        <value>&lt;p class="py-1 text-sm 2xl:text-base"&gt;H5P files are a container format used to create multimedia learning content. They allow for a wide variety of content types – from quizzes and word search games to concept collections. Since H5P supports such diverse content types, a classification is required within the authoring tool:&lt;/p&gt; 
+&lt;ul class="py-2 mx-4 list-disc list-outside text-sm 2xl:text-base"&gt;
+&lt;li&gt;&lt;p class="py-1 font-bold"&gt;Completable content&lt;/p&gt;&lt;p&gt; If the H5P element can be evaluated (e.g., a quiz or an interactive video), &lt;span class="italic"&gt; do not check the box.&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p class="py-1 font-bold"&gt;Non-completable content&lt;/p&gt;&lt;p&gt; If the element cannot be evaluated (e.g., a concept collection), you should &lt;span class="italic"&gt; check the box. &lt;/span&gt; This ensures that students can complete the activity simply by opening it and still receive points for engaging with it.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;div class="flex flex-col py-1"&gt;&lt;p class="font-bold text-sm 2xl:text-base"&gt;Tip: &lt;/p&gt;&lt;p class=" text-sm 2xl:text-base"&gt; If you're unsure which category an H5P file belongs to, check the box as a precaution. This way, students can interact with the content and continue progressing in their world.&lt;/p&gt;&lt;/div&gt;
+&lt;p class="py-1 text-sm 2xl:text-base"&gt; For more information, please refer to the authoring tool’s user documentation.&lt;/p&gt;</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text" xml:space="preserve">
         <value>Click for more information</value>

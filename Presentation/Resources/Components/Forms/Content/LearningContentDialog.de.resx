@@ -21,9 +21,6 @@
     <data name="LearningContentDialog.LearningMaterial.Dialog.Subtitle" xml:space="preserve">
         <value>Untenstehend wird das gesamte externe Lernmaterial aufgelistet, das bereits in das Autorentool importiert wurde. Wählen Sie aus dieser Auflistung das gewünschte Lernmaterial zum Lernelement aus.</value>
     </data>
-    <data name="LearningContentDialog.LearningMaterial.Search" xml:space="preserve">
-        <value>Suche...</value>
-    </data>
     <data name="LearningContentDialog.LearningMaterial.Preview" xml:space="preserve">
         <value>Lernmaterial anzeigen</value>
     </data>

@@ -11,6 +11,8 @@
 - Added a header and footer to the left sidebar
 - Added a arrow icon for doors in the floor plans
 - Implemented a validation for export to archive
+- Added new learning world theme
+- Added frame story for learning world
 
 ### Changed
 
@@ -19,6 +21,7 @@
 - Changed design for the dropzone to drag and drop learning material
 - Changed size and design for the learning space editor and unplaced elements
 - Changed design for the story element slots
+- Updated learning space theme values
 
 ### Deprecated
 

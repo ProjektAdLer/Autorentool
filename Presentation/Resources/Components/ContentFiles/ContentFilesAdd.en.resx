@@ -18,9 +18,6 @@
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Drag and drop files here or click to add them.</value>
     </data>
-    <data name="Header.Text" xml:space="preserve">
-        <value>Add external learning material</value>
-    </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
         <value>Unsupported file ending</value>
     </data>
@@ -86,5 +83,8 @@
     </data>
     <data name="ContentFilesAdd.ErrorMessage.LoadingMaterial" xml:space="preserve">
         <value>Error while loading external learning material</value>
+    </data>
+    <data name="ContentFilesAdd.Header" xml:space="preserve">
+        <value>Add external learning material</value>
     </data>
 </root>

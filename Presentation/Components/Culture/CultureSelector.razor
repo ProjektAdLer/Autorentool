@@ -2,7 +2,7 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Globalization
 @using MudBlazor.Utilities
-<section class="flex flex-row justify-center drop-shadow p-1">
+<section class="flex flex-row justify-center h-12">
     <div dir="ltr" class="flex justify-center items-center">
         <button title=@Localizer["Localizer.German.Short.Text.Hover"]
                 class="@GermanButtonClass.Build()"
@@ -80,9 +80,9 @@
     private bool GermanSelected => Equals(Culture, _supportedCultures[0]);
     private bool EnglishSelected => Equals(Culture, _supportedCultures[1]);
 
-    private CssBuilder ButtonBaseClass => new("text-white bg-buttonbgblue py-1 px-2");
+    private CssBuilder ButtonBaseClass => new("text-white bg-adlerdarkblue py-1 px-2");
     private CssBuilder PBaseClass => new("z-10 text-white font-bold");
-    private CssBuilder ImageBaseClass => new("z-0 pointer-events-none absolute rounded-full w-6 h-6");
+    private CssBuilder ImageBaseClass => new("z-0 pointer-events-none absolute rounded-full bg-white w-6 h-6");
 
     private CssBuilder GermanButtonClass =>
         ButtonBaseClass

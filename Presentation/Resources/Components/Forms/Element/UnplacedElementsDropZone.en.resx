@@ -31,7 +31,7 @@
         <value>Difficulty of the element</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Text" xml:space="preserve">
-        <value>Filter by:</value>
+        <value>Filter </value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.All" xml:space="preserve">
         <value>All</value>
@@ -62,8 +62,5 @@
     </data>
     <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
         <value>Story element</value>
-    </data>
-    <data name="UnplacedElementsDropZone.SearchBar.PlaceHolder" xml:space="preserve">
-        <value>Search</value>
     </data>
 </root>
