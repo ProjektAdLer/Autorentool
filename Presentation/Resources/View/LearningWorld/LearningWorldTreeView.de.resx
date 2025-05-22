@@ -35,4 +35,7 @@
     <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
         <value> Pkt.</value>
     </data>
+    <data name="OverView.Title" xml:space="preserve">
+        <value>Lernwelt-Übersicht - Hierarchie</value>
+    </data>
 </root>

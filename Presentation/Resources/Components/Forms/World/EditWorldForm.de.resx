@@ -75,7 +75,7 @@
         <value>Rahmenhandlung zur Story</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine stimmige Rahmenhandlung einzubetten.</value>
+        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine Rahmenhandlung einzubetten.</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
         <value>Einleitung</value>

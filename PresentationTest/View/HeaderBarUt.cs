@@ -47,8 +47,6 @@ public class HeaderBarUt
     {
         _testContext = new TestContext();
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
-        _testContext.ComponentFactories.AddStub<CultureSelector>();
-        _testContext.ComponentFactories.AddStub<LmsLoginButton>();
         _testContext.ComponentFactories.AddStub<MudPopover>();
         _testContext.ComponentFactories.AddStub<MudDivider>();
         _testContext.ComponentFactories.AddStub<MudMenu>();
@@ -110,22 +108,6 @@ public class HeaderBarUt
     }
 
     [Test]
-    public void Render_ContainsCultureSelectorStub()
-    {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(() => systemUnderTest.FindComponent<Stub<CultureSelector>>(), Throws.Nothing);
-    }
-
-    [Test]
-    public void Render_ContainsLmsLoginButtonStub()
-    {
-        var systemUnderTest = GetRenderedComponent();
-
-        Assert.That(() => systemUnderTest.FindComponent<Stub<LmsLoginButton>>(), Throws.Nothing);
-    }
-
-    [Test]
     public void Render_ShowsLocalizedAuthoringToolName()
     {
         _stringLocalizer["AuthoringTool.Text"].Returns(new LocalizedString("AuthoringTool.Text", "TestName"));
@@ -136,7 +118,7 @@ public class HeaderBarUt
 
         var element = systemUnderTest.FindAll("div p")[1];
         element.MarkupMatches(
-            @$"<p class=""font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800"">TestName {Constants.ApplicationVersion}</h1>");
+            @$"<p class=""font-bold text-base 2xl:text-lg text-adlertitledarkblue"">TestName {Constants.ApplicationVersion}</h1>");
     }
 
     [Test]

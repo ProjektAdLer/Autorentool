@@ -1,12 +1,12 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using MudBlazor.Utilities
-@using Presentation.PresentationLogic.Mediator
+@using Presentation.Components.ContentFiles
 @inherits MudBaseInput<Presentation.Components.Forms.Models.ILearningContentFormModel>
 <div class="flex flex-col min-h-12 w-full">
     <MudText Class="flex text-start text-sm px-6 text-formerror font-bold py-2 break-words">@Localizer["NoContentWarning.Text"]</MudText>
     <div class="flex justify-center items-center">
-        <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesView">
+        <MudButton Class="@ButtonCssClass.Build()" OnClick="@OpenContentFilesDialog">
             <MudIcon Icon="@Icons.Material.Filled.Reply" Class="-scale-x-100"></MudIcon>
             <MudText Class="@TextCssClass.Build()">@Localizer["NoContentWarning.ButtonText"]</MudText>
         </MudButton>
@@ -18,11 +18,27 @@
     [Inject, AllowNull] //n.stich
     IStringLocalizer<NoContentWarning> Localizer { get; set; }
 
-    [Inject, AllowNull] //n.stich
-    IMediator Mediator { get; set; }
+    [Inject, AllowNull] 
+    internal IDialogService DialogService { get; set; }
+    
+    [Parameter] public EventCallback ContentFilesChanged { get; set; }
+    
+    private async void OpenContentFilesDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseButton = true,
+            FullWidth = true,
+            MaxWidth = MaxWidth.Large,
+        };
+        var dialog = await DialogService.ShowAsync<ContentFilesContainer>(@Localizer["Header.ContentFilesAdd.Title"].Value, options);
 
-    private void OpenContentFilesView() => Mediator.RequestOpenContentDialog();
-
+        _ = await dialog.Result;
+        
+        await ContentFilesChanged.InvokeAsync();
+    }
+    
     private CssBuilder ButtonCssClass => new CssBuilder("w-64").AddClass("btn-standard");
     private CssBuilder TextCssClass => new CssBuilder("text-sm font-bold").AddClass("text-formerror", Error);
 }
