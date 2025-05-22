@@ -83,8 +83,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         Assert.That(mudTexts, Has.Count.EqualTo(3));
         Assert.Multiple(() =>
         {
-            Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
-            Assert.That(mudTexts[1].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[1].Markup, Contains.Substring("Header.Moodle.Text"));
             Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Login"));
         });
 
@@ -121,8 +120,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         Assert.That(mudTexts, Has.Count.EqualTo(7));
         Assert.Multiple(() =>
         {
-            Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
-            Assert.That(mudTexts[1].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[1].Markup, Contains.Substring("Header.Moodle.Text"));
             Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Logout"));
             Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
             Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
@@ -601,27 +599,5 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await dialogService.Received(1)
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>());
         _errorService.Received(1).SetError("Error while trying to delete the LMS world", "nix gut");
-    }
-
-    [Test]
-    public async Task ClickCloseDialogButton_CallsCloseDialog()
-    {
-        var dialog = await OpenDialogAndGetDialogReferenceAsync();
-
-        var mudIconButtons = DialogProvider.FindComponents<MudIconButton>();
-        Assert.Multiple(() =>
-        {
-            Assert.That(mudIconButtons[0].Instance.Icon, Is.EqualTo(Icons.Material.Filled.Close));
-            Assert.That(DialogProvider.Markup, Is.Not.Empty);
-        });
-
-        mudIconButtons[0].Find("button").Click();
-
-        var result = await dialog.Result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result!.Canceled, Is.False);
-            Assert.That(DialogProvider.Markup, Is.Empty);
-        });
     }
 }

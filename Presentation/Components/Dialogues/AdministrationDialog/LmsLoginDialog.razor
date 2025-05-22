@@ -211,9 +211,6 @@ else
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     private ILogger<LmsLoginDialog> Logger { get; set; }
 
-    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
-    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-
     [Inject, AllowNull] internal IErrorService ErrorService { get; set; }
 
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
@@ -245,8 +242,6 @@ else
     private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
     private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
 
-    private static DialogOptions Options => new() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = false, NoHeader = true };
-
     private List<LmsWorldViewModel> _lmsWorldList = new();
 
     private LmsWorldViewModel? _deleteWorld = null;
@@ -260,7 +255,6 @@ else
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
         _ = UpdateLmsIsConnected();
-        MudDialog!.SetOptionsAsync(Options);
     }
 
     private async Task UpdateLmsIsConnected()

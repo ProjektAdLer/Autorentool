@@ -605,7 +605,12 @@
     {
         var options = new DialogOptions
         {
-            BackdropClick = false,
+            BackdropClick = true,
+            CloseOnEscapeKey = true, 
+            CloseButton = true, 
+            MaxWidth = MaxWidth.Small, 
+            FullWidth = true, 
+            NoHeader = true
         };
         DialogService.ShowAsync<AdministrationDialog>("Administration", options);
         InvokeAsync(StateHasChanged);
