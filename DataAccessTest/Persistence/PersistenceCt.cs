@@ -350,6 +350,30 @@ public class PersistenceCt
     }
 
     [Test]
+    [TestCaseSource(nameof(GetObsoleteElementModelsWithNewElementModels))]
+    public void Persistence_LoadAndSaveWorld_WithObsoleteElementModelInStoryElement_ReplacesWithNewElementModel(
+        ElementModel obsoleteElementModel, ElementModel newElementModel)
+    {
+        var world = PersistEntityProvider.GetLearningWorld();
+        world.UnplacedLearningElements.Clear();
+        world.UnplacedLearningElements.Add(
+            PersistEntityProvider.GetLearningElement(content: PersistEntityProvider.GetStoryContent(),
+                elementModel: obsoleteElementModel)
+        );
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>();
+        systemUnderTest.SaveToDisk(world, FilePath);
+        var restoredWorld = systemUnderTest.LoadFromDisk(FilePath);
+        Assert.That(restoredWorld.UnplacedLearningElements.First().ElementModel, Is.EqualTo(newElementModel));
+    }
+    
+    static ElementModel[][] GetObsoleteElementModelsWithNewElementModels()
+    {
+        return Enum.GetValues<ElementModel>().Where(e => ElementModelHelper.IsObsolete(e))
+            .Select(e => new[] { e, ElementModelHelper.GetAlternateValue(e) })
+            .ToArray();
+    }
+    
+    [Test]
     // ANF-ID: [ASE2, AWA0022, AWA0019]
     public void SaveAndLoadWorld_WithExactSameElementInTwoSpaces_ElementIsEqualObject()
     {
