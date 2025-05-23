@@ -41,7 +41,7 @@ public class ElementModelHandler : IElementModelHandler
                 return AdaptivityModels;
             default:
             {
-                var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
+                var elementModels = GetAllElementModels();
                 return elementModels.Except(NpcModels).Except(AdaptivityModels).OrderBy(m => m, comparer);
             }
         }
@@ -122,12 +122,11 @@ public class ElementModelHandler : IElementModelHandler
 
     private static string GetStoryElementModelPreviewPath(ElementModel elementModel)
     {
-        var name = elementModel.ToString();
-        var value = (int)elementModel;
         if (ElementModelHelper.IsObsolete(elementModel))
         {
             elementModel = ElementModelHelper.GetAlternateValue(elementModel);
         }
+
         var elementModelName = elementModel.ToString().ToLower().Replace("_", "-");
 
         return "CustomIcons/StoryElementModels/" + elementModelName +
@@ -202,9 +201,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.a_npc_alerobot;
                 break;
             case ContentTypeEnum.Story:
-                foreach (var model in Enum.GetValues<ElementModel>()
-                             .Where(e => e.ToString().StartsWith("a_npc_") &&
-                                         e != ElementModel.a_npc_alerobot && !ElementModelHelper.IsObsolete(e)))
+                foreach (var model in GetAllElementModels()
+                             .Where(e => e.ToString().StartsWith("a_npc_") && e != ElementModel.a_npc_alerobot))
                 {
                     yield return model;
                 }
@@ -252,11 +250,16 @@ public class ElementModelHandler : IElementModelHandler
 
         // Models that are in all themes
         // return all NPC ElementModels
-        foreach (var model in Enum.GetValues<ElementModel>().Where(e => e.ToString().StartsWith("a_npc_") && 
-                                                                        !ElementModelHelper.IsObsolete(e)))
+        foreach (var model in GetAllElementModels().Where(e => e.ToString().StartsWith("a_npc_")))
         {
             yield return model;
         }
+    }
+
+    internal static IEnumerable<ElementModel> GetAllElementModels()
+    {
+        return Enum.GetValues<ElementModel>()
+            .Where(e => !ElementModelHelper.IsObsolete(e));
     }
 
     private class ElementModelComparer : Comparer<ElementModel>
