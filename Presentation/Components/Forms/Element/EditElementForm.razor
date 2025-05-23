@@ -237,17 +237,15 @@
                                     <p class="text-xs px-6 pt-2 font-bold text-adlertextgrey">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
                                     var x = i;
                                     <div class="flex flex-col">
-                                        <div class="flex flex-row items-centerpx-6">
+                                        <div class="flex flex-row items-center px-6">
                                             <MudTextField T="string"
                                                           Variant="Variant.Outlined" Lines="5"
                                                           @bind-Value="@(StoryContentModel.StoryText[x])"
-                                                          DebounceInterval="DebounceInterval"
-                                            />
+                                                          DebounceInterval="DebounceInterval"/>
                                             <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                            OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
                                                            title=@Localizer["EditStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
-                                                           Size="Size.Small"
-                                            >
+                                                           Size="Size.Small">
                                             </MudIconButton>
                                         </div>
                                         <p class="px-6 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/400 Zeichen")</p>
