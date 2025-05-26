@@ -24,8 +24,13 @@
                 </div>
             </TooltipContent>
         </MudTooltip>
-        <MudSelect T="NpcMood" ValueChanged="async mood => await OnItemClick(mood)" Value="Value"
-                   Label="@Localizer["NpcMoodSelect.MoodSelect.Label"]" Variant="Variant.Outlined">
+        <MudSelect T="NpcMood" 
+                   ValueChanged="async mood => await OnItemClick(mood)" 
+                   Value="Value"
+                   Label="@Localizer["NpcMoodSelect.MoodSelect.Label"]" 
+                   Variant="Variant.Outlined"
+                   Dense="true"
+                   Margin="Margin.Dense">
             @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
             {
                 <MudSelectItem T="NpcMood" Value="@(npcMood)"

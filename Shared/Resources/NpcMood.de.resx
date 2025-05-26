@@ -22,16 +22,16 @@
         <value>Freundlich</value>
     </data>
     <data name="Enum.NpcMood.Welcome" xml:space="preserve">
-        <value>Willkommen</value>
+        <value>Begrüßend</value>
     </data>
     <data name="Enum.NpcMood.ThumbsUp" xml:space="preserve">
-        <value>Freude über Erfolg</value>
+        <value>Erfreut</value>
     </data>
     <data name="Enum.NpcMood.Shocked" xml:space="preserve">
-        <value>Panisch, erschrocken</value>
+        <value>Panisch / Erschrocken</value>
     </data>
     <data name="Enum.NpcMood.Disappointed" xml:space="preserve">
-        <value>Traurig, enttäuscht</value>
+        <value>Traurig / Enttäuscht</value>
     </data>
     <data name="Enum.NpcMood.Angry" xml:space="preserve">
         <value>Wütend</value>
