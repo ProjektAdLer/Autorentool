@@ -36,7 +36,7 @@
 
     <Fields>
         <div
-            class="pl-2 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]
                          InitiallyCollapsed="false">
                 <div class="rounded-lg w-4/4 px-6">
@@ -46,8 +46,7 @@
                                   DebounceInterval="DebounceInterval"
                                   Placeholder=@Localizer["EditElementForm.Fields.Collapsable.General.Field.Name.Text"]
                                   Margin="Margin.Normal"
-                                  Typo="Typo.body1"
-                                  Class="pb-3"/>
+                                  Typo="Typo.body1"/>
                     @if (ElementMode != ElementMode.Story)
                     {
                         <div class="flex flex-row justify-between gap-1">
@@ -172,7 +171,7 @@
 
                         @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
                         {
-                            <div class="flex flex-row items-center justify-start">
+                            <div class="flex flex-row items-center justify-start px-3">
                                 <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
                                     <p class="text-adlertextgrey text-xs 2xl:text-sm">
                                         @Localizer["EditElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
@@ -212,7 +211,7 @@
                             @ref="_pseudoGroupStoryContent">
 
                             <div class="flex flex-row items-center gap-1 py-2">
-                                <p class="text-xs px-6 pt-1">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]
+                                <p class="text-xs px-6 pt-1 cursor-default">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Text"]
                                     <MudTooltip Placement="Placement.Right"
                                                 Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                                         <TooltipContent>
@@ -234,7 +233,7 @@
                             {
                                 @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
                                 {
-                                    <p class="text-xs px-6 pt-2 font-bold text-adlertextgrey">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
+                                    <p class="text-xs px-6 pt-2 font-bold cursor-default">@Localizer["EditStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
                                     var x = i;
                                     <div class="flex flex-col">
                                         <div class="flex flex-row items-center px-6">
@@ -248,7 +247,7 @@
                                                            Size="Size.Small">
                                             </MudIconButton>
                                         </div>
-                                        <p class="px-6 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/400 Zeichen")</p>
+                                        <p class="px-6 text-adlergrey-500 cursor-default">@($"{StoryContentModel.StoryText[x].Length}/400") @Localizer["EditStoryElementForm.Collapsable.Story.Length"]</p>
                                     </div>
                                 }
 
@@ -282,15 +281,15 @@
                     </div>
                     @if (ElementMode == ElementMode.Story && StoryContentModel != null)
                     {
-                        <MudText>
+                        <p class="text-xs font-bold pt-3 cursor-default">
                             @Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title"]
-                        </MudText>
+                        </p>
                         <MudTextField @bind-Value="StoryContentModel.NpcName"
                                       For="@(() => StoryContentModel.NpcName)"
                                       Variant="Variant.Outlined"
                                       DebounceInterval="DebounceInterval"
                                       Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text"]"
-                                      Class="pb-2"/>
+                                      Class="pb-2 mt-0"/>
                         <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)"
                                        ElementModel="FormDataContainer.FormModel.ElementModel"
                                        Label="@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">

@@ -4,9 +4,9 @@
 @using MudBlazor.Utilities
 @inherits MudBaseInput<NpcMood>
 <div>
-    <MudText>@Localizer["NpcMoodSelect.Header.Text"]</MudText>
-    <div class="flex items-center space-x-4">
-        <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Delay="150" Duration="250"
+    <p class="text-xs font-bold">@Localizer["NpcMoodSelect.Header.Text"]</p>
+    <div class="flex gap-4 items-center space-x-4 cursor-default">
+        <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Delay="150" Duration="250"
                     Arrow="true">
             <ChildContent>
                 <div style="width: 100%; height: auto; aspect-ratio: 1/1; overflow: hidden;">
