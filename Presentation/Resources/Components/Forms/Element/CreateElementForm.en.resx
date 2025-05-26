@@ -189,4 +189,7 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text" xml:space="preserve">
         <value>Name</value>
     </data>
+    <data name="CreateStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
+        <value>characters</value>
+    </data>
 </root>

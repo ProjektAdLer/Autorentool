@@ -204,4 +204,7 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text" xml:space="preserve">
         <value>Name</value>
     </data>
+    <data name="CreateStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
+        <value>Zeichen</value>
+    </data>
 </root>
