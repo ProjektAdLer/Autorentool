@@ -1123,6 +1123,20 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForExport"/>
+    public ValidationResult ValidateLearningWorldForExport(LearningWorldViewModel worldVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
+        return BusinessLogic.ValidateLearningWorldForExport(worldEntity);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForGeneration"/>
+    public ValidationResult ValidateLearningWorldForGeneration(LearningWorldViewModel worldVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
+        return BusinessLogic.ValidateLearningWorldForGeneration(worldEntity);
+    }
+
     public async Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world)
     {
         ElectronCheck();
@@ -1330,6 +1344,8 @@ public class PresentationLogic : IPresentationLogic
         var world = Mapper.Map<LmsWorld>(worldVm);
         await BusinessLogic.DeleteLmsWorld(world);
     }
+    
+    #endregion
 
 #if DEBUG
 
@@ -1345,6 +1361,4 @@ public class PresentationLogic : IPresentationLogic
     }
 
 #endif
-
-    #endregion
 }

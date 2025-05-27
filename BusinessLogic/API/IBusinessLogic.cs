@@ -123,7 +123,27 @@ public interface IBusinessLogic
     #endregion
 
     #region LearningWorldStructureValidator
+    
+    /// <summary>
+    /// Validates a <see cref="LearningWorld"/> instance for export operations,
+    /// ensuring that all required references and contents are present and valid.
+    /// </summary>
+    /// <param name="world">The learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
     ValidationResult ValidateLearningWorldForExport(LearningWorld world);
+    
+    /// <summary>
+    /// Validates a <see cref="LearningWorld"/> instance to determine if it meets
+    /// all structural and content-based requirements necessary for generation.
+    /// Includes checks for learning spaces, content references, adaptivity rules,
+    /// and proper ordering of referenced elements.
+    /// </summary>
+    /// <param name="world">The learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
     ValidationResult ValidateLearningWorldForGeneration(LearningWorld world);
     
     #endregion

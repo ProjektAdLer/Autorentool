@@ -391,11 +391,13 @@ public class BusinessLogic : IBusinessLogic
 
     #region LearningWorldStructureValidator
 
+    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForExport"/>
     public ValidationResult ValidateLearningWorldForExport(LearningWorld world)
     {
         return LearningWorldStructureValidator.ValidateForExport(world);
     }
 
+    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForGeneration"/>
     public ValidationResult ValidateLearningWorldForGeneration(LearningWorld world)
     {
         return LearningWorldStructureValidator.ValidateForGeneration(world);
