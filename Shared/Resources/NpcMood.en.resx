@@ -1,0 +1,35 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Enum.NpcMood.Happy" xml:space="preserve">
+        <value>Friendly</value>
+    </data>
+    <data name="Enum.NpcMood.Welcome" xml:space="preserve">
+        <value>Welcoming</value>
+    </data>
+    <data name="Enum.NpcMood.ThumbsUp" xml:space="preserve">
+        <value>Pleased</value>
+    </data>
+    <data name="Enum.NpcMood.Shocked" xml:space="preserve">
+        <value>Panicked / Shocked</value>
+    </data>
+    <data name="Enum.NpcMood.Disappointed" xml:space="preserve">
+        <value>Sad / Disappointed</value>
+    </data>
+    <data name="Enum.NpcMood.Angry" xml:space="preserve">
+        <value>Angry</value>
+    </data>
+    <data name="Enum.NpcMood.Tired" xml:space="preserve">
+        <value>Bored</value>
+    </data>
+</root>

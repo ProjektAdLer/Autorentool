@@ -27,4 +27,7 @@
     <data name="StoryContentValidator.StoryTextNoBlocks.ErrorMessage" xml:space="preserve">
         <value>The story element must contain at elast one non-empty text block.</value>
     </data>
+    <data name="StoryContentValidator.NpcNameTooLong.ErrorMessage" xml:space="preserve">
+        <value>The name for an NPC may be a maximum of 60 characters long.</value>
+    </data>
 </root>
