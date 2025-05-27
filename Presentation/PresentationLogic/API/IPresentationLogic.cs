@@ -707,7 +707,7 @@ public interface IPresentationLogic
     /// <returns>
     /// A <see cref="ValidationResult"/> containing any validation errors found.
     /// </returns>
-    ValidationResult ValidateLearningWorldForExport(LearningWorldViewModel worldVm);
+    ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel worldVm);
 
 
     /// <summary>
@@ -718,5 +718,5 @@ public interface IPresentationLogic
     /// <returns>
     /// A <see cref="ValidationResult"/> containing any validation errors found.
     /// </returns>
-    ValidationResult ValidateLearningWorldForGeneration(LearningWorldViewModel worldVm);
+    ValidationResult ValidateLearningWorldForGeneration(ILearningWorldViewModel worldVm);
 }

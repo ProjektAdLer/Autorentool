@@ -1,4 +1,3 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
@@ -13,17 +12,14 @@ namespace BusinessLogic.Validation.Validators;
 public class LearningWorldStructureValidator : ILearningWorldStructureValidator
 {
     private readonly IStringLocalizer<LearningWorldStructureValidator> _localizer;
-    private readonly IBusinessLogic _businessLogic;
 
     public LearningWorldStructureValidator(
-        IBusinessLogic businessLogic,
         IStringLocalizer<LearningWorldStructureValidator> localizer)
     {
-        _businessLogic = businessLogic;
         _localizer = localizer;
     }
 
-    public ValidationResult ValidateForExport(ILearningWorld world)
+    public ValidationResult ValidateForExport(ILearningWorld world, List<ILearningContent> listLearningContent)
     {
         var result = new ValidationResult();
 
@@ -32,7 +28,7 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
             if (element.LearningContent is not (IFileContent or ILinkContent))
                 continue;
 
-            if (!_businessLogic.GetAllContent().Contains(element.LearningContent))
+            if (!listLearningContent.Contains(element.LearningContent))
             {
                 result.Errors.Add(
                     $"<li>{_localizer["ErrorString.Missing.LearningContent.Message", element.Name]}</li>");
@@ -49,7 +45,7 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
                     $"<li>{_localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]}</li>");
             }
 
-            if (TaskReferencesNonExistentContent(adaptivityContent, world))
+            if (TaskReferencesNonExistentContent(adaptivityContent, listLearningContent))
             {
                 result.Errors.Add(
                     $"<li>{_localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]}</li>");
@@ -65,10 +61,10 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
         return ids.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
     }
 
-    private bool TaskReferencesNonExistentContent(IAdaptivityContent adaptivityContent, ILearningWorld world)
+    private bool TaskReferencesNonExistentContent(IAdaptivityContent adaptivityContent, List<ILearningContent> listLearningContent)
     {
         var contents = GetContentReferencesByAdaptivityContent(adaptivityContent);
-        return contents.Any(content => !_businessLogic.GetAllContent().Contains(content));
+        return contents.Any(content => !listLearningContent.Contains(content));
     }
 
     private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContent adaptivityContent)
@@ -92,9 +88,9 @@ public class LearningWorldStructureValidator : ILearningWorldStructureValidator
             .Select(a => a.Content);
     }
 
-    public ValidationResult ValidateForGeneration(ILearningWorld world)
+    public ValidationResult ValidateForGeneration(ILearningWorld world, List<ILearningContent> listLearningContent)
     {
-        var result = ValidateForExport(world);
+        var result = ValidateForExport(world, listLearningContent);
 
         ValidateLearningSpaceCount(world, result);
         ValidateLearningSpaces(world, result);

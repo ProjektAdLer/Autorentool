@@ -57,8 +57,6 @@ namespace Presentation.PresentationLogic.API;
 public class PresentationLogic : IPresentationLogic
 {
     private const string WorldFileFormatDescriptor = "AdLer World File";
-    private const string SpaceFileFormatDescriptor = "AdLer Space File";
-    private const string ElementFileFormatDescriptor = "AdLer Element File";
     private readonly IElectronDialogManager? _dialogManager;
 
     public PresentationLogic(
@@ -134,7 +132,6 @@ public class PresentationLogic : IPresentationLogic
     public IAdaptivityRuleCommandFactory AdaptivityRuleCommandFactory { get; }
     public IAdaptivityActionCommandFactory AdaptivityActionCommandFactory { get; }
     internal IFileSystem FileSystem { get; }
-
     public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
@@ -1124,14 +1121,14 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForExport"/>
-    public ValidationResult ValidateLearningWorldForExport(LearningWorldViewModel worldVm)
+    public ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel worldVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
         return BusinessLogic.ValidateLearningWorldForExport(worldEntity);
     }
 
     /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForGeneration"/>
-    public ValidationResult ValidateLearningWorldForGeneration(LearningWorldViewModel worldVm)
+    public ValidationResult ValidateLearningWorldForGeneration(ILearningWorldViewModel worldVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
         return BusinessLogic.ValidateLearningWorldForGeneration(worldEntity);

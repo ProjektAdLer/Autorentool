@@ -394,13 +394,15 @@ public class BusinessLogic : IBusinessLogic
     /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForExport"/>
     public ValidationResult ValidateLearningWorldForExport(LearningWorld world)
     {
-        return LearningWorldStructureValidator.ValidateForExport(world);
+        var content = DataAccess.GetAllContent();
+        return LearningWorldStructureValidator.ValidateForExport(world, content.ToList());
     }
 
     /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForGeneration"/>
     public ValidationResult ValidateLearningWorldForGeneration(LearningWorld world)
     {
-        return LearningWorldStructureValidator.ValidateForGeneration(world);
+        var content = DataAccess.GetAllContent();
+        return LearningWorldStructureValidator.ValidateForGeneration(world, content.ToList());
     }
     
     #endregion
