@@ -5,6 +5,7 @@ using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
+using Shared;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
@@ -119,5 +120,11 @@ public interface IBusinessLogic
     Task<UploadResponse> UploadLearningWorldToBackendAsync(string filepath, IProgress<int>? progress = null,
         CancellationToken? cancellationToken = null);
 
+    #endregion
+
+    #region LearningWorldStructureValidator
+    ValidationResult ValidateLearningWorldForExport(LearningWorld world);
+    ValidationResult ValidateLearningWorldForGeneration(LearningWorld world);
+    
     #endregion
 }
