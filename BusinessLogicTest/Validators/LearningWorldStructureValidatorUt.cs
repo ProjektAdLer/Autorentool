@@ -20,11 +20,25 @@ public class LearningWorldStructureValidatorUt
     public void SetUp()
     {
         _localizer = Substitute.For<IStringLocalizer<LearningWorldStructureValidator>>();
+
         _localizer[Arg.Any<string>(), Arg.Any<object[]>()]
-            .Returns(ci => new LocalizedString(ci.Arg<string>(), string.Join(" ", ci.Arg<object[]>() ?? Array.Empty<object>())));
+            .Returns(call =>
+            {
+                var key = call.Arg<string>();
+                var args = call.Arg<object[]>() ?? Array.Empty<object>();
+                return new LocalizedString(key, $"{key}: {string.Join(", ", args)}");
+            });
+
+        _localizer[Arg.Any<string>()]
+            .Returns(call =>
+            {
+                var key = call.Arg<string>();
+                return new LocalizedString(key, $"{key}: a");
+            });
 
         _validator = new LearningWorldStructureValidator(_localizer);
     }
+
     
     // ANF-ID: [ASN0001]
     [Test]
@@ -70,6 +84,9 @@ public class LearningWorldStructureValidatorUt
         var result = _validator.ValidateForExport(world, new List<ILearningContent>());
 
         Assert.That(result.Errors, Has.Count.EqualTo(3));
+        Assert.That(result.Errors[0], Is.EqualTo("<li>ErrorString.Missing.LearningContent.Message: a</li>"));
+        Assert.That(result.Errors[1], Is.EqualTo("<li>ErrorString.TaskReferencesNonexistantElement.Message: a</li>"));
+        Assert.That(result.Errors[2], Is.EqualTo("<li>ErrorString.TaskReferencesNonexistantContent.Message: a</li>"));
         Assert.That(result.IsValid, Is.False);
     }
     
@@ -143,6 +160,12 @@ public class LearningWorldStructureValidatorUt
         var result = _validator.ValidateForGeneration(world, new List<ILearningContent>());
 
         Assert.That(result.Errors.Count, Is.EqualTo(6));
+        Assert.That(result.Errors[0], Is.EqualTo("<li>ErrorString.Missing.LearningContent.Message: a</li>"));
+        Assert.That(result.Errors[1], Is.EqualTo("<li>ErrorString.Missing.LearningContent.Message: a</li>"));
+        Assert.That(result.Errors[2], Is.EqualTo("<li>ErrorString.TaskReferencesNonexistantElement.Message: a</li>"));
+        Assert.That(result.Errors[3], Is.EqualTo("<li>ErrorString.TaskReferencesNonexistantContent.Message: a</li>"));
+        Assert.That(result.Errors[4], Is.EqualTo("<li>ErrorString.Insufficient.Points.Message: </li>"));
+        Assert.That(result.Errors[5], Is.EqualTo("<li>ErrorString.Insufficient.Points.Message: </li>"));
         Assert.That(result.IsValid, Is.False);
     }
     
@@ -156,6 +179,7 @@ public class LearningWorldStructureValidatorUt
         var result = _validator.ValidateForGeneration(world, new List<ILearningContent>());
 
         Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors[0], Is.EqualTo("<li>ErrorString.Missing.LearningSpace.Message: a</li>"));
         Assert.That(result.IsValid, Is.False);
     }
     
