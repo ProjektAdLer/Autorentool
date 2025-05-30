@@ -10,11 +10,13 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel, INotifyPropertyChanged
 {
-    IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
+    IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
     ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
     TopicViewModel? AssignedTopic { get; set; }
     int Workload { get; }
     int Points { get; }
+    int NumberOfElements { get; }
+    int NumberOfRequiredElements { get; }
     int RequiredPoints { get; }
     SpaceTheme SpaceTheme { get; set; }
     new string Name { get; set; }

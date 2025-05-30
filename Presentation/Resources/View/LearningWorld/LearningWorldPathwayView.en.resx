@@ -39,6 +39,6 @@
         <value>Learning world overview - Learning pathway</value>
     </data>
     <data name="LearningWorldView.Condition.Text" xml:space="preserve">
-        <value>Closing condition (total):</value>
+        <value>Completion condition (total):</value>
     </data>
 </root>

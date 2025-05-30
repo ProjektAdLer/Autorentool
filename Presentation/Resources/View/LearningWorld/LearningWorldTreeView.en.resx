@@ -25,6 +25,6 @@
         <value>Learning world overview - Hierarchy</value>
     </data>
     <data name="LearningWorldTreeView.Condition.Text" xml:space="preserve">
-        <value>Closing condition (total):</value>
+        <value>Completion condition (total):</value>
     </data>
 </root>

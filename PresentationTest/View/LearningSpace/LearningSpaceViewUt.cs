@@ -92,12 +92,13 @@ public class LearningSpaceViewUt
     }
 
     [Test]
-    public void Render_LearningSpaceSet_RendersNameAndWorkload()
+    public void Render_LearningSpaceSet_RendersNameAndWorkloadAndCondition()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         learningSpace.Name.Returns("foobar");
         learningSpace.Workload.Returns(42);
-        learningSpace.Points.Returns(8);
+        learningSpace.NumberOfRequiredElements.Returns(8);
+        learningSpace.NumberOfElements.Returns(17);
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
@@ -108,7 +109,7 @@ public class LearningSpaceViewUt
             @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
         var spacePoints = systemUnderTest.Find("p.space-points");
         spacePoints.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17</p>");
     }
 
     [Test]
