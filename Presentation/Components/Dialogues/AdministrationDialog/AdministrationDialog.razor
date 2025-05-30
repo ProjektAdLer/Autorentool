@@ -14,17 +14,25 @@
             <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
                 <MudTabs Position="Position.Left" MinimumTabWidth="100px" Color="Color.Info"
                          TabPanelClass="bg-adlergrey-100">
-                    <MudTabPanel title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" Icon="@_moodle"
+                    <MudTabPanel title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" 
+                                 Icon="@_moodle"
                                  OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)"
-                                 Style="@GetTabPanelStyle(SideToShow.LoginDialog)"/>
-                    <MudTabPanel Icon="@_help" OnClick="() => ChangeActiveSide(SideToShow.Help)"
-                                 Style="@GetTabPanelStyle(SideToShow.Help)"/>
-                    <MudTabPanel Icon="@Icons.Material.Filled.Language" Class="text-adlerdarkblue"
+                                 Style="@GetTabPanelStyle(SideToShow.LoginDialog)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelOne.AdLerServer"]"/>
+                    <MudTabPanel Icon="@_help" 
+                                 OnClick="() => ChangeActiveSide(SideToShow.Help)"
+                                 Style="@GetTabPanelStyle(SideToShow.Help)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelTwo.Help"]"/>
+                    <MudTabPanel Icon="@Icons.Material.Filled.Language" 
+                                 Class="text-adlerdarkblue"
                                  OnClick="() => ChangeActiveSide(SideToShow.Language)"
-                                 Style="@GetTabPanelStyle(SideToShow.Language)"/>
-                    <MudTabPanel Icon="@Icons.Material.Filled.Archive" Class="text-adlerdarkblue"
+                                 Style="@GetTabPanelStyle(SideToShow.Language)" 
+                                 ToolTip="@Localizer["AdministrationDialog.PanelThree.Language"]"/>
+                    <MudTabPanel Icon="@Icons.Material.Filled.Unarchive" 
+                                 Class="text-adlerdarkblue"
                                  OnClick="() => ChangeActiveSide(SideToShow.Archive)"
-                                 Style="@GetTabPanelStyle(SideToShow.Archive)"/>
+                                 Style="@GetTabPanelStyle(SideToShow.Archive)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelFour.Archive"]"/>
                 </MudTabs>
             </MudPaper>
         </div>

@@ -196,10 +196,10 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
         <value>Change language</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Archive open learning world</value>
+        <value>Export learning world</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Archive learning world</value>
+        <value>Export learning world</value>
     </data>
     <data name="LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
         <value>Learning world successfully archived</value>

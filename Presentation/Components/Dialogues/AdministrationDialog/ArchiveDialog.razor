@@ -10,35 +10,60 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @inject ISnackbar Snackbar
-<div class="flex flex-col w-full">
+<div class="flex flex-col w-full gap-2">
     <p class="text-adlerheaderblue text-lg font-bold py-2 text-center cursor-default">
         @Localizer["DialogContent.LearningWorldArchive.Title"]
     </p>
-
-    <div class="flex flex-col md:flex-row gap-6 justify-center items-start px-4 py-4">
+    <div class="flex flex-row gap-2 justify-center items-center mr-2">
         <!-- ZIP-Export -->
-        <div class="flex flex-col items-center border rounded-xl p-4 shadow-md bg-white w-full md:w-1/2">
-            <h3 class="font-semibold text-base text-center mb-2">Lernwelt speichern (ZIP)</h3>
-            <p class="text-sm text-center mb-4 text-gray-600">Zur späteren Nutzung in dieser App. Diese Datei können Sie jederzeit erneut importieren.</p>
+        <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.ZIP.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.ZIP.Text"]
+                <MudTooltip Placement="Placement.Right"
+                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="text-xs">@Localizer["ArchiveDialog.ZIP.Tooltip.Text"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey-300 hover:text-adlerdarkblue">
+                        </MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </p>
             <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
                        OnClick="ExportLearningWorldToArchiveAsync"
                        title="@Localizer["ExportArchive.Hover"]"
                        Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-                <MudIcon Icon="@Icons.Material.Filled.Archive" Title="@Localizer["ExportArchive.Hover"]" Size="Size.Small"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.Unarchive" Title="@Localizer["ExportArchive.Hover"]" Size="Size.Small"></MudIcon>
                 <span class="pl-2 text-xs uppercase">@Localizer["DialogContent.LearningWorldArchive.Button"]</span>
             </MudButton>
         </div>
+        
+        <MudDivider DividerType="DividerType.FullWidth" Style="border-color: rgb(204,204,204)" Vertical="true" Light="true"></MudDivider>
 
         <!-- MBZ-Export -->
-        <div class="flex flex-col items-center border rounded-xl p-4 shadow-md bg-white w-full md:w-1/2">
-            <h3 class="font-semibold text-base text-center mb-2">Export für Moodle (MBZ)</h3>
-            <p class="text-sm text-center mb-4 text-gray-600">Erstellt eine Datei zum Hochladen in Moodle-Kurse.</p>
+        <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.MBZ.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.MBZ.Text"]
+                <MudTooltip Placement="Placement.Right"
+                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="text-xs">@Localizer["ArchiveDialog.Tooltip.Text"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey-300 hover:text-adlerdarkblue">
+                        </MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </p>
             <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
                        OnClick="ExportLearningWorldToMoodleAsync"
                        title="Exportiert die Lernwelt im Moodle-kompatiblen Format"
                        Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-                <MudIcon Icon="@Icons.Material.Filled.CloudUpload" Size="Size.Small"></MudIcon>
-                <span class="pl-2 text-xs uppercase">Für Moodle exportieren</span>
+                <MudIcon Icon="@Icons.Material.Filled.Unarchive" Size="Size.Small"></MudIcon>
+                <span class="pl-2 text-xs uppercase">@Localizer["ArchiveDialog.MBZ.Button"]</span>
             </MudButton>
         </div>
     </div>
