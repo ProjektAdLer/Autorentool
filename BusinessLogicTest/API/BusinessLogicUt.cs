@@ -947,6 +947,42 @@ public class BusinessLogicUt
 
         errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
+    
+    // ANF-ID: [ASN0001]
+    [Test]
+    public void ValidateLearningWorldStructureForExport_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForExport(world);
+
+        mockValidator.Received().ValidateForExport(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
+    
+    // ANF-ID: [ASN0001]
+    [Test]
+    public void ValidateLearningWorldStructureForGeneration_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForGeneration(world);
+
+        mockValidator.Received().ValidateForGeneration(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IApplicationConfiguration? fakeConfiguration = null,

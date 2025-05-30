@@ -200,6 +200,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
 
+    // ANF-ID: [ASN0001]
     [Test]
     public void ValidateForGeneration_AdaptivityReferencesElementInLaterSpace_ReturnsError()
     {
@@ -244,6 +245,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
     
+    // ANF-ID: [ASN0001]
     [Test]
     public void ValidateForGeneration_AdaptivityReferencesUnplacedElement_ReturnsError()
     {
