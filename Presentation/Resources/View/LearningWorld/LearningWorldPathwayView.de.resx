@@ -26,9 +26,6 @@
     <data name="LearningWorldView.Workload.Text" xml:space="preserve">
         <value>Arbeitsaufwand:</value>
     </data>
-    <data name="LearningWorldView.Points.Text" xml:space="preserve">
-        <value>Gesamtpunkte:</value>
-    </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
     </data>
@@ -50,10 +47,10 @@
     <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
         <value>Speichere Lernwelt</value>
     </data>
-    <data name="LearningWorldPathwayView.Points.Summary" xml:space="preserve">
-        <value> Pkt.</value>
-    </data>
     <data name="LearningWorldView.Title" xml:space="preserve">
         <value>Lernwelt-Übersicht - Lernpfade</value>
+    </data>
+    <data name="LearningWorldView.Condition.Text" xml:space="preserve">
+        <value>Abschlussbedingung (Gesamt):</value>
     </data>
 </root>

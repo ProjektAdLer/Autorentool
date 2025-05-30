@@ -17,6 +17,7 @@ public interface ILearningElementViewModel : IDisplayableLearningObject, INotify
     ElementModel ElementModel { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
+    bool IsRequired { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
     bool UnsavedChanges { get; set; }
