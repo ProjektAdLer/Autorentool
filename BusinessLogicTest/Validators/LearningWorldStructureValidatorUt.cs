@@ -91,7 +91,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
 
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_NoErrors_ReturnsEmptyResult()
     {
@@ -111,7 +111,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.True);
     }
 
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_ReturnsMultipleErrors()
     {
@@ -171,7 +171,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
 
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_EmptyWorld_ReturnsError()
     {
@@ -185,7 +185,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
 
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_TooManySpaces_ReturnsError()
     {
@@ -200,7 +200,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
 
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_AdaptivityReferencesElementInLaterSpace_ReturnsError()
     {
@@ -245,7 +245,7 @@ public class LearningWorldStructureValidatorUt
         Assert.That(result.IsValid, Is.False);
     }
     
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateForGeneration_AdaptivityReferencesUnplacedElement_ReturnsError()
     {

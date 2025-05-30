@@ -966,7 +966,7 @@ public class BusinessLogicUt
             list[0] == learningContentList[0])); 
     }
     
-    // ANF-ID: [ASN0001]
+    // ANF-ID: [AHO22]
     [Test]
     public void ValidateLearningWorldStructureForGeneration_CallsValidator()
     {
