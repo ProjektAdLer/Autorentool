@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using BusinessLogic.Entities.LearningContent.Story;
+using JetBrains.Annotations;
 using Shared.Theme;
 
 namespace BusinessLogic.Entities;
@@ -84,6 +85,10 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string StoryStart { get; set; }
     public string StoryEnd { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
+
+    public IEnumerable<ILearningElement> AllLearningElements =>
+        LearningSpaces.SelectMany(space => space.ContainedLearningElements)
+            .Concat(UnplacedLearningElements.Where(ele => ele.LearningContent is not StoryContent));
     public string SavePath { get; set; }
 
     public bool UnsavedChanges

@@ -21,6 +21,7 @@ public class ArchiveDialogUt
     public void SetUp()
     {
         _ctx = new TestContext();
+        _ctx.ComponentFactories.AddStub<MudPopover>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _localizer = Substitute.For<IStringLocalizer<ArchiveDialog>>();
         _logger = Substitute.For<ILogger<ArchiveDialog>>();

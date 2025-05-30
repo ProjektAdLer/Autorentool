@@ -7,11 +7,11 @@ using Microsoft.Extensions.Localization;
 namespace BusinessLogic.Validation.Validators;
 
 [UsedImplicitly]
-public class LearningWorldValidator : AbstractValidator<LearningWorld>
+public class LearningWorldPropertyValidator : AbstractValidator<LearningWorld>
 {
     private readonly ILearningWorldNamesProvider _learningWorldNamesProvider;
 
-    public LearningWorldValidator(ILearningWorldNamesProvider learningWorldNamesProvider, IStringLocalizer<LearningWorldValidator> localizer)
+    public LearningWorldPropertyValidator(ILearningWorldNamesProvider learningWorldNamesProvider, IStringLocalizer<LearningWorldPropertyValidator> localizer)
     {
         _learningWorldNamesProvider = learningWorldNamesProvider;
         RuleFor(x => x.Name)

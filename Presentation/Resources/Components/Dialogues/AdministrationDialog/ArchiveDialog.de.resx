@@ -19,12 +19,33 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Geöffnete Lernwelt archivieren</value>
+        <value>Lernwelt exportieren</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Lernwelt als ZIP-Datei archivieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei exportieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Lernwelt archivieren</value>
+        <value>Als ZIP exportieren</value>
+    </data>
+    <data name="ArchiveDialog.Tooltip.Text" xml:space="preserve">
+        <value>Über diesen Schritt können Sie die geöffnete Lernwelt im Moodle-kompatiblen Format exportieren.</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Text" xml:space="preserve">
+        <value>Erstellt eine Datei Ihrer geöffneten Lernwelt zum Hochladen in AdLer-Moodle-Kurse.</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Button" xml:space="preserve">
+        <value>Als MBZ exportieren</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Title" xml:space="preserve">
+        <value>...als MBZ-Datei</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Title" xml:space="preserve">
+        <value>...als ZIP-Datei</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Text" xml:space="preserve">
+        <value>Erstellt eine Datei Ihrer geöffneten Lernwelt zur späteren Wiederverwendung im AdLer-Autorentool.</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Tooltip.Text" xml:space="preserve">
+        <value>Diese ZIP-Datei können Sie jederzeit erneut importieren. Zudem ermöglicht das Speichern der Lernwelt als ZIP-Datei, das Wiederverwenden der Lernwelt auf anderen Endgeräten und zum Teilen mit anderen Personen.</value>
     </data>
 </root>

@@ -205,10 +205,10 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
         <value>Sprache ändern</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Geöffnete Lernwelt archivieren</value>
+        <value>Lernwelt exportieren</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Lernwelt archivieren</value>
+        <value>Lernwelt exportieren</value>
     </data>
     <data name="LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
         <value>Lernwelt erfolgreich archiviert</value>

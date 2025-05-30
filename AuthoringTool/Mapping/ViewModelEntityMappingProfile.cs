@@ -446,6 +446,7 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
@@ -498,6 +499,7 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)

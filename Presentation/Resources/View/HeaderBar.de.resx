@@ -72,15 +72,6 @@
     <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
         <value>Lernwelt ist ungültig</value>
     </data>
-    <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
-        <value>Diese Lernwelt enthält keine Lernräume.</value>
-    </data>
-    <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
-        <value>Lernraum &lt;b&gt;{0}&lt;/b&gt; enthält keine Lernelemente.</value>
-    </data>
-    <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
-        <value>Lernraum &lt;b&gt;{0}&lt;/b&gt; kann nicht abgeschlossen werden, da die Punkte nicht ausreichen. Aktuell sind die benötigten Punkte höher als die Gesamtpunkte.</value>
-    </data>
     <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
         <value>Du bist nicht angemeldet</value>
     </data>
@@ -93,18 +84,6 @@
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
         <value>Lernwelt {0} erfolgreich gespeichert</value>
     </data>
-    <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element, welches nicht in einem Raum platziert wurde.</value>
-    </data>
-    <data name="ErrorString.NoTasks.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; enthält keine Aufgaben.</value>
-    </data>
-    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
-    </data>
-    <data name="ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element &lt;b&gt;{2}&lt;/b&gt; in Lernraum &lt;b&gt;{1}&lt;/b&gt;. Da dieser Lernraum aber erst nach dem Raum, in dem Element &lt;b&gt;{0}&lt;/b&gt; platziert ist, freigeschaltet wird, ist diese Referenz nicht zulässig.</value>
-    </data>
     <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
         <value>Veröffentlichen erfolgreich</value>
     </data>
@@ -112,10 +91,10 @@
         <value>Ihre Lernwelt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
-        <value>Lernwelt archivieren (.zip)</value>
+        <value>Lernwelt exportieren (ZIP)</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Lernwelt als ZIP-Datei archivieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei exportieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>
@@ -129,16 +108,10 @@
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Hochladen der Lernwelt...</value>
     </data>
-    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
-        <value>Diese Lernwelt enthält mehr als 50 Lernräume.</value>
-    </data>
     <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
         <value>Lernwelt hochladen</value>
     </data>
-    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert externes Lernmaterial, welches nicht existiert</value>
-    </data>
-    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes externes Lernmaterial. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    <data name="LMS.Login.Hover" xml:space="preserve">
+        <value>Administration</value>
     </data>
 </root>

@@ -2853,6 +2853,40 @@ public class PresentationLogicUt
 
     [Test]
     // ANF-ID: [ASN0001]
+    public void ValidateLearningWorldForExport_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForExport(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForExport(mockWorld);
+    }
+    
+    [Test]
+    // ANF-ID: [AHO22]
+    public void ValidateLearningWorldForGeneration_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForGeneration(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForGeneration(mockWorld);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0001]
     public async Task ExportLearningWorldToArchive_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

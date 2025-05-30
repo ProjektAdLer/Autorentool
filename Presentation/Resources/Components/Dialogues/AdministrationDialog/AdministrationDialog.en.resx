@@ -17,4 +17,16 @@
     <data name="DialogContent.LeftSidebar.AdLerServer" xml:space="preserve">
         <value>AdLer server</value>
     </data>
+    <data name="AdministrationDialog.PanelTwo.Help" xml:space="preserve">
+        <value>Read more information</value>
+    </data>
+    <data name="AdministrationDialog.PanelThree.Language" xml:space="preserve">
+        <value>Change language</value>
+    </data>
+    <data name="AdministrationDialog.PanelOne.AdLerServer" xml:space="preserve">
+        <value>Login to AdLer server</value>
+    </data>
+    <data name="AdministrationDialog.PanelFour.Archive" xml:space="preserve">
+        <value>Export learning world</value>
+    </data>
 </root>

@@ -17,4 +17,7 @@
     <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
         <value />
     </data>
+    <data name="LMS.Login.Hover" xml:space="preserve">
+        <value />
+    </data>
 </root>

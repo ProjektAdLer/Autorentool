@@ -19,13 +19,13 @@ public class ValidationWrapperIt
     // ANF-ID: [AHO22]
     public async Task LearningWorld_WithLearningWorldValidator_ValidEntity_IsValidated()
     {
-        var localizer = Substitute.For<IStringLocalizer<LearningWorldValidator>>();
+        var localizer = Substitute.For<IStringLocalizer<LearningWorldPropertyValidator>>();
         localizer["LearningWorldValidator.Name.Duplicate"].Returns(new LocalizedString("en","Already in use."));
         localizer["LearningWorldValidator.Shortname.Duplicate"].Returns(new LocalizedString("en","Already in use."));
         localizer["LearningWorldValidator.Name.Valid"].Returns(new LocalizedString("en","Valid name."));
         localizer["LearningWorldValidator.Shortname.Valid"].Returns(new LocalizedString("en","Valid shortname."));
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
-        var validator = new LearningWorldValidator(namesProvider, localizer);
+        var validator = new LearningWorldPropertyValidator(namesProvider, localizer);
         var entity = EntityProvider.GetLearningWorld();
 
         var sut = GetSystemUnderTest(validator);
@@ -38,7 +38,7 @@ public class ValidationWrapperIt
     // ANF-ID: [AHO22]
     public async Task LearningWorld_WithLearningWorldValidator_InvalidEntity_GivesErrors()
     {
-        var localizer = Substitute.For<IStringLocalizer<LearningWorldValidator>>();
+        var localizer = Substitute.For<IStringLocalizer<LearningWorldPropertyValidator>>();
         localizer["LearningWorldValidator.Name.Duplicate"].Returns(new LocalizedString("en","Already in use."));
         localizer["LearningWorldValidator.Shortname.Duplicate"].Returns(new LocalizedString("en","Already in use."));
         localizer["LearningWorldValidator.Name.Valid"].Returns(new LocalizedString("en","Valid name."));
@@ -46,7 +46,7 @@ public class ValidationWrapperIt
         var namesProvider = Substitute.For<ILearningWorldNamesProvider>();
         namesProvider.WorldNames.Returns(new[] { (new Guid(), "a") });
         namesProvider.WorldShortnames.Returns(new[] { (new Guid(), "b") });
-        var validator = new LearningWorldValidator(namesProvider, localizer);
+        var validator = new LearningWorldPropertyValidator(namesProvider, localizer);
         var entity = EntityProvider.GetLearningWorld();
 
         var sut = GetSystemUnderTest(validator);
