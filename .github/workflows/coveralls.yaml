@@ -43,7 +43,7 @@ jobs:
 
       - name: Run automated unit and integration tests
         run: dotnet test
-  
+
   build:
     runs-on: windows-latest
     env:
@@ -62,7 +62,7 @@ jobs:
           - PresentationTest
           - SharedTest
           - H5pPlayer/H5pPlayerTest
-    
+
     steps:
       # checkout the repo
       - uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
       # build only the specific test project we are testing   
       - name: Build test project
         run: dotnet build ${{ matrix.test_project }}
-      
+
       # run test with coverage collection
       - name: Run ${{ matrix.test_project }} tests
         run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
@@ -110,7 +110,7 @@ jobs:
         with:
           parallel-finished: true
           carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest, run-H5pPlayerTest"
-  
+
   send-summary:
     runs-on: ubuntu-latest
     if: ${{ always() }}
