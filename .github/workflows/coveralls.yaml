@@ -82,23 +82,19 @@ jobs:
       # run test with coverage collection
       - name: Run ${{ matrix.test_project }} tests
         run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
-
-      - name: Install coveralls.net
+        
+      - name: Install Coveralls.net global
         run: dotnet tool install --global coveralls.net
-
-      - name: Add dotnet tools to PATH (Windows)
+  
+      - name: .NET Tools-Pfad setzen (Windows)
+        if: runner.os == 'Windows'
         shell: pwsh
-        run: |
-          echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
-      
-      - name: Upload coverage to Coveralls (manual)
-        shell: pwsh
-        run: |
-          $coverageFile = Get-ChildItem "${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml" -Recurse | Select -ExpandProperty FullName
-          echo "Found coverage file at: $coverageFile"
-          dotnet tool run coveralls.net --repoToken ${{ secrets.COVERALLS_REPO_TOKEN }} --input "$coverageFile" --format cobertura --useRelativePaths
-
-
+        run: Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools`n"
+  
+      - name: Coverage an Coveralls.io senden
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: csmacnz.Coveralls --input "${{ matrix.test_project }}/TestResults/coverage.cobertura.xml" --format cobertura --useRelativePaths
 
 
   finish:
