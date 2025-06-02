@@ -15,7 +15,7 @@ jobs:
   test-platforms:
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
+      matrix:f
         os: [ubuntu-22.04, windows-latest, macos-latest]
     env:
       dotNetVersion: net9.0
@@ -93,7 +93,7 @@ jobs:
       
       # submit result from parallel to coveralls
       - name: Coveralls Parallel
-        uses: coverallsapp/github-action@v2.3.0
+        uses: coverallsapp/github-action@v2.3.6
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
@@ -106,7 +106,7 @@ jobs:
     steps:
       # tell coveralls we are done with this run
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2.3.0
+        uses: coverallsapp/github-action@v2.3.6
         with:
           parallel-finished: true
           carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest, run-H5pPlayerTest"
