@@ -92,9 +92,13 @@ jobs:
         run: Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools`n"
   
       - name: Coverage an Coveralls.io senden
+        shell: pwsh
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: csmacnz.Coveralls --input "${{ matrix.test_project }}/TestResults/coverage.cobertura.xml" --format cobertura --useRelativePaths
+        run: |
+          $coverageFile = Get-ChildItem "${{ matrix.test_project }}\TestResults\*\coverage.opencover.xml" -Recurse | Select -ExpandProperty FullName
+          echo "Found: $coverageFile"
+          csmacnz.Coveralls --opencover -i "$coverageFile" --useRelativePaths
 
 
   finish:
