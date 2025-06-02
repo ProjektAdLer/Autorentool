@@ -58,6 +58,18 @@
                                      Variant="Variant.Outlined"
                                      Margin="Margin.Dense"/>
                 </div>
+                <div class="px-6">
+                    <p class="text-xs pt-3">
+                        Abzuschließende Lern- und Adaptivitätselemente
+                        @SpaceToEdit.NumberOfRequiredElements / @SpaceToEdit.NumberOfElements El.:
+                    </p>
+                    <ul Class="pb-2 pl-2 mt-0 border-2 border-adlergrey-700 rounded-lg w-full list-disc list-inside">
+                        @foreach (var leName in SpaceToEdit.ContainedLearningElements.Where(x => x.IsRequired).Select(x => x.Name).ToList())
+                        {
+                            <li class="text-xs pt-1">@leName</li>
+                        }
+                    </ul>
+                </div>
             </Collapsable>
 
             <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.FloorPlan.Title"]
