@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>cobertura</Format>          
+          <Format>opencover</Format>          
           <Exclude>[ElectronWrapper*]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest*]*,[TestHelpers*]*,[PresentationTest*]*</Exclude> <!-- [Assembly-Filter]Type-Filter -->
           <Include>[AuthoringTool*]*,[BackendAccess*]*,[BusinessLogic*]*,[DataAccess*]*,[Generator*]*,[PersistEntities*]*,[Presentation*]*,[Shared*]*</Include> <!-- [Assembly-Filter]Type-Filter -->
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
