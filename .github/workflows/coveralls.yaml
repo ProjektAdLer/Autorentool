@@ -96,7 +96,8 @@ jobs:
         run: |
           $coverageFile = Get-ChildItem "${{ matrix.test_project }}\TestResults\*\coverage.cobertura.xml" -Recurse | Select -ExpandProperty FullName
           echo "Found coverage file at: $coverageFile"
-          coveralls.net --repoToken ${{ secrets.COVERALLS_REPO_TOKEN }} --input "$coverageFile" --format cobertura --useRelativePaths
+          & "$env:USERPROFILE\.dotnet\tools\coveralls.net" --repoToken ${{ secrets.COVERALLS_REPO_TOKEN }} --input "$coverageFile" --format cobertura --useRelativePaths
+
 
 
   finish:
