@@ -1,15 +1,20 @@
+using System;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components.Dialogues.AdministrationDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Shared;
+using Shared.Exceptions;
+using TestHelpers;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.Dialogues.AdministrationDialog;
@@ -75,5 +80,111 @@ public class ArchiveDialogUt
 
         var exportButton = systemUnderTest.FindComponent<MudButton>();
         Assert.That(exportButton.Instance.Disabled, Is.True);
+    }
+
+    [Test]
+    public void ClickExport_LearningWorldIsNotNull_CallsExportToZipArchive()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[0].Click();
+        _presentationLogic.Received().ExportLearningWorldToZipArchiveAsync(world);
+    }
+    
+    [Test]
+    public void ClickExport_OperationCanceled_Throws()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _presentationLogic.ExportLearningWorldToZipArchiveAsync(world).Throws<OperationCanceledException>();
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[0].Click();
+        _snackbar.Received().Add(Arg.Any<string>(), Severity.Warning);
+    }
+    
+    [Test]
+    public void ClickExport_Zip_LearningWorldIsNotValid_CallsErrorService()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult()
+        {
+            Errors = { "<li>Error 1</li>", "<li>Error 2</li>" }
+        });
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[0].Click();
+        _presentationLogic.DidNotReceive().ExportLearningWorldToZipArchiveAsync(world);
+        _errorService.Received().SetError(null!, "<li>Error 1</li><li>Error 2</li>");
+    }
+    
+    [Test]
+    public void ClickExport_LearningWorldIsNotNull_CallsExportToMoodleArchive()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[1].Click();
+        _presentationLogic.Received().ExportLearningWorldToMoodleArchiveAsync(world);
+    }
+    
+    [Test]
+    public void ClickExport_Moodle_OperationCanceled_Throws()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _presentationLogic.ExportLearningWorldToMoodleArchiveAsync(world).Throws<OperationCanceledException>();
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[1].Click();
+        _snackbar.Received().Add(Arg.Any<string>(), Severity.Warning);
+    }
+    
+    [Test]
+    public void ClickExport_Moodle_GeneratorException_Throws()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _presentationLogic.ExportLearningWorldToMoodleArchiveAsync(world).Throws<GeneratorException>();
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[1].Click();
+        _errorService.Received().SetError("An Error has occured during creation of a Backup File", Arg.Any<string>());
+    }
+    
+    [Test]
+    public void ClickExport_Moodle_Exception_Throws()
+    {
+        var world = ViewModelProvider.GetLearningWorld();
+        _presentationLogic.ValidateLearningWorldForExport(world).Returns(new ValidationResult());
+        _presentationLogic.ExportLearningWorldToMoodleArchiveAsync(world).Throws<Exception>();
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        
+        var systemUnderTest = _ctx.RenderComponent<ArchiveDialog>();
+        var exportButtons = systemUnderTest.FindAll("button");
+        
+        exportButtons[1].Click();
+        _errorService.Received().SetError(Arg.Any<Exception>());
     }
 }
