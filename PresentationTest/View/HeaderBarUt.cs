@@ -132,6 +132,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
@@ -166,6 +167,23 @@ public class HeaderBarUt
     }
 
     [Test]
+    public void ExportButton_Clicked_LearningWorldIsNotValidForGeneration_ErrorServiceCalled()
+    {
+        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
+        _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult()
+        {
+            Errors = { "<li>Error 1</li>", "<li>Error 2</li>" }
+        });
+        var systemUnderTest = GetRenderedComponent();
+
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
+        button.Click();
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", 
+            "<li>Error 1</li><li>Error 2</li>");
+    }
+
+    [Test]
     public void ExportButton_Clicked_ConstructBackupThrowsOperationCanceledException_SnackbarWarningAdded()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
@@ -175,6 +193,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
@@ -205,6 +224,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
             {element.LearningContent });
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -297,6 +317,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         var lmsWorldList = new List<LmsWorldViewModel>
             { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
         _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
@@ -335,6 +356,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         var lmsWorldList = new List<LmsWorldViewModel>
             { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
         _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
