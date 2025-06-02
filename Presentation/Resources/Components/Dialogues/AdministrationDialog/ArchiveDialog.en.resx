@@ -41,4 +41,7 @@
     <data name="ArchiveDialog.ZIP.Tooltip.Text" xml:space="preserve">
         <value>You can import this ZIP file again at any time. Saving the learning world as a ZIP file also allows you to reuse the learning world on other devices and share it with other people.</value>
     </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Learning world is not valid</value>
+    </data>
 </root>

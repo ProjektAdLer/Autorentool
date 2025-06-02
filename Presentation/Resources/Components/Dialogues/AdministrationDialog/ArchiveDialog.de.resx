@@ -48,4 +48,7 @@
     <data name="ArchiveDialog.ZIP.Tooltip.Text" xml:space="preserve">
         <value>Diese ZIP-Datei können Sie jederzeit erneut importieren. Zudem ermöglicht das Speichern der Lernwelt als ZIP-Datei, das Wiederverwenden der Lernwelt auf anderen Endgeräten und zum Teilen mit anderen Personen.</value>
     </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Lernwelt ist ungültig</value>
+    </data>
 </root>

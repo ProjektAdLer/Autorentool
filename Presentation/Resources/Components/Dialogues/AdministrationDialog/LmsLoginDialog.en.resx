@@ -213,7 +213,4 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant element. Plase check the element references you have set in this element.</value>
     </data>
-    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
-        <value>Learning world is not valid</value>
-    </data>
 </root>

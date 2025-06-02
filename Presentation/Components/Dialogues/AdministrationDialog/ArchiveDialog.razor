@@ -32,7 +32,7 @@
                 </MudTooltip>
             </p>
             <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
-                       OnClick="ExportLearningWorldToArchiveAsync"
+                       OnClick="ExportLearningWorldToZipArchiveAsync"
                        title="@Localizer["ExportArchive.Hover"]"
                        Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
                 <MudIcon Icon="@Icons.Material.Filled.Unarchive" Title="@Localizer["ExportArchive.Hover"]" Size="Size.Small"></MudIcon>
@@ -59,7 +59,7 @@
                 </MudTooltip>
             </p>
             <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
-                       OnClick="ExportLearningWorldToMoodleAsync"
+                       OnClick="ExportLearningWorldToMoodleArchiveAsync"
                        title="Exportiert die Lernwelt im Moodle-kompatiblen Format"
                        Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
                 <MudIcon Icon="@Icons.Material.Filled.Unarchive" Size="Size.Small"></MudIcon>
@@ -86,95 +86,26 @@
 
     [Inject, AllowNull] internal IErrorService ErrorService { get; set; }
 
-    private async Task ExportLearningWorldToArchiveAsync()
+    private async Task ExportLearningWorldToZipArchiveAsync()
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
-        if (IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld))
-        {
-            await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
-            Snackbar.Add(@Localizer["LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);
-        }
+        if (!IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld)) return;
+        
+        await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
+        Snackbar.Add(@Localizer["LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);
+        
     }
 
-    private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel? learningWorld)
+    private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel learningWorld)
     {
-        if (learningWorld is null) return false;
-
-        var errors = new List<string>();
-
-        foreach (var space in learningWorld.LearningSpaces)
-        {
-            foreach (var element in space.ContainedLearningElements)
-            {
-                if (element.LearningContent is not (IFileContentViewModel or ILinkContentViewModel))
-                    continue;
-
-                if (!PresentationLogic.GetAllContent().Contains(element.LearningContent))
-                {
-                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
-                }
-            }
-        }
-
-        foreach (var (adaptivityContent, learningElement) in learningWorld.AllLearningElements
-                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
-        {
-            if (TaskReferencesNonExistentElement(adaptivityContent, learningWorld))
-            {
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
-            }
-
-            if (TaskReferencesNonExistentContent(adaptivityContent, learningWorld))
-            {
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
-            }
-        }
-
-        if (!errors.Any()) return true;
-
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
+        var validationResult = PresentationLogic.ValidateLearningWorldForExport(learningWorld);
+        if (validationResult.IsValid) return true;
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", validationResult.Errors);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], string.Join("", validationResult.Errors));
         return false;
     }
 
-    private static bool TaskReferencesNonExistentElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
-        return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
-    }
-
-    private bool TaskReferencesNonExistentContent(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var contentReferencedByAdaptivityContent = GetContentReferencesByAdaptivityContent(adaptivityContent);
-        return contentReferencedByAdaptivityContent.Any(adaContent => !PresentationLogic.GetAllContent().Contains(adaContent));
-    }
-
-    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ElementReferenceActionViewModel)
-                    .Cast<ElementReferenceActionViewModel>()
-                    .Select(action => action.ElementId)));
-    }
-
-    private static IEnumerable<ILearningContentViewModel> GetContentReferencesByAdaptivityContent(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ContentReferenceActionViewModel)
-                    .Cast<ContentReferenceActionViewModel>()
-                    .Select(action => action.Content)));
-    }
-
-    private Task ExportLearningWorldToMoodleAsync()
+    private Task ExportLearningWorldToMoodleArchiveAsync()
     {
         return Task.CompletedTask;
     }
