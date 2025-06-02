@@ -90,10 +90,16 @@
     {
         if (SelectedViewModelsProvider.LearningWorld is null) return;
         if (!IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld)) return;
-        
-        await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
-        Snackbar.Add(@Localizer["LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);
-        
+
+        try
+        {
+            await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);    
+        }
+        catch (OperationCanceledException)
+        {
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar"], Severity.Warning);  
+        }
     }
 
     private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel learningWorld)

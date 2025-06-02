@@ -44,4 +44,10 @@
     <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
         <value>Learning world is not valid</value>
     </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
+        <value>Learning world successfully archived</value>
+    </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar" xml:space="preserve">
+        <value>Export canceled</value>
+    </data>
 </root>

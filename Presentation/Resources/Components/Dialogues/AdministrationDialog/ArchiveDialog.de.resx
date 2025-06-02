@@ -51,4 +51,10 @@
     <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
         <value>Lernwelt ist ungültig</value>
     </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
+        <value>Lernwelt erfolgreich archiviert</value>
+    </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar" xml:space="preserve">
+        <value>Export abgebrochen</value>
+    </data>
 </root>

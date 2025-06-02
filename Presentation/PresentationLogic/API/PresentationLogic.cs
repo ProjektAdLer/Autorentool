@@ -1149,6 +1149,7 @@ public class PresentationLogic : IPresentationLogic
         catch (OperationCanceledException)
         {
             Logger.LogInformation("Export to archive canceled by user");
+            throw;
         }
     }
 

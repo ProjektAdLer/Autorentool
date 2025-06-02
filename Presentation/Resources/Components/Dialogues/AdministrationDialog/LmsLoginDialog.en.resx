@@ -201,9 +201,6 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
         <value>Export learning world</value>
     </data>
-    <data name="LmsLoginDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
-        <value>Learning world successfully archived</value>
-    </data>
     <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
         <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>
     </data>
