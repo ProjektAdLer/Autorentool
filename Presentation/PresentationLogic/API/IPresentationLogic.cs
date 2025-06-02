@@ -617,7 +617,8 @@ public interface IPresentationLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
-    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToZipArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world);
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
     IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
     void DeleteLearningWorldByPath(string savePath);

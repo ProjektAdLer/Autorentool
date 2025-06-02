@@ -1134,7 +1134,7 @@ public class PresentationLogic : IPresentationLogic
         return BusinessLogic.ValidateLearningWorldForGeneration(worldEntity);
     }
 
-    public async Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world)
+    public async Task ExportLearningWorldToZipArchiveAsync(ILearningWorldViewModel world)
     {
         ElectronCheck();
         try
@@ -1149,6 +1149,23 @@ public class PresentationLogic : IPresentationLogic
         catch (OperationCanceledException)
         {
             Logger.LogInformation("Export to archive canceled by user");
+            throw;
+        }
+    }
+    
+    public async Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world)
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowSaveAsDialogAsync("Archive export path",
+                fileFilters: new[] { new FileFilterProxy("Moodle archive", new[] { "mbz" }) }
+            );
+            BusinessLogic.ConstructBackup(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world), pathToArchive);
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Export to moodle archive canceled by user");
             throw;
         }
     }

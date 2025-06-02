@@ -6,6 +6,7 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+- New button for export learning world as a mbz file.
 
 ### Changed
 

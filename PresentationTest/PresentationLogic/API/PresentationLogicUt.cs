@@ -2904,7 +2904,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             serviceProvider: serviceProvider.BuildServiceProvider());
         systemUnderTest.RunningElectron.Returns(true);
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        await systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm);
         mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
         await mockBusinessLogic.Received().ExportLearningWorldToArchiveAsync(mockWorldEntity, pathToArchive);
     }
@@ -2924,7 +2924,7 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
         systemUnderTest.RunningElectron.Returns(true);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm).Throws(new OperationCanceledException("User cancelled"));;
 
         await mockBusinessLogic.DidNotReceive()
             .ExportLearningWorldToArchiveAsync(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
