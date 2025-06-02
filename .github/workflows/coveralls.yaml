@@ -82,6 +82,13 @@ jobs:
       # run test with coverage collection
       - name: Run ${{ matrix.test_project }} tests
         run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+
+      - name: Install coveralls.net
+        run: dotnet tool install --global coveralls.net
+
+      - name: Add dotnet tools to PATH
+        run: echo "${{ runner.tool_cache }}/dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        shell: pwsh
       
       - name: Upload coverage to Coveralls (manual)
         shell: pwsh
