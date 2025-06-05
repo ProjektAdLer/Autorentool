@@ -24,4 +24,16 @@
     <data name="DialogContent.LeftSidebar.AdLerServer" xml:space="preserve">
         <value>AdLer-Server</value>
     </data>
+    <data name="AdministrationDialog.PanelOne.AdLerServer" xml:space="preserve">
+        <value>Auf dem AdLer-Server anmelden</value>
+    </data>
+    <data name="AdministrationDialog.PanelTwo.Help" xml:space="preserve">
+        <value>Weitere Informationen abrufen</value>
+    </data>
+    <data name="AdministrationDialog.PanelThree.Language" xml:space="preserve">
+        <value>Sprache wechseln</value>
+    </data>
+    <data name="AdministrationDialog.PanelFour.Archive" xml:space="preserve">
+        <value>Lernwelt exportieren</value>
+    </data>
 </root>

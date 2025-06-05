@@ -617,7 +617,8 @@ public interface IPresentationLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
-    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToZipArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world);
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
     IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
     void DeleteLearningWorldByPath(string savePath);
@@ -699,4 +700,24 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
+
+    /// <summary>
+    /// Validates a <see cref="LearningWorldViewModel"/> instance to determine whether it is suitable for export.
+    /// </summary>
+    /// <param name="worldVm">The view model representing the learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
+    ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel worldVm);
+
+
+    /// <summary>
+    /// Validates a <see cref="LearningWorldViewModel"/> instance to determine whether it meets all requirements for generation.
+    /// Validation includes structural integrity, learning space definitions, content references, and adaptivity rules.
+    /// </summary>
+    /// <param name="worldVm">The view model representing the learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
+    ValidationResult ValidateLearningWorldForGeneration(ILearningWorldViewModel worldVm);
 }

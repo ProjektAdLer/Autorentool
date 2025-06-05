@@ -21,6 +21,7 @@ public class AdministrationDialogIt : MudDialogTestFixture<
         Context.ComponentFactories.AddStub<HelpDialog>();
         Context.ComponentFactories.AddStub<LanguageDialog>();
         Context.ComponentFactories.AddStub<ArchiveDialog>();
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     [Test]
@@ -54,7 +55,7 @@ public class AdministrationDialogIt : MudDialogTestFixture<
             Assert.That(tabs[2].Instance, Is.Not.Null);
             Assert.That(tabs[2].Instance.Icon, Is.EqualTo(Icons.Material.Filled.Language));
             Assert.That(tabs[3].Instance, Is.Not.Null);
-            Assert.That(tabs[3].Instance.Icon, Is.EqualTo(Icons.Material.Filled.Archive));
+            Assert.That(tabs[3].Instance.Icon, Is.EqualTo(Icons.Material.Filled.Unarchive));
         });
     }
 

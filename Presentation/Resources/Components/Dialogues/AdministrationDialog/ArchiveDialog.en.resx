@@ -12,12 +12,42 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Archive learning world</value>
+        <value>Export as ZIP</value>
     </data>
     <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Archive open learning world</value>
+        <value>Export learning world</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Archive the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
+        <value>Exportieren the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
+    </data>
+    <data name="ArchiveDialog.Tooltip.Text" xml:space="preserve">
+        <value>This step allows you to export the open learning world in a Moodle-compatible format.</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Text" xml:space="preserve">
+        <value>Creates a file of your open learning world for uploading to AdLer Moodle courses.</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Button" xml:space="preserve">
+        <value>Export as MBZ</value>
+    </data>
+    <data name="ArchiveDialog.MBZ.Title" xml:space="preserve">
+        <value>...as MBZ file</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Title" xml:space="preserve">
+        <value>...as ZIP file</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Text" xml:space="preserve">
+        <value>Creates a file of your open learning world for later reuse in the AdLer authoring tool.</value>
+    </data>
+    <data name="ArchiveDialog.ZIP.Tooltip.Text" xml:space="preserve">
+        <value>You can import this ZIP file again at any time. Saving the learning world as a ZIP file also allows you to reuse the learning world on other devices and share it with other people.</value>
+    </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Learning world is not valid</value>
+    </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Success.Snackbar" xml:space="preserve">
+        <value>Learning world successfully archived</value>
+    </data>
+    <data name="ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar" xml:space="preserve">
+        <value>Export canceled</value>
     </data>
 </root>
