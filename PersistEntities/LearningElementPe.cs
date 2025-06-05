@@ -79,6 +79,9 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     {
         if (Id == Guid.Empty)
             Id = Guid.NewGuid();
+        if (ElementModelHelper.IsObsolete(ElementModel))
+        {
+            ElementModel = ElementModelHelper.GetAlternateValue(ElementModel);
+        }
     }
-    
 }

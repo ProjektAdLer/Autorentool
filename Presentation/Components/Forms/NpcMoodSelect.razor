@@ -1,0 +1,67 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Shared
+@using MudBlazor.Utilities
+@inherits MudBaseInput<NpcMood>
+<div>
+    <p class="text-xs font-bold">@Localizer["NpcMoodSelect.Header.Text"]</p>
+    <div class="flex gap-4 items-center space-x-4 cursor-default">
+        <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Delay="150" Duration="250"
+                    Arrow="true">
+            <ChildContent>
+                <div style="width: 100%; height: auto; aspect-ratio: 1/1; overflow: hidden;">
+                    <MudImage Src="@NpcMoodPreviewHandler.GetIconForNpcAndMood(ElementModel, Value)"
+                              Width="60"
+                              Style="transform: scale(1.7); transform-origin: center top"/>
+                </div>
+            </ChildContent>
+
+            <TooltipContent>
+                <div class="flex flex-col gap-2 justify-center items-center w-56 h-64">
+                    <MudText>@Localizer["NpcMoodSelect.Preview.Title"]</MudText>
+                    <MudImage Src="@NpcMoodPreviewHandler.GetIconForNpcAndMood(ElementModel, Value)"
+                              Width="180"></MudImage>
+                </div>
+            </TooltipContent>
+        </MudTooltip>
+        <MudSelect T="NpcMood" 
+                   ValueChanged="async mood => await OnItemClick(mood)" 
+                   Value="Value"
+                   Label="@Localizer["NpcMoodSelect.MoodSelect.Label"]" 
+                   Variant="Variant.Outlined"
+                   Dense="true"
+                   Margin="Margin.Dense">
+            @foreach (var npcMood in Enum.GetValues(typeof(NpcMood)).Cast<NpcMood>())
+            {
+                <MudSelectItem T="NpcMood" Value="@(npcMood)"
+                               Class="@BuildListItemCss(npcMood)">@NpcMoodHelper.Localize(npcMood)</MudSelectItem>
+            }
+        </MudSelect>
+    </div>
+</div>
+
+@code {
+
+    [Parameter, EditorRequired] public ElementModel ElementModel { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
+    internal IStringLocalizer<NpcMoodSelect> Localizer { get; set; }
+
+    private async Task OnItemClick(NpcMood npcMood)
+    {
+        await SetValueAsync(npcMood);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string BuildListItemCss(NpcMood npcMood)
+    {
+        var isSelected = npcMood == Value;
+        return new CssBuilder()
+            .AddClass("bg-adlerblue-300", isSelected)
+            .AddClass("hover:bg-adlergrey-100", !isSelected)
+            .Build();
+    }
+
+
+}
+

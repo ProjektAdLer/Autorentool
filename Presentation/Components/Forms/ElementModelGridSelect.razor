@@ -11,7 +11,7 @@
         <MudListItem Value="@(elementModel)"
                      Class="@BuildListItemCss(elementModel)"
                      OnClick="async () => await OnItemClick(elementModel)">
-            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Right" Delay="150" Duration="250" Arrow="true">
+            <MudTooltip Class="bg-adlergrey-200 shadow-xl" Placement="Placement.Top" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
                     <img class="inset-0 w-full drop-shadow-xl p-0"
                          src="@ElementModelHandler.GetIconForElementModel(elementModel)"
