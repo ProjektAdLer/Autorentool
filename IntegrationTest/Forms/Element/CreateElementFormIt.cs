@@ -345,7 +345,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
             TimeSpan.FromSeconds(2));
         Assert.That(FormModel.ElementModel, Is.EqualTo(ElementModel.l_random));
         Assert.That(FormModel.Workload, Is.EqualTo(123));
-        Assert.That(FormModel.Points, Is.EqualTo(123));
+        Assert.That(FormModel.Points, Is.EqualTo(0));
         systemUnderTest.WaitForAssertion(
             () => Assert.That(FormModel.LearningContent, Is.EqualTo(LearningContentFormModels[0])),
             TimeSpan.FromSeconds(2));
@@ -356,6 +356,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         var mudTextFields = systemUnderTest.FindComponents<MudTextField<string>>();
         var mudNumericFields = systemUnderTest.FindComponents<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<LearningElementDifficultyEnum>>();
+        var mudSwitch = systemUnderTest.FindComponent<MudSwitch<bool>>();
 
         var editContentButton = systemUnderTest.FindComponents<MudIconButton>();
         editContentButton[1].Find("button").Click();
@@ -364,7 +365,7 @@ public class CreateElementFormIt : MudFormTestFixture<CreateElementForm, Learnin
         mudTextFields[1].Find("textarea").Change(Expected);
         mudTextFields[2].Find("textarea").Change(Expected);
         mudNumericFields[0].Find("input").Change(123);
-        mudNumericFields[1].Find("input").Change(123);
+        mudSwitch.Find("input").Change(true);
         mudSelect.Find("div.mud-input-control").MouseDown();
         popover.Render();
         popover.WaitForElements("div.mud-list-item", TimeSpan.FromSeconds(2))[2].Click();
