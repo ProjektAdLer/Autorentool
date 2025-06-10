@@ -132,6 +132,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
@@ -166,170 +167,20 @@ public class HeaderBarUt
     }
 
     [Test]
-    public void ExportButton_Clicked_WorldHasNoSpaces_ErrorServiceCalled()
+    public void ExportButton_Clicked_LearningWorldIsNotValidForGeneration_ErrorServiceCalled()
     {
         var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult()
+        {
+            Errors = { "<li>Error 1</li>", "<li>Error 2</li>" }
+        });
         var systemUnderTest = GetRenderedComponent();
 
         var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
-        
-        var errors = new List<string>();
-        
-        errors.Add("<li> ErrorString.Missing.LearningSpace.Message </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
-    }
-
-    [Test]
-    public void ExportButton_Clicked_WorldSpaceHasNoElementsAndInsufficientPointsAndLearningContentNotExistsInDirectory_ErrorServiceCalled()
-    {
-        var world = new LearningWorldViewModel("a", "f", "d", "e", "f", "d",WorldTheme.CampusAschaffenburg, "h", "i", "j", "k");
-        var space1 = new LearningSpaceViewModel("a", "f", SpaceTheme.LearningArea, 2);
-        var space2 = new LearningSpaceViewModel("ah", "fi", SpaceTheme.LearningArea, 3);
-        var element1 = new LearningElementViewModel("a", ViewModelProvider.GetFileContent(), "s", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.l_h5p_blackboard_1, points: 1);
-        space1.LearningSpaceLayout.LearningElements.Add(0, element1);
-        world.LearningSpaces.Add(space1);
-        world.LearningSpaces.Add(space2);
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        button.Click();
-        
-        var errors = new List<string>();
-        
-        errors.Add($"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>");
-        errors.Add($"<li> ErrorString.Missing.LearningContent.Message {element1.Name} </li>");
-        errors.Add($"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>");
-        errors.Add($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
-    }
-
-    [Test]
-    public async Task ExportButton_Clicked_AdaptivityContentWithNoTasks_ErrorServiceCalled()
-    {
-        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
-        var space = world.LearningSpaces.First();
-        var element = space.LearningSpaceLayout.LearningElements.First().Value;
-        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
-        element.LearningContent = adaptivityContent;
-        adaptivityContent.Tasks.Clear();
-
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        await button.ClickAsync(new MouseEventArgs());
-        
-        var errors = new List<string>();
-        
-        errors.Add($"<li> ErrorString.NoTasks.Message {element.Name} </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
-    }
-
-    [Test]
-    public async Task ExportButton_Clicked_AdaptivityContentReferencesNonExistantElement_ErrorServiceCalled()
-    {
-        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
-        var space = world.LearningSpaces.First();
-        var element = space.LearningSpaceLayout.LearningElements.First().Value;
-        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
-        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
-            new ElementReferenceActionViewModel(Guid.NewGuid(), "foobar");
-        element.LearningContent = adaptivityContent;
-
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        await button.ClickAsync(new MouseEventArgs());
-        
-        var errors = new List<string>();
-        
-        errors.Add($"<li> ErrorString.TaskReferencesNonexistantElement.Message {element.Name} </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
-    }
-
-    [Test]
-    public async Task ExportButton_Clicked_AdaptivityContentReferencesUnplacedElement_ErrorServiceCalled()
-    {
-        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
-        var space = world.LearningSpaces.First();
-        var element = space.LearningSpaceLayout.LearningElements.First().Value;
-        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
-        var unplacedElement = ViewModelProvider.GetLearningElement();
-        world.UnplacedLearningElements.Add(unplacedElement);
-        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
-            new ElementReferenceActionViewModel(unplacedElement.Id, "foobar");
-        element.LearningContent = adaptivityContent;
-
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        await button.ClickAsync(new MouseEventArgs());
-        
-        var errors = new List<string>();
-        
-        errors.Add($"<li> ErrorString.TaskReferencesUnplacedElement.Message {element.Name} </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
-    }
-
-    [Test]
-    public async Task ExportButton_Clicked_AdaptivityContentReferencesElementInSpaceAfterOwnSpace_ErrorServiceCalled()
-    {
-        var world = ViewModelProvider.GetLearningWorldWithSpaceWithElement();
-        var space = world.LearningSpaces.First();
-        var element = space.LearningSpaceLayout.LearningElements.First().Value;
-        var adaptivityContent = ViewModelProvider.GetAdaptivityContent();
-        var laterElement = ViewModelProvider.GetLearningElement();
-        laterElement.Points = 777;
-        var laterSpace = ViewModelProvider.GetLearningSpace();
-        laterSpace.LearningSpaceLayout.LearningElements.Add(0, laterElement);
-        space.OutBoundObjects.Add(laterSpace);
-        laterSpace.InBoundObjects.Add(space);
-        world.LearningSpaces.Add(laterSpace);
-        adaptivityContent.Tasks.First().Questions.First().Rules.First().Action =
-            new ElementReferenceActionViewModel(laterElement.Id, "foobar");
-        element.LearningContent = adaptivityContent;
-
-        _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
-            {laterElement.LearningContent});
-
-        _selectedViewModelsProvider.LearningWorld.Returns(world);
-
-        var systemUnderTest = GetRenderedComponent();
-
-        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
-        await button.ClickAsync(new MouseEventArgs());
-
-        var errors = new List<string>();
-        
-        errors.Add($"<li> ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message {element.Name} {laterSpace.Name} {laterElement.Name} </li>");
-        
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", errorString);
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", 
+            "<li>Error 1</li><li>Error 2</li>");
     }
 
     [Test]
@@ -342,6 +193,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.IsLmsConnected().Returns(true);
         _presentationLogic.GetLmsWorldList().Returns(new List<LmsWorldViewModel>());
         _presentationLogic
@@ -372,6 +224,7 @@ public class HeaderBarUt
         space.LearningSpaceLayout.LearningElements.Add(0, element);
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         _presentationLogic.GetAllContent().Returns(new List<ILearningContentViewModel>
             {element.LearningContent });
         _presentationLogic.IsLmsConnected().Returns(true);
@@ -464,6 +317,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         var lmsWorldList = new List<LmsWorldViewModel>
             { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
         _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);
@@ -502,6 +356,7 @@ public class HeaderBarUt
         world.LearningSpaces.Add(space);
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         _presentationLogic.IsLmsConnected().Returns(true);
+        _presentationLogic.ValidateLearningWorldForGeneration(world).Returns(new ValidationResult());
         var lmsWorldList = new List<LmsWorldViewModel>
             { new LmsWorldViewModel { WorldId = 1, WorldName = world.Name } };
         _presentationLogic.GetLmsWorldList().Returns(lmsWorldList);

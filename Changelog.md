@@ -6,6 +6,7 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+- New button for export learning world as a mbz file.
 
 ### Changed
 
@@ -18,6 +19,21 @@
 ### Security
 
 </details>
+
+## [2.2.3-rc.2] - 2025-06-06
+
+### Added
+- New button for export learning world as a mbz file.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
 
 ## [2.2.3-rc.1] - 2025-05-30
 
