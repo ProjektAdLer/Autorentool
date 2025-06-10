@@ -29,7 +29,7 @@
         <value>Abschlussbedingung:</value>
     </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
-        <value>Arbeitsaufwand: </value>
+        <value>Dauer: </value>
     </data>
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Ausgewähltes Lernelement:</value>

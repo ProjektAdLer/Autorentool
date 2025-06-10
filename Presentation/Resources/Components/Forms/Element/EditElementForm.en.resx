@@ -180,4 +180,10 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="EditElementForm.LearningMaterial.Dialog.Title" xml:space="preserve">
         <value>Select or change external learning material</value>
     </data>
+    <data name="EditElementForm.Fields.Collapsable.Element.Mandatory" xml:space="preserve">
+        <value>Mandatory</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Element.Optional" xml:space="preserve">
+        <value>Optional</value>
+    </data>
 </root>

@@ -183,4 +183,10 @@ The corresponding slots can be found in each floor plan at the position of the e
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
         <value>Selected learning material:</value>
     </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Mandatory" xml:space="preserve">
+        <value>Mandatory</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Optional" xml:space="preserve">
+        <value>Optional</value>
+    </data>
 </root>

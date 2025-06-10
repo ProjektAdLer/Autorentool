@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Arbeitsaufwand: </value>
+        <value>Dauer:</value>
     </data>
     <data name="OverView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
