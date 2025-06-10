@@ -172,7 +172,7 @@ public class DataAccess : IDataAccess
         world.SavePath = newSavePath;
 
         //parse save path back into name
-        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
+        if (iterations != 0) world.Name = $"{world.Name}_{iterations}";
 
         SaveLearningWorldToFile(world, newSavePath);
 

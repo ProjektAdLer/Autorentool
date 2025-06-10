@@ -9,6 +9,7 @@
 - New button for export learning world as a mbz file.
 
 ### Changed
+- Fixed a bug where importing a learning world conflicted with validation when a name was already used.
 
 ### Deprecated
 
