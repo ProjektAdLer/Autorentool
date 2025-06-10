@@ -375,6 +375,12 @@
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
+        FormModel.Points = model.LearningContent switch
+        {
+            AdaptivityContentFormModel adaptivityContentFormModel => adaptivityContentFormModel.Tasks.Any(x => x.MinimumRequiredDifficulty != null) ? 1 : 0,
+            _ => FormModel.Points
+        };
+        
         if (SelectedViewModelsProvider.ActiveElementSlotInSpace != -1 && ElementMode is not ElementMode.Story)
             SpacePresenter.CreateLearningElementInSlotFromFormModel(model);
         else if (SelectedViewModelsProvider.ActiveStorySlotInSpace != -1 && ElementMode is ElementMode.Story)

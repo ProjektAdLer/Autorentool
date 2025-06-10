@@ -390,8 +390,12 @@
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
+        FormModel.Points = model.LearningContent switch
+        {
+            AdaptivityContentFormModel adaptivityContentFormModel => adaptivityContentFormModel.Tasks.Any(x => x.MinimumRequiredDifficulty != null) ? 1 : 0,
+            _ => FormModel.Points
+        };
         WorldPresenter.EditLearningElementFromFormModel(ElementToEdit.Parent, ElementToEdit, model);
-        //TriggerMasterLayoutStateHasChanged?.Invoke();
     }
 
     private void OnValidFieldChange(LearningElementFormModel model) => OnValidSubmit(model);
@@ -421,6 +425,9 @@
 
     private async void OpenAdaptivityContentDialog()
     {
+        var hasRequiredTasks = ((AdaptivityContentFormModel)FormDataContainer.FormModel.LearningContent!)
+            .Tasks.Any(x => x.MinimumRequiredDifficulty != null);
+
         var options = new DialogOptions
         {
             BackdropClick = true,
@@ -435,6 +442,12 @@
         };
         var dialog = await DialogService.ShowAsync<AdaptivityContentDialog>(Localizer["EditElementForm.AdaptivityContent.Dialog.Title"], parameters, options);
         _ = await dialog.Result;
+
+        if (((AdaptivityContentFormModel)FormDataContainer.FormModel.LearningContent!).Tasks.Any(x => x.MinimumRequiredDifficulty != null) != hasRequiredTasks)
+        {
+            OnValidSubmit(FormDataContainer.FormModel);
+        }
+
         StateHasChanged();
     }
 
