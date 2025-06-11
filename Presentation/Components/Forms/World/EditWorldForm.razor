@@ -82,8 +82,8 @@
             </Collapsable>
 
             <Collapsable Title=@Localizer["EditWorldForm.Theme.Text"] InitiallyCollapsed="true">
-                <p class="text-xs pl-4">@Localizer["EditWorldForm.Theme.Field.Theme.Text"]</p>
-                <div class="px-4 pb-2">
+                <p class="text-xs px-6 pt-3">@Localizer["EditWorldForm.Theme.Field.Theme.Text"]</p>
+                <div class="px-6 py-2">
                     <MudSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
                                Text="@FormDataContainer.FormModel.WorldTheme.ToString()"
                                For="@(() => FormModel.WorldTheme)">

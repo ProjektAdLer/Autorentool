@@ -195,4 +195,13 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     <data name="EditElementForm.LearningMaterial.Dialog.Title" xml:space="preserve">
         <value>Externes Lernmaterial auswählen bzw. ändern</value>
     </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title" xml:space="preserve">
+        <value>Name der Person</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="EditStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
+        <value>Zeichen</value>
+    </data>
 </root>
