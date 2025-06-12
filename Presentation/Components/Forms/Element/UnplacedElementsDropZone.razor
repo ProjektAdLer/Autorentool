@@ -84,6 +84,25 @@
                                     </MudMenuItem>
                                 }
                             </MudMenu>
+                            <MudMenu Label="@Localizer["UnplacedElementsDropZone.Filter.Required"]">
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_isRequiredFilter.Count == 0 ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ResetIsRequiredFilter()" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.All"]
+                                </MudMenuItem>
+                                <MudDivider />
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_isRequiredFilter.Contains(true) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ToggleIsRequiredFilter(true)" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.RequiredOnly"]
+                                </MudMenuItem>
+                                <MudMenuItem
+                                    Class="px-2 text-xs" IconColor="@(_isRequiredFilter.Contains(false) ? Color.Default : Color.Transparent)" Icon="@Icons.Material.Filled.Check"
+                                    OnClick="() => ToggleIsRequiredFilter(false)" AutoClose="false">
+                                    @Localizer["UnplacedElementsDropZone.Filter.OptionalOnly"]
+                                </MudMenuItem>
+                            </MudMenu>
+
                         </ChildContent>
                     </MudMenu>
                 </div>
@@ -130,6 +149,7 @@
     private List<LearningElementDifficultyEnum> _difficultyFilter = new();
     private List<ContentTypeEnum> _contentTypeFilter = new();
     private List<Type> _elementTypeFilter = new();
+    private List<bool> _isRequiredFilter = new();
 
     protected override void OnParametersSet()
     {
@@ -186,6 +206,8 @@
         if (!ShowAfterElementTypeFilter(element)) return false;
 
         if (!ShowAfterContentTypeFilter(element)) return false;
+        
+        if (!ShowAfterIsRequiredFilter(element)) return false;
 
         return true;
     }
@@ -246,11 +268,19 @@
 
         return true;
     }
+    
+    private bool ShowAfterIsRequiredFilter(ILearningElementViewModel element)
+    {
+        if (_isRequiredFilter.Count == 0) return true;
+        return _isRequiredFilter.Contains(element.IsRequired);
+    }
 
     private void ResetDifficultyFilter()
     {
         _difficultyFilter.Clear();
     }
+    
+    private void ResetIsRequiredFilter() => _isRequiredFilter.Clear();
 
     private void ToggleDifficultyFilter(LearningElementDifficultyEnum difficulty)
     {
@@ -295,6 +325,18 @@
         else
         {
             _contentTypeFilter.Add(type);
+        }
+    }
+    
+    private void ToggleIsRequiredFilter(bool isRequired)
+    {
+        if (_isRequiredFilter.Contains(isRequired))
+        {
+            _isRequiredFilter.Remove(isRequired);
+        }
+        else
+        {
+            _isRequiredFilter.Add(isRequired);
         }
     }
 }
