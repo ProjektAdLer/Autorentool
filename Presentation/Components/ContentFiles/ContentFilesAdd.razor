@@ -102,6 +102,8 @@
     
     private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = null!;
     private readonly List<string> _unvalidatedH5PFiles = new();
+    private readonly Dictionary<string, string> _h5pFilePaths = new();
+
 
     /// <summary>
     /// Iterates all files, copies them into a new stream and passes said stream to presentation logic
@@ -142,7 +144,9 @@
                    
                      _unvalidatedH5PFiles.Add(file.Name);
                      
-
+                     var fullPath = Path.Combine(ApplicationPaths.ContentFolder, file.Name);
+                     
+                     _h5pFilePaths[file.Name] = fullPath;
                  }
 #endif
             }
@@ -325,15 +329,21 @@
 
     private async Task ValidateH5P(string fileName)
     {
-            var h5pZipSourcePath = Path.Combine(ApplicationPaths.ContentFolder, fileName);
-            var baseUri = new Uri(Navigation.BaseUri); 
-            var unzippedH5ps = new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
+        if (!_h5pFilePaths.TryGetValue(fileName, out var fullPath))
+        {
+            Logger.LogError("Could not find full path for H5P file {FileName}", fileName);
+            return;
+        }
+        var h5PZipSourcePath = fullPath;
+        var baseUri = new Uri(Navigation.BaseUri); 
+        var unzippedH5Ps = new Uri(baseUri, "H5pStandalone/h5p-folder/"); 
 
-            Logger.LogTrace("Start H5P-Player with: " +
-                            "h5pZipSourcePath: " + h5pZipSourcePath + Environment.NewLine +
-                            "unzippedH5psPath: " + unzippedH5ps.AbsoluteUri);
+        Logger.LogTrace("Start H5P-Player with: " +
+                        "h5pZipSourcePath: " + h5PZipSourcePath + Environment.NewLine +
+                        "unzippedH5psPath: " + unzippedH5Ps.AbsoluteUri);
 
-            H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5pZipSourcePath, unzippedH5ps.AbsoluteUri, H5pDisplayMode.Validate);
+        H5PPlayerDialogViewModel.OpenH5pPlayerDialog(h5PZipSourcePath, unzippedH5Ps.AbsoluteUri, H5pDisplayMode.Validate);
+            
 
             await Task.CompletedTask;
 
