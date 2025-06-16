@@ -126,7 +126,7 @@ public class DataAccess : IDataAccess
         //ensure folders are created
         if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
             FileSystem.Directory.CreateDirectory(ApplicationPaths.TempFolder);
-        FileSystem.CreateDisposableDirectory(out var directoryInfo);
+        using var dispDir = FileSystem.CreateDisposableDirectory(out var directoryInfo);
         var tempFolder = directoryInfo.FullName;
         //create temp folder structure
         FileSystem.Directory.CreateDirectory(tempFolder);
@@ -172,7 +172,7 @@ public class DataAccess : IDataAccess
         world.SavePath = newSavePath;
 
         //parse save path back into name
-        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
+        if (iterations != 0) world.Name = $"{world.Name}_{iterations}";
 
         SaveLearningWorldToFile(world, newSavePath);
 
@@ -192,10 +192,10 @@ public class DataAccess : IDataAccess
                 .SelectMany(space => space.ContainedLearningElements)
                 .Concat(worldToCopyFrom.UnplacedLearningElements)
                 .Select(el => el.LearningContent)
-                .OfType<AdaptivityContent>()                
-                .SelectMany(adco => adco.Tasks)            
-                .SelectMany(task => task.Questions)         
-                .SelectMany(question => question.Rules)     
+                .OfType<AdaptivityContent>()
+                .SelectMany(adco => adco.Tasks)
+                .SelectMany(task => task.Questions)
+                .SelectMany(question => question.Rules)
                 .Select(rule => rule.Action)
                 .OfType<ContentReferenceAction>()
                 .Select(cra => cra.Content)
@@ -203,7 +203,7 @@ public class DataAccess : IDataAccess
                 .ToList();
 
             fileContents.AddRange(referenceContents);
-            
+
             //copy content files into content folder (avoiding duplicates) and changing filepaths in world
             var newContentFolder = FileSystem.Path.Join(tempFolder, "Content");
             var contentFiles = FileSystem.Directory.GetFiles(newContentFolder).Where(filepath =>
@@ -259,7 +259,7 @@ public class DataAccess : IDataAccess
             .SelectMany(space => space.ContainedLearningElements.Select(e => e.LearningContent))
             .Concat(world.UnplacedLearningElements.Select(e => e.LearningContent))
             .ToList();
-        
+
         var referencedContents = world.LearningSpaces
             .SelectMany(space => space.ContainedLearningElements)
             .Where(el => el.LearningContent is AdaptivityContent)
@@ -272,9 +272,9 @@ public class DataAccess : IDataAccess
             .Select(cfa => cfa.Content)
             .Distinct()
             .ToList();
-        
+
         contentInWorld.AddRange(referencedContents);
-        
+
         var fileContent = contentInWorld
             .OfType<FileContent>()
             .Distinct()

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="DialogContent.Help.UserManual.Title" xml:space="preserve">
+        <value>Weitere Informationen nachlesen</value>
+    </data>
+    <data name="DialogContent.Help.UserManual" xml:space="preserve">
+        <value>Benutzerhandbuch</value>
+    </data>
+    <data name="DialogContent.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value>Softwarekomponenten des Autorentools - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="DialogContent.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value>Softwarekomponenten</value>
+    </data>
+    <data name="DialogContent.Help.UserManual.Handling" xml:space="preserve">
+        <value>Bedienung</value>
+    </data>
+    <data name="DialogContent.Help.Tutorial" xml:space="preserve">
+        <value>Didaktische Handreichung</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value>Informationen zum Adaptivitätselement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivitätselement</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value>Informationen zur Eingabeunterstützung zum Formulieren von Lernzielen - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value>Eingabeunterstützung</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value>Informationen zum Storyelement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="DialogContent.Help.Didactic.StoryElement" xml:space="preserve">
+        <value>Storyelement</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Allgemeines Feedback zu AdLer - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>Feedback geben</value>
+    </data>
+    <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
+        <value>Technisches Feedback - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Technischen Fehler melden</value>
+    </data>
+    <data name="DialogContent.Help.About.Hover" xml:space="preserve">
+        <value>Informationen über das Projekt AdLer</value>
+    </data>
+    <data name="DialogContent.Help.About" xml:space="preserve">
+        <value>Über AdLer</value>
+    </data>
+    <data name="DialogContent.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value>Im Autorentool verfügbare Bedienschritte - Öffnet ein neues Browserfenster</value>
+    </data>
+</root>

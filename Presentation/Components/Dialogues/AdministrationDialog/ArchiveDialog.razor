@@ -1,0 +1,134 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Shared.Exceptions
+@inject ISnackbar Snackbar
+<div class="flex flex-col w-full gap-2">
+    <p class="text-adlerheaderblue text-lg font-bold py-2 text-center cursor-default">
+        @Localizer["DialogContent.LearningWorldArchive.Title"]
+    </p>
+    <div class="flex flex-row gap-2 justify-center items-center mr-2">
+        <!-- ZIP-Export -->
+        <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.ZIP.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.ZIP.Text"]
+                <MudTooltip Placement="Placement.Right"
+                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="text-xs">@Localizer["ArchiveDialog.ZIP.Tooltip.Text"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey-300 hover:text-adlerdarkblue">
+                        </MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </p>
+            <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
+                       OnClick="ExportLearningWorldToZipArchiveAsync"
+                       title="@Localizer["ExportArchive.Hover"]"
+                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                <MudIcon Icon="@Icons.Material.Filled.Unarchive" Title="@Localizer["ExportArchive.Hover"]" Size="Size.Small"></MudIcon>
+                <span class="pl-2 text-xs uppercase">@Localizer["DialogContent.LearningWorldArchive.Button"]</span>
+            </MudButton>
+        </div>
+        
+        <MudDivider DividerType="DividerType.FullWidth" Style="border-color: rgb(204,204,204)" Vertical="true" Light="true"></MudDivider>
+
+        <!-- MBZ-Export -->
+        <div class="flex flex-col items-center justify-between border rounded-xl p-3 shadow-md bg-white w-56 h-52">
+            <p class="text-sm 2xl:text-base font-bold text-center mb-2">@Localizer["ArchiveDialog.MBZ.Title"]</p>
+            <p class="text-sm text-center mb-4 text-adlertextgrey">@Localizer["ArchiveDialog.MBZ.Text"]
+                <MudTooltip Placement="Placement.Right"
+                            Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="text-xs">@Localizer["ArchiveDialog.Tooltip.Text"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey-300 hover:text-adlerdarkblue">
+                        </MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </p>
+            <MudButton Class="btn-standard w-full disabled:bg-adlerbggradientto"
+                       OnClick="ExportLearningWorldToMoodleArchiveAsync"
+                       title="Exportiert die Lernwelt im Moodle-kompatiblen Format"
+                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                <MudIcon Icon="@Icons.Material.Filled.Unarchive" Size="Size.Small"></MudIcon>
+                <span class="pl-2 text-xs uppercase">@Localizer["ArchiveDialog.MBZ.Button"]</span>
+            </MudButton>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    internal IPresentationLogic PresentationLogic { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<ArchiveDialog> Localizer { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private ILogger<ArchiveDialog> Logger { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    [Inject, AllowNull] internal IErrorService ErrorService { get; set; }
+
+    private async Task ExportLearningWorldToZipArchiveAsync()
+    {
+        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        if (!IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld)) return;
+
+        try
+        {
+            await PresentationLogic.ExportLearningWorldToZipArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);    
+        }
+        catch (OperationCanceledException)
+        {
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar"], Severity.Warning);  
+        }
+    }
+
+    private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel learningWorld)
+    {
+        var validationResult = PresentationLogic.ValidateLearningWorldForExport(learningWorld);
+        if (validationResult.IsValid) return true;
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", validationResult.Errors);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], string.Join("", validationResult.Errors));
+        return false;
+    }
+
+    private async Task ExportLearningWorldToMoodleArchiveAsync()
+    {
+        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        if (!IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld)) return;
+
+        try
+        {
+            await PresentationLogic.ExportLearningWorldToMoodleArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Success.Snackbar"], Severity.Success);    
+        }
+        catch (OperationCanceledException)
+        {
+            Snackbar.Add(@Localizer["ArchiveDialog.ArchiveLearningWorld.Canceled.Snackbar"], Severity.Warning);  
+        }
+        catch (GeneratorException e)
+        {
+            ErrorService.SetError("An Error has occured during creation of a Backup File", e.Message);
+        }
+        catch (Exception ex)
+        {
+            ErrorService.SetError(ex);
+        }
+    }
+
+}

@@ -120,20 +120,24 @@ public class UnplacedElementsDropZoneUt
     {
         var systemUnderTest = GetRenderedComponent();
 
-        var mudMenus = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var mudMenu = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
         var searchBar = systemUnderTest.FindComponentOrFail<MudTextField<string>>();
+
+        Assert.That(mudMenu, Has.Count.EqualTo(1));
+
+        var mudMenus = _testContext.Render((RenderFragment)mudMenu[0].Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         Assert.That(mudMenus, Has.Count.EqualTo(3));
 
         // Element Type Filter
-        var elementTypeFilterHeader =
-            _testContext.Render((RenderFragment)mudMenus[0].Instance.Parameters["ActivatorContent"]);
+        var elementTypeFilterHeader = (string)mudMenus[0].Instance.Parameters["Label"];
         var elementTypeFilterChildContent =
             _testContext.Render((RenderFragment)mudMenus[0].Instance.Parameters["ChildContent"]);
         var elementTypeFilterEntries = elementTypeFilterChildContent.FindComponentsOrFail<Stub<MudMenuItem>>().ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(elementTypeFilterHeader.Markup, Contains.Substring("UnplacedElementsDropZone.Filter.Element"));
+            Assert.That(elementTypeFilterHeader, Is.EqualTo("UnplacedElementsDropZone.Filter.Element"));
             Assert.That(elementTypeFilterEntries, Has.Count.EqualTo(4));
             Assert.That(
                 _testContext.Render((RenderFragment)elementTypeFilterEntries[0].Instance.Parameters["ChildContent"])
@@ -150,14 +154,13 @@ public class UnplacedElementsDropZoneUt
         });
 
         // Content Type Filter
-        var contentTypeFilterHeader =
-            _testContext.Render((RenderFragment)mudMenus[1].Instance.Parameters["ActivatorContent"]);
+        var contentTypeFilterHeader = (string)mudMenus[1].Instance.Parameters["Label"];
         var contentTypeFilterChildContent =
             _testContext.Render((RenderFragment)mudMenus[1].Instance.Parameters["ChildContent"]);
         var contentTypeFilterEntries = contentTypeFilterChildContent.FindComponentsOrFail<Stub<MudMenuItem>>().ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(contentTypeFilterHeader.Markup, Contains.Substring("UnplacedElementsDropZone.Filter.Type"));
+            Assert.That(contentTypeFilterHeader, Is.EqualTo("UnplacedElementsDropZone.Filter.Type"));
             Assert.That(contentTypeFilterEntries, Has.Count.EqualTo(Enum.GetNames(typeof(ContentTypeEnum)).Length + 1));
             Assert.That(
                 _testContext.Render((RenderFragment)contentTypeFilterEntries[0].Instance.Parameters["ChildContent"])
@@ -173,15 +176,14 @@ public class UnplacedElementsDropZoneUt
         }
 
         // Difficulty Filter
-        var difficultyFilterHeader =
-            _testContext.Render((RenderFragment)mudMenus[2].Instance.Parameters["ActivatorContent"]);
+        var difficultyFilterHeader = (string)mudMenus[2].Instance.Parameters["Label"];
         var difficultyFilterChildContent =
             _testContext.Render((RenderFragment)mudMenus[2].Instance.Parameters["ChildContent"]);
         var difficultyFilterEntries = difficultyFilterChildContent.FindComponentsOrFail<Stub<MudMenuItem>>().ToList();
         Assert.Multiple(() =>
         {
-            Assert.That(difficultyFilterHeader.Markup,
-                Contains.Substring("UnplacedElementsDropZone.Filter.Difficulty"));
+            Assert.That(difficultyFilterHeader,
+                Is.EqualTo("UnplacedElementsDropZone.Filter.Difficulty"));
             Assert.That(difficultyFilterEntries, Has.Count.EqualTo(5));
             Assert.That(
                 _testContext.Render((RenderFragment)difficultyFilterEntries[0].Instance.Parameters["ChildContent"])
@@ -201,7 +203,7 @@ public class UnplacedElementsDropZoneUt
         });
 
         // Search Bar
-        Assert.That(searchBar.Instance.Placeholder, Is.EqualTo("UnplacedElementsDropZone.SearchBar.PlaceHolder"));
+        Assert.That(searchBar.Instance.AdornmentIcon, Is.EqualTo(Icons.Material.Outlined.Search));
     }
 
     [Test]
@@ -248,7 +250,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var elementTypeFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[0].Instance
@@ -278,7 +282,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var elementTypeFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[0].Instance
@@ -342,7 +348,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var contentTypeFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[1].Instance
@@ -372,7 +380,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var contentTypeFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[1].Instance
@@ -431,7 +441,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var difficultyFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[2].Instance
@@ -461,7 +473,9 @@ public class UnplacedElementsDropZoneUt
         var items = GetTestItems();
         var systemUnderTest = GetRenderedComponent(items: items);
 
-        var filterDropDowns = systemUnderTest.FindComponentsOrFail<Stub<MudMenu>>().ToList();
+        var filterMenu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var filterDropDowns = _testContext.Render((RenderFragment)filterMenu.Instance.Parameters["ChildContent"])
+            .FindComponentsOrFail<Stub<MudMenu>>().ToList();
 
         var difficultyFilterChildContent =
             _testContext.Render((RenderFragment)filterDropDowns[2].Instance

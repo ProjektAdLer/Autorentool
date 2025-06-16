@@ -1,7 +1,10 @@
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
+using Presentation.Components.ContentFiles;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.Mediator;
 using TestHelpers;
@@ -13,14 +16,15 @@ namespace PresentationTest.Components.Forms.Element;
 public class NoContentWarningUt
 {
     private TestContext _testContext = null!;
-    private IMediator Mediator { get; set; }
 
+    private IDialogService _dialogService = null!;
+    
     [SetUp]
     public void Setup()
     {
         _testContext = new TestContext();
-        Mediator = Substitute.For<IMediator>();
-        _testContext.Services.AddSingleton(Mediator);
+        _dialogService = Substitute.For<IDialogService>();
+        _testContext.Services.AddSingleton(_dialogService);
         _testContext.AddLocalizerForTest<NoContentWarning>();
         _testContext.AddMudBlazorTestServices();
     }
@@ -37,8 +41,8 @@ public class NoContentWarningUt
         var systemUnderTest = GetRenderedComponent();
         
         systemUnderTest.Find("button").Click();
-        
-        Mediator.Received(1).RequestOpenContentDialog();
+
+        _dialogService.Received(1).ShowAsync<ContentFilesContainer>(Arg.Any<string>(), Arg.Any<DialogOptions>());
     }
 
     private IRenderedComponent<NoContentWarning> GetRenderedComponent()

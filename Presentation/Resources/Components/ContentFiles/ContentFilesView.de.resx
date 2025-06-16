@@ -48,9 +48,6 @@
     <data name="PagerContent.Button.Text" xml:space="preserve">
         <value> öffnen</value>
     </data>
-    <data name="MudTextField.Search.Placeholder" xml:space="preserve">
-        <value>Suche</value>
-    </data>
     <data name="TypeSortBy.ContentType.Link" xml:space="preserve">
         <value>Link</value>
     </data>
