@@ -43,7 +43,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -81,7 +81,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -143,7 +143,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();

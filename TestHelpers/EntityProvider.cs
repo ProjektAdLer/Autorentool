@@ -206,7 +206,7 @@ public static class EntityProvider
         return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
     }
 
-    public static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
+    private static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
         IAdaptivityAction? action = null)
     {
         trigger ??= GetAdaptivityTrigger();
@@ -239,7 +239,7 @@ public static class EntityProvider
         return new CompositeTrigger(ConditionEnum.And, GetTimeTrigger(), GetCorrectnessTrigger());
     }
 
-    public static IAdaptivityQuestion GetAdaptivityQuestion()
+    private static IAdaptivityQuestion GetAdaptivityQuestion()
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };

@@ -19,5 +19,4 @@ public interface ILearningSpace : IObjectInPathWay
     IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
     Topic? AssignedTopic { get; set; }
     bool InternalUnsavedChanges { get; }
-    int Points { get; }
 }

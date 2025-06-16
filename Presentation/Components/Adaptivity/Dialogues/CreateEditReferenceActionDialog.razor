@@ -15,12 +15,13 @@
 @using Shared.Adaptivity
 <div class="relative w-[800px] h-[520px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm cursor-default">@Localizer["Reference.Text"]</MudText>
-    <div class="border-adlergrey-200 border-4 rounded m-2">
+    <div class="border-adlerdarkblue border-4 rounded-lg m-2">
         <MudText Class="font-bold text-sm cursor-default px-3 py-1 pt-2">@Localizer["Note.Label.Text"]</MudText>
         <div class="border-4 border-adlergrey-100 rounded-lg mx-1.5">
             <MudTextField Variant="Variant.Outlined"
                           Class="shadow-none m-0"
                           T="string"
+                          Placeholder="@Localizer["Comment.Label.Text.Placeholder"]"
                           @bind-Value="Comment"
                           Lines="2"
                           Required="false"/>
@@ -35,7 +36,7 @@
                         <div class="flex flex-row justify-between items-center gap-1">
                             <MudText Class="cursor-default font-bold text-sm p-1 text-adlertextgrey">@Localizer["Reference.Element.Label.Text"]
                                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Element.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
                             <div class="flex flex-row gap-1 w-72 cursor-default">
@@ -67,7 +68,7 @@
                         <div class="flex flex-row justify-between items-center gap-1">
                             <MudText Class="font-bold text-sm p-1 cursor-default text-adlertextgrey">@Localizer["Reference.Content.Label.Text"]
                                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed cursor-default" Text="@Localizer["Reference.Content.Info.Text"]">
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-300 hover:text-adlerdarkblue"></MudIcon>
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                                 </MudTooltip>
                             </MudText>
                             <div class="flex flex-row gap-1 w-72 cursor-default">
@@ -81,20 +82,18 @@
                             @bind-Value="LearningContent"
                             Required="true"
                             RequiredError="@Localizer["Content.RequiredError.Text"]"
-                            Typo="Typo.body2" 
-                            Margin="Margin.None"
                             AllowDeselect="false"
                             Elements="LearningContents.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)"
                             FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
                             <HeaderContent>
                             </HeaderContent>
                             <RowTemplate>
-                                <MudTd Class="px-1.5 py-0 h-6">
+                                <MudTd Class="px-1.5">
                                     <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
                                                    OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
                                 </MudTd>
-                                <MudTd Class="cursor-pointer p-0 max-w-[20rem] truncate h-6" DataLabel="Name">@context.Name</MudTd>
-                                <MudTd Class="cursor-pointer py-0 pl-1 h-6" DataLabel="Type">
+                                <MudTd Class="cursor-pointer" DataLabel="Name">@context.Name</MudTd>
+                                <MudTd Class="cursor-pointer" DataLabel="Type">
                                     @if (context is FileContentViewModel fileContentContext)
                                     {
                                         @fileContentContext.Type

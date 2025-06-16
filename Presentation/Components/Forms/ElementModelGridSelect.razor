@@ -5,7 +5,7 @@
 @using MudBlazor.Utilities
 @inherits MudBaseInput<ElementModel>
 
-<div class="grid grid-cols-4 2xl:grid-cols-5 2500p:grid-cols-7">
+<div class="grid grid-cols-4 2xl:grid-cols-5 2500p:grid-cols-7" style="max-height: 300px; overflow-y: auto;">
     @foreach (var elementModel in Elements)
     {
         <MudListItem Value="@(elementModel)"

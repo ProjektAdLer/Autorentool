@@ -23,16 +23,7 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="OverView.Workload" xml:space="preserve">
-        <value>Arbeitsaufwand: </value>
-    </data>
-    <data name="OverView.Points" xml:space="preserve">
-        <value>Gesamtpunkte:</value>
-    </data>
-    <data name="OverView.Workload.TimeScale" xml:space="preserve">
-        <value> min</value>
-    </data>
-    <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
-        <value> Pkt.</value>
+    <data name="LMS.Login.Hover" xml:space="preserve">
+        <value>Einloggen auf AdLer-Server</value>
     </data>
 </root>

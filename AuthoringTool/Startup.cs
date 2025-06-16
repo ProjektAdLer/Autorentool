@@ -181,7 +181,6 @@ public class Startup
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
-        services.AddSingleton<ILearningWorldStructureValidator, LearningWorldStructureValidator>();
     }
 
     internal static void ConfigureAuthoringTool(IServiceCollection services)

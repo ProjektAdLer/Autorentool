@@ -54,7 +54,7 @@
         <value>Erfolgreich angemeldet!</value>
     </data>
     <data name="Header.Moodle.Text" xml:space="preserve">
-        <value>Auf AdLer-Server anmelden</value>
+        <value>Anmelden auf AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
         <value>Passwort vergessen?</value>
@@ -66,7 +66,7 @@
         <value>Passwort anzeigen</value>
     </data>
     <data name="DialogContent.Button.Login.Title" xml:space="preserve">
-        <value>Auf AdLer-Server anmelden</value>
+        <value>Anmelden auf AdLer-Server</value>
     </data>
     <data name="DialogContent.Button.Logout.Title" xml:space="preserve">
         <value>Abmelden vom AdLer-Server</value>
@@ -105,11 +105,14 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     <data name="DialogContent.LoggedIn.Info" xml:space="preserve">
         <value>Damit Sie Ihre im Autorentool erstellte Lernwelt Ihren Studierenden als 3D-Lernumgebung zur Verfügung stellen können, ist zunächst eine Anmeldung auf dem AdLer-Server notwendig.</value>
     </data>
+    <data name="DialogContent.Header" xml:space="preserve">
+        <value>Administration</value>
+    </data>
     <data name="DialogContent.LeftSidebar.AdLerServer" xml:space="preserve">
         <value>AdLer-Server</value>
     </data>
     <data name="DialogContent.Delete.Title" xml:space="preserve">
-        <value>Moodle-Kurs löschen</value>
+        <value>Löschen von Moodle-Kursen</value>
     </data>
     <data name="DialogContent.Delete.Subtitle" xml:space="preserve">
         <value>Moodle-Kurse</value>
@@ -134,89 +137,5 @@ Mit dieser ausgeführten Aktion des Löschens werden die Kurse unwiderruflich au
     </data>
     <data name="DialogContent.AdLerServer.CourseDeleteSuccessful.Snackbar" xml:space="preserve">
         <value>Moodle-Kurs erfolgreich gelöscht.</value>
-    </data>
-    <data name="DialogContent.Help.About" xml:space="preserve">
-        <value>Über AdLer</value>
-    </data>
-    <data name="DialogContent.Help.About.Hover" xml:space="preserve">
-        <value>Informationen über das Projekt AdLer</value>
-    </data>
-    <data name="DialogContent.Help.UserManual" xml:space="preserve">
-        <value>Benutzerhandbuch</value>
-    </data>
-    <data name="DialogContent.Help.Tutorial" xml:space="preserve">
-        <value>Didaktische Handreichung</value>
-    </data>
-    <data name="DialogContent.Help.Tutorial.Hover" xml:space="preserve">
-        <value>Didaktische Handreichung - Öffnet ein Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.Hover" xml:space="preserve">
-        <value>Benutzerhandbuch - Öffnet ein Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.AdaptivityElement" xml:space="preserve">
-        <value>Adaptivitätselement</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
-        <value>Informationen zum Adaptivitätselement - Öffnet ein neues Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.StoryElement.Hover" xml:space="preserve">
-        <value>Informationen zum Storyelement - Öffnet ein neues Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.StoryElement" xml:space="preserve">
-        <value>Storyelement</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
-        <value>Eingabeunterstützung</value>
-    </data>
-    <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
-        <value>Informationen zur Eingabeunterstützung zum Formulieren von Lernzielen - Öffnet ein neues Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.Handling" xml:space="preserve">
-        <value>Bedienung</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.SoftwareComponents" xml:space="preserve">
-        <value>Softwarekomponenten</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.Handling.Hover" xml:space="preserve">
-        <value>Im Autorentool verfügbare Bedienschritte - Öffnet ein neues Browserfenster</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
-        <value>Softwarekomponenten des Autorentools - Öffnet ein neues Browserfenster</value>
-    </data>
-    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
-        <value>Um das Autorentool weiter zu entwickeln und zu optimieren, würden wir es schätzen wenn Sie sich ein paar Minuten Ihrer Zeit erübrigen würden um uns Ihr Feedback über das aktuelle Autorentool mitzuteilen.</value>
-    </data>
-    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
-        <value>Zum finalen Feedback</value>
-    </data>
-    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
-        <value>Allgemeines Feedback zu AdLer - Öffnet ein Browserfenster</value>
-    </data>
-    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
-        <value>Feedback geben</value>
-    </data>
-    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
-        <value>Technischen Fehler melden</value>
-    </data>
-    <data name="DialogContent.Help.UserManual.Title" xml:space="preserve">
-        <value>Weitere Informationen nachlesen</value>
-    </data>
-    <data name="DialogContent.Language.Title" xml:space="preserve">
-        <value>Sprache ändern</value>
-    </data>
-    <data name="DialogContent.LearningWorldArchive.Title" xml:space="preserve">
-        <value>Lernwelt exportieren</value>
-    </data>
-    <data name="DialogContent.LearningWorldArchive.Button" xml:space="preserve">
-        <value>Lernwelt exportieren</value>
-    </data>
-    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert externes Lernmaterial, welches nicht existiert</value>
-    </data>
-    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes externes Lernmaterial. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
-    </data>
-    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
-        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
     </data>
 </root>

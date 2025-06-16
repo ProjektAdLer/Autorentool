@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
-using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
@@ -26,7 +25,6 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
-using Presentation.PresentationLogic.SelectedViewModels;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
@@ -49,9 +47,7 @@ public class ContentFilesViewUt
         _localizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
             new LocalizedString(ci.Arg<string>() + string.Concat(ci.Arg<object[]>()),
                 ci.Arg<string>() + string.Concat(ci.Arg<object[]>())));
-        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _errorService = Substitute.For<IErrorService>();
-        _mudDialogInstance = Substitute.For<IMudDialogInstance>();
 
         _testContext.ComponentFactories.AddStub<MudMenu>();
         _testContext.ComponentFactories.AddStub<MudMenuItem>();
@@ -62,7 +58,6 @@ public class ContentFilesViewUt
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_workspaceViewModel);
         _testContext.Services.AddSingleton(_localizer);
-        _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_errorService);
 
         _testContext.AddMudBlazorTestServices();
@@ -80,9 +75,7 @@ public class ContentFilesViewUt
     private IMediator _mediator;
     private IAuthoringToolWorkspaceViewModel _workspaceViewModel;
     private IStringLocalizer<ContentFilesView> _localizer;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IErrorService _errorService;
-    private IMudDialogInstance _mudDialogInstance;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -582,8 +575,8 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(x =>
-                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
                         x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
     }
@@ -629,8 +622,8 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(x =>
-                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
                         x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
@@ -678,8 +671,8 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(x =>
-                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                Arg.Is<DialogParameters>(
+                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
                         x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
@@ -803,7 +796,7 @@ public class ContentFilesViewUt
 
     [Test]
     // ANF-ID: [AWA0002]
-    public void ClickNewElementButton_CallsPresentationLogicAndMediatorAndClosesDialog()
+    public void ClickNewElementButton_CallsPresentationLogicAndMediator()
     {
         var items = PresentationLogicSetItems();
 
@@ -820,7 +813,6 @@ public class ContentFilesViewUt
 
         _presentationLogic.Received().SetSelectedLearningContentViewModel(items.First());
         _mediator.Received().RequestOpenNewElementDialog();
-        _mudDialogInstance.Received().Close(Arg.Is<DialogResult>(d => true));
     }
 
     [Test]
@@ -857,7 +849,6 @@ public class ContentFilesViewUt
 
     private IRenderedComponent<ContentFilesView> GetRenderedComponent()
     {
-        return _testContext.RenderComponent<ContentFilesView>(parameters =>
-            parameters.AddCascadingValue(_mudDialogInstance));
+        return _testContext.RenderComponent<ContentFilesView>();
     }
 }

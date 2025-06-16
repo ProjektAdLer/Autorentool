@@ -9,16 +9,16 @@
             {
                 @if (_collapsed)
                 {
-                    <MudIcon Icon="@Icons.Material.Filled.ArrowRight" Class="text-adlertitledarkblue"/>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
                 }
                 else
                 {
-                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" Class="text-adlertitledarkblue"/>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
                 }
             }
             @if (Title is not null)
             {
-                <p class="select-none cursor-pointer text-adlertitledarkblue font-bold text-base 2xl:text-lg"> @Title </p>
+                <p class="select-none cursor-pointer text-adlergrey-800 font-bold text-base 2xl:text-lg"> @Title </p>
             }
             else if (TitleContent is not null)
             {
@@ -53,7 +53,7 @@
     [Parameter] public RenderFragment? TitleContent { get; set; }
     [Parameter] public RenderFragment? TitleContentAfterToggler { get; set; }
     [Parameter] public RenderFragment<bool>? TogglerContent { get; set; }
-    [Parameter] public string VerticalMargin { get; set; } = "my-2";
+    [Parameter] public string VerticalMargin { get; set; } = "my-3";
 
     protected override void OnParametersSet()
     {

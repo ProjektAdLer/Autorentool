@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.ErrorManagement.BackendAccess;
-using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -13,11 +12,9 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
-using Presentation.Components.Dialogues.AdministrationDialog;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.SelectedViewModels;
 using PresentationTest;
 using Shared.Configuration;
 using Shared.Exceptions;
@@ -34,14 +31,10 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         _errorService = Substitute.For<IErrorService>();
         _logger = Substitute.For<ILogger<LmsLoginDialog>>();
-        _shellWrapper = Substitute.For<IShellWrapper>();
-        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_applicationConfiguration);
         Context.Services.AddSingleton(_errorService);
         Context.Services.AddSingleton(_logger);
-        Context.Services.AddSingleton(_shellWrapper);
-        Context.Services.AddSingleton(_selectedViewModelsProvider);
         Context.RenderComponent<MudPopoverProvider>();
     }
 
@@ -49,8 +42,6 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
     private IApplicationConfiguration _applicationConfiguration = null!;
     private IErrorService _errorService = null!;
     private ILogger<LmsLoginDialog> _logger = null!;
-    private IShellWrapper _shellWrapper = null!;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider = null!;
 
     [Test]
     public async Task DialogCreated_DependenciesInjected()
@@ -80,11 +71,13 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(3));
+        Assert.That(mudTexts, Has.Count.EqualTo(4));
         Assert.Multiple(() =>
         {
-            Assert.That(mudTexts[1].Markup, Contains.Substring("Header.Moodle.Text"));
-            Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Login"));
+            Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
+            Assert.That(mudTexts[1].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[2].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Login"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -98,6 +91,12 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
 
         var mudButtons = DialogProvider.FindComponents<MudButton>();
         Assert.That(mudButtons, Has.Count.EqualTo(1));
+
+        var mudLists = DialogProvider.FindComponents<MudList<object>>();
+        //Left sidebar (LoginDialog)
+        Assert.That(mudLists, Has.Count.EqualTo(1));
+        var mudListItems = mudLists[0].FindComponents<MudListItem<object>>();
+        Assert.That(mudListItems, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -117,15 +116,17 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(7));
+        Assert.That(mudTexts, Has.Count.EqualTo(8));
         Assert.Multiple(() =>
         {
-            Assert.That(mudTexts[1].Markup, Contains.Substring("Header.Moodle.Text"));
-            Assert.That(mudTexts[2].Markup, Contains.Substring("DialogContent.Button.Logout"));
-            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
-            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
+            Assert.That(mudTexts[0].Markup, Contains.Substring("DialogContent.Header"));
+            Assert.That(mudTexts[1].Markup, Contains.Substring(""));
+            Assert.That(mudTexts[2].Markup, Contains.Substring("Header.Moodle.Text"));
+            Assert.That(mudTexts[3].Markup, Contains.Substring("DialogContent.Button.Logout"));
+            Assert.That(mudTexts[4].Markup, Contains.Substring("DialogContent.Delete.Subtitle"));
             Assert.That(mudTexts[5].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
             Assert.That(mudTexts[6].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
+            Assert.That(mudTexts[7].Markup, Contains.Substring("DialogContent.Delete.MoodleCourse"));
         });
 
         var mudTextFields = DialogProvider.FindComponents<MudTextField<string>>();
@@ -162,7 +163,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(4));
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
@@ -185,7 +186,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(4));
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
@@ -214,7 +215,7 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await OpenDialogAndGetDialogReferenceAsync();
 
         var mudTexts = DialogProvider.FindComponents<MudText>();
-        Assert.That(mudTexts, Has.Count.EqualTo(4));
+        Assert.That(mudTexts, Has.Count.EqualTo(5));
         DialogProvider.WaitForAssertion(() =>
         {
             var errorElement = DialogProvider.Find("p.mud-error-text");
@@ -599,5 +600,27 @@ public class LmsLoginDialogIt : MudDialogTestFixture<LmsLoginDialog>
         await dialogService.Received(1)
             .ShowAsync<GenericCancellationConfirmationDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>());
         _errorService.Received(1).SetError("Error while trying to delete the LMS world", "nix gut");
+    }
+
+    [Test]
+    public async Task ClickCloseDialogButton_CallsCloseDialog()
+    {
+        var dialog = await OpenDialogAndGetDialogReferenceAsync();
+
+        var mudIconButtons = DialogProvider.FindComponents<MudIconButton>();
+        Assert.Multiple(() =>
+        {
+            Assert.That(mudIconButtons[0].Instance.Icon, Is.EqualTo(Icons.Material.Filled.Close));
+            Assert.That(DialogProvider.Markup, Is.Not.Empty);
+        });
+
+        mudIconButtons[0].Find("button").Click();
+
+        var result = await dialog.Result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(result!.Canceled, Is.False);
+            Assert.That(DialogProvider.Markup, Is.Empty);
+        });
     }
 }

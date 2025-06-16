@@ -4,7 +4,7 @@
 @inherits ComponentBase
 @inject IShutdownManager ShutdownManager
 <MudIconButton title=@Localizer["CloseAppButton.Hover"].Value
-               Class="w-14 h-8 text-adlerdarkblue rounded-none transform ease-in-out duration-75 active:drop-shadow-none hover:text-buttonbgblue m-0 p-2 hover:bg-red-400"
+               Class="w-12 h-12 text-adlerdarkblue rounded-none transform ease-in-out duration-75 active:drop-shadow-none hover:text-buttonbgblue m-0 p-2 hover:bg-red-400"
                Icon="@Icons.Material.Filled.Close"
                OnClick="async () => await ShutdownManager.RequestShutdownAsync()">
     

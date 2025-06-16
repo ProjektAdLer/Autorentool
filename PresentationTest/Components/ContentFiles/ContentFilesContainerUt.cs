@@ -12,7 +12,6 @@ using Presentation.Components.ContentFiles;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.Mediator;
-using Presentation.PresentationLogic.SelectedViewModels;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.ContentFiles;
@@ -31,7 +30,6 @@ public class ContentFilesContainerUt
         _localizer = Substitute.For<IStringLocalizer<ContentFilesView>>();
         _errorService = Substitute.For<IErrorService>();
         _snackbar = Substitute.For<ISnackbar>();
-        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
@@ -40,7 +38,6 @@ public class ContentFilesContainerUt
         _testContext.Services.AddSingleton(_localizer);
         _testContext.Services.AddSingleton(_errorService);
         _testContext.Services.AddSingleton(_snackbar);
-        _testContext.Services.AddSingleton(_selectedViewModelsProvider);
 
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();
@@ -63,7 +60,6 @@ public class ContentFilesContainerUt
     private IStringLocalizer<ContentFilesView> _localizer;
     private IErrorService _errorService;
     private ISnackbar _snackbar;
-    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 
     [Test]
     public void Constructor_SetsAllPropertiesAndRendersCorrectly()

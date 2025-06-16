@@ -18,17 +18,14 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Header.ContentFilesAdd.Title" xml:space="preserve">
-        <value>Add external learning material</value>
-    </data>
     <data name="AuthoringTool.Text" xml:space="preserve">
         <value>Authoring tool</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
-        <value>Upload learning world</value>
+        <value>Publish learning world</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Upload learning world to the AdLer server</value>
+        <value>Export moodle learning world file (.mbz)</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>My learning worlds</value>
@@ -54,11 +51,35 @@
     <data name="MudPopover.Functionality.Button.Close.Hover" xml:space="preserve">
         <value>Close</value>
     </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Final feedback - Opens a browser window</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
+        <value>To the final feedback</value>
+    </data>
+    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
+        <value>In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</value>
+    </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>Give feedback</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Report technical error</value>
+    </data>
     <data name="Export.SnackBar.Message" xml:space="preserve">
         <value>Publishing of the learning world completed.</value>
     </data>
     <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
         <value>Exporting learning world was canceled</value>
+    </data>
+    <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
+        <value>Learning world contains no learning spaces.</value>
+    </data>
+    <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
+        <value>Learning space &lt;b&gt;{0}&lt;/b&gt; contains no learning elements.</value>
+    </data>
+    <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
+        <value>Learning space &lt;b&gt;{0}&lt;/b&gt; cannot be completed due to insufficient points. Currently, the points required are higher than the total points.</value>
     </data>
     <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
         <value>Learning world is not valid</value>
@@ -84,6 +105,18 @@
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
         <value>Sucessfully saved learning world {0}</value>
     </data>
+    <data name="ErrorString.NoTasks.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains no tasks.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; references an element which was not placed inside of a space.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant element. Plase check the element references you have set in this element.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; references element &lt;b&gt;{2}&lt;/b&gt; in space &lt;b&gt;{1}&lt;/b&gt;. However, because this space comes after the space in which element &lt;b&gt;{0}&lt;/b&gt; is placed, this reference is invalid.</value>
+    </data>
     <data name="UploadLearningWorld.Success.DialogText" xml:space="preserve">
         <value>Your learning world {0} was successfully uploaded. Click &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;here&lt;/a&gt;&lt;/strong&gt;, to open the world in moodle or &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;here&lt;/a&gt;&lt;/strong&gt;, to go to the 3D website.</value>
     </data>
@@ -91,10 +124,22 @@
         <value>Publish successful</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
-        <value>Export learning world (ZIP)</value>
+        <value>Archive learning world (.zip)</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Export the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
+        <value>Archive the learning world as ZIP file (e.g. to send to another computer or as a backup)</value>
+    </data>
+    <data name="HeaderBar.Help.About" xml:space="preserve">
+        <value>About AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.About.Hover" xml:space="preserve">
+        <value>Information about the AdLer project</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual" xml:space="preserve">
+        <value>User manual</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
+        <value>Didactic guide</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Learning world already exists</value>
@@ -105,13 +150,52 @@
     <data name="Functionality.Button.Close.Hover" xml:space="preserve">
         <value>Close</value>
     </data>
+    <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
+        <value>User manual (only available in German) - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
+        <value>Didactic guide (only available in German) - Opens a browser window</value>
+    </data>
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Uploading the learning world...</value>
     </data>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Administration</value>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivity element</value>
     </data>
-    <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
-        <value>Upload learning world</value>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value>Information about the adaptivity element - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value>Information about the story element - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement" xml:space="preserve">
+        <value>Story element</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value>Input support</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value>Information on input support for formulate learning outcomes - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value>Software components</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value>Software components of the authoring tool - Opens a browser window</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling" xml:space="preserve">
+        <value>Operation</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value>Operating steps available in the authoring tool</value>
+    </data>
+    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
+        <value>Learning world contains more than 50 learning spaces.</value>
+    </data>
+    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; references external learning material that does not exist</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; contains a reference to a non-existant external learning material. Plase check the element references you have set in this element.</value>
     </data>
 </root>

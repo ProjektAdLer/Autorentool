@@ -8,22 +8,22 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
 @using Presentation.Components.Forms.Buttons
-
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-3">
+        <div class="px-3 2xl:px-4">
+            
             <p class="text-[12px] text-justify pb-2">@Localizer["AddLinkForm.Info.Text"]
                 <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
                     <TooltipContent>
                         <MudText Class="cursor-default text-xs">@Localizer["AddLinkForm.Info.Infotext"]</MudText>
                     </TooltipContent>
                     <ChildContent>
-                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue"></MudIcon>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-200 hover:text-adlerdarkblue"></MudIcon>
                     </ChildContent>
                 </MudTooltip>
             </p>
- 
+            
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           DebounceInterval="DebounceInterval"
@@ -45,7 +45,7 @@
             </MudTextField>
         </div>
     </Fields>
-    
+
     <FooterButtons>
         <DefaultSubmitButton/>
     </FooterButtons>

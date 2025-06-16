@@ -21,6 +21,9 @@
     <data name="LearningContentDialog.LearningMaterial.Dialog.Subtitle" xml:space="preserve">
         <value>All external learning material that has already been imported into the authoring tool is listed below. Select the desired learning material for the learning element from this list.</value>
     </data>
+    <data name="LearningContentDialog.LearningMaterial.Search" xml:space="preserve">
+        <value>Search...</value>
+    </data>
     <data name="LearningContentDialog.LearningMaterial.Preview" xml:space="preserve">
         <value>Show learning material</value>
     </data>

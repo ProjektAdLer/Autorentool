@@ -274,7 +274,6 @@ public class EntityPersistEntityMappingProfile : Profile
             })
             .ReverseMap()
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
-            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)

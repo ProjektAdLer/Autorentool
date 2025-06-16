@@ -105,10 +105,6 @@ module.exports = {
                 adlerbggradientto: "#e2eaf2",
                 nodehandlecolor: "#e9d6b3",
                 adlerbronze: "#bf8970",
-                adlertitleblue: "#8b96a7",
-                adlertitledarkblue: "#747e8c",
-                adlerheaderdarkblue: "#2e394d",
-                adlerheaderblue: "#3d4a66",
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",

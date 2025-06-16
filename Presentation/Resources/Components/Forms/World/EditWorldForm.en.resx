@@ -67,7 +67,7 @@
         <value>Framework for the story</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
+        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a coherent framework.</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
         <value>Introduction</value>

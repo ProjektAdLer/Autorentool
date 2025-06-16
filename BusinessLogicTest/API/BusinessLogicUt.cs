@@ -9,7 +9,6 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
-using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -947,42 +946,6 @@ public class BusinessLogicUt
 
         errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
-    
-    // ANF-ID: [ASN0001]
-    [Test]
-    public void ValidateLearningWorldStructureForExport_CallsValidator()
-    {
-        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
-        var world = EntityProvider.GetLearningWorld();
-        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
-        mockDataAccess.GetAllContent().Returns(learningContentList);
-        
-        systemUnderTest.ValidateLearningWorldForExport(world);
-
-        mockValidator.Received().ValidateForExport(world, Arg.Is<List<ILearningContent>>(list =>
-            list.Count == learningContentList.Count &&
-            list[0] == learningContentList[0])); 
-    }
-    
-    // ANF-ID: [AHO22]
-    [Test]
-    public void ValidateLearningWorldStructureForGeneration_CallsValidator()
-    {
-        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
-        var world = EntityProvider.GetLearningWorld();
-        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
-        mockDataAccess.GetAllContent().Returns(learningContentList);
-        
-        systemUnderTest.ValidateLearningWorldForGeneration(world);
-
-        mockValidator.Received().ValidateForGeneration(world, Arg.Is<List<ILearningContent>>(list =>
-            list.Count == learningContentList.Count &&
-            list[0] == learningContentList[0])); 
-    }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IApplicationConfiguration? fakeConfiguration = null,
@@ -991,8 +954,7 @@ public class BusinessLogicUt
         ICommandStateManager? commandStateManager = null,
         IBackendAccess? apiAccess = null,
         IErrorManager? errorManager = null,
-        ILogger<BusinessLogic.API.BusinessLogic>? logger = null,
-        ILearningWorldStructureValidator? learningWorldStructureValidator = null)
+        ILogger<BusinessLogic.API.BusinessLogic>? logger = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
@@ -1001,9 +963,8 @@ public class BusinessLogicUt
         apiAccess ??= Substitute.For<IBackendAccess>();
         errorManager ??= Substitute.For<IErrorManager>();
         logger ??= Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
-        learningWorldStructureValidator ??= Substitute.For<ILearningWorldStructureValidator>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess, errorManager, logger, learningWorldStructureValidator);
+            commandStateManager, apiAccess, errorManager, logger);
     }
 }

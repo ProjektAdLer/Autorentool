@@ -41,7 +41,4 @@
     <data name="LearningWorldPathwayView.Points.Summary" xml:space="preserve">
         <value> pt</value>
     </data>
-    <data name="LearningWorldView.Title" xml:space="preserve">
-        <value>Learning world overview - Learning pathway</value>
-    </data>
 </root>

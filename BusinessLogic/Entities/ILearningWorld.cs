@@ -25,5 +25,4 @@ public interface ILearningWorld
     string EnrolmentKey { get; set; }
     string StoryStart { get; set; }
     string StoryEnd { get; set; }
-    IEnumerable<ILearningElement> AllLearningElements { get; }
 }

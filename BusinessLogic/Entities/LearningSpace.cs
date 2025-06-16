@@ -59,7 +59,7 @@ public class LearningSpace : ILearningSpace
     public string Name { get; set; }
     public string Description { get; set; }
     public int RequiredPoints { get; set; }
-    public int Points => ContainedLearningElements.Sum(element => element.Points);
+
     public SpaceTheme SpaceTheme { get; set; }
 
     public bool UnsavedChanges

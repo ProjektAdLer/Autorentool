@@ -18,17 +18,14 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Header.ContentFilesAdd.Title" xml:space="preserve">
-        <value>Externes Lernmaterial hinzufügen</value>
-    </data>
     <data name="AuthoringTool.Text" xml:space="preserve">
         <value>Autorentool</value>
     </data>
     <data name="3DWorld.Generate.Text" xml:space="preserve">
-        <value>Lernwelt hochladen</value>
+        <value>Veröffentlichen der Lernwelt</value>
     </data>
     <data name="3DWorld.Generate.Hover" xml:space="preserve">
-        <value>Lernwelt auf den AdLer-Server hochladen</value>
+        <value>Lernwelt als Moodle-Lernwelt-Datei (.mbz) veröffentlichen</value>
     </data>
     <data name="LearningWorld.Home.Hover" xml:space="preserve">
         <value>Meine Lernwelten</value>
@@ -54,8 +51,23 @@
     <data name="MudPopover.Functionality.Button.Close.Hover" xml:space="preserve">
         <value>Schließen</value>
     </data>
+    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
+        <value>Um das Autorentool weiter zu entwickeln und zu optimieren, würden wir es schätzen wenn Sie sich ein paar Minuten Ihrer Zeit erübrigen würden um uns Ihr Feedback über das aktuelle Autorentool mitzuteilen.</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
+        <value>Zum finalen Feedback</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Allgemeines Feedback zu AdLer - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>Feedback geben</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Technischen Fehler melden</value>
+    </data>
     <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
-        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; hochladen?</value>
+        <value>Möchten Sie wirklich die Lernwelt &lt;b&gt;{0}&lt;/b&gt; veröffentlichen?</value>
     </data>
     <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
         <value>Ok</value>
@@ -72,6 +84,15 @@
     <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
         <value>Lernwelt ist ungültig</value>
     </data>
+    <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
+        <value>Diese Lernwelt enthält keine Lernräume.</value>
+    </data>
+    <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
+        <value>Lernraum &lt;b&gt;{0}&lt;/b&gt; enthält keine Lernelemente.</value>
+    </data>
+    <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
+        <value>Lernraum &lt;b&gt;{0}&lt;/b&gt; kann nicht abgeschlossen werden, da die Punkte nicht ausreichen. Aktuell sind die benötigten Punkte höher als die Gesamtpunkte.</value>
+    </data>
     <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
         <value>Du bist nicht angemeldet</value>
     </data>
@@ -84,6 +105,18 @@
     <data name="SaveWorld.Success.Snackbar.Message" xml:space="preserve">
         <value>Lernwelt {0} erfolgreich gespeichert</value>
     </data>
+    <data name="ErrorString.TaskReferencesUnplacedElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element, welches nicht in einem Raum platziert wurde.</value>
+    </data>
+    <data name="ErrorString.NoTasks.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; enthält keine Aufgaben.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantElement.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes Element. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
+    </data>
+    <data name="ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert Element &lt;b&gt;{2}&lt;/b&gt; in Lernraum &lt;b&gt;{1}&lt;/b&gt;. Da dieser Lernraum aber erst nach dem Raum, in dem Element &lt;b&gt;{0}&lt;/b&gt; platziert ist, freigeschaltet wird, ist diese Referenz nicht zulässig.</value>
+    </data>
     <data name="UploadLearningWorld.Success.Title" xml:space="preserve">
         <value>Veröffentlichen erfolgreich</value>
     </data>
@@ -91,10 +124,22 @@
         <value>Ihre Lernwelt {0} wurde erfolgreich hochgeladen. Klicken Sie &lt;strong&gt;&lt;a href="{1}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um die Welt in Moodle zu öffnen oder &lt;strong&gt;&lt;a href="{2}" target="_blank" class="text-adlerblue-700"&gt;hier&lt;/a&gt;&lt;/strong&gt;, um zur 3D-Webseite zu gelangen.</value>
     </data>
     <data name="ExportArchive.Text" xml:space="preserve">
-        <value>Lernwelt exportieren (ZIP)</value>
+        <value>Lernwelt archivieren (.zip)</value>
     </data>
     <data name="ExportArchive.Hover" xml:space="preserve">
-        <value>Lernwelt als ZIP-Datei exportieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+        <value>Lernwelt als ZIP-Datei archivieren (z.B. zu anderem Rechner senden oder für Sicherungskopie)</value>
+    </data>
+    <data name="HeaderBar.Help.About" xml:space="preserve">
+        <value>Über AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.About.Hover" xml:space="preserve">
+        <value>Informationen über das Projekt AdLer</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual" xml:space="preserve">
+        <value>Benutzerhandbuch</value>
+    </data>
+    <data name="HeaderBar.Help.Tutorial" xml:space="preserve">
+        <value>Didaktische Handreichung</value>
     </data>
     <data name="ConfirmReplaceOrCreateCopyDialog.Title" xml:space="preserve">
         <value>Lernwelt existiert bereits</value>
@@ -105,13 +150,52 @@
     <data name="Functionality.Button.Close.Hover" xml:space="preserve">
         <value>Schließen</value>
     </data>
+    <data name="HeaderBar.Help.Tutorial.Hover" xml:space="preserve">
+        <value>Didaktische Handreichung - Öffnet ein Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Hover" xml:space="preserve">
+        <value>Benutzerhandbuch - Öffnet ein Browserfenster</value>
+    </data>
     <data name="DialogService.UploadLearningWorld.Dialog.Title" xml:space="preserve">
         <value>Hochladen der Lernwelt...</value>
     </data>
-    <data name="3DWorld.Generate.Button.Title" xml:space="preserve">
-        <value>Lernwelt hochladen</value>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement" xml:space="preserve">
+        <value>Adaptivitätselement</value>
     </data>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Administration</value>
+    <data name="HeaderBar.Help.Didactic.AdaptivityElement.Hover" xml:space="preserve">
+        <value>Informationen zum Adaptivitätselement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement.Hover" xml:space="preserve">
+        <value>Informationen zum Storyelement - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.StoryElement" xml:space="preserve">
+        <value>Storyelement</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
+        <value>Eingabeunterstützung</value>
+    </data>
+    <data name="HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
+        <value>Informationen zur Eingabeunterstützung zum Formulieren von Lernzielen - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling" xml:space="preserve">
+        <value>Bedienung</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents" xml:space="preserve">
+        <value>Softwarekomponenten</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.Handling.Hover" xml:space="preserve">
+        <value>Im Autorentool verfügbare Bedienschritte - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="HeaderBar.Help.UserManual.SoftwareComponents.Hover" xml:space="preserve">
+        <value>Softwarekomponenten des Autorentools - Öffnet ein neues Browserfenster</value>
+    </data>
+    <data name="ErrorString.TooMany.LearningSpaces.Message" xml:space="preserve">
+        <value>Diese Lernwelt enthält mehr als 50 Lernräume.</value>
+    </data>
+    <data name="ErrorString.Missing.LearningContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert externes Lernmaterial, welches nicht existiert</value>
+    </data>
+    <data name="ErrorString.TaskReferencesNonexistantContent.Message" xml:space="preserve">
+        <value>Element &lt;b&gt;{0}&lt;/b&gt; referenziert ein nicht existierendes externes Lernmaterial. Bitte überprüfen Sie die gesetzten Referenzen in diesem Element.</value>
     </data>
 </root>

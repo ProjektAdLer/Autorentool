@@ -7,11 +7,9 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
-using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
 using Shared.Command;
 using Shared.Configuration;
-using Shared;
 
 namespace BusinessLogic.API;
 
@@ -24,8 +22,7 @@ public class BusinessLogic : IBusinessLogic
         ICommandStateManager commandStateManager,
         IBackendAccess backendAccess,
         IErrorManager errorManager,
-        ILogger<BusinessLogic> logger,
-        ILearningWorldStructureValidator learningWorldStructureValidator)
+        ILogger<BusinessLogic> logger)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
@@ -34,7 +31,6 @@ public class BusinessLogic : IBusinessLogic
         BackendAccess = backendAccess;
         ErrorManager = errorManager;
         Logger = logger;
-        LearningWorldStructureValidator = learningWorldStructureValidator;
     }
 
 
@@ -44,7 +40,6 @@ public class BusinessLogic : IBusinessLogic
     internal ILogger<BusinessLogic> Logger { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
-    internal ILearningWorldStructureValidator LearningWorldStructureValidator { get; }
     public IApplicationConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs>? OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
@@ -387,23 +382,5 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    #endregion
-
-    #region LearningWorldStructureValidator
-
-    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForExport"/>
-    public ValidationResult ValidateLearningWorldForExport(LearningWorld world)
-    {
-        var content = DataAccess.GetAllContent();
-        return LearningWorldStructureValidator.ValidateForExport(world, content.ToList());
-    }
-
-    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForGeneration"/>
-    public ValidationResult ValidateLearningWorldForGeneration(LearningWorld world)
-    {
-        var content = DataAccess.GetAllContent();
-        return LearningWorldStructureValidator.ValidateForGeneration(world, content.ToList());
-    }
-    
     #endregion
 }

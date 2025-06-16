@@ -15,7 +15,6 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
 using Presentation.Components.Dialogues;
-using Presentation.Components.Forms.Content;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 
@@ -33,7 +32,6 @@ public class ContentFilesAddIt : MudBlazorTestFixture<ContentFilesAdd>
         Context.Services.AddSingleton(_dialogService);
         Context.Services.AddSingleton(_presentationLogic);
         Context.Services.AddSingleton(_errorService);
-        Context.ComponentFactories.AddStub<AddLinkForm>();
         Context.RenderComponent<MudPopoverProvider>();
     }
 

@@ -23,6 +23,9 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="Header.Text" xml:space="preserve">
+        <value>Externes Lernmaterial hinzufügen</value>
+    </data>
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>
     </data>
@@ -91,8 +94,5 @@
     </data>
     <data name="ContentFilesAdd.ErrorMessage.LoadingMaterial" xml:space="preserve">
         <value>Fehler beim Laden von externem Lernmaterial</value>
-    </data>
-    <data name="ContentFilesAdd.Header" xml:space="preserve">
-        <value>Externes Lernmaterial hinzufügen</value>
     </data>
 </root>
