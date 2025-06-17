@@ -82,24 +82,23 @@
                                Immediate="false"
                                For="@(() => FormModel.Difficulty)"
                                Variant="Variant.Outlined"
-                               Margin="Margin.Dense"
-                               Class="text-xs">
+                               Margin="Margin.Dense">
                         <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
                             <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Easy"]</p>
+                                <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                <p>@Localizer["EditElementForm.Difficulty.Easy"]</p>
                             </div>
                         </MudSelectItem>
                         <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
                             <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Medium"]</p>
+                                <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                <p>@Localizer["EditElementForm.Difficulty.Medium"]</p>
                             </div>
                         </MudSelectItem>
                         <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
                             <div class="flex items-center gap-2">
-                                <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
-                                <p class="pt-1">@Localizer["EditElementForm.Difficulty.Hard"]</p>
+                                <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                <p>@Localizer["EditElementForm.Difficulty.Hard"]</p>
                             </div>
                         </MudSelectItem>
                         <MudSelectItem
