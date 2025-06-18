@@ -28,6 +28,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest;
@@ -42,7 +43,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -51,11 +52,11 @@ public class CachingMapperIt
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
                 Substitute.For<IUnsavedChangesResetHelper>()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1");
+        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1", WorldTheme.CampusKempten, "g1", "h1", "i1", "j1");
         systemUnderTest.UndoCommand();
 
         systemUnderTest.UndoCommand();
@@ -80,7 +81,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -92,14 +93,14 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
-            Theme.CampusAschaffenburg,
+            SpaceTheme.EatingArea,
             2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
@@ -142,7 +143,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -155,14 +156,14 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
-            Theme.CampusAschaffenburg,
+            SpaceTheme.LearningArea,
             2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 

@@ -10,7 +10,7 @@
 
 
 <p class="text-sm px-6">@Localizer["LearningContentDialog.LearningMaterial.Dialog.Subtitle"]</p>
-<div class="rounded-lg border-4 border-adlerdarkblue-100 m-4">
+<div class="rounded border-4 border-adlergrey-200 m-4">
     <MudContainer Class="flex justify-end bg-adlerbgbright">
         <div class="pb-2 px-2 w-80 bg-adlerbgbright">
             <MudTextField @bind-Value="_searchString"
@@ -97,7 +97,7 @@
 
     private string SelectedRowClassFunc(ILearningContentFormModel element, int rowNumber)
     {
-        return element.Equals(LearningContent) ? "bg-adlergrey-100" : string.Empty;
+        return element.Equals(LearningContent) ? "bg-adlerblue-200" : string.Empty;
     }
 
     private bool Filter(ILearningContentFormModel element) =>

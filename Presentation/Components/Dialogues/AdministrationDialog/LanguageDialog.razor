@@ -1,0 +1,14 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Culture
+<div class="flex flex-col w-full">
+    <p class="text-adlerheaderblue text-lg font-bold py-2 text-center cursor-default">@Localizer["DialogContent.Language.Title"]</p>
+    <CultureSelector/>
+</div>
+
+@code {
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<LanguageDialog> Localizer { get; set; }
+
+}

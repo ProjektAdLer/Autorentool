@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
 using Shared;
+using Shared.Theme;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;
@@ -39,9 +40,9 @@ public class LearningSpaceViewUt
             .Returns(_dimensions);
         _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        ThemeHelper.Initialize(themeLocalizer);
+        ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
         _ctx.Services.AddSingleton(_jsRuntime);
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
@@ -122,7 +123,7 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("p.space-theme");
         elementName.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.CampusAschaffenburg</p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.SpaceTheme.LearningArea.CampusAschaffenburg</p>");
     }
 
     [Test]

@@ -1,6 +1,7 @@
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Entities;
 
@@ -10,8 +11,8 @@ public class AuthoringToolWorkspaceUt
     [Test]
     public void Constructor_InitializesProperties()
     {
-        var world1 = new LearningWorld("foo", "", "f", "", "", "");
-        var world2 = new LearningWorld("bar", "", "f", "", "", "");
+        var world1 = new LearningWorld("foo", "", "f", "", "", "", WorldTheme.CampusAschaffenburg);
+        var world2 = new LearningWorld("bar", "", "f", "", "", "", WorldTheme.CampusAschaffenburg);
         var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
@@ -29,8 +30,8 @@ public class AuthoringToolWorkspaceUt
     [Test]
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
-        var world1 = new LearningWorld("foo", "", "f", "", "", "");
-        var world2 = new LearningWorld("bar", "", "f", "", "", "");
+        var world1 = new LearningWorld("foo", "", "f", "", "", "", WorldTheme.CampusAschaffenburg);
+        var world2 = new LearningWorld("bar", "", "f", "", "", "", WorldTheme.CampusAschaffenburg);
         var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
@@ -41,7 +42,7 @@ public class AuthoringToolWorkspaceUt
         var memento = systemUnderTest.GetMemento();
 
         systemUnderTest.LearningWorlds.Remove(world1);
-        systemUnderTest.LearningWorlds.Add(new LearningWorld("f", "f", "f", "f", "f", "f"));
+        systemUnderTest.LearningWorlds.Add(new LearningWorld("f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg));
         
         Assert.Multiple(() =>
         {

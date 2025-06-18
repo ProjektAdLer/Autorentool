@@ -2,6 +2,7 @@ using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.Topic;
 
@@ -11,7 +12,7 @@ public class CreateTopicUt
     [Test]
     public void Execute_CreatesTopic()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
@@ -43,7 +44,7 @@ public class CreateTopicUt
     [Test]
     public void Execute_NameOfTopicAlreadyExists_CreatesTopicWithEditedName()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var name = "topic1";
         var topic = new BusinessLogic.Entities.Topic(name);
         world.Topics.Add(topic);
@@ -83,7 +84,7 @@ public class CreateTopicUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var name = "topic1";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -101,7 +102,7 @@ public class CreateTopicUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateTopic()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var name = "topic1";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;

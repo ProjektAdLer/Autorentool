@@ -63,6 +63,7 @@ using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.API;
@@ -322,14 +323,14 @@ public class PresentationLogicUt
         var mockWorldVm = ViewModelProvider.GetLearningWorld();
         Substitute.For<ILogger<WorldCommandFactory>>();
         workspaceVm.LearningWorlds.Add(mockWorldVm);
-        mockWorldCommandFactory.GetCreateCommand(workspaceEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
+        mockWorldCommandFactory.GetCreateCommand(workspaceEntity, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.AuthoringToolWorkspace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: mockSelectedViewModelsProvider, worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
         mockSelectedViewModelsProvider.Received().SetLearningWorld(workspaceVm.LearningWorlds.Last(), mockCommand);
@@ -350,14 +351,14 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(worldEntity);
         mockWorldCommandFactory
-            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
+            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -377,14 +378,14 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(worldEntity);
         mockWorldCommandFactory
-            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
+            .GetEditCommand(worldEntity, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f",
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             worldCommandFactory: mockWorldCommandFactory);
 
-        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", "f", "f", "f", "f");
+        systemUnderTest.EditLearningWorld(worldVm, "f", "f", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg, "f", "f", "f", "f");
 
         mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }
@@ -473,7 +474,7 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         learningWorldVm.LearningSpaces.Add(mockSpaceVm);
         mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", learningOutcomeCollection, 5,
-                Theme.CampusAschaffenburg,
+                SpaceTheme.LearningArea,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
         mockCommand.NewSpace.Id.Returns(mockSpaceVm.Id);
@@ -482,7 +483,7 @@ public class PresentationLogicUt
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
 
         systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", ViewModelProvider.GetLearningOutcomeCollection(),
-            5, Theme.CampusAschaffenburg, 6, 7,
+            5, SpaceTheme.LearningArea, 6, 7,
             topicVm);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -501,14 +502,14 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
-        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.CampusAschaffenburg, null,
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, SpaceTheme.LearningArea, null,
                 Arg.Any<Action<ILearningSpace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, SpaceTheme.LearningArea, null);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -527,14 +528,14 @@ public class PresentationLogicUt
         Substitute.For<ILogger<SpaceCommandFactory>>();
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
-        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, Theme.CampusAschaffenburg, null,
+        mockSpaceCommandFactory.GetEditCommand(learningSpaceEntity, "z", "z", 5, SpaceTheme.LearningArea, null,
                 Arg.Any<Action<ILearningSpace>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, Theme.CampusAschaffenburg, null);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", 5, SpaceTheme.LearningArea, null);
 
         mockBusinessLogic.DidNotReceive().ExecuteCommand(mockCommand);
     }
@@ -1484,15 +1485,15 @@ public class PresentationLogicUt
             .Returns(mockDeleteTopicCommand);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand1);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand2);
         mockSpaceCommandFactory
             .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>())
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>())
             .Returns(mockEditSpaceCommand3);
         mockBatchCommandFactory
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
@@ -1514,15 +1515,15 @@ public class PresentationLogicUt
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity1, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity2, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockSpaceCommandFactory
             .Received()
             .GetEditCommand(spaceEntity3, Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<int>(), Arg.Any<Theme>(), null, Arg.Any<Action<ILearningSpace>>());
+                Arg.Any<int>(), Arg.Any<SpaceTheme>(), null, Arg.Any<Action<ILearningSpace>>());
         mockBatchCommandFactory
             .Received()
             .GetBatchCommand(Arg.Is<IEnumerable<IUndoCommand>>(i =>
@@ -2852,7 +2853,41 @@ public class PresentationLogicUt
 
     [Test]
     // ANF-ID: [ASN0001]
-    public async Task ExportLearningWorldToArchive_CallsBusinessLogic()
+    public void ValidateLearningWorldForExport_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForExport(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForExport(mockWorld);
+    }
+    
+    [Test]
+    // ANF-ID: [AHO22]
+    public void ValidateLearningWorldForGeneration_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForGeneration(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForGeneration(mockWorld);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0001]
+    public async Task ExportLearningWorldToZipArchive_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
@@ -2869,14 +2904,14 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             serviceProvider: serviceProvider.BuildServiceProvider());
         systemUnderTest.RunningElectron.Returns(true);
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        await systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm);
         mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
         await mockBusinessLogic.Received().ExportLearningWorldToArchiveAsync(mockWorldEntity, pathToArchive);
     }
 
     [Test]
     // ANF-ID: [ASN0001]
-    public async Task ExportLearningWorldToArchive_UserCancels_DoesNotCallBusinessLogic()
+    public async Task ExportLearningWorldToZipArchive_UserCancels_DoesNotCallBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
@@ -2889,10 +2924,55 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
         systemUnderTest.RunningElectron.Returns(true);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm).Throws(new OperationCanceledException("User cancelled"));;
 
         await mockBusinessLogic.DidNotReceive()
             .ExportLearningWorldToArchiveAsync(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
+    }
+    
+    [Test]
+    // ANF-ID: [AHO22]
+    public async Task ExportLearningWorldToMoodleArchive_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorldEntity = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        var pathToArchive = "pathToArchiveVar";
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Returns(pathToArchive);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(mockWorldEntity);
+        var serviceProvider = new ServiceCollection();
+        serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            serviceProvider: serviceProvider.BuildServiceProvider());
+        systemUnderTest.RunningElectron.Returns(true);
+        await systemUnderTest.ExportLearningWorldToMoodleArchiveAsync(mockWorldVm);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
+        mockBusinessLogic.Received().ConstructBackup(mockWorldEntity, pathToArchive);
+    }
+
+    [Test]
+    // ANF-ID: [AHO22]
+    public async Task ExportLearningWorldToMoodleArchive_UserCancels_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Throws(new OperationCanceledException("User cancelled"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        systemUnderTest.ExportLearningWorldToMoodleArchiveAsync(mockWorldVm).Throws(new OperationCanceledException("User cancelled"));;
+
+        mockBusinessLogic.DidNotReceive()
+            .ConstructBackup(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
     }
 
     // ANF-ID: [ASN0002]

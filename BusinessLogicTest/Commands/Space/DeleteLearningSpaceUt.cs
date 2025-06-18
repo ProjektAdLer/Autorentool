@@ -2,7 +2,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
@@ -14,21 +14,21 @@ public class DeleteLearningSpaceUt
     // ANF-ID: [AWA0024]
     public void Execute_DeletesLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("a", "d", 4, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("g", "j", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space3 = new LearningSpace("g", "j", 5, Theme.CampusAschaffenburg,
+        var space3 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
@@ -69,8 +69,8 @@ public class DeleteLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", 5, Theme.CampusAschaffenburg,
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var space = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection());
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -89,16 +89,16 @@ public class DeleteLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg)
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("g", "j", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpace("g", "j", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", 7, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpace("l", "o", 7, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection())
         {
             UnsavedChanges = false

@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.World;
@@ -33,13 +34,14 @@ public class WorldCommandFactoryUt
         var evaluationLink = "WorldEvaluationLink";
         var enrolmentKey = "WorldEnrolmentKey";
         var goals = "WorldGoals";
+        var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "WorldStoryStart";
         var storyEnd = "WorldStoryEnd";
         Action<AuthoringToolWorkspace> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetCreateCommand(authoringToolWorkspace, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningWorld>());
@@ -120,13 +122,14 @@ public class WorldCommandFactoryUt
         var evaluationLink = "NewEvaluationLink";
         var enrolmentKey = "NewEnrolmentKey";
         var goals = "NewGoals";
+        var theme = WorldTheme.CampusAschaffenburg;
         var storyStart = "NewStoryStart";
         var storyEnd = "NewStoryEnd";
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
         var result = _factory.GetEditCommand(learningWorld, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
+            description, goals,theme, evaluationLink, enrolmentKey, storyStart, storyEnd, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningWorld>());

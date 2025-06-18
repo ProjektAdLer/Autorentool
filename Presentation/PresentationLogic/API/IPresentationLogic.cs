@@ -25,6 +25,7 @@ using Shared.Command;
 using Shared.Configuration;
 using Shared.Exceptions;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.API;
 
@@ -80,12 +81,14 @@ public interface IPresentationLogic
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
+    /// <param name="worldTheme"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
-        string authors, string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey,
         string storyStart, string storyEnd);
 
     /// <summary>
@@ -98,12 +101,14 @@ public interface IPresentationLogic
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
+    /// <param name="worldTheme"></param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
     /// <param name="storyStart">The story start of the learning world.</param>
     /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
-        string language, string description, string goals, string evaluationLink, string enrolmentKey,
+        string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
+        string enrolmentKey,
         string storyStart, string storyEnd);
 
     /// <summary>
@@ -159,13 +164,13 @@ public interface IPresentationLogic
     /// <param name="description">The description of the Learning Space.</param>
     /// <param name="learningOutcomeCollectionVm">The learning outcomes of the Learning Space.</param>
     /// <param name="requiredPoints">The points required to access the Learning Space.</param>
-    /// <param name="theme">The theme of the Learning Space.</param>
+    /// <param name="spaceTheme">The theme of the Learning Space.</param>
     /// <param name="positionX">The X-coordinate of the Learning Space's position.</param>
     /// <param name="positionY">The Y-coordinate of the Learning Space's position.</param>
     /// <param name="topicVm">The topic associated with the Learning Space. Can be null.</param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
         string description, LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints,
-        Theme theme,
+        SpaceTheme spaceTheme,
         double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
@@ -176,10 +181,10 @@ public interface IPresentationLogic
     /// <param name="name">The new name of the Learning Space.</param>
     /// <param name="description">The new description of the Learning Space.</param>
     /// <param name="requiredPoints">The new points required to access the Learning Space.</param>
-    /// <param name="theme">The new theme of the Learning Space.</param>
+    /// <param name="spaceTheme">The new theme of the Learning Space.</param>
     /// <param name="topicVm">The new topic associated with the Learning Space. Can be null.</param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
+        string description, int requiredPoints, SpaceTheme spaceTheme, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.
@@ -612,7 +617,8 @@ public interface IPresentationLogic
     /// <exception cref="BackendException">Thrown when the LMS world could not be deleted or if there is an issue with the HTTP request.</exception>
     Task DeleteLmsWorld(LmsWorldViewModel worldVm);
 
-    Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToZipArchiveAsync(ILearningWorldViewModel world);
+    Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world);
     Task<LearningWorldViewModel?> ImportLearningWorldFromArchiveAsync();
     IFileInfo? GetFileInfoForLearningWorld(ILearningWorldViewModel world);
     void DeleteLearningWorldByPath(string savePath);
@@ -694,4 +700,24 @@ public interface IPresentationLogic
         CancellationToken cancellationToken);
 
     #endregion
+
+    /// <summary>
+    /// Validates a <see cref="LearningWorldViewModel"/> instance to determine whether it is suitable for export.
+    /// </summary>
+    /// <param name="worldVm">The view model representing the learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
+    ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel worldVm);
+
+
+    /// <summary>
+    /// Validates a <see cref="LearningWorldViewModel"/> instance to determine whether it meets all requirements for generation.
+    /// Validation includes structural integrity, learning space definitions, content references, and adaptivity rules.
+    /// </summary>
+    /// <param name="worldVm">The view model representing the learning world to validate.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> containing any validation errors found.
+    /// </returns>
+    ValidationResult ValidateLearningWorldForGeneration(ILearningWorldViewModel worldVm);
 }

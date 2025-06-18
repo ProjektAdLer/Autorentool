@@ -18,6 +18,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
@@ -31,7 +32,7 @@ public class LearningSpacePresenterUt
         var mockErrorService = Substitute.For<IErrorService>();
         var systemUnderTest = CreatePresenterForTesting(errorService: mockErrorService);
 
-        systemUnderTest.EditLearningSpace("a", "d", 5, Theme.CampusAschaffenburg, null);
+        systemUnderTest.EditLearningSpace("a", "d", 5, SpaceTheme.LearningArea, null);
 
         mockErrorService.Received().SetError("Operation failed", "No learning space selected");
     }
@@ -46,9 +47,9 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space", "d", 5, Theme.CampusAschaffenburg, topic);
+        systemUnderTest.EditLearningSpace("space", "d", 5, SpaceTheme.LearningArea, topic);
 
-        presentationLogic.Received().EditLearningSpace(space, "space", "d", 5, Theme.CampusAschaffenburg, topic);
+        presentationLogic.Received().EditLearningSpace(space, "space", "d", 5, SpaceTheme.LearningArea, topic);
     }
 
     [Test]

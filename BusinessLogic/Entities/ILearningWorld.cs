@@ -1,4 +1,6 @@
-﻿namespace BusinessLogic.Entities;
+﻿using Shared.Theme;
+
+namespace BusinessLogic.Entities;
 
 public interface ILearningWorld
 {
@@ -12,6 +14,7 @@ public interface ILearningWorld
     string Authors { get; set; }
     string Language { get; set; }
     string Goals { get; set; }
+    WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     ICollection<ILearningElement> UnplacedLearningElements { get; set; }
     bool UnsavedChanges { get; set; }
@@ -22,4 +25,5 @@ public interface ILearningWorld
     string EnrolmentKey { get; set; }
     string StoryStart { get; set; }
     string StoryEnd { get; set; }
+    IEnumerable<ILearningElement> AllLearningElements { get; }
 }

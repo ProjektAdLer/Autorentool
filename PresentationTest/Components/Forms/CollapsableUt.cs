@@ -155,14 +155,14 @@ public class CollapsableUt
     }
 
     [Test]
-    public void Render_NoVerticalMarginSet_DefaultsTo_my4()
+    public void Render_NoVerticalMarginSet_DefaultsTo_my2()
     {
         const bool collapsed = true;
         const string title = "Title";
         
         var systemUnderTest = RenderComponent(initiallyCollapsed: collapsed, title: title);
         
-        Assert.That(() => systemUnderTest.Find("div.gap-2.my-3"), Throws.Nothing);
+        Assert.That(() => systemUnderTest.Find("div.gap-2.my-2"), Throws.Nothing);
     }
     
     [Test]

@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
@@ -31,7 +32,7 @@ public class SpaceCommandFactoryUt
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
-        var theme = Theme.CampusAschaffenburg;
+        var theme = SpaceTheme.LearningArea;
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
@@ -113,7 +114,7 @@ public class SpaceCommandFactoryUt
         var description = "Updated description";
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
-        var theme = Theme.CampusAschaffenburg;
+        var theme = SpaceTheme.LearningArea;
         Action<ILearningSpace> mappingAction = _ => { };
 
         // Act

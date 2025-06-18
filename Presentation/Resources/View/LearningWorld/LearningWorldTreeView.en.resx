@@ -27,4 +27,7 @@
     <data name="LearningWorldTreeView.Points.Summary" xml:space="preserve">
         <value> pt</value>
     </data>
+    <data name="OverView.Title" xml:space="preserve">
+        <value>Learning world overview - Hierarchy</value>
+    </data>
 </root>

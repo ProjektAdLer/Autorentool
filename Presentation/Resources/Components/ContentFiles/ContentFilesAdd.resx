@@ -44,4 +44,7 @@
     <data name="ContentFilesAdd.ErrorMessage.LoadingMaterial" xml:space="preserve">
         <value />
     </data>
+    <data name="ContentFilesAdd.Header" xml:space="preserve">
+        <value />
+    </data>
 </root>

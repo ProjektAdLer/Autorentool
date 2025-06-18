@@ -70,7 +70,7 @@
         <value>Framework for the story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a coherent framework.</value>
+        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
         <value>Introduction</value>
@@ -83,5 +83,11 @@
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
         <value>And so it ended...</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
+        <value>Learning world theme</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Selection of themes with different theme worlds for the learning world</value>
     </data>
 </root>

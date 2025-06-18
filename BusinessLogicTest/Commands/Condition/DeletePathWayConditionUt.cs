@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.Condition;
 
@@ -13,7 +14,7 @@ public class DeletePathWayConditionUt
     // ANF-ID: [AHO63]
     public void Execute_DeletesLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 4);
         var pathWayCondition1 = new PathWayCondition(ConditionEnum.Or, 6, 5);
         var pathWayCondition2 = new PathWayCondition(ConditionEnum.And, 9, 5);
@@ -52,7 +53,7 @@ public class DeletePathWayConditionUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 5);
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -70,7 +71,7 @@ public class DeletePathWayConditionUt
     [Test]
     public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 5);
         var pathWayCondition1 = new PathWayCondition(ConditionEnum.Or, 2, 7);
         world.PathWayConditions.Add(pathWayCondition);

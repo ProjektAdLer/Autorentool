@@ -12,6 +12,7 @@ using BusinessLogic.Entities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace TestHelpers;
 
@@ -25,6 +26,7 @@ public static class EntityProvider
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
         return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append,
+                WorldTheme.CampusAschaffenburg,
                 "g" + append)
             { UnsavedChanges = unsavedChanges };
     }
@@ -32,7 +34,7 @@ public static class EntityProvider
     public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
         Topic? assignedTopic = null)
     {
-        return new LearningSpace("a", "d", 4, Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
+        return new LearningSpace("a", "d", 4, SpaceTheme.LearningArea, GetLearningOutcomeCollection(),
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan))
             { UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic };
     }
@@ -204,7 +206,7 @@ public static class EntityProvider
         return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
     }
 
-    private static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
+    public static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
         IAdaptivityAction? action = null)
     {
         trigger ??= GetAdaptivityTrigger();
@@ -237,7 +239,7 @@ public static class EntityProvider
         return new CompositeTrigger(ConditionEnum.And, GetTimeTrigger(), GetCorrectnessTrigger());
     }
 
-    private static IAdaptivityQuestion GetAdaptivityQuestion()
+    public static IAdaptivityQuestion GetAdaptivityQuestion()
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };

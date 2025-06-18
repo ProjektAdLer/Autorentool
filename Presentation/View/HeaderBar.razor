@@ -1,12 +1,10 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
-@using System.Text
 @using BusinessLogic.ErrorManagement.BackendAccess
 @using ElectronWrapper
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
-@using Presentation.Components.Culture
 @using Presentation.Components.Dialogues
 @using Presentation.Components.LearningOutcomes
 @using Presentation.PresentationLogic
@@ -21,6 +19,8 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.Components.ContentFiles
+@using Presentation.Components.Dialogues.AdministrationDialog
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Shared
@@ -29,9 +29,9 @@
 @using Color = MudBlazor.Color
 @inject ISnackbar Snackbar
 
-<header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
-    <div class="flex justify-start items-center ml-1 gap-1">
+<header class="flex flex-row w-full bg-buttonbgblue items-center gap-1 justify-between h-8">
 
+    <div class="flex justify-start items-center w-14">
         @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
         {
             <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large"
@@ -43,207 +43,98 @@
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Home" Size="Size.Large"
                            Disabled="true"></MudIconButton>
         }
-        <MudDivider Vertical="true" FlexItem="true"/>
-        <div class="relative">
-            <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save"
-                           title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
-            </MudIconButton>
-            @if (SaveButtonHighlighted)
-            {
-                <span
-                    class="absolute inline-flex items-center justify-center w-3 h-3 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0">
-                </span>
-            }
-        </div>
-        <div class="flex">
-            <MudIconButton Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo"
-                           Disabled="!CanUndo"
-                           title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
-            </MudIconButton>
-            <MudIconButton Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo"
-                           Disabled="!CanRedo"
-                           title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
-            </MudIconButton>
-        </div>
+    </div>
 
-        <div class="flex gap-2">
-            <MudIconButton OnClick="@ExportLearningWorldToArchiveAsync"
-                           Icon="@Icons.Material.Filled.Archive"
-                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue p-2"
-                           title=@Localizer["ExportArchive.Hover"]
-                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-            </MudIconButton>
+    <div class="flex justify-start items-center h-6 w-56 gap-2">
+        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@_content"
+                       title=@Localizer["Header.ContentFilesAdd.Title"] OnClick="OpenContentFilesDialog">
+        </MudIconButton>
 
-            <MudIconButton id="HeaderBar.GenerateLearningWorld.Button" OnClick="@GenerateLearningWorld"
-                           title="@Localizer["3DWorld.Generate.Hover"].Value"
-                           Class="w-8 h-8 text-adlerdarkblue disabled:bg-buttonbgblue bg-adlergold-400 p-2 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlergold-600 hover:text-adlerdarkblue"
-                           Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
-                           Icon="@Icons.Material.Filled.Publish">
-            </MudIconButton>
-        </div>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Save"
+                       title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
+        </MudIconButton>
+        @if (SaveButtonHighlighted)
+        {
+            <span
+                class="absolute inline-flex items-center justify-center text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0">
+            </span>
+        }
 
+        <MudIconButton Size="Size.Small" Class="p-1 undo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Undo"
+                       Disabled="!CanUndo"
+                       title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo">
+        </MudIconButton>
+        <MudIconButton Size="Size.Small" Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo"
+                       Disabled="!CanRedo"
+                       title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
+        </MudIconButton>
         @if (_debugBuild)
         {
             <button @onclick="DebugButtonClick"
-                    class="relative w-20 btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto"
-                    title=@Localizer["3DWorld.Generate.Hover"]
+                    class="relative btn-standard w-12 h-6 my-1 p-1 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto"
                     disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
                 <p class="absolute left-1 hover:-translate-x-[30%] transition-all duration-1000">DEBUG BACKUP</p>
             </button>
         }
-
-        @*<MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
-            <div class="flex flex-row">
-                <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
-                <button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</button>
-            </div>
-            <div class="flex justify-center items-center pb-6 pt-1">
-                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title=@Localizer["MudPopover.Feedback.Final.Hover"] class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
-                    <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    <p class="uppercase">@Localizer["MudPopover.Feedback.Final.Text"]</p>
-                </a>
-            </div>
-        </MudPopover>*@
-
     </div>
-    @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
-    {
-        <div class="flex justify-center items-center gap-2 cursor-default">
-            @* ReSharper disable Html.PathError *@
-            <img class="w-7 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png"
-                 alt="authoringtool-logo"/>
-            @* ReSharper restore Html.PathError *@
-            <p class="font-bold text-base 2xl:text-lg opacity-80 text-adlerdarkblue-800">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
-        </div>
-    }
-    @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
-    {
-        <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
-            @* ReSharper disable Html.PathError *@
-            <img class="w-7 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>
-            @* ReSharper restore Html.PathError *@
-            <p class="font-bold text-base 2xl:text-lg truncate opacity-80 text-adlerdarkblue-800"
-               title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
-        </div>
-    }
 
-    <div class="flex justify-end items-center gap-2 border-solid">
-
+    <div class="flex justify-center w-full">
         @if (SelectedViewModelsProvider.LearningWorld?.Name == null)
         {
-            <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank"
-               title="@Localizer["Feedback.Button.UX.Hover"]">
-                <div class="flex flex-row items-center gap-4">
-                    <MudButton
-                        Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                </div>
-            </a>
-        }
-        else
-        {
-            <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank"
-               title="@Localizer["Feedback.Button.UX.Hover"]">
-                <div class="flex flex-row items-center gap-4">
-                    <MudButton
-                        Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">@Localizer["Feedback.Text"]</MudButton>
-                </div>
-            </a>
-        }
-
-        <CultureSelector/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" OnClick="@ShowLearningOutcomesOverview"
-                       Disabled="@(SelectedViewModelsProvider.LearningWorld == null)" Icon="@learningOutcomeIcon"
-                       title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
-
-        <MudMenu ListClass="px-2" Dense="true" AnchorOrigin="Origin.BottomCenter" Icon="@_icon">
-            <div class="flex flex-col">
-
-                <MudMenu ListClass="mx-2" Class="w-full hover:bg-adlerbgbright" ActivationEvent="@MouseEvent.MouseOver"
-                         AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight"
-                         title="@Localizer["HeaderBar.Help.UserManual.Hover"]">
-                    <ActivatorContent>
-                        <div class="flex flex-row justify-between pl-4 py-3 w-full">
-                            <p @onclick="@OpenManual">@Localizer["HeaderBar.Help.UserManual"]</p>
-                            <button>
-                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small"
-                                         Class="px-0 text-adlertextgrey opacity-60"></MudIcon>
-                            </button>
-                        </div>
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MudListItem T="object">
-                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                                     title="@Localizer["HeaderBar.Help.UserManual.SoftwareComponents.Hover"]"
-                                     @onclick="@OpenManualSoftwareComponents">@Localizer["HeaderBar.Help.UserManual.SoftwareComponents"]</MudLink>
-                        </MudListItem>
-                        <MudListItem T="object">
-                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                                     title="@Localizer["HeaderBar.Help.UserManual.Handling.Hover"]"
-                                     @onclick="@OpenManualHandling">@Localizer["HeaderBar.Help.UserManual.Handling"]</MudLink>
-                        </MudListItem>
-                    </ChildContent>
-                </MudMenu>
-
-                <MudMenu ListClass="mx-2" Class="w-full hover:bg-adlerbgbright" ActivationEvent="@MouseEvent.MouseOver"
-                         AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight"
-                         title="@Localizer["HeaderBar.Help.Tutorial.Hover"]">
-                    <ActivatorContent>
-                        <div class="flex flex-row justify-between pl-4 py-3 w-full">
-                            <p @onclick="@OpenDidacticGuide">@Localizer["HeaderBar.Help.Tutorial"]</p>
-                            <button>
-                                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small"
-                                         Class="px-0 text-adlertextgrey opacity-60"></MudIcon>
-                            </button>
-                        </div>
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MudListItem T="object">
-                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                                     title="@Localizer["HeaderBar.Help.Didactic.AdaptivityElement.Hover"]"
-                                     @onclick="@OpenDidacticAdaptivityElementGuide">@Localizer["HeaderBar.Help.Didactic.AdaptivityElement"]</MudLink>
-                        </MudListItem>
-                        <MudListItem T="object">
-                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                                     title="@Localizer["HeaderBar.Help.Didactic.LearningOutcomeGuide.Hover"]"
-                                     @onclick="@OpenDidacticLearningOutcomeGuide">@Localizer["HeaderBar.Help.Didactic.LearningOutcomeGuide"]</MudLink>
-                        </MudListItem>
-                        <MudListItem T="object">
-                            <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                                     title="@Localizer["HeaderBar.Help.Didactic.StoryElement.Hover"]"
-                                     @onclick="@OpenDidacticStoryElementGuide">@Localizer["HeaderBar.Help.Didactic.StoryElement"]</MudLink>
-                        </MudListItem>
-                    </ChildContent>
-                </MudMenu>
+            <div class="flex justify-center items-center gap-2 cursor-default">
+                @* ReSharper disable Html.PathError *@
+                <img class="w-5 h-5 drop-shadow opacity-60" src="/CustomIcons/HeaderBar/autorentool-logo-icon.png"
+                     alt="authoringtool-logo"/>
+                @* ReSharper restore Html.PathError *@
+                <p class="font-bold text-base 2xl:text-lg text-adlertitledarkblue">@Localizer["AuthoringTool.Text"] @(Constants.ApplicationVersion)</p>
             </div>
+        }
+        @if (SelectedViewModelsProvider.LearningWorld?.Name != null)
+        {
+            <div class="flex justify-center items-center gap-2 cursor-default max-w-[85%] 2xl:w-full">
+                @* ReSharper disable Html.PathError *@
+                @*<img class="w-5 h-5 drop-shadow opacity-60" src="CustomIcons/World/world-icon.png" alt="learningworld"/>*@
+                @* ReSharper restore Html.PathError *@
+                <p class="font-bold text-base 2xl:text-lg truncate text-adlertitledarkblue"
+                   title="@SelectedViewModelsProvider.LearningWorld?.Name"> @SelectedViewModelsProvider.LearningWorld?.Name</p>
+                <MudIconButton Size="Size.Small" Class="flex items-center h-5 w-5 text-adlerdarkblue opacity-70"
+                               OnClick="@ShowLearningOutcomesOverview"
+                               Disabled="@(SelectedViewModelsProvider.LearningWorld == null)"
+                               Icon="@learningOutcomeIcon"
+                               title="@Localizer["LearningOutcomes.Overview"]"></MudIconButton>
+            </div>
+        }
+    </div>
 
-            <MudDivider></MudDivider>
+    <div class="flex flex-row w-60 gap-2 items-center justify-end">
 
-            <MudListItem T="object" Class="py-2" title="@Localizer["MudPopover.Feedback.Final.Hover"]">
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                         OnClick="OpenFeedbackUX">@Localizer["Feedback.MenuItem.UX.Text"]</MudLink>
-            </MudListItem>
+        <div class="bg-none w-60 flex flex-row justify-center items-center cursor-pointer">
+            <MudButton
+                Class="h-6 rounded-lg my-1 p-1 drop-shadow disabled:bg-adlerbggradientto text-adlerdarkblue bg-adlergold-400 hover:bg-adlergold-600"
+                id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld"
+                title=@Localizer["3DWorld.Generate.Hover"].Value
+                Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+                <MudIcon Icon="@Icons.Material.Filled.Upload" Title="@Localizer["3DWorld.Generate.Hover"].Value"
+                         Size="Size.Small"></MudIcon>
+                <p class="text-xs font-bold uppercase pl-2">@Localizer["3DWorld.Generate.Button.Title"]</p>
+            </MudButton>
+        </div>
 
-            <MudListItem T="object" Class="py-2" title="@Localizer["Feedback.Button.Technical.Hover"]">
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                         OnClick="OpenFeedbackBug">@Localizer["Feedback.MenuItem.Technical.Text"]</MudLink>
-            </MudListItem>
+        <MudIconButton id="LmsLoginButton.OpenLmsDialog.Button" OnClick="OpenAdministrationDialog"
+                       Icon="@Icons.Material.Filled.Settings"
+                       title=@Localizer["LMS.Login.Hover"]
+                       Class="text-adlerdarkblue normal-case p-1 w-8"
+                       Size="Size.Medium"/>
 
-            <MudDivider></MudDivider>
+    </div>
 
-            <MudListItem T="object" Class="py-2" title="@Localizer["HeaderBar.Help.About.Hover"]">
-                <MudLink Underline="Underline.None" Class="text-adlertextgrey text-sm"
-                         OnClick="OpenAdLer">@Localizer["HeaderBar.Help.About"]</MudLink>
-            </MudListItem>
-
-        </MudMenu>
-
-        <LmsLoginButton/>
+    <div class="flex justify-end w-16">
         @if (PresentationLogic.RunningElectron)
         {
             <CloseAppButton/>
         }
-
     </div>
+
 </header>
 
 @code {
@@ -276,6 +167,18 @@
 
     private bool SaveButtonHighlighted => SelectedViewModelsProvider.LearningWorld is { UnsavedChanges: true };
 
+    private void OpenContentFilesDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseButton = true,
+            FullWidth = true,
+            MaxWidth = MaxWidth.Large,
+        };
+        DialogService.ShowAsync<ContentFilesContainer>(@Localizer["Header.ContentFilesAdd.Title"].Value, options);
+        InvokeAsync(StateHasChanged);
+    }
 
     private bool _popoverOpen;
     private bool _debugBuild = false;
@@ -479,184 +382,13 @@
         DialogService.ShowAsync<UploadSuccessfulDialog>(Localizer["UploadLearningWorld.Success.Title"].ToString(), parameters, options);
     }
 
-    private async Task ExportLearningWorldToArchiveAsync()
-    {
-        if (IsLearningWorldValidForExportToArchive(SelectedViewModelsProvider.LearningWorld))
-        {
-            await PresentationLogic.ExportLearningWorldToArchiveAsync(SelectedViewModelsProvider.LearningWorld!);
-        }
-    }
-
-    private bool IsLearningWorldValidForExportToArchive(ILearningWorldViewModel? learningWorld)
-    {
-        if (learningWorld is null) return false;
-
-        var errors = new List<string>();
-
-        foreach (var space in learningWorld.LearningSpaces)
-        {
-            foreach (var element in space.ContainedLearningElements)
-            {
-                if (element.LearningContent is not (IFileContentViewModel or ILinkContentViewModel))
-                    continue;
-
-                if (!PresentationLogic.GetAllContent().Contains(element.LearningContent))
-                {
-                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
-                }
-            }
-        }
-
-        foreach (var (adaptivityContent, learningElement) in learningWorld.AllLearningElements
-                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
-        {
-            if (TaskReferencesNonExistantElement(adaptivityContent, learningWorld))
-            {
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
-            }
-
-            if (TaskReferencesNonExistantContent(adaptivityContent, learningWorld))
-            {
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
-            }
-        }
-
-        if (!errors.Any()) return true;
-
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-
-        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
-        return false;
-    }
-
     private bool IsLearningWorldValidForGeneration(ILearningWorldViewModel world)
     {
-        var errors = new List<string>();
-
-        if (world.LearningSpaces.Count == 0)
-        {
-            errors.Add($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
-        }
-        else if (world.LearningSpaces.Count > 50)
-        {
-            errors.Add($"<li> {Localizer["ErrorString.TooMany.LearningSpaces.Message"]} </li>");
-        }
-
-        foreach (var space in world.LearningSpaces)
-        {
-            if (!space.ContainedLearningElements.Any())
-                errors.Add($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
-
-            if (space.Points < space.RequiredPoints)
-                errors.Add($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
-
-            foreach (var element in space.ContainedLearningElements)
-            {
-                if (element.LearningContent is (IFileContentViewModel or ILinkContentViewModel)
-                    && !PresentationLogic.GetAllContent().Contains(element.LearningContent))
-                {
-                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
-                }
-            }
-        }
-
-        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
-                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
-        {
-            if (adaptivityContent.Tasks.Count == 0)
-                errors.Add($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
-
-            if (TaskReferencesNonExistantElement(adaptivityContent, world))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
-            if (TaskReferencesNonExistantContent(adaptivityContent, world))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
-            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
-
-            var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
-            errors.AddRange(invalidSpaceReferences.Select(reference => $"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, reference.Space.Name, reference.Element.Name]} </li>"));
-        }
-
-        if (!errors.Any()) return true;
-
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString);
+        var validationResult = PresentationLogic.ValidateLearningWorldForGeneration(world);
+        if (validationResult.IsValid) return true;
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", validationResult.Errors);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], string.Join("", validationResult.Errors));
         return false;
-    }
-
-    private bool TaskReferencesNonExistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
-        return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
-    }
-
-    private bool TaskReferencesNonExistantContent(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var contentReferencedByAdaptivityContent = GetContentReferencesByAdaptivityContent(adaptivityContent);
-        return contentReferencedByAdaptivityContent.Any(adaContent => !PresentationLogic.GetAllContent().Contains(adaContent));
-    }
-
-    private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
-        task => task.Questions
-            .Any(question => question.Rules
-                .Any(rule => rule.Action is ElementReferenceActionViewModel eravm &&
-                             world.UnplacedLearningElements.Any(unplacedEle =>
-                                 unplacedEle.Id == eravm.ElementId)));
-
-
-    /// <summary>
-    /// Checks if the given element references any elements that are placed in spaces which come AFTER the space it
-    /// itself is in, in the partial ordering of spaces.
-    /// </summary>
-    private IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> ReferencesElementInSpaceAfterOwnSpace(ILearningElementViewModel element, ILearningWorldViewModel world)
-    {
-        var ownSpace = world.LearningSpaces.SingleOrDefault(space => space.ContainedLearningElements.Contains(element));
-        //element isn't placed yet, can't say anything about it
-        if (ownSpace is null) return Enumerable.Empty<(ILearningSpaceViewModel, ILearningElementViewModel)>();
-
-        //find all the id's of elements that the adaptivity content of this element we are looking at references
-        var adaptivityContent = (AdaptivityContentViewModel)element.LearningContent;
-        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
-
-        //create a tuple of (space,ele) for every element in every space
-        IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> spaceElementTuples = world.LearningSpaces
-            .SelectMany(space => space.ContainedLearningElements
-                .Select(ele => (space, ele)));
-
-        //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
-        var spaceElementTuplesReferenced = spaceElementTuples.Where(tup => adaptivityContentReferencedIds.Contains(tup.Element.Id));
-
-        //find all spaces that are after the space the element we are looking at is in
-        var spacesAfterOwn = ownSpace.GetFollowingSpaces();
-
-        //find all tuples that contain a space that is after our own space
-        return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
-    }
-
-    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ElementReferenceActionViewModel)
-                    .Cast<ElementReferenceActionViewModel>()
-                    .Select(action => action.ElementId)));
-    }
-
-    private IEnumerable<ILearningContentViewModel> GetContentReferencesByAdaptivityContent(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ContentReferenceActionViewModel)
-                    .Cast<ContentReferenceActionViewModel>()
-                    .Select(action => action.Content)));
     }
 
     private async Task ShowNotLoggedInDialog()
@@ -728,8 +460,6 @@
         }
     }
 
-    private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
-
     private void ShowLearningOutcomesOverview()
     {
         var options = new DialogOptions
@@ -748,6 +478,21 @@
             }
         };
         DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
+    }
+
+    private void OpenAdministrationDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = true,
+            CloseOnEscapeKey = true,
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            NoHeader = true
+        };
+        DialogService.ShowAsync<AdministrationDialog>("Administration", options);
+        InvokeAsync(StateHasChanged);
     }
 
     private string learningOutcomeIcon => SelectedViewModelsProvider.LearningWorld == null ? learningOutcomeIconDeactivated : learningOutcomeIconActivated;
@@ -790,47 +535,44 @@
                                                                     <line x1=""987.71"" y1=""1221.81"" x2=""987.71"" y2=""2029.06"" style=""fill: none; stroke: rgb(179,179,179); stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 50px;""/>
                                                                         </svg>";
 
-    private void OpenFeedbackUX() => ShellWrapper.OpenPathAsync("https://www.soscisurvey.de/autorentoolevaluation_gesamt");
 
-    private void OpenFeedbackBug() => ShellWrapper.OpenPathAsync("https://bugreport.projekt-adler.eu");
+    private readonly string _content = ContentIcon;
 
-    private void OpenManual() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringautorentool.html");
-
-    private void OpenManualSoftwareComponents() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringsoftwarekomponenten.html");
-
-    private void OpenManualHandling() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/manualauthoringbedienung.html");
-
-    private void OpenDidacticGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/handreichung-didaktik-bd.html");
-
-    private void OpenDidacticAdaptivityElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-adaptivitaetselement-bd.html");
-
-    private void OpenDidacticLearningOutcomeGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-lernziele.html");
-
-    private void OpenDidacticStoryElementGuide() => ShellWrapper.OpenPathAsync("https://projektadler.github.io/Documentation/didaktik-autorentool-game-design-elemente-bd.html");
-
-    private string _icon = Help;
-
-    const string Help =
+    const string ContentIcon =
         @"<?xml version=""1.0"" encoding=""UTF-8""?>
-        <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
-            <defs>
-                <style>
-                    .cls-1 {
-                        fill: #172d4d;
-                    }
-
-                        .cls-1, .cls-2 {
-                            stroke-width: 0px;
-                        }
-
-                            .cls-2 {
-                                fill: #e9f2fa;
-                            }
-    </style>
-    </defs>
-    <circle class=""cls-1"" cx=""1000"" cy=""1002"" r=""979""/>
-    <path class=""cls-2"" d=""m544.25,614.03s161.83-383.69,652.2-240.32c2.7.79,5.38,1.68,8.02,2.66,193.68,72.11,231.78,155.81,262.57,236.47,1.08,2.83,2.06,5.7,2.92,8.6,110.36,376.9-370.36,480.48-375.65,635.86-.76,127.58-322.4,150.5-229.19-142.86,79.89-251.46,305.72-177.93,320.02-343.75,5.03-58.36,4.33-105.36-37.37-151.01-14.12-15.46-32.17-26.82-52.08-33.31-336.37-109.7-265.48,333.41-498.75,220.87-43.55-21.01-71.01-65.56-69.45-113.89,1.45-44.95,16.76-79.31,16.76-79.31Z""/>
-    <ellipse class=""cls-2"" cx=""986.74"" cy=""1572.63"" rx=""133.38"" ry=""134.89""/>
-    </svg>";
+<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <g id=""uuid-58c73294-b6c8-4e63-81c7-5c3f104c41f0"" data-name=""R-File_Back"">
+    <polygon points=""36.53 1958 36.53 738.32 309.44 738 418.62 960.8 1576.39 960.53 1589 1958 36.53 1958"" style=""fill: #172d4d; fill-rule: evenodd;""/>
+  </g>
+  <g id=""uuid-e5fee6e8-a59d-4d72-8816-301bfea3f822"" data-name=""R-Metadata_Back"">
+    <rect x=""443.49"" y=""60.4"" width=""915"" height=""1356"" rx=""137.35"" ry=""137.35"" style=""fill: #e9f2fa; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""593.49"" y1=""289.4"" x2=""925.49"" y2=""289.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""878.49"" y1=""644.4"" x2=""1210.49"" y2=""644.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""593.49"" y1=""1214.4"" x2=""925.49"" y2=""1214.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1093.49"" y1=""1206.74"" x2=""1202.05"" y2=""1206.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1103.77"" y1=""289.74"" x2=""1212.32"" y2=""289.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""601.77"" y1=""644.74"" x2=""710.32"" y2=""644.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""593.49"" y1=""466.4"" x2=""1210.49"" y2=""466.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""593.49"" y1=""820.4"" x2=""1210.49"" y2=""820.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""593.49"" y1=""1028.4"" x2=""817.49"" y2=""1028.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""982.49"" y1=""1028.4"" x2=""1202.49"" y2=""1028.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+  </g>
+  <g id=""uuid-449b1d8f-61d8-42e4-a3e3-9f042a1ed0bb"" data-name=""R-Metadata_Front"">
+    <rect x=""752.49"" y=""408.4"" width=""915"" height=""1356"" rx=""137.35"" ry=""137.35"" style=""fill: #e9f2fa; stroke: #172d4d; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""902.49"" y1=""637.4"" x2=""1234.49"" y2=""637.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1187.49"" y1=""992.4"" x2=""1519.49"" y2=""992.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""902.49"" y1=""1562.4"" x2=""1234.49"" y2=""1562.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1402.49"" y1=""1554.74"" x2=""1511.05"" y2=""1554.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1412.77"" y1=""637.74"" x2=""1521.32"" y2=""637.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""910.77"" y1=""992.74"" x2=""1019.32"" y2=""992.74"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""902.49"" y1=""814.4"" x2=""1519.49"" y2=""814.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""902.49"" y1=""1168.4"" x2=""1519.49"" y2=""1168.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""902.49"" y1=""1376.4"" x2=""1126.49"" y2=""1376.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+    <line x1=""1291.49"" y1=""1376.4"" x2=""1511.49"" y2=""1376.4"" style=""fill: none; stroke: #172d4d; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 70px;""/>
+  </g>
+  <g id=""uuid-78b2ec3d-4e52-48e3-a2e2-fcb54ba09758"" data-name=""R-File_Front"">
+    <polygon points=""94 1955 1592.72 1955 1975 953.21 474.86 953.21 94 1955"" style=""fill: #363f4d; fill-rule: evenodd;""/>
+  </g>
+</svg>";
 
 }

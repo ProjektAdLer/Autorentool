@@ -9,12 +9,14 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.API;
@@ -517,7 +519,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_CallsDataAccess()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -531,7 +533,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_SerializationException_CallsErrorManager()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.When(x => x.SaveLearningWorldToFile(Arg.Any<LearningWorld>(), Arg.Any<string>()))
             .Do(_ => throw new SerializationException());
@@ -563,7 +565,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE2]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 
@@ -945,6 +947,42 @@ public class BusinessLogicUt
 
         errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
+    
+    // ANF-ID: [ASN0001]
+    [Test]
+    public void ValidateLearningWorldStructureForExport_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForExport(world);
+
+        mockValidator.Received().ValidateForExport(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
+    
+    // ANF-ID: [AHO22]
+    [Test]
+    public void ValidateLearningWorldStructureForGeneration_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForGeneration(world);
+
+        mockValidator.Received().ValidateForGeneration(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IApplicationConfiguration? fakeConfiguration = null,
@@ -953,7 +991,8 @@ public class BusinessLogicUt
         ICommandStateManager? commandStateManager = null,
         IBackendAccess? apiAccess = null,
         IErrorManager? errorManager = null,
-        ILogger<BusinessLogic.API.BusinessLogic>? logger = null)
+        ILogger<BusinessLogic.API.BusinessLogic>? logger = null,
+        ILearningWorldStructureValidator? learningWorldStructureValidator = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
@@ -962,8 +1001,9 @@ public class BusinessLogicUt
         apiAccess ??= Substitute.For<IBackendAccess>();
         errorManager ??= Substitute.For<IErrorManager>();
         logger ??= Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        learningWorldStructureValidator ??= Substitute.For<ILearningWorldStructureValidator>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess, errorManager, logger);
+            commandStateManager, apiAccess, errorManager, logger, learningWorldStructureValidator);
     }
 }

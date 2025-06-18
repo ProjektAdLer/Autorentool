@@ -1,4 +1,6 @@
-﻿namespace PersistEntities;
+﻿using Shared.Theme;
+
+namespace PersistEntities;
 
 public interface ILearningWorldPe
 {
@@ -9,6 +11,7 @@ public interface ILearningWorldPe
     string Authors { get; set; }
     string Language { get; set; }
     string Goals { get; set; }
+    WorldTheme WorldTheme { get; set; }
     string SavePath { get; set; }
     ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
     string EvaluationLink { get; set; }

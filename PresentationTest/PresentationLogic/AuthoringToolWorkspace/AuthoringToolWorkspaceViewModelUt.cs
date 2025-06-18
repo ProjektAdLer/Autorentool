@@ -2,6 +2,7 @@ using System.Linq;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningWorld;
+using Shared.Theme;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 
@@ -70,6 +71,6 @@ public class AuthoringToolWorkspaceViewModelUt
 
     private LearningWorldViewModel GetLearningWorldViewModelForTesting()
     {
-        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar", "foo", "foo", "foo", "foo");
+        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar",WorldTheme.CampusAschaffenburg, "foo", "foo", "foo", "foo");
     }
 }

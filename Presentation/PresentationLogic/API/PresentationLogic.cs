@@ -50,14 +50,13 @@ using Shared.Adaptivity;
 using Shared.Command;
 using Shared.Configuration;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.API;
 
 public class PresentationLogic : IPresentationLogic
 {
     private const string WorldFileFormatDescriptor = "AdLer World File";
-    private const string SpaceFileFormatDescriptor = "AdLer Space File";
-    private const string ElementFileFormatDescriptor = "AdLer Element File";
     private readonly IElectronDialogManager? _dialogManager;
 
     public PresentationLogic(
@@ -133,7 +132,6 @@ public class PresentationLogic : IPresentationLogic
     public IAdaptivityRuleCommandFactory AdaptivityRuleCommandFactory { get; }
     public IAdaptivityActionCommandFactory AdaptivityActionCommandFactory { get; }
     internal IFileSystem FileSystem { get; }
-
     public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
@@ -177,7 +175,8 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme,
+        string evaluationLink,
         string enrolmentKey, string storyStart, string storyEnd)
     {
         var authoringToolWorkspaceEntity =
@@ -185,7 +184,7 @@ public class PresentationLogic : IPresentationLogic
 
         var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
             language,
-            description, goals, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            description, goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -194,13 +193,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
     public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
-        string shortname, string authors, string language, string description, string goals, string evaluationLink,
+        string shortname, string authors, string language, string description, string goals, WorldTheme worldTheme, string evaluationLink,
         string enrolmentKey, string storyStart, string storyEnd)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
-            goals, evaluationLink, enrolmentKey, storyStart, storyEnd,
+            goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd,
             world => CMapper.Map(world, learningWorldVm));
         //quit early if there are no changes
         if (!command.AnyChanges())
@@ -266,7 +265,7 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
-        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints, Theme theme,
+        LearningOutcomeCollectionViewModel learningOutcomeCollectionVm, int requiredPoints, SpaceTheme spaceTheme,
         double positionX,
         double positionY,
         ITopicViewModel? topicVm)
@@ -276,7 +275,7 @@ public class PresentationLogic : IPresentationLogic
         var learningOutcomeCollection = Mapper.Map<LearningOutcomeCollection>(learningOutcomeCollectionVm);
 
         var command = SpaceCommandFactory.GetCreateCommand(worldEntity, name, description, learningOutcomeCollection,
-            requiredPoints, theme,
+            requiredPoints, spaceTheme,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -287,13 +286,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, int requiredPoints, Theme theme,
+        string description, int requiredPoints, SpaceTheme spaceTheme,
         ITopicViewModel? topicVm)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, requiredPoints, theme,
+        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, requiredPoints, spaceTheme,
             topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         if (!command.AnyChanges())
@@ -424,7 +423,7 @@ public class PresentationLogic : IPresentationLogic
                 .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.RequiredPoints,
-                    t.spaceEntity.Theme, null,
+                    t.spaceEntity.SpaceTheme, null,
                     space => CMapper.Map(space, t.spaceVm)))
                 .Cast<IUndoCommand>()
                 .ToList();
@@ -1079,17 +1078,19 @@ public class PresentationLogic : IPresentationLogic
         var elementReferenceActionEntity = Mapper.Map<ElementReferenceAction>(elementReferenceActionVm);
         var triggerEntity = Mapper.Map<IAdaptivityTrigger>(triggerVm);
 
-        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity,
             entity => CMapper.Map(entity, question));
-        
-        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity, elementReferenceActionEntity,
+
+        var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerEntity,
+            elementReferenceActionEntity,
             entity => CMapper.Map(entity, question));
-        
-        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        var batchCommand =
+            BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> { deleteRuleCommand, createRuleCommand });
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
-    
+
     /// <inheritdoc cref="IPresentationLogic.ReplaceElementReferenceActionByContentReferenceAction"/>
     public void ReplaceElementReferenceActionByContentReferenceAction(IAdaptivityQuestionViewModel question,
         IAdaptivityRuleViewModel ruleVm, ContentReferenceActionViewModel contentReferenceActionVm,
@@ -1100,13 +1101,14 @@ public class PresentationLogic : IPresentationLogic
         var craE = Mapper.Map<ContentReferenceAction>(contentReferenceActionVm);
         var triggerE = Mapper.Map<IAdaptivityTrigger>(triggerVm);
 
-        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity, 
+        var deleteRuleCommand = AdaptivityRuleCommandFactory.GetDeleteCommand(questionEntity, ruleEntity,
             entity => CMapper.Map(entity, question));
-        
+
         var createRuleCommand = AdaptivityRuleCommandFactory.GetCreateCommand(questionEntity, triggerE, craE,
             entity => CMapper.Map(entity, question));
-        
-        var batchCommand = BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> {deleteRuleCommand, createRuleCommand});
+
+        var batchCommand =
+            BatchCommandFactory.GetBatchCommand(new List<IUndoCommand> { deleteRuleCommand, createRuleCommand });
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
@@ -1118,7 +1120,21 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<List<LmsWorldViewModel>>(worldsEntity);
     }
 
-    public async Task ExportLearningWorldToArchiveAsync(ILearningWorldViewModel world)
+    /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForExport"/>
+    public ValidationResult ValidateLearningWorldForExport(ILearningWorldViewModel worldVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
+        return BusinessLogic.ValidateLearningWorldForExport(worldEntity);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.ValidateLearningWorldForGeneration"/>
+    public ValidationResult ValidateLearningWorldForGeneration(ILearningWorldViewModel worldVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
+        return BusinessLogic.ValidateLearningWorldForGeneration(worldEntity);
+    }
+
+    public async Task ExportLearningWorldToZipArchiveAsync(ILearningWorldViewModel world)
     {
         ElectronCheck();
         try
@@ -1133,6 +1149,24 @@ public class PresentationLogic : IPresentationLogic
         catch (OperationCanceledException)
         {
             Logger.LogInformation("Export to archive canceled by user");
+            throw;
+        }
+    }
+    
+    public async Task ExportLearningWorldToMoodleArchiveAsync(ILearningWorldViewModel world)
+    {
+        ElectronCheck();
+        try
+        {
+            var pathToArchive = await _dialogManager!.ShowSaveAsDialogAsync("Archive export path",
+                fileFilters: new[] { new FileFilterProxy("Moodle archive", new[] { "mbz" }) }
+            );
+            BusinessLogic.ConstructBackup(Mapper.Map<BusinessLogic.Entities.LearningWorld>(world), pathToArchive);
+        }
+        catch (OperationCanceledException)
+        {
+            Logger.LogInformation("Export to moodle archive canceled by user");
+            throw;
         }
     }
 
@@ -1325,6 +1359,8 @@ public class PresentationLogic : IPresentationLogic
         var world = Mapper.Map<LmsWorld>(worldVm);
         await BusinessLogic.DeleteLmsWorld(world);
     }
+    
+    #endregion
 
 #if DEBUG
 
@@ -1340,6 +1376,4 @@ public class PresentationLogic : IPresentationLogic
     }
 
 #endif
-
-    #endregion
 }

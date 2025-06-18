@@ -55,6 +55,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Shared;
 using Shared.Configuration;
 using Shared.Networking;
+using Shared.Theme;
 using Tailwind;
 using HttpClientFactory = Shared.Networking.HttpClientFactory;
 using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
@@ -180,6 +181,7 @@ public class Startup
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
+        services.AddSingleton<ILearningWorldStructureValidator, LearningWorldStructureValidator>();
     }
 
     internal static void ConfigureAuthoringTool(IServiceCollection services)
@@ -327,7 +329,8 @@ public class Startup
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
         // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
-        ThemeHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<Theme>>());
+        ThemeHelper<SpaceTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<SpaceTheme>>());
+        ThemeHelper<WorldTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<WorldTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
 

@@ -70,7 +70,7 @@
         <value>Rahmenhandlung zur Story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
-        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine stimmige Rahmenhandlung einzubetten.</value>
+        <value>Formulieren Sie hier eine Einleitung und einen Schluss für Ihre Story, um die Lernwelt in eine Rahmenhandlung einzubetten.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
         <value>Einleitung</value>
@@ -83,5 +83,11 @@
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
         <value>Und so endete es...</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
+        <value>Lernwelt-Theme</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Auswahl an Themes mit verschiedenen Themenwelten für die Lernwelt</value>
     </data>
 </root>
