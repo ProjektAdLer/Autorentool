@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -68,31 +69,40 @@ public class NpcMoodPreviewHandlerUt
     }
 
     [Test]
-    public void GetIconForNpcAndMood_EachValidCombination_PathExists([Values] NpcMood npcMood)
+    [TestCaseSource(nameof(NpcElementModelsAndMoods))]
+    public void GetIconForNpcAndMood_EachValidCombination_PathExists(ElementModel elementModel, NpcMood npcMood)
     {
-        var npcElementModels = Enum.GetValues<ElementModel>()
-            .Where(model => model.ToString().Contains("a_npc")).ToList();
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
         var iconDirectory = Path.Combine(projectDirectory!, "AuthoringTool", "wwwroot");
-        
+
         Assert.Multiple(() =>
         {
-            foreach (var elementModel in npcElementModels)
-            {
-                var testElementModel = ElementModelHelper.IsObsolete(elementModel)
-                    ? ElementModelHelper.GetAlternateValue(elementModel)
-                    : elementModel;
+            var testElementModel = ElementModelHelper.IsObsolete(elementModel)
+                ? ElementModelHelper.GetAlternateValue(elementModel)
+                : elementModel;
 
-                string iconPath = null!;
-                Assert.DoesNotThrow(() => iconPath =
-                    NpcMoodPreviewHandler.GetIconForNpcAndMood(testElementModel, npcMood));
-                Assert.That(iconPath, Is.Not.Null);
-                Assert.That(iconPath, Is.Not.Empty);
-                Assert.That(File.Exists(Path.Combine(iconDirectory, iconPath)), Is.True,
-                    $"Icon file does not exist for enum value {testElementModel}. " +
-                    $"The returned path is {iconPath}");
-            }
+            string iconPath = null!;
+            Assert.DoesNotThrow(() => iconPath =
+                NpcMoodPreviewHandler.GetIconForNpcAndMood(testElementModel, npcMood));
+            Assert.That(iconPath, Is.Not.Null);
+            Assert.That(iconPath, Is.Not.Empty);
+            Assert.That(File.Exists(Path.Combine(iconDirectory, iconPath)), Is.True,
+                $"Icon file does not exist for enum value {testElementModel}. " +
+                $"The returned path is {iconPath}");
         });
     }
+    
+    public static IEnumerable<object[]> NpcElementModelsAndMoods()
+    {
+        var npcModels = Enum.GetValues<ElementModel>()
+            .Where(e => e.ToString().StartsWith("a_npc"));
+    
+        var moods = Enum.GetValues<NpcMood>();
+    
+        return from model in npcModels
+            from mood in moods
+            select new object[] { model, mood };
+    }
+    
 }
