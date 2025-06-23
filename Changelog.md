@@ -6,10 +6,43 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+- New button for export learning world as a mbz file.
+
+### Changed
+- Fixed a bug where importing a learning world conflicted with validation when a name was already used.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+</details>
+
+## [2.2.3-rc.2] - 2025-06-06
+
+### Added
+- New button for export learning world as a mbz file.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.2.3-rc.1] - 2025-05-30
+
+### Added
 
 - Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material
 - Added a header and footer to the left sidebar
-- Added a arrow icon for doors in the floor plans
+- Added an arrow icon for doors in the floor plans
 - Implemented a validation for export to archive
 - Added new learning world theme
 - Added frame story for learning world
@@ -34,8 +67,6 @@
   elements.
 
 ### Security
-
-</details>
 
 ## [2.2.2] - 2024-12-19
 

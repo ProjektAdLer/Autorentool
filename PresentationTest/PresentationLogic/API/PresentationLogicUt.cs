@@ -2853,7 +2853,41 @@ public class PresentationLogicUt
 
     [Test]
     // ANF-ID: [ASN0001]
-    public async Task ExportLearningWorldToArchive_CallsBusinessLogic()
+    public void ValidateLearningWorldForExport_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForExport(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForExport(mockWorld);
+    }
+    
+    [Test]
+    // ANF-ID: [AHO22]
+    public void ValidateLearningWorldForGeneration_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorld = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>()).Returns(mockWorld);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.ValidateLearningWorldForGeneration(mockWorldVm);
+
+        mockBusinessLogic.Received().ValidateLearningWorldForGeneration(mockWorld);
+    }
+
+    [Test]
+    // ANF-ID: [ASN0001]
+    public async Task ExportLearningWorldToZipArchive_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
@@ -2870,14 +2904,14 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             serviceProvider: serviceProvider.BuildServiceProvider());
         systemUnderTest.RunningElectron.Returns(true);
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        await systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm);
         mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
         await mockBusinessLogic.Received().ExportLearningWorldToArchiveAsync(mockWorldEntity, pathToArchive);
     }
 
     [Test]
     // ANF-ID: [ASN0001]
-    public async Task ExportLearningWorldToArchive_UserCancels_DoesNotCallBusinessLogic()
+    public async Task ExportLearningWorldToZipArchive_UserCancels_DoesNotCallBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
@@ -2890,10 +2924,55 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
         systemUnderTest.RunningElectron.Returns(true);
 
-        await systemUnderTest.ExportLearningWorldToArchiveAsync(mockWorldVm);
+        systemUnderTest.ExportLearningWorldToZipArchiveAsync(mockWorldVm).Throws(new OperationCanceledException("User cancelled"));;
 
         await mockBusinessLogic.DidNotReceive()
             .ExportLearningWorldToArchiveAsync(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
+    }
+    
+    [Test]
+    // ANF-ID: [AHO22]
+    public async Task ExportLearningWorldToMoodleArchive_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockWorldEntity = EntityProvider.GetLearningWorld();
+        var mockMapper = Substitute.For<IMapper>();
+        var pathToArchive = "pathToArchiveVar";
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Returns(pathToArchive);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(mockWorldEntity);
+        var serviceProvider = new ServiceCollection();
+        serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            serviceProvider: serviceProvider.BuildServiceProvider());
+        systemUnderTest.RunningElectron.Returns(true);
+        await systemUnderTest.ExportLearningWorldToMoodleArchiveAsync(mockWorldVm);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(mockWorldVm);
+        mockBusinessLogic.Received().ConstructBackup(mockWorldEntity, pathToArchive);
+    }
+
+    [Test]
+    // ANF-ID: [AHO22]
+    public async Task ExportLearningWorldToMoodleArchive_UserCancels_DoesNotCallBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockWorldVm = ViewModelProvider.GetLearningWorld();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockDialogManager.ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<IEnumerable<FileFilterProxy>?>()).Throws(new OperationCanceledException("User cancelled"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+        systemUnderTest.RunningElectron.Returns(true);
+
+        systemUnderTest.ExportLearningWorldToMoodleArchiveAsync(mockWorldVm).Throws(new OperationCanceledException("User cancelled"));;
+
+        mockBusinessLogic.DidNotReceive()
+            .ConstructBackup(Arg.Any<BusinessLogic.Entities.LearningWorld>(), Arg.Any<string>());
     }
 
     // ANF-ID: [ASN0002]
