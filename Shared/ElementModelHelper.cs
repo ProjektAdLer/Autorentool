@@ -17,4 +17,14 @@ public static class ElementModelHelper
             (ElementModel) ((AlternateValueAttribute) alternateValue).AlternateValue :
             ElementModel.a_npc_defaultdark_female;
     }
+
+    public static string GetAtfString(ElementModel model)
+    {
+        if (IsObsolete(model))
+        {
+            model = GetAlternateValue(model);
+        }
+
+        return model.ToString().ToLower().Replace("_", "-");
+    }
 }

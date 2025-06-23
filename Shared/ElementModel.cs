@@ -58,7 +58,6 @@ public enum ElementModel
     
     a_npc_defaultdark_female,
     a_npc_defaultdark_male,
-    a_npc_defaultlight_female,
     a_npc_defaultlight_male,
     a_npc_bullydark_female,
     a_npc_bullydark_male,
@@ -153,12 +152,16 @@ public enum ElementModel
     [AlternateValue(a_npc_teamc_male)]
     a_npc_dozentdaniel,
     
-    a_npc_dozentgeorg,
-    
     [Obsolete("Use a_npc_teamb_male instead", error: false)]
     [AlternateValue(a_npc_teamb_male)]
+    a_npc_dozentgeorg,
+    
+    [Obsolete("Use a_npc_teamd_male instead", error: false)]
+    [AlternateValue(a_npc_teamd_male)]
     a_npc_dozentjoerg,
     
+    [Obsolete("Use a_npc_teama_male instead", error: false)]
+    [AlternateValue(a_npc_teama_male)]
     a_npc_dozentlukas,
 
     // ReSharper restore InconsistentNaming
