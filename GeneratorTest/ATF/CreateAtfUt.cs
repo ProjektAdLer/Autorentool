@@ -214,11 +214,14 @@ public class CreateAtfUt
         var outroStoryContent =
             PersistEntityProvider.GetStoryContent(story: new List<string>() { "Outro", "Story", "Text" });
 
-        var ele1 = PersistEntityProvider.GetLearningElement(name: "ele1", content: content1);
-        var ele2 = PersistEntityProvider.GetLearningElement(name: "ele2", content: content2);
+        var ele1 = PersistEntityProvider.GetLearningElement(name: "ele1", content: content1,
+            difficulty: LearningElementDifficultyEnum.Hard, workload: 13);
+        var ele2 = PersistEntityProvider.GetLearningElement(name: "ele2", content: content2,
+            difficulty: LearningElementDifficultyEnum.Medium, workload: 19);
         var ele3 = PersistEntityProvider.GetLearningElement(name: "ele3", content: content3);
         var ele4 = PersistEntityProvider.GetLearningElement(name: "ele4", content: content4);
-        var ele5 = PersistEntityProvider.GetLearningElement(name: "ele5", content: content5);
+        var ele5 = PersistEntityProvider.GetLearningElement(name: "ele5", content: content5,
+            difficulty: LearningElementDifficultyEnum.None, workload: 27);
         var ele6 = PersistEntityProvider.GetLearningElement(name: "ele6", content: adaptivityContent1);
         var introEle = PersistEntityProvider.GetLearningElement(name: "StoryEle1", content: introStoryContent);
         var outroEle = PersistEntityProvider.GetLearningElement(name: "StoryEle2", content: outroStoryContent);
@@ -260,7 +263,7 @@ public class CreateAtfUt
         var adaptivityContent2 = new AdaptivityContentPe("Abschlussquiz zur Stadt Aschaffenburg",
             new List<IAdaptivityTaskPe> { task1, task2 });
 
-        var ele8 = PersistEntityProvider.GetLearningElement(name: "ele8", content: adaptivityContent2);
+        var ele8 = PersistEntityProvider.GetLearningElement(name: "ele8", content: adaptivityContent2, workload: 34);
 
         var manualLearningOutcome = new ManualLearningOutcomePe("Outcome");
         var structuredLearningOutcome1 = new StructuredLearningOutcomePe(TaxonomyLevel.Level1, "whatDe", "wherebyDe",
@@ -302,8 +305,9 @@ public class CreateAtfUt
                 }
             }
         };
-        var space2 = new LearningSpacePe("b", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: null)
+        var space2 = new LearningSpacePe("b", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(),
+            assignedTopic: null)
         {
             LearningSpaceLayout =
             {
@@ -329,8 +333,9 @@ public class CreateAtfUt
                 FloorPlanName = FloorPlanEnum.R_20X30_8L
             }
         };
-        var space3 = new LearningSpacePe("c", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>(), assignedTopic: topic2)
+        var space3 = new LearningSpacePe("c", "ff", 5, SpaceTheme.LearningArea, positionX: 0, positionY: 0,
+            inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(),
+            assignedTopic: topic2)
         {
             LearningSpaceLayout =
             {
@@ -375,10 +380,8 @@ public class CreateAtfUt
         var topics = new List<TopicPe> { topic1, topic2 };
 
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath,
-            learningSpaces, conditions, topics: topics);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces, conditions, topics: topics);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -466,6 +469,11 @@ public class CreateAtfUt
                 Is.EqualTo(ele1.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
+            Assert.That(
+                ((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementEstimatedTimeMinutes,
+                Is.EqualTo(13));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementDifficulty,
+                Is.EqualTo(200));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementName, Is.EqualTo(ele2.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[1].ElementId, Is.EqualTo(2));
@@ -482,6 +490,11 @@ public class CreateAtfUt
                 Is.EqualTo(ele2.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
+            Assert.That(
+                ((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementEstimatedTimeMinutes,
+                Is.EqualTo(19));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementDifficulty,
+                Is.EqualTo(100));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementName, Is.EqualTo(ele5.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[2].ElementId, Is.EqualTo(3));
@@ -498,6 +511,11 @@ public class CreateAtfUt
                 Is.EqualTo(ele5.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
+            Assert.That(
+                ((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementEstimatedTimeMinutes,
+                Is.EqualTo(27));
+            Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementDifficulty,
+                Is.EqualTo(null));
 
             //AdaptivityElement with ContentReferenceAction
             Assert.That(systemUnderTest.LearningWorldJson.Elements[3].ElementName, Is.EqualTo(ele8.Name));
@@ -515,6 +533,11 @@ public class CreateAtfUt
                 Is.EqualTo(ele8.ElementModel.ToString()));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
+            Assert.That(
+                ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementEstimatedTimeMinutes,
+                Is.EqualTo(34));
+            Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementDifficulty,
+                Is.EqualTo(null));
 
             Assert.That(
                 ((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).AdaptivityContent.IntroText,
@@ -750,7 +773,7 @@ public class CreateAtfUt
                 Is.EqualTo(ele7.ElementModel.ToString()));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
-            
+
             Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryIntro, Is.EqualTo(storyStart));
             Assert.That(systemUnderTest.LearningWorldJson.FrameStory.FrameStoryOutro, Is.EqualTo(storyEnd));
         });
@@ -800,10 +823,8 @@ public class CreateAtfUt
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath,
-            learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -855,10 +876,8 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath,
-            learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -910,10 +929,8 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath,
-            learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -963,10 +980,8 @@ public class CreateAtfUt
         };
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme, evaluationLink,
-            enrolmentKey, storyStart, storyEnd,
-            savePath,
-            learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
+            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
