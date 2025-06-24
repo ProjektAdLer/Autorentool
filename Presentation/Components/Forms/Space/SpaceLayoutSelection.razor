@@ -4,12 +4,12 @@
 @using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 
-<div class="grid grid-cols-5 w-full">
+<div class="grid grid-cols-5 w-full bg-adlerbggradientto rounded">
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
         <MudListItem T="FloorPlanEnum" OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
                      Class="pl-2">
-            <MudTooltip Class="bg-adlergrey-200" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
+            <MudTooltip Class="bg-adlerblue-100" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
                     <div class="flex flex-col cursor-pointer">
                         <MudIcon Class="inset-0 p-0 w-10 2xl:w-12 h-full"
@@ -23,7 +23,7 @@
                         <MudCarouselItem>
                             <div class="flex flex-col gap-1 justify-center">
                                 <MudText>@FloorPlanLocalizer[$"FloorPlanEnum.{floorPlan.ToString()}.DisplayName"]</MudText>
-                                <MudIcon Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon" Class="flex justify-center pl-5 w-72 h-64"/>
+                                <MudIcon Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon" Class="flex justify-center pl-5 w-72 h-64 drop-shadow-lg"/>
                             </div>
                         </MudCarouselItem>
                         <MudCarouselItem>
@@ -83,7 +83,7 @@
     private string GetStyle(FloorPlanEnum floorPlan)
     {
         return IsFloorPlanActive(floorPlan) ?
-            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px #2e3a4d); -webkit-filter: drop-shadow(0 0 5px #2e3a4d);":
+            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px #2e3a4d); -webkit-filter: drop-shadow(0 0 4px #2e3a4d);":
             "filter: grayscale(70%); -webkit-filter: grayscale(70%); opacity(0.40); -webkit-filter: opacity(0.40);";
     }
 

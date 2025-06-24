@@ -31,6 +31,6 @@
         <value>T shape with 13 elements</value>
     </data>
     <data name="FloorPlanEnum.D_40X37_15L.DisplayName" xml:space="preserve">
-        <value>D shape with 15 elements</value>
+        <value>D shape with max. 15 elements</value>
     </data>
 </root>
