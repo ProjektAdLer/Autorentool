@@ -8,8 +8,8 @@
     @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
     {
         <MudListItem T="FloorPlanEnum" OnClick="_ => OnFloorPlanButtonSelected(floorPlan)"
-                     Class="pl-2">
-            <MudTooltip Class="bg-adlerblue-100" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
+                     Class="pl-2 bg-adlerbggradientto">
+            <MudTooltip Class="bg-adlergrey-200" Placement="Placement.End" Delay="150" Duration="250" Arrow="true">
                 <ChildContent>
                     <div class="flex flex-col cursor-pointer">
                         <MudIcon Class="inset-0 p-0 w-10 2xl:w-12 h-full"
