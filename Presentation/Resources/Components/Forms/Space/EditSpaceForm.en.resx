@@ -69,9 +69,9 @@
         <value>Selection of floor plans for the learning space. The numer indicates how many slots are available for placing learning and adaptivity elements</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
-        <value>Learning and adaptivity elements to be completed</value>
+        <value>List of mandatory learning and adaptivity elements to be completed.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix" xml:space="preserve">
-        <value>El.:</value>
+        <value>elem.:</value>
     </data>
 </root>

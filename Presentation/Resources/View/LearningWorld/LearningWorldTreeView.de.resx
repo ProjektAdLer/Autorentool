@@ -35,4 +35,7 @@
     <data name="LearningWorldTreeView.Condition.Text" xml:space="preserve">
         <value>Abschlussbedingung (Gesamt):</value>
     </data>
+    <data name="LearningWorldTreeView.Condition.Elements" xml:space="preserve">
+        <value>Elem.</value>
+    </data>
 </root>

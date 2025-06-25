@@ -81,9 +81,9 @@
         <value>Auswahl an Grundrissen für den Lernraum. Die Zahl gibt an, wie viele Slots zum Platzieren von Adaptivitäts- und Lernelementen zur Verfügung stehen</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
-        <value>Abzuschließende Lern- und Adaptivitätselemente</value>
+        <value>Liste der abzuschließenden, verpflichtenden Lern- und Adaptivitätselemente.</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix" xml:space="preserve">
-        <value>El.:</value>
+        <value>Elem.:</value>
     </data>
 </root>

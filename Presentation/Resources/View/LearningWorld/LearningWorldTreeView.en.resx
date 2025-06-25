@@ -27,4 +27,7 @@
     <data name="LearningWorldTreeView.Condition.Text" xml:space="preserve">
         <value>Completion condition (total):</value>
     </data>
+    <data name="LearningWorldTreeView.Condition.Elements" xml:space="preserve">
+        <value>elem.</value>
+    </data>
 </root>

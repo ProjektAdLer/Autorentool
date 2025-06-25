@@ -70,4 +70,7 @@
     <data name="LearningSpaceView.NoOutcome" xml:space="preserve">
         <value>Zu diesem Lernraum existieren aktuell noch keine Lernziele.</value>
     </data>
+    <data name="LearningSpace.Condition.Text" xml:space="preserve">
+        <value>Elem.</value>
+    </data>
 </root>

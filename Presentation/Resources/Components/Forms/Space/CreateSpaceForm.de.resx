@@ -74,4 +74,10 @@
     <data name="CreateSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Beschreibung</value>
     </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix" xml:space="preserve">
+        <value>Elem.:</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text" xml:space="preserve">
+        <value>Abzuschließende, verpflichtende Lern- und Adaptivitätselemente.</value>
+    </data>
 </root>

@@ -41,4 +41,7 @@
     <data name="LearningWorldView.Condition.Text" xml:space="preserve">
         <value>Completion condition (total):</value>
     </data>
+    <data name="LearningWorldView.Condition.Elements" xml:space="preserve">
+        <value>elem.</value>
+    </data>
 </root>
