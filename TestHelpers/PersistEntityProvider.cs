@@ -18,7 +18,8 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPek" + append, "LWPss" + append, "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPek" + append, "LWPss" + append,
+            "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,
@@ -61,10 +62,11 @@ public static class PersistEntityProvider
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
-        string name = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1)
+        string name = "", LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.Easy, 
+        ElementModel elementModel = ElementModel.l_h5p_slotmachine_1, int workload = 0)
     {
         return new LearningElementPe(name != "" ? name : "a" + append, content!, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, elementModel);
+            difficulty, elementModel, workload);
     }
 
     public static PathWayConditionPe GetPathWayCondition(ConditionEnum condition = ConditionEnum.And,
@@ -85,7 +87,8 @@ public static class PersistEntityProvider
         return new LinkContentPe(name ?? "a name", link ?? "a link");
     }
 
-    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null, bool primitiveH5p = false)
+    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null,
+        bool primitiveH5p = false)
     {
         return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath", primitiveH5p);
     }

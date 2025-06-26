@@ -483,21 +483,24 @@ public class CreateAtf : ICreateAtf
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
                     learningElement.Name, elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
                     ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
-                    learningElement.Goals.Split("\n"));
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
+                    MapElementDifficultyToInt(learningElement.Difficulty));
                 ListFileContent.Add((fileContentPe, learningElement.Name));
                 break;
             case LinkContentPe linkContentPe:
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
                     learningElement.Name, linkContentPe.Link, "video", "url", learningSpaceId, learningElement.Points,
                     ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
-                    learningElement.Goals.Split("\n"));
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
+                    MapElementDifficultyToInt(learningElement.Difficulty));
                 break;
             case AdaptivityContentPe adaptivityContentPe:
                 var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
                 elementJson = new AdaptivityElementJson(learningElementId, learningElement.Id.ToString(),
                     learningElement.Name, "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
                     ElementModelHelper.GetAtfString(learningElement.ElementModel), adaptivityContent,
-                    learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Description, learningElement.Goals.Split("\n"),
+                    learningElement.Workload);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(learningElement.LearningContent),
@@ -523,6 +526,22 @@ public class CreateAtf : ICreateAtf
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
                 $"The given LearningContent Type of file {fileContent.Name} is not supported")
+        };
+    }
+
+    /// <summary>
+    /// Converts a element difficulty to its corresponding integer representation in the ATF.
+    /// </summary>
+    private static int? MapElementDifficultyToInt(LearningElementDifficultyEnum questionDifficulty)
+    {
+        return questionDifficulty switch
+        {
+            LearningElementDifficultyEnum.None => null,
+            LearningElementDifficultyEnum.Easy => 000,
+            LearningElementDifficultyEnum.Medium => 100,
+            LearningElementDifficultyEnum.Hard => 200,
+            _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
+                questionDifficulty, null)
         };
     }
 

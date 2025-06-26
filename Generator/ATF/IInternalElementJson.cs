@@ -7,4 +7,6 @@ public interface IInternalElementJson : IElementJson
     int LearningSpaceParentId { get; set; }
     string? ElementDescription { get; set; }
     string[] ElementGoals { get; set; }
+    int ElementEstimatedTimeMinutes { get; set; }
+    int? ElementDifficulty { get; set; }
 }
