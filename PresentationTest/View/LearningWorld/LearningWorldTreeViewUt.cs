@@ -80,6 +80,25 @@ public class LearningWorldTreeViewUt
             Assert.That(items[2].Instance.Parameters["IsSelected"], Is.False);
         });
     }
+    
+    [Test]
+    public void Render_LearningWorldSet_RendersNameWorkloadAndCondition()
+    {
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        learningWorld.Name.Returns("my insanely sophisticated name");
+        learningWorld.Workload.Returns(42);
+        learningWorld.NumberOfRequiredElements.Returns(9);
+        learningWorld.NumberOfElements.Returns(17);
+        LearningWorldPresenterOverview.LearningWorldVm.Returns(learningWorld);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var p = systemUnderTest.FindAllOrFail("p").ToList();
+        p[1].MarkupMatches(
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">OverView.Workload</span> 42<span class=""text-adlergrey-600"">OverView.Workload.TimeScale</span></p>");
+        p[2].MarkupMatches(
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Elements</span></p>");
+    }
 
     [Test]
     public void ClickSpace_SelectsSpaceAndOpensIt()

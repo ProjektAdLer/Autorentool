@@ -13,6 +13,8 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     new string FileEnding { get; }
     int Workload { get; }
     int Points { get; }
+    int NumberOfElements { get; }
+    int NumberOfRequiredElements { get; }
     ICollection<ILearningSpaceViewModel> LearningSpaces { get; }
     ICollection<PathWayConditionViewModel> PathWayConditions { get; }
     IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays { get; }

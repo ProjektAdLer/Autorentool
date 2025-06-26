@@ -134,6 +134,12 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         set => SetField(ref _workload, value);
     }
 
+    public bool IsRequired
+    {
+        get => _points != 0;
+        set => SetField(ref _points, value ? 1 : 0);
+    }
+
     public int Points
     {
         get => _points;

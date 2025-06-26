@@ -38,17 +38,19 @@
 
             <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
                          InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-6">
+                <div class="px-6">
                     <p class="text-xs pt-3">
-                        @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
+                        <span class="text-adlergrey-800">
+                            @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
+                        </span>
                     </p>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                                     Min="0"
-                                     For="@(() => FormModel.RequiredPoints)"
-                                     DebounceInterval="DebounceInterval"
-                                     OnKeyUp="HandleKeyEvent"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"/>
+                    <p class="text-xs text-adlerblue-600">0
+                        <span class="text-adlergrey-800"> / </span> 0
+                        <span class="text-adlergrey-800"> @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                    </p>
+                    <ul class="py-2 pl-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
+                        <li class="text-xs">...</li>
+                    </ul>
                 </div>
             </Collapsable>
 

@@ -41,29 +41,26 @@
                                   Placeholder=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
                                   Margin="Margin.Normal"
                                   Typo="Typo.body1"/>
-                    @if (ElementMode != ElementMode.Story)
+                    @if (ElementMode == ElementMode.Normal)
                     {
-                        <div class="flex flex-row justify-between gap-1">
-                            <div class="flex-initial items-center gap-1">
-                                <p class="text-xs pt-3">
-                                    @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]
-                                </p>
-                                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                                 Min="1"
-                                                 Max="1000"
-                                                 For="@(() => FormModel.Points)"
-                                                 DebounceInterval="DebounceInterval"
-                                                 OnKeyUp="HandleKeyEvent"
-                                                 Variant="Variant.Outlined"
-                                                 Margin="Margin.Dense"/>
-                            </div>
+                        <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudText
+                                    Color="@(!IsRequired ? Color.Info : Color.Dark)">@Localizer["CreateElementForm.Fields.Collapsable.Element.Mandatory"]</MudText>
 
-                            <MudDivider Style="border-style: dashed; border-color: rgb(230,230,230)" Vertical="true"
-                                        FlexItem="true">
-                            </MudDivider>
+                                <MudSwitch @bind-Value="IsRequired"
+                                           Color="Color.Info"
+                                           UnCheckedColor="Color.Info"
+                                           Style="margin-right: 0; margin-left: 2px"/>
 
+                                <MudText
+                                    Color="@(IsRequired ? Color.Info : Color.Dark)">@Localizer["CreateElementForm.Fields.Collapsable.Element.Optional"]</MudText>
+                            </MudStack>
+                        </div>
+
+                        <div class="flex flex-row gap-2 w-full">
                             <div class="flex-initial items-center gap-1">
-                                <p class="text-xs pt-3">
+                                <p class="text-xs pt-2">
                                     @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
                                 </p>
                                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
@@ -75,43 +72,62 @@
                                                  Variant="Variant.Outlined"
                                                  Margin="Margin.Dense"/>
                             </div>
+
+                            <div class="flex-initial items-center gap-1 w-full">
+                                <p class="text-xs pt-2">
+                                    @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
+                                </p>
+                                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                                           Immediate="false"
+                                           For="@(() => FormModel.Difficulty)"
+                                           OnKeyUp="HandleKeyEvent"
+                                           Variant="Variant.Outlined"
+                                           Margin="Margin.Dense">
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Easy"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Medium"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Hard"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem
+                                        Value="@(LearningElementDifficultyEnum.None)">
+                                        @Localizer["CreateElementForm.Difficulty.None"]
+                                    </MudSelectItem>
+                                </MudSelect>
+                            </div>
                         </div>
                     }
 
-                    @if (ElementMode == ElementMode.Normal)
+                    @if (ElementMode == ElementMode.Adaptivity)
                     {
-                        <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                                   Immediate="false"
-                                   Label="@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
-                                   For="@(() => FormModel.Difficulty)"
-                                   OnKeyUp="HandleKeyEvent"
-                                   Variant="Variant.Outlined"
-                                   Dense="true"
-                                   Margin="Margin.Dense"
-                                   Class="text-xs pt-2">
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
-                                    <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Easy"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
-                                    <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Medium"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                                <div class="flex items-center gap-2">
-                                    <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
-                                    <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Hard"]</p>
-                                </div>
-                            </MudSelectItem>
-                            <MudSelectItem
-                                Value="@(LearningElementDifficultyEnum.None)">
-                                @Localizer["CreateElementForm.Difficulty.None"]
-                            </MudSelectItem>
-                        </MudSelect>
+                        <div class="flex-initial items-center gap-1">
+                            <p class="text-xs pt-2">
+                                @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
+                            </p>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                             Min="0"
+                                             Max="1000"
+                                             For="@(() => FormModel.Workload)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"/>
+                        </div>
                     }
                 </div>
             </Collapsable>
@@ -119,6 +135,7 @@
             @switch (ElementMode)
             {
                 case ElementMode.Normal:
+
                     <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]
                                  InitiallyCollapsed="false">
                         <p class="text-xs px-6 pt-3">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
@@ -375,6 +392,12 @@
     private MudTextField<string> _nameField = null!;
     private MudTextField<ILearningContentFormModel>? _contentTextField;
 
+    public bool IsRequired
+    {
+        get => FormModel.Points == 0;
+        set => FormModel.Points = value ? 0 : 1;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -390,6 +413,12 @@
         //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
+
+        FormModel.Points = model.LearningContent switch
+        {
+            AdaptivityContentFormModel adaptivityContentFormModel => adaptivityContentFormModel.Tasks.Any(x => x.MinimumRequiredDifficulty != null) ? 1 : 0,
+            _ => FormModel.Points
+        };
 
         if (SelectedViewModelsProvider.ActiveElementSlotInSpace != -1 && ElementMode is not ElementMode.Story)
             SpacePresenter.CreateLearningElementInSlotFromFormModel(model);

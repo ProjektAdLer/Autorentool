@@ -108,7 +108,7 @@
         <value>IT-Abteilung</value>
     </data>
     <data name="Enum.SpaceTheme.TechnicalArea.Suburb" xml:space="preserve">
-        <value>Serverraum im Rathaus</value>
+        <value>IT-Raum im Rathaus</value>
     </data>
     <data name="Enum.SpaceTheme.Presentation" xml:space="preserve">
         <value>Vortrag</value>

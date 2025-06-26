@@ -63,4 +63,13 @@
     <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
         <value>Story element</value>
     </data>
+    <data name="UnplacedElementsDropZone.Filter.Required" xml:space="preserve">
+        <value>Required/Optional</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.RequiredOnly" xml:space="preserve">
+        <value>Required</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.OptionalOnly" xml:space="preserve">
+        <value>Optional</value>
+    </data>
 </root>
