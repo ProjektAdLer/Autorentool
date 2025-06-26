@@ -490,7 +490,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null);
+            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? WorldPresenter.LearningWorldVm?.WorldTheme : null);
     }
 
 
@@ -509,5 +509,6 @@
         get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;
         set { }
     }
+
 
 }
