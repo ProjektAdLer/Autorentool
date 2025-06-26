@@ -135,7 +135,7 @@ public class LearningWorldPathwayViewUt
         p[1].MarkupMatches(
             @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></p>");
         p[2].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17</p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldView.Condition.Elements</span></p>");
     }
 
     [Test]

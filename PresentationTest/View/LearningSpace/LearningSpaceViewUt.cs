@@ -109,7 +109,7 @@ public class LearningSpaceViewUt
             @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
         var spacePoints = systemUnderTest.Find("p.space-points");
         spacePoints.MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17</p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17<span class=""text-adlergrey-600"">LearningSpace.Condition.Text</span></p>");
     }
 
     [Test]

@@ -259,6 +259,7 @@ public class EditElementFormIt : MudFormTestFixture<EditElementForm, LearningEle
     [Test]
     public async Task AddTasksButtonClicked_OpensAdaptivityContentDialog()
     {
+        FormModel.LearningContent = FormModelProvider.GetAdaptivityContent();
         var dialogServiceMock = Substitute.For<IDialogService>();
         Context.Services.AddSingleton(dialogServiceMock);
 
