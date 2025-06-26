@@ -35,7 +35,7 @@
           FormDataContainer="FormDataContainer">
 
     <Fields>
-        <div 
+        <div
             class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.General.Title"]
                          InitiallyCollapsed="false">
@@ -51,19 +51,21 @@
                     {
                         <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
                             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                <MudText Color="@(!IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]</MudText>
+                                <MudText
+                                    Color="@(!IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Mandatory"]</MudText>
 
                                 <MudSwitch @bind-Value="IsRequired"
                                            Color="Color.Info"
                                            UnCheckedColor="Color.Info"
                                            Style="margin-right: 0; margin-left: 2px"/>
 
-                                <MudText Color="@(IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]</MudText>
+                                <MudText
+                                    Color="@(IsRequired ? Color.Info : Color.Dark)">@Localizer["EditElementForm.Fields.Collapsable.Element.Optional"]</MudText>
                             </MudStack>
                         </div>
-                        
+
                         <div class="flex flex-row gap-2 w-full">
-                            
+
                             <div class="flex-initial items-center gap-1">
                                 <p class="text-xs pt-2">
                                     @Localizer["EditElementForm.Fields.Collapsable.General.Field.Workload.Text"]
@@ -87,19 +89,22 @@
                                            Margin="Margin.Dense">
                                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
                                         <div class="flex items-center gap-2">
-                                            <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
                                             <p>@Localizer["EditElementForm.Difficulty.Easy"]</p>
                                         </div>
                                     </MudSelectItem>
                                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
                                         <div class="flex items-center gap-2">
-                                            <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
                                             <p>@Localizer["EditElementForm.Difficulty.Medium"]</p>
                                         </div>
                                     </MudSelectItem>
                                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
                                         <div class="flex items-center gap-2">
-                                            <MudIcon Class="drop-shadow w-4 h-4" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
                                             <p>@Localizer["EditElementForm.Difficulty.Hard"]</p>
                                         </div>
                                     </MudSelectItem>
@@ -407,7 +412,7 @@
     private BaseForm<LearningElementFormModel, LearningElement> _form = null!;
     private MudTextField<string> _nameField = null!;
     private bool _focusCalled = false;
-    
+
     public bool IsRequired
     {
         get => FormModel.Points == 0;
