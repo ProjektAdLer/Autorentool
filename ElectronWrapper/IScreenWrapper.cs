@@ -1,4 +1,4 @@
-﻿using ElectronNET.API.Entities;
+﻿using ElectronSharp.API.Entities;
 using System;
 using System.Threading.Tasks;
 

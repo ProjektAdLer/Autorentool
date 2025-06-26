@@ -19,6 +19,9 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="NoContentWarning.Text" xml:space="preserve">
-        <value>Noch keine Lerninhalte importiert. Klicken Sie hier, um Dateien zu importieren.</value>
+        <value>Sie haben noch kein Lernmaterial in das Autorentool importiert.</value>
+    </data>
+    <data name="NoContentWarning.ButtonText" xml:space="preserve">
+        <value>Dateien importieren</value>
     </data>
 </root>

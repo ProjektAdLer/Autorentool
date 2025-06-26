@@ -16,13 +16,13 @@
         </value>
     </resheader>
     <data name="UnplacedElementsDropZone.Title" xml:space="preserve">
-        <value>All unplaced elements</value>
+        <value>Unplaced elements</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Theme" xml:space="preserve">
-        <value>Topic of the learning space</value>
+        <value>Theme of the learning space</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Type" xml:space="preserve">
-        <value>Type of the element</value>
+        <value>Content of the element</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Element" xml:space="preserve">
         <value>Type of the element</value>
@@ -31,7 +31,7 @@
         <value>Difficulty of the element</value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.Text" xml:space="preserve">
-        <value>Filter by:</value>
+        <value>Filter </value>
     </data>
     <data name="UnplacedElementsDropZone.Filter.All" xml:space="preserve">
         <value>All</value>
@@ -63,7 +63,13 @@
     <data name="UnplacedElementsDropZone.Filter.StoryElement" xml:space="preserve">
         <value>Story element</value>
     </data>
-    <data name="UnplacedElementsDropZone.SearchBar.PlaceHolder" xml:space="preserve">
-        <value>Search</value>
+    <data name="UnplacedElementsDropZone.Filter.Required" xml:space="preserve">
+        <value>Required/Optional</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.RequiredOnly" xml:space="preserve">
+        <value>Required</value>
+    </data>
+    <data name="UnplacedElementsDropZone.Filter.OptionalOnly" xml:space="preserve">
+        <value>Optional</value>
     </data>
 </root>

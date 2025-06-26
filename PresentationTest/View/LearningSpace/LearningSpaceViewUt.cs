@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
@@ -11,6 +12,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
 using Shared;
+using Shared.Theme;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;
@@ -28,15 +30,26 @@ public class LearningSpaceViewUt
         _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _mediator = Substitute.For<ISelectedViewModelsProvider>();
+        _dimensions = new LearningSpaceLayoutView.Dimensions
+        {
+            Width = 1920,
+            Height = 1080
+        };
+        _jsRuntime = Substitute.For<IJSRuntime>();
+        _jsRuntime.InvokeAsync<LearningSpaceLayoutView.Dimensions>("getScreenDimensions")
+            .Returns(_dimensions);
         _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        var themeLocalizer = Substitute.For<IStringLocalizer<Theme>>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<SpaceTheme>>();
         themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        ThemeHelper.Initialize(themeLocalizer);
+        ThemeHelper<SpaceTheme>.Initialize(themeLocalizer);
+        _ctx.Services.AddSingleton(_jsRuntime);
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddSingleton(_localizer);
         _ctx.Services.AddLogging();
+        _ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        _ctx.RenderComponent<MudPopoverProvider>();
     }
 
     [TearDown]
@@ -49,12 +62,13 @@ public class LearningSpaceViewUt
     private ILearningSpacePresenter _learningSpacePresenter;
     private ISelectedViewModelsProvider _mediator;
     private IStringLocalizer<LearningSpaceView> _localizer;
+    private IJSRuntime _jsRuntime;
+    private LearningSpaceLayoutView.Dimensions _dimensions;
 
     [Test]
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = GetLearningSpaceViewForTesting();
-
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.LearningSpaceP, Is.EqualTo(_learningSpacePresenter));
@@ -78,12 +92,13 @@ public class LearningSpaceViewUt
     }
 
     [Test]
-    public void Render_LearningSpaceSet_RendersNameAndWorkload()
+    public void Render_LearningSpaceSet_RendersNameAndWorkloadAndCondition()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         learningSpace.Name.Returns("foobar");
         learningSpace.Workload.Returns(42);
-        learningSpace.Points.Returns(8);
+        learningSpace.NumberOfRequiredElements.Returns(8);
+        learningSpace.NumberOfElements.Returns(17);
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
@@ -91,10 +106,10 @@ public class LearningSpaceViewUt
         //TODO Use this for LmsLoginDialogUt
         var spaceWorkload = systemUnderTest.Find("p.space-workload");
         spaceWorkload.MarkupMatches(
-            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text</span> 42<span class=""text-adlergrey-600"">LearningSpace.SpaceWorkload.Text.Additional</span></p>");
         var spacePoints = systemUnderTest.Find("p.space-points");
         spacePoints.MarkupMatches(
-            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span> 0 <span class=""text-adlergrey-600"">/</span>8<span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text.Points.Suffix</span></p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">LearningSpace.SpacePoints.Text</span>8<span class=""text-adlergrey-600""> / </span>17<span class=""text-adlergrey-600"">LearningSpace.Condition.Text</span></p>");
     }
 
     [Test]
@@ -109,7 +124,7 @@ public class LearningSpaceViewUt
 
         var elementName = systemUnderTest.Find("p.space-theme");
         elementName.MarkupMatches(
-            @"<p class=""text-sm 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.Theme.CampusAschaffenburg</p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600 space-theme""><span class=""text-adlergrey-600"">LearningSpace.SpaceTheme.Text</span>Enum.SpaceTheme.LearningArea.CampusAschaffenburg</p>");
     }
 
     [Test]

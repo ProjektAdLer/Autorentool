@@ -1,16 +1,17 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 
 namespace BusinessLogic.Validation.Validators.CustomValidators;
 
 public static class HttpValidator
 {
     private const string UrlRegex = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-    public static IRuleBuilderOptions<T, string> IsHttpOrHttpsUrl<T>(this IRuleBuilder<T, string> ruleBuilder)
+    public static IRuleBuilderOptions<T, string> IsHttpOrHttpsUrl<T>(this IRuleBuilder<T, string> ruleBuilder, string message)
     {
         return ruleBuilder
             .Must(IsHttpOrHttpsUrl)
-            .WithMessage("Must be a valid URL (e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ)");
+            .WithMessage(message);
     }
     
     private static bool IsHttpOrHttpsUrl(string url)

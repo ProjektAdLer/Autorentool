@@ -25,7 +25,7 @@
         <value>Eingabeunterstützung</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Info.Text" xml:space="preserve">
-        <value>Im Zusammenhang mit der kompetenzorientierten Hochschullehre und dem damit verbundenen Perspektivwechsel „Shift from Teaching to Learning“, wurden auch Lernziele in den Fokus gerückt. Lernziele beschreiben, was Studierende am Ende eines Lernabschnitts wissen und können sollen sowie welche Einstellungen von ihnen erwartet werden. Lernziele sind damit die möglichst exakte Beschreibung der angestrebten Lernergebnisse (engl. Learning Outcomes). Sie werden in schriftlicher Form festgehalten und situationsgerecht kommuniziert. Hilfestellungen dafür sind die Was-Womit-Wozu-Struktur und Lernzieltaxonomien (z.B. nach Anderson/Krathwohl), welche auf Basis von verschiedenen Kompetenzstufen passende Verben für die Formulierung von Lernzielen vorschlagen.</value>
+        <value>Im Zusammenhang mit der kompetenzorientierten Hochschullehre und dem damit verbundenen Perspektivwechsel „Shift from Teaching to Learning“, wurden auch Lernziele in den Fokus gerückt. Lernziele beschreiben, was Studierende am Ende eines Lernabschnitts wissen und können sollen sowie welche Einstellungen von ihnen erwartet werden. Lernziele sind damit die möglichst exakte Beschreibung der angestrebten Lernergebnisse (engl. Learning Outcomes). Sie werden in schriftlicher Form festgehalten und situationsgerecht kommuniziert. Hilfestellungen dafür sind die Was-Womit-Wozu-Struktur und Lernzieltaxonomien (z.B. nach Anderson &amp; Krathwohl), welche auf Basis von verschiedenen Kompetenzstufen passende Verben für die Formulierung von Lernzielen vorschlagen.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Button.Create" xml:space="preserve">
         <value>Erstellen</value>
@@ -37,7 +37,7 @@
         <value>Taxonomiestufe</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
-        <value>Die Formulierung eines Lernziels/Lernergebnisses fokussiert die Beschreibung von entsprechenden Fähigkeiten, Fertigkeiten oder Kompetenzen des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernziel/Lernergebnis-Formulierung zum Finden eines passenden Verbes der Sichtbarkeit.</value>
+        <value>Die Formulierung eines Lernziels fokussiert die Beschreibung von entsprechenden Kompetenzen innerhalb des intendierten Lernprozesses der Studierenden. Diese lassen sich aufgrund ihrer Komplexität der kognitiven Prozesse einer Taxonomiestufe zuordnen. Die Festlegung einer Taxonomiestufe (nach Anderson &amp; Krathwohl) dient in den weiteren Bearbeitungsschritten der Lernzielformulierung zum Finden eines passenden Verbes der Sichtbarkeit.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Intro" xml:space="preserve">
         <value>Sie können...</value>
@@ -64,7 +64,7 @@
         <value>Was? (Thema)*</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.What.Info" xml:space="preserve">
-        <value>Das „Was“ sagt aus, welcher Lerninhalt (inhaltliches Thema) im Rahmen des Kompetenzerwerbs der Studierenden adressiert werden soll. Dieser wird in den folgenden Schritten mit Hilfe einer Taxonomiestufe und einem Verb der Sichtbarkeit zu einer entsprechenden Fähigkeit, Fertigkeit oder Kompetenz weiterformuliert.</value>
+        <value>Das „Was“ sagt aus, welcher Lerninhalt (inhaltliches Thema) im Rahmen des Kompetenzerwerbs der Studierenden adressiert wird. In Verbindung mit einem Verb der Sichtbarkeit und der dazugehörigen Taxonomiestufe beschreibt es eine Kompetenz, welche Studierende am Ende des Lernprozesses entwickelt haben sollen.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Whereby.Placeholder" xml:space="preserve">
         <value>Textfeld</value>
@@ -76,7 +76,7 @@
         <value>Womit?</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Whereby.Info" xml:space="preserve">
-        <value>Das „Womit“ beschreibt, mit Hilfe welcher theoretischen oder praktischen Werkzeuge Studierende ihre Handlungen ausführen. Hierbei handelt es sich beispielsweise um Formeln, Modelle, Pläne, Begriffe, Tools etc., die im Verlauf der Lehrveranstaltung vermittelt werden und deren Anwendung geübt wird. Die Verwendung und Verknüpfung dieser Werkzeuge stellt die Grundlage für kompetentes Handeln dar. Eine hilfreiche Fragestellung bei der Formulierung ist: „Womit erreichen die Studierenden die Fähigkeit, Fertigkeit oder Kompetenz?“.</value>
+        <value>Das „Womit“ beschreibt, mit Hilfe welcher theoretischen oder praktischen Werkzeuge Studierende ihre Handlungen ausführen. Hierbei handelt es sich beispielsweise um Formeln, Modelle, Pläne, Begriffe, Tools etc., die im Verlauf der Lehrveranstaltung vermittelt werden und deren Anwendung geübt wird. Die Verwendung und Verknüpfung dieser Werkzeuge bildet die Grundlage für kompetentes Handeln.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.WhatFor.Placeholder" xml:space="preserve">
         <value>Textfeld</value>
@@ -85,13 +85,13 @@
         <value>um...</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.WhatFor.Info" xml:space="preserve">
-        <value>Das „Wozu“ gibt einen Ausblick auf den Sinn und Zweck, für den die Lerneinheit konzipiert wurde. Dabei steht nicht die Prüfung im Fokus. Vielmehr veranschaulicht das „Wozu“ die Handlungsmöglichkeiten der Studierenden, wenn sie das Gelernte sicher beherrschen. Oftmals findet die Handlung oder die Situation des „Wozu“ in einer komplexeren Umgebung und unter schwierigeren Bedingungen als in der Lernsituation statt. Hilfreiche Fragestellungen bei der Formulierung sind: „Für welchen (konkreten und/oder langfristigen) Zweck sollen die Kompetenzen erworben werden?“ und/oder „Wozu benötigen die Studierenden die erworbenen Fähigkeiten, Fertigkeiten oder Kompetenzen nach der Lehrveranstaltung?“.</value>
+        <value>Das „Wozu“ gibt einen Ausblick auf den Sinn und Zweck, für den die Lerneinheit konzipiert wurde. Es veranschaulicht die Handlungsmöglichkeiten der Studierenden, wenn sie das Gelernte sicher beherrschen. Oftmals findet die Handlung oder die Situation des „Wozu“ in einer komplexeren Umgebung und unter schwierigeren Bedingungen statt, als in der Lernsituation. Das „Wozu“ bezieht sich nicht auf die Prüfung.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.WhatFor" xml:space="preserve">
         <value>Wozu?</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Text" xml:space="preserve">
-        <value>Machen Sie sich zunächst Gedanken dazu, auf welcher Taxonomiestufe Sie Ihr Lernziel formulieren möchten.</value>
+        <value>1. Machen Sie sich zunächst Gedanken, auf welcher Taxonomiestufe Sie Ihr Lernziel formulieren möchten.</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Preview" xml:space="preserve">
         <value>Vorschau des formulierten Lernziels:</value>
@@ -125,5 +125,38 @@
     </data>
     <data name="CreateEditStructuredLearningOutcome.Button.Edit" xml:space="preserve">
         <value>Aktualisieren</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Title" xml:space="preserve">
+        <value>Qualitätscheck</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Subtitle" xml:space="preserve">
+        <value>Reflexionsfragen zur Überprüfung von hochwertig formulierten Lernzielen:</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.One" xml:space="preserve">
+        <value>Sind die Studierenden die wirklichen Akteur:innen der Handlung?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Two" xml:space="preserve">
+        <value>Ist der Ablauf der Tätigkeit für Außenstehende verständlich?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Three" xml:space="preserve">
+        <value>Beschreiben die Verben ein Tun an/mit einem äußeren Lernobjekt?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Four" xml:space="preserve">
+        <value>Lässt sich aus dem Aussagesatz ein Prüfungsauftrag formulieren?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Five" xml:space="preserve">
+        <value>Steht der Arbeitsaufwand des Lernprozesses in einem angemessenen Verhältnis?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Six" xml:space="preserve">
+        <value>Werden die theoretischen oder praktischen Werkzeuge für die Handlung benannt?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.QualityCheck.Seven" xml:space="preserve">
+        <value>Wird deutlich, welchem Sinn und Zweck die Lerneinheit dient?</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcome.Text.Two" xml:space="preserve">
+        <value>2. Formulieren Sie nun ein Lernziel.</value>
+    </data>
+    <data name="CreateEditStructuredLearningOutcomeInternal.FormattedOutcome.1" xml:space="preserve">
+        <value>[Was?]</value>
     </data>
 </root>

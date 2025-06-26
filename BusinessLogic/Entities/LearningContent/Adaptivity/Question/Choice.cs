@@ -9,6 +9,7 @@ public class Choice : IEquatable<Choice>
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     private Choice()
     {
         Text = "";
@@ -35,10 +36,12 @@ public class Choice : IEquatable<Choice>
         return Equals((Choice) obj);
     }
 
+    // ReSharper disable NonReadonlyMemberInGetHashCode
     public override int GetHashCode()
     {
         return HashCode.Combine(Text, Id);
     }
+    // ReSharper restore NonReadonlyMemberInGetHashCode
 
     public static bool operator ==(Choice? left, Choice? right)
     {

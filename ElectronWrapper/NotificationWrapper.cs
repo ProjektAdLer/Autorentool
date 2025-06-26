@@ -1,17 +1,12 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 namespace ElectronWrapper;
 
 class NotificationWrapper : INotificationWrapper
 {
-    Notification notification;
-
-    public NotificationWrapper()
-    {
-        notification = Electron.Notification;
-    }
+    readonly Notification _notification = Electron.Notification;
 
     /// <summary>
     /// Create OS desktop notifications
@@ -19,7 +14,7 @@ class NotificationWrapper : INotificationWrapper
     /// <param name="notificationOptions"></param>
     public void Show(NotificationOptions notificationOptions)
     {
-        notification.Show(notificationOptions);
+        _notification.Show(notificationOptions);
     }
 
     /// <summary>
@@ -28,6 +23,6 @@ class NotificationWrapper : INotificationWrapper
     /// <returns></returns>
     public Task<bool> IsSupportedAsync()
     {
-        return notification.IsSupportedAsync();
+        return _notification.IsSupportedAsync();
     }
 }

@@ -1,0 +1,123 @@
+﻿@using H5pPlayer.Api
+@using H5pPlayer.BusinessLogic.Entities
+@using H5pPlayer.Main
+@using H5pPlayer.Presentation.PresentationLogic
+@using Microsoft.JSInterop
+@using H5pPlayer.Presentation.View.ValidateH5p
+@inject IJSRuntime JsRuntime
+
+
+<div class="p-6 m-4 border  rounded-lg shadow">
+    @if (IsDisplayModeActive())
+    {
+        <DisplayH5pView
+            DisplayH5pVm="StartH5pPlayerFactory.DisplayH5PFactory.DisplayH5pVm"
+            DisplayH5pController="StartH5pPlayerFactory.DisplayH5PFactory.DisplayH5pController">
+        </DisplayH5pView>
+    }
+    else if (IsValidationModeActive())
+    {
+        <ValidateH5pView
+            ValidateH5pVm="StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pVm"
+            ValidateH5pController="StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pController">
+        </ValidateH5pView>
+    }
+</div>
+
+@code {
+    private RenderFragment? _activeView;
+
+    internal RenderFragment? ActiveView
+    {
+        get => _activeView;
+        set
+        {
+            if (_activeView != value)
+            {
+                _activeView = value;
+                StateHasChanged();
+            }
+        }
+    }
+    
+    [Parameter] 
+    public string? H5pZipSourcePath { get; set; }
+    
+    [Parameter] 
+    public string? UnzippedH5psPath{ get; set; }
+    
+    /// <summary>
+    /// <para>
+    /// Do never use directly this DisplayMode this is only for StartupPurpose
+    /// Use -> <see cref="H5pPlayerViewModel.IsDisplayModeActive"/> 
+    /// Or <see cref="H5pPlayerViewModel.IsValidationModeActive"/>
+    /// </para>
+    /// <para>
+    /// Because: The right way is StartH5pPlayerUc -> decides which DisplayMode -> triggers correct Uc (Display Or Validate)
+    /// and calls the OutputPort(Presenter) Presenter sets DisplayMode in Viewmodel -> View Updates!
+    /// </para>
+    /// </summary>
+    [Parameter] 
+    public H5pDisplayMode DisplayMode{ get; set; }
+    
+    [Parameter]
+    public Action<H5pPlayerResultTO>? OnPlayerFinished { get; set; }
+    
+    [Inject]
+    public required IStartH5pPlayerFactory StartH5pPlayerFactory{ get; set; }
+    
+    internal H5pPlayerController? H5pPlayerController { get; private set; }
+    internal H5pPlayerViewModel? H5pPlayerVm { get; set; }
+
+
+    /// <summary>
+    /// Todo : hier muss Finish player gecalled werden wenn wir fertig sind.
+    /// Butten muss eingefügt werden: Finish und vll noch einer mit Abbrechen
+    ///  vll beenden button besser, da Abbrechen annehmen lässt dass die gerade
+    ///  getätigten eingaben verworfen werden.
+    /// -> dann könnten wir uns das X oben rechts im Dialog sparen und schön von hier aus beenden.
+    /// -> Erstmal ein hack wir ziehen einfach ausdem VM den active STated
+    /// -> Wird mit umbau phase siehe obsidian gerefactored
+    /// </summary>
+    private async Task FinishPlayer()
+    {
+        var activeH5pState = StartH5pPlayerFactory.ValidateH5PFactory.ValidateH5pVm.ActiveH5PState.ToString();
+        var result = new H5pPlayerResultTO(activeH5pState);
+
+        OnPlayerFinished?.Invoke(result);
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        InitializeStartH5pPlayer(); 
+    }
+    
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await StartH5pPlayer();   
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    internal void InitializeStartH5pPlayer()
+    {
+        StartH5pPlayerFactory.CreateStartH5pPlayerPresentationAndUseCaseStructure(StateHasChanged, JsRuntime);
+        H5pPlayerController = StartH5pPlayerFactory.H5pPlayerController;
+        H5pPlayerVm = StartH5pPlayerFactory.H5pPlayerVm;
+    }
+
+    private async Task StartH5pPlayer()
+    {
+        await H5pPlayerController!.StartH5pPlayer(DisplayMode, H5pZipSourcePath!, UnzippedH5psPath!);
+    }
+    private bool IsValidationModeActive()
+    {
+        return H5pPlayerVm?.IsValidationModeActive == true;
+    }
+
+    private bool IsDisplayModeActive()
+    {
+        return H5pPlayerVm?.IsDisplayModeActive == true;
+    }
+}

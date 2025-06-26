@@ -6,44 +6,144 @@
 <summary> Changes that are not yet included in a release. </summary>
 
 ### Added
+- New button for export learning world as a mbz file.
 
 ### Changed
-- Improved the filter search field in unplaced learning elements to be case-insensitive.
-- Changed the order of learning elements in 13- and 15-slot floor plan
+- Fixed a bug where importing a learning world conflicted with validation when a name was already used.
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
-- Fixed a bug in adaptivity elements where changes in the learning content were not applied correctly.
-- Fixed a bug where the program crashed after deleting two learning elements in a row using the right click menu.
-- Fixed a bug where the list of unplaced elements was not updated after changing the floor plan.
-- Fixed a bug where a story slot was not made active after undoing the creation of a story element.
-- Fixed the order of learning elements in learning world tree view
-- Fixed a bug in adaptivity element question preview, where long comments exceeded the viewport.
 
 ### Security
 
 </details>
 
+## [2.2.3-rc.2] - 2025-06-06
+
+### Added
+- New button for export learning world as a mbz file.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.2.3-rc.1] - 2025-05-30
+
+### Added
+
+- Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material
+- Added a header and footer to the left sidebar
+- Added an arrow icon for doors in the floor plans
+- Implemented a validation for export to archive
+- Added new learning world theme
+- Added frame story for learning world
+
+### Changed
+
+- Migrated to .NET 9
+- Changed design for element cards in reference dialog of adaptivity elements
+- Changed design for the dropzone to drag and drop learning material
+- Changed size and design for the learning space editor and unplaced elements
+- Changed design for the story element slots
+- Updated learning space theme values
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- #527: Fixed a bug where external learning material was not taken into account when archiving the learning world.
+- Resolved an issue where the generator crashed when one single file was referenced multiple times in adaptivity
+  elements.
+
+### Security
+
+## [2.2.2] - 2024-12-19
+
+### Fixed
+
+- Fixed a crash after upload learning world
+
+## [2.2.1] - 2024-12-04
+
+### Changed
+
+- Limited number of learning spaces to be uploaded to 50.
+
+### Fixed
+
+- #664: Resolved an issue where resource and url elements were created with incorrect completion conditions in the
+  generator.
+
+## [2.2.0] - 2024-10-23
+
+### Added
+
+- Added a feature to mark H5P Elements as primitive.
+- Added Confirmation dialog when deleting a learning element, learning space and pathway condition.
+- Added 3d representation in the story, learning and adaptivity element cards.
+- Added the writerside documentation in the authoringtool with a link.
+
+### Changed
+
+- Improved the filter search field in unplaced learning elements to be case-insensitive.
+- Changed the order of learning elements in 13- and 15-slot floor plan.
+- Changed Icon for deleting learning elements, learning spaces and pathway conditions.
+- Outsourced the selection of learning content from the learning element to a separate dialog.
+- Changed the styling of the story element slots for higher visibility.
+- Changed the styling of the switch button for selecting multiple or single choice question for higher visibility.
+
+### Deprecated
+
+### Removed
+
+- Removed the right-click menu for learning element, learning space and pathway condition.
+- Removed the button for importing learning spaces.
+
+### Fixed
+
+- Fixed a bug in adaptivity elements where changes in the learning content were not applied correctly.
+- Fixed a bug where the program crashed after deleting two learning elements in a row using the right click menu.
+- Fixed a bug where the list of unplaced elements was not updated after changing the floor plan.
+- Fixed a bug where a story slot was not made active after undoing the creation of a story element.
+- Fixed the order of learning elements in learning world tree view.
+- Fixed a bug in adaptivity element question preview, where long comments exceeded the viewport.
+- Fixed a bug where points were shown in the story element cards.
+- Fixed a bug where unplaced elements are incorrectly dragged and dropped into the slots.
+
+### Security
+
 ## [2.1.7] - 2024-05-28
 
 ### Removed
+
 - Removed primitive H5P
 
 ## [2.1.5] - 2024-05-22
 
 ### Fixed
+
 - Fixed a bug where upload of a learning world would be cancelled after 10 seconds, which would make it practically
-impossible to upload bigger learning worlds or upload worlds on a slow internet connection.
+  impossible to upload bigger learning worlds or upload worlds on a slow internet connection.
 
 ## [2.1.4] - 2024-05-14
 
 ### Added
 
 ### Changed
-- Installer on Windows is now not one-click anymore, meaning the wizard instead of just installing the app now guides you
+
+- Installer on Windows is now not one-click anymore, meaning the wizard instead of just installing the app now guides
+  you
   through the installation process.
 - Made it possible to select during installation whether you want to install the app for all users (C:\ProgramFiles) or
   just the current user (AppData\Local) on Windows.
@@ -53,36 +153,43 @@ impossible to upload bigger learning worlds or upload worlds on a slow internet 
 ### Removed
 
 ### Fixed
+
 - Fixed a bug where you could not import a world zip file created on Windows into the Authoring tool on macOS. (#515)
 - Fixed a bug where it was impossible to export and upload a learning world if your windows user didn't have
   administrator privileges. (#514)
 
 ### Security
 
-
 ## [2.1.3] - 2024-04-12
 
 ### Fixed
-- Fixed a bug where you could not save a learning world after importing it before closing the program once and reopening it. (#511)
+
+- Fixed a bug where you could not save a learning world after importing it before closing the program once and reopening
+  it. (#511)
 - Fixed a bug where the first field of a dialog would keep being focused after you made a change in the dialog. (#505)
 
 ## [2.1.2] - 2024-04-11
 
 ### Changed
+
 - Changed a typo in the German version of the Create World dialog.
-- Changed an inconsistency of wording where the action of deleting a learning world was incorrectly referred to as closing it instead.
+- Changed an inconsistency of wording where the action of deleting a learning world was incorrectly referred to as
+  closing it instead.
 
 ### Fixed
-- Fixed a bug where the program would crash if you try to delete learning content which is currently opened in a program that holds a lock on the file. (#504)
-- Fixed a bug where deleting a learning world would incorrectly be undoable (#506)
 
+- Fixed a bug where the program would crash if you try to delete learning content which is currently opened in a program
+  that holds a lock on the file. (#504)
+- Fixed a bug where deleting a learning world would incorrectly be undoable (#506)
 
 ## [2.1.1] - 2024-03-15
 
 ### Added
+
 - Added build for linux-arm64
 
 ### Changed
+
 - Updated header bar and desktop app icon
 
 ### Deprecated
@@ -90,6 +197,7 @@ impossible to upload bigger learning worlds or upload worlds on a slow internet 
 ### Removed
 
 ### Fixed
+
 - Fixed a bug where the new 13- and 15-slot floor plans could not be processed in the generator
 - Fixed a bug where it was impossible to export and import learning worlds correctly
 
@@ -100,12 +208,13 @@ impossible to upload bigger learning worlds or upload worlds on a slow internet 
 ### Added
 
 - Import and archive functionality:
-  - You can now archive your learning worlds as a .zip archive which you can store elsewhere for backup purposes or
-    share with others. It contains all the data necessary to restore the entire world on another machine.
-  - You can now import learning worlds from .zip archives.
+    - You can now archive your learning worlds as a .zip archive which you can store elsewhere for backup purposes or
+      share with others. It contains all the data necessary to restore the entire world on another machine.
+    - You can now import learning worlds from .zip archives.
 - New list of previously uploaded learning worlds that appears after logging in to the LMS.
 - Previously uploaded worlds can now be deleted from the LMS and the AdLerBackend.
-- Before a learning world is uploaded, the system now checks whether a learning world with the same name already exists on the backend. If there is a duplicate, the author can decide whether to replace the learning world or create a copy.
+- Before a learning world is uploaded, the system now checks whether a learning world with the same name already exists
+  on the backend. If there is a duplicate, the author can decide whether to replace the learning world or create a copy.
 - Authors can now assign an enrolment key for their learning world.
 - Learning outcomes can now be created for learning spaces using an input form.
 - A new button in the header bar shows an overview of all learning outcomes in the selected world.
@@ -113,18 +222,21 @@ impossible to upload bigger learning worlds or upload worlds on a slow internet 
 - Add two floor plans (T-shape and D-shape) with more space for learning elements.
 - Add filter and search for unplaced learning elements.
 - Possibility to delete several learning contents at once.
-  
 
 #### Story elements
-- You can now create story elements: Story elements are a new type of learning element that can be used to create a story in the learning world.
+
+- You can now create story elements: Story elements are a new type of learning element that can be used to create a
+  story in the learning world.
 - They can only contain text blocks as content.
 - They can only be placed in thew new story slots in learning spaces.
 - There is one story slot at the entrance and one at the exit of each learning space.
-- The story element at the entrance of a space will be triggered when the user first enters the space, and the story element at the exit will be triggered when the user leaves the space.
+- The story element at the entrance of a space will be triggered when the user first enters the space, and the story
+  element at the exit will be triggered when the user leaves the space.
 - Story elements are represented in the 3D world as NPCs that the user can interact with.
 - Story elements cannot grant points or be required to complete a space.
 - Story elements cannot have a difficulty, estimated workload or goals (learning outcomes).
-- The content of a story element cannot be created in advance (just like the adaptivity element and unlike normal learning elements).
+- The content of a story element cannot be created in advance (just like the adaptivity element and unlike normal
+  learning elements).
 - As such, the content of story elements will not be listed in the external learning material overview.
 
 ### Changed
@@ -132,42 +244,47 @@ impossible to upload bigger learning worlds or upload worlds on a slow internet 
 - Presentation of the learning elements in the hierarchy and in Moodle according to the linear order of the floor plan.
 - The Create-World, -Space, -Element and -Link dialogs can be confirmed with the Enter key.
 - Changed the way learning worlds are fetched internally and displayed on the start screen.
-  - You can now see the last modify time and optionally file name of worlds.
-  - You can now sort worlds by name or last modify time.
+    - You can now see the last modify time and optionally file name of worlds.
+    - You can now sort worlds by name or last modify time.
 - UI:
-  - Optimized styling of the adaptivity dialog.
-  - Optimized responsive design.
-  - Reworked learning world tree view.
-    - Selecting a learning space while tree view is open now shows the learning space in blue in the tree view.
-    - Selecting a learning element while tree view is open now opens the learning space in the tree view (if not open yet) and shows the learning element in blue in the tree view.
-    - Creating a new learning space while tree view is open now also shows the learning space in blue in the tree view.
-    - Creating a new learning element inside a learning space (by clicking the "+" button on an empty slow) now also shows the learning element in blue in the tree view.
-  - The container for the unplaced learning elements is now in the bottom center below the space view.
-  - Separate sidebar panel for different types of learning elements
-  - The tab key can be used in the forms on the left-hand side. Categories can be opened with Space or Enter.
-  - Replaced Campus Theme with Campus Aschaffenburg and Campus Kempten.
-  - The buttons for deleting, creating learning elements and previewing learning content in the learning content view are now located in a hover menu.
-  - Headerbar extended by a help button containing the following functions:
-    - User manual (displayed).
-    - Tutorial (displayed).
-    - Give feedback (General feedback).
-    - Report technical error.
-    - About AdLer (redirection to the AdLer page).
-  - New styling of the LMSLoginDialog with deletion of Moodle courses.
-  - New styling of the listed learning worlds in the learning world menu.
-  - Addition of info icons (e.g. login dialog, my learning worlds dialog, reference to learning elements or references, enrolment method).
-  - New icons in a more uniform design for more internal consistency.
-  - New styling of the learning path area for more internal consistency.
-  - Styling of the input support.
-  - Styling of the enrolment method.
-  - New styling of the floor plans.
-  - New arrangement of properties for learning spaces in the middle window.
-    New styling of the element cards.
-  - New arrangement of points and workload for learning and adaptivity elements.
-  - New arrangement of the "Objectives" category in "Learning objectives" and "Description".
-  - More responsive design.
-  - Styling of the list of added learning material (all deletion process).
-  - Styling of the filter function for unplaced elements.
+    - Optimized styling of the adaptivity dialog.
+    - Optimized responsive design.
+    - Reworked learning world tree view.
+        - Selecting a learning space while tree view is open now shows the learning space in blue in the tree view.
+        - Selecting a learning element while tree view is open now opens the learning space in the tree view (if not
+          open yet) and shows the learning element in blue in the tree view.
+        - Creating a new learning space while tree view is open now also shows the learning space in blue in the tree
+          view.
+        - Creating a new learning element inside a learning space (by clicking the "+" button on an empty slow) now also
+          shows the learning element in blue in the tree view.
+    - The container for the unplaced learning elements is now in the bottom center below the space view.
+    - Separate sidebar panel for different types of learning elements
+    - The tab key can be used in the forms on the left-hand side. Categories can be opened with Space or Enter.
+    - Replaced Campus Theme with Campus Aschaffenburg and Campus Kempten.
+    - The buttons for deleting, creating learning elements and previewing learning content in the learning content view
+      are now located in a hover menu.
+    - Headerbar extended by a help button containing the following functions:
+        - User manual (displayed).
+        - Tutorial (displayed).
+        - Give feedback (General feedback).
+        - Report technical error.
+        - About AdLer (redirection to the AdLer page).
+    - New styling of the LMSLoginDialog with deletion of Moodle courses.
+    - New styling of the listed learning worlds in the learning world menu.
+    - Addition of info icons (e.g. login dialog, my learning worlds dialog, reference to learning elements or
+      references, enrolment method).
+    - New icons in a more uniform design for more internal consistency.
+    - New styling of the learning path area for more internal consistency.
+    - Styling of the input support.
+    - Styling of the enrolment method.
+    - New styling of the floor plans.
+    - New arrangement of properties for learning spaces in the middle window.
+      New styling of the element cards.
+    - New arrangement of points and workload for learning and adaptivity elements.
+    - New arrangement of the "Objectives" category in "Learning objectives" and "Description".
+    - More responsive design.
+    - Styling of the list of added learning material (all deletion process).
+    - Styling of the filter function for unplaced elements.
 
 ### Removed
 

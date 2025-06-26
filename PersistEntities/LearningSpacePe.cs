@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningOutcome;
 using Shared;
+using Shared.Theme;
 
 namespace PersistEntities;
 
@@ -12,7 +13,7 @@ namespace PersistEntities;
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string description,
-        int requiredPoints, Theme theme, LearningOutcomeCollectionPe? learningOutcomes = null,
+        int requiredPoints, SpaceTheme spaceTheme, LearningOutcomeCollectionPe? learningOutcomes = null,
         ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
         TopicPe? assignedTopic = null)
@@ -22,7 +23,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = description;
         LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollectionPe();
         RequiredPoints = requiredPoints;
-        Theme = theme;
+        SpaceTheme = spaceTheme;
         LearningSpaceLayout = learningSpaceLayout ??
                               new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
                                   new Dictionary<int, ILearningElementPe>(),
@@ -53,7 +54,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         PositionY = 0;
     }
 
-    [DataMember] public Theme Theme { get; set; }
+    [DataMember] public SpaceTheme SpaceTheme { get; set; }
 
     [DataMember] public TopicPe? AssignedTopic { get; set; }
 

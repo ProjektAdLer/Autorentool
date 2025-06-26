@@ -3,6 +3,8 @@ using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.Entities.LearningContent.Adaptivity;
+using BusinessLogic.Entities.LearningContent.Adaptivity.Action;
 using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement.DataAccess;
@@ -19,21 +21,15 @@ public class DataAccess : IDataAccess
     internal readonly IContentFileHandler ContentFileHandler;
     internal readonly IFileSystem FileSystem;
     internal readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
-    internal readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
     internal readonly IXmlFileHandler<List<LinkContentPe>> XmlHandlerLink;
-    internal readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     internal readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
 
 
     public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld,
-        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement,
-        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink,
-        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler,
-        IFileSystem fileSystem, IMapper mapper)
+        IXmlFileHandler<List<LinkContentPe>> xmlHandlerLink, IContentFileHandler contentFileHandler,
+        ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
-        XmlHandlerSpace = xmlHandlerSpace;
-        XmlHandlerElement = xmlHandlerElement;
         ContentFileHandler = contentFileHandler;
         WorldSavePathsHandler = worldSavePathsHandler;
         FileSystem = fileSystem;
@@ -59,36 +55,6 @@ public class DataAccess : IDataAccess
     public LearningWorld LoadLearningWorld(Stream stream)
     {
         return Mapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromStream(stream));
-    }
-
-    public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
-    {
-        XmlHandlerSpace.SaveToDisk(Mapper.Map<LearningSpacePe>(space), filepath);
-    }
-
-    public LearningSpace LoadLearningSpace(string filepath)
-    {
-        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromDisk(filepath));
-    }
-
-    public LearningSpace LoadLearningSpace(Stream stream)
-    {
-        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromStream(stream));
-    }
-
-    public void SaveLearningElementToFile(LearningElement element, string filepath)
-    {
-        XmlHandlerElement.SaveToDisk(Mapper.Map<LearningElementPe>(element), filepath);
-    }
-
-    public LearningElement LoadLearningElement(string filepath)
-    {
-        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromDisk(filepath));
-    }
-
-    public LearningElement LoadLearningElement(Stream stream)
-    {
-        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
     /// <inheritdoc cref="IDataAccess.LoadLearningContentAsync(string)"/>
@@ -160,7 +126,7 @@ public class DataAccess : IDataAccess
         //ensure folders are created
         if (!FileSystem.Directory.Exists(ApplicationPaths.TempFolder))
             FileSystem.Directory.CreateDirectory(ApplicationPaths.TempFolder);
-        FileSystem.CreateDisposableDirectory(out var directoryInfo);
+        using var dispDir = FileSystem.CreateDisposableDirectory(out var directoryInfo);
         var tempFolder = directoryInfo.FullName;
         //create temp folder structure
         FileSystem.Directory.CreateDirectory(tempFolder);
@@ -197,34 +163,50 @@ public class DataAccess : IDataAccess
         //save world to savedworlds folder
         var newSavePath =
             FindSuitableNewSavePath(ApplicationPaths.SavedWorldsFolder, world.Name, "awf", out var iterations);
-        
+
         //we must update the save path in the world entity because it still holds the save path from the archive,
         //which is in turn the save path on the previous machine. this *could* lead to an exception being thrown,
         //if the current user on the new machine is not the exact same username as the user on the previous machine.
         //this problem resolves itself when the application is restarted, as the loaded world contains the correct save path,
         //but for the world that is loaded in the current session, we must update the save path.
         world.SavePath = newSavePath;
-        
+
         //parse save path back into name
-        if (iterations != 0) world.Name = $"{world.Name} ({iterations})";
+        if (iterations != 0) world.Name = $"{world.Name}_{iterations}";
 
         SaveLearningWorldToFile(world, newSavePath);
 
         //return world entity
         return world;
 
-        async Task<string> CopyContentAsync(ILearningWorld world)
+        async Task<string> CopyContentAsync(ILearningWorld worldToCopyFrom)
         {
             EnsureCreated(ApplicationPaths.ContentFolder);
-            var fileContents = world.LearningSpaces
+            var fileContents = worldToCopyFrom.LearningSpaces
                 .SelectMany(space => space.ContainedLearningElements.Select(element => element.LearningContent))
-                .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+                .Concat(worldToCopyFrom.UnplacedLearningElements.Select(element => element.LearningContent))
                 .Where(content => content is FileContent)
                 .Cast<FileContent>()
                 .ToList();
+            var referenceContents = worldToCopyFrom.LearningSpaces
+                .SelectMany(space => space.ContainedLearningElements)
+                .Concat(worldToCopyFrom.UnplacedLearningElements)
+                .Select(el => el.LearningContent)
+                .OfType<AdaptivityContent>()
+                .SelectMany(adco => adco.Tasks)
+                .SelectMany(task => task.Questions)
+                .SelectMany(question => question.Rules)
+                .Select(rule => rule.Action)
+                .OfType<ContentReferenceAction>()
+                .Select(cra => cra.Content)
+                .OfType<FileContent>()
+                .ToList();
+
+            fileContents.AddRange(referenceContents);
+
             //copy content files into content folder (avoiding duplicates) and changing filepaths in world
-            var contentFolder = FileSystem.Path.Join(tempFolder, "Content");
-            var contentFiles = FileSystem.Directory.GetFiles(contentFolder).Where(filepath =>
+            var newContentFolder = FileSystem.Path.Join(tempFolder, "Content");
+            var contentFiles = FileSystem.Directory.GetFiles(newContentFolder).Where(filepath =>
                 !filepath.EndsWith(".hash") && !filepath.EndsWith(".linkstore"));
             foreach (var contentFile in contentFiles)
             {
@@ -250,7 +232,7 @@ public class DataAccess : IDataAccess
                 }
             }
 
-            return contentFolder;
+            return newContentFolder;
         }
     }
 
@@ -274,13 +256,33 @@ public class DataAccess : IDataAccess
     private void CopyContentFiles(ILearningWorld world, string contentFolder)
     {
         var contentInWorld = world.LearningSpaces
-            .SelectMany(space =>
-                space.ContainedLearningElements.Select(element => element.LearningContent)
-            )
-            .Concat(world.UnplacedLearningElements.Select(element => element.LearningContent))
+            .SelectMany(space => space.ContainedLearningElements.Select(e => e.LearningContent))
+            .Concat(world.UnplacedLearningElements.Select(e => e.LearningContent))
             .ToList();
-        var fileContent = contentInWorld.Where(content => content is FileContent).Cast<FileContent>().Distinct();
-        var linkContent = contentInWorld.Where(content => content is LinkContent).Cast<LinkContent>().Distinct()
+
+        var referencedContents = world.LearningSpaces
+            .SelectMany(space => space.ContainedLearningElements)
+            .Where(el => el.LearningContent is AdaptivityContent)
+            .Select(el => (AdaptivityContent)el.LearningContent)
+            .SelectMany(adco => adco.Tasks)
+            .SelectMany(task => task.Questions)
+            .SelectMany(question => question.Rules)
+            .Select(rule => rule.Action)
+            .OfType<ContentReferenceAction>()
+            .Select(cfa => cfa.Content)
+            .Distinct()
+            .ToList();
+
+        contentInWorld.AddRange(referencedContents);
+
+        var fileContent = contentInWorld
+            .OfType<FileContent>()
+            .Distinct()
+            .ToList();
+
+        var linkContent = contentInWorld
+            .OfType<LinkContent>()
+            .Distinct()
             .ToList();
 
         //copy files

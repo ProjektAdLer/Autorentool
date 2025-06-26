@@ -24,7 +24,7 @@
                       Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                       ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                       ItemDropped="ElementDropZoneHelper.ItemUpdated"
-                      class="flex flex-row justify-between gap-1 items-start max-h-[calc(95dvh)] flex-auto">
+                      Class="flex flex-row justify-between gap-1 items-start max-h-[calc(95dvh)] flex-auto">
         <ChildContent>
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
@@ -34,7 +34,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningWorldMetadata.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/LeftSidebar/world-metadata-icon.png" alt=@Localizer["SideBarContent.LearningWorldMetadata.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -46,7 +48,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningSpaceMetadata.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/LeftSidebar/space-metadata-icon.png" alt=@Localizer["SideBarContent.LearningSpaceMetadata.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -58,7 +62,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleStoryElementDialog">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title="@Localizer["SideBarContent.StoryLearningElementMetadata.Title"]">
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/LeftSidebar/storyelement-icon_adlerdarkblue.png" alt="@Localizer["SideBarContent.StoryLearningElementMetadata.Alt"]">
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -70,7 +76,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningElementMetadata.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/LeftSidebar/learningelements-icon.png" alt=@Localizer["SideBarContent.LearningElementMetadata.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -82,42 +90,55 @@
                             RequestIsActiveToggle="Mediator.RequestToggleAdaptivityElementDialog">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/LeftSidebar/adaptivityelement-icon.png" alt=@Localizer["SideBarContent.AdaptivityLearningElementMetadata.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
                                 <ElementFormContainer ElementMode="ElementMode.Adaptivity"/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem
-                            IsActive="Mediator.ContentDialogOpen"
-                            RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
-                            <SidebarContent>
-                                <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.ImportFiles.Title"]>
-                                    <img class="w-full" src="CustomIcons/LeftSidebar/all-data-icon.png" alt=@Localizer["SideBarContent.ImportFiles.Alt"]>
-                                </div>
-                            </SidebarContent>
-                            <MainContent>
-                                <ContentFilesContainer/>
-                            </MainContent>
-                        </SidebarItem>
                     </Sidebar>
                 </SideContainer>
-                <div class="flex flex-col grow min-w-[30vw] max-w-[98vw] h-[98%]">
+                <div class="flex flex-col w-full h-[98%]">
                     <CenterContainer>
                             @if (SelectedViewModelsProvider.LearningObjectInPathWay is ILearningSpaceViewModel)
                             {
                                 <LearningSpaceView/>
                             }
-                        else
-                        {
-                            <img class="w-64 2xl:w-96 opacity-5 inset-0 m-auto absolute" src="CustomIcons/autorentool-logo.png">
+                            else
+                            {
+                                @* ReSharper disable Html.PathError *@
+                            <div class="absolute inset-0 m-auto flex flex-col justify-center">
+                                <p class="px-4 text-center text-[#8b96a7] font-bold text-base 2xl:text-xl z-30">
+                                    @Localizer["CenterContainer.OpenLearningSpace.Text.One"]
+                                    <span class="inline-flex flex items-baseline">
+                                        <img src="CustomIcons/Space/space-icon_bright.png" class="opacity-50 w-5 h-5 self-center" alt="Lernraum-Icon"/>
+                                    </span>
+                                    @Localizer["CenterContainer.OpenLearningSpace.Text.Two"]
+                                    <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                                        <TooltipContent>
+                                            <MudText Class="cursor-default text-xs">@Localizer["CenterContainer.OpenLearningSpace.Text.Tooltip"]</MudText>
+                                        </TooltipContent>
+                                        <ChildContent>
+                                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue"></MudIcon>
+                                        </ChildContent>
+                                    </MudTooltip>
+                                </p>
+                                <div class="flex flex-row justify-between items-center ml-2 w-[95%]">
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Style="color: #8b96a7" Size="Size.Large" Class="animate-move-left-right"></MudIcon>
+                                    <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Style="color: #8b96a7" Size="Size.Large" Class="animate-move-right-left"></MudIcon>
+                            </div>
+                                </div>
+                                    <img class="w-64 2xl:w-96 opacity-5 m-auto" src="CustomIcons/autorentool-logo.png" alt="Autorentool-Logo">
+                            @* ReSharper restore Html.PathError *@
                         }
                     </CenterContainer>
                     <BottomContainer>
                         <UnplacedElementsDropZone/>
                     </BottomContainer>
-                    </div>
+                </div>
                 <SideContainer Side="Side.Right">
                     <Sidebar Side="Side.Right">
                         <SidebarItem
@@ -125,7 +146,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleWorldPathwayView">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/RightSidebar/path-icon.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -137,7 +160,9 @@
                             RequestIsActiveToggle="Mediator.RequestToggleWorldTreeView">
                             <SidebarContent>
                                 <div class="w-10 p-1 my-1.5" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
+                                    @* ReSharper disable Html.PathError *@
                                     <img class="w-full" src="CustomIcons/RightSidebar/overview-icon.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
+                                    @* ReSharper restore Html.PathError *@
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -149,7 +174,7 @@
             </CascadingValue>
         </ChildContent>
         <ItemRenderer>
-            <MudListItem Text="@context.Name"/>
+            <MudListItem T="string" Text="@context.Name"/>
         </ItemRenderer>
     </MudDropContainer>
 </div>

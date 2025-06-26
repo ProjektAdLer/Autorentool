@@ -136,7 +136,8 @@ public class EditMultipleChoiceQuestionWithTypeChangeUt
         // Act and Assert
         var ex = Assert.Throws<InvalidOperationException>(() =>
         {
-            var command = new EditMultipleChoiceQuestionWithTypeChange(task, oldQuestion, isSingleResponse, text,
+            // ReSharper disable once ObjectCreationAsStatement
+            new EditMultipleChoiceQuestionWithTypeChange(task, oldQuestion, isSingleResponse, text,
                 choices, correctChoices, expectedCompletionTime, mappingAction,
                 new NullLogger<EditMultipleChoiceQuestionWithTypeChange>());
         });

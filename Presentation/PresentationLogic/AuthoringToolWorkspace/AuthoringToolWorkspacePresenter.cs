@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
@@ -19,11 +21,12 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly IPresentationLogic _presentationLogic;
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly IShutdownManager _shutdownManager;
+    private readonly IStringLocalizer<AuthoringToolWorkspacePresenter> _localizer;
 
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILogger<AuthoringToolWorkspacePresenter> logger,
         ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
-        IDialogService dialogService, IErrorService errorService)
+        IDialogService dialogService, IErrorService errorService, IStringLocalizer<AuthoringToolWorkspacePresenter> localizer)
     {
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
@@ -32,6 +35,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _dialogService = dialogService;
         _errorService = errorService;
         _selectedViewModelsProvider = selectedViewModelsProvider;
+        _localizer = localizer;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
@@ -65,10 +69,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.CreateLearningWorld"/>
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey)
+        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
-            description, goals, evaluationLink, enrolmentKey);
+            description, goals, worldTheme, evaluationLink, enrolmentKey, storyStart, storyEnd);
     }
 
     /// <inheritdoc cref="IAuthoringToolWorkspacePresenter.DeleteLearningWorld"/>
@@ -146,10 +150,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
-            DisableBackdropClick = true
+            BackdropClick = false
         };
-        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
+        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>(_localizer["AuthoringToolWorkspacePresenter.SaveWorld.UnsavedChanges"], parameters, options);
         var result = await dialog.Result;
+        if (result == null) return DialogResult.Cancel();
         return result;
     }
 

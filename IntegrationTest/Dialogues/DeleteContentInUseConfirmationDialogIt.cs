@@ -30,8 +30,8 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
             { nameof(DeleteContentInUseConfirmationDialog.ContentName), "ContentName" },
             { nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples), matches }
         };
-        await comp.InvokeAsync(() =>
-            dialogReference = service.Show<DeleteContentInUseConfirmationDialog>("foo", parameters));
+        await comp.InvokeAsync(async () =>
+            dialogReference = await service.ShowAsync<DeleteContentInUseConfirmationDialog>("foo", parameters));
         Assert.That(dialogReference, Is.Not.Null);
 
         var mainText = comp.Find("p.main-text");
@@ -40,11 +40,11 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
 
         var tableRows = comp.FindAll("tbody tr");
         Assert.That(tableRows, Has.Count.EqualTo(1));
-        var worldInner = tableRows.First().Children.First(element => element.Attributes["data-label"].Value == "World")
+        var worldInner = tableRows.First().Children.First(ele => ele.Attributes["data-label"]!.Value == "World")
             .InnerHtml;
         Assert.That(worldInner, Is.EqualTo(world.Name));
         var elementInner = tableRows.First().Children
-            .First(element => element.Attributes["data-label"].Value == "Element")
+            .First(ele => ele.Attributes["data-label"]!.Value == "Element")
             .InnerHtml;
         Assert.That(elementInner, Is.EqualTo(element.Name));
     }
@@ -56,13 +56,13 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
         var comp = GetDialogProvider();
         var service = (DialogService)Context.Services.GetService<IDialogService>()!;
         IDialogReference? dialogReference = null;
-        await comp.InvokeAsync(() =>
-            dialogReference = service.Show<DeleteContentInUseConfirmationDialog>("foo"));
+        await comp.InvokeAsync(async () =>
+            dialogReference = await service.ShowAsync<DeleteContentInUseConfirmationDialog>("foo"));
         Assert.That(dialogReference, Is.Not.Null);
         //cancel
         comp.FindAll("button")[0].Click();
         var result = await dialogReference.Result;
-        Assert.That(result.Canceled, Is.True);
+        Assert.That(result!.Canceled, Is.True);
     }
 
     [Test]
@@ -72,13 +72,13 @@ public class DeleteContentInUseConfirmationDialogIt : MudDialogTestFixture<Delet
         var comp = GetDialogProvider();
         var service = (DialogService)Context.Services.GetService<IDialogService>()!;
         IDialogReference? dialogReference = null;
-        await comp.InvokeAsync(() =>
-            dialogReference = service.Show<DeleteContentInUseConfirmationDialog>("foo"));
+        await comp.InvokeAsync(async () =>
+            dialogReference = await service.ShowAsync<DeleteContentInUseConfirmationDialog>("foo"));
         Assert.That(dialogReference, Is.Not.Null);
         //confirm
         comp.FindAll("button")[1].Click();
         var result = await dialogReference.Result;
-        Assert.That(result.Canceled, Is.False);
+        Assert.That(result!.Canceled, Is.False);
         Assert.That(result.Data, Is.EqualTo(true));
     }
 

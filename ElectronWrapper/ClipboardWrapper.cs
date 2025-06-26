@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronSharp.API;
+using ElectronSharp.API.Entities;
 
 
 namespace ElectronWrapper;
@@ -10,12 +10,8 @@ namespace ElectronWrapper;
 /// </summary>
 class ClipboardWrapper : IClipboardWrapper
 {
-    private Clipboard clipboard;
+    private readonly Clipboard _clipboard = Electron.Clipboard;
 
-    public ClipboardWrapper()
-    {
-        clipboard = Electron.Clipboard;
-    }
     /// <summary>
     /// Read the content in the clipboard as plain text.
     /// </summary>
@@ -23,7 +19,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <returns>The content in the clipboard as plain text.</returns>
     public Task<string> ReadTextAsync(string type = "")
     {
-        return clipboard.ReadTextAsync(type);
+        return _clipboard.ReadTextAsync(type);
     }
 
 
@@ -34,7 +30,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void WriteText(string text, string type = "")
     {
-        clipboard.WriteText(text, type);
+        _clipboard.WriteText(text, type);
     }
 
     /// <summary>
@@ -44,7 +40,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <returns></returns>
     public Task<string> ReadHtmlAsync(string type = "")
     {
-        return clipboard.ReadHTMLAsync(type);
+        return _clipboard.ReadHTMLAsync(type);
     }
 
     /// <summary>
@@ -54,7 +50,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void WriteHtml(string markup, string type = "")
     {
-        clipboard.WriteHTML(markup, type);
+        _clipboard.WriteHTML(markup, type);
     }
 
     /// <summary>
@@ -64,7 +60,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <returns></returns>
     public Task<string> ReadRtfAsync(string type = "")
     {
-        return clipboard.ReadRTFAsync(type);
+        return _clipboard.ReadRTFAsync(type);
     }
 
 
@@ -76,56 +72,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void WriteRtf(string text, string type = "")
     {
-        clipboard.WriteRTF(text, type);
-    }
-
-
-    /// <summary>
-    /// Returns an Object containing title and url keys representing 
-    /// the bookmark in the clipboard. The title and url values will 
-    /// be empty strings when the bookmark is unavailable.
-    /// </summary>
-    /// <returns></returns>
-    public Task<ReadBookmark> ReadBookmarkAsync()
-    {
-        return clipboard.ReadBookmarkAsync();
-    }
-
-    /// <summary>
-    /// Writes the title and url into the clipboard as a bookmark.
-    /// 
-    /// Note: Most apps on Windows don’t support pasting bookmarks
-    /// into them so you can use clipboard.write to write both a 
-    /// bookmark and fallback text to the clipboard.
-    /// </summary>
-    /// <param name="title"></param>
-    /// <param name="url"></param>
-    /// <param name="type"></param>
-    public void WriteBookmark(string title, string url, string type = "")
-    {
-        clipboard.WriteBookmark(title, url, type);
-    }
-
-
-    /// <summary>
-    /// macOS: The text on the find pasteboard. This method uses synchronous IPC
-    /// when called from the renderer process. The cached value is reread from the
-    /// find pasteboard whenever the application is activated.
-    /// </summary>
-    /// <returns></returns>
-    public Task<string> ReadFindTextAsync()
-    {
-        return clipboard.ReadFindTextAsync();
-    }
-
-    /// <summary>
-    /// macOS: Writes the text into the find pasteboard as plain text. This method uses 
-    /// synchronous IPC when called from the renderer process.
-    /// </summary>
-    /// <param name="text"></param>
-    public void WriteFindText(string text)
-    {
-        clipboard.WriteFindText(text);
+        _clipboard.WriteRTF(text, type);
     }
 
     /// <summary>
@@ -134,7 +81,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void Clear(string type = "")
     {
-        clipboard.Clear(type);
+        _clipboard.Clear(type);
     }
 
     /// <summary>
@@ -144,7 +91,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <returns></returns>
     public Task<string[]> AvailableFormatsAsync(string type = "")
     {
-        return clipboard.AvailableFormatsAsync(type);
+        return _clipboard.AvailableFormatsAsync(type);
     }
 
 
@@ -155,7 +102,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void Write(Data data, string type = "")
     {
-        clipboard.Write(data, type);
+        _clipboard.Write(data, type);
     }
 
 
@@ -166,7 +113,7 @@ class ClipboardWrapper : IClipboardWrapper
     /// <returns></returns>
     public Task<NativeImage> ReadImageAsync(string type = "")
     {
-        return clipboard.ReadImageAsync(type);
+        return _clipboard.ReadImageAsync(type);
     }
 
 
@@ -177,6 +124,6 @@ class ClipboardWrapper : IClipboardWrapper
     /// <param name="type"></param>
     public void WriteImage(NativeImage image, string type = "")
     {
-        clipboard.WriteImage(image, type);
+        _clipboard.WriteImage(image, type);
     }
 }

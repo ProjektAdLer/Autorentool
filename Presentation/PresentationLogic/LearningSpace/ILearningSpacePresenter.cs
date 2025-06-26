@@ -7,6 +7,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -33,17 +34,11 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">The description of the learning space.</param>
     /// <param name="requiredPoints">The required points for the learning space.</param>
-    /// <param name="theme">The theme of the learning space.</param>
+    /// <param name="spaceTheme">The theme of the learning space.</param>
     /// <param name="topic">The topic of the learning space, which may be null.</param>
     void EditLearningSpace(string name, string description, int requiredPoints,
-        Theme theme,
+        SpaceTheme spaceTheme,
         ITopicViewModel? topic = null);
-
-    /// <summary>
-    /// Calls the LoadLearningElementAsync method in PresentationLogic and adds the returned
-    /// learning element to its parent.
-    /// </summary>
-    Task LoadLearningElementAsync(int slotIndex);
 
     /// <summary>
     /// Sets the LearningSpaceVm.

@@ -42,9 +42,9 @@ public class LearningWorldTreeViewUt
     private IMediator Mediator { get; set; }
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
     private LearningWorldViewModel? World { get; set; }
-    private LearningElementViewModel StoryEle1 { get; set; }
-    private LearningElementViewModel StoryEle2 { get; set; }
-    private LearningElementViewModel Ele1 { get; set; }
+    private LearningElementViewModel StoryEle1 { get; set; } = null!;
+    private LearningElementViewModel StoryEle2 { get; set; } = null!;
+    private LearningElementViewModel Ele1 { get; set; } = null!;
 
     [TearDown]
     public void Teardown()
@@ -79,6 +79,25 @@ public class LearningWorldTreeViewUt
             Assert.That(items[2].Instance.Parameters["LearningElement"], Is.EqualTo(StoryEle2));
             Assert.That(items[2].Instance.Parameters["IsSelected"], Is.False);
         });
+    }
+    
+    [Test]
+    public void Render_LearningWorldSet_RendersNameWorkloadAndCondition()
+    {
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        learningWorld.Name.Returns("my insanely sophisticated name");
+        learningWorld.Workload.Returns(42);
+        learningWorld.NumberOfRequiredElements.Returns(9);
+        learningWorld.NumberOfElements.Returns(17);
+        LearningWorldPresenterOverview.LearningWorldVm.Returns(learningWorld);
+
+        var systemUnderTest = GetRenderedComponent();
+
+        var p = systemUnderTest.FindAllOrFail("p").ToList();
+        p[1].MarkupMatches(
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">OverView.Workload</span> 42<span class=""text-adlergrey-600"">OverView.Workload.TimeScale</span></p>");
+        p[2].MarkupMatches(
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldTreeView.Condition.Elements</span></p>");
     }
 
     [Test]

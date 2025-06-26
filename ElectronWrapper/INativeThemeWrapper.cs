@@ -1,4 +1,4 @@
-﻿using ElectronNET.API.Entities;
+﻿using ElectronSharp.API.Entities;
 using System;
 using System.Threading.Tasks;
 
@@ -11,6 +11,4 @@ interface INativeThemeWrapper
     Task<ThemeSourceMode> GetThemeSourceAsync();
     void SetThemeSource(ThemeSourceMode themeSourceMode);
     Task<bool> ShouldUseDarkColorsAsync();
-    Task<bool> ShouldUseHighContrastColorsAsync();
-    Task<bool> ShouldUseInvertedColorSchemeAsync();
 }

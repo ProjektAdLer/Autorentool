@@ -16,17 +16,6 @@ public class LoadLearningWorld : ILoadLearningWorld
         Logger = logger;
     }
 
-    public LoadLearningWorld(AuthoringToolWorkspace workspace, Stream stream, IBusinessLogic businessLogic,
-        Action<AuthoringToolWorkspace> mappingAction, ILogger<LoadLearningWorld> logger)
-    {
-        Filepath = "";
-        Workspace = workspace;
-        BusinessLogic = businessLogic;
-        LearningWorld = BusinessLogic.LoadLearningWorld(stream);
-        MappingAction = mappingAction;
-        Logger = logger;
-    }
-
     internal IBusinessLogic BusinessLogic { get; }
 
     internal AuthoringToolWorkspace Workspace { get; }

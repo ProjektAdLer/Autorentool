@@ -14,15 +14,9 @@ public interface IDataAccess
     void SaveLearningWorldToFile(LearningWorld world, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
     LearningWorld LoadLearningWorld(Stream stream);
-    void SaveLearningSpaceToFile(LearningSpace space, string filepath);
-    LearningSpace LoadLearningSpace(string filepath);
-    LearningSpace LoadLearningSpace(Stream stream);
-    void SaveLearningElementToFile(LearningElement element, string filepath);
-    LearningElement LoadLearningElement(string filepath);
-    LearningElement LoadLearningElement(Stream stream);
 
     /// <summary>
-    /// Loads the file at the given filepath into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
+    /// Loads the file at the given filepath into an application data folder and returns a <see cref="ILearningContent"/> object referencing it.
     /// </summary>
     /// <param name="filepath">The path to the content file.</param>
     /// <returns>A content object referencing the file.</returns>
@@ -32,7 +26,7 @@ public interface IDataAccess
     Task<ILearningContent> LoadLearningContentAsync(string filepath);
 
     /// <summary>
-    /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContentPe"/> object referencing it.
+    /// Writes the content of the given stream into an application data folder and returns a <see cref="ILearningContent"/> object referencing it.
     /// </summary>
     /// <param name="name">The name of the file which is contained in the stream.</param>
     /// <param name="stream">The stream to be written.</param>
@@ -52,6 +46,7 @@ public interface IDataAccess
     /// </summary>
     /// <returns>An enumerable of <see cref="IFileInfo"/>.</returns>
     IEnumerable<IFileInfo> GetSavedLearningWorldPaths();
+
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
     /// that does not yet exist.
@@ -59,6 +54,7 @@ public interface IDataAccess
     /// <param name="targetFolder">The parent folder which shall contain the file.</param>
     /// <param name="fileName">The name of the file.</param>
     /// <param name="fileEnding">The ending of the file.</param>
+    /// <param name="iterations">Numeric suffix appended to the file name; increments until a unique path is found.</param>
     /// <exception cref="ArgumentException"><paramref name="targetFolder"/>, <paramref name="fileName"/>
     /// or <paramref name="fileEnding"/> is null, whitespace or empty.</exception>
     /// <returns>A save path of form <code>[targetFolder]/[fileName]_n.[fileEnding]</code> that does not yet exist,
@@ -103,7 +99,7 @@ public interface IDataAccess
     /// <param name="savePath">The path to the file.</param>
     /// <returns>An <see cref="IFileInfo"/> object.</returns>
     IFileInfo GetFileInfoForPath(string savePath);
-    
+
     /// <summary>
     /// Deletes a file at the given path.
     /// </summary>

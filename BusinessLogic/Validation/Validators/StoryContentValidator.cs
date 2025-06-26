@@ -16,10 +16,12 @@ public class StoryContentValidator : AbstractValidator<StoryContent>
         RuleFor(x => x.StoryText)
             .NotEmpty().WithMessage(_localizer["StoryContentValidator.StoryTextNoBlocks.ErrorMessage"])
             .ForEach(IsValidStoryBlock);
+        RuleFor(x => x.NpcName)
+            .MaximumLength(60).WithMessage(_localizer["StoryContentValidator.NpcNameTooLong.ErrorMessage"]);
     }
 
     private void IsValidStoryBlock(IRuleBuilderInitialCollection<IEnumerable<string>, string> builder) =>
         builder
             .NotEmpty().WithMessage(_localizer["StoryContentValidator.BlockEmpty.ErrorMessage"])
-            .MaximumLength(550).WithMessage(_localizer["StoryContentValidator.BlockTooLong.ErrorMessage"]);
+            .MaximumLength(400).WithMessage(_localizer["StoryContentValidator.BlockTooLong.ErrorMessage"]);
 }

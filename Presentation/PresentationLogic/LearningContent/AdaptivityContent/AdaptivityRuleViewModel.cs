@@ -12,6 +12,7 @@ public class AdaptivityRuleViewModel : IAdaptivityRuleViewModel
         UnsavedChanges = true;
     }
 
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>

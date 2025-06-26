@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -20,12 +21,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// The currently selected LearningWorldViewModel.
     /// </summary>
     ILearningWorldViewModel? LearningWorldVm { get; }
-
-    /// <summary>
-    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
-    /// Otherwise, it is null.
-    /// </summary>
-    IObjectInPathWayViewModel? RightClickedLearningObject { get; }
 
     /// <summary>
     /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
@@ -39,19 +34,11 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="description">The description of the learning space.</param>
     /// <param name="learningOutcomeCollectionVm">The learning outcomes of the learning space.</param>
     /// <param name="requiredPoints">The required points for the learning space.</param>
-    /// <param name="theme">The theme of the learning space.</param>
+    /// <param name="spaceTheme">The theme of the learning space.</param>
     /// <param name="topic">The topic of the learning space (optional).</param>
-    /// <param name="positionX">The X position of the learning space (default is 0).</param>
-    /// <param name="positionY">The Y position of the learning space (default is 0).</param>
     void CreateLearningSpace(string name, string description,
         LearningOutcomeCollectionViewModel learningOutcomeCollectionVm,
-        int requiredPoints, Theme theme, TopicViewModel? topic = null);
-
-    /// <summary>
-    /// Asynchronously loads the learning space associated with the currently selected learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task LoadLearningSpaceAsync();
+        int requiredPoints, SpaceTheme spaceTheme, TopicViewModel? topic = null);
 
     /// <summary>
     /// Edits an existing learning world.
@@ -62,21 +49,18 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="language">The language of the learning world.</param>
     /// <param name="description">The description of the learning world.</param>
     /// <param name="goals">The goals of the learning world.</param>
+    /// <param name="worldTheme">The theme of the learning world.</param>
     /// <param name="evaluationLink">Link to the evaluation displayed on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     void EditLearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey);
+        string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart, string storyEnd);
 
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
     void SaveLearningWorld();
-
-    /// <summary>
-    /// Asynchronously saves the selected learning space associated with the current learning world.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task SaveSelectedLearningSpaceAsync();
 
     /// <summary>
     /// Deletes the specified pathway condition from the current learning world.
@@ -94,12 +78,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
 
     /// <summary>
-    /// Handles a right-click event on an object in the pathway, setting the right-clicked learning object.
-    /// </summary>
-    /// <param name="objectInPathWayView">The object in the pathway that was right-clicked.</param>
-    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWayView);
-
-    /// <summary>
     /// Handles a click event on an object in the world, setting the selected learning object.
     /// </summary>
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
@@ -114,11 +92,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// </summary>
     /// <param name="pathWayCondition">The pathway condition to switch, represented as a PathWayConditionViewModel.</param>
     void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition);
-
-    /// <summary>
-    /// Hides the right-click menu by resetting the right-clicked learning object.
-    /// </summary>
-    void HideRightClickMenu();
 
     /// <summary>
     /// Deletes the specified learning space from the current learning world.
@@ -194,5 +167,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void EditSelectedLearningSpace();
 
     void CreateUnplacedLearningElementFromFormModel(LearningElementFormModel model);
-    void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent, ILearningElementViewModel elementToEdit, LearningElementFormModel model);
+
+    void EditLearningElementFromFormModel(ILearningSpaceViewModel? parent, ILearningElementViewModel elementToEdit,
+        LearningElementFormModel model);
 }

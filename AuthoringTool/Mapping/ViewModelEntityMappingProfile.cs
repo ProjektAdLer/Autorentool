@@ -1,5 +1,6 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using AutoMapper.Internal;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
@@ -57,6 +58,7 @@ public class ViewModelEntityMappingProfile : Profile
     {
         cfg.AddProfile(new ViewModelEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
+        cfg.Internal().MethodMappingEnabled = false;
     };
 
 
@@ -257,6 +259,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.LearningContent, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.IsRequired, opt => opt.Ignore())
             .AfterMap(ElementContentAfterMap)
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
@@ -271,7 +274,8 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore())
-            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.IsRequired, opt => opt.Ignore());
     }
 
     /// <summary>
@@ -444,6 +448,7 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
@@ -496,6 +501,7 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
@@ -675,27 +681,27 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .AfterMap((entity, vm, context) =>
+            .AfterMap((entity, vm, _) =>
                 vm.CorrectChoice = vm.Choices.Single(choicevm => choicevm.Id == entity.CorrectChoice.Id))
             .ReverseMap()
             .ForMember(x => x.CorrectChoice, opt => opt.Ignore())
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .AfterMap((vm, entity, context) =>
+            .AfterMap((vm, entity, _) =>
                 entity.CorrectChoice = entity.Choices.Single(choicevm => choicevm.Id == vm.CorrectChoice.Id))
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>();
         CreateMap<MultipleChoiceMultipleResponseQuestion, MultipleChoiceMultipleResponseQuestionViewModel>()
             .IncludeBase<IAdaptivityQuestion, IAdaptivityQuestionViewModel>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .AfterMap((entity, vm, context) =>
+            .AfterMap((entity, vm, _) =>
                 vm.CorrectChoices = vm.Choices.Where(choicevm =>
                     entity.CorrectChoices.Any(choiceentity => choiceentity.Id.Equals(choicevm.Id))).ToList())
             .ReverseMap()
             .IncludeBase<IAdaptivityQuestionViewModel, IAdaptivityQuestion>()
             .ForMember(x => x.CorrectChoices, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
-            .AfterMap((vm, entity, context) =>
+            .AfterMap((vm, entity, _) =>
                 entity.CorrectChoices = entity.Choices.Where(choiceentity =>
                     vm.CorrectChoices.Any(choicevm => choiceentity.Id.Equals(choicevm.Id))).ToList());
     }

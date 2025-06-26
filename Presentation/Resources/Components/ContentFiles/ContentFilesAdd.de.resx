@@ -23,23 +23,20 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Header.Text" xml:space="preserve">
-        <value>Externes Lernmaterial hinzufügen</value>
-    </data>
     <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Ziehen Sie Dateien in dieses Feld oder klicken Sie, um diese hinzuzufügen.</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
-        <value>Inkompatible Dateiendung</value>
+        <value>Nicht unterstützte Dateiendung</value>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
-        <value>Datei leer</value>
+        <value>Leere Datei</value>
     </data>
     <data name="DialogService.MessageBox.Message" xml:space="preserve">
-        <value>Die Datei &lt;b&gt;{0}&lt;/b&gt; war leer. Sie wird übersprungen.</value>
+        <value>Die Datei {0} war leer. Sie wird übersprungen.</value>
     </data>
     <data name="Collapsable.Title" xml:space="preserve">
-        <value>Link hinzufügen</value>
+        <value>Video als Link hinzufügen</value>
     </data>
     <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
         <value>Erlaubte Dateiendungen: {0}.</value>
@@ -49,5 +46,53 @@
     </data>
     <data name="FileTooBig.Error.Message" xml:space="preserve">
         <value>Die maximal unterstützte Dateigröße für Dateien beträgt 1 Gigabyte.</value>
+    </data>
+    <data name="Invocation.MessageBox.Message" xml:space="preserve">
+        <value>Die mitgelieferte Datei {0} wird nicht unterstützt.</value>
+    </data>
+    <data name="DialogService.MessageBox.Import.Title" xml:space="preserve">
+        <value>Import einer ZIP-Datei</value>
+    </data>
+    <data name="DialogService.MessageBox.Import.ErrorMessage" xml:space="preserve">
+        <value>Fehler beim Laden von externem Lernmaterial</value>
+    </data>
+    <data name="DialogService.MessageBox.Duplicate.Title" xml:space="preserve">
+        <value>Doppelte Dateien (Duplikat)</value>
+    </data>
+    <data name="DialogService.MessageBox.Duplicate.Text" xml:space="preserve">
+        <value>Die Datei '{0}' wurde bereits in das Autorentool importiert und liegt dort bereits ab.</value>
+    </data>
+    <data name="DialogService.MessageBox.Text" xml:space="preserve">
+        <value>Die Datei {0} ist leer. Sie konnte deshalb nicht importiert werden.</value>
+    </data>
+    <data name="ContentFilesAdd.AddedMaterial.Success" xml:space="preserve">
+        <value>Externes Lernmaterial hinzugefügt</value>
+    </data>
+    <data name="ContentFilesAdd.UnsupportedFileEnding.Snackbar" xml:space="preserve">
+        <value>Nicht unterstützte Dateiendung: Externes Lernmaterial nicht hinzugefügt</value>
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Snackbar" xml:space="preserve">
+        <value>Leere Datei: Externes Lernmaterial nicht hinzugefügt</value>
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Title" xml:space="preserve">
+        <value>Leere Datei</value>
+    </data>
+    <data name="ContentFilesAdd.EmptyFile.Text" xml:space="preserve">
+        <value>Die Datei ist leer. Sie konnte deshalb nicht importiert werden.</value>
+    </data>
+    <data name="ContentFilesAdd.FileLoadingError.Snackbar" xml:space="preserve">
+        <value>Ladefehler: Externes Lernmaterial nicht hinzugefügt</value>
+    </data>
+    <data name="ContentFilesAdd.DuplicatedFile.Snackbar" xml:space="preserve">
+        <value>Duplikat: Externes Lernmaterial bereits vorhanden</value>
+    </data>
+    <data name="ContentFilesAdd.LargeFile.Snackbar" xml:space="preserve">
+        <value>Dateigröße zu hoch: Externes Lernmaterial nicht hinzugefügt</value>
+    </data>
+    <data name="ContentFilesAdd.ErrorMessage.LoadingMaterial" xml:space="preserve">
+        <value>Fehler beim Laden von externem Lernmaterial</value>
+    </data>
+    <data name="ContentFilesAdd.Header" xml:space="preserve">
+        <value>Externes Lernmaterial hinzufügen</value>
     </data>
 </root>

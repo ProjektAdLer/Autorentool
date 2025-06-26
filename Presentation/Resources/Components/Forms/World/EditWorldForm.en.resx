@@ -25,10 +25,10 @@
         <value>General</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s) for this learning world.</value>
+        <value>Learning outcome(s) for this learning world</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description for your learning world.</value>
+        <value>Description for this learning world</value>
     </data>
     <data name="EditWorldForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Learning outcomes</value>
@@ -62,5 +62,29 @@
     </data>
     <data name="EditWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>A password allows students access to the learning world to be restricted to only those who know the password. Students will be required to supply the password each time they access the learning world.</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Framework for the story</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
+        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
+        <value>Introduction</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder" xml:space="preserve">
+        <value>It began with...</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.End.Label" xml:space="preserve">
+        <value>Ending</value>
+    </data>
+    <data name="EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
+        <value>And so it ended...</value>
+    </data>
+    <data name="EditWorldForm.Theme.Text" xml:space="preserve">
+        <value>Learning world theme</value>
+    </data>
+    <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Selection of themes with different theme worlds for the learning world</value>
     </data>
 </root>

@@ -5,9 +5,9 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Trigger
 @using Shared.Adaptivity
-<div class="relative max-w-full h-[300px] flex flex-col mx-4">
+<div class="relative max-w-full h-[315px] flex flex-col mx-4">
     <MudText Class="px-2 mb-1 text-sm">@Localizer["Comment.Text"]</MudText>
-    <div class="border-adlerdarkblue border-4 rounded-lg m-2 bg-adlerbgbright">
+    <div class="border-adlergrey-200 border-4 rounded m-2 bg-adlerbgbright">
         <MudForm @ref="_form" Class="bg-adlerbgbright border-t-2 border-adlergrey-100">
             <div class="p-2 mb-4 bg-adlerbgbright">
                 <MudText Class="cursor-default font-bold text-sm pl-2">@Localizer["Comment.Label.Text"]</MudText>
@@ -49,7 +49,7 @@
     public IAdaptivityQuestionViewModel Question { get; set; }
     
     [CascadingParameter, AllowNull] //injected by MudDialog - n.stich
-    public MudDialogInstance DialogInstance { get; set; }
+    public IMudDialogInstance DialogInstance { get; set; }
     
 
     private MudForm _form = null!;

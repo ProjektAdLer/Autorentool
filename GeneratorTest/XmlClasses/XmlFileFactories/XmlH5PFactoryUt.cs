@@ -85,7 +85,6 @@ public class XmlH5PFactoryUt
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
-        var space_1 = new LearningSpaceJson(1, "", "space1", new List<int?> { 1, 2 }, 10, "space", "");
         mockReadAtf.GetH5PElementsList().Returns(h5PList);
         systemUnderTest.CreateH5PFileFactory();
 
@@ -124,8 +123,6 @@ public class XmlH5PFactoryUt
             h5PElement1, h5PElement2
         };
 
-        var space_1 =
-            new LearningSpaceJson(1, "", "space", new List<int?> { 1, 2 }, 10, "space", "");
         mockReadAtf.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "space"), new MockFileData("Hello World"));
 
@@ -144,11 +141,11 @@ public class XmlH5PFactoryUt
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId, Is.EqualTo(h5PElement1.ElementId.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename, Is.EqualTo("element1"));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename, Is.EqualTo("element1.h5p"));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source,
                 Is.EqualTo("element1" + "." + h5PElement1.ElementFileType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId, Is.EqualTo(h5PElement2.ElementId.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename, Is.EqualTo("element2"));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename, Is.EqualTo("element2.h5p"));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source,
                 Is.EqualTo("element2" + "." + h5PElement2.ElementFileType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id,

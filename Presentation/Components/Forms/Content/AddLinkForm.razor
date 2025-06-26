@@ -8,27 +8,44 @@
 @using System.Diagnostics.CodeAnalysis
 @using System.Runtime.Serialization
 @using Presentation.Components.Forms.Buttons
+
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit" @ref="_form"
           SnackbarMessage=@Localizer["AddLinkForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
-        <div class="px-3 2xl:px-4">
-            <p class="text-[12px] text-justify">@Localizer["AddLinkForm.Info.Text"]</p>
+        <div class="px-3">
+            <p class="text-[12px] text-justify pb-2">@Localizer["AddLinkForm.Info.Text"]
+                <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                    <TooltipContent>
+                        <MudText Class="cursor-default text-xs">@Localizer["AddLinkForm.Info.Infotext"]</MudText>
+                    </TooltipContent>
+                    <ChildContent>
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey-500 hover:text-adlerdarkblue"></MudIcon>
+                    </ChildContent>
+                </MudTooltip>
+            </p>
+ 
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
-                          Label="@Localizer["AddLinkForm.Field.Name.Text"]"/>
+                          Placeholder="@Localizer["AddLinkForm.Field.Name.Text"]"
+                          Margin="Margin.Dense"
+                          Style="margin-top: 0px;">
+            </MudTextField>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Link"
-                          Variant="Variant.Filled"
+                          Variant="Variant.Text"
                           For="@(() => FormModel.Link)"
                           DebounceInterval="DebounceInterval"
                           OnKeyUp="HandleKeyEvent"
-                          Label="@Localizer["AddLinkForm.Field.Link.Text"]"
                           Adornment="Adornment.End"
-                          AdornmentIcon="@Icons.Material.Filled.Link"/>
+                          AdornmentIcon="@Icons.Material.Filled.Link"
+                          Placeholder="@Localizer["AddLinkForm.Field.Link.Text"]"
+                          Margin="Margin.Dense"
+                          Style="margin-top: 0px;">
+            </MudTextField>
         </div>
     </Fields>
-
+    
     <FooterButtons>
         <DefaultSubmitButton/>
     </FooterButtons>
@@ -71,7 +88,7 @@
         }
         catch (SerializationException e)
         {
-            ErrorService.SetError("Error while adding link", e.Message);
+            ErrorService.SetError(@Localizer["AddLinkForm.Field.Link.ErrorMessage"], e.Message);
         }
         if (RerenderContentContainer is not null)
             await RerenderContentContainer();

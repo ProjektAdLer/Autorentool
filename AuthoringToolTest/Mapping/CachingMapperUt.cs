@@ -120,7 +120,7 @@ public class CachingMapperUt
             Assert.That(worldViewModel.LearningSpaces.First().Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(worldViewModel.LearningSpaces.First().Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(worldViewModel.LearningSpaces.First().RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
-            Assert.That(worldViewModel.LearningSpaces.First().Theme, Is.EqualTo(spaceEntity.Theme));
+            Assert.That(worldViewModel.LearningSpaces.First().SpaceTheme, Is.EqualTo(spaceEntity.SpaceTheme));
         });
         Assert.Multiple(() =>
         {
@@ -454,7 +454,7 @@ public class CachingMapperUt
         var systemUnderTest = CreateTestableCachingMapper();
 
         var spaceViewModel = ViewModelProvider.GetLearningSpace();
-        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        systemUnderTest.Map(spaceEntity, spaceViewModel);
 
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(1));
         Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(6));
@@ -465,14 +465,14 @@ public class CachingMapperUt
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
-            Assert.That(spaceViewModel.Theme, Is.EqualTo(spaceEntity.Theme));
+            Assert.That(spaceViewModel.SpaceTheme, Is.EqualTo(spaceEntity.SpaceTheme));
         });
 
         spaceEntity.LearningSpaceLayout =
             EntityProvider.GetLearningSpaceLayout(FloorPlanEnum.R_20X30_8L);
         spaceEntity.LearningSpaceLayout.LearningElements[7] = elementEntity;
 
-        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        systemUnderTest.Map(spaceEntity, spaceViewModel);
 
         Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(8));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7], Is.Not.Null);

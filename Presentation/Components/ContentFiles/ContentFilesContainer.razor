@@ -1,10 +1,10 @@
-<MudPaper Class="w-full h-full flex overflow-auto">
+<MudPaper Class="relative w-full h-full shadow-none">
     <CascadingValue Value="@RerenderAsync" Name="RerenderContentContainer">
-        <div class="flex flex-col w-full grow">
+        <div class="flex flex-row w-full">
             <div>
                 <ContentFilesAdd/>
             </div>
-            <div class="w-full h-full flex flex-col">
+            <div class="w-full h-full">
                 <ContentFilesView @ref="ContentFilesView"/>
             </div>
         </div>
@@ -14,7 +14,6 @@
 @code {
 
     private ContentFilesView? ContentFilesView { get; set; }
-
 
     /// <summary>Rerenders this component as well as the <see cref="ContentFilesView"/> inside of it.</summary>
     internal async Task RerenderAsync()

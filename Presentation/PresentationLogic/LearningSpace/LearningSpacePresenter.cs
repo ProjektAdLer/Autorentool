@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using AutoMapper;
 using MudBlazor;
 using Presentation.Components.Forms.Models;
@@ -19,6 +18,7 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -67,14 +67,14 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.EditLearningSpace"/>
-    public void EditLearningSpace(string name, string description, int requiredPoints, Theme theme,
+    public void EditLearningSpace(string name, string description, int requiredPoints, SpaceTheme spaceTheme,
         ITopicViewModel? topic)
     {
         if (!CheckLearningSpaceNotNull("EditLearningSpace"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
         _presentationLogic.EditLearningSpace(LearningSpaceVm!, name, description,
-            requiredPoints, theme, topic);
+            requiredPoints, spaceTheme, topic);
     }
 
     /// <inheritdoc cref="ILearningSpacePresenter.ReplaceLearningElementDialogOpen"/>
@@ -214,7 +214,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
             return;
         }
-        
+
         SetSelectedLearningElement(null);
         _selectedViewModelsProvider.SetActiveStorySlotInSpace(i, null);
         _mediator.RequestOpenStoryElementDialog();
@@ -228,12 +228,13 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateLearningElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveElementSlotInSpace,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm!,
+            _selectedViewModelsProvider.ActiveElementSlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveElementSlotInSpace(-1, null);
     }
-    
+
     public void CreateStoryElementInSlot(string name, ILearningContentViewModel learningContent,
         string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points)
@@ -241,7 +242,8 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         if (!CheckLearningSpaceNotNull("CreateStoryElementInSlot"))
             return;
         //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!, _selectedViewModelsProvider.ActiveStorySlotInSpace,
+        _presentationLogic.CreateStoryElementInSlot(LearningSpaceVm!,
+            _selectedViewModelsProvider.ActiveStorySlotInSpace,
             name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveStorySlotInSpace(-1, null);
@@ -252,7 +254,7 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
         CreateLearningElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
             model.Description, model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points);
     }
-    
+
     public void CreateStoryElementInSlotFromFormModel(LearningElementFormModel model)
     {
         CreateStoryElementInSlot(model.Name, _mapper.Map<ILearningContentViewModel>(model.LearningContent),
@@ -348,26 +350,6 @@ public sealed class LearningSpacePresenter : ILearningSpacePresenter
             null => null,
             _ => LearningSpaceVm
         };
-    }
-
-    /// <inheritdoc cref="ILearningSpacePresenter.LoadLearningElementAsync"/>
-    public async Task LoadLearningElementAsync(int slotIndex)
-    {
-        if (!CheckLearningSpaceNotNull("LoadLearningElementAsync"))
-            return;
-        try
-        {
-            //Nullability check for learningSpaceVm is done in CheckLearningSpaceNotNull
-            await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm!, slotIndex);
-        }
-        catch (SerializationException e)
-        {
-            _errorService.SetError("Error while loading learning element", e.Message);
-        }
-        catch (InvalidOperationException e)
-        {
-            _errorService.SetError("Error while loading learning element", e.Message);
-        }
     }
 
     /// <summary>

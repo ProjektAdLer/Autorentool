@@ -1,8 +1,8 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.Theme;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -17,9 +17,9 @@ public class SpaceCommandFactory : ISpaceCommandFactory
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
         LearningOutcomeCollection learningOutcomeCollection,
-        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, SpaceTheme spaceTheme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction) =>
-        new CreateLearningSpace(learningWorld, name, description, learningOutcomeCollection, requiredPoints, theme,
+        new CreateLearningSpace(learningWorld, name, description, learningOutcomeCollection, requiredPoints, spaceTheme,
             positionX,
             positionY,
             topic, mappingAction, LoggerFactory.CreateLogger<CreateLearningSpace>());
@@ -35,21 +35,7 @@ public class SpaceCommandFactory : ISpaceCommandFactory
             LoggerFactory.CreateLogger<DeleteLearningSpace>());
 
     public IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name, string description,
-        int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction) =>
-        new EditLearningSpace(learningSpace, name, description, requiredPoints, theme, topic, mappingAction,
+        int requiredPoints, SpaceTheme spaceTheme, Entities.Topic? topic, Action<ILearningSpace> mappingAction) =>
+        new EditLearningSpace(learningSpace, name, description, requiredPoints, spaceTheme, topic, mappingAction,
             LoggerFactory.CreateLogger<EditLearningSpace>());
-
-    public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction) =>
-        new LoadLearningSpace(learningWorld, filepath, businessLogic, mappingAction,
-            LoggerFactory.CreateLogger<LoadLearningSpace>());
-
-    public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, Stream stream, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction) =>
-        new LoadLearningSpace(learningWorld, stream, businessLogic, mappingAction,
-            LoggerFactory.CreateLogger<LoadLearningSpace>());
-
-    public ISaveLearningSpace GetSaveCommand(IBusinessLogic businessLogic, LearningSpace learningSpace,
-        string filepath) =>
-        new SaveLearningSpace(businessLogic, learningSpace, filepath, LoggerFactory.CreateLogger<SaveLearningSpace>());
 }

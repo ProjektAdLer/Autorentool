@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
+using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
@@ -25,6 +26,7 @@ using Presentation.PresentationLogic.LearningContent.LinkContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.SelectedViewModels;
 using TestHelpers;
 using TestContext = Bunit.TestContext;
 
@@ -47,7 +49,9 @@ public class ContentFilesViewUt
         _localizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
             new LocalizedString(ci.Arg<string>() + string.Concat(ci.Arg<object[]>()),
                 ci.Arg<string>() + string.Concat(ci.Arg<object[]>())));
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _errorService = Substitute.For<IErrorService>();
+        _mudDialogInstance = Substitute.For<IMudDialogInstance>();
 
         _testContext.ComponentFactories.AddStub<MudMenu>();
         _testContext.ComponentFactories.AddStub<MudMenuItem>();
@@ -58,6 +62,7 @@ public class ContentFilesViewUt
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_workspaceViewModel);
         _testContext.Services.AddSingleton(_localizer);
+        _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_errorService);
 
         _testContext.AddMudBlazorTestServices();
@@ -75,7 +80,9 @@ public class ContentFilesViewUt
     private IMediator _mediator;
     private IAuthoringToolWorkspaceViewModel _workspaceViewModel;
     private IStringLocalizer<ContentFilesView> _localizer;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IErrorService _errorService;
+    private IMudDialogInstance _mudDialogInstance;
 
     [Test]
     public void Constructor_InjectsDependencies()
@@ -112,7 +119,8 @@ public class ContentFilesViewUt
 
                 var nameTd = tableRows[i].Children
                     .FirstOrDefault(child => child.Attributes["data-label"]?.Value == "Name");
-                var name = nameTd.Children.First(child => child.Matches("div")).Children
+                Assert.That(nameTd, Is.Not.Null);
+                var name = nameTd!.Children.First(child => child.Matches("div")).Children
                     .First(child => child.Matches("p"))
                     .GetInnerText();
                 Assert.That(name, Is.EqualTo(item.Name));
@@ -152,7 +160,7 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>();
         _presentationLogic.Received(1).RemoveContent(items.First());
@@ -181,7 +189,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", Arg.Any<string>());
     }
 
     [Test]
@@ -207,7 +215,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -233,7 +241,7 @@ public class ContentFilesViewUt
 
         deleteButton!.Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -266,13 +274,13 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
 
         Expression<Predicate<DialogParameters>> secondDialogParametersPredicate = d =>
-            (string)d[nameof(DeleteContentInUseConfirmationDialog.ContentName)] == "file1" &&
+            (string)d[nameof(DeleteContentInUseConfirmationDialog.ContentName)]! == "file1" &&
             ((IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)>)d[
-                nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples)])
+                nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples)]!)
             .Any(tup =>
                 tup.Item1 == world &&
                 tup.Item2 == world.LearningSpaces.First().ContainedLearningElements.First());
@@ -309,7 +317,7 @@ public class ContentFilesViewUt
         deleteButton!.Click();
 
         _dialogService.Received(1).ShowAsync<GenericCancellationConfirmationDialog>("TaskDelete.DialogService.Title",
-            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"] == "Dialog.Delete.DialogTextfile1"),
+            Arg.Is<DialogParameters>(arg => (string)arg["DialogText"]! == "Dialog.Delete.DialogTextfile1"),
             Arg.Any<DialogOptions>());
         _dialogService.DidNotReceiveWithAnyArgs().ShowAsync<DeleteContentInUseConfirmationDialog>(Arg.Any<string>(),
             Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
@@ -318,7 +326,7 @@ public class ContentFilesViewUt
     [Test]
     public void SelectionCheckbox_Click_ChangeToCorrectState()
     {
-        var items = PresentationLogicSetItems();
+        _ = PresentationLogicSetItems();
         var world = ViewModelProvider.GetLearningWorld();
         _workspaceViewModel.LearningWorlds.Returns(new ILearningWorldViewModel[] { world });
 
@@ -574,9 +582,9 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(
-                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Is<DialogParameters>(x =>
+                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
     }
 
@@ -621,9 +629,9 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(
-                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Is<DialogParameters>(x =>
+                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
             .RemoveMultipleContents(Arg.Is<IEnumerable<ILearningContentViewModel>>(x => x.SequenceEqual(items)));
@@ -670,9 +678,9 @@ public class ContentFilesViewUt
                 Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>());
         await _dialogService.Received()
             .ShowAsync<DeleteMultipleContentConfirmationDialog>("TaskDelete.DialogService.Title",
-                Arg.Is<DialogParameters>(
-                    x => ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
-                        x["ContentWorldElementInUseList"]).SequenceEqual(expectedDialogParameters)),
+                Arg.Is<DialogParameters>(x =>
+                    ((List<(ILearningContentViewModel, ILearningWorldViewModel, ILearningElementViewModel)>)
+                        x["ContentWorldElementInUseList"]!).SequenceEqual(expectedDialogParameters)),
                 Arg.Any<DialogOptions>());
         _presentationLogic.Received()
             .RemoveMultipleContents(
@@ -700,7 +708,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", Arg.Any<string>());
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", Arg.Any<string>());
     }
 
     [Test]
@@ -724,7 +732,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -748,7 +756,7 @@ public class ContentFilesViewUt
         systemUnderTest.FindComponent<MudTable<ILearningContentViewModel>>()
             .FindComponent<MudIconButton>().Find("button").Click();
 
-        _errorService.Received(1).SetError("Error deleting content", "test");
+        _errorService.Received(1).SetError("ContentFilesView.ErrorMessage.MaterialDelete", "test");
     }
 
     [Test]
@@ -795,7 +803,7 @@ public class ContentFilesViewUt
 
     [Test]
     // ANF-ID: [AWA0002]
-    public void ClickNewElementButton_CallsPresentationLogicAndMediator()
+    public void ClickNewElementButton_CallsPresentationLogicAndMediatorAndClosesDialog()
     {
         var items = PresentationLogicSetItems();
 
@@ -812,6 +820,7 @@ public class ContentFilesViewUt
 
         _presentationLogic.Received().SetSelectedLearningContentViewModel(items.First());
         _mediator.Received().RequestOpenNewElementDialog();
+        _mudDialogInstance.Received().Close(Arg.Is<DialogResult>(d => true));
     }
 
     [Test]
@@ -848,6 +857,7 @@ public class ContentFilesViewUt
 
     private IRenderedComponent<ContentFilesView> GetRenderedComponent()
     {
-        return _testContext.RenderComponent<ContentFilesView>();
+        return _testContext.RenderComponent<ContentFilesView>(parameters =>
+            parameters.AddCascadingValue(_mudDialogInstance));
     }
 }

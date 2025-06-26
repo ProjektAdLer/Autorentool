@@ -15,15 +15,15 @@
     public RenderFragment MainContent { get; set; }
 
     [Parameter]
-    public bool IsActive
+    public bool IsActive { get; set; }
+
+    private bool _previousIsActive;
+
+    protected override void OnParametersSet()
     {
-        get => _isActive;
-        set
-        {
-            if (_isActive == value) return;
-            _isActive = value;
-            NotifySidebar();
-        }
+        if (IsActive == _previousIsActive) return;
+        _previousIsActive = IsActive;
+        NotifySidebar();
     }
 
     [Parameter]
@@ -46,8 +46,8 @@
     }
 
     private bool IsCurrentItem() => Sidebar?.CurrentItem == this;
-    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-none";
-    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-md";
+    private string BackgroundColour() => IsCurrentItem() ? "bg-blacktrans-100" : "bg-none";
+    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded";
 
     private string RoundedInFocus() => Sidebar?.Side switch
     {
@@ -55,6 +55,4 @@
         Side.Right => "rounded-r-md",
         _ => throw new ArgumentOutOfRangeException()
         };
-
-    private bool _isActive;
 }

@@ -1,8 +1,16 @@
-﻿using Shared;
+using Shared;
+using Shared.Theme;
 
 namespace Presentation.Components.Forms.Element;
 
-public enum ElementModelContentType {Any, File, Link, Adaptivity, Story}
+public enum ElementModelContentType
+{
+    Any,
+    File,
+    Link,
+    Adaptivity,
+    Story
+}
 
 public class ElementModelHandler : IElementModelHandler
 {
@@ -11,7 +19,7 @@ public class ElementModelHandler : IElementModelHandler
     //  - GetElementModelsForModelType: Add the new ElementModel to the switch statement for each corresponding ContentType
     //  - GetElementModelsForTheme: Add the new ElementModel to the switch statement for each corresponding Theme
     public IEnumerable<ElementModel> GetElementModels(ElementModelContentType contentType, string fileType = "",
-        Theme? theme = null)
+        WorldTheme? theme = null)
     {
         var type = contentType switch
         {
@@ -23,7 +31,7 @@ public class ElementModelHandler : IElementModelHandler
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null)
         };
 
-        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? Theme.CampusAschaffenburg);
+        IComparer<ElementModel> comparer = new ElementModelComparer(type, theme ?? WorldTheme.CampusAschaffenburg);
 
         switch (type)
         {
@@ -33,20 +41,26 @@ public class ElementModelHandler : IElementModelHandler
                 return AdaptivityModels;
             default:
             {
-                var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-                return elementModels.Except(NpcModels).OrderBy(m => m, comparer);
+                var elementModels = GetAllElementModels();
+                return elementModels.Except(NpcModels).Except(AdaptivityModels).OrderBy(m => m, comparer);
             }
         }
     }
 
-    internal static readonly IEnumerable<ElementModel> NpcModels = new[]
-        { ElementModel.a_npc_dozentlukas, ElementModel.a_npc_sheriffjustice, ElementModel.a_npc_defaultnpc };
-    
-    internal static readonly IEnumerable<ElementModel> AdaptivityModels = new[]
-        { ElementModel.a_npc_alerobot };
+    internal static readonly IEnumerable<ElementModel> NpcModels =
+        GetElementModelsForModelType(ContentTypeEnum.Story).ToArray();
+
+    internal static readonly IEnumerable<ElementModel> AdaptivityModels =
+        GetElementModelsForModelType(ContentTypeEnum.Adaptivity).ToArray();
 
     public string GetIconForElementModel(ElementModel elementModel)
     {
+        // if the elementModel is a story element model, return the path to the icon
+        if (elementModel.ToString().StartsWith("a_npc_") && elementModel != ElementModel.a_npc_alerobot)
+        {
+            return GetStoryElementModelPreviewPath(elementModel);
+        }
+
         return elementModel switch
         {
             ElementModel.l_random => "CustomIcons/ElementModels/random-icon-nobg.png",
@@ -93,13 +107,11 @@ public class ElementModelHandler : IElementModelHandler
             ElementModel.l_text_bookshelf_1 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_1.png",
             ElementModel.l_text_bookshelf_2 => "CustomIcons/ElementModels/suburbTheme/l_text_bookshelf_2.png",
             ElementModel.l_video_television_1 => "CustomIcons/ElementModels/suburbTheme/l_video_television_1.png",
+            //Adaptivity
             ElementModel.a_npc_alerobot => "CustomIcons/AdaptivityElementModels/a_npc_alerobot.png",
-            ElementModel.a_npc_sheriffjustice =>
-                "CustomIcons/AdaptivityElementModels/arcadeTheme/a_npc_sheriffjustice.png",
-            ElementModel.a_npc_dozentlukas => "CustomIcons/AdaptivityElementModels/campusTheme/a_npc_dozentlukas.png",
-            ElementModel.a_npc_defaultnpc => "CustomIcons/AdaptivityElementModels/suburbTheme/a_npc_defaultnpc.png",
+            //Story NPCs are handled above
             _ => throw new ArgumentOutOfRangeException(nameof(elementModel), elementModel,
-                "Icon not found for ElementModel")
+                @"Icon not found for ElementModel")
         };
     }
 
@@ -107,7 +119,20 @@ public class ElementModelHandler : IElementModelHandler
     {
         return ElementModel.l_random;
     }
-    
+
+    private static string GetStoryElementModelPreviewPath(ElementModel elementModel)
+    {
+        if (ElementModelHelper.IsObsolete(elementModel))
+        {
+            elementModel = ElementModelHelper.GetAlternateValue(elementModel);
+        }
+
+        var elementModelName = elementModel.ToString().ToLower().Replace("_", "-");
+
+        return "CustomIcons/StoryElementModels/" + elementModelName +
+               "/" + elementModelName + "-default.png";
+    }
+
     public static ElementModel GetElementModelDefault(ContentTypeEnum modelType)
     {
         return modelType switch
@@ -172,42 +197,31 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_video_television_1;
                 break;
             case ContentTypeEnum.Adaptivity:
+                //adaptivity
                 yield return ElementModel.a_npc_alerobot;
                 break;
             case ContentTypeEnum.Story:
-                //campus
-                yield return ElementModel.a_npc_dozentlukas;
-                //arcade
-                yield return ElementModel.a_npc_sheriffjustice;
-                //suburb
-                yield return ElementModel.a_npc_defaultnpc;
+                foreach (var model in GetAllElementModels()
+                             .Where(e => e.ToString().StartsWith("a_npc_") && e != ElementModel.a_npc_alerobot))
+                {
+                    yield return model;
+                }
+
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(modelType), modelType, null);
         }
     }
 
-    internal static IEnumerable<ElementModel> GetElementModelsForTheme(Theme theme)
+    internal static IEnumerable<ElementModel> GetElementModelsForTheme(WorldTheme worldTheme)
     {
-        switch (theme)
+        switch (worldTheme)
         {
-            case Theme.Arcade:
-                yield return ElementModel.l_h5p_blackslotmachine_1;
-                yield return ElementModel.l_h5p_deskpc_2;
-                yield return ElementModel.l_h5p_greyslotmachine_1;
-                yield return ElementModel.l_h5p_purpleslotmachine_1;
-                yield return ElementModel.l_h5p_redslotmachine_1;
-                yield return ElementModel.l_image_cardboardcutout_1;
-                yield return ElementModel.l_image_gameposter_1;
-                yield return ElementModel.l_image_gameposter_2;
-                yield return ElementModel.l_text_comicshelfbig_1;
-                yield return ElementModel.l_text_comicshelfsmall_1;
-                yield return ElementModel.l_video_vrdesk_1;
-                yield return ElementModel.a_npc_sheriffjustice;
-                yield return ElementModel.a_npc_alerobot;
+            case WorldTheme.Company:
                 break;
-            case Theme.CampusAschaffenburg:
-            case Theme.CampusKempten:
+            case WorldTheme.CampusAschaffenburg:
+            case WorldTheme.CampusKempten:
                 yield return ElementModel.l_h5p_blackboard_2;
                 yield return ElementModel.l_h5p_daylightprojector_1;
                 yield return ElementModel.l_h5p_deskpc_3;
@@ -217,10 +231,8 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_image_sciencewhiteboard_1;
                 yield return ElementModel.l_text_libraryshelf_1;
                 yield return ElementModel.l_video_movieprojector_1;
-                yield return ElementModel.a_npc_dozentlukas;
-                yield return ElementModel.a_npc_alerobot;
                 break;
-            case Theme.Suburb:
+            case WorldTheme.Suburb:
                 yield return ElementModel.l_h5p_blackboard_1;
                 yield return ElementModel.l_h5p_deskpc_1;
                 yield return ElementModel.l_h5p_drawingtable_1;
@@ -231,24 +243,35 @@ public class ElementModelHandler : IElementModelHandler
                 yield return ElementModel.l_text_bookshelf_1;
                 yield return ElementModel.l_text_bookshelf_2;
                 yield return ElementModel.l_video_television_1;
-                yield return ElementModel.a_npc_defaultnpc;
-                yield return ElementModel.a_npc_alerobot;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
+                throw new ArgumentOutOfRangeException(nameof(worldTheme), worldTheme, null);
         }
+
+        // Models that are in all themes
+        // return all NPC ElementModels
+        foreach (var model in GetAllElementModels().Where(e => e.ToString().StartsWith("a_npc_")))
+        {
+            yield return model;
+        }
+    }
+
+    internal static IEnumerable<ElementModel> GetAllElementModels()
+    {
+        return Enum.GetValues<ElementModel>()
+            .Where(e => !ElementModelHelper.IsObsolete(e));
     }
 
     private class ElementModelComparer : Comparer<ElementModel>
     {
-        private readonly Theme _theme;
+        private readonly WorldTheme _worldTheme;
 
         private readonly ContentTypeEnum _type;
 
-        public ElementModelComparer(ContentTypeEnum type, Theme theme)
+        public ElementModelComparer(ContentTypeEnum type, WorldTheme worldTheme)
         {
             _type = type;
-            _theme = theme;
+            _worldTheme = worldTheme;
         }
 
         public override int Compare(ElementModel x, ElementModel y)
@@ -257,8 +280,8 @@ public class ElementModelHandler : IElementModelHandler
             if (x == ElementModel.l_random) return -1;
             if (y == ElementModel.l_random) return 1;
 
-            var xInTheme = GetElementModelsForTheme(_theme).Contains(x);
-            var yInTheme = GetElementModelsForTheme(_theme).Contains(y);
+            var xInTheme = GetElementModelsForTheme(_worldTheme).Contains(x);
+            var yInTheme = GetElementModelsForTheme(_worldTheme).Contains(y);
             var xInType = GetElementModelsForModelType(_type).Contains(x);
             var yInType = GetElementModelsForModelType(_type).Contains(y);
 

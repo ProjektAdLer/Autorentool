@@ -68,7 +68,7 @@ module.exports = {
                     900: "rgb(229,157,23)", //dunkel
                 },
                 adlerbrown: {
-                    DEFAULT: "rgb(77,62,54)", //DEFAULT = 300
+                    DEFAULT: "rgb(77,62,54)", //DEFAULT = 700
                     100: "rgb(77,32,8)", // hell
                     200: "rgb(77,37,15)",
                     300: "rgb(77,42,23)",
@@ -105,6 +105,10 @@ module.exports = {
                 adlerbggradientto: "#e2eaf2",
                 nodehandlecolor: "#e9d6b3",
                 adlerbronze: "#bf8970",
+                adlertitleblue: "#8b96a7",
+                adlertitledarkblue: "#747e8c",
+                adlerheaderdarkblue: "#2e394d",
+                adlerheaderblue: "#3d4a66",
                 
                 //neue Farben
                 adlerbgbright: "#f6f6f6",
@@ -113,7 +117,23 @@ module.exports = {
             },
             fontFamily: {
                 'sans': ['Roboto']
-            }
+            },
+            animation: {
+                'move-left-right': 'moveLR 8s ease-in-out infinite',
+                'move-right-left': 'moveRL 8s ease-in-out infinite',
+            },
+            keyframes: {
+                moveLR: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '50%': { transform: 'translateX(50%)' },
+                    '100%': { transform: 'translateX(0%)' },
+                },
+                moveRL: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '50%': { transform: 'translateX(-50%)' },
+                    '100%': { transform: 'translateX(0%)' },
+                }
+            },
         },
     },
     plugins: [
@@ -131,4 +151,5 @@ module.exports = {
         "list-disc",
         "list-inside"
     ]
+
 }

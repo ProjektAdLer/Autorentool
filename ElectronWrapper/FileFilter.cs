@@ -4,14 +4,14 @@ public class FileFilter
 {
     public FileFilter()
     {
-        InnerFileFilter = new ElectronNET.API.Entities.FileFilter();
+        InnerFileFilter = new ElectronSharp.API.Entities.FileFilter();
     }
 
-    internal FileFilter(ElectronNET.API.Entities.FileFilter innerFileFilter)
+    internal FileFilter(ElectronSharp.API.Entities.FileFilter innerFileFilter)
     {
         InnerFileFilter = innerFileFilter;
     }
-    internal ElectronNET.API.Entities.FileFilter InnerFileFilter { get; }
+    internal ElectronSharp.API.Entities.FileFilter InnerFileFilter { get; }
 
     public string[] Extensions
     {

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 
 namespace BackendAccess.BackendEntities;
-
+// ReSharper disable once InconsistentNaming
 [UsedImplicitly]
 public class UploadResponseBE
 {

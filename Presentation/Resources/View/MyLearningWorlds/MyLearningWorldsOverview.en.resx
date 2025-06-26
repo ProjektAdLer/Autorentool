@@ -28,10 +28,10 @@
         <value>Import a learning world as ZIP file (e.g. from another computer or from a backup)</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
-        <value>NEW</value>
+        <value>Create learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>Import</value>
+        <value>Import learning world</value>
     </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug for Philipp</value>
@@ -49,13 +49,13 @@
         <value>Load (.awf)</value>
     </data>
     <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
-        <value>Confirm deleting world</value>
+        <value>Confirm deleting learning world</value>
     </data>
     <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
-        <value>Through this action the world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting world?</value>
+        <value>Through this action the learning world will be &lt;b&gt;permanently and irrevocably&lt;/b&gt; deleted. Confirm deleting learning world?</value>
     </data>
     <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
-        <value>Delete world</value>
+        <value>Delete learning world</value>
     </data>
     <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
         <value>Show file names</value>
@@ -68,5 +68,11 @@
     </data>
     <data name="Page.LearningWorld.ShowFile.Checkbox" xml:space="preserve">
         <value>Display the entire name of the .awf file</value>
+    </data>
+    <data name="Page.LearningWorld.Error.ReloadLearningWorlds" xml:space="preserve">
+        <value>Error while loading a learning world</value>
+    </data>
+    <data name="MyLearningWorldsOverview.Snackbar.LearningWorldDelete" xml:space="preserve">
+        <value>Learning world successfully deleted.</value>
     </data>
 </root>

@@ -40,7 +40,6 @@ public class XmlResourceFactory : IXmlResourceFactory
         IActivitiesGradeHistoryXmlGradeHistory? gradeHistory = null, IActivitiesInforefXmlFile? inforefXmlFile = null,
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
         IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
-        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
         ReadAtf = readAtf;
@@ -77,7 +76,6 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesInforefXmlFileBlock2 = inforefXmlFile ?? new ActivitiesInforefXmlFile();
         ActivitiesInforefXmlFileref = inforefXmlFileref ?? new ActivitiesInforefXmlFileref();
         ActivitiesInforefXmlGradeItem = inforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
-        ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
     }
 
@@ -93,7 +91,6 @@ public class XmlResourceFactory : IXmlResourceFactory
     public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
     public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     public IReadAtf ReadAtf { get; }
 
@@ -196,11 +193,6 @@ public class XmlResourceFactory : IXmlResourceFactory
         CreateActivityFolder(FileElementId);
 
         //file activities/resource.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ??
-                                                  new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlActivityGradebook.GradeItems =
-            ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
-
         ActivitiesGradesXmlActivityGradebook.Serialize("resource", FileElementId);
 
         //file activities/resource.../resource.xml
@@ -228,6 +220,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.SectionId = FileElementParentSpaceString;
         ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpaceString;
         ActivitiesModuleXmlModule.Indent = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
+        ActivitiesModuleXmlModule.CompletionView = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
@@ -258,14 +252,8 @@ public class XmlResourceFactory : IXmlResourceFactory
 
         ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
 
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
-                                                     new ActivitiesInforefXmlGradeItem();
-
         ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ??
                                               new ActivitiesInforefXmlFileref();
-        ActivitiesInforefXmlInforef.GradeItemref =
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
-            new ActivitiesInforefXmlGradeItemref();
 
         ActivitiesInforefXmlInforef.Serialize("resource", FileElementId);
     }

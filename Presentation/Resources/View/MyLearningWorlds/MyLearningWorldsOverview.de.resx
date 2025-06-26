@@ -34,10 +34,10 @@
         <value>Lernwelt als ZIP-Datei importieren (z.B. von anderem Rechner oder aus Sicherheitskopie)</value>
     </data>
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
-        <value>Importieren</value>
+        <value>Lernwelt importieren</value>
     </data>
     <data name="Page.LearningWorld.Button.New.Text" xml:space="preserve">
-        <value>NEU</value>
+        <value>Lernwelt erstellen</value>
     </data>
     <data name="Page.LearningWorld.Subheading" xml:space="preserve">
         <value>Fahren Sie mit der Maus über Ihre Lernwelten, und öffnen Sie diese anschließend.</value>
@@ -49,13 +49,13 @@
         <value>Laden (.awf)</value>
     </data>
     <data name="ConfirmDeleteWorld.Title" xml:space="preserve">
-        <value>Welt löschen bestätigen</value>
+        <value>Löschen der Lernwelt bestätigen</value>
     </data>
     <data name="ConfirmDeleteWorld.DialogText" xml:space="preserve">
-        <value>Durch diese Aktion wird die Welt &lt;b&gt;permanent und unwiderruflich&lt;/b&gt; gelöscht. Welt wirklich löschen?</value>
+        <value>Durch diese Aktion wird die Lernwelt &lt;b&gt;permanent und unwiderruflich&lt;/b&gt; gelöscht. Lernwelt wirklich löschen?</value>
     </data>
     <data name="ConfirmDeleteWorld.SubmitButtonText" xml:space="preserve">
-        <value>Welt löschen</value>
+        <value>Lernwelt löschen</value>
     </data>
     <data name="Checkbox.ShowFileName.Label" xml:space="preserve">
         <value>Dateinamen anzeigen</value>
@@ -68,5 +68,11 @@
     </data>
     <data name="Page.LearningWorld.ShowFile.Checkbox" xml:space="preserve">
         <value>Den gesamten Namen der .awf-Datei anzeigen</value>
+    </data>
+    <data name="Page.LearningWorld.Error.ReloadLearningWorlds" xml:space="preserve">
+        <value>Fehler beim Laden einer Lernwelt</value>
+    </data>
+    <data name="MyLearningWorldsOverview.Snackbar.LearningWorldDelete" xml:space="preserve">
+        <value>Lernwelt erfolgreich gelöscht.</value>
     </data>
 </root>

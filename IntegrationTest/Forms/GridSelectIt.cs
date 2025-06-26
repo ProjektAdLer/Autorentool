@@ -7,6 +7,7 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
+using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Forms;
 
@@ -95,8 +96,10 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
     [Test]
     public void ErrorSet_DisplaysError()
     {
+#pragma warning disable BL0005
         Component.Instance.Error = true;
         Component.Instance.ErrorText = "some error";
+#pragma warning restore BL0005
         Component.Render();
 
         var errorText = Component.FindComponent<MudText>();
@@ -105,7 +108,7 @@ public class GridSelectIt<T> : MudBlazorTestFixture<GridSelect<T>> where T : not
 
     private IRefreshableElementCollection<IElement> FindAllMudcardDivs()
     {
-        return Component.FindAll("div.mud-card");
+        return Component.FindAll("div.cursor-pointer");
     }
 
     private IRenderedComponent<GridSelect<T>> GetRenderedComponent()

@@ -7,8 +7,8 @@ namespace BusinessLogic.Validation.Validators;
 [UsedImplicitly]
 public class MultipleChoiceMultipleResponseQuestionValidator : AbstractValidator<IMultipleChoiceQuestion>
 {
-    public MultipleChoiceMultipleResponseQuestionValidator()
+    public MultipleChoiceMultipleResponseQuestionValidator(MultipleChoiceQuestionValidator baseValidator)
     {
-        Include(new MultipleChoiceQuestionValidator());
+        Include(baseValidator);
     }
 }

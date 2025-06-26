@@ -31,6 +31,8 @@ public class LinkContentFormModel : ILinkContentFormModel, IEquatable<LinkConten
 
     public override int GetHashCode()
     {
+        // ReSharper disable NonReadonlyMemberInGetHashCode
         return HashCode.Combine(Name, Link);
+        // ReSharper restore NonReadonlyMemberInGetHashCode
     }
 }

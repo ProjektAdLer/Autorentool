@@ -5,6 +5,7 @@ using AutoMapper;
 using Bunit;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -29,6 +30,7 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
         Context.Services.AddSingleton(PresentationLogic);
         Context.Services.AddSingleton(Mapper);
         Context.Services.AddSingleton(ErrorService);
+        Context.RenderComponent<MudPopoverProvider>();
     }
 
     private IPresentationLogic PresentationLogic { get; set; }
@@ -98,10 +100,11 @@ public class AddLinkFormIt : MudFormTestFixture<AddLinkForm, LinkContentFormMode
     // ANF-ID: [AWA0042]
     public void SubmitButtonClicked_SerializationException_ErrorServiceCalled()
     {
-        var vm = ViewModelProvider.GetLinkContent();
         var systemUnderTest = GetRenderedComponent();
         PresentationLogic.When(x => x.SaveLink(Arg.Any<LinkContentViewModel>()))
             .Do(_ => throw new SerializationException());
+        
+        systemUnderTest.Instance.Localizer["AddLinkForm.Field.Link.ErrorMessage"].Returns(new LocalizedString("AddLinkForm.Field.Link.ErrorMessage", "Error while adding link"));
 
         var textFields = systemUnderTest.FindComponents<MudTextField<string>>();
         textFields[0].Find("input").Change("name");

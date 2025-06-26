@@ -44,7 +44,7 @@ public class XmlSectionFactory : IXmlSectionFactory
     {
         CreateSectionsFolder("0");
         CreateSectionInforefXml("0");
-        CreateSectionSectionXml("0", "", "", new List<int?>(),
+        CreateSectionSectionXml("0", "General", "", new List<int?>(),
             "", null, -1);
     }
 
@@ -124,7 +124,7 @@ public class XmlSectionFactory : IXmlSectionFactory
     /// <param name="sectionId"></param>
     private void CreateSectionsFolder(string sectionId)
     {
-        var currWorkDir =  ApplicationPaths.BackupFolder;
+        var currWorkDir = ApplicationPaths.BackupFolder;
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections",
             "section_" + sectionId));
     }

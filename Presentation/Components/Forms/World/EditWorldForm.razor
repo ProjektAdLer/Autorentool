@@ -6,96 +6,154 @@
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.Components.Forms.Buttons
-<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-    <div class="flex justify-center py-2 2xl:py-3">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
-    </div>
-</header>
+@using Shared.Theme
 
-<MudText Class="text-adlergrey-200 w-4/4 p-4 text-xs">@Localizer["EditWorldForm.Text"]</MudText>
-<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit" OnValidFieldChange="OnValidFieldChange"
-          SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer" @ref="_form">
+<div class="absolute w-full z-30">
+    <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+        <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
+    </header>
+    <div class="flex justify-between items-start">
+        <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["EditWorldForm.Text"]</MudText>
+    </div>
+</div>
+
+<BaseForm TForm="LearningWorldFormModel"
+          TEntity="LearningWorld"
+          OnValidSubmit="OnValidSubmit"
+          OnValidFieldChange="OnValidFieldChange"
+          SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"]
+          FormDataContainer="FormDataContainer" @ref="_form">
+
     <Fields>
-        <div class="px-4">
+        <div
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[83%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
-                <div class="rounded-lg w-4/4 px-4 pb-2">
+                <div class="rounded-lg w-4/4 px-6">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                                   For="@(() => FormModel.Name)"
                                   @ref="_nameField"
                                   DebounceInterval="DebounceInterval"
-                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]"/>
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]"
+                                  Typo="Typo.body1" 
+                                  Margin="Margin.Normal" />
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                                   For="@(() => FormModel.Shortname)"
                                   DebounceInterval="DebounceInterval"
-                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]"/>
+                                  Typo="Typo.body1" 
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]" 
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                                   For="@(() => FormModel.Authors)"
                                   DebounceInterval="DebounceInterval"
-                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]"/>
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]" 
+                                  Typo="Typo.body1" 
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                                   For="@(() => FormModel.Language)"
                                   DebounceInterval="DebounceInterval"
-                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]"/>
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]" 
+                                  Typo="Typo.body1" 
+                                  Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
-                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]"/>
-                    </div>
-            </Collapsable>
-        </div>
-
-        <div class="px-4">
-            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                      <div class="flex flex-row items-center gap-1 py-2">
-                           <MudText Class="font-bold text-sm pl-1">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</MudText>
-                           <MudTooltip Placement="Placement.Right" Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
-                                 <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
-                           </MudTooltip>
-                      </div>
-                        <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
-                                      For="@(() => FormModel.EnrolmentKey)"
-                                      DebounceInterval="DebounceInterval"
-                                      Variant="Variant.Outlined"/>
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text"]" 
+                                  Typo="Typo.body1" 
+                                  Margin="Margin.Normal"/>
                 </div>
             </Collapsable>
-        </div>    
-        
-        <div class="px-4">
+
+            <Collapsable Title="@Localizer["EditWorldForm.EnrolmentKey.Title"]" InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6">
+                    <div class="flex flex-row items-center gap-1">
+                        <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.General.Field.EnrolmentKey.Text"]</p>
+                        <MudTooltip Placement="Placement.Right"
+                                    Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed"
+                                    Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                     Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                        </MudTooltip>
+                    </div>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.EnrolmentKey"
+                                  For="@(() => FormModel.EnrolmentKey)"
+                                  DebounceInterval="DebounceInterval"
+                                  Variant="Variant.Outlined"/>
+                </div>
+            </Collapsable>
+
+            <Collapsable Title=@Localizer["EditWorldForm.Theme.Text"] InitiallyCollapsed="true">
+                <p class="text-xs px-6 pt-3">@Localizer["EditWorldForm.Theme.Field.Theme.Text"]</p>
+                <div class="px-6 py-2">
+                    <MudSelect @bind-Value="FormDataContainer.FormModel.WorldTheme"
+                               Text="@FormDataContainer.FormModel.WorldTheme.ToString()"
+                               For="@(() => FormModel.WorldTheme)">
+                        @foreach (var theme in _themes)
+                        {
+                            <!-- WorldTheme.Company is disabled because it is not yet supported -->
+                            <MudSelectItem Disabled="@theme.Equals(WorldTheme.Company)"
+                                Value="@(theme)">@(ThemeHelper<WorldTheme>.Localize(theme))</MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+            </Collapsable>
+
             <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                   For="@(() => FormModel.Goals)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
-                                  DebounceInterval="DebounceInterval"
-                                  Class="pb-2 mt-0"/>
+                                  DebounceInterval="DebounceInterval"/>
                 </div>
             </Collapsable>
-        </div>
-        
-        <div class="px-4">
-            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
-                <div class="rounded-lg w-4/4 px-4">
-                    <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
+
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Description.Title"]
+                         InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</p>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                   For="@(() => FormModel.Description)"
                                   Lines="3"
                                   Variant="Variant.Outlined"
+                                  DebounceInterval="DebounceInterval"/>
+                </div>
+            </Collapsable>
+
+            <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Story.Title"] InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Description.Text"]</p>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.StoryStart"
+                                  For="@(() => FormModel.StoryStart)"
+                                  Lines="3"
+                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Start.Label"]"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder"]"
                                   DebounceInterval="DebounceInterval"
-                                  Class="pb-4 mt-0"/>
+                                  Class="pb-2"/>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.StoryEnd"
+                                  For="@(() => FormModel.StoryEnd)"
+                                  Lines="3"
+                                  Label="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.End.Label"]"
+                                  Variant="Variant.Outlined"
+                                  Placeholder="@Localizer["EditWorldForm.Fields.Collapsable.Story.Field.End.Placeholder"]"
+                                  DebounceInterval="DebounceInterval"
+                                  Class="pb-4"/>
                 </div>
             </Collapsable>
         </div>
 
     </Fields>
+
     <FooterButtons>
-        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
-                       OnClick="@OnResetAsync"
-                       Class="btn-standard text-adlergrey shadow-lg rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
-        </MudIconButton>
+        <div
+            class="absolute flex flex-row justify-end left-0 w-full bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright">
+            <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Autorenew"
+                           OnClick="@OnResetAsync"
+                           Class="btn-standard shadow-lg text-adlergrey rounded-lg bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue reset-form">
+            </MudIconButton>
+        </div>
     </FooterButtons>
 </BaseForm>
 
@@ -126,6 +184,8 @@
     private BaseForm<LearningWorldFormModel, LearningWorld> _form = null!;
     private MudTextField<string> _nameField = null!;
 
+    private WorldTheme[] _themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -137,7 +197,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.EvaluationLink, model.EnrolmentKey);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals, model.WorldTheme, model.EvaluationLink, model.EnrolmentKey, model.StoryStart, model.StoryEnd);
     }
 
     private void OnValidFieldChange(LearningWorldFormModel model) => OnValidSubmit(model);

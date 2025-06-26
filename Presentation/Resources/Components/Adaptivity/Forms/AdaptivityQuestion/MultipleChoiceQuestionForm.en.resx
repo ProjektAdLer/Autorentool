@@ -31,13 +31,13 @@
         <value>Question Text</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.AddChoice" xml:space="preserve">
-        <value>Add Choices</value>
+        <value>Add option of answer</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.Choice" xml:space="preserve">
-        <value>Choice</value>
+        <value>Answer option {0}</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.Choices" xml:space="preserve">
-        <value>Choices</value>
+        <value>Answer options</value>
     </data>
     <data name="MultipleChoiceQuestionForm.TitleContent.Create.Easy" xml:space="preserve">
         <value>Creating an easy question</value>
@@ -68,5 +68,11 @@
     </data>
     <data name="MultipleChoiceQuestionForm.Switch.Question.Text" xml:space="preserve">
         <value>Question: </value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Text.DeleteChoice" xml:space="preserve">
+        <value>Delete answer</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Info.Infotext" xml:space="preserve">
+        <value>A maximum of ten possible answers are available for each question.</value>
     </data>
 </root>

@@ -5,7 +5,7 @@ namespace BusinessLogic.ErrorManagement.BackendAccess;
 /// </summary>
 public class BackendInvalidTokenException : Exception
 {
-    public BackendInvalidTokenException() : base()
+    public BackendInvalidTokenException()
     {
     }
 

@@ -9,6 +9,7 @@ using PersistEntities;
 using PersistEntities.LearningContent;
 using PersistEntities.LearningContent.Question;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace DataAccessTest.Persistence;
@@ -39,7 +40,6 @@ public class PersistenceCt
         var initialCondition2Id = condition2.Id;
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -131,7 +131,6 @@ public class PersistenceCt
         var initialSpaceId = space.Id;
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
 
         using var stream = new MemoryStream();
@@ -155,7 +154,6 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
 
         using var stream = new MemoryStream();
         var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>();
@@ -185,10 +183,8 @@ public class PersistenceCt
         var initialCondition2Id = condition2.Id;
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
         var unplacedContent = PersistEntityProvider.GetFileContent();
         var unplacedElement = PersistEntityProvider.GetLearningElement(content: unplacedContent);
-        var initialUnplacedElementId = unplacedElement.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -272,7 +268,6 @@ public class PersistenceCt
         var initialSpaceId = space.Id;
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
         var mockFileSystem = new MockFileSystem();
 
@@ -292,7 +287,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg)
+        var space = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea)
         {
             LearningSpaceLayout =
             {
@@ -321,7 +316,6 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var initialElementId = element.Id;
         var mockFileSystem = new MockFileSystem();
 
         var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>(fileSystem: mockFileSystem);
@@ -356,12 +350,36 @@ public class PersistenceCt
     }
 
     [Test]
+    [TestCaseSource(nameof(GetObsoleteElementModelsWithNewElementModels))]
+    public void Persistence_LoadAndSaveWorld_WithObsoleteElementModelInStoryElement_ReplacesWithNewElementModel(
+        ElementModel obsoleteElementModel, ElementModel newElementModel)
+    {
+        var world = PersistEntityProvider.GetLearningWorld();
+        world.UnplacedLearningElements.Clear();
+        world.UnplacedLearningElements.Add(
+            PersistEntityProvider.GetLearningElement(content: PersistEntityProvider.GetStoryContent(),
+                elementModel: obsoleteElementModel)
+        );
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>();
+        systemUnderTest.SaveToDisk(world, FilePath);
+        var restoredWorld = systemUnderTest.LoadFromDisk(FilePath);
+        Assert.That(restoredWorld.UnplacedLearningElements.First().ElementModel, Is.EqualTo(newElementModel));
+    }
+    
+    static ElementModel[][] GetObsoleteElementModelsWithNewElementModels()
+    {
+        return Enum.GetValues<ElementModel>().Where(e => ElementModelHelper.IsObsolete(e))
+            .Select(e => new[] { e, ElementModelHelper.GetAlternateValue(e) })
+            .ToArray();
+    }
+    
+    [Test]
     // ANF-ID: [ASE2, AWA0022, AWA0019]
     public void SaveAndLoadWorld_WithExactSameElementInTwoSpaces_ElementIsEqualObject()
     {
         var content = PersistEntityProvider.GetFileContent();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -370,7 +388,7 @@ public class PersistenceCt
                     element
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -401,7 +419,7 @@ public class PersistenceCt
         var content = PersistEntityProvider.GetFileContent();
         var element1 = PersistEntityProvider.GetLearningElement(content: content);
         var element2 = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -410,7 +428,7 @@ public class PersistenceCt
                     element1
                 }
             }, new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R_20X30_8L));
-        var space2 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space2 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -440,7 +458,7 @@ public class PersistenceCt
     {
         var content = PersistEntityProvider.GetAdaptivityContentFullStructure();
         var element = PersistEntityProvider.GetLearningElement(content: content);
-        var space1 = new LearningSpacePe("Name", "Description", 5, Theme.CampusAschaffenburg,
+        var space1 = new LearningSpacePe("Name", "Description", 5, SpaceTheme.LearningArea,
             PersistEntityProvider.GetLearningOutcomeCollection(),
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>
             {
@@ -463,8 +481,8 @@ public class PersistenceCt
         var actualContent =
             actual.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().LearningContent as
                 IAdaptivityContentPe;
-        var actualQuestion = actualContent.Tasks.First().Questions.First() as MultipleChoiceSingleResponseQuestionPe;
-        Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoice));
+        var actualQuestion = actualContent!.Tasks.First().Questions.First() as MultipleChoiceSingleResponseQuestionPe;
+        Assert.That(actualQuestion!.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoice));
         Assert.That(actualQuestion.Choices.First(), Is.EqualTo(actualQuestion.CorrectChoices.First()));
 
         actual.Should().BeEquivalentTo(
@@ -489,9 +507,9 @@ public class PersistenceCt
 
         actualContent.Should().BeEquivalentTo(content, options =>
         {
-            options.For(content => content.Tasks).Exclude(task => task.Id);
-            options.For(content => content.Tasks).For(task => task.Questions).Exclude(question => question.Id);
-            options.For(content => content.Tasks).For(task => task.Questions).For(question => question.Rules)
+            options.For(cnt => cnt.Tasks).Exclude(task => task.Id);
+            options.For(cnt => cnt.Tasks).For(task => task.Questions).Exclude(question => question.Id);
+            options.For(cnt => cnt.Tasks).For(task => task.Questions).For(question => question.Rules)
                 .Exclude(rule => rule.Action.Id);
             return options;
         });

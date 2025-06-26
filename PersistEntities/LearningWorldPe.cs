@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningOutcome;
+using Shared.Theme;
 
 namespace PersistEntities;
 
@@ -10,7 +11,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string savePath,
+        string goals, WorldTheme worldTheme,
+        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, string savePath,
         List<LearningSpacePe>? learningSpaces = null,
         List<PathWayConditionPe>? pathWayConditions = null,
         List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
@@ -22,8 +24,11 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = language;
         Description = description;
         Goals = goals;
+        WorldTheme = worldTheme;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
+        StoryStart = storyStart;
+        StoryEnd = storyEnd;
         SavePath = savePath;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
@@ -44,8 +49,11 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = "";
         Description = "";
         Goals = "";
+        WorldTheme = default;
         EvaluationLink = "";
         EnrolmentKey = "";
+        StoryStart = "";
+        StoryEnd = "";
         SavePath = "";
         LearningSpaces = new List<LearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
@@ -81,10 +89,16 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember] public string Description { get; set; }
 
     [DataMember] public string Goals { get; set; }
+    
+    [DataMember] public WorldTheme WorldTheme { get; set; }
 
     [DataMember] public string EvaluationLink { get; set; }
 
     [DataMember] public string EnrolmentKey { get; set; }
+
+    [DataMember] public string StoryStart { get; set; }
+
+    [DataMember] public string StoryEnd { get; set; }
 
     [DataMember] public string SavePath { get; set; }
 
@@ -103,8 +117,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 
         //LearningWorlds created in or before Version 2.0.0 have Goals instead of LearningOutcomeCollection
         //To ensure compatibility, we convert Goals to ManualLearningOutcomePe and add them to LearningOutcomeCollection - m.ho
-#pragma warning disable
-        if (!LearningSpaces.Any(x => x.LearningOutcomeCollection == null)) return;
+#pragma warning disable CS0618 // Type or member is obsolete
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (LearningSpaces.All(x => x.LearningOutcomeCollection != null)) return;
         foreach (var space in LearningSpaces)
         {
             space.LearningOutcomeCollection = new LearningOutcomeCollectionPe();
@@ -112,5 +127,5 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
                 space.LearningOutcomeCollection.LearningOutcomes.Add(new ManualLearningOutcomePe(space.Goals));
         }
     }
-#pragma warning restore
+#pragma warning restore CS0618 // Type or member is obsolete
 }

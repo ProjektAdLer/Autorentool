@@ -1,5 +1,6 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using AutoMapper.Internal;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.Adaptivity;
@@ -44,6 +45,7 @@ public class EntityPersistEntityMappingProfile : Profile
     {
         cfg.AddProfile(new EntityPersistEntityMappingProfile());
         cfg.AddCollectionMappersOnce();
+        cfg.Internal().MethodMappingEnabled = false;
     };
 
     private void CreateLearningOutcomeMap()
@@ -272,6 +274,7 @@ public class EntityPersistEntityMappingProfile : Profile
             })
             .ReverseMap()
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)

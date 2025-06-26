@@ -1,13 +1,14 @@
-@using Microsoft.Extensions.Localization
 @using System.Diagnostics.CodeAnalysis
 @using global::Shared
+@using Microsoft.Extensions.Localization
 @inherits LayoutComponentBase
 
-<PageTitle>@($"{Localizer["PageTitle"]} v{Constants.ApplicationVersion}")</PageTitle>
+<PageTitle>@($"{Localizer["PageTitle"]} {Constants.ApplicationVersion}")</PageTitle>
 
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
+<MudPopoverProvider/>
 @Body
 
 @code {

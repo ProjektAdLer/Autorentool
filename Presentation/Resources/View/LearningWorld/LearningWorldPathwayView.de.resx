@@ -24,10 +24,7 @@
         </value>
     </resheader>
     <data name="LearningWorldView.Workload.Text" xml:space="preserve">
-        <value>Arbeitsaufwand:</value>
-    </data>
-    <data name="LearningWorldView.Points.Text" xml:space="preserve">
-        <value>Gesamtpunkte:</value>
+        <value>Dauer:</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
@@ -39,7 +36,7 @@
         <value>Lernraum importieren</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Und-/Oder-Verbindung erstellen</value>
+        <value>Bedingung erstellen</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
         <value>Lade Lernraum</value>
@@ -50,7 +47,13 @@
     <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
         <value>Speichere Lernwelt</value>
     </data>
-    <data name="LearningWorldPathwayView.Points.Summary" xml:space="preserve">
-        <value> Pkt.</value>
+    <data name="LearningWorldView.Title" xml:space="preserve">
+        <value>Lernwelt-Übersicht - Lernpfade</value>
+    </data>
+    <data name="LearningWorldView.Condition.Text" xml:space="preserve">
+        <value>Abschlussbedingung (Gesamt):</value>
+    </data>
+    <data name="LearningWorldView.Condition.Elements" xml:space="preserve">
+        <value>Elem.</value>
     </data>
 </root>

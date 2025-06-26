@@ -1,21 +1,23 @@
-@using Presentation.PresentationLogic.LearningSpace
-@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
-@using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View.LearningElement
 @using System.Diagnostics.CodeAnalysis
 @using System.Text
 @using MudBlazor.Utilities
 @using Presentation.PresentationLogic.LearningContent.Story
 @using Presentation.PresentationLogic.LearningElement
-<div class="w-full min-h-[265px] bg-adlergreybright border-2 border-b-adlerdeactivated">
-    <div class="drop-shadow-xl w-full h-full">
-        <div class="mt-15 mx-auto w-[98%] h-[265px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; ">
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningElement
+@using Microsoft.JSInterop
 
-            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
-            {
-                var x = i;
-                var identifier = $"{LearningSpace.Id.ToString()}_ele_{x}";
 
+<div class="flex flex-col w-full h-full">
+
+    <div class="h-full relative" style="background-image: url('@DynamicBackgroundSvg'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;">
+      
+        @for (var i = 0; i < LearningSpace.LearningSpaceLayout.Capacity; i++)
+        {
+            var x = i;
+            var identifier = $"{LearningSpace.Id.ToString()}_ele_{x}";
                 <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                              Class="@GetSlotStyleString(x)"
                              style="@GetElementSlotPositionString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel, x)"
@@ -26,86 +28,77 @@
                     <ItemRenderer>
                         <DragDropLearningElement
                             LearningElement="@context"
-                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
                             OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
                             OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                     </ItemRenderer>
                     <ChildContent>
                         @if (!LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(x))
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
                         }
                     </ChildContent>
                 </MudDropZone>
-            }
-            @for (var i = 0; i < LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions.Count; i++)
-            {
-                var x = i;
-                var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
-                <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                             Class="@GetStorySlotStyleString(x)"
-                             style="@GetStorySlotPositionString(x)"
-                             @onclick="() => ClickOnStorySlot(x)"
-                             CanDrop="vm => vm.LearningContent is StoryContentViewModel"
-                             CanDropClass="@GetCanDropClass()"
-                             NoDropClass="@GetNoDropClass()">
-                    <ItemRenderer>
-                        <DragDropLearningElement
-                            LearningElement="@context"
-                            OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                            OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
-                            OnDeleteLearningElement="@LearningSpaceP.DeleteStoryElement"
-                            OnClicked="@LearningSpaceP.ClickedLearningElement"/>
-                    </ItemRenderer>
-                    <ChildContent>
-                        @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon>
-                        }
-                    </ChildContent>
-                </MudDropZone>
-            }
-        </div>
+        }
+        @for (var i = 0; i < LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions.Count; i++)
+        {
+            var x = i;
+            var identifier = $"{LearningSpace.Id.ToString()}_story_{x}";
+            <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                         Class="@GetStorySlotStyleString(x)"
+                         style="@GetStorySlotPositionString(x)"
+                         @onclick="() => ClickOnStorySlot(x)"
+                         CanDrop="vm => vm.LearningContent is StoryContentViewModel"
+                         CanDropClass="@GetCanDropClass()"
+                         NoDropClass="@GetNoDropClass()">
+                <ItemRenderer>
+                    <DragDropLearningElement
+                        LearningElement="@context"
+                        OnDeleteLearningElement="@LearningSpaceP.DeleteStoryElement"
+                        OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                </ItemRenderer>
+                <ChildContent>
+                    @if (!LearningSpace.LearningSpaceLayout.StoryElements.ContainsKey(x))
+                    {
+                        <div class="flex flex-row gap-1 justify-center items-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;"></MudIcon>
+                            <p class="text-xs 2xl:text-sm">Story</p>
+                        </div>
+                    }
+                </ChildContent>
+            </MudDropZone>
+        }
+        
     </div>
-</div>
+    </div>
+
 
 @code {
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ILearningSpacePresenter LearningSpaceP { get; set; }
 
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
+    
+    private double ScreenWidth { get; set; }
+    
+    private double ScreenHeight { get; set; }
+    
+    public class Dimensions
+    {
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+    
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Parameter, EditorRequired] public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
 
-    private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\" viewBox=\"-1 -1 34 34\">"
+    private string DynamicBackgroundSvg => "data:image/svg+xml;utf8," + "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"xMidYMid meet\" viewBox=\"-1 -1 34 34\">"
                                                                       + GetSvgPolygonString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + GetSvgDoorsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
+                                                                      + GetSvgArrowsString(LearningSpace.LearningSpaceLayout.FloorPlanViewModel)
                                                                       + "</svg>";
-
-    private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
-    {
-        var cornerPointsString = new StringBuilder();
-        cornerPointsString.Append("clip-path: polygon(");
-        foreach (var cornerPoint in floorPlan.CornerPoints)
-        {
-            cornerPointsString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
-        }
-
-        if (floorPlan.CornerPoints.Any())
-        {
-            cornerPointsString.Length -= 2;
-        }
-        else
-        {
-            cornerPointsString.Append("0% 0%");
-        }
-
-        cornerPointsString.Append(");");
-        return cornerPointsString.ToString();
-    }
 
     private string GetSvgPolygonString(IFloorPlanViewModel floorPlan)
     {
@@ -117,7 +110,7 @@
             polygonPointsString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
         }
 
-        polygonPointsString.Append("\" style=\"fill:%23e9f2fa; stroke:rgba(204,204,204); stroke-width:0.2\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
+        polygonPointsString.Append("\" style=\"fill:%23e9f2fa; stroke:rgb(204,204,204); stroke-width:0.2\" />"); //%23 is the url encoded version of #. This is needed to make the svg work in the url.
         return polygonPointsString.ToString();
     }
 
@@ -126,48 +119,145 @@
         var doorsString = new StringBuilder();
         foreach (var (p1, p2) in floorPlan.DoorPositions)
         {
-            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgba(204,204,204);stroke-width:0.5\" />");
+            doorsString.Append($"<line x1=\"{p1.X}\" y1=\"{p1.Y}\" x2=\"{p2.X}\" y2=\"{p2.Y}\" style=\"stroke:rgb(204,204,204);stroke-width:0.5\" />");
         }
 
         return doorsString.ToString();
     }
 
-    private string GetCanDropClass() => new CssBuilder("bg-adlergreen w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
-
-    private string GetNoDropClass() => new CssBuilder("bg-formerror w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
-
-    private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    private string GetSvgArrowsString(IFloorPlanViewModel floorPlan)
     {
-        var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
+        var svgString = new StringBuilder();
+
+        foreach (var arrow in floorPlan.ArrowCornerPoints)
+        {
+            svgString.Append("<polygon points=\"");
+
+            foreach (var cornerPoint in arrow)
+            {
+                svgString.Append($"{cornerPoint.X},{cornerPoint.Y} ");
+            }
+
+            svgString.Append("\" style=\"fill:rgb(153,153,153); stroke:rgba(153,153,153); stroke-width:0.2\" />");
+        }
+
+        return svgString.ToString();
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // Bildschirmbreite ermitteln und speichern
+        var dimensions = await GetCurrentScreenDimensions();
+        ScreenWidth = dimensions.Width;
+        ScreenHeight = dimensions.Height;
+    }
+
+    private async Task<Dimensions> GetCurrentScreenDimensions()
+    {
+        return await JsRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dimensions = await JsRuntime.InvokeAsync<Dimensions>("getScreenDimensions");
+            ScreenWidth = dimensions.Width;
+            ScreenHeight = dimensions.Height;
+
+            Console.WriteLine($"Initial Screen Dimensions: {ScreenWidth} x {ScreenHeight}");
+
+            // Registriere den Resize-Listener
+            await JsRuntime.InvokeVoidAsync("subscribeToResize", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable] // Wichtig: Diese Methode muss aufgerufen werden können
+    public Task OnResize(Dimensions dimensions)
+    {
+        Console.WriteLine($"OnResize: Neue Bildschirmgröße {dimensions.Width}x{dimensions.Height}");
+        ScreenWidth = dimensions.Width;
+        ScreenHeight = dimensions.Height;
+
+        StateHasChanged(); // Erzwingt das erneute Rendern der Slots
+        return Task.CompletedTask;
+    }
+
+    private string GetCanDropClass() => new CssBuilder("bg-adlergreen text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-50").Build();
+
+    private string GetNoDropClass() => new CssBuilder("bg-formerror text-white w-[86px] 2xl:w-[98px] 3xl:w-[104px] 1080p:w-[115px] 2500p:w-[160px] h-[54px] 2xl:h-[62px] 2500p:h-[70px] bg-opacity-70").Build();
+
+    private string GetElementSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int slotIndex)
+    {
+        var slotPosition = floorPlanViewModel.ElementSlotPositions[slotIndex];
+        return GetSlotPositionString(slotPosition);
+    }
+
+    private string GetStorySlotPositionString(int slotIndex)
+    {
+        var slotPosition = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[slotIndex];
+        return GetSlotPositionString(slotPosition);
+    }
+    
+    private string GetSlotPositionString(Point slotPosition)
+    {
         var slotPositionString = new StringBuilder();
-        slotPositionString.Append("position: absolute; ");
-        slotPositionString.Append($"top: {(int)((slotPosition.Y + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append($"left: {(int)((slotPosition.X + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append("transform: translate(-70%, -100%);");
+
+        double viewportWidth;
+        double scaleFactor;
+        double adjustedWidth;
+        
+        if (ScreenWidth < 1536)
+        {
+            viewportWidth = 34.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);
+            
+            adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 33)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append("transform: translate(-50%, -30%); ");
+            slotPositionString.Append("scale: 0.6;");
+        }
+        
+        else
+        {
+            viewportWidth = 50.0;
+            scaleFactor = Math.Min(ScreenWidth / viewportWidth, 0.6);   
+            
+            adjustedWidth = 20.0 * scaleFactor;
+
+            slotPositionString.Append("position: absolute; ");
+            slotPositionString.Append($"top: {(int)((slotPosition.Y - 1) / adjustedWidth * 35)}%; ");
+            slotPositionString.Append($"left: {(int)((slotPosition.X - 1 ) / adjustedWidth * 22)}%; ");
+            slotPositionString.Append("transform: translate(180%, -60%); ");
+            slotPositionString.Append("scale: 0.7;");
+        }
         return slotPositionString.ToString();
     }
 
-    private string GetStorySlotPositionString(int position)
-    {
-        var slotPos = LearningSpace.LearningSpaceLayout.FloorPlanViewModel.StoryElementSlotPositions[position];
-        var slotPositionString = new StringBuilder();
-        slotPositionString.Append("position: absolute; ");
-        slotPositionString.Append($"top: {(int)((slotPos.Y + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append($"left: {(int)((slotPos.X + 1) / 35.0 * 100)}%; ");
-        slotPositionString.Append("transform: translate(-70%, -100%);");
-        return slotPositionString.ToString();
-    }
+    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace, false);
 
-    private string GetSlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveElementSlotInSpace);
-
-    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace);
-
-    private string GetSlotStyleStringInternal(int position, int selectedPos)
-    {
+    private string GetStorySlotStyleString(int position) => LearningSpaceP.LearningSpaceVm == null ? "" : GetSlotStyleStringInternal(position, SelectedViewModelsProvider.ActiveStorySlotInSpace, true);
+    
+    private string GetSlotStyleStringInternal(int position, int selectedPos, bool isStorySlot)
+    { 
         var activeSlotIsPos = selectedPos == position;
-        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default")
-            .AddClass("bg-adlerblue-100 border-adlerblue-300 bg-opacity-30 text-white", activeSlotIsPos)
-            .AddClass("border-adlergrey-200 bg-adlerdeactivatedtext hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        var cssBuilder = new CssBuilder("cursor-pointer rounded-lg border-2 w-[76px] 2xl:w-[88px] 3xl:w-[94px] 1080p:w-[105px] 2500p:w-[150px] h-[44px] 2xl:h-[52px] 2500p:h-[60px] flex justify-center items-center mud-border-lines-default text-adlergrey-400 hover:text-white font-bold");
+        
+        if (isStorySlot)
+        {
+            //Farben für ActiveStorySlotInSpace
+            cssBuilder.AddClass("bg-adlergold-200 border-adlergold-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlergold-700 border-[3px] bg-adlerdeactivatedtext hover:bg-adlergold-300 hover:border-adlergold-300", !activeSlotIsPos);
+        }
+        else
+        {
+            //Farben für ActiveElementSlotInSpace
+            cssBuilder.AddClass("bg-adlerblue-200 border-adlerblue-300", activeSlotIsPos);
+            cssBuilder.AddClass("border-adlerblue-200 border-[3px] bg-adlerbgbright hover:bg-adlerblue-300 hover:border-adlerblue-300", !activeSlotIsPos);
+        }
         return cssBuilder.ToString();
     }
 
@@ -179,3 +269,4 @@
     private void ClickOnStorySlot(int i) => LearningSpaceP.ClickOnStorySlot(i);
 
 }
+

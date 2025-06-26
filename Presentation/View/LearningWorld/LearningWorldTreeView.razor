@@ -16,21 +16,30 @@
 @if (LearningWorldP.LearningWorldVm != null)
 {
     <div class="flex flex-col h-full grow">
-        <article class="flex flex-col justify-content mb-2 cursor-default">
-            <section class="bg-adlerbgbright rounded p-2 w-[334px] xl:w-[334px] 2xl:w-[384px] 3xl:w-[384px] 1080p:w-[434px] 2500p:w-[584px] 3000p:w-[584px] 3700p:w-[584px] grow">
-                <div class="flex justify-start items-center space-x-2 py-1">
-                    <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-7 h-7">
-                    <p class="text-base 2xl:text-lg font-bold opacity-80 text-adlerdarkblue-800 truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+        <div class="flex flex-col bg-adlerbgbright rounded-b">
+            <header class="py-2 2xl:py-3 border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+                <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["OverView.Title"]</h2>
+            </header>
+            <article class="flex flex-col justify-content cursor-default mb-1">
+                <div class="bg-adlerbgbright rounded-b px-2 w-full overflow-hidden truncate">
+                    <div class="flex justify-start items-center space-x-2 py-2">
+                        @* ReSharper disable Html.PathError *@
+                        <img src="CustomIcons/World/world-icon.png" alt="world" class="opacity-50 w-4 2xl:w-6">
+                        @* ReSharper restore Html.PathError *@
+                        <p class="text-sm 2xl:text-base font-bold text-adlertitledarkblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
+                    </div>
+                    <p class="text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
+                    </p>
+                    <p class="text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["LearningWorldTreeView.Condition.Text"] </span> @LearningWorldP.LearningWorldVm?.NumberOfRequiredElements<span class="text-adlergrey-600"> / </span>@LearningWorldP.LearningWorldVm?.NumberOfElements
+                        <span class="text-adlergrey-600"> @Localizer["LearningWorldTreeView.Condition.Elements"] </span>
+                    </p>
                 </div>
-                <p class="text-sm 2xl:text-base text-adlerblue-600">
-                    <span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span>
-                </p>
-                <p class="text-sm 2xl:text-base text-adlerblue-600">
-                    <span class="text-adlergrey-600">@Localizer["OverView.Points"] </span> @LearningWorldP.LearningWorldVm?.Points<span class="text-adlergrey-600"> @Localizer["LearningWorldTreeView.Points.Summary"]</span>
-                </p>
-            </section>
-        </article>
-        <section class="bg-white rounded w-full overflow-scroll grow pt-2">
+            </article>
+        </div>
+        
+        <section class="bg-white rounded w-full overflow-scroll grow mt-1.5 2xl:mt-2">
             <div class="cursor-pointer flex flex-col justify-start">
                 @if (LearningWorldP.LearningWorldVm?.LearningSpaces != null)
                 {
@@ -39,10 +48,10 @@
                         <Collapsable VerticalMargin="my-1" @ref="Collapsables[learningSpace]"
                                      InitiallyCollapsed="!IsLearningSpaceSelected(learningSpace)">
                             <TitleContentAfterToggler>
-                                <span @onclick="@(e => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
+                                <span @onclick="@(_ => SelectLearningSpace(learningSpace))" class="@GetSpaceDivCss(learningSpace)">
                                     <div class="flex flex-row gap-2 items-center">
                                         <MudIcon Class="w-6 h-6 2xl:w-8 2xl:h-8" Icon="@SpaceIcon"></MudIcon>
-                                        <p class="break-words">@learningSpace.Name</p>
+                                        <p class="break-all">@learningSpace.Name</p>
                                     </div>
                                 </span>
                             </TitleContentAfterToggler>
@@ -73,11 +82,11 @@
                             <TogglerContent>
                                 @if (context)
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight"/>
+                                    <MudIcon Class="text-adlertitleblue" Icon="@Icons.Material.Filled.ArrowRight"/>
                                 }
                                 else
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"/>
+                                    <MudIcon Class="text-adlertitleblue" Icon="@Icons.Material.Filled.ArrowDropDown"/>
                                 }
                             </TogglerContent>
                         </Collapsable>
@@ -237,7 +246,7 @@
     private Task SelectLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         Mediator.RequestOpenSpaceDialog();
-        if (SelectedViewModelsProvider.LearningElement != null && SelectedViewModelsProvider.LearningElement.Parent != learningSpace)
+        if (SelectedViewModelsProvider.LearningElement != null)
             SelectedViewModelsProvider.SetLearningElement(null, null);
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpace, null);
         return Task.CompletedTask;

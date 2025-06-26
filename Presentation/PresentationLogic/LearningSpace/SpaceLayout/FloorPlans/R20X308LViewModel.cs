@@ -33,26 +33,45 @@ public class R20X308LViewModel : IFloorPlanViewModel
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 6, Y = 5 },
-        new() { X = 14, Y = 5 },
-        new() { X = 22, Y = 5 },
+        new() { X = 4, Y = 5 },
+        new() { X = 11, Y = 5 },
+        new() { X = 18, Y = 5 },
         new() { X = 30, Y = 5 },
         new() { X = 30, Y = 19 },
-        new() { X = 22, Y = 19 },
-        new() { X = 14, Y = 19 },
-        new() { X = 6, Y = 19 }
+        new() { X = 18, Y = 19 },
+        new() { X = 11, Y = 19 },
+        new() { X = 4, Y = 19 }
     };
 
     public IList<Point> StoryElementSlotPositions { get; } = new List<Point>
     {
-        new() { X = 2, Y = 11 },
-        new() { X = 26, Y = 23 }
+        new() { X = 4, Y = 12 },
+        new() { X = 24, Y = 19 }
     };
 
     public IList<(Point, Point)> DoorPositions { get; } = new List<(Point, Point)>()
     {
-        (new Point { X = 0, Y = 12 }, new Point { X = 0, Y = 7 }),
-        (new Point { X = 22, Y = 20 }, new Point { X = 27, Y = 20 })
+        (new Point { X = 0, Y = 13 }, new Point { X = 0, Y = 7 }),
+        (new Point { X = 20, Y = 20 }, new Point { X = 26, Y = 20 })
+    };
+    
+    public IList<IList<Point>> ArrowCornerPoints { get; } = new List<IList<Point>>
+    {
+        new List<Point>
+        {
+            //Intro
+            new() { X = 0, Y = 10 },
+            new() { X = -1, Y = 9 },
+            new() { X = -1, Y = 11 }
+        },
+
+        new List<Point>
+        {
+            //Outro
+            new() { X = 23, Y = 21 },
+            new() { X = 22, Y = 20 },
+            new() { X = 24, Y = 20 }
+        }
     };
 
     public string GetIcon => Icon;

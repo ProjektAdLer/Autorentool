@@ -66,6 +66,8 @@ public class CreateAtf : ICreateAtf
 
         MapLearningSpacesToLearningWorldJson(learningWorld.ObjectsInPathWaysPe);
 
+        WriteFrameStoryToLearningWorldJson(learningWorld.StoryStart, learningWorld.StoryEnd);
+
         var rootJson = CreateRootJson();
         var jsonFile = SerializeRootJson(rootJson);
 
@@ -209,6 +211,7 @@ public class CreateAtf : ICreateAtf
         LearningWorldJson.WorldGoals = learningWorld.Goals.Split("\n");
         LearningWorldJson.EvaluationLink = learningWorld.EvaluationLink;
         LearningWorldJson.EnrolmentKey = learningWorld.EnrolmentKey;
+        LearningWorldJson.Theme = learningWorld.WorldTheme.ToString();
     }
 
     /// <summary>
@@ -268,7 +271,7 @@ public class CreateAtf : ICreateAtf
 
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
                 space.Name, _listLearningSpaceElements, space.RequiredPoints,
-                space.LearningSpaceLayout.FloorPlanName.ToString(), space.Theme.ToString(),
+                space.LearningSpaceLayout.FloorPlanName.ToString(), space.SpaceTheme.ToString(),
                 spaceStoryJson, space.Description, spaceGoals,
                 _booleanAlgebraRequirements));
 
@@ -276,6 +279,16 @@ public class CreateAtf : ICreateAtf
         }
 
         LearningWorldJson.Elements = LearningWorldJson.Elements.OrderBy(x => x.ElementId).ToList();
+    }
+
+    /// <summary>
+    /// Writes the frame story start and end of the learning world to the FrameStory of LearningWorldJson.
+    /// </summary>
+    /// <param name="storyStart"></param>
+    /// <param name="storyEnd"></param>
+    private void WriteFrameStoryToLearningWorldJson(string storyStart, string storyEnd)
+    {
+        LearningWorldJson.FrameStory = new FrameStoryJson(storyStart, storyEnd);
     }
 
     private ISpaceStoryJson GetSpaceStoryJson(LearningSpacePe space)
@@ -288,13 +301,13 @@ public class CreateAtf : ICreateAtf
         if (storyElements.TryGetValue(0, out var introStory))
         {
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
-                introStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(introStory.ElementModel));
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
         {
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
-                outroStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(outroStory.ElementModel));
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);
@@ -360,7 +373,6 @@ public class CreateAtf : ICreateAtf
     private static List<LearningSpacePe> GetLearningSpacesInOrder(
         IEnumerable<IObjectInPathWayPe> objectInPathWayViewModels)
     {
-        
         var objectInPathWayList = objectInPathWayViewModels.ToList();
         var startObjects = objectInPathWayList
             .OfType<ILearningSpacePe>()
@@ -469,26 +481,26 @@ public class CreateAtf : ICreateAtf
             case FileContentPe fileContentPe:
                 var elementCategory = MapFileContentToElementCategory(fileContentPe);
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
+                    MapElementDifficultyToInt(learningElement.Difficulty));
                 ListFileContent.Add((fileContentPe, learningElement.Name));
                 break;
             case LinkContentPe linkContentPe:
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    linkContentPe.Link,
-                    "video", "url", learningSpaceId, learningElement.Points, learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, linkContentPe.Link, "video", "url", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
+                    MapElementDifficultyToInt(learningElement.Difficulty));
                 break;
             case AdaptivityContentPe adaptivityContentPe:
                 var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
                 elementJson = new AdaptivityElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    adaptivityContent, learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), adaptivityContent,
+                    learningElement.Description, learningElement.Goals.Split("\n"),
+                    learningElement.Workload);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(learningElement.LearningContent),
@@ -514,6 +526,22 @@ public class CreateAtf : ICreateAtf
             "pdf" => "pdf",
             _ => throw new ArgumentOutOfRangeException(nameof(fileContent.Type),
                 $"The given LearningContent Type of file {fileContent.Name} is not supported")
+        };
+    }
+
+    /// <summary>
+    /// Converts a element difficulty to its corresponding integer representation in the ATF.
+    /// </summary>
+    private static int? MapElementDifficultyToInt(LearningElementDifficultyEnum questionDifficulty)
+    {
+        return questionDifficulty switch
+        {
+            LearningElementDifficultyEnum.None => null,
+            LearningElementDifficultyEnum.Easy => 000,
+            LearningElementDifficultyEnum.Medium => 100,
+            LearningElementDifficultyEnum.Hard => 200,
+            _ => throw new ArgumentOutOfRangeException(nameof(questionDifficulty),
+                questionDifficulty, null)
         };
     }
 
@@ -665,7 +693,12 @@ public class CreateAtf : ICreateAtf
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
                     MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
-                ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                if (!ListFileContent.Any(x =>
+                        x.Item1.Filepath == fileContentPe.Filepath && x.Item2 == fileContentPe.Name))
+                {
+                    ListFileContent.Add((fileContentPe, fileContentPe.Name));
+                }
+
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),
@@ -777,7 +810,7 @@ public class CreateAtf : ICreateAtf
     /// </summary>
     private void SetupDirectoryStructure()
     {
-        var workDir =  ApplicationPaths.BackupFolder;
+        var workDir = ApplicationPaths.BackupFolder;
         _xmlFilesForExportPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport");
         _atfPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport", "ATF_Document.json");
 
@@ -803,7 +836,8 @@ public class CreateAtf : ICreateAtf
             try
             {
                 _fileSystem.File.Copy(fileContent.Filepath,
-                    _fileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", $"{name}.{fileContent.Type}"));
+                    _fileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport",
+                        $"{name}.{fileContent.Type}"));
                 Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", fileContent.Filepath);
             }
             catch (FileNotFoundException)

@@ -31,7 +31,7 @@
         <value>Frage erstellt</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.AddChoice" xml:space="preserve">
-        <value>Antworten hinzufügen</value>
+        <value>Antwort hinzufügen</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Button.Create" xml:space="preserve">
         <value>Erstellen</value>
@@ -40,7 +40,7 @@
         <value>Antwortmöglichkeiten</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.Choice" xml:space="preserve">
-        <value>Antwortmöglichkeit</value>
+        <value>Antwortmöglichkeit {0}</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Edit.SnackbarMessage" xml:space="preserve">
         <value>Frage aktualisiert</value>
@@ -77,5 +77,11 @@
     </data>
     <data name="MultipleChoiceQuestionForm.Switch.Question.Text" xml:space="preserve">
         <value>Frage: </value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Text.DeleteChoice" xml:space="preserve">
+        <value>Antwort löschen</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Info.Infotext" xml:space="preserve">
+        <value>Für eine Frage stehen max. zehn Antwortmöglichkeiten zur Verfügung.</value>
     </data>
 </root>

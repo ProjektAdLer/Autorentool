@@ -9,6 +9,7 @@ public class ContentReferenceActionPe : IAdaptivityActionPe
     /// Creates a new instance of <see cref="ContentReferenceActionPe"/>.
     /// </summary>
     /// <param name="content">Content to be referenced. Must not be <see cref="IAdaptivityContentPe"/>.</param>
+    /// <param name="comment">A comment for the action.</param>
     /// <exception cref="ArgumentException">Content was <see cref="IAdaptivityContentPe"/>.</exception>
     public ContentReferenceActionPe(ILearningContentPe content, string comment)
     {

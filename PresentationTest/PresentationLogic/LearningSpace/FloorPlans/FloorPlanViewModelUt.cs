@@ -15,7 +15,7 @@ public class FloorPlanViewModelUt
     {
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
-        _iconDirectory = Path.Combine(projectDirectory, "AuthoringTool", "wwwroot");
+        _iconDirectory = Path.Combine(projectDirectory!, "AuthoringTool", "wwwroot");
     }
 
     private string _iconDirectory = "";

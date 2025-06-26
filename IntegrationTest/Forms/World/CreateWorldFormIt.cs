@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,6 +14,7 @@ using Presentation.Components.Forms.Buttons;
 using Presentation.Components.Forms.Models;
 using Presentation.Components.Forms.World;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest.Forms.World;
@@ -20,10 +23,13 @@ namespace IntegrationTest.Forms.World;
 public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, LearningWorldFormModel, LearningWorld>
 {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
         WorkspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         WorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var themeLocalizer = Substitute.For<IStringLocalizer<WorldTheme>>();
+        themeLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        ThemeHelper<WorldTheme>.Initialize(themeLocalizer);
         FormModel = FormModelProvider.GetLearningWorld();
         Entity = EntityProvider.GetLearningWorld();
         FormDataContainer = Substitute.For<IFormDataContainer<LearningWorldFormModel, LearningWorld>>();
@@ -59,11 +65,13 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     {
         var systemUnderTest = GetRenderedComponent();
         var mudForm = systemUnderTest.FindComponent<MudForm>();
-
+        Context.RenderComponent<MudPopoverProvider>();
         var collapsables = systemUnderTest.FindComponents<Collapsable>();
         collapsables[1].Find("div.toggler").Click();
         collapsables[2].Find("div.toggler").Click();
         collapsables[3].Find("div.toggler").Click();
+        collapsables[4].Find("div.toggler").Click();
+        collapsables[5].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -78,6 +86,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(FormModel.Goals, Is.EqualTo(""));
             Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
             Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
+            Assert.That(FormModel.StoryStart, Is.EqualTo(""));
+            Assert.That(FormModel.StoryEnd, Is.EqualTo(""));
         });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.False);
@@ -112,6 +122,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
         });
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
@@ -156,7 +168,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
@@ -169,7 +181,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [Test]
@@ -192,14 +204,14 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
 
@@ -208,7 +220,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
             {
                 if (ci.Arg<string>() != nameof(FormModel.Name)) return Enumerable.Empty<string>();
-                return (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
+                return (string)FormModel.GetType().GetProperty(ci.Arg<string>())!.GetValue(FormModel)! == Expected
                     ? Enumerable.Empty<string>()
                     : new[] { "Must be test" };
             }
@@ -218,9 +230,16 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
     private void ConfigureValidatorAllMembersTest()
     {
         Validator.ValidateAsync(Entity, Arg.Any<string>()).Returns(ci =>
-            (string)FormModel.GetType().GetProperty(ci.Arg<string>()).GetValue(FormModel) == Expected
-                ? Enumerable.Empty<string>()
-                : new[] { "Must be test" }
+            {
+                var value = FormModel.GetType().GetProperty(ci.Arg<string>())?.GetValue(FormModel);
+                var valid = value switch
+                {
+                    string str => str == Expected,
+                    WorldTheme t => t == WorldTheme.CampusAschaffenburg,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return valid ? Enumerable.Empty<string>() : new[] { "Must be test" };
+            }
         );
     }
 

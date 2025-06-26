@@ -1,4 +1,5 @@
-﻿using Presentation.PresentationLogic.LearningElement;
+﻿using System.Collections;
+using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans;
 
@@ -31,6 +32,8 @@ public interface IFloorPlanViewModel
     /// List of two X/Y coordinates of the door positions.
     /// </summary>
     IList<(Point, Point)> DoorPositions { get; }
+    
+    IList<IList<Point>> ArrowCornerPoints { get; }
 
     string GetIcon { get; }
 

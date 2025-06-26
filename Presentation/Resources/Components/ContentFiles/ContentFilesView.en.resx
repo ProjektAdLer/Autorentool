@@ -39,9 +39,6 @@
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
         <value>Do you really want to delete content entry &lt;b&gt;{0}&lt;/b&gt;? If you delete content which an learning element inside a learning world is using, you won't be able to generate that learning world anymore until you add it back!</value>
     </data>
-    <data name="MudTextField.Search.Placeholder" xml:space="preserve">
-        <value>Search</value>
-    </data>
     <data name="TypeSortBy.ContentType.Link" xml:space="preserve">
         <value>Link</value>
     </data>
@@ -83,5 +80,20 @@
     </data>
     <data name="Content.Select.Option.AllUnused" xml:space="preserve">
         <value>All unused learning material</value>
+    </data>
+    <data name="ContentFilesView.Snackbar.OneMaterialDelete" xml:space="preserve">
+        <value>External learning material successfully deleted</value>
+    </data>
+    <data name="ContentFilesView.Snackbar.MaterialDelete" xml:space="preserve">
+        <value>External learning material successfully deleted</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.MaterialDelete" xml:space="preserve">
+        <value>Error deleting external learning material</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.OpenMaterialFolder" xml:space="preserve">
+        <value>Error opening external learning material files folder</value>
+    </data>
+    <data name="ContentFilesView.ErrorMessage.MaterialInUse" xml:space="preserve">
+        <value>Error deleting external learning material: File in use</value>
     </data>
 </root>

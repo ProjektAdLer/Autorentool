@@ -57,8 +57,7 @@ public class VersionCompatibilityIt
     {
         var asmb = Assembly.GetExecutingAssembly();
         using var stream = asmb.GetManifestResourceStream("IntegrationTest.VersionCompatibility.testworld110.awf");
-        if (stream is null)
-            Assert.Fail("stream was null");
+        Assert.That(stream, Is.Not.Null, "stream was null");
         var world = _dataAccess.LoadLearningWorld(stream);
         Assert.Multiple(() =>
         {

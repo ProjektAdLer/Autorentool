@@ -9,6 +9,7 @@ using PersistEntities.LearningOutcome;
 using Shared;
 using Shared.Adaptivity;
 using Shared.LearningOutcomes;
+using Shared.Theme;
 
 namespace TestHelpers;
 
@@ -17,7 +18,8 @@ public static class PersistEntityProvider
     public static LearningWorldPe GetLearningWorld(string append = "", List<LearningSpacePe>? learningSpaces = null)
     {
         return new LearningWorldPe("LWPn" + append, "LWPsn" + append, "LWPa" + append, "LWPl" + append, "LWPd" + append,
-            "LWPg" + append, "LWPev" + append, "LWPek" + append, "LWPsp" + append, learningSpaces: learningSpaces);
+            "LWPg" + append, WorldTheme.CampusAschaffenburg, "LWPev" + append, "LWPek" + append, "LWPss" + append,
+            "LWPse" + append, "LWPsp" + append, learningSpaces: learningSpaces);
     }
 
     public static LearningSpacePe GetLearningSpace(string append = "", FloorPlanEnum? floorPlan = null,
@@ -26,7 +28,7 @@ public static class PersistEntityProvider
         List<IObjectInPathWayPe>? outBoundObjects = null, TopicPe? assignedTopic = null, string name = "")
     {
         return new LearningSpacePe(name != "" ? name : "LSPn" + append, "LSPd" + append, 4,
-            Theme.CampusAschaffenburg, GetLearningOutcomeCollection(),
+            SpaceTheme.LearningArea, GetLearningOutcomeCollection(),
             learningSpaceLayout ?? (floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum)floorPlan)),
             positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects,
             outBoundObjects: outBoundObjects, assignedTopic: assignedTopic);
@@ -60,10 +62,11 @@ public static class PersistEntityProvider
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
-        string name = "")
+        string name = "", LearningElementDifficultyEnum difficulty = LearningElementDifficultyEnum.Easy, 
+        ElementModel elementModel = ElementModel.l_h5p_slotmachine_1, int workload = 0)
     {
-        return new LearningElementPe(name != "" ? name : "a" + append, content, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1);
+        return new LearningElementPe(name != "" ? name : "a" + append, content!, "d" + append, "e" + append,
+            difficulty, elementModel, workload);
     }
 
     public static PathWayConditionPe GetPathWayCondition(ConditionEnum condition = ConditionEnum.And,
@@ -84,16 +87,17 @@ public static class PersistEntityProvider
         return new LinkContentPe(name ?? "a name", link ?? "a link");
     }
 
-    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null, bool primitiveH5p = false)
+    public static FileContentPe GetFileContent(string? name = null, string? type = null, string? filepath = null,
+        bool primitiveH5p = false)
     {
         return new FileContentPe(name ?? "a name", type ?? "a type", filepath ?? "a filepath", primitiveH5p);
     }
 
     public static StoryContentPe GetStoryContent(string? name = null, bool unsavedChanges = false,
-        List<string>? story = null)
+        List<string>? story = null, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
     {
         return new StoryContentPe(name ?? "a name", unsavedChanges,
-            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" });
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, npcName, NpcMood.Welcome);
     }
 
     public static TopicPe GetTopic(string? name = null)

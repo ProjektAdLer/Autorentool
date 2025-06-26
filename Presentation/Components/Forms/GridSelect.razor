@@ -2,32 +2,36 @@
 @using System.Diagnostics.CodeAnalysis
 @using MudBlazor.Utilities
 @inherits MudBaseInput<T>
-<div class="flex flex-col w-[98%] h-52 bg-adlerbgbright border-adlergrey-100 border-4 rounded m-2">
-    @if (Error)
-    {
-        <MudText Class="text-formerror pl-2 pt-2 text-sm">@ErrorText</MudText>
-    }
-    @if (FilterFuncSearchableStrings is not null)
-    {
-        <div class="w-full h-1/3">
-            <MudTextField T="string"
-                          Class="fixed w-1/3 px-2"
-                          Placeholder="Suche..."
-                          Immediate="true"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Outlined.Search"
-                          @bind-Value="_searchString"/>
-        </div>
-    }
 
-    <div class="h-2/3 w-full">
-        <div class="py-2 grid grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center overflow-scroll h-32 p-0 text-xs font-bold text-adlertextgrey break-words text-center leading-none truncate">
+<div class="flex flex-col w-[100%] h-52 bg-adlerbgbright border-adlergrey-100 border-4 rounded">
+    <div class="w-full h-1/3 flex flex-row justify-between">
+        @if (FilterFuncSearchableStrings is not null)
+        {
+            <div>
+                <MudTextField T="string"
+                              Class="fixed w-1/3 px-2 mt-0"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Outlined.Search"
+                              @bind-Value="_searchString"/>
+            </div>
+        }
+        <div>
+            @if (Error)
+            {
+                <MudText Class="text-formerror px-2 text-sm">@ErrorText</MudText>
+            }
+        </div>
+    </div>
+
+    <div class="h-2/3 w-full overflow-auto">
+        <div class="z-50 py-2 grid grid-cols-7 2xl:grid-cols-5 gap-4 items-start justify-start justify-items-center place-items-center p-0 h-32 text-xs font-bold break-all leading-none text-adlertextgrey">
             @for (var i = 0; i < FilteredElements.Count(); i++)
             {
                 var element = FilteredElements.ElementAt(i);
-                <MudCard @onclick="() => SelectAsync(element)" Outlined="true" Class="@GetCssBuilder(element, i)" Style="background-color: #e9e9e9; border-color: rgb(204,204,204); border-width: 2px; border-radius: 0.5rem;">
+                <div onclick="@(() => SelectAsync(element))" class="@GetCssBuilder(element, i)">
                     @ElementTemplate(element)
-                </MudCard>
+                </div>
             }
         </div>
     </div>
@@ -41,12 +45,13 @@
 
     [Parameter] public Func<T, IEnumerable<string>>? FilterFuncSearchableStrings { get; set; }
 
+    [Parameter] public bool AllowDeselect { get; set; } = true;
+
     private IEnumerable<T> FilteredElements => FilterFuncSearchableStrings is null || string.IsNullOrWhiteSpace(_searchString) ? Elements : Elements.Where(ele => FilterFuncSearchableStrings(ele).Any(str => str.ToLower().Contains(_searchString.ToLower())));
 
     private string? _searchString = "";
 
-    private string GetCssBuilder(T element, int i) => new CssBuilder("grid cursor-pointer w-[100px] h-[48px] text-clip place-content-center")
-        .AddClass("bg-adlerblue-100 border-adlerblue-300", element.Equals(Value))
+    private string GetCssBuilder(T element, int i) => new CssBuilder("cursor-pointer")
         .AddClass($"element-{i}")
         .Build();
 
@@ -54,7 +59,10 @@
     {
         if (element.Equals(Value))
         {
-            await SetValueAsync(default!);
+            if (AllowDeselect)
+            {
+                await SetValueAsync(default!);
+            }
         }
         else
         {

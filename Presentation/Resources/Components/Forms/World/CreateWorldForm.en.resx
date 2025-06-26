@@ -34,10 +34,10 @@
         <value>Language</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Description.Text" xml:space="preserve">
-        <value>Formulate a description for your learning world.</value>
+        <value>Description for this learning world</value>
     </data>
     <data name="CreateWorldForm.Goals.Field.Goals.Text" xml:space="preserve">
-        <value>Formulate your learning outcome(s) for this learning world.</value>
+        <value>Learning outcome(s) for this learning world</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
         <value>Create learning world</value>
@@ -65,5 +65,29 @@
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>An enrolment key enables access to the learning world to be restricted to only those who know the key. &lt;br&gt; &lt;br&gt; If the field is left blank, any user may enrol in the learning world. &lt;br&gt; &lt;br&gt; If an enrolment key is specified, any user attempting to enrol in the learning world will be restricted to supply the key. Note that users only need to supply the enrolment key once, when they enrol in the learning world.</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
+        <value>Framework for the story</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
+        <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Label" xml:space="preserve">
+        <value>Introduction</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Start.Placeholder" xml:space="preserve">
+        <value>It began with...</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Label" xml:space="preserve">
+        <value>Ending</value>
+    </data>
+    <data name="CreateWorldForm.Fields.Collapsable.Story.Field.End.Placeholder" xml:space="preserve">
+        <value>And so it ended...</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
+        <value>Learning world theme</value>
+    </data>
+    <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Selection of themes with different theme worlds for the learning world</value>
     </data>
 </root>

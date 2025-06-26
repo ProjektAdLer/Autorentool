@@ -5,6 +5,7 @@
 @using Presentation.Components.Adaptivity.Dialogues
 @using Presentation.Components.Dialogues
 @using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Content
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningSpace
@@ -13,336 +14,341 @@
 @using Shared
 @using Size = MudBlazor.Size
 
-<header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100">
-    <div class="flex justify-center py-2 2xl:py-3">
-        <h2 class="text-base 2xl:text-xl text-center font-bold text-adlerdarkblue-800 mx-2">
-            @(GetHeaderText())
-        </h2>
+<div class="absolute w-full z-30">
+    <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
+        <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@(GetHeaderText())</h2>
+    </header>
+    <div class="flex justify-between items-start">
+        <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["CreateElementForm.Text"]</MudText>
     </div>
-</header>
-
-<div class="flex justify-between items-start p-2">
-    <MudText Class="text-adlergrey-200 text-xs p-2">@Localizer["CreateElementForm.Text"]</MudText>
-
-    <MudTooltip Placement="Placement.Bottom" Delay="150" Duration="250" Arrow="true" Class="w-[700px] p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed" Text="Erklärung">
-        <ChildContent>
-            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info" Class="text-blacktrans-300 hover:text-adlerdarkblue"></MudIcon>
-        </ChildContent>
-        <TooltipContent>
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col gap-4">
-                    <div class="flex flex-row gap-4">
-                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearningElement"].ToString())</p>
-                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationAdaptivityElement"].ToString())</p>
-                        <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart1"].ToString())</p>
-                    </div>
-
-                    <img src="/CustomIcons/PositionFloorPlan.png" alt="@Localizer["CreateElementForm.Tooltip.Image.Alt"]"/>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationLearnAdaptElementPart2"].ToString())</p>
-                    <p>@((MarkupString)Localizer["CreateElementForm.Tooltip.ExplanationStoryElement"].ToString())</p>
-                </div>
-            </div>
-        </TooltipContent>
-    </MudTooltip>
 </div>
-
 
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement" @ref="_form"
           OnValidSubmit="OnValidSubmit"
           SnackbarMessage="@GetSnackbarMessage()"
           FormDataContainer="FormDataContainer">
-<Fields>
-<div class="px-4">
-    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"] InitiallyCollapsed="false">
-        <div class="rounded-lg w-4/4 px-2 2xl:px-4">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          @ref="_nameField"
-                          DebounceInterval="DebounceInterval"
-                          OnKeyUp="HandleKeyEvent"
-                          Label=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]/>
-            @if (ElementMode != ElementMode.Story)
-            {
-                <div class="flex flex-row justify-between py-6 gap-2">
-                    <div class="flex-initial items-center gap-2">
-                        <MudText
-                            Typo="Typo.caption">
-                            @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Points.Text"]
-                        </MudText>
-                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                         Min="1"
-                                         Max="1000"
-                                         For="@(() => FormModel.Points)"
-                                         DebounceInterval="DebounceInterval"
-                                         OnKeyUp="HandleKeyEvent"
-                                         Variant="Variant.Outlined"
-                                         Margin="Margin.Dense"/>
-                    </div>
-
-                    <MudDivider Style="border-style: dashed; border-color: rgb(230,230,230)" Vertical="true"
-                                FlexItem="true">
-                    </MudDivider>
-
-                    <div class="flex-initial items-center gap-2">
-                        <MudText
-                            Typo="Typo.caption">
-                            @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
-                        </MudText>
-                        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                         Min="0"
-                                         Max="1000"
-                                         For="@(() => FormModel.Workload)"
-                                         DebounceInterval="DebounceInterval"
-                                         OnKeyUp="HandleKeyEvent"
-                                         Variant="Variant.Outlined"
-                                         Margin="Margin.Dense"/>
-                    </div>
-                </div>
-            }
-
-            @if (ElementMode == ElementMode.Normal)
-            {
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                           Immediate="false"
-                           Label="@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]"
-                           For="@(() => FormModel.Difficulty)"
-                           OnKeyUp="HandleKeyEvent"
-                           Variant="Variant.Outlined">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
-                        <div class="flex items-center gap-2">
-                            <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
-                            <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Easy"]</p>
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
-                        <div class="flex items-center gap-2">
-                            <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
-                            <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Medium"]</p>
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
-                        <div class="flex items-center gap-2">
-                            <MudIcon Class="drop-shadow" Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
-                            <p class="pt-1">@Localizer["CreateElementForm.Difficulty.Hard"]</p>
-                        </div>
-                    </MudSelectItem>
-                    <MudSelectItem
-                        Value="@(LearningElementDifficultyEnum.None)">
-                        @Localizer["CreateElementForm.Difficulty.None"]
-                    </MudSelectItem>
-                </MudSelect>
-            }
-        </div>
-    </Collapsable>
-</div>
-
-@switch (ElementMode)
-{
-    case ElementMode.Normal:
-        <div class="px-4">
-            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] InitiallyCollapsed="false">
-                <p class="text-xs pl-6">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
-                @if (!WorldPresenter.GetAllContent().Any())
-                {
-                    <NoContentWarning For="@(() => FormModel.LearningContent!)"/>
-                }
-                else
-                {
-                    <TableSelect
-                        T="ILearningContentFormModel"
-                        @bind-Value="FormDataContainer.FormModel.LearningContent"
-                        For="@(() => FormModel.LearningContent!)"
-                        Elements="WorldPresenter.GetAllContent().Select(vm => Mapper.Map<ILearningContentFormModel>(vm))"
-                        OnKeyUp="HandleKeyEvent"
-                        FilterFuncSearchableStrings="ILearningContentFormModel.GetSearchableStrings">
-                        <HeaderContent>
-                            <MudTh></MudTh>
-                            <MudTh Class="p-0">@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Name"]</MudTh>
-                            <MudTh Class="p-0">@Localizer["CreateElementForm.Fields.Collapse.LearningContent.Type"]</MudTh>
-                        </HeaderContent>
-                        <RowTemplate>
-                            <MudTd Class="p-0">
-                                <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
-                                               OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"
-                                               Class="show-content-preview py-2"/>
-                            </MudTd>
-                            <MudTd Class="p-0" DataLabel="Name">
-                                <MudTooltip Text="@context.Name"
-                                            Arrow="true"
-                                            Placement="Placement.Right"
-                                            Class="bg-adlergrey-200 shadow-xl text-adlergrey-800"
-                                            Duration="Double.Epsilon">
-                                    <p class="pt-2 cursor-pointer max-w-[5rem] truncate text-ellipsis overflow-hidden">@context.Name</p>
-                                </MudTooltip>
-                            </MudTd>
-                            <MudTd Class="py-0 pl-0 cursor-default" DataLabel="Type">
-                                @if (context is FileContentFormModel fileContentContext)
-                                {
-                                    @fileContentContext.Type
-                                }
-                                else
-                                {
-                                    <span>Link</span>
-                                }
-                            </MudTd>
-                        </RowTemplate>
-                    </TableSelect>
-                    @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
+    <Fields>
+        <div
+            class="pl-4 2xl:pl-4 2xl:pr-4 overflow-y-scroll top-28 h-[75%] 2xl:h-[85%] absolute flex flex-col w-[100%] mt-2 border-t border-dotted">
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.General.Title"]
+                         InitiallyCollapsed="false">
+                <div class="rounded-lg w-4/4 px-6">
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                                  For="@(() => FormModel.Name)"
+                                  @ref="_nameField"
+                                  DebounceInterval="DebounceInterval"
+                                  OnKeyUp="HandleKeyEvent"
+                                  Placeholder=@Localizer["CreateElementForm.Fields.Collapsable.General.Field.Name.Text"]
+                                  Margin="Margin.Normal"
+                                  Typo="Typo.body1"/>
+                    @if (ElementMode == ElementMode.Normal)
                     {
-                        <div class="flex flex-col">
-                            @* PrimitiveH5P is not yet implemented in Backend, so this option should not yet be selectable in the authoring tool. *@
-                            <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)" Disabled="true">
-                                @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
-                                <MudTooltip>
-                                    <ChildContent>
-                                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info"
-                                                       Class="text-adlergrey-200 hover:text-adlerdarkblue"
-                                                       OnClick="ShowH5PInfoDialog"/>
-                                    </ChildContent>
-                                    <TooltipContent>
-                                        @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
-                                    </TooltipContent>
-                                </MudTooltip>
-                            </MudCheckBox>
+                        <div class="flex items-center justify-center gap-2 bg-adlerbggradientto rounded my-1 py-1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudText
+                                    Color="@(!IsRequired ? Color.Info : Color.Dark)">@Localizer["CreateElementForm.Fields.Collapsable.Element.Mandatory"]</MudText>
+
+                                <MudSwitch @bind-Value="IsRequired"
+                                           Color="Color.Info"
+                                           UnCheckedColor="Color.Info"
+                                           Style="margin-right: 0; margin-left: 2px"/>
+
+                                <MudText
+                                    Color="@(IsRequired ? Color.Info : Color.Dark)">@Localizer["CreateElementForm.Fields.Collapsable.Element.Optional"]</MudText>
+                            </MudStack>
+                        </div>
+
+                        <div class="flex flex-row gap-2 w-full">
+                            <div class="flex-initial items-center gap-1">
+                                <p class="text-xs pt-2">
+                                    @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
+                                </p>
+                                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                                 Min="0"
+                                                 Max="1000"
+                                                 For="@(() => FormModel.Workload)"
+                                                 DebounceInterval="DebounceInterval"
+                                                 OnKeyUp="HandleKeyEvent"
+                                                 Variant="Variant.Outlined"
+                                                 Margin="Margin.Dense"/>
+                            </div>
+
+                            <div class="flex-initial items-center gap-1 w-full">
+                                <p class="text-xs pt-2">
+                                    @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text"]
+                                </p>
+                                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                                           Immediate="false"
+                                           For="@(() => FormModel.Difficulty)"
+                                           OnKeyUp="HandleKeyEvent"
+                                           Variant="Variant.Outlined"
+                                           Margin="Margin.Dense">
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonEasy"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Easy"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonMedium"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Medium"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)">
+                                        <div class="flex items-center gap-2">
+                                            <MudIcon Class="drop-shadow w-4 h-4"
+                                                     Icon="@CustomIcons.DifficultyPolygonHard"></MudIcon>
+                                            <p>@Localizer["CreateElementForm.Difficulty.Hard"]</p>
+                                        </div>
+                                    </MudSelectItem>
+                                    <MudSelectItem
+                                        Value="@(LearningElementDifficultyEnum.None)">
+                                        @Localizer["CreateElementForm.Difficulty.None"]
+                                    </MudSelectItem>
+                                </MudSelect>
+                            </div>
                         </div>
                     }
-                }
-            </Collapsable>
-        </div>
-        break;
-    case ElementMode.Adaptivity:
-        <div class="px-4">
-            <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"] InitiallyCollapsed="false">
-                <p class="text-xs pl-6">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
-                <div class="flex flex-col items-center justify-center">
-                    <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard" OnClick="OpenAdaptivityContentDialog">
-                        @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
-                    </MudButton>
+
+                    @if (ElementMode == ElementMode.Adaptivity)
+                    {
+                        <div class="flex-initial items-center gap-1">
+                            <p class="text-xs pt-2">
+                                @Localizer["CreateElementForm.Fields.Collapsable.General.Field.Workload.Text"]
+                            </p>
+                            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                             Min="0"
+                                             Max="1000"
+                                             For="@(() => FormModel.Workload)"
+                                             DebounceInterval="DebounceInterval"
+                                             OnKeyUp="HandleKeyEvent"
+                                             Variant="Variant.Outlined"
+                                             Margin="Margin.Dense"/>
+                        </div>
+                    }
                 </div>
             </Collapsable>
-        </div>
-        break;
-    case ElementMode.Story:
-        <div class="px-4">
-            <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]" InitiallyCollapsed="false">
-                <PseudoFormFieldGrouping
-                    For="() => FormModel.LearningContent"
-                    @ref="_pseudoGroupStoryContent">
 
-                    <div class="flex flex-row items-center gap-1 py-2">
-                        <p class="text-xs pl-6">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]</p>
-                        <MudTooltip Placement="Placement.Right"
-                                    Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
-                            <TooltipContent>
-                                <MudText
-                                    Class="text-xs">
-                                    @((MarkupString)Localizer["CreateElementForm.Story.Tooltip"].ToString())
-                                </MudText>
-                            </TooltipContent>
-                            <ChildContent>
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
-                                         Class="text-adlergrey hover:text-adlerdarkblue">
-                                </MudIcon>
-                            </ChildContent>
-                        </MudTooltip>
-                    </div>
+            @switch (ElementMode)
+            {
+                case ElementMode.Normal:
 
-                    @if (StoryContentModel != null)
-                    {
-                        @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
+                    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"]
+                                 InitiallyCollapsed="false">
+                        <p class="text-xs px-6 pt-3">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text"]</p>
+                        @if (!WorldPresenter.GetAllContent().Any())
                         {
-                            <p class="text-xs pl-4 pt-4 font-bold text-adlertextgrey">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
-                            var x = i;
-                            <div class="flex flex-col">
-                                <div class="flex flex-row items-center">
-                                    <MudTextField T="string"
-                                                  Variant="Variant.Outlined" Lines="5"
-                                                  @bind-Value="@(StoryContentModel.StoryText[x])"
-                                                  DebounceInterval="DebounceInterval"
-                                                  Class="pl-4"/>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                                   OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
-                                                   Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
-                                                   Class="w-8 h-8">
+                            <NoContentWarning ContentFilesChanged="OnFilesChanged"
+                                              For="@(() => FormModel.LearningContent!)"/>
+                        }
+                        else
+                        {
+                            <div class="flex flex-col gap-1 px-6">
+                                <MudText
+                                    Class="text-xs font-bold pt-1">@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial"]</MudText>
+                                <div
+                                    class="flex items-center cursor-default rounded border border-adlergrey-200 bg-adlerdeactivated">
+                                    <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                                   Disabled="@(FormDataContainer.FormModel.LearningContent == null)"
+                                                   OnClick="() => PresentationLogic.ShowLearningContentAsync(FormDataContainer.FormModel.LearningContent!)"
+                                                   Class="show-content-preview py-2"
+                                                   title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Preview"]"/>
+
+                                    <MudTextField
+                                        T="ILearningContentFormModel"
+                                        @ref="_contentTextField"
+                                        @bind-Value="FormDataContainer.FormModel.LearningContent"
+                                        @bind-Text="@LearningContentName"
+                                        Variant="Variant.Text"
+                                        For="@(() => FormModel.LearningContent!)"
+                                        ReadOnly="true"
+                                        Disabled="true"
+                                        Underline="false"
+                                        Style="color: rgb(69,160,229); margin-top: 6px;"
+                                        Margin="Margin.Dense"
+                                        Class="w-96">
+                                    </MudTextField>
+
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                   OnClick="OpenLearningContentDialog"
+                                                   title="@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Edit"]">
                                     </MudIconButton>
                                 </div>
-                                <p class="pl-4 text-adlergrey-500">@($"{StoryContentModel.StoryText[x].Length}/550")</p>
                             </div>
+
+                            @if (FormModel.LearningContent is FileContentFormModel { Type: "h5p" } fc)
+                            {
+                                <div class="flex flex-col">
+                                    <MudCheckBox @bind-Value="@(fc.PrimitiveH5P)">
+                                        @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Text"]
+                                        <MudTooltip Class="bg-adlerdarkblue-200 shadow-xl">
+                                            <ChildContent>
+                                                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                                               Class="text-adlergrey-200 hover:text-adlerdarkblue"
+                                                               OnClick="ShowH5PInfoDialog"/>
+                                            </ChildContent>
+                                            <TooltipContent>
+                                                @Localizer["CreateElementForm.Fields.Collapsable.LearningContent.PrimitiveH5P.Tooltip.Text"]
+                                            </TooltipContent>
+                                        </MudTooltip>
+                                    </MudCheckBox>
+                                </div>
+                            }
                         }
+                    </Collapsable>
 
-                        <div class="flex justify-center items-center">
-                            <MudIconButton Icon="@Icons.Material.Filled.Add"
-                                           Class="w-9 h-9 add-story-block-button"
-                                           OnClick="@(() => StoryContentModel.StoryText.Add(""))"
-                                           Title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]>
-                            </MudIconButton>
+                    break;
+                case ElementMode.Adaptivity:
+                    <Collapsable Title=@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Title"]
+                                 InitiallyCollapsed="false">
+                        <p class="text-xs px-6 pt-3">@Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Text"]</p>
+                        <div class="flex flex-col items-center justify-center">
+                            <MudButton Class="w-44 2xl:w-3/5 add-tasks btn-standard"
+                                       OnClick="OpenAdaptivityContentDialog">
+                                @Localizer["CreateAdaptivityElementForm.Fields.Collapsable.Tasks.Button.Text"]
+                            </MudButton>
                         </div>
+                    </Collapsable>
+
+                    break;
+                case ElementMode.Story:
+                    <Collapsable Title="@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.Title"]"
+                                 InitiallyCollapsed="false">
+                        <PseudoFormFieldGrouping
+                            For="() => FormModel.LearningContent"
+                            @ref="_pseudoGroupStoryContent">
+
+                            <div class="flex flex-row items-center gap-1 py-2">
+                                <p class="text-xs px-6 pt-1 cursor-default">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Text"]
+                                    <MudTooltip Placement="Placement.Right"
+                                                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed">
+                                        <TooltipContent>
+                                            <MudText
+                                                Class="text-xs">
+                                                @((MarkupString)Localizer["CreateElementForm.Story.Tooltip"].ToString())
+                                            </MudText>
+                                        </TooltipContent>
+                                        <ChildContent>
+                                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                                     Class="text-adlergrey hover:text-adlerdarkblue">
+                                            </MudIcon>
+                                        </ChildContent>
+                                    </MudTooltip>
+                                </p>
+                            </div>
+
+                            @if (StoryContentModel != null)
+                            {
+                                @for (var i = 0; i < StoryContentModel.StoryText.Count; i++)
+                                {
+                                    <p class="text-xs px-6 pt-2 font-bold cursor-default">@Localizer["CreateStoryElementForm.Fields.Collapsable.StoryText.Slide"]@(i + 1)</p>
+                                    var x = i;
+                                    <div class="flex flex-col">
+                                        <div class="flex flex-row items-center px-6">
+                                            <MudTextField T="string"
+                                                          Variant="Variant.Outlined" Lines="5"
+                                                          @bind-Value="@(StoryContentModel.StoryText[x])"
+                                                          DebounceInterval="DebounceInterval"/>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                           OnClick="@(() => StoryContentModel.StoryText.RemoveAt(x))"
+                                                           title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.DeleteStory"]
+                                                           Size="Size.Small">
+                                            </MudIconButton>
+                                        </div>
+                                        <p class="px-6 text-adlergrey-500 cursor-default">@($"{StoryContentModel.StoryText[x].Length}/400") @Localizer["CreateStoryElementForm.Collapsable.Story.Length"]</p>
+                                    </div>
+                                }
+
+                                <div class="flex justify-center items-center">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Add"
+                                                   Class="add-story-block-button p-2"
+                                                   OnClick="@(() => StoryContentModel.StoryText.Add(""))"
+                                                   title=@Localizer["CreateStoryElementForm.Fields.Collapsable.Story.AddStory"]
+                                                   Size="Size.Small">
+                                    </MudIconButton>
+                                </div>
+                            }
+                        </PseudoFormFieldGrouping>
+                    </Collapsable>
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ElementMode));
+            }
+
+            <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"]
+                         InitiallyCollapsed="true">
+                <div class="rounded-lg w-4/4 px-6 pt-3">
+                    <div
+                        class="@(ElementMode != ElementMode.Adaptivity ? "overflow-y-scroll h-52 border-adlergrey-200 border rounded" : "")">
+                        <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                                                For="@(() => FormModel.ElementModel)"
+                                                Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
+                                                Elements="GetElementModels()">
+                        </ElementModelGridSelect>
+                    </div>
+
+                    @if (ElementMode == ElementMode.Story && StoryContentModel != null)
+                    {
+                        <p class="text-xs font-bold pt-3 cursor-default">
+                            @Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title"]
+                        </p>
+                        <MudTextField @bind-Value="StoryContentModel.NpcName"
+                                      For="@(() => StoryContentModel.NpcName)"
+                                      Variant="Variant.Outlined"
+                                      DebounceInterval="DebounceInterval"
+                                      Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text"]"
+                                      Class="pb-2 mt-0"/>
+                        <NpcMoodSelect @bind-Value="@(StoryContentModel.NpcMood)"
+                                       ElementModel="FormDataContainer.FormModel.ElementModel"
+                                       Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcMood.Text"]">
+                        </NpcMoodSelect>
                     }
-                </PseudoFormFieldGrouping>
+                </div>
             </Collapsable>
+
+            @if (ElementMode != ElementMode.Story)
+            {
+                <Collapsable
+                    Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"] InitiallyCollapsed="true">
+                    <div class="rounded-lg w-4/4 px-6">
+                        <p class="text-xs pt-3">
+                            @Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]
+                        </p>
+                        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                                      For="@(() => FormModel.Goals)"
+                                      Lines="3"
+                                      Variant="Variant.Outlined"
+                                      DebounceInterval="DebounceInterval"/>
+                    </div>
+                </Collapsable>
+
+                <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.Description.Title"]
+                             InitiallyCollapsed="true">
+                    <div class="rounded-lg w-4/4 px-6">
+                        <p class="text-xs pt-3">
+                            @Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]
+                        </p>
+                        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                                      For="@(() => FormModel.Description)"
+                                      Lines="3"
+                                      Variant="Variant.Outlined"
+                                      DebounceInterval="DebounceInterval"
+                                      Class="pb-4"/>
+                    </div>
+                </Collapsable>
+            }
         </div>
-        break;
-    default:
-        throw new ArgumentOutOfRangeException(nameof(ElementMode));
-}
+    </Fields>
 
-<div class="px-4">
-    <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"] InitiallyCollapsed="true">
-        <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-            <ElementModelGridSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
-                                    For="@(() => FormModel.ElementModel)"
-                                    Label="@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]"
-                                    Elements="GetElementModels()">
-            </ElementModelGridSelect>
+    <FooterButtons>
+        <div
+            class="flex flex-row justify-end absolute left-0 bottom-0 border-t-2 border-adlergrey-100 bg-adlerbgbright w-full">
+            <DefaultSubmitButton/>
         </div>
-    </Collapsable>
-</div>
-
-@if (ElementMode != ElementMode.Story)
-{
-    <div class="px-4">
-        <Collapsable
-            Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"]  InitiallyCollapsed="true">
-            <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                <MudText
-                    Typo="Typo.caption">
-                    @Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]
-                </MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                              For="@(() => FormModel.Goals)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-2 mt-0"/>
-            </div>
-        </Collapsable>
-    </div>
-
-    <div class="px-4">
-        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.Description.Title"] InitiallyCollapsed="true">
-            <div class="rounded-lg w-4/4 px-2 2xl:px-4 pb-2">
-                <MudText
-                    Typo="Typo.caption">
-                    @Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]
-                </MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                              For="@(() => FormModel.Description)"
-                              Lines="3"
-                              Variant="Variant.Outlined"
-                              DebounceInterval="DebounceInterval"
-                              Class="pb-4 mt-0"/>
-            </div>
-        </Collapsable>
-    </div>
-}
-</Fields>
-
-<FooterButtons>
-    <DefaultSubmitButton/>
-</FooterButtons>
-
+    </FooterButtons>
 </BaseForm>
 
 @code {
@@ -384,6 +390,13 @@
 
     private BaseForm<LearningElementFormModel, LearningElement> _form = null!;
     private MudTextField<string> _nameField = null!;
+    private MudTextField<ILearningContentFormModel>? _contentTextField;
+
+    public bool IsRequired
+    {
+        get => FormModel.Points == 0;
+        set => FormModel.Points = value ? 0 : 1;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -401,6 +414,12 @@
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
+        FormModel.Points = model.LearningContent switch
+        {
+            AdaptivityContentFormModel adaptivityContentFormModel => adaptivityContentFormModel.Tasks.Any(x => x.MinimumRequiredDifficulty != null) ? 1 : 0,
+            _ => FormModel.Points
+        };
+
         if (SelectedViewModelsProvider.ActiveElementSlotInSpace != -1 && ElementMode is not ElementMode.Story)
             SpacePresenter.CreateLearningElementInSlotFromFormModel(model);
         else if (SelectedViewModelsProvider.ActiveStorySlotInSpace != -1 && ElementMode is ElementMode.Story)
@@ -416,13 +435,13 @@
         {
             case ElementMode.Adaptivity:
                 FormDataContainer.FormModel.LearningContent = new AdaptivityContentFormModel();
-                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Adaptivity, theme: WorldPresenter.LearningWorldVm?.WorldTheme).First();
                 break;
             case ElementMode.Story:
                 var storyContentFormModel = new StoryContentFormModel();
                 storyContentFormModel.StoryText.Add("");
                 FormDataContainer.FormModel.LearningContent = storyContentFormModel;
-                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: SpacePresenter.LearningSpaceVm?.Theme).First();
+                FormDataContainer.FormModel.ElementModel = ElementModelHandler.GetElementModels(ElementModelContentType.Story, theme: WorldPresenter.LearningWorldVm?.WorldTheme).First();
                 break;
             case ElementMode.Normal:
                 if (SelectedViewModelsProvider.LearningContent == null) return;
@@ -438,7 +457,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true,
             CloseButton = true,
@@ -451,6 +470,42 @@
         _ = await dialog.Result;
         StateHasChanged();
     }
+
+    private async void OpenLearningContentDialog()
+    {
+        var options = new DialogOptions
+        {
+            BackdropClick = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+        };
+
+        var parameters = new DialogParameters
+        {
+            { nameof(LearningContentDialog.LearningContent), FormDataContainer.FormModel.LearningContent }
+        };
+        var dialog = await DialogService.ShowAsync<LearningContentDialog>(Localizer["CreateElementForm.LearningMaterial.Dialog.Title"], parameters, options);
+        _ = await dialog.Result;
+        if (dialog.Result.Result == null) return;
+        if (dialog.Result.Result.Canceled)
+            return;
+
+        if (!Equals(FormModel.LearningContent, dialog.Result.Result.Data) && dialog.Result.Result.Data != null)
+        {
+            var dialogResult = (ILearningContentFormModel)dialog.Result.Result.Data;
+            FormModel.LearningContent = dialogResult;
+            _contentTextField?.ResetValidation();
+        }
+
+        StateHasChanged();
+    }
+
+    private void OnFilesChanged()
+    {
+        StateHasChanged();
+    }
+
 
     private async Task HandleKeyEvent(KeyboardEventArgs arg)
     {
@@ -495,7 +550,7 @@
         };
         var fileType = elementModelContentType is ElementModelContentType.File ? ((FileContentFormModel)FormModel.LearningContent!).Type : "";
         return ElementModelHandler.GetElementModels(elementModelContentType, fileType,
-            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? space.Theme : null);
+            SelectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space ? WorldPresenter.LearningWorldVm?.WorldTheme : null);
     }
 
 
@@ -507,5 +562,14 @@
         };
         await DialogService.ShowAsync<GenericInfoDialog>("H5P Info", dialogParams);
     }
+
+
+    private string LearningContentName
+    {
+        get => FormDataContainer.FormModel.LearningContent?.Name ?? String.Empty;
+        set { }
+    }
+
+}
 
 }

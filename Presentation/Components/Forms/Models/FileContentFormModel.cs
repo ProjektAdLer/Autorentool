@@ -43,6 +43,8 @@ public class FileContentFormModel : IFileContentFormModel, IEquatable<FileConten
 
     public override int GetHashCode()
     {
+        // ReSharper disable NonReadonlyMemberInGetHashCode
         return HashCode.Combine(Name, Type, Filepath);
+        // ReSharper restore NonReadonlyMemberInGetHashCode
     }
 }

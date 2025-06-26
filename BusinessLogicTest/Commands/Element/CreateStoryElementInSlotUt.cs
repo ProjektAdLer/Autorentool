@@ -15,7 +15,7 @@ public class CreateStoryElementInSlotUt
     [Test]
     public void ElementConstructor_AllPropertiesSet()
     {
-        var (space, content) = GetEntitiesForTest();
+        var (space, _) = GetEntitiesForTest();
         var mappingAction = Substitute.For<Action<LearningSpace>>();
         var logger = Substitute.For<ILogger<CreateStoryElementInSlot>>();
         var learningElement = EntityProvider.GetLearningElement();

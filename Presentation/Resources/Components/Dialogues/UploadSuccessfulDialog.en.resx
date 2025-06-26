@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Dialog.UploadSuccessful.Text" xml:space="preserve">
-        <value>Upload of world with name {0} successful. Click one of the buttons below to get to the world in Moodle or 3D!</value>
+        <value>Upload of learning world with name &lt;b&gt;{0}&lt;/b&gt; successful. Click one of the buttons below to get to the learning world in Moodle or 3D.</value>
     </data>
     <data name="Button.Open3D.Text" xml:space="preserve">
         <value>Open in 3D</value>

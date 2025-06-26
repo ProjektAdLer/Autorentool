@@ -1,0 +1,120 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Enum.SpaceTheme.Suburb" xml:space="preserve">
+        <value>Suburb</value>
+    </data>
+    <data name="Enum.SpaceTheme.Arcade" xml:space="preserve">
+        <value>Arcade</value>
+    </data>
+    <data name="Enum.SpaceTheme.CampusAschaffenburg" xml:space="preserve">
+        <value>Campus Aschaffenburg</value>
+    </data>
+    <data name="Enum.SpaceTheme.CampusKempten" xml:space="preserve">
+        <value>Campus Kempten</value>
+    </data>
+    <data name="Enum.SpaceTheme.EatingArea" xml:space="preserve">
+        <value>Eating area</value>
+    </data>
+    <data name="Enum.SpaceTheme.FnE" xml:space="preserve">
+        <value>Science and Research</value>
+    </data>
+    <data name="Enum.SpaceTheme.LearningArea" xml:space="preserve">
+        <value>Learning area</value>
+    </data>
+    <data name="Enum.SpaceTheme.SocialArea" xml:space="preserve">
+        <value>Social activities</value>
+    </data>
+    <data name="Enum.SpaceTheme.TechnicalArea" xml:space="preserve">
+        <value>Technical infrastructure</value>
+    </data>
+    <data name="Enum.SpaceTheme.EatingArea.CampusAschaffenburg" xml:space="preserve">
+        <value>Mensa</value>
+    </data>
+    <data name="Enum.SpaceTheme.EatingArea.CampusKempten" xml:space="preserve">
+        <value>Mensa</value>
+    </data>
+    <data name="Enum.SpaceTheme.EatingArea.Company" xml:space="preserve">
+        <value>Canteen</value>
+    </data>
+    <data name="Enum.SpaceTheme.EatingArea.Suburb" xml:space="preserve">
+        <value>Restaurant</value>
+    </data>
+    <data name="Enum.SpaceTheme.LearningArea.CampusAschaffenburg" xml:space="preserve">
+        <value>Library</value>
+    </data>
+    <data name="Enum.SpaceTheme.LearningArea.CampusKempten" xml:space="preserve">
+        <value>Library</value>
+    </data>
+    <data name="Enum.SpaceTheme.LearningArea.Company" xml:space="preserve">
+        <value>Training centre</value>
+    </data>
+    <data name="Enum.SpaceTheme.LearningArea.Suburb" xml:space="preserve">
+        <value>Library</value>
+    </data>
+    <data name="Enum.SpaceTheme.FnE.CampusAschaffenburg" xml:space="preserve">
+        <value>Research laboratory</value>
+    </data>
+    <data name="Enum.SpaceTheme.FnE.CampusKempten" xml:space="preserve">
+        <value>Research laboratory</value>
+    </data>
+    <data name="Enum.SpaceTheme.FnE.Company" xml:space="preserve">
+        <value> R&amp;D department</value>
+    </data>
+    <data name="Enum.SpaceTheme.FnE.Suburb" xml:space="preserve">
+        <value>Innovation centre</value>
+    </data>
+    <data name="Enum.SpaceTheme.SocialArea.CampusAschaffenburg" xml:space="preserve">
+        <value>Student club</value>
+    </data>
+    <data name="Enum.SpaceTheme.SocialArea.CampusKempten" xml:space="preserve">
+        <value>Student club</value>
+    </data>
+    <data name="Enum.SpaceTheme.SocialArea.Company" xml:space="preserve">
+        <value>Break room</value>
+    </data>
+    <data name="Enum.SpaceTheme.SocialArea.Suburb" xml:space="preserve">
+        <value>Community center</value>
+    </data>
+    <data name="Enum.SpaceTheme.TechnicalArea.CampusAschaffenburg" xml:space="preserve">
+        <value>Computer centre</value>
+    </data>
+    <data name="Enum.SpaceTheme.TechnicalArea.CampusKempten" xml:space="preserve">
+        <value>Computer centre</value>
+    </data>
+    <data name="Enum.SpaceTheme.TechnicalArea.Company" xml:space="preserve">
+        <value>IT department</value>
+    </data>
+    <data name="Enum.SpaceTheme.TechnicalArea.Suburb" xml:space="preserve">
+        <value>IT room at city hall</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation" xml:space="preserve">
+        <value>Presentation</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.CampusAschaffenburg" xml:space="preserve">
+        <value>Auditorium</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.CampusKempten" xml:space="preserve">
+        <value>Auditorium</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.Company" xml:space="preserve">
+        <value>Conference room</value>
+    </data>
+    <data name="Enum.SpaceTheme.Presentation.Suburb" xml:space="preserve">
+        <value>Community center</value>
+    </data>
+</root>

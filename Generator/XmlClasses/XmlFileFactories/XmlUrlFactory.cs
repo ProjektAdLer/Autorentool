@@ -33,7 +33,6 @@ public class XmlUrlFactory : IXmlUrlFactory
         IActivitiesGradeHistoryXmlGradeHistory? gradeHistory = null,
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
         IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
-        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
         ReadAtf = readAtf;
@@ -65,7 +64,6 @@ public class XmlUrlFactory : IXmlUrlFactory
 
         ActivitiesInforefXmlFileref = inforefXmlFileref ?? new ActivitiesInforefXmlFileref();
         ActivitiesInforefXmlGradeItem = inforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
-        ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef ?? new ActivitiesInforefXmlInforef();
     }
 
@@ -79,7 +77,6 @@ public class XmlUrlFactory : IXmlUrlFactory
     public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
     public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     public IReadAtf ReadAtf { get; }
 
@@ -127,11 +124,6 @@ public class XmlUrlFactory : IXmlUrlFactory
         CreateActivityFolder(UrlId);
 
         //file activities/label.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ??
-                                                  new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlActivityGradebook.GradeItems =
-            ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
-
         ActivitiesGradesXmlActivityGradebook.Serialize("url", UrlId);
 
         //file activities/url.../url.xml
@@ -159,7 +151,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesModuleXmlModule.SectionNumber = UrlParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = UrlId;
-        ActivitiesModuleXmlModule.Completion = "1";
+        ActivitiesModuleXmlModule.Completion = "2";
+        ActivitiesModuleXmlModule.CompletionView = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
         ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax =
             UrlPoints.ToString("F5", CultureInfo.InvariantCulture);
@@ -171,13 +164,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("url", UrlId);
 
         //file activities/label.../inforef.xml
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ??
-                                                     new ActivitiesInforefXmlGradeItem();
         ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ??
                                               new ActivitiesInforefXmlFileref();
-        ActivitiesInforefXmlInforef.GradeItemref =
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ??
-            new ActivitiesInforefXmlGradeItemref();
 
         ActivitiesInforefXmlInforef.Serialize("url", UrlId);
     }

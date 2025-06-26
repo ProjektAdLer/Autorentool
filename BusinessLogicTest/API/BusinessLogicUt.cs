@@ -9,13 +9,14 @@ using BusinessLogic.Entities.LearningContent.FileContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
-using Shared;
 using Shared.Command;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.API;
@@ -139,7 +140,7 @@ public class BusinessLogicUt
         var errorManager = Substitute.For<IErrorManager>();
         var dataAccess = Substitute.For<IDataAccess>();
         dataAccess.When(x => x.RemoveContent(Arg.Any<ILearningContent>()))
-            .Do(_ => throw new ArgumentOutOfRangeException("test"));
+            .Do(_ => throw new ArgumentOutOfRangeException());
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess, errorManager: errorManager);
         var content = new FileContent("foo", "bar", "baz");
 
@@ -518,7 +519,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_CallsDataAccess()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -532,7 +533,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE6]
     public void SaveLearningWorld_SerializationException_CallsErrorManager()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.When(x => x.SaveLearningWorldToFile(Arg.Any<LearningWorld>(), Arg.Any<string>()))
             .Do(_ => throw new SerializationException());
@@ -564,7 +565,7 @@ public class BusinessLogicUt
     // ANF-ID: [ASE2]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f", WorldTheme.CampusAschaffenburg);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 
@@ -592,160 +593,16 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void SaveLearningSpace_CallsDataAccess()
-    {
-        var learningSpace = new LearningSpace("fa", "f", 0, Theme.CampusAschaffenburg);
-        var mockDataAccess = Substitute.For<IDataAccess>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
-
-        mockDataAccess.Received().SaveLearningSpaceToFile(learningSpace, "foobar");
-    }
-
-    [Test]
-    public void SaveLearningSpace_SerializationException_CallsErrorManager()
-    {
-        var learningSpace = new LearningSpace("fa", "f", 0, Theme.CampusAschaffenburg);
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.When(x => x.SaveLearningSpaceToFile(Arg.Any<LearningSpace>(), Arg.Any<string>()))
-            .Do(_ => throw new SerializationException());
-        var mockErrorManager = Substitute.For<IErrorManager>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
-
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
-    public void LoadLearningSpace_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var space = EntityProvider.GetLearningSpace();
-        mockDataAccess.LoadLearningSpace("foobar").Returns(space);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadLearningSpace("foobar");
-
-        mockDataAccess.Received().LoadLearningSpace("foobar");
-    }
-
-    [Test]
-    public void LoadLearningSpace_ReturnsLearningSpace()
-    {
-        var learningSpace = new LearningSpace("fa", "f", 0, Theme.CampusAschaffenburg);
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var learningSpaceActual = systemUnderTest.LoadLearningSpace("foobar");
-
-        Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
-    }
-
-    [Test]
-    public void LoadLearningSpace_SerializationException_CallsErrorManager()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.When(x => x.LoadLearningSpace(Arg.Any<string>()))
-            .Do(_ => throw new SerializationException());
-        var mockErrorManager = Substitute.For<IErrorManager>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.LoadLearningSpace("foobar");
-
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
-    public void SaveLearningElement_CallsDataAccess()
-    {
-        var learningElement = EntityProvider.GetLearningElement();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.SaveLearningElement(learningElement, "foobar");
-
-        mockDataAccess.Received().SaveLearningElementToFile(learningElement, "foobar");
-    }
-
-    [Test]
-    public void SaveLearningElement_SerializationException_CallsErrorManager()
-    {
-        var learningElement = EntityProvider.GetLearningElement();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.When(x => x.SaveLearningElementToFile(Arg.Any<LearningElement>(), Arg.Any<string>()))
-            .Do(_ => throw new SerializationException());
-        var mockErrorManager = Substitute.For<IErrorManager>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.SaveLearningElement(learningElement, "foobar");
-
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
-    public void LoadLearningElement_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var element = EntityProvider.GetLearningElement();
-        mockDataAccess.LoadLearningElement("foobar").Returns(element);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadLearningElement("foobar");
-
-        mockDataAccess.Received().LoadLearningElement("foobar");
-    }
-
-    [Test]
-    public void LoadLearningElement_ReturnsLearningElement()
-    {
-        var learningElement = EntityProvider.GetLearningElement();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var learningElementActual = systemUnderTest.LoadLearningElement("foobar");
-
-        Assert.That(learningElementActual, Is.EqualTo(learningElement));
-    }
-
-    [Test]
-    public void LoadLearningElement_SerializationException_CallsErrorManager()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.When(x => x.LoadLearningElement(Arg.Any<string>()))
-            .Do(_ => throw new SerializationException());
-        var mockErrorManager = Substitute.For<IErrorManager>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.LoadLearningElement("foobar");
-
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
     // ANF-ID: [AWA0036]
-    public void LoadLearningContent_CallsDataAccess()
+    public  async Task LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningContentAsync("foobar");
+        await systemUnderTest.LoadLearningContentAsync("foobar");
 
-        mockDataAccess.Received().LoadLearningContentAsync("foobar");
+        await mockDataAccess.Received().LoadLearningContentAsync("foobar");
     }
 
     [Test]
@@ -775,143 +632,6 @@ public class BusinessLogicUt
         mockDataAccess.Received().GetSavedLearningWorldPaths();
     }
 
-
-    [Test]
-    public void LoadLearningWorldFromStream_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        var learningWorld = EntityProvider.GetLearningWorld();
-        mockDataAccess.LoadLearningWorld(stream).Returns(learningWorld);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadLearningWorld(stream);
-
-        mockDataAccess.Received().LoadLearningWorld(stream);
-    }
-
-    [Test]
-    public void LoadLearningWorldFromStream_ReturnsLearningWorld()
-    {
-        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
-        var stream = Substitute.For<Stream>();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningWorld(stream).Returns(learningWorld);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var learningWorldActual = systemUnderTest.LoadLearningWorld(stream);
-
-        Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
-    }
-
-    [Test]
-    public void LoadLearningWorldFromStream_SerializationException_CallsErrorManager()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        mockDataAccess.When(x => x.LoadLearningWorld(Arg.Any<Stream>()))
-            .Do(_ => { throw new SerializationException(); });
-
-        var mockErrorManager = Substitute.For<IErrorManager>();
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.LoadLearningWorld(stream);
-
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
-    public void LoadLearningSpaceFromStream_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        var space = EntityProvider.GetLearningSpace();
-        mockDataAccess.LoadLearningSpace(stream).Returns(space);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadLearningSpace(stream);
-
-        mockDataAccess.Received().LoadLearningSpace(stream);
-    }
-
-    [Test]
-    public void LoadLearningSpaceFromStream_SerializationException_CallsErrorManager()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        mockDataAccess.When(x => x.LoadLearningSpace(Arg.Any<Stream>()))
-            .Do(_ => { throw new SerializationException(); });
-
-        var mockErrorManager = Substitute.For<IErrorManager>();
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.LoadLearningSpace(stream);
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
-    [Test]
-    public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
-    {
-        var learningSpace = new LearningSpace("fa", "f", 0, Theme.CampusAschaffenburg);
-        var stream = Substitute.For<Stream>();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var learningSpaceActual = systemUnderTest.LoadLearningSpace(stream);
-
-        Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
-    }
-
-    [Test]
-    public void LoadLearningElementFromStream_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        var element = EntityProvider.GetLearningElement();
-        mockDataAccess.LoadLearningElement(stream).Returns(element);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadLearningElement(stream);
-
-        mockDataAccess.Received().LoadLearningElement(stream);
-    }
-
-    [Test]
-    public void LoadLearningElementFromStream_ReturnsLearningElement()
-    {
-        var learningElement = EntityProvider.GetLearningElement();
-        var stream = Substitute.For<Stream>();
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningElement(stream).Returns(learningElement);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var learningElementActual = systemUnderTest.LoadLearningElement(stream);
-
-        Assert.That(learningElementActual, Is.EqualTo(learningElement));
-    }
-
-    [Test]
-    public void LoadLearningElementFromStream_SerializationException_CallsErrorManager()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
-        mockDataAccess.When(x => x.LoadLearningElement(Arg.Any<Stream>()))
-            .Do(_ => { throw new SerializationException(); });
-
-        var mockErrorManager = Substitute.For<IErrorManager>();
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, errorManager: mockErrorManager);
-
-        systemUnderTest.LoadLearningElement(stream);
-        mockErrorManager.Received().LogAndRethrowError(Arg.Any<SerializationException>());
-    }
-
     [Test]
     // ANF-ID: [AWA0036]
     public async Task LoadLearningContentFromStream_CallsDataAccess()
@@ -923,7 +643,7 @@ public class BusinessLogicUt
 
         await systemUnderTest.LoadLearningContentAsync("filename.extension", stream);
 
-        mockDataAccess.Received().LoadLearningContentAsync("filename.extension", stream);
+        await mockDataAccess.Received().LoadLearningContentAsync("filename.extension", stream);
     }
 
     [Test]
@@ -964,9 +684,9 @@ public class BusinessLogicUt
         var dataAccess = Substitute.For<IDataAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
 
-        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz", out var iterations);
+        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz", out _);
 
-        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out iterations);
+        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz", out _);
     }
 
     [Test]
@@ -1072,20 +792,20 @@ public class BusinessLogicUt
 
     [Test]
     // ANF-ID: [AHO022]
-    public void UploadLearningWorldToBackend_CallsWorldGenerator()
+    public  async Task UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
         const string filepath = "filepath";
         var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
 
-        systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
+        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath);
 
         worldGenerator.Received().ExtractAtfFromBackup(filepath);
     }
 
     [Test]
     // ANF-ID: [AHO022]
-    public void UploadLearningWorldToBackend_CallsBackendAccess()
+    public  async Task UploadLearningWorldToBackend_CallsBackendAccess()
     {
         const string filepath = "filepath";
         const string atfPath = "atfPath";
@@ -1099,9 +819,9 @@ public class BusinessLogicUt
         var mockProgress = Substitute.For<IProgress<int>>();
         mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
 
-        systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
+        await systemUnderTest.UploadLearningWorldToBackendAsync(filepath, mockProgress);
 
-        backendAccess.Received()
+        await backendAccess.Received()
             .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
     }
 
@@ -1227,6 +947,42 @@ public class BusinessLogicUt
 
         errorManager.Received().LogAndRethrowBackendAccessError(Arg.Any<HttpRequestException>());
     }
+    
+    // ANF-ID: [ASN0001]
+    [Test]
+    public void ValidateLearningWorldStructureForExport_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForExport(world);
+
+        mockValidator.Received().ValidateForExport(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
+    
+    // ANF-ID: [AHO22]
+    [Test]
+    public void ValidateLearningWorldStructureForGeneration_CallsValidator()
+    {
+        var mockValidator = Substitute.For<ILearningWorldStructureValidator>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(learningWorldStructureValidator: mockValidator, fakeDataAccess: mockDataAccess);
+        var world = EntityProvider.GetLearningWorld();
+        var learningContentList = new List<ILearningContent>(){new FileContent("file", "txt", "content")};
+        mockDataAccess.GetAllContent().Returns(learningContentList);
+        
+        systemUnderTest.ValidateLearningWorldForGeneration(world);
+
+        mockValidator.Received().ValidateForGeneration(world, Arg.Is<List<ILearningContent>>(list =>
+            list.Count == learningContentList.Count &&
+            list[0] == learningContentList[0])); 
+    }
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IApplicationConfiguration? fakeConfiguration = null,
@@ -1235,7 +991,8 @@ public class BusinessLogicUt
         ICommandStateManager? commandStateManager = null,
         IBackendAccess? apiAccess = null,
         IErrorManager? errorManager = null,
-        ILogger<BusinessLogic.API.BusinessLogic>? logger = null)
+        ILogger<BusinessLogic.API.BusinessLogic>? logger = null,
+        ILearningWorldStructureValidator? learningWorldStructureValidator = null)
     {
         fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
@@ -1244,8 +1001,9 @@ public class BusinessLogicUt
         apiAccess ??= Substitute.For<IBackendAccess>();
         errorManager ??= Substitute.For<IErrorManager>();
         logger ??= Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
+        learningWorldStructureValidator ??= Substitute.For<ILearningWorldStructureValidator>();
 
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
-            commandStateManager, apiAccess, errorManager, logger);
+            commandStateManager, apiAccess, errorManager, logger, learningWorldStructureValidator);
     }
 }

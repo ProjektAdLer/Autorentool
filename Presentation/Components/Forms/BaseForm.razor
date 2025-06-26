@@ -5,7 +5,7 @@
 @implements IBaseForm
 
 <MudFocusTrap DefaultFocus="DefaultFocus.None">
-    <MudCardActions Class="flex flex-col justify-center items-center p-0">
+    <MudCardActions>
         <MudButtonGroup OverrideStyles="false">
             <CascadingValue Value="this">
                 @HeaderButtons
@@ -24,11 +24,11 @@
             }
         </MudCardContent>
     </MudForm>
-
-    <MudCardActions Class="flex justify-end">
+    
+    <MudCardActions Class="flex items-end justify-end py-1">
         <MudButtonGroup OverrideStyles="false">
             <CascadingValue Value="this">
-                @FooterButtons
+                    @FooterButtons
             </CascadingValue>
         </MudButtonGroup>
     </MudCardActions>
@@ -66,8 +66,10 @@
 
     internal string? SubmitErrorMessage { get; set; }
 
-    private MudForm? _form; public async Task FocusField(MudTextField<string> focusField)
+    private MudForm? _form; 
+    public async Task FocusField(MudTextField<string> focusField)
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (focusField != null)
         {
             await focusField.FocusAsync();

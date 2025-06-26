@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -15,8 +16,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _authors;
     private string _description;
     private string _enrolmentKey;
+    private string _storyStart;
+    private string _storyEnd;
     private string _evaluationLink;
     private string _goals;
+    private WorldTheme _worldTheme;
     private string _language;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
@@ -41,8 +45,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = "";
         _description = "";
         _goals = "";
+        _worldTheme = default;
         _evaluationLink = "";
         _enrolmentKey = "";
+        _storyStart = "";
+        _storyEnd = "";
         _savePath = "";
         InternalUnsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
@@ -63,16 +70,20 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="evaluationLink">Link to the evaluation on completion.</param>
     /// <param name="enrolmentKey">Key for users to enrol in the learning world.</param>
+    /// <param name="storyStart">The story start of the learning world.</param>
+    /// <param name="storyEnd">The story end of the learning world.</param>
     /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
-    /// Should be used when loading a saved learnign world into the application.</param>
+    ///     Should be used when loading a saved learnign world into the application.</param>
     /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink, string enrolmentKey, string savePath = "", bool unsavedChanges = true,
+        string goals, WorldTheme worldTheme,
+        string evaluationLink, string enrolmentKey, string storyStart, string storyEnd, 
+        string savePath = "", bool unsavedChanges = true,
         List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null,
         List<ILearningPathWayViewModel>? learningPathWays = null,
@@ -86,8 +97,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = language;
         _description = description;
         _goals = goals;
+        _worldTheme = worldTheme;
         _evaluationLink = evaluationLink;
         _enrolmentKey = enrolmentKey;
+        _storyStart = storyStart;
+        _storyEnd = storyEnd;
         _savePath = savePath;
         InternalUnsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
@@ -157,6 +171,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public int Points =>
         LearningSpaces.Sum(space => space.Points);
 
+    public int NumberOfElements => 
+        LearningSpaces.Sum(space => space.NumberOfElements);
+    
+    public int NumberOfRequiredElements =>
+        LearningSpaces.Sum(space => space.NumberOfRequiredElements);
+
     public string Name
     {
         get => _name;
@@ -192,6 +212,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         get => _goals;
         set => SetField(ref _goals, value);
     }
+    
+    public WorldTheme WorldTheme
+    {
+        get => _worldTheme;
+        set => SetField(ref _worldTheme, value);
+    }
 
     public string EvaluationLink
     {
@@ -203,6 +229,18 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _enrolmentKey;
         set => SetField(ref _enrolmentKey, value);
+    }
+    
+    public string StoryStart
+    {
+        get => _storyStart;
+        set => SetField(ref _storyStart, value);
+    }
+    
+    public string StoryEnd
+    {
+        get => _storyEnd;
+        set => SetField(ref _storyEnd, value);
     }
 
     public string SavePath

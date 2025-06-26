@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Pathway;
@@ -18,7 +19,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)
@@ -94,7 +95,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY);
@@ -119,7 +120,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", 5, Theme.CampusAschaffenburg,
+        var space = new LearningSpace("a", "d", 5, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
             positionX: newPositionX,
             positionY: newPositionY)

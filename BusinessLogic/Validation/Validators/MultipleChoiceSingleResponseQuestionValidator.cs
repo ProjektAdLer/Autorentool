@@ -7,9 +7,8 @@ namespace BusinessLogic.Validation.Validators;
 [UsedImplicitly]
 public class MultipleChoiceSingleResponseQuestionValidator : AbstractValidator<MultipleChoiceSingleResponseQuestion>
 {
-    public MultipleChoiceSingleResponseQuestionValidator()
+    public MultipleChoiceSingleResponseQuestionValidator(MultipleChoiceQuestionValidator baseValidator)
     {
-        Include(new MultipleChoiceQuestionValidator());
-        // Validation for single response is solved by the radio group in the UI.
+        Include(baseValidator);
     }
 }

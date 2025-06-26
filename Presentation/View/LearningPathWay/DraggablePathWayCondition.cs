@@ -1,5 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
-using Presentation.Components.RightClickMenu;
+using Microsoft.Extensions.Localization;
 using Presentation.PresentationLogic.LearningPathway;
 using Shared;
 
@@ -7,6 +8,9 @@ namespace Presentation.View.LearningPathWay;
 
 public class DraggablePathWayCondition : DraggableObjectInPathWay
 {
+    protected override string ObjectInPathwayDeletionTitle =>
+        Localizer["DraggablePathWayCondition.Delete"].Value;
+
     protected override string ObjectName => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString().ToUpper();
 
     protected override string Text
@@ -27,7 +31,7 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
         }
     }
 
-    protected override string Title => "";
+    protected override string ObjectInPathwayTitle => "";
 
     protected override string ObjectStyleWhenSelected =>
         @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:1";
@@ -47,15 +51,21 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
                                         style=""fill:none;stroke:white;stroke-width:1""/>";
 
     protected override string DeleteObjectButtonShape =>
-        @"<text font-size=""14"" transform=""translate(65,11)"" font-weight=""bold"" fill=""gray"" style=""user-select:none; cursor: pointer"">x</text>";
+        @"<g transform=""translate(59,-1) scale(0.8,0.8)"">
+        <path d=""M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"" fill=""gray"" style=""user-select:none; cursor: pointer""/>
+    </g>";
+
+    protected override string DeleteObjectConfirmationDialogText => 
+        Localizer["DraggablePathWayCondition.DeleteConfirmationDialog.Text", 
+        Localizer["DraggablePathWayCondition." + ((PathWayConditionViewModel)ObjectInPathWay).Condition].Value].Value;
+    protected override string DeleteObjectConfirmationDialogTitle  => Localizer["DraggablePathWayCondition.Delete"].Value;
 
     [Parameter, EditorRequired] public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
+    
+    [Inject, AllowNull] internal IStringLocalizer<DraggablePathWayCondition> Localizer { get; set; }
 
-    protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
-    {
-        return new List<RightClickMenuEntry>
-        {
-            new("Delete", () => OnDeletePathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay)),
-        };
-    }
+    protected override string DeleteObjectConfirmationDialogSubmitButtonText =>
+        Localizer["DraggablePathWayCondition.DeleteObjectConfirmationDialog.SubmitButtonText"].Value;
+
+    protected override string SnackBarDeletionMessage => Localizer["DraggablePathWayCondition.SnackbarDeletionMessage"].Value;
 }

@@ -1,14 +1,13 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent
 @using Presentation.PresentationLogic.LearningContent.Story
 @implements IDisposable
 @implements IAsyncDisposable
-<MudCard Class="overflow-auto w-full max-h-[128rem]">
+<MudCard Class="relative w-full max-h-[128rem] shadow-none">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
         <CreateElementForm ElementMode="ElementMode"/>
@@ -53,7 +52,7 @@
     }
 
     /// <summary>
-    /// Evaluates whether the passed <see cref="ElementMode"/> is correct for the currently selected <see cref="LearningElement"/>.
+    /// Evaluates whether the passed <see cref="ElementMode"/> is correct for the currently selected <see cref="Presentation.PresentationLogic.LearningElement.LearningElementViewModel"/>.
     /// </summary>
     private bool IsCorrectContentTypeForSelectedElement()
     {

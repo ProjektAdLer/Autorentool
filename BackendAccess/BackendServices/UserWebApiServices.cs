@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Handlers;
 using System.Net.Sockets;
 using System.Security.Authentication;
+using System.Text;
 using System.Text.Json;
 using System.Web;
 using BackendAccess.BackendEntities;
@@ -51,15 +52,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
     {
-        var parameters = new Dictionary<string, string>
-        {
-            { "username", username },
-            { "password", password }
-        };
+        var body = new StringContent(JsonSerializer.Serialize(new { Username = username, Password = password }),
+            Encoding.UTF8, "application/json");
 
         try
         {
-            return await SendHttpGetRequestAsync<UserTokenBE>("Users/Login", parameters);
+            return await SendHttpPostRequestAsync<UserTokenBE>("Users/Login", new Dictionary<string, string>(), body);
         }
         catch (HttpRequestException e)
         {
@@ -109,10 +107,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
             return await SendHttpGetRequestAsync<UserInformationBE>("Users/UserData",
                 parameters);
         }
-        catch (HttpRequestException httpReqEx)
+        catch (BackendHttpRequestException httpReqEx)
         {
-            if (httpReqEx.Message == "The provided token is invalid")
+            if (httpReqEx.ErrorType == ErrorCodes.LmsTokenInvalid)
                 throw new BackendInvalidTokenException(httpReqEx.Message, httpReqEx);
+            if (httpReqEx.ErrorType == ErrorCodes.LmsError)
+                throw new BackendMoodleApiUnreachableException(httpReqEx.Message, httpReqEx);
             throw;
         }
     }
@@ -182,11 +182,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         {
             var responseHeaders = healthResponse.Headers;
             var redirect = responseHeaders.Location;
-            if (redirect is null) 
+            if (redirect is null)
                 throw new BackendException("Got 301 response from backend but no redirect URL");
             var newUri = redirect.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
             Configuration[IApplicationConfiguration.BackendBaseUrl] = newUri;
         }
+
         PreflightDomain = Configuration[IApplicationConfiguration.BackendBaseUrl];
     }
 
@@ -260,8 +261,12 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// Sends a POST request with the given headers and content to the given URL.
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
+    /// <param name="headers">A dictionary containing header key-value pairs to include in the request.</param>
+    /// <param name="content">The multipart form data content to be sent in the request body.</param>
+    /// <param name="progress">An optional progress reporter to track the progress of the HTTP request.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
-        MultipartFormDataContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
+        HttpContent content, IProgress<int>? progress = null, CancellationToken? cancellationToken = null)
     {
         cancellationToken ??= CancellationToken.None;
         var uri = new Uri(GetApiBaseUrl(), url);
@@ -305,6 +310,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
     /// </summary>
     /// <param name="url">Relative URL to request. May NOT start with a slash.</param>
     /// <param name="parameters">A dictionary of query parameters for the HTTP GET request, with each key-value pair representing one parameter.</param>
+    /// <param name="headers">Optional dictionary containing header key-value pairs to include in the request.</param>
     /// <exception cref="HttpRequestException">Request failed due to underlying issue such as connection issues or configuration.</exception>
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters,
         IDictionary<string, string>? headers = null)
@@ -379,7 +385,7 @@ public class UserWebApiServices : IUserWebApiServices, IDisposable
         var error = await apiResp.Content.ReadAsStringAsync();
 
         var problemDetails = TryRead<ErrorBE>(error);
-        throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
+        throw new BackendHttpRequestException(problemDetails.Detail, null, apiResp.StatusCode, problemDetails.Type);
     }
 
 

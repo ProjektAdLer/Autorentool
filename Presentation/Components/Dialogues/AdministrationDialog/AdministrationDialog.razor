@@ -1,0 +1,133 @@
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Localization
+<MudPaper id="LmsLoginDialog.Dialog.Paper" Height="450px" Style="overflow: hidden; position: relative;">
+    <div class="w-full flex flex-row items-center justify-between">
+        <MudText
+            Class="cursor-default p-4 text-adlerdarkblue font-bold text-lg cursor-default">@Localizer["DialogContent.Header"]</MudText>
+        <MudIconButton id="LmsLoginDialog.CloseDialog.Button" Icon="@Icons.Material.Filled.Close" DropShadow="false"
+                       OnClick="CloseDialog"
+                       ButtonType="ButtonType.Submit" Class="relative items-center flex justify-end button-submit"/>
+    </div>
+
+    <div class="flex flex-row gap-2 bg-adlerbgbright h-full">
+        <div class="flex">
+            <MudPaper Width="100px" Height="590px" Class="bg-adlergrey-100" Elevation="0">
+                <MudTabs Position="Position.Left" MinimumTabWidth="100px" Color="Color.Info"
+                         TabPanelClass="bg-adlergrey-100">
+                    <MudTabPanel title="@Localizer["DialogContent.LeftSidebar.AdLerServer"]" 
+                                 Icon="@_moodle"
+                                 OnClick="() => ChangeActiveSide(SideToShow.LoginDialog)"
+                                 Style="@GetTabPanelStyle(SideToShow.LoginDialog)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelOne.AdLerServer"]"/>
+                    <MudTabPanel Icon="@_help" 
+                                 OnClick="() => ChangeActiveSide(SideToShow.Help)"
+                                 Style="@GetTabPanelStyle(SideToShow.Help)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelTwo.Help"]"/>
+                    <MudTabPanel Icon="@Icons.Material.Filled.Language" 
+                                 Class="text-adlerdarkblue"
+                                 OnClick="() => ChangeActiveSide(SideToShow.Language)"
+                                 Style="@GetTabPanelStyle(SideToShow.Language)" 
+                                 ToolTip="@Localizer["AdministrationDialog.PanelThree.Language"]"/>
+                    <MudTabPanel Icon="@Icons.Material.Filled.Unarchive" 
+                                 Class="text-adlerdarkblue"
+                                 OnClick="() => ChangeActiveSide(SideToShow.Archive)"
+                                 Style="@GetTabPanelStyle(SideToShow.Archive)"
+                                 ToolTip="@Localizer["AdministrationDialog.PanelFour.Archive"]"/>
+                </MudTabs>
+            </MudPaper>
+        </div>
+        @switch (ActiveSide)
+        {
+            case SideToShow.LoginDialog:
+                <LmsLoginDialog/>
+                break;
+
+            case SideToShow.Help:
+                <HelpDialog/>
+                break;
+
+            case SideToShow.Language:
+                <LanguageDialog/>
+                break;
+
+            case SideToShow.Archive:
+                <ArchiveDialog/>
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    </div>
+</MudPaper>
+
+@code {
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    private IStringLocalizer<AdministrationDialog> Localizer { get; set; }
+
+    [Inject, AllowNull] internal IDialogService DialogService { get; set; }
+
+    private enum SideToShow
+    {
+        LoginDialog,
+        Help,
+        Language,
+        Archive
+    }
+
+    private SideToShow ActiveSide { get; set; }
+
+    private Task ChangeActiveSide(SideToShow sideToShow)
+    {
+        ActiveSide = sideToShow;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseDialog()
+    {
+        MudDialog?.Close();
+        return Task.CompletedTask;
+    }
+
+    private string GetTabPanelStyle(SideToShow sideToShow)
+    {
+        return sideToShow == ActiveSide ? "bg-adlerbggradientto" : "bg-adlergrey-100";
+    }
+
+    private readonly string _moodle = MoodleIcon;
+
+    const string MoodleIcon =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            <svg id=""uuid-641fc258-3a7a-40b9-819a-ba6601463eb6"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+                <path d=""m152.06,736.06l-135.43,4.15v-15.2s441.2-330.85,1307.28-397.99l5.53,13.82-315.07,229.4s86.52,60.15,124.37,113.32c0,0,24.89,7.2,49.75,41.46,0,0,80.72-117.85,362.06-107.79,281.34,10.06,420.73,153.85,436.68,378.64v677.13h-315.07l-2.76-655.02s-1.55-167.12-163.06-157.54c-161.52,9.58-154.77,157.54-154.77,157.54v655.02h-317.84v-655.02s-3.77-101.59-74.62-140.95c0,0-86.71,66.71-232.16,88.44,0,0-5.82,11.26-8.29,52.51-2.47,41.25,0,655.02,0,655.02h-317.84v-655.02s-.9-72.33,8.29-88.44c0,0-11.39-184.97-2.79-185.17,0,0-237.76-1.6-254.24-8.29"" style=""fill: #172d4d; fill-rule: evenodd; stroke-width: 0px;""/>
+                    </svg>";
+
+    private readonly string _help = HelpIcon;
+
+    const string HelpIcon =
+        @"<?xml version=""1.0"" encoding=""UTF-8""?>
+        <svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+            <defs>
+                <style>
+                    .cls-1 {
+                        fill: #172d4d;
+                    }
+
+                        .cls-1, .cls-2 {
+                            stroke-width: 0px;
+                        }
+
+                            .cls-2 {
+                                fill: #e9f2fa;
+                            }
+    </style>
+    </defs>
+    <circle class=""cls-1"" cx=""1000"" cy=""1002"" r=""979""/>
+    <path class=""cls-2"" d=""m544.25,614.03s161.83-383.69,652.2-240.32c2.7.79,5.38,1.68,8.02,2.66,193.68,72.11,231.78,155.81,262.57,236.47,1.08,2.83,2.06,5.7,2.92,8.6,110.36,376.9-370.36,480.48-375.65,635.86-.76,127.58-322.4,150.5-229.19-142.86,79.89-251.46,305.72-177.93,320.02-343.75,5.03-58.36,4.33-105.36-37.37-151.01-14.12-15.46-32.17-26.82-52.08-33.31-336.37-109.7-265.48,333.41-498.75,220.87-43.55-21.01-71.01-65.56-69.45-113.89,1.45-44.95,16.76-79.31,16.76-79.31Z""/>
+    <ellipse class=""cls-2"" cx=""986.74"" cy=""1572.63"" rx=""133.38"" ry=""134.89""/>
+    </svg>";
+
+
+}

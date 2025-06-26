@@ -1,10 +1,9 @@
-using BusinessLogic.API;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
-using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
@@ -33,7 +32,7 @@ public class SpaceCommandFactoryUt
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
         var learningOutcomeCollection = EntityProvider.GetLearningOutcomeCollection();
-        var theme = Theme.CampusAschaffenburg;
+        var theme = SpaceTheme.LearningArea;
         Action<LearningWorld> mappingAction = _ => { };
 
         // Act
@@ -115,7 +114,7 @@ public class SpaceCommandFactoryUt
         var description = "Updated description";
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
-        var theme = Theme.CampusAschaffenburg;
+        var theme = SpaceTheme.LearningArea;
         Action<ILearningSpace> mappingAction = _ => { };
 
         // Act
@@ -133,82 +132,6 @@ public class SpaceCommandFactoryUt
             Assert.That(resultCasted.RequiredPoints, Is.EqualTo(requiredPoints));
             Assert.That(resultCasted.Topic, Is.EqualTo(topic));
             Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
-    // ANF-ID: [AWA0022]
-    public void GetLoadCommand_WithLearningWorldAndFilePath_ReturnsLoadLearningSpaceCommand()
-    {
-        // Arrange
-        var learningWorld = EntityProvider.GetLearningWorld();
-        var filepath = "path/to/file";
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        Action<LearningWorld> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetLoadCommand(learningWorld, filepath, businessLogic, mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<LoadLearningSpace>());
-        var resultCasted = result as LoadLearningSpace;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
-            Assert.That(resultCasted.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.Filepath, Is.EqualTo(filepath));
-            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
-    // ANF-ID: [AWA0022]
-    public void GetLoadCommand_WithLearningWorldAndStream_ReturnsLoadLearningSpaceCommand()
-    {
-        // Arrange
-        var learningWorld = EntityProvider.GetLearningWorld();
-        var stream = new MemoryStream();
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        var learningSpace = EntityProvider.GetLearningSpace();
-        businessLogic.LoadLearningSpace(Arg.Any<Stream>()).Returns(learningSpace);
-        Action<LearningWorld> mappingAction = _ => { };
-
-        // Act
-        var result = _factory.GetLoadCommand(learningWorld, stream, businessLogic, mappingAction);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<LoadLearningSpace>());
-        var resultCasted = result as LoadLearningSpace;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.LearningWorld, Is.EqualTo(learningWorld));
-            Assert.That(resultCasted.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.Filepath, Is.EqualTo(""));
-            Assert.That(resultCasted.LearningSpace, Is.EqualTo(learningSpace));
-            Assert.That(resultCasted.MappingAction, Is.EqualTo(mappingAction));
-        });
-    }
-
-    [Test]
-    // ANF-ID: [AWA0025]
-    public void GetSaveCommand_WithBusinessLogicAndLearningSpace_ReturnsSaveLearningSpaceCommand()
-    {
-        // Arrange
-        var businessLogic = Substitute.For<IBusinessLogic>();
-        var learningSpace = EntityProvider.GetLearningSpace();
-        var filepath = "path/to/file";
-
-        // Act
-        var result = _factory.GetSaveCommand(businessLogic, learningSpace, filepath);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<SaveLearningSpace>());
-        var resultCasted = result as SaveLearningSpace;
-        Assert.Multiple(() =>
-        {
-            Assert.That(resultCasted!.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(resultCasted.LearningSpace, Is.EqualTo(learningSpace));
-            Assert.That(resultCasted.Filepath, Is.EqualTo(filepath));
         });
     }
 }

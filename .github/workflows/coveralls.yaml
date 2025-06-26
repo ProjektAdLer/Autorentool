@@ -16,9 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, windows-latest, macos-latest]
+        os: [ubuntu-22.04, windows-latest, macos-latest]
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
     steps:
       # checkout the repo
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
 
       - name: Cache Nuget Packages
         uses: actions/cache@v4
@@ -43,11 +43,11 @@ jobs:
 
       - name: Run automated unit and integration tests
         run: dotnet test
-        
+
   build:
     runs-on: windows-latest
     env:
-      dotNetVersion: net6.0
+      dotNetVersion: net9.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
     strategy:
@@ -61,6 +61,8 @@ jobs:
           - IntegrationTest
           - PresentationTest
           - SharedTest
+          - H5pPlayer/H5pPlayerTest
+
     steps:
       # checkout the repo
       - uses: actions/checkout@v4
@@ -71,12 +73,12 @@ jobs:
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.422'
+          dotnet-version: '9.0.200'
       
       # build only the specific test project we are testing   
       - name: Build test project
         run: dotnet build ${{ matrix.test_project }}
-        
+
       # run test with coverage collection
       - name: Run ${{ matrix.test_project }} tests
         run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
@@ -91,7 +93,7 @@ jobs:
       
       # submit result from parallel to coveralls
       - name: Coveralls Parallel
-        uses: coverallsapp/github-action@v2.3.0
+        uses: coverallsapp/github-action@v2.3.6
         with:
           flag-name: run-${{ join(matrix.*, '-') }}
           parallel: true
@@ -104,11 +106,11 @@ jobs:
     steps:
       # tell coveralls we are done with this run
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2.3.0
+        uses: coverallsapp/github-action@v2.3.6
         with:
           parallel-finished: true
-          carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest"
-          
+          carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest, run-H5pPlayerTest"
+
   send-summary:
     runs-on: ubuntu-latest
     if: ${{ always() }}

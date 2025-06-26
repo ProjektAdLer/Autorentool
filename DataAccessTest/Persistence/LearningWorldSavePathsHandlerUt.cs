@@ -39,7 +39,7 @@ public class LearningWorldSavePathsHandlerUt
         });
         var systemUnderTest = CreateTestableLearningWorldSavePathsHandler(fileSystem: fileSystem);
 
-        var result = systemUnderTest.GetSavedLearningWorldPaths();
+        var result = systemUnderTest.GetSavedLearningWorldPaths().ToList();
 
         Assert.That(result.Count(), Is.EqualTo(2));
         Assert.That(result, Has.All.Matches<IFileInfo>(file => file.Name.EndsWith(FileEndings.WorldFileEndingWithDot)));

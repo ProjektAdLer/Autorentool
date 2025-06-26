@@ -2,6 +2,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -13,7 +14,7 @@ public class DeleteLearningWorldUt
     public void Execute_DeletesLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
         workspace.LearningWorlds.Add(world);
         var actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
@@ -40,8 +41,8 @@ public class DeleteLearningWorldUt
     public void Execute_DeletesLearningWorldAndSetsAnotherLearningWorldAsSelected()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg);
+        var world2 = new LearningWorld("g", "h", "i", "j", "k", "l", WorldTheme.CampusAschaffenburg);
         workspace.LearningWorlds.Add(world);
         workspace.LearningWorlds.Add(world2);
         var actionWasInvoked = false;

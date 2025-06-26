@@ -50,8 +50,7 @@ public class DeleteAdaptivityQuestionUt
     // ANF-ID: [AWA0009]
     public void Execute_UpdatesMinimumRequiredDifficultyAfterDeletion()
     {
-        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>() { }, null, "taskname");
-        ;
+        var adaptivityTask = new AdaptivityTask(new List<IAdaptivityQuestion>(), null, "taskname");
         var question1 = EntityProvider.GetMultipleChoiceSingleResponseQuestion();
         question1.Difficulty = QuestionDifficulty.Easy;
         var question2 = EntityProvider.GetMultipleChoiceSingleResponseQuestion();

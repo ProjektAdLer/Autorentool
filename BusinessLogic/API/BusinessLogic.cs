@@ -7,9 +7,11 @@ using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Entities.LearningContent.LinkContent;
 using BusinessLogic.ErrorManagement;
 using BusinessLogic.ErrorManagement.BackendAccess;
+using BusinessLogic.Validation.Validators;
 using Microsoft.Extensions.Logging;
 using Shared.Command;
 using Shared.Configuration;
+using Shared;
 
 namespace BusinessLogic.API;
 
@@ -22,7 +24,8 @@ public class BusinessLogic : IBusinessLogic
         ICommandStateManager commandStateManager,
         IBackendAccess backendAccess,
         IErrorManager errorManager,
-        ILogger<BusinessLogic> logger)
+        ILogger<BusinessLogic> logger,
+        ILearningWorldStructureValidator learningWorldStructureValidator)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
@@ -31,6 +34,7 @@ public class BusinessLogic : IBusinessLogic
         BackendAccess = backendAccess;
         ErrorManager = errorManager;
         Logger = logger;
+        LearningWorldStructureValidator = learningWorldStructureValidator;
     }
 
 
@@ -40,6 +44,7 @@ public class BusinessLogic : IBusinessLogic
     internal ILogger<BusinessLogic> Logger { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
+    internal ILearningWorldStructureValidator LearningWorldStructureValidator { get; }
     public IApplicationConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs>? OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
@@ -208,58 +213,6 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
-    {
-        try
-        {
-            DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-        }
-    }
-
-    public LearningSpace LoadLearningSpace(string filepath)
-    {
-        try
-        {
-            var space = DataAccess.LoadLearningSpace(filepath);
-            return space;
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public void SaveLearningElement(LearningElement learningElement, string filepath)
-    {
-        try
-        {
-            DataAccess.SaveLearningElementToFile(learningElement, filepath);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-        }
-    }
-
-    public LearningElement LoadLearningElement(string filepath)
-    {
-        try
-        {
-            var learningElement = DataAccess.LoadLearningElement(filepath);
-            return learningElement;
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
     public async Task<ILearningContent> LoadLearningContentAsync(string filepath)
     {
         return await DataAccess.LoadLearningContentAsync(filepath);
@@ -282,45 +235,6 @@ public class BusinessLogic : IBusinessLogic
     public IEnumerable<IFileInfo> GetSavedLearningWorldPaths()
     {
         return DataAccess.GetSavedLearningWorldPaths();
-    }
-
-    public LearningWorld LoadLearningWorld(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningWorld(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public LearningSpace LoadLearningSpace(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningSpace(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
-    }
-
-    public LearningElement LoadLearningElement(Stream stream)
-    {
-        try
-        {
-            return DataAccess.LoadLearningElement(stream);
-        }
-        catch (SerializationException e)
-        {
-            ErrorManager.LogAndRethrowError(e);
-            return null!;
-        }
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding, out int iterations)
@@ -473,5 +387,23 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
+    #endregion
+
+    #region LearningWorldStructureValidator
+
+    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForExport"/>
+    public ValidationResult ValidateLearningWorldForExport(LearningWorld world)
+    {
+        var content = DataAccess.GetAllContent();
+        return LearningWorldStructureValidator.ValidateForExport(world, content.ToList());
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.ValidateLearningWorldForGeneration"/>
+    public ValidationResult ValidateLearningWorldForGeneration(LearningWorld world)
+    {
+        var content = DataAccess.GetAllContent();
+        return LearningWorldStructureValidator.ValidateForGeneration(world, content.ToList());
+    }
+    
     #endregion
 }

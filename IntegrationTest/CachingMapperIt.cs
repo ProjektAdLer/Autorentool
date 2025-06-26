@@ -28,6 +28,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using Shared.Theme;
 using TestHelpers;
 
 namespace IntegrationTest;
@@ -42,7 +43,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -51,11 +52,11 @@ public class CachingMapperIt
             worldCommandFactory: new WorldCommandFactory(new NullLoggerFactory(),
                 Substitute.For<IUnsavedChangesResetHelper>()));
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1", "g1", "f1");
+        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1", WorldTheme.CampusKempten, "g1", "h1", "i1", "j1");
         systemUnderTest.UndoCommand();
 
         systemUnderTest.UndoCommand();
@@ -80,7 +81,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -92,14 +93,14 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
-            Theme.CampusAschaffenburg,
+            SpaceTheme.EatingArea,
             2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
@@ -142,7 +143,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -155,14 +156,14 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", "g", "f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "g", "h", "i", "j");
 
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", ViewModelProvider.GetLearningOutcomeCollection(), 1,
-            Theme.CampusAschaffenburg,
+            SpaceTheme.LearningArea,
             2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 
@@ -182,7 +183,7 @@ public class CachingMapperIt
 
         systemUnderTest.CreateStoryElementInSlot(spaceVm, 0, "q",
             ViewModelProvider.GetStoryContent(), "r", "s", LearningElementDifficultyEnum.Easy,
-            ElementModel.a_npc_defaultnpc, 2, 3);
+            ElementModel.a_npc_defaultdark_female, 2, 3);
 
         Assert.That(spaceVm.LearningSpaceLayout.StoryElements.Count, Is.EqualTo(1));
 
@@ -226,7 +227,7 @@ public class CachingMapperIt
                 Is.EqualTo(1));
             Assert.That(
                 workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningSpaceLayout.StoryElements.Values.First(),
-                Is.EqualTo(storyElementVm));
+                Is.EqualTo(storyElementVm).UsingPropertiesComparer());
         });
     }
 
@@ -236,7 +237,7 @@ public class CachingMapperIt
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
-        IQuestionCommandFactory questionCommandFactory = null!,
+        IQuestionCommandFactory? questionCommandFactory = null,
         ITaskCommandFactory? taskCommandFactory = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,

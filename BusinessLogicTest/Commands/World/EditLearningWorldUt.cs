@@ -2,6 +2,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Shared.Theme;
 
 namespace BusinessLogicTest.Commands.World;
 
@@ -12,7 +13,7 @@ public class EditLearningWorldUt
     // ANF-ID: [ASE3]
     public void Execute_EditsLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f",  WorldTheme.CampusAschaffenburg,"eva")
         {
             UnsavedChanges = false
         };
@@ -22,14 +23,18 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
-                enrolmentKey,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme,
+                evaluationLink,
+                enrolmentKey, storyStart, storyEnd,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 
@@ -58,6 +63,8 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
+            Assert.That(world.StoryStart, Is.EqualTo("ss"));
+            Assert.That(world.StoryEnd, Is.EqualTo("se"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
     }
@@ -65,21 +72,24 @@ public class EditLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "eva");
         var name = "n";
         var shortname = "sn";
         var authors = "a";
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusKempten;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
-                enrolmentKey,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme, evaluationLink,
+                enrolmentKey, storyStart, storyEnd,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 
@@ -94,7 +104,7 @@ public class EditLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningWorld()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f", "eva")
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", WorldTheme.CampusAschaffenburg, "eva")
         {
             UnsavedChanges = false
         };
@@ -104,14 +114,17 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
+        var theme = WorldTheme.CampusKempten;
         var evaluationLink = "el";
         var enrolmentKey = "ek";
+        var storyStart = "ss";
+        var storyEnd = "se";
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
-            new EditLearningWorld(world, name, shortname, authors, language, description, goals, evaluationLink,
-                enrolmentKey,
+            new EditLearningWorld(world, name, shortname, authors, language, description, goals, theme, evaluationLink,
+                enrolmentKey, storyStart, storyEnd,
                 mappingAction,
                 new NullLogger<EditLearningWorld>());
 
@@ -140,6 +153,8 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
+            Assert.That(world.StoryStart, Is.EqualTo("ss"));
+            Assert.That(world.StoryEnd, Is.EqualTo("se"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
@@ -156,6 +171,8 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
             Assert.That(world.EvaluationLink, Is.EqualTo("eva"));
+            Assert.That(world.StoryStart, Is.Empty);
+            Assert.That(world.StoryEnd, Is.Empty);
             Assert.That(world.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
@@ -172,6 +189,8 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
+            Assert.That(world.StoryStart, Is.EqualTo("ss"));
+            Assert.That(world.StoryEnd, Is.EqualTo("se"));
             Assert.That(world.UnsavedChanges, Is.True);
         });
     }

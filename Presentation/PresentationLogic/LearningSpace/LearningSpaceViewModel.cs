@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningSpace.LearningOutcomeViewModel;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using Shared.Theme;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -20,7 +21,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private double _positionX;
     private double _positionY;
     private int _requiredPoints;
-    private Theme _theme;
+    private SpaceTheme _spaceTheme;
 
     /// <summary>
     /// Private Constructor for AutoMapper
@@ -46,7 +47,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">A description of the learning space and its contents.</param>
-    /// <param name="theme">The theme of the learning space.</param>
+    /// <param name="spaceTheme">The theme of the learning space.</param>
     /// <param name="requiredPoints">Points required to complete the learning space.</param>
     /// <param name="learningOutcomes">The learning outcomes of the learning space.</param>
     /// <param name="layoutViewModel">Layout of the learning space</param>
@@ -55,7 +56,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
-    public LearningSpaceViewModel(string name, string description, Theme theme,
+    public LearningSpaceViewModel(string name, string description, SpaceTheme spaceTheme,
         int requiredPoints = 0, LearningOutcomeCollectionViewModel? learningOutcomes = null,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
@@ -67,7 +68,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Name = name;
         Description = description;
         LearningOutcomeCollection = learningOutcomes ?? new LearningOutcomeCollectionViewModel();
-        Theme = theme;
+        SpaceTheme = spaceTheme;
         RequiredPoints = requiredPoints;
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
@@ -86,6 +87,10 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => ContainedLearningElements.Sum(element => element.Points);
+    
+    public int NumberOfElements => ContainedLearningElements.Count();
+
+    public int NumberOfRequiredElements => ContainedLearningElements.Count(element => element.IsRequired);
 
     public Guid Id { get; private set; }
 
@@ -107,10 +112,10 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         set => SetField(ref _requiredPoints, value);
     }
 
-    public Theme Theme
+    public SpaceTheme SpaceTheme
     {
-        get => _theme;
-        set => SetField(ref _theme, value);
+        get => _spaceTheme;
+        set => SetField(ref _spaceTheme, value);
     }
 
     public bool UnsavedChanges

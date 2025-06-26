@@ -13,7 +13,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@Localizer["GenericCancellationConfirmationDialog.Button.Cancel.Text"]</MudButton>
-        <MudButton Color="SubmitButtonColor" OnClick="Submit">@SubmitButtonText</MudButton>
+        <MudButton id="GenericCancellationConfirmationDialog.Submit.Button" Color="SubmitButtonColor" OnClick="Submit">@SubmitButtonText</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -21,7 +21,7 @@
 
     [Inject, AllowNull] private IStringLocalizer<GenericCancellationConfirmationDialog> Localizer { get; set; }
 
-    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+    [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
 
     /// <summary>
     /// The text to display in the dialog.

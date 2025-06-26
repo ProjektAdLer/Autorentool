@@ -7,7 +7,7 @@
 @using Presentation.PresentationLogic.LearningContent.AdaptivityContent.Question
 @using Shared.Adaptivity
 <p class="text-sm 2xl:text-base mx-6">@Localizer["AdaptivityContentDialog.Subtitle"]</p>
-<MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Class="rounded-lg border-4 border-adlerdarkblue-100 m-4"
+<MudTable @ref="@_table" Items="@MyContent.Tasks" Height="500px" Outlined="true" Class="rounded border-4 border-adlergrey-200 m-4"
           FixedHeader="true" r="false" CustomFooter="true" Bordered="true">
     <ColGroup>
         <col/>
@@ -50,13 +50,13 @@
                                   RequiredError="@Localizer["AdaptivityContentDialog.Table.Field.Name.RequiredError.Text"]"
                                   DebounceInterval="DebounceInterval"
                                   OnDebounceIntervalElapsed="s => RenameTask(context, s)"/>
-                    <MudIconButton Title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Remove" OnClick="() => RemoveTask(context)"/>
+                    <MudIconButton title="@Localizer["AdaptivityContent.Dialog.Table.Header.DeleteTask"]" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveTask(context)"/>
                 </span>
             </MudForm>
         </MudTd>
         <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]">
             <div class="flex justify-center">
-                <MudCheckBox T="bool?" Checked="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
+                <MudCheckBox T="bool?" Value="@(context.MinimumRequiredDifficulty != null)" Disabled="true"/>
             </div>
         </MudTd>
         @foreach (var difficulty in Enum.GetValues(typeof(QuestionDifficulty)).Cast<QuestionDifficulty>())
@@ -84,7 +84,7 @@
                             <MudButton Class="shadow btn-standard px-1 w-36 2xl:w-40 mt-2 relative" OnClick="() => AddOrEditQuestion(context, difficulty)">
                                 <MudText Class="flex justify-start items-center uppercase font-bold text-xs 2xl:text-sm">@Localizer["AdaptivityContentDialog.Table.Button.Question." + difficulty]</MudText>
                                 <div class="flex justify-end absolute w-2.5 h-1.5 top-0.5 -right-0.5 m-0.5">
-                                    <MudIconButton Title="@Localizer["AdaptivityContentDialog.Table.Button.Question.Delete"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-adlerblue-200 p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerblue-200 hover:text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"></MudIconButton>
+                                    <MudIconButton title="@Localizer["AdaptivityContentDialog.Table.Button.Question.Delete"]" Class="w-2 h-2 close-button rounded-full text-adlerdarkblue bg-adlerblue-200 p-3 transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerblue-200 hover:text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveQuestion(context, difficulty)"></MudIconButton>
                                 </div>
                             </MudButton>
 
@@ -98,7 +98,8 @@
                                                  ToggledChanged="b => ChangeRequiredDifficulty(context, difficulty, b)"
                                                  ToggledIcon="@Icons.Material.Filled.Key"
                                                  Icon="@Icons.Material.Outlined.KeyOff"
-                                                 Title="@Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"]"/>
+                                                 title="@(context.MinimumRequiredDifficulty.Equals(difficulty) ? Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestionIsSelected"] : Localizer["AdaptivityContentDialog.Table.Button.RequiredQuestion"])"
+                                                 />
                         </div>
                     </div>
                 }
@@ -118,7 +119,7 @@
         <MudTFootRow>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.Tasks"]">
                 <span class="inline-flex">
-                    <MudIconButton Title="@Localizer["AdaptivityContentDialog.Table.Header.NewTask"]" Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
+                    <MudIconButton title="@Localizer["AdaptivityContentDialog.Table.Header.NewTask"]" Icon="@Icons.Material.Filled.Add" OnClick="AddNewTask"/>
                 </span>
             </MudTd>
             <MudTd DataLabel="@Localizer["AdaptivityContentDialog.Table.Header.RequiredTask"]"/>
@@ -145,16 +146,17 @@
 
     [Parameter, EditorRequired] public AdaptivityContentFormModel MyContent { get; set; } = null!;
 
-    [Parameter] //can never be null, DI will throw exception on unresolved types - n.stich
-    public ILearningContentViewModel? ContentToEdit { get; set; } = null;
+    [Parameter]
+    public ILearningContentViewModel? ContentToEdit { get; set; }
 
     [Parameter] public int DebounceInterval { get; set; } = 300;
 
-
+    // ReSharper disable once NotAccessedField.Local
     private MudTable<IAdaptivityTaskViewModel>? _table;
 
     private readonly Dictionary<IAdaptivityTaskViewModel, MudForm> _nameMudFormRefs = new();
 
+    // ReSharper disable once CollectionNeverQueried.Local
     private readonly Dictionary<IAdaptivityTaskViewModel, string> _nameValues = new();
 
     protected override async Task OnParametersSetAsync()
@@ -216,7 +218,7 @@
     {
         var options = new DialogOptions
         {
-            DisableBackdropClick = false,
+            BackdropClick = true,
             MaxWidth = MaxWidth.ExtraExtraLarge,
             FullWidth = false,
             NoHeader = true,
@@ -227,7 +229,7 @@
             { nameof(AdaptivityQuestionDialog.Task), task },
             { nameof(AdaptivityQuestionDialog.Difficulty), difficulty }
         }, options);
-        var result = await dialog.Result;
+        _ = await dialog.Result;
         await InvokeAsync(StateHasChanged);
     }
 

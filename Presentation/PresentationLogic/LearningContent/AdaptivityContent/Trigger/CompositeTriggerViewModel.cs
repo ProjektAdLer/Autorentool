@@ -15,6 +15,7 @@ public class CompositeTriggerViewModel : IAdaptivityTriggerViewModel
         UnsavedChanges = true;
     }
     
+    // ReSharper disable once UnusedMember.Local
     /// <summary>
     /// Automapper constructor. DO NOT USE.
     /// </summary>

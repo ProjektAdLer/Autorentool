@@ -6,7 +6,7 @@ namespace Generator.ATF;
 public interface ILearningSpaceJson
 {
     int SpaceId { get; set; }
-
+    // ReSharper disable once InconsistentNaming
     string SpaceUUID { get; set; }
 
     string? SpaceDescription { get; set; }

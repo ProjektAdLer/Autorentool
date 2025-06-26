@@ -23,12 +23,12 @@
             }
         </div>
     }
-    <MudToggleIconButton Title="@Localizer["AdaptivityQuestionDialog.Sidebar.Toggle.Text"]" Class="h-10 w-10" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
+    <MudToggleIconButton title="@Localizer["AdaptivityQuestionDialog.Sidebar.Toggle.Text"]" Class="h-10 w-10" Icon="@Icons.Material.Filled.ChevronLeft" ToggledIcon="@Icons.Material.Filled.ChevronRight" @bind-Toggled="_isSidePanelOpen"></MudToggleIconButton>
 
     <div class="w-[500px]">
-        <MudDialog ClassContent="p-0">
+        <MudDialog ContentClass="p-0">
             <DialogContent>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col">
                     @if (Task.Questions.FirstOrDefault(x => x.Difficulty == Difficulty) is IMultipleChoiceQuestionViewModel questionToEdit)
                     {
                         <MultipleChoiceQuestionForm Task="Task" Difficulty="Difficulty" QuestionToEdit="questionToEdit" OnSubmitted="CloseDialog"></MultipleChoiceQuestionForm>
@@ -55,8 +55,9 @@
     public QuestionDifficulty Difficulty { get; set; }
 
     [CascadingParameter]
-    public MudDialogInstance MudDialog { get; set; } = default!;
+    public IMudDialogInstance MudDialog { get; set; } = null!;
 
+    // ReSharper disable once RedundantDefaultMemberInitializer
     private bool _isSidePanelOpen = false;
 
     private void CloseDialog()

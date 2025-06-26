@@ -4,7 +4,6 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using MudBlazor;
 using NSubstitute;
@@ -31,6 +30,7 @@ public class MainLayoutUt
         _ctx.ComponentFactories.AddStub<MudThemeProvider>();
         _ctx.ComponentFactories.AddStub<MudDialogProvider>();
         _ctx.ComponentFactories.AddStub<MudSnackbarProvider>();
+        _ctx.ComponentFactories.AddStub<MudPopoverProvider>();
         _ctx.ComponentFactories.AddStub<CultureSelector>();
     }
 
@@ -61,14 +61,13 @@ public class MainLayoutUt
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudThemeProvider>>(), Throws.Nothing);
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudDialogProvider>>(), Throws.Nothing);
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudSnackbarProvider>>(), Throws.Nothing);
+            Assert.That(() => systemUnderTest.FindComponent<Stub<MudPopoverProvider>>(), Throws.Nothing);
         });
     }
 
     private IRenderedComponent<MainLayout> GetFragmentForTesting(RenderFragment? body = null)
     {
-        var options = Options.Create(new LocalizationOptions { ResourcesPath = "View/Shared" });
-        var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
-        var localizer = new StringLocalizer<MainLayout>(factory);
+        Options.Create(new LocalizationOptions { ResourcesPath = "View/Shared" });
         body ??= delegate { };
         return _ctx.RenderComponent<MainLayout>(
             parameters => parameters

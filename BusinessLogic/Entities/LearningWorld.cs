@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using BusinessLogic.Entities.LearningContent.Story;
+using JetBrains.Annotations;
+using Shared.Theme;
 
 namespace BusinessLogic.Entities;
 
@@ -17,9 +19,12 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = "";
         Description = "";
         Goals = "";
+        WorldTheme = default;
         SavePath = "";
         EvaluationLink = "";
         EnrolmentKey = "";
+        StoryStart = "";
+        StoryEnd = "";
         LearningSpaces = new List<ILearningSpace>();
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
@@ -29,7 +34,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     }
 
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, string evaluationLink = "", string enrolmentKey = "", string savePath = "",
+        string goals, WorldTheme worldTheme, string evaluationLink = "", string enrolmentKey = "", string storyStart = "",
+        string storyEnd = "", string savePath = "",
         List<ILearningSpace>? learningSpaces = null,
         List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
@@ -41,9 +47,12 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = language;
         Description = description;
         Goals = goals;
+        WorldTheme = worldTheme;
         SavePath = savePath;
         EvaluationLink = evaluationLink;
         EnrolmentKey = enrolmentKey;
+        StoryStart = storyStart;
+        StoryEnd = storyEnd;
         LearningSpaces = learningSpaces ?? new List<ILearningSpace>();
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
@@ -70,9 +79,16 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
     public string EnrolmentKey { get; set; }
+    public string StoryStart { get; set; }
+    public string StoryEnd { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; }
+
+    public IEnumerable<ILearningElement> AllLearningElements =>
+        LearningSpaces.SelectMany(space => space.ContainedLearningElements)
+            .Concat(UnplacedLearningElements.Where(ele => ele.LearningContent is not StoryContent));
     public string SavePath { get; set; }
 
     public bool UnsavedChanges
@@ -90,9 +106,8 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, EvaluationLink,
-            EnrolmentKey,
-            SavePath,
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, WorldTheme,
+            EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             LearningSpaces, PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges,
             UnplacedLearningElements);
     }
@@ -110,8 +125,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
+        WorldTheme = learningWorldMemento.WorldTheme;
         EvaluationLink = learningWorldMemento.EvaluationLink;
         EnrolmentKey = learningWorldMemento.EnrolmentKey;
+        StoryStart = learningWorldMemento.StoryStart;
+        StoryEnd = learningWorldMemento.StoryEnd;
         SavePath = learningWorldMemento.SavePath;
         LearningSpaces = learningWorldMemento.LearningSpaces;
         PathWayConditions = learningWorldMemento.PathWayConditions;
@@ -124,7 +142,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, string evaluationLink, string enrolmentKey, string savePath,
+            string description, string goals, WorldTheme worldTheme, string evaluationLink, string enrolmentKey, string storyStart,
+            string storyEnd, string savePath,
             List<ILearningSpace> learningSpaces,
             List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges,
@@ -136,9 +155,12 @@ public class LearningWorld : ILearningWorld, IOriginator
             Language = language;
             Description = description;
             Goals = goals;
+            WorldTheme = worldTheme;
             SavePath = savePath;
             EvaluationLink = evaluationLink;
             EnrolmentKey = enrolmentKey;
+            StoryStart = storyStart;
+            StoryEnd = storyEnd;
             UnsavedChanges = unsavedChanges;
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
@@ -157,8 +179,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal WorldTheme WorldTheme { get; }
         internal string EvaluationLink { get; }
         internal string EnrolmentKey { get; }
+        internal string StoryStart { get; }
+        internal string StoryEnd { get; }
         internal string SavePath { get; }
         public bool UnsavedChanges { get; }
         internal List<ILearningElement> UnplacedLearningElements { get; }

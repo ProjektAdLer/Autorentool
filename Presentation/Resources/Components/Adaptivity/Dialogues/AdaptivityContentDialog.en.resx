@@ -46,7 +46,7 @@
         <value>Name for task required!</value>
     </data>
     <data name="AdaptivityContentDialog.Subtitle" xml:space="preserve">
-        <value>Create a new task and at least one associated question with the desired level of difficulty. You can optionally add an additional comment or reference to each question.</value>
+        <value>A task must contain at least one question. A comment or a reference to a learning element or external learning material can optionally be added to each question.</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.Question.Delete" xml:space="preserve">
         <value>Delete question</value>
@@ -58,6 +58,9 @@
         <value>Delete task</value>
     </data>
     <data name="AdaptivityContentDialog.Table.Button.RequiredQuestion" xml:space="preserve">
-        <value>Set as "question to be solved"</value>
+        <value>Define as "question to be solved"</value>
+    </data>
+    <data name="AdaptivityContentDialog.Table.Button.RequiredQuestionIsSelected" xml:space="preserve">
+        <value>Question to be solved</value>
     </data>
 </root>

@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningOutcome;
 using NUnit.Framework;
 using Shared;
+using Shared.Theme;
 using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
@@ -34,7 +35,7 @@ public class LearningSpaceUt
                 floorPlan: FloorPlanEnum.R_20X20_6L);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         Assert.Multiple(() =>
@@ -75,7 +76,7 @@ public class LearningSpaceUt
         var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements);
         var assignedTopic = EntityProvider.GetTopic();
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
@@ -83,7 +84,7 @@ public class LearningSpaceUt
 
         var nameChanged = "qwertz";
         var descriptionChanged = "changed description";
-        var LOutcomesChanged = EntityProvider.GetLearningOutcomeCollection(new ManualLearningOutcome("outcome123"));
+        var lOutcomesChanged = EntityProvider.GetLearningOutcomeCollection(new ManualLearningOutcome("outcome123"));
         var positionXChanged = 10f;
         var positionYChanged = 14f;
         var content1Changed = EntityProvider.GetFileContent(append: "c1");
@@ -103,7 +104,7 @@ public class LearningSpaceUt
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Description = descriptionChanged;
-        systemUnderTest.LearningOutcomeCollection = LOutcomesChanged;
+        systemUnderTest.LearningOutcomeCollection = lOutcomesChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
         systemUnderTest.AssignedTopic = topicChanged;
@@ -113,7 +114,7 @@ public class LearningSpaceUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
-            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(LOutcomesChanged));
+            Assert.That(systemUnderTest.LearningOutcomeCollection, Is.EqualTo(lOutcomesChanged));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele1Changed));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
@@ -163,7 +164,7 @@ public class LearningSpaceUt
             EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
                 floorPlan: FloorPlanEnum.R_20X20_6L);
 
-        var systemUnderTest = new LearningSpace(name, description, requiredPoints, Theme.CampusAschaffenburg, learningOutcomes,
+        var systemUnderTest = new LearningSpace(name, description, requiredPoints, SpaceTheme.LearningArea, learningOutcomes,
             learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();
