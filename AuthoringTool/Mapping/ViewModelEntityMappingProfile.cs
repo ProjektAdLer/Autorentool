@@ -259,6 +259,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.LearningContent, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.IsRequired, opt => opt.Ignore())
             .AfterMap(ElementContentAfterMap)
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
@@ -273,7 +274,8 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore())
-            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore());
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.IsRequired, opt => opt.Ignore());
     }
 
     /// <summary>

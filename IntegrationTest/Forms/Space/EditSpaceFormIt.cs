@@ -134,19 +134,16 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<SpaceTheme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(SpaceTheme.LearningArea);
 
         systemUnderTest.WaitForAssertion(() => Assert.That(FormModel.Name, Is.EqualTo(Expected)),
             TimeSpan.FromSeconds(2));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);
@@ -171,12 +168,10 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         collapsables[5].Find("div.toggler").Click();
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<SpaceTheme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(SpaceTheme.LearningArea);
 
@@ -184,7 +179,6 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
         {
             Assert.That(() => FormModel.Name, Is.EqualTo(Expected).After(300, 10));
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(300, 10));
-            Assert.That(() => FormModel.RequiredPoints, Is.EqualTo(123).After(300, 10));
             Assert.That(() => FormModel.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea).After(300, 10));
         });
 
@@ -192,7 +186,7 @@ public class EditSpaceFormIt : MudFormTestFixture<EditSpaceForm, LearningSpaceFo
 
         systemUnderTest.FindComponent<SubmitThenRemapButton>().Find("button").Click();
 
-        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, 123, SpaceTheme.LearningArea);
+        SpacePresenter.Received(2).EditLearningSpace(Expected, Expected, 0, SpaceTheme.LearningArea);
         systemUnderTest.WaitForAssertion(() =>
             {
                 Mapper.Received(1).Map(vm, FormDataContainer.FormModel);

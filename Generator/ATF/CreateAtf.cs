@@ -301,13 +301,13 @@ public class CreateAtf : ICreateAtf
         if (storyElements.TryGetValue(0, out var introStory))
         {
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
-                introStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(introStory.ElementModel));
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
         {
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
-                outroStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(outroStory.ElementModel));
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);
@@ -481,28 +481,25 @@ public class CreateAtf : ICreateAtf
             case FileContentPe fileContentPe:
                 var elementCategory = MapFileContentToElementCategory(fileContentPe);
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"), learningElement.Workload,
+                    learningElement.Name, elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
                     MapElementDifficultyToInt(learningElement.Difficulty));
                 ListFileContent.Add((fileContentPe, learningElement.Name));
                 break;
             case LinkContentPe linkContentPe:
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    linkContentPe.Link,
-                    "video", "url", learningSpaceId, learningElement.Points, learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"), learningElement.Workload,
+                    learningElement.Name, linkContentPe.Link, "video", "url", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"), learningElement.Workload,
                     MapElementDifficultyToInt(learningElement.Difficulty));
                 break;
             case AdaptivityContentPe adaptivityContentPe:
                 var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
                 elementJson = new AdaptivityElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    adaptivityContent, learningElement.Description, learningElement.Goals.Split("\n"),
+                    learningElement.Name, "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), adaptivityContent,
+                    learningElement.Description, learningElement.Goals.Split("\n"),
                     learningElement.Workload);
                 break;
             default:

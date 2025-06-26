@@ -120,12 +120,13 @@ public class LearningWorldPathwayViewUt
     }
 
     [Test]
-    public void Render_LearningWorldSet_RendersNameWorkloadAndPoints()
+    public void Render_LearningWorldSet_RendersNameWorkloadAndCondition()
     {
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
         learningWorld.Name.Returns("my insanely sophisticated name");
         learningWorld.Workload.Returns(42);
-        learningWorld.Points.Returns(9);
+        learningWorld.NumberOfRequiredElements.Returns(9);
+        learningWorld.NumberOfElements.Returns(17);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
@@ -134,7 +135,7 @@ public class LearningWorldPathwayViewUt
         p[1].MarkupMatches(
             @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></p>");
         p[2].MarkupMatches(
-            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9<span class=""text-adlergrey-600"">LearningWorldPathwayView.Points.Summary</span></p>");
+            @"<p class=""text-xs 2xl:text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Condition.Text</span> 9<span class=""text-adlergrey-600"">/</span>17<span class=""text-adlergrey-600"">LearningWorldView.Condition.Elements</span></p>");
     }
 
     [Test]

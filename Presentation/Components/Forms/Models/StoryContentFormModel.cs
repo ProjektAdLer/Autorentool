@@ -1,3 +1,5 @@
+using Shared;
+
 namespace Presentation.Components.Forms.Models;
 
 public class StoryContentFormModel : ILearningContentFormModel
@@ -9,9 +11,18 @@ public class StoryContentFormModel : ILearningContentFormModel
     {
         Name = "";
         StoryText = new List<string>();
+        NpcName = "";
+        NpcMood = NpcMood.Welcome;
     }
 
     public List<string> StoryText { get; set; }
+
+    public string NpcName { get; set; }
+    public NpcMood NpcMood
+    {
+        get;
+        set;
+    }
 
     public string Name { get; set; }
 }

@@ -58,9 +58,6 @@
     <data name="LearningSpace.SpaceWorkload.Text.Additional" xml:space="preserve">
         <value> min</value>
     </data>
-    <data name="LearningSpace.SpacePoints.Text.Points.Suffix" xml:space="preserve">
-        <value>pt</value>
-    </data>
     <data name="LearningSpace.SpaceGoals.Overview" xml:space="preserve">
         <value>Learning outcomes of this learning space</value>
     </data>
@@ -72,5 +69,8 @@
     </data>
     <data name="LearningSpaceView.NoOutcome" xml:space="preserve">
         <value>There are currently no learning outcomes for this learning space.</value>
+    </data>
+    <data name="LearningSpace.Condition.Text" xml:space="preserve">
+        <value>elem.</value>
     </data>
 </root>
