@@ -65,7 +65,7 @@ public class CreateAtf : ICreateAtf
         MapTopicsToLearningWorldJson(learningWorld.Topics);
 
         MapLearningSpacesToLearningWorldJson(learningWorld.ObjectsInPathWaysPe);
-        
+
         WriteFrameStoryToLearningWorldJson(learningWorld.StoryStart, learningWorld.StoryEnd);
 
         var rootJson = CreateRootJson();
@@ -301,13 +301,13 @@ public class CreateAtf : ICreateAtf
         if (storyElements.TryGetValue(0, out var introStory))
         {
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
-                introStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(introStory.ElementModel));
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
         {
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
-                outroStory.ElementModel.ToString());
+                ElementModelHelper.GetAtfString(outroStory.ElementModel));
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);
@@ -373,7 +373,6 @@ public class CreateAtf : ICreateAtf
     private static List<LearningSpacePe> GetLearningSpacesInOrder(
         IEnumerable<IObjectInPathWayPe> objectInPathWayViewModels)
     {
-        
         var objectInPathWayList = objectInPathWayViewModels.ToList();
         var startObjects = objectInPathWayList
             .OfType<ILearningSpacePe>()
@@ -482,26 +481,23 @@ public class CreateAtf : ICreateAtf
             case FileContentPe fileContentPe:
                 var elementCategory = MapFileContentToElementCategory(fileContentPe);
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, elementCategory, fileContentPe.Type, learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"));
                 ListFileContent.Add((fileContentPe, learningElement.Name));
                 break;
             case LinkContentPe linkContentPe:
                 elementJson = new LearningElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    linkContentPe.Link,
-                    "video", "url", learningSpaceId, learningElement.Points, learningElement.ElementModel.ToString(),
-                    learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, linkContentPe.Link, "video", "url", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), learningElement.Description,
+                    learningElement.Goals.Split("\n"));
                 break;
             case AdaptivityContentPe adaptivityContentPe:
                 var adaptivityContent = MapAdaptivityContentPeToJson(adaptivityContentPe);
                 elementJson = new AdaptivityElementJson(learningElementId, learningElement.Id.ToString(),
-                    learningElement.Name,
-                    "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
-                    learningElement.ElementModel.ToString(),
-                    adaptivityContent, learningElement.Description, learningElement.Goals.Split("\n"));
+                    learningElement.Name, "adaptivity", "adaptivity", learningSpaceId, learningElement.Points,
+                    ElementModelHelper.GetAtfString(learningElement.ElementModel), adaptivityContent,
+                    learningElement.Description, learningElement.Goals.Split("\n"));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(learningElement.LearningContent),
@@ -678,10 +674,12 @@ public class CreateAtf : ICreateAtf
                 baseLearningElement = new BaseLearningElementJson(elementId,
                     contentReferenceAction.Id.ToString(), fileContentPe.Name, "",
                     MapFileContentToElementCategory(fileContentPe), fileContentPe.Type);
-                if (!ListFileContent.Any(x => x.Item1.Filepath == fileContentPe.Filepath && x.Item2 == fileContentPe.Name))
+                if (!ListFileContent.Any(x =>
+                        x.Item1.Filepath == fileContentPe.Filepath && x.Item2 == fileContentPe.Name))
                 {
                     ListFileContent.Add((fileContentPe, fileContentPe.Name));
                 }
+
                 break;
             case LinkContentPe linkContentPe:
                 baseLearningElement = new BaseLearningElementJson(elementId, contentReferenceAction.Id.ToString(),
@@ -793,7 +791,7 @@ public class CreateAtf : ICreateAtf
     /// </summary>
     private void SetupDirectoryStructure()
     {
-        var workDir =  ApplicationPaths.BackupFolder;
+        var workDir = ApplicationPaths.BackupFolder;
         _xmlFilesForExportPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport");
         _atfPath = _fileSystem.Path.Join(workDir, "XMLFilesForExport", "ATF_Document.json");
 
@@ -819,7 +817,8 @@ public class CreateAtf : ICreateAtf
             try
             {
                 _fileSystem.File.Copy(fileContent.Filepath,
-                    _fileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport", $"{name}.{fileContent.Type}"));
+                    _fileSystem.Path.Join(ApplicationPaths.BackupFolder, "XMLFilesForExport",
+                        $"{name}.{fileContent.Type}"));
                 Logger.LogTrace("Copied file from {Filepath} to XMLFilesForExport", fileContent.Filepath);
             }
             catch (FileNotFoundException)

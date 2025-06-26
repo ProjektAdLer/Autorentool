@@ -61,10 +61,10 @@ public static class PersistEntityProvider
     }
 
     public static LearningElementPe GetLearningElement(string append = "", ILearningContentPe? content = null,
-        string name = "")
+        string name = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1)
     {
         return new LearningElementPe(name != "" ? name : "a" + append, content!, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1);
+            LearningElementDifficultyEnum.Easy, elementModel);
     }
 
     public static PathWayConditionPe GetPathWayCondition(ConditionEnum condition = ConditionEnum.And,
@@ -91,10 +91,10 @@ public static class PersistEntityProvider
     }
 
     public static StoryContentPe GetStoryContent(string? name = null, bool unsavedChanges = false,
-        List<string>? story = null)
+        List<string>? story = null, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
     {
         return new StoryContentPe(name ?? "a name", unsavedChanges,
-            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" });
+            story ?? new List<string> { "this is a story", "of a", "duck", "debugging", "a", "bug", "with quacks" }, npcName, NpcMood.Welcome);
     }
 
     public static TopicPe GetTopic(string? name = null)

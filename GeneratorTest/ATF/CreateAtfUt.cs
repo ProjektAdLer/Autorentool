@@ -444,12 +444,12 @@ public class CreateAtfUt
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory?.StoryTexts,
                 Is.EqualTo(introStoryContent.StoryText.ToArray()));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.IntroStory?.ElementModel,
-                Is.EqualTo(ElementModel.l_h5p_slotmachine_1.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ElementModel.l_h5p_slotmachine_1)));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory, Is.Not.Null);
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory?.StoryTexts,
                 Is.EqualTo(outroStoryContent.StoryText.ToArray()));
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].SpaceStory.OutroStory?.ElementModel,
-                Is.EqualTo(ElementModel.l_h5p_slotmachine_1.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ElementModel.l_h5p_slotmachine_1)));
 
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementName, Is.EqualTo(ele1.Name));
             Assert.That(systemUnderTest.LearningWorldJson.Elements[0].ElementId, Is.EqualTo(1));
@@ -463,7 +463,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementGoals,
                 Is.EqualTo(ele1.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).ElementModel,
-                Is.EqualTo(ele1.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele1.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[0]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
@@ -479,7 +479,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementGoals,
                 Is.EqualTo(ele2.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).ElementModel,
-                Is.EqualTo(ele2.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele2.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[1]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[0].SpaceId));
 
@@ -495,7 +495,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementGoals,
                 Is.EqualTo(ele5.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).ElementModel,
-                Is.EqualTo(ele5.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele5.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[2]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
@@ -512,7 +512,7 @@ public class CreateAtfUt
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementGoals,
                 Is.EqualTo(ele8.Goals.Split("\n")));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).ElementModel,
-                Is.EqualTo(ele8.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele8.ElementModel)));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[3]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[1].SpaceId));
 
@@ -699,7 +699,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementGoals,
                 Is.EqualTo(ele3.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).ElementModel,
-                Is.EqualTo(ele3.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele3.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[5]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
@@ -715,7 +715,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementGoals,
                 Is.EqualTo(ele4.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).ElementModel,
-                Is.EqualTo(ele4.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele4.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[6]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
@@ -731,7 +731,7 @@ public class CreateAtfUt
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementGoals,
                 Is.EqualTo(ele6.Goals.Split("\n")));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).ElementModel,
-                Is.EqualTo(ele6.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele6.ElementModel)));
             Assert.That(((IAdaptivityElementJson)systemUnderTest.LearningWorldJson.Elements[7]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
 
@@ -747,7 +747,7 @@ public class CreateAtfUt
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementGoals,
                 Is.EqualTo(ele7.Goals.Split("\n")));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).ElementModel,
-                Is.EqualTo(ele7.ElementModel.ToString()));
+                Is.EqualTo(ElementModelHelper.GetAtfString(ele7.ElementModel)));
             Assert.That(((LearningElementJson)systemUnderTest.LearningWorldJson.Elements[8]).LearningSpaceParentId,
                 Is.EqualTo(systemUnderTest.LearningWorldJson.Spaces[2].SpaceId));
             
