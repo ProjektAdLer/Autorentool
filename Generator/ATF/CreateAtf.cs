@@ -270,7 +270,8 @@ public class CreateAtf : ICreateAtf
             var spaceStoryJson = GetSpaceStoryJson(space);
 
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId, space.Id.ToString(),
-                space.Name, _listLearningSpaceElements, space.RequiredPoints,
+                space.Name, _listLearningSpaceElements,
+                space.LearningSpaceLayout.ContainedLearningElements.Sum(x => x.Points),
                 space.LearningSpaceLayout.FloorPlanName.ToString(), space.SpaceTheme.ToString(),
                 spaceStoryJson, space.Description, spaceGoals,
                 _booleanAlgebraRequirements));
