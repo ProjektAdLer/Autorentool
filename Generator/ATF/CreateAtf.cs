@@ -301,13 +301,17 @@ public class CreateAtf : ICreateAtf
         if (storyElements.TryGetValue(0, out var introStory))
         {
             introStoryJson = new StoryElementJson(((StoryContentPe)introStory.LearningContent).StoryText.ToArray(),
-                ElementModelHelper.GetAtfString(introStory.ElementModel));
+                ElementModelHelper.GetAtfString(introStory.ElementModel),
+                ((StoryContentPe)introStory.LearningContent).NpcMood.ToString().ToLower(),
+                ((StoryContentPe)introStory.LearningContent).NpcName);
         }
 
         if (storyElements.TryGetValue(1, out var outroStory))
         {
             outroStoryJson = new StoryElementJson(((StoryContentPe)outroStory.LearningContent).StoryText.ToArray(),
-                ElementModelHelper.GetAtfString(outroStory.ElementModel));
+                ElementModelHelper.GetAtfString(outroStory.ElementModel),
+                ((StoryContentPe)outroStory.LearningContent).NpcMood.ToString().ToLower(),
+                ((StoryContentPe)outroStory.LearningContent).NpcName);
         }
 
         return new SpaceStoryJson(introStoryJson, outroStoryJson);
