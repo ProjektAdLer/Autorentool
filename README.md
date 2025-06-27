@@ -8,6 +8,7 @@
 | 2.1.5       | 2.2.0           |
 | 2.1.7       | 2.2.0           |
 | 2.2.0       | 2.3.0           |
+| 2.3.0       | 2.4.8           |
 
 ## Kompilieren
 Die Anleitung um das Autorentool zu bauen findet sich [hier in unserer Dokumentation](https://projektadler.github.io/Documentation/manualauthoringeinrichtenundkompilieren.html)
