@@ -7,10 +7,30 @@
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+</details>
+
+## [2.3.0] - 2025-06-27
+
+### Added
+
 - Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material
 - Added a header and footer to the left sidebar
-- Added a arrow icon for doors in the floor plans
+- Added an arrow icon for doors in the floor plans
 - Implemented a validation for export to archive
+- Added new learning world theme
+- Added frame story for learning world
+- New button for export learning world as a mbz file.
+- Add name and facial expression to story element.
 
 ### Changed
 
@@ -19,6 +39,58 @@
 - Changed design for the dropzone to drag and drop learning material
 - Changed size and design for the learning space editor and unplaced elements
 - Changed design for the story element slots
+- Updated learning space theme values
+- Fixed a bug where importing a learning world conflicted with validation when a name was already used.
+- Changed Points to IsRequired in elements.
+- Changed completion conditions of spaces from points to required elements.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- #527: Fixed a bug where external learning material was not taken into account when archiving the learning world.
+- Resolved an issue where the generator crashed when one single file was referenced multiple times in adaptivity
+  elements.
+- #762: Send estimated completion time and difficulty of elements to backend.
+
+### Security
+
+## [2.2.3-rc.2] - 2025-06-06
+
+### Added
+- New button for export learning world as a mbz file.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.2.3-rc.1] - 2025-05-30
+
+### Added
+
+- Added a snackbar for added (new, duplicate, not valid, empty) and deleted learning material
+- Added a header and footer to the left sidebar
+- Added an arrow icon for doors in the floor plans
+- Implemented a validation for export to archive
+- Added new learning world theme
+- Added frame story for learning world
+
+### Changed
+
+- Migrated to .NET 9
+- Changed design for element cards in reference dialog of adaptivity elements
+- Changed design for the dropzone to drag and drop learning material
+- Changed size and design for the learning space editor and unplaced elements
+- Changed design for the story element slots
+- Updated learning space theme values
 
 ### Deprecated
 
@@ -31,8 +103,6 @@
   elements.
 
 ### Security
-
-</details>
 
 ## [2.2.2] - 2024-12-19
 

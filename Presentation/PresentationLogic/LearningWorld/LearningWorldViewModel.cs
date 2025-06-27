@@ -171,6 +171,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public int Points =>
         LearningSpaces.Sum(space => space.Points);
 
+    public int NumberOfElements => 
+        LearningSpaces.Sum(space => space.NumberOfElements);
+    
+    public int NumberOfRequiredElements =>
+        LearningSpaces.Sum(space => space.NumberOfRequiredElements);
+
     public string Name
     {
         get => _name;

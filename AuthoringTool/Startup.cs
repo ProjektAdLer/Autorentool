@@ -180,6 +180,7 @@ public class Startup
         services.AddScoped<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
         services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
+        services.AddSingleton<ILearningWorldStructureValidator, LearningWorldStructureValidator>();
     }
 
     internal static void ConfigureAuthoringTool(IServiceCollection services)
@@ -330,6 +331,7 @@ public class Startup
         ThemeHelper<WorldTheme>.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<WorldTheme>>());
         LearningElementDifficultyHelper.Initialize(app.ApplicationServices
             .GetRequiredService<IStringLocalizer<LearningElementDifficultyEnum>>());
+        NpcMoodHelper.Initialize(app.ApplicationServices.GetRequiredService<IStringLocalizer<NpcMood>>());
 
         app.UseRouting();
 

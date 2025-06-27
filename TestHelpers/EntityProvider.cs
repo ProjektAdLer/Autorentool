@@ -121,10 +121,10 @@ public static class EntityProvider
     }
 
     public static StoryContent GetStoryContent(string name = "a name", List<string>? storyText = null,
-        bool unsavedChanges = false)
+        bool unsavedChanges = false, string npcName = "a npc name", NpcMood npcMood = NpcMood.Welcome)
     {
         storyText ??= new List<string> { "a story" };
-        return new StoryContent(name, unsavedChanges, storyText);
+        return new StoryContent(name, unsavedChanges, storyText, npcName, npcMood);
     }
 
     public static Topic GetTopic(string append = "")
@@ -206,7 +206,7 @@ public static class EntityProvider
         return new AdaptivityTask(questions, QuestionDifficulty.Hard, "taskname");
     }
 
-    private static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
+    public static IAdaptivityRule GetAdaptivityRule(IAdaptivityTrigger? trigger = null,
         IAdaptivityAction? action = null)
     {
         trigger ??= GetAdaptivityTrigger();
@@ -239,7 +239,7 @@ public static class EntityProvider
         return new CompositeTrigger(ConditionEnum.And, GetTimeTrigger(), GetCorrectnessTrigger());
     }
 
-    private static IAdaptivityQuestion GetAdaptivityQuestion()
+    public static IAdaptivityQuestion GetAdaptivityQuestion()
     {
         var choices = new List<Choice> { GetAdaptivityChoice() };
         var rules = new List<IAdaptivityRule> { GetAdaptivityRule() };

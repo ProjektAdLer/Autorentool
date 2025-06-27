@@ -9,9 +9,10 @@ public class LearningElementJson : ILearningElementJson, IInternalElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
     [JsonConstructor]
-    public LearningElementJson(int elementId, string elementUuid, string elementName,
-        string url, string elementCategory, string elementFileType, int learningSpaceParentId,
-        int elementMaxScore, string elementModel, string? elementDescription = null, string[]? elementGoals = null)
+    public LearningElementJson(int elementId, string elementUuid, string elementName, string url,
+        string elementCategory, string elementFileType, int learningSpaceParentId, int elementMaxScore,
+        string elementModel, string? elementDescription = null, string[]? elementGoals = null,
+        int elementEstimatedTimeMinutes = 0, int? elementDifficulty = null)
     {
         ElementId = elementId;
         ElementUUID = elementUuid;
@@ -24,11 +25,14 @@ public class LearningElementJson : ILearningElementJson, IInternalElementJson
         LearningSpaceParentId = learningSpaceParentId;
         ElementMaxScore = elementMaxScore;
         ElementModel = elementModel;
+        ElementEstimatedTimeMinutes = elementEstimatedTimeMinutes;
+        ElementDifficulty = elementDifficulty;
     }
 
-    public LearningElementJson(int elementId, string elementUuid, string elementName, string elementCategory,
-        string elementFileType, int learningSpaceParentId, int elementMaxScore, string elementModel,
-        string? elementDescription = null, string[]? elementGoals = null)
+    public LearningElementJson(int elementId, string elementUuid, string elementName,
+        string elementCategory, string elementFileType, int learningSpaceParentId, int elementMaxScore,
+        string elementModel, string? elementDescription = null, string[]? elementGoals = null,
+        int elementEstimatedTimeMinutes = 0, int? elementDifficulty = null)
     {
         ElementId = elementId;
         ElementUUID = elementUuid;
@@ -41,6 +45,8 @@ public class LearningElementJson : ILearningElementJson, IInternalElementJson
         LearningSpaceParentId = learningSpaceParentId;
         ElementMaxScore = elementMaxScore;
         ElementModel = elementModel;
+        ElementEstimatedTimeMinutes = elementEstimatedTimeMinutes;
+        ElementDifficulty = elementDifficulty;
     }
 
     //A Description for the Learning Element
@@ -69,4 +75,6 @@ public class LearningElementJson : ILearningElementJson, IInternalElementJson
 
     // the elementFileType describes the Filetype of the element. (H5P, Picture, Video, PDF)
     public string ElementFileType { get; set; }
+    public int ElementEstimatedTimeMinutes { get; set; }
+    public int? ElementDifficulty { get; set; }
 }

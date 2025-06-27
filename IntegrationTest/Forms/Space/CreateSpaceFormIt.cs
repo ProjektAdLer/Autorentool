@@ -69,18 +69,15 @@ public class CreateSpaceFormIt : MudFormTestFixture<CreateSpaceForm, LearningSpa
         Assert.That(mudForm.Instance.IsValid, Is.False);
 
         var mudStringInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        var mudIntInput = systemUnderTest.FindComponent<MudNumericField<int>>();
         var mudSelect = systemUnderTest.FindComponent<MudSelect<SpaceTheme>>();
 
         mudStringInputs[0].Find("input").Change(Expected);
         mudStringInputs[1].Find("textarea").Change(Expected);
-        mudIntInput.Find("input").Change(123);
         //TODO: once we have more themes, change to a different theme and test that
         mudSelect.Find("input").Change(SpaceTheme.LearningArea);
 
         Assert.That(FormModel.Name, Is.EqualTo(Expected));
         Assert.That(FormModel.Description, Is.EqualTo(Expected));
-        Assert.That(FormModel.RequiredPoints, Is.EqualTo(123));
         Assert.That(FormModel.SpaceTheme, Is.EqualTo(SpaceTheme.LearningArea));
         await mudForm.InvokeAsync(async () => await mudForm.Instance.Validate());
         Assert.That(mudForm.Instance.IsValid, Is.True);

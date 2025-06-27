@@ -54,7 +54,7 @@
         <value>Punkte</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Workload.Text" xml:space="preserve">
-        <value>Arbeitsaufwand (min)</value>
+        <value>Dauer (min)</value>
     </data>
     <data name="CreateElementForm.Difficulty.Easy" xml:space="preserve">
         <value>Leicht</value>
@@ -81,7 +81,7 @@
         <value>Lernziel(e) zu diesem Element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
-        <value>Schwierigkeitsgrad</value>
+        <value>Schwierigkeit</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
         <value>3D-Darstellung</value>
@@ -197,5 +197,20 @@ Die dazugehörigen Slots sind in jedem Grundriss an der Position der Eingangs- u
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Text.SelectedLearningMaterial" xml:space="preserve">
         <value>Ausgewähltes Lernmaterial:</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Mandatory" xml:space="preserve">
+        <value>Verpflichtend</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.Element.Optional" xml:space="preserve">
+        <value>Optional</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Title" xml:space="preserve">
+        <value>Name der Person</value>
+    </data>
+    <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.NpcName.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="CreateStoryElementForm.Collapsable.Story.Length" xml:space="preserve">
+        <value>Zeichen</value>
     </data>
 </root>

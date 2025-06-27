@@ -63,11 +63,11 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>LearningSpaceValidator.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldValidator.en.resx">
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldPropertyValidator.en.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>LearningWorldValidator.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldValidator.de.resx">
+      <EmbeddedResource Update="Resources\Validation\Validators\LearningWorldPropertyValidator.de.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>LearningWorldValidator.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>

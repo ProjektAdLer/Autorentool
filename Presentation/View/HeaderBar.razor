@@ -114,7 +114,7 @@
                 id="HeaderBar.GenerateLearningWorld.Button" OnClick="GenerateLearningWorld"
                 title=@Localizer["3DWorld.Generate.Hover"].Value
                 Disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
-                <MudIcon Icon="@Icons.Material.Filled.Publish" Title="@Localizer["3DWorld.Generate.Hover"].Value"
+                <MudIcon Icon="@Icons.Material.Filled.Upload" Title="@Localizer["3DWorld.Generate.Hover"].Value"
                          Size="Size.Small"></MudIcon>
                 <p class="text-xs font-bold uppercase pl-2">@Localizer["3DWorld.Generate.Button.Title"]</p>
             </MudButton>
@@ -384,130 +384,11 @@
 
     private bool IsLearningWorldValidForGeneration(ILearningWorldViewModel world)
     {
-        var errors = new List<string>();
-
-        if (world.LearningSpaces.Count == 0)
-        {
-            errors.Add($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
-        }
-        else if (world.LearningSpaces.Count > 50)
-        {
-            errors.Add($"<li> {Localizer["ErrorString.TooMany.LearningSpaces.Message"]} </li>");
-        }
-
-        foreach (var space in world.LearningSpaces)
-        {
-            if (!space.ContainedLearningElements.Any())
-                errors.Add($"<li> {Localizer["ErrorString.Missing.LearningElements.Message", space.Name]} </li>");
-
-            if (space.Points < space.RequiredPoints)
-                errors.Add($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
-
-            foreach (var element in space.ContainedLearningElements)
-            {
-                if (element.LearningContent is (IFileContentViewModel or ILinkContentViewModel)
-                    && !PresentationLogic.GetAllContent().Contains(element.LearningContent))
-                {
-                    errors.Add($"<li> {Localizer["ErrorString.Missing.LearningContent.Message", element.Name]} </li>");
-                }
-            }
-        }
-
-        foreach (var (adaptivityContent, learningElement) in world.AllLearningElements
-                     .Where(ele => ele.LearningContent is IAdaptivityContentViewModel)
-                     .Select(ele => ((IAdaptivityContentViewModel)ele.LearningContent, ele)))
-        {
-            if (adaptivityContent.Tasks.Count == 0)
-                errors.Add($"<li> {Localizer["ErrorString.NoTasks.Message", learningElement.Name]} </li>");
-
-            if (TaskReferencesNonExistantElement(adaptivityContent, world))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantElement.Message", learningElement.Name]} </li>");
-            if (TaskReferencesNonExistantContent(adaptivityContent, world))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesNonexistantContent.Message", learningElement.Name]} </li>");
-            if (adaptivityContent.Tasks.Any(TaskReferencesUnplacedElement(world)))
-                errors.Add($"<li> {Localizer["ErrorString.TaskReferencesUnplacedElement.Message", learningElement.Name]} </li>");
-
-            var invalidSpaceReferences = ReferencesElementInSpaceAfterOwnSpace(learningElement, world);
-            errors.AddRange(invalidSpaceReferences.Select(reference => $"<li> {Localizer["ErrorString.TaskReferencesElementInSpaceAfterOwnSpace.Message", learningElement.Name, reference.Space.Name, reference.Element.Name]} </li>"));
-        }
-
-        if (!errors.Any()) return true;
-
-        var errorString = $"<ul>{string.Join(Environment.NewLine, errors)}</ul>";
-        Logger.LogError("LearningWorld is not valid: {ErrorString}", errorString);
-        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString);
+        var validationResult = PresentationLogic.ValidateLearningWorldForGeneration(world);
+        if (validationResult.IsValid) return true;
+        Logger.LogError("LearningWorld is not valid: {ErrorString}", validationResult.Errors);
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], string.Join("", validationResult.Errors));
         return false;
-    }
-
-    private bool TaskReferencesNonExistantElement(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
-        return adaptivityContentReferencedIds.Any(id => world.AllLearningElements.All(ele => ele.Id != id));
-    }
-
-    private bool TaskReferencesNonExistantContent(IAdaptivityContentViewModel adaptivityContent, ILearningWorldViewModel world)
-    {
-        var contentReferencedByAdaptivityContent = GetContentReferencesByAdaptivityContent(adaptivityContent);
-        return contentReferencedByAdaptivityContent.Any(adaContent => !PresentationLogic.GetAllContent().Contains(adaContent));
-    }
-
-    private static Func<IAdaptivityTaskViewModel, bool> TaskReferencesUnplacedElement(ILearningWorldViewModel world) =>
-        task => task.Questions
-            .Any(question => question.Rules
-                .Any(rule => rule.Action is ElementReferenceActionViewModel eravm &&
-                             world.UnplacedLearningElements.Any(unplacedEle =>
-                                 unplacedEle.Id == eravm.ElementId)));
-
-
-    /// <summary>
-    /// Checks if the given element references any elements that are placed in spaces which come AFTER the space it
-    /// itself is in, in the partial ordering of spaces.
-    /// </summary>
-    private IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> ReferencesElementInSpaceAfterOwnSpace(ILearningElementViewModel element, ILearningWorldViewModel world)
-    {
-        var ownSpace = world.LearningSpaces.SingleOrDefault(space => space.ContainedLearningElements.Contains(element));
-        //element isn't placed yet, can't say anything about it
-        if (ownSpace is null) return Enumerable.Empty<(ILearningSpaceViewModel, ILearningElementViewModel)>();
-
-        //find all the id's of elements that the adaptivity content of this element we are looking at references
-        var adaptivityContent = (AdaptivityContentViewModel)element.LearningContent;
-        var adaptivityContentReferencedIds = GetElementIdsContentReferences(adaptivityContent);
-
-        //create a tuple of (space,ele) for every element in every space
-        IEnumerable<(ILearningSpaceViewModel Space, ILearningElementViewModel Element)> spaceElementTuples = world.LearningSpaces
-            .SelectMany(space => space.ContainedLearningElements
-                .Select(ele => (space, ele)));
-
-        //find all the tuples that contain an element that is referenced by the adaptivity content of the element we are looking at
-        var spaceElementTuplesReferenced = spaceElementTuples.Where(tup => adaptivityContentReferencedIds.Contains(tup.Element.Id));
-
-        //find all spaces that are after the space the element we are looking at is in
-        var spacesAfterOwn = ownSpace.GetFollowingSpaces();
-
-        //find all tuples that contain a space that is after our own space
-        return spaceElementTuplesReferenced.Where(tup => spacesAfterOwn.Contains(tup.Space));
-    }
-
-    private static IEnumerable<Guid> GetElementIdsContentReferences(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ElementReferenceActionViewModel)
-                    .Cast<ElementReferenceActionViewModel>()
-                    .Select(action => action.ElementId)));
-    }
-
-    private IEnumerable<ILearningContentViewModel> GetContentReferencesByAdaptivityContent(IAdaptivityContentViewModel adaptivityContent)
-    {
-        return adaptivityContent.Tasks
-            .SelectMany(task => task.Questions
-                .SelectMany(question => question.Rules
-                    .Select(rule => rule.Action)
-                    .Where(action => action is ContentReferenceActionViewModel)
-                    .Cast<ContentReferenceActionViewModel>()
-                    .Select(action => action.Content)));
     }
 
     private async Task ShowNotLoggedInDialog()
@@ -579,8 +460,6 @@
         }
     }
 
-    private void OpenAdLer() => ShellWrapper.OpenPathAsync("https://www.projekt-adler.eu");
-
     private void ShowLearningOutcomesOverview()
     {
         var options = new DialogOptions
@@ -606,10 +485,10 @@
         var options = new DialogOptions
         {
             BackdropClick = true,
-            CloseOnEscapeKey = true, 
-            CloseButton = true, 
-            MaxWidth = MaxWidth.Small, 
-            FullWidth = true, 
+            CloseOnEscapeKey = true,
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
             NoHeader = true
         };
         DialogService.ShowAsync<AdministrationDialog>("Administration", options);

@@ -27,16 +27,16 @@
         <value>Öffnen</value>
     </data>
     <data name="ApplicationException.OnOpenLearningWorld.Message" xml:space="preserve">
-        <value>OnOpenLearningWorld must be set.</value>
+        <value>OnOpenLearningWorld muss festgelegt werden.</value>
     </data>
     <data name="ApplicationException.LearningWorldPath.Message" xml:space="preserve">
-        <value>LearningWorldPath must be set.</value>
+        <value>LearningWorldPath muss festgelegt sein.</value>
     </data>
     <data name="ApplicationException.OnDeleteFromSaved.Message" xml:space="preserve">
-        <value>OnDeleteFromSaved must be set.</value>
+        <value>OnDeleteFromSaved muss festgelegt werden.</value>
     </data>
     <data name="ApplicationException.OnCloseWorld.Message" xml:space="preserve">
-        <value>OnCloseWorld must be set.</value>
+        <value>OnCloseWorld muss festgelegt werden.</value>
     </data>
     <data name="LearningWorldCard.Button.Close.Text" xml:space="preserve">
         <value>Lernwelt löschen</value>

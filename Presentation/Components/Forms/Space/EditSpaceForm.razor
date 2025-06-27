@@ -49,14 +49,21 @@
                          InitiallyCollapsed="true">
                 <div class="px-6">
                     <p class="text-xs pt-3">
-                        @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
+                        <span class="text-adlergrey-800">
+                            @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Text"]
+                        </span>
                     </p>
-                    <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                                     Min="0"
-                                     For="@(() => FormModel.RequiredPoints)"
-                                     DebounceInterval="DebounceInterval"
-                                     Variant="Variant.Outlined"
-                                     Margin="Margin.Dense"/>
+                    <p class="text-xs text-adlerblue-600">
+                        @SpaceToEdit.NumberOfRequiredElements
+                        <span class="text-adlergrey-800"> / </span> @SpaceToEdit.NumberOfElements
+                        <span class="text-adlergrey-800"> @Localizer["EditSpaceForm.Fields.Collapsable.CompletionConditions.Description.Appendix"] </span>
+                    </p>
+                    <ul class="pl-2 py-2 mt-0 border border-adlergrey-300 rounded w-full list-disc list-inside">
+                        @foreach (var leName in SpaceToEdit.ContainedLearningElements.Where(x => x.IsRequired).Select(x => x.Name).ToList())
+                        {
+                            <li class="text-xs">@leName</li>
+                        }
+                    </ul>
                 </div>
             </Collapsable>
 

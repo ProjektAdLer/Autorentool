@@ -44,7 +44,7 @@
     {
         <MudCardContent @onclick="() => OnClicked.InvokeAsync(LearningElement)" title="@LearningElement.Name" Class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] h-[40px] 2xl:h-[50px] 2500p:h-[55px] p-0">
      
-            <div class="flex flex-col items-center">
+            <div class="@(StyleWhenRequired)">
                 
                 <p T="ILearningElementViewModel" class="absolute truncate w-[2.5rem] 2xl:w-[5rem] h-4 2xl:h-4 text-sm mt-4 font-bold text-adlertextgrey text-ellipsis overflow-hidden text-center leading-none 2xl:leading-none 1080p:leading-none px-0 z-10" @onclick="() => OnClicked.InvokeAsync(LearningElement)">@LearningElement.Name
                 </p>
@@ -58,13 +58,12 @@
 
                 <img src="@ElementModelHandler.GetIconForElementModel(LearningElement.ElementModel)" class="drop-shadow w-10 h-10 2xl:w-12 2xl:h-12 opacity-50 z-0" draggable="false"/>
                 
-                <div class="w-[60px] 2xl:w-[70px] 3xl:w-[75px] 1080p:w-[80px] 2500p:w-[120px] bg-[#b9c0ca] rounded-md border-2 border-[#8b96a7] px-0.5 mt-0.5 absolute -bottom-2">
+                <div class="w-[72px] 2xl:w-[85px] 3xl:w-[88px] 1080p:w-[100px] 2500p:w-[145px] opacity-60 px-0.5 mt-0.5 absolute bottom-0">
                     <div class="flex justify-between items-center">
                         <MudIcon Class="flex difficulty-icon drop-shadow w-3 h-3 2xl:h-4 2xl:w-4"
                                  Icon="@GetDifficultyIcon(LearningElement.Difficulty)">
                         </MudIcon>
-                        <MudText Class="flex items-center justify-center rounded-full text-adlertextgrey text-[8px] 2xl:text-[10px] font-bold">@LearningElement.Points P.</MudText>
-                        <MudIcon Class="flex drop-shadow w-3 h-3 2xl:w-3 2xl:h-3" 
+                        <MudIcon Class="flex drop-shadow w-3 h-3 2xl:w-3 2xl:h-3 mr-1" 
                                  Icon="@GetElementIcon()"></MudIcon>
                     </div>
                 </div>
@@ -99,6 +98,8 @@
     [Inject, AllowNull] internal IDialogService DialogService { get; set; }
     
     [Parameter] public bool ShowDeleteButton { get; set; } = true;
+    
+    private string StyleWhenRequired => LearningElement.IsRequired ? "flex flex-col items-center opacity-100" : "flex flex-col items-center opacity-50";
 
     protected override void OnParametersSet()
     {

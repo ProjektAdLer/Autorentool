@@ -43,7 +43,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -81,7 +81,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -143,7 +143,7 @@ public class CachingMapperIt
         var commandStateManager = new CommandStateManager();
         var businessLogger = Substitute.For<ILogger<BusinessLogic.API.BusinessLogic>>();
         var businessLogic =
-            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger);
+            new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!, null!, businessLogger, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var cachingLogger = Substitute.For<ILogger<CachingMapper>>();
@@ -183,7 +183,7 @@ public class CachingMapperIt
 
         systemUnderTest.CreateStoryElementInSlot(spaceVm, 0, "q",
             ViewModelProvider.GetStoryContent(), "r", "s", LearningElementDifficultyEnum.Easy,
-            ElementModel.a_npc_defaultnpc, 2, 3);
+            ElementModel.a_npc_defaultdark_female, 2, 3);
 
         Assert.That(spaceVm.LearningSpaceLayout.StoryElements.Count, Is.EqualTo(1));
 

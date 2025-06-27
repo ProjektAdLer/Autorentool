@@ -85,8 +85,11 @@ public class ElementModelHandlerUt
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Adaptivity))
             .Concat(ElementModelHandler.GetElementModelsForModelType(ContentTypeEnum.Story))
             .ToList();
-        var elementModels = (ElementModel[])Enum.GetValues(typeof(ElementModel));
-        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random).ToArray();
+        var elementModels = Enum.GetValues<ElementModel>();
+        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random &&
+                                                            typeof(ElementModel).GetMember(elementModel.ToString())[0]
+                                                                .GetCustomAttributes(typeof(ObsoleteAttribute), false)
+                                                                .Length == 0).ToArray();
 
         Assert.Multiple(() =>
         {
@@ -111,5 +114,34 @@ public class ElementModelHandlerUt
         var unknownEnumValue = Enum.GetValues(typeof(WorldTheme)).Length;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             _ = ElementModelHandler.GetElementModelsForTheme((WorldTheme)unknownEnumValue).ToList());
+    }
+
+    [Test]
+    [Ignore("Not all ElementModels are currently assigned to a theme")]
+    public void GetElementModelsForTheme_ContainsEachElementModel()
+    {
+        var themes = (WorldTheme[])Enum.GetValues(typeof(WorldTheme));
+
+        var elementModelsFromAllThemes = new List<ElementModel>();
+        foreach (var theme in themes)
+        {
+            elementModelsFromAllThemes.AddRange(ElementModelHandler.GetElementModelsForTheme(theme));
+        }
+
+        var elementModels = Enum.GetValues<ElementModel>();
+        elementModels = elementModels.Where(elementModel => elementModel != ElementModel.l_random &&
+                                                            typeof(ElementModel).GetMember(elementModel.ToString())[0]
+                                                                .GetCustomAttributes(typeof(ObsoleteAttribute), false)
+                                                                .Length == 0).ToArray();
+
+        //Assert.That(elementModelsFromAllThemes.Count, Is.GreaterThanOrEqualTo(elementModels.Length));
+        Assert.Multiple(() =>
+        {
+            foreach (var elementModel in elementModels)
+            {
+                Assert.That(elementModelsFromAllThemes.Contains(elementModel), Is.True,
+                    $"ElementModel {elementModel} is not assigned to any theme");
+            }
+        });
     }
 }
