@@ -19,6 +19,23 @@
 
 </details>
 
+## [2.3.1] - 2025-06-30
+
+### Added
+
+### Changed
+
+- Compressed images to reduce app size.
+- Updated dependencies.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [2.3.0] - 2025-06-27
 
 ### Added
