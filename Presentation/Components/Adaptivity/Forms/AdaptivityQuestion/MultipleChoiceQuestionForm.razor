@@ -33,7 +33,7 @@
                 <div class="border-4 border-adlergrey-100 rounded-md mx-1.5 bg-white">
                     <MudTextField @bind-Value="FormDataContainer.FormModel.Text"
                                   For="@(() => FormModel.Text)"
-                                  Placeholder="Textfeld"
+                                  Placeholder="@Localizer["MultipleChoiceQuestionForm.Field.QuestionText.Placeholder"]"
                                   t="string"
                                   Lines="3"
                                   Variant="Variant.Outlined"

@@ -19,10 +19,10 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="CreateEditStructuredLearningOutcome.Title.Part1" xml:space="preserve">
-        <value>Learning outcome formulation: </value>
+        <value>Learning Outcome Formulation: </value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Title.Part2" xml:space="preserve">
-        <value>Input support</value>
+        <value>Input Support</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.Info.Text" xml:space="preserve">
         <value>In the context of competency-based higher education and the associated shift in perspective from "teaching to learning", learning objectives have also come into focus. Learning objectives are also the most precise description of the desired learning outcomes. Learning outcomes describe what students should know and be able to do at the end of a learning section and what attitudes are expected of them. They are recorded in writing and communicated in a situational manner. The what-whereby-what-for-structure and taxonomy of learning objectives (e.g. according to Anderson &amp; Krathwohl) are helpful in this context, to select appropriate verbs for formulating learning outcomes on the basis of different levels of competence.</value>
@@ -34,7 +34,7 @@
         <value>Not specified</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel" xml:space="preserve">
-        <value>Taxonomy level</value>
+        <value>Taxonomy Level</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.TaxonomyLevel.Info" xml:space="preserve">
         <value>The formulation of a learning outcome focuses on the description of corresponding competencies of the intended learning process of the students. These can be assigned to a taxonomy level based on the complexity of the cognitive processes. The definition of a taxonomy level (according to Anderson &amp; Krathwohl) serves to find a suitable action verb in the further processing steps of the learning outcome formulation.</value>
@@ -43,7 +43,7 @@
         <value>You are able to...</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility" xml:space="preserve">
-        <value>Action verb*</value>
+        <value>Action Verb*</value>
     </data>
     <data name="CreateEditStructuredLearningOutcome.VerbOfVisibility.Info" xml:space="preserve">
         <value>The learning outcome describes desired behavioral dispositions and which abilities, skills or competencies the students will have developed at the end of the learning process. It therefore describes actions that are formulated with the help of verbs of external visibility. These represent an action on or with an external object. Verbs such as "understand" or "recognize" are therefore not suitable. The verbs of external visibility can be assigned to a taxonomy level.</value>

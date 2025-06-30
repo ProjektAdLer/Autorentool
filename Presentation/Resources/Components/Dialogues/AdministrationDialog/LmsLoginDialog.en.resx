@@ -157,7 +157,7 @@ This deletion action also irrevocably removes the courses from Moodle.</value>
         <value>Story element</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide" xml:space="preserve">
-        <value>Input support</value>
+        <value>Input Support</value>
     </data>
     <data name="DialogContent.Help.Didactic.LearningOutcomeGuide.Hover" xml:space="preserve">
         <value>Information on input support for formulate learning outcomes - Opens a browser window</value>

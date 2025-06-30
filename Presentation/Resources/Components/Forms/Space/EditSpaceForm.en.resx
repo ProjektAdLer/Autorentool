@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="EditSpaceForm.Header.Title" xml:space="preserve">
-        <value>Edit learning space</value>
+        <value>Edit Learning Space</value>
     </data>
     <data name="EditSpaceForm.SnackbarMessage" xml:space="preserve">
         <value>Learning space updated</value>
@@ -24,13 +24,13 @@
         <value>Learning outcome(s) for this learning space</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Learning outcomes</value>
+        <value>Learning Outcomes</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Learning space theme</value>
+        <value>Learning Space Theme</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Completion condition</value>
+        <value>Completion Condition</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
         <value>Floor plan</value>
@@ -60,7 +60,7 @@
         <value>Move the mouse over the floor plans in the thumbnail view to display the placement of the entrance and exit doors as well as the representation of the space in the 3D learning environment. </value>
     </data>
     <data name="EditSpaceForm.Goals.Button" xml:space="preserve">
-        <value>Learning outcome formulation</value>
+        <value>Learning Outcome Formulation</value>
     </data>
     <data name="EditSpaceForm.Fields.Collapsable.Description.Title" xml:space="preserve">
         <value>Description</value>

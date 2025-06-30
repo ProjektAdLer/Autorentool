@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="CreateAdaptivityElementForm.Header.Text" xml:space="preserve">
-        <value>Create adaptivity element</value>
+        <value>Create Adaptivity Element</value>
     </data>
     <data name="CreateAdaptivityElementForm.SnackbarMessage" xml:space="preserve">
         <value>Adaptivity element created</value>
@@ -27,7 +27,7 @@
         <value>Add tasks</value>
     </data>
     <data name="CreateElementForm.Header.Text" xml:space="preserve">
-        <value>Create learning element</value>
+        <value>Create Learning Element</value>
     </data>
     <data name="CreateElementForm.SnackbarMessage" xml:space="preserve">
         <value>Learning element created</value>
@@ -54,16 +54,16 @@
         <value>None</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>External learning material</value>
+        <value>External Learning Material</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D representation</value>
+        <value>3D Representation</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
         <value>3D representation of learning element</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Learning outcomes</value>
+        <value>Learning Outcomes</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
         <value>Description to this element</value>
@@ -78,7 +78,7 @@
         <value>Name*</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
-        <value>External learning material</value>
+        <value>External Learning Material</value>
     </data>
     <data name="CreateElementForm.Fields.Collapse.LearningContent.Type" xml:space="preserve">
         <value>Type</value>
@@ -119,7 +119,7 @@
         <value>Click for more information</value>
     </data>
     <data name="CreateStoryElementForm.Header.Text" xml:space="preserve">
-        <value>Create story element</value>
+        <value>Create Story Element</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.Story.Title" xml:space="preserve">
         <value>Story</value>
@@ -143,7 +143,7 @@
         <value>Delete text block</value>
     </data>
     <data name="CreateStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
-        <value>Text block </value>
+        <value>Text Block </value>
     </data>
     <data name="CreateStoryElementForm.SnackbarMessage" xml:space="preserve">
         <value>Story element created</value>
@@ -175,7 +175,7 @@ The corresponding slots can be found in each floor plan at the position of the e
         <value>Select or change external learning material</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Preview" xml:space="preserve">
-        <value>Show learning material</value>
+        <value>Show Learning Material</value>
     </data>
     <data name="CreateElementForm.Fields.Collapsable.LearningContent.Edit" xml:space="preserve">
         <value>Select or change learning material</value>

@@ -30,13 +30,13 @@
         <value>Import learning space</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value>Create condition</value>
+        <value>Create Condition</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
-        <value>Create learning space</value>
+        <value>Create Learning Space</value>
     </data>
     <data name="LearningWorldView.Title" xml:space="preserve">
-        <value>Learning world overview - Learning pathway</value>
+        <value>Learning World Overview - Learning Pathway</value>
     </data>
     <data name="LearningWorldView.Condition.Text" xml:space="preserve">
         <value>Completion condition (total):</value>

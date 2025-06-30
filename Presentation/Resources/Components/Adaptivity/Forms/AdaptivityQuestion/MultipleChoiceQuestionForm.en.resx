@@ -37,7 +37,7 @@
         <value>Answer option {0}</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Text.Choices" xml:space="preserve">
-        <value>Answer options</value>
+        <value>Answer Options</value>
     </data>
     <data name="MultipleChoiceQuestionForm.TitleContent.Create.Easy" xml:space="preserve">
         <value>Creating an easy question</value>
@@ -61,10 +61,10 @@
         <value>Formulate a question and the corresponding answers. Indicate whether it is a single or a multiple choice question.</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Switch.SingleChoice" xml:space="preserve">
-        <value>Single choice</value>
+        <value>Single Choice</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Switch.MultipleChoice" xml:space="preserve">
-        <value>Multiple choice</value>
+        <value>Multiple Choice</value>
     </data>
     <data name="MultipleChoiceQuestionForm.Switch.Question.Text" xml:space="preserve">
         <value>Question: </value>
@@ -74,5 +74,8 @@
     </data>
     <data name="MultipleChoiceQuestionForm.Info.Infotext" xml:space="preserve">
         <value>A maximum of ten possible answers are available for each question.</value>
+    </data>
+    <data name="MultipleChoiceQuestionForm.Field.QuestionText.Placeholder" xml:space="preserve">
+        <value>Text field</value>
     </data>
 </root>

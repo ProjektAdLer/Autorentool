@@ -22,7 +22,7 @@
         <value>Workload: </value>
     </data>
     <data name="OverView.Title" xml:space="preserve">
-        <value>Learning world overview - Hierarchy</value>
+        <value>Learning World Overview - Hierarchy</value>
     </data>
     <data name="LearningWorldTreeView.Condition.Text" xml:space="preserve">
         <value>Completion condition (total):</value>

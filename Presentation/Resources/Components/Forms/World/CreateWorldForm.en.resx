@@ -40,10 +40,10 @@
         <value>Learning outcome(s) for this learning world</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
-        <value>Create learning world</value>
+        <value>Create Learning World</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
-        <value>Learning outcomes</value>
+        <value>Learning Outcomes</value>
     </data>
     <data name="CreateWorldForm.General.Field.EvaluationLink.Text" xml:space="preserve">
         <value>Link to evaluation</value>
@@ -61,13 +61,13 @@
         <value>Description</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Title" xml:space="preserve">
-        <value>Enrolment method</value>
+        <value>Enrolment Method</value>
     </data>
     <data name="CreateWorldForm.EnrolmentKey.Tooltip" xml:space="preserve">
         <value>An enrolment key enables access to the learning world to be restricted to only those who know the key. &lt;br&gt; &lt;br&gt; If the field is left blank, any user may enrol in the learning world. &lt;br&gt; &lt;br&gt; If an enrolment key is specified, any user attempting to enrol in the learning world will be restricted to supply the key. Note that users only need to supply the enrolment key once, when they enrol in the learning world.</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Title" xml:space="preserve">
-        <value>Framework for the story</value>
+        <value>Framework For The Story</value>
     </data>
     <data name="CreateWorldForm.Fields.Collapsable.Story.Field.Description.Text" xml:space="preserve">
         <value>Formulate an introduction and a conclusion for your story here in order to embed the learning world in a framework.</value>
@@ -85,7 +85,7 @@
         <value>And so it ended...</value>
     </data>
     <data name="CreateWorldForm.Theme.Text" xml:space="preserve">
-        <value>Learning world theme</value>
+        <value>Learning World Theme</value>
     </data>
     <data name="CreateWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Selection of themes with different theme worlds for the learning world</value>

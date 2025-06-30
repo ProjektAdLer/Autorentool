@@ -84,4 +84,7 @@
     <data name="MultipleChoiceQuestionForm.Info.Infotext" xml:space="preserve">
         <value>Für eine Frage stehen max. zehn Antwortmöglichkeiten zur Verfügung.</value>
     </data>
+    <data name="MultipleChoiceQuestionForm.Field.QuestionText.Placeholder" xml:space="preserve">
+        <value>Textfeld</value>
+    </data>
 </root>

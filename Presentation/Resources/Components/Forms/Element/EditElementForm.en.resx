@@ -27,7 +27,7 @@
         <value>Edit tasks</value>
     </data>
     <data name="EditElementForm.Header.Text" xml:space="preserve">
-        <value>Edit learning element</value>
+        <value>Edit Learning Element</value>
     </data>
     <data name="EditElementForm.SnackbarMessage" xml:space="preserve">
         <value>Learning element updated</value>
@@ -54,16 +54,16 @@
         <value>None</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
-        <value>External learning material</value>
+        <value>External Learning Material</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
-        <value>3D representation</value>
+        <value>3D Representation</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
         <value>3D representation of learning element</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
-        <value>Learning outcomes</value>
+        <value>Learning Outcomes</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
         <value>Description to this element</value>
@@ -72,7 +72,7 @@
         <value>Learning outcome(s) for this element</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
-        <value>External learning material</value>
+        <value>External Learning Material</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Points</value>
@@ -131,7 +131,7 @@
         <value>Story of this story element. Each text block can contain 400 characters</value>
     </data>
     <data name="EditStoryElementForm.Fields.Collapsable.StoryText.Slide" xml:space="preserve">
-        <value>Text block </value>
+        <value>Text Block </value>
     </data>
     <data name="EditStoryElementForm.Fields.Collapsable.Story.DeleteStory" xml:space="preserve">
         <value>Delete text block</value>
