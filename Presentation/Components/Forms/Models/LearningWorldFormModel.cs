@@ -14,6 +14,8 @@ public class LearningWorldFormModel
         Goals = "";
         WorldTheme = default;
         EvaluationLink = "";
+        EvaluationLinkName = "";
+        EvaluationLinkText = "";
         EnrolmentKey = "";
         StoryStart = "";
         StoryEnd = "";
@@ -28,6 +30,8 @@ public class LearningWorldFormModel
     public string Goals { get; set; }
     public WorldTheme WorldTheme { get; set; }
     public string EvaluationLink { get; set; }
+    public string EvaluationLinkName { get; set; }
+    public string EvaluationLinkText { get; set; }
     public string EnrolmentKey { get; set; }
     public string StoryStart { get; set; }
     public string StoryEnd { get; set; }
