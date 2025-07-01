@@ -6,7 +6,7 @@
 /// </summary>
 public enum H5pState
 {
-    Unknown,
+    NotValidated,
     NotUsable,
     Primitive,
     Completable,
