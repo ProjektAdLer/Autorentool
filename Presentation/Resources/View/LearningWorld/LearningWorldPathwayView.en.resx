@@ -12,7 +12,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="LearningWorldView.Workload.Text" xml:space="preserve">
-        <value>Workload:</value>
+        <value>Workload (Total):</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
@@ -43,5 +43,14 @@
     </data>
     <data name="LearningWorldView.Condition.Elements" xml:space="preserve">
         <value>elem.</value>
+    </data>
+    <data name="LearningWorldView.Theme.Text" xml:space="preserve">
+        <value>World theme:</value>
+    </data>
+    <data name="LearningWorldView.WorldGoals.Text" xml:space="preserve">
+        <value>Learning outcomes:</value>
+    </data>
+    <data name="LearningWorldView.WorldGoals.Overview" xml:space="preserve">
+        <value>Learning outcomes of this learning world</value>
     </data>
 </root>

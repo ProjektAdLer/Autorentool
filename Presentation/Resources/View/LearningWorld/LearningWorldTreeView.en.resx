@@ -19,7 +19,7 @@
         <value> min</value>
     </data>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Workload: </value>
+        <value>Workload (Total): </value>
     </data>
     <data name="OverView.Title" xml:space="preserve">
         <value>Learning World Overview - Hierarchy</value>
@@ -29,5 +29,14 @@
     </data>
     <data name="LearningWorldTreeView.Condition.Elements" xml:space="preserve">
         <value>elem.</value>
+    </data>
+    <data name="OverView.WorldGoals.Overview" xml:space="preserve">
+        <value>Learning outcomes of this learning world</value>
+    </data>
+    <data name="OverView.WorldGoals.Text" xml:space="preserve">
+        <value>Learning outcomes:</value>
+    </data>
+    <data name="OverView.Theme.Text" xml:space="preserve">
+        <value>World theme:</value>
     </data>
 </root>

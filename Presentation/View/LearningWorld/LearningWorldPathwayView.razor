@@ -5,7 +5,11 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningPathWay
+@using Shared.Theme
+@using Presentation.Components.LearningOutcomes
 @using Direction = Shared.Direction
+@using Size = MudBlazor.Size
+@inject ISnackbar Snackbar
 @ChildContent
 
 <article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 3xl:w-[350px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[500px] 3700p:w-[550px] grow">
@@ -20,14 +24,30 @@
                 @* ReSharper restore Html.PathError *@
                 <p class="text-sm 2xl:text-base font-bold text-adlertitledarkblue truncate" title="@LearningWorldP.LearningWorldVm?.Name"> @LearningWorldP.LearningWorldVm?.Name</p>
             </div>
-            <p class="text-xs 2xl:text-base text-adlerblue-600">
-                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
-            </p>
-            <p class="text-xs 2xl:text-base text-adlerblue-600">
-                <span class="text-adlergrey-600">@Localizer["LearningWorldView.Condition.Text"] </span> @LearningWorldP.LearningWorldVm?.NumberOfRequiredElements
-                <span class="text-adlergrey-600"> / </span>@LearningWorldP.LearningWorldVm?.NumberOfElements
-                <span class="text-adlergrey-600"> @Localizer["LearningWorldView.Condition.Elements"] </span>
-            </p>
+            <div class="pl-4">
+                <ul class="list-disc">
+                    @if (LearningWorldP.LearningWorldVm != null && SelectedViewModelsProvider.LearningWorld != null)
+                    {
+                        <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-theme">
+                            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Theme.Text"] </span> @(ThemeHelper<WorldTheme>.Localize(LearningWorldP.LearningWorldVm.WorldTheme, SelectedViewModelsProvider.LearningWorld!.WorldTheme.ToString()))
+                        </li>
+                    }
+                    <div class="flex flex-row items-center gap-1">
+                        <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlergrey-600 world-goals">@Localizer["LearningWorldView.WorldGoals.Text"]</li>
+                        <button title="@Localizer["LearningWorldView.WorldGoals.Overview"]" @onclick="@ShowLearningOutcomesOverview">
+                            <img class="w-4 2xl:w-5 opacity-70" src="CustomIcons/learningoutcome-icon_circle.png" alt="learning-outcome-icon">
+                        </button>
+                    </div>
+                    <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
+                    </li>
+                    <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600">
+                        <span class="text-adlergrey-600">@Localizer["LearningWorldView.Condition.Text"] </span> @LearningWorldP.LearningWorldVm?.NumberOfRequiredElements
+                        <span class="text-adlergrey-600"> / </span>@LearningWorldP.LearningWorldVm?.NumberOfElements
+                        <span class="text-adlergrey-600"> @Localizer["LearningWorldView.Condition.Elements"] </span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
     <section class="flex flex-row justify-around py-2">
@@ -39,7 +59,7 @@
                 <p class="text-xs z-10 uppercase">@Localizer["LearningWorldView.NewLearningSpace.Title"]</p>
             </button>
             @* ReSharper disable Html.PathError *@
-            <img src="CustomIcons/Space/space-icon_bright.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+            <img src="CustomIcons/Space/space-icon_bright.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8" alt="Space-Icon">
             @* ReSharper restore Html.PathError *@
         </div>
 
@@ -51,7 +71,7 @@
                 <p class="text-xs z-10 uppercase">@Localizer["LearningWorldView.NewCondition.Title"]</p>
             </button>
             @* ReSharper disable Html.PathError *@
-            <img src="CustomIcons/condition-icon.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
+            <img src="CustomIcons/condition-icon.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8" alt="Condition-Icon">
             @* ReSharper restore Html.PathError *@
         </div>
     </section>
@@ -116,6 +136,9 @@
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
+    IDialogService DialogService { get; set; }
 
     [Inject, AllowNull] //can never be null, DI will throw exception on unresolved types - n.stich
     internal IStringLocalizer<LearningWorldPathwayView> Localizer { get; set; }
@@ -174,4 +197,23 @@
         TriggerStateHasChanged();
     }
 
+    private void ShowLearningOutcomesOverview()
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            BackdropClick = true,
+            FullWidth = true,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        var parameters = new DialogParameters
+        {
+            {
+                nameof(LearningOutcomesWorldOverview.LearningWorld), SelectedViewModelsProvider.LearningWorld
+            }
+        };
+        DialogService.ShowAsync<LearningOutcomesWorldOverview>("", parameters, options);
+    }
 }

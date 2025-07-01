@@ -28,20 +28,16 @@
                         <p class="text-sm 2xl:text-base text-adlertitledarkblue font-bold break-normal" title="@LearningSpaceP.LearningSpaceVm.Name">@LearningSpaceP.LearningSpaceVm.Name</p>
                     </div>
 
-                    <section class="flex flex-row justify-between items-center w-full">
-                        <div class="flex flex-col justify-start">
-                            <p class="text-xs 2xl:text-base text-adlerblue-600 space-theme">
+                    <section class="pl-4 w-full">
+                        <ul class="list-disc">
+                            <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-theme">
                                 <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span> @(ThemeHelper<SpaceTheme>.Localize(LearningSpaceP.LearningSpaceVm.SpaceTheme, SelectedViewModelsProvider.LearningWorld!.WorldTheme.ToString()))
-                            </p>
-                            <p class="text-xs 2xl:text-base text-adlerblue-600 space-workload">
-                                <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
-                            </p>
-                        </div>
-                        <div class="flex flex-col justify-start">
+                            </li>
+                            
                             <div class="flex flex-row items-center gap-1">
-                                <p class="text-xs 2xl:text-base text-adlergrey-600 space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</p>
+                                <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlergrey-600 space-goals">@Localizer["LearningSpace.SpaceGoals.Text"]</li>
                                 <button title="@Localizer["LearningSpace.SpaceGoals.Overview"]" @onclick="@ToggleOpen">
-                                    <img class="w-4 2xl:w-6 opacity-70" src="CustomIcons/learningoutcome-icon_circle.png" alt="learning-outcome-icon">
+                                    <img class="w-4 2xl:w-65 opacity-70" src="CustomIcons/learningoutcome-icon_circle.png" alt="learning-outcome-icon">
                                 </button>
 
                                 <MudPopover AnchorOrigin="Origin.BottomLeft" Fixed="true" Open="@_isOpen" Class="bg-white rounded drop-shadow-xl h-fit w-[550px] text-adlergrey-800 text-justify p-4">
@@ -81,14 +77,16 @@
                                 </MudPopover>
                             </div>
                             @ChildContent
-                            
-                            <p class="text-xs 2xl:text-base text-adlerblue-600 space-points">
+
+                            <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-workload">
+                                <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text.Additional"]</span>
+                            </li>
+                            <li class="marker:text-adlergrey pl-1 text-xs 2xl:text-base text-adlerblue-600 space-points">
                                 <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"]</span> @LearningSpaceP.LearningSpaceVm?.NumberOfRequiredElements
                                 <span class="text-adlergrey-600"> / </span> @LearningSpaceP.LearningSpaceVm?.NumberOfElements
                                 <span class="text-adlergrey-600"> @Localizer["LearningSpace.Condition.Text"] </span>
-                            </p>
-                            
-                        </div>
+                            </li>
+                        </ul>
                     </section>
                 </div>
             }

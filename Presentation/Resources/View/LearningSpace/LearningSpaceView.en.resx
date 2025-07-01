@@ -38,7 +38,7 @@
         <value>Replace learning element</value>
     </data>
     <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
-        <value>Theme: </value>
+        <value>Space theme: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
         <value>Learning Outcomes: </value>

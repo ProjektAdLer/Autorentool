@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="LearningWorldView.Workload.Text" xml:space="preserve">
-        <value>Dauer:</value>
+        <value>Dauer (Gesamt):</value>
     </data>
     <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
         <value> min</value>
@@ -55,5 +55,14 @@
     </data>
     <data name="LearningWorldView.Condition.Elements" xml:space="preserve">
         <value>Elem.</value>
+    </data>
+    <data name="LearningWorldView.Theme.Text" xml:space="preserve">
+        <value>Welt-Theme:</value>
+    </data>
+    <data name="LearningWorldView.WorldGoals.Text" xml:space="preserve">
+        <value>Lernziele:</value>
+    </data>
+    <data name="LearningWorldView.WorldGoals.Overview" xml:space="preserve">
+        <value>Lernziele dieser Lernwelt</value>
     </data>
 </root>
