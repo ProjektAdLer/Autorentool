@@ -47,6 +47,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="obj\" />
       <Folder Include="View" />
       <Folder Include="wwwroot\fonts" />
       <Folder Include="wwwroot\H5pStandalone\h5p-folder\" />
