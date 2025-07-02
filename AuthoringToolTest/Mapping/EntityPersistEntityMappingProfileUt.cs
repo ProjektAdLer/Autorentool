@@ -25,6 +25,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string Goals = "goals";
     private const WorldTheme WorldThemeVar = WorldTheme.CampusAschaffenburg;
     private const string EvaluationLink = "https://www.projekt-alder.eu/evaluation";
+    private const string EvaluationLinkName = "EvaluationName";
+    private const string EvaluationLinkText = "EvaluationText";
     private const string EnrolmentKey = "enrolmentKey";
     private const string StoryStart = "storyStart";
     private const string StoryEnd = "storyEnd";
@@ -50,13 +52,18 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewGoals = "newGoals";
     private const WorldTheme NewWorldThemeVar = WorldTheme.CampusKempten;
     private const string NewEvaluationLink = "https://www.projekt-alder.eu/newEvaluation";
+    private const string NewEvaluationLinkName = "NewEvaluationName";
+    private const string NewEvaluationLinkText = "NewEvaluationText";
     private const string NewEnrolmentKey = "newEnrolmentKey";
     private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private const string NewFilepath = "/foo/bar/baz.txt";
     private const string NewNameNpc = "newNpcName";
     private const NpcMood NewMoodNpc = NpcMood.Shocked;
-    private static readonly List<string> ConfigureNewStoryText = new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+
+    private static readonly List<string> ConfigureNewStoryText =
+        new() { "NewStoryText1", "NewStoryText2", "NewStoryText3" };
+
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
@@ -241,10 +248,10 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
-            EvaluationLink,
+            EvaluationLink, EvaluationLinkName, EvaluationLinkText,
             EnrolmentKey,
             savePath: SavePath, learningSpaces: new List<ILearningSpace>());
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -258,6 +265,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EvaluationLinkName = NewEvaluationLinkName;
+        destination.EvaluationLinkText = NewEvaluationLinkText;
         destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>();
@@ -273,10 +282,10 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
-            EvaluationLink, EnrolmentKey, savePath: SavePath);
+            EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
             Difficulty, SelectedElementModel, null, Workload, Points, PositionX, PositionY));
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -294,6 +303,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EvaluationLinkName = NewEvaluationLinkName;
+        destination.EvaluationLinkText = NewEvaluationLinkText;
         destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.UnplacedLearningElements = new List<ILearningElementPe>
@@ -317,12 +328,12 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            WorldThemeVar, EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath,
             learningSpaces: new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>()));
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -340,6 +351,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EvaluationLinkName = NewEvaluationLinkName;
+        destination.EvaluationLinkText = NewEvaluationLinkText;
         destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
@@ -364,10 +377,13 @@ public class EntityPersistEntityMappingProfileUt
     {
         var element1 =
             new LearningElement(Name, new FileContent(Name, Type, Filepath), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
+                positionY: PositionY);
         var storyElement1 =
-            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc), Description, Goals, Difficulty,
-                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
+            new LearningElement(Name, new StoryContent(Name, false, ConfigureStoryText, NameNpc, MoodNpc), Description,
+                Goals, Difficulty,
+                ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
+                positionY: PositionY);
 
         var space = new LearningSpace(Name, Description, RequiredPoints, SpaceTheme.LearningArea,
             EntityProvider.GetLearningOutcomeCollection(),
@@ -389,10 +405,10 @@ public class EntityPersistEntityMappingProfileUt
         element1.Parent = space;
         storyElement1.Parent = space;
 
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            WorldThemeVar, EvaluationLink, EnrolmentKey, StoryStart, StoryEnd, SavePath,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, WorldThemeVar,
+            EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, StoryStart, StoryEnd, SavePath,
             new List<ILearningSpace> { space });
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
 
         var systemUnderTest = CreateTestableMapper();
 
@@ -414,6 +430,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EvaluationLinkName = NewEvaluationLinkName;
+        destination.EvaluationLinkText = NewEvaluationLinkText;
         destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>
@@ -433,7 +451,8 @@ public class EntityPersistEntityMappingProfileUt
                     {
                         {
                             0,
-                            new LearningElementPe(NewName, new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc),
+                            new LearningElementPe(NewName,
+                                new StoryContentPe(NewName, false, ConfigureNewStoryText, NewNameNpc, NewMoodNpc),
                                 NewDescription, NewGoals,
                                 NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
                         }
@@ -457,7 +476,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            WorldThemeVar, EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath,
             learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
@@ -465,7 +484,7 @@ public class EntityPersistEntityMappingProfileUt
         source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
         source.LearningSpaces.Add(space2);
-        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "", default, "", "", "", "", "", "", "");
 
         source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
         source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
@@ -501,6 +520,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.EvaluationLink = NewEvaluationLink;
+        destination.EvaluationLinkName = NewEvaluationLinkName;
+        destination.EvaluationLinkText = NewEvaluationLinkText;
         destination.EnrolmentKey = NewEnrolmentKey;
         destination.SavePath = NewSavePath;
         var spacePe1 = GetTestableNewSpacePersistEntity();
@@ -568,7 +589,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            WorldThemeVar, EvaluationLink, EnrolmentKey, savePath: SavePath,
+            WorldThemeVar, EvaluationLink, EvaluationLinkName, EvaluationLinkText, EnrolmentKey, savePath: SavePath,
             learningSpaces: new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         space1.Name = "space1";
@@ -735,6 +756,10 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
+                    Assert.That(world.EvaluationLinkName,
+                        Is.EqualTo(useNewFields ? NewEvaluationLinkName : EvaluationLinkName));
+                    Assert.That(world.EvaluationLinkText,
+                        Is.EqualTo(useNewFields ? NewEvaluationLinkText : EvaluationLinkText));
                     Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                     TestElementsList(world.UnplacedLearningElements, null, useNewFields);
@@ -751,6 +776,10 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     Assert.That(world.EvaluationLink, Is.EqualTo(useNewFields ? NewEvaluationLink : EvaluationLink));
+                    Assert.That(world.EvaluationLinkName,
+                        Is.EqualTo(useNewFields ? NewEvaluationLinkName : EvaluationLinkName));
+                    Assert.That(world.EvaluationLinkText,
+                        Is.EqualTo(useNewFields ? NewEvaluationLinkText : EvaluationLinkText));
                     Assert.That(world.EnrolmentKey, Is.EqualTo(useNewFields ? NewEnrolmentKey : EnrolmentKey));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                     TestElementsList(world.UnplacedLearningElements, null, useNewFields);

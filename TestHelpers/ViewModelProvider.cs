@@ -33,7 +33,8 @@ public static class ViewModelProvider
 
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg", WorldTheme.CampusAschaffenburg,"LWVMev", "LWVMek", "LWVMss", "LWVMse");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg",
+            WorldTheme.CampusAschaffenburg, "LWVMev", "LWVMevN", "LWVMevT", "LWVMek", "LWVMss", "LWVMse");
     }
 
     public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,

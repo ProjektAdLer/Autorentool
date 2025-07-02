@@ -34,6 +34,8 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     bool InternalUnsavedChanges { get; }
     IEnumerable<ILearningElementViewModel> AllLearningElements { get; }
     string EvaluationLink { get; set; }
+    string EvaluationLinkName { get; set; }
+    string EvaluationLinkText { get; set; }
     string EnrolmentKey { get; set; }
     IEnumerable<ILearningElementViewModel> AllStoryElements { get; }
     string StoryStart { get; set; }

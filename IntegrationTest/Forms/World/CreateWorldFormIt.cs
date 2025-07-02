@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
@@ -72,6 +73,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         collapsables[3].Find("div.toggler").Click();
         collapsables[4].Find("div.toggler").Click();
         collapsables[5].Find("div.toggler").Click();
+        collapsables[6].Find("div.toggler").Click();
         await systemUnderTest.InvokeAsync(() => systemUnderTest.Render());
 
         ConfigureValidatorAllMembersTest();
@@ -85,6 +87,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(FormModel.Description, Is.EqualTo(""));
             Assert.That(FormModel.Goals, Is.EqualTo(""));
             Assert.That(FormModel.EvaluationLink, Is.EqualTo(""));
+            Assert.That(FormModel.EvaluationLinkName, Is.EqualTo(""));
+            Assert.That(FormModel.EvaluationLinkText, Is.EqualTo(""));
             Assert.That(FormModel.EnrolmentKey, Is.EqualTo(""));
             Assert.That(FormModel.StoryStart, Is.EqualTo(""));
             Assert.That(FormModel.StoryEnd, Is.EqualTo(""));
@@ -94,23 +98,7 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
 
 
         var mudInputs = systemUnderTest.FindComponents<MudTextField<string>>();
-        foreach (var mudInput in mudInputs.Take(6))
-        {
-            var input = mudInput.Find("input");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
-
-        foreach (var mudInput in mudInputs.Skip(6))
-        {
-            var input = mudInput.Find("textarea");
-            await input.ChangeAsync(new ChangeEventArgs
-            {
-                Value = Expected
-            });
-        }
+        await SetAllInputAndTextareaValueToExpected(mudInputs);
 
         Assert.Multiple(() =>
         {
@@ -121,6 +109,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
             Assert.That(() => FormModel.Description, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.Goals, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EvaluationLink, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.EvaluationLinkName, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
+            Assert.That(() => FormModel.EvaluationLinkText, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.EnrolmentKey, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.StoryStart, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
             Assert.That(() => FormModel.StoryEnd, Is.EqualTo(Expected).After(3).Seconds.PollEvery(250));
@@ -168,7 +158,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         var mudInput = systemUnderTest.FindComponent<MudTextField<string>>();
         var input = mudInput.Find("input");
@@ -181,7 +172,8 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         submitButton.Find("button").Click();
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
     [Test]
@@ -204,16 +196,44 @@ public sealed class CreateWorldFormIt : MudFormTestFixture<CreateWorldForm, Lear
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.False);
         WorkspacePresenter.DidNotReceive().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
         input.Change(Expected);
         Assert.That(FormDataContainer.FormModel.Name, Is.EqualTo(Expected));
         input.KeyUp(Key.Enter);
         Assert.That(callbackCalled, Is.True);
         WorkspacePresenter.Received().CreateLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<WorldTheme>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
+    private static async Task SetAllInputAndTextareaValueToExpected(
+        IReadOnlyList<IRenderedComponent<MudTextField<string>>> mudInputs)
+    {
+        foreach (var mudInput in mudInputs)
+        {
+            var inputs = mudInput.FindAll("input", false);
+            if (inputs.Any())
+            {
+                await inputs[0].ChangeAsync(new ChangeEventArgs
+                {
+                    Value = Expected
+                });
+            }
+            else
+            {
+                var textareas = mudInput.FindAll("textarea", false);
+                if (textareas.Any())
+                {
+                    await textareas[0].ChangeAsync(new ChangeEventArgs
+                    {
+                        Value = Expected
+                    });
+                }
+            }
+        }
+    }
 
     private void ConfigureValidatorNameIsTest()
     {

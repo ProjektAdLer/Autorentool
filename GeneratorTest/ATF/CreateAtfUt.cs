@@ -191,6 +191,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "http://www.projekt-alder.eu";
+        const string evaluationLinkName = "LinkName";
+        const string evaluationLinkText = "LinkText";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -381,7 +383,8 @@ public class CreateAtfUt
 
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces, conditions, topics: topics);
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces, conditions, topics: topics);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -440,6 +443,8 @@ public class CreateAtfUt
             Assert.That(systemUnderTest.LearningWorldJson.Spaces[3].SpaceGoals[1],
                 Is.EqualTo(manualLearningOutcome.GetOutcome()));
             Assert.That(systemUnderTest.LearningWorldJson.EvaluationLink, Is.EqualTo(evaluationLink));
+            Assert.That(systemUnderTest.LearningWorldJson.EvaluationLinkName, Is.EqualTo(evaluationLinkName));
+            Assert.That(systemUnderTest.LearningWorldJson.EvaluationLinkText, Is.EqualTo(evaluationLinkText));
             Assert.That(systemUnderTest.LearningWorldJson.EnrolmentKey, Is.EqualTo(enrolmentKey));
             Assert.That(systemUnderTest.LearningWorldJson.Elements.Count, Is.EqualTo(9));
 
@@ -797,6 +802,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -824,7 +831,8 @@ public class CreateAtfUt
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -860,6 +868,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -877,7 +887,8 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -913,6 +924,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -930,7 +943,8 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 
@@ -956,6 +970,8 @@ public class CreateAtfUt
         const string goals = "learn very many things";
         const WorldTheme theme = WorldTheme.CampusAschaffenburg;
         const string evaluationLink = "https://www.projekt-alder.eu";
+        const string evaluationLinkName = "EvaluationName";
+        const string evaluationLinkText = "EvaluationText";
         const string enrolmentKey = "1234";
         const string storyStart = "story start";
         const string storyEnd = "story end";
@@ -981,7 +997,8 @@ public class CreateAtfUt
 
         var learningSpaces = new List<LearningSpacePe> { space1 };
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd, savePath, learningSpaces);
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd, savePath,
+            learningSpaces);
 
         var systemUnderTest = new CreateAtf(mockFileSystem, mockLogger);
 

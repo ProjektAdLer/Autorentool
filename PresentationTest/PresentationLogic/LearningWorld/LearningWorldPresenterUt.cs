@@ -28,7 +28,6 @@ namespace PresentationTest.PresentationLogic.LearningWorld;
 [TestFixture]
 public class LearningWorldPresenterUt
 {
-
     [Test]
     public void EditLearningWorld_CallsPresentationLogic()
     {
@@ -36,8 +35,10 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g",WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
-        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek", "ss", "se");
+        presentationLogic.Received().EditLearningWorld(world, "n", "s", "a", "l", "d", "g",
+            WorldTheme.CampusAschaffenburg, "el", "eln", "elt", "ek", "ss", "se");
     }
 
     [Test]
@@ -52,7 +53,8 @@ public class LearningWorldPresenterUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider,
             errorService: mockErrorService);
 
-        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g",WorldTheme.CampusAschaffenburg, "h", "f", "ss", "se");
+        systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g", WorldTheme.CampusAschaffenburg, "el", "eln",
+            "elt", "ek", "ss", "se");
 
         mockErrorService.Received().SetError("Operation failed", "No learning world selected");
     }

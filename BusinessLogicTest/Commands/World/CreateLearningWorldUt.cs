@@ -22,6 +22,8 @@ public class CreateLearningWorldUt
         var goals = "g";
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -29,7 +31,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd,
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>
@@ -56,6 +58,11 @@ public class CreateLearningWorldUt
             Assert.That(world.Goals, Is.EqualTo("g"));
             Assert.That(world.WorldTheme, Is.EqualTo(WorldTheme.CampusAschaffenburg));
             Assert.That(world.EvaluationLink, Is.EqualTo("el"));
+            Assert.That(world.EvaluationLinkName, Is.EqualTo("eln"));
+            Assert.That(world.EvaluationLinkText, Is.EqualTo("elt"));
+            Assert.That(world.EnrolmentKey, Is.EqualTo("ek"));
+            Assert.That(world.StoryStart, Is.EqualTo("ss"));
+            Assert.That(world.StoryEnd, Is.EqualTo("se"));
         });
     }
 
@@ -66,7 +73,8 @@ public class CreateLearningWorldUt
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "", WorldTheme.CampusAschaffenburg);
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
-        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", default, "", "", "", "", _ => { },
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", default, "", "", "", "", "",
+            "", _ => { },
             new NullLogger<CreateLearningWorld>());
 
         systemUnderTest.Execute();
@@ -112,6 +120,8 @@ public class CreateLearningWorldUt
         var goals = "g";
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -119,7 +129,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd,
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -134,7 +144,7 @@ public class CreateLearningWorldUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f",default, "g");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f", default, "g", "h", "i", "j", "k", "l");
         workspace.LearningWorlds.Add(world);
         var name = "n";
         var shortname = "sn";
@@ -144,6 +154,8 @@ public class CreateLearningWorldUt
         var goals = "g";
         var theme = WorldTheme.CampusAschaffenburg;
         var evaluationLink = "el";
+        var evaluationLinkName = "eln";
+        var evaluationLinkText = "elt";
         var enrolmentKey = "ek";
         var storyStart = "ss";
         var storyEnd = "se";
@@ -151,7 +163,7 @@ public class CreateLearningWorldUt
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals, theme,
-            evaluationLink, enrolmentKey, storyStart, storyEnd,
+            evaluationLink, evaluationLinkName, evaluationLinkText, enrolmentKey, storyStart, storyEnd,
             mappingAction, new NullLogger<CreateLearningWorld>());
 
         Assert.Multiple(() =>

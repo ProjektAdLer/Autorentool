@@ -1,9 +1,9 @@
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.Components.Forms.Models
-@using BusinessLogic.Entities
-@using Presentation.Components.Forms.Buttons
 @using System.Diagnostics.CodeAnalysis
+@using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Shared.Theme
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
@@ -56,6 +56,13 @@
 
             <Collapsable Title=@Localizer["CreateWorldForm.Finalization.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["CreateWorldForm.Finalization.Collapsable.Description.Text"]</p>
+                    <MudTooltip Placement="Placement.Right"
+                                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed"
+                                Text="@Localizer["CreateWorldForm.EnrolmentKey.Tooltip"]">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                    </MudTooltip>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkText"
                                   For="@(() => FormModel.EvaluationLinkText)"
                                   Lines="3"

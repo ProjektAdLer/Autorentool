@@ -1,13 +1,12 @@
-@using Presentation.PresentationLogic.LearningWorld
-@using AutoMapper
-@using BusinessLogic.Entities
-@using Presentation.Components.Forms.Models
-@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using System.Diagnostics.CodeAnalysis
+@using AutoMapper
+@using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.LearningWorld
 @using Shared.Theme
-
 <div class="absolute w-full z-30">
     <header class="py-2 2xl:py-3 bg-adlerbgbright border-b-2 border-adlergrey-100 overflow-hidden flex justify-center">
         <h2 class="text-base 2xl:text-lg text-center font-bold text-adlertitledarkblue mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
@@ -59,6 +58,13 @@
 
             <Collapsable Title=@Localizer["EditWorldForm.Finalization.Text"] InitiallyCollapsed="true">
                 <div class="rounded-lg w-4/4 px-6">
+                    <p class="text-xs pt-3">@Localizer["EditWorldForm.Finalization.Collapsable.Description.Text"]</p>
+                    <MudTooltip Placement="Placement.Right"
+                                Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed"
+                                Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
+                                 Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
+                    </MudTooltip>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkText"
                                   For="@(() => FormModel.EvaluationLinkText)"
                                   Lines="3"
