@@ -9,12 +9,9 @@
 
 <ValidationNecessaryView></ValidationNecessaryView>
 
-
-
 <div style="margin-top: 20px;"></div>
 <div id="h5p-container"></div>
 <div style="margin-top: 20px;"></div>
-
 
 @if (ValidateH5pVm != null)
 {
@@ -25,22 +22,22 @@
             <span style="margin-left: 5px;">H5P ist abschließbar</span>
         </div>
     }
+
+    <div class="fixed bottom-4 right-4 flex flex-row gap-4 justify-end items-center z-50">
+        <NotUsableH5pButton ValidateH5pController="@ValidateH5pController" />
+        <PrimitiveH5pButton ValidateH5pController="@ValidateH5pController" />
+        <CompletableH5pButton IsEnabled="@ValidateH5pVm.IsCompletable"
+                              ValidateH5pController="@ValidateH5pController" />
+    </div>
+
 }
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist primitiv</p>
-</button>
-
-<button @onclick="@OpenContentFilesFolder" class="relative btn-standard p-2 justify-end items-center shadow-lg">
-    <p class="pl-1 font-bold uppercase">H5P ist nicht verwendbar</p>
-</button>
-
-
 
 @code {
-    
+    private bool showDefectExplanation = false;
+
     [Parameter]
-    public required IValidateH5pViewModel ValidateH5pVm { get;  set; }
-   
+    public required IValidateH5pViewModel ValidateH5pVm { get; set; }
+
     [Parameter]
     public required IValidateH5pController ValidateH5pController { get; set; }
 
@@ -48,10 +45,6 @@
     {
         ValidateH5pVm.OnChange += StateHasChanged;
     }
-    
-    
-    private void OpenContentFilesFolder()
-    {
 
-    }
+
 }

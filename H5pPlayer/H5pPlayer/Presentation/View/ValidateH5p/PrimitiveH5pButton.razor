@@ -1,0 +1,16 @@
+﻿@using H5pPlayer.Presentation.PresentationLogic.ValidateH5p
+
+<button @onclick="MarkAsPrimitive"
+        class="btn-standard p-3 min-w-[150px] text-right font-bold text-lg shadow-lg">
+    H5P ist primitiv
+</button>
+
+@code {
+    [Parameter, EditorRequired]
+    public required IValidateH5pController ValidateH5pController { get; set; }
+
+    private void MarkAsPrimitive()
+    {
+        ValidateH5pController.SetActiveH5pStateToPrimitive();
+    }
+}
