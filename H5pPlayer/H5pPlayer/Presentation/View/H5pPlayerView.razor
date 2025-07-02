@@ -25,20 +25,7 @@
 </div>
 
 @code {
-    private RenderFragment? _activeView;
-
-    internal RenderFragment? ActiveView
-    {
-        get => _activeView;
-        set
-        {
-            if (_activeView != value)
-            {
-                _activeView = value;
-                StateHasChanged();
-            }
-        }
-    }
+  
     
     [Parameter] 
     public string? H5pZipSourcePath { get; set; }
