@@ -3,6 +3,9 @@ name: Run Tests & Publish
 on:
   release:
     types: [created]
+  push:
+    branches:
+      - markus/pipeline
 
 jobs:
   test:
@@ -38,7 +41,8 @@ jobs:
   publish-osx:
     needs: test
     name: Publish for MacOS
-    runs-on: macos-latest 
+    runs-on: macos-latest
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,6 +99,7 @@ jobs:
     needs: test
     name: Publish for Windows
     runs-on: windows-latest
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -177,8 +182,7 @@ jobs:
     needs: test
     name: Publish for Linux
     runs-on: ubuntu-22.04
-    permissions:
-      packages: write
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -221,7 +225,7 @@ jobs:
         with:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
-      
+
 #      - name: Pack linux-unpacked into xz
 #        working-directory: ./AuthoringTool/bin/Desktop_Publish
 #        run: tar cf - ./linux-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-unpacked.tar.xz
@@ -250,7 +254,17 @@ jobs:
 #          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.xz
 #          tag: ${{ github.ref }}
 
-      # docker images
+  publish-docker:
+    needs: test
+    name: Build and Push Multi-Architecture Docker Images
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -273,18 +287,30 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Build and push Docker image (amd64)
+      - name: Extract metadata (tags) - branch push
+        if: github.event_name == 'push'
+        id: meta_push
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/projektadler/autorentool
+          tags: |
+            type=ref,event=branch
+
+      - name: Build and push multi-architecture Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta_release.outputs.tags }}
+          tags: ${{ github.event_name == 'release' && steps.meta_release.outputs.tags || steps.meta_push.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   publish-linux-arm64:
     needs: test
     name: Publish for Linux ARM64
     runs-on: ubuntu-22.04
+    if: github.event_name == 'release'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -351,38 +377,6 @@ jobs:
 #          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
 #          asset_name: AuthoringTool-${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
 #          tag: ${{ github.ref }}
-
-      # docker images
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: "ghcr.io"
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags) - release
-        if: github.event_name == 'release'
-        id: meta_release
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/projektadler/autorentool
-          tags: |
-            type=raw,value=latest
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Build and push Docker image (arm64)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/arm64
-          push: true
-          tags: ${{ steps.meta_release.outputs.tags }}
-
 
 #  discord-notification:
 #    needs: [test, publish-osx, publish-windows, publish-linux, publish-linux-arm64]

@@ -1,3 +1,33 @@
+# Stage 1: Build the application
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG TARGETARCH
+
+WORKDIR /src
+
+# Install Node.js for npm dependencies
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+
+# Copy project files
+COPY . .
+
+# Restore .NET tools and install electron-sharp
+RUN dotnet tool restore
+
+# Install npm dependencies and run Tailwind build
+WORKDIR /src/AuthoringTool
+RUN npm install && npm run tailwind-build
+
+# Build the application based on target architecture
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        dotnet electron-sharp build /target linux; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        dotnet electron-sharp build /target custom "linux-arm64;linux" /electron-arch arm64; \
+    else \
+        dotnet electron-sharp build /target linux; \
+    fi
+
+# Stage 2: Runtime image
 FROM ubuntu:24.04
 
 RUN apt-get update && \
@@ -10,7 +40,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY AuthoringTool/bin/Desktop_Publish/*.AppImage ./authoring-tool.AppImage
+# Copy the built AppImage from build stage
+COPY --from=build /src/AuthoringTool/bin/Desktop_Publish/*.AppImage ./authoring-tool.AppImage
 
 RUN chmod +x authoring-tool.AppImage && \
     ./authoring-tool.AppImage --appimage-extract && \
