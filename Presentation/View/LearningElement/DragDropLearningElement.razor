@@ -99,7 +99,7 @@
     
     [Parameter] public bool ShowDeleteButton { get; set; } = true;
     
-    private string StyleWhenRequired => LearningElement.IsRequired ? "flex flex-col items-center opacity-100" : "flex flex-col items-center opacity-50";
+    private string StyleWhenRequired => LearningElement.IsRequired ? "flex flex-col items-center opacity-100" : "flex flex-col items-center opacity-20";
 
     protected override void OnParametersSet()
     {
@@ -154,9 +154,9 @@
         
         @if(LearningElement.LearningContent is IStoryContentViewModel)
         {
-        return isSelected ? "border-2 border-adlergold-300 bg-adlergold-200 relative flex rounded-lg hover:bg-adlergold-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlergold-400 hover:border-adlergold-300";
+        return isSelected ? "border-2 border-adlergold-300 bg-adlergold-200 relative flex rounded-lg hover:bg-adlergold-300" : "border-2 relative flex rounded-lg bg-adlergold-200 hover:bg-adlergold-400 hover:border-adlergold-300";
         }
-        return isSelected ? "border-2 border-adlerblue-300 bg-adlerblue-200 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerdeactivated hover:bg-adlerblue-300 hover:border-adlerblue-300";
+        return isSelected ? "border-2 border-adlerblue-300 bg-adlerblue-200 relative flex rounded-lg hover:bg-adlerblue-300" : "border-2 relative flex rounded-lg bg-adlerblue-100 hover:bg-adlerblue-300 hover:border-adlerblue-300";
     }
 
     private async Task DeleteLearningElement()

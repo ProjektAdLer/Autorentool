@@ -33,7 +33,7 @@
         <value>Completion Condition</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
-        <value>Floor plan</value>
+        <value>Floor Plan</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>

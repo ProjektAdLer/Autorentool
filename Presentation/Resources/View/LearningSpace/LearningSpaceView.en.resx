@@ -32,7 +32,7 @@
         <value>Workload: </value>
     </data>
     <data name="LearningSpace.SpacePoints.Text" xml:space="preserve">
-        <value>Completion Condition:</value>
+        <value>Completion condition:</value>
     </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
         <value>Replace learning element</value>
@@ -41,7 +41,7 @@
         <value>Space theme: </value>
     </data>
     <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
-        <value>Learning Outcomes: </value>
+        <value>Learning outcomes: </value>
     </data>
     <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
         <value>Replace learning element</value>

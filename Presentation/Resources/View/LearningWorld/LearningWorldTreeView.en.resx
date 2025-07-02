@@ -19,7 +19,7 @@
         <value> min</value>
     </data>
     <data name="OverView.Workload" xml:space="preserve">
-        <value>Workload (Total): </value>
+        <value>Workload (total): </value>
     </data>
     <data name="OverView.Title" xml:space="preserve">
         <value>Learning World Overview - Hierarchy</value>

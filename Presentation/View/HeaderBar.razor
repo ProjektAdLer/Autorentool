@@ -36,10 +36,6 @@
     </div>
 
     <div class="flex justify-start items-center h-6 w-56 gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@_content"
-                       title=@Localizer["Header.ContentFilesAdd.Title"] OnClick="OpenContentFilesDialog">
-        </MudIconButton>
-
         <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@Icons.Material.Filled.Save"
                        title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySave">
         </MudIconButton>
@@ -57,6 +53,9 @@
         <MudIconButton Size="Size.Small" Class="p-1 redo-button text-adlerdarkblue" Icon="@Icons.Material.Filled.Redo"
                        Disabled="!CanRedo"
                        title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo">
+        </MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Size="Size.Small" Icon="@_content"
+                       title=@Localizer["Header.ContentFilesAdd.Title"] OnClick="OpenContentFilesDialog">
         </MudIconButton>
         @if (_debugBuild)
         {
