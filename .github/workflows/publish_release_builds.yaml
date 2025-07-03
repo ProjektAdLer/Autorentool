@@ -311,7 +311,7 @@ jobs:
         run: tar cf - ./linux-arm64-unpacked | xz -8 -T0 > ${{ github.ref_name }}-linux-arm64-unpacked.tar.xz
 
       - name: Upload linux appimage to release
-       uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}-arm64.AppImage
