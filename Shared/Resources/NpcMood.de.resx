@@ -28,10 +28,10 @@
         <value>Erfreut</value>
     </data>
     <data name="Enum.NpcMood.Shocked" xml:space="preserve">
-        <value>Panisch / Erschrocken</value>
+        <value>Schockiert</value>
     </data>
     <data name="Enum.NpcMood.Disappointed" xml:space="preserve">
-        <value>Traurig / Enttäuscht</value>
+        <value>Niedergeschlagen</value>
     </data>
     <data name="Enum.NpcMood.Angry" xml:space="preserve">
         <value>Wütend</value>
