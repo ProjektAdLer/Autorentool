@@ -61,26 +61,26 @@
                     <p class="text-xs pt-3">@Localizer["EditWorldForm.Finalization.Collapsable.Description.Text"]</p>
                     <MudTooltip Placement="Placement.Right"
                                 Class="w-96 p-4 bg-adlerdarkblue-200 shadow-xl text-start leading-relaxed"
-                                Text="@Localizer["EditWorldForm.EnrolmentKey.Tooltip"]">
+                                Text="@Localizer["EditWorldForm.Finalization.Tooltip"]">
                         <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Info"
                                  Class="text-adlergrey hover:text-adlerdarkblue"></MudIcon>
                     </MudTooltip>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkText"
                                   For="@(() => FormModel.EvaluationLinkText)"
                                   Lines="3"
-                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLinkText.Text"]"
+                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text"]"
                                   Variant="Variant.Outlined"
                                   DebounceInterval="DebounceInterval"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLinkName"
                                   For="@(() => FormModel.EvaluationLinkName)"
                                   DebounceInterval="DebounceInterval"
-                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLinkName.Text"]"
+                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text"]"
                                   Typo="Typo.body1"
                                   Margin="Margin.Normal"/>
                     <MudTextField @bind-Value="FormDataContainer.FormModel.EvaluationLink"
                                   For="@(() => FormModel.EvaluationLink)"
                                   DebounceInterval="DebounceInterval"
-                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLink.Text"]"
+                                  Placeholder="@Localizer["EditWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text"]"
                                   Typo="Typo.body1"
                                   Margin="Margin.Normal"/>
                 </div>

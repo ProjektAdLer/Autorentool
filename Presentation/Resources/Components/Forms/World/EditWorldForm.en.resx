@@ -45,9 +45,6 @@
     <data name="EditWorldForm.Fields.Collapsable.General.Field.Language.Text" xml:space="preserve">
         <value>Language</value>
     </data>
-    <data name="EditWorldForm.Fields.Collapsable.General.Field.EvaluationLink.Text" xml:space="preserve">
-        <value>Link to evaluation</value>
-    </data>
     <data name="EditWorldForm.Text" xml:space="preserve">
         <value>* Required</value>
     </data>
@@ -86,5 +83,23 @@
     </data>
     <data name="EditWorldForm.Theme.Field.Theme.Text" xml:space="preserve">
         <value>Selection of themes with different theme worlds for the learning world</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Text" xml:space="preserve">
+        <value>Link to the learning world finalisation</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Collapsable.Description.Text" xml:space="preserve">
+        <value>In this section, you can enter a link to a specially created online survey, to your university moodle or similar and also formulate a reference text.</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Tooltip" xml:space="preserve">
+        <value>If you do not specify a link and hint text, the placeholder text is displayed in the 3D learning environment by default.</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkText.Placeholder.Text" xml:space="preserve">
+        <value>You have successfully completed all the learning rooms and thus passed the learning world, congratulations!</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLinkName.Placeholder.Text" xml:space="preserve">
+        <value>e.g. online survey</value>
+    </data>
+    <data name="EditWorldForm.Finalization.Field.EvaluationLink.Placeholder.Text" xml:space="preserve">
+        <value>--- Link to evaluation</value>
     </data>
 </root>
