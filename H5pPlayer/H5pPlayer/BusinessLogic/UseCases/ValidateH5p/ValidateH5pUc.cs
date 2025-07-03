@@ -49,16 +49,15 @@ public class ValidateH5pUc : IValidateH5pUc
         H5pEntity.ActiveH5pState = H5pState.Primitive;
         ValidateH5pUcOutputPort.SetH5pActiveStateToPrimitive();
     }
+    public void SetActiveH5pStateToCompletable()
+    {
+        H5pEntity.ActiveH5pState = H5pState.Completable;
+        ValidateH5pUcOutputPort.SetH5pActiveStateToCompletable();
+    }
 
     public IValidateH5pUcOutputPort ValidateH5pUcOutputPort { get; }
     private ICallJavaScriptAdapter ICallJavaScriptAdapter { get; }
     public H5pEntity H5pEntity { get; set; }
-
-
-
- 
-    
-    
 
 
 

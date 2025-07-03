@@ -54,6 +54,14 @@ public class ValidateH5pIt
 
         Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.Primitive));
     }
+    
+    [Test]
+    public void SetActiveH5pStateToCompletable()
+    {
+        _validateH5pController!.SetActiveH5pStateToCompletable();
+
+        Assert.That(_validateH5pVm!.ActiveH5PState, Is.EqualTo(H5pState.Completable));
+    }
 
 
     private string _basePath;

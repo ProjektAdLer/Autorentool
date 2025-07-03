@@ -9,6 +9,7 @@ public interface IValidateH5pUc
 
     void SetActiveH5pStateToNotUsable();
     void SetActiveH5pStateToPrimitive();
+    void SetActiveH5pStateToCompletable();
     
     H5pEntity H5pEntity { get; set; }
 }

@@ -95,7 +95,7 @@ public class ValidateH5pUcUt
     }
 
     [Test]
-    public async Task SetActiveH5pStateToNotUsable()
+    public void SetActiveH5pStateToNotUsable()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
         var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
@@ -111,7 +111,7 @@ public class ValidateH5pUcUt
     }
     
     [Test]
-    public async Task SetActiveH5pStateToPrimitive()
+    public void SetActiveH5pStateToPrimitive()
     {
         var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
         var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
@@ -127,7 +127,21 @@ public class ValidateH5pUcUt
     }
     
 
-
+    [Test]
+    public void SetActiveH5pStateToCompletable()
+    {
+        var mockValidateH5pUcOutputPort = Substitute.For<IValidateH5pUcOutputPort>();
+        var systemUnderTest = CreateValidateH5PUc(mockValidateH5pUcOutputPort);
+        var unzippedH5psPath = Path.Combine(_basePath, "ValidPath1.h5p");
+        var h5pZipSourcePath = @Path.Combine(_basePath, "ValidPath2.h5p");
+        var h5pEntity = CreateH5pEntity(unzippedH5psPath, h5pZipSourcePath);
+        systemUnderTest.H5pEntity = h5pEntity;
+        
+        systemUnderTest.SetActiveH5pStateToCompletable();
+        
+        Assert.That(systemUnderTest.H5pEntity.ActiveH5pState, Is.EqualTo(H5pState.Completable)); 
+        mockValidateH5pUcOutputPort.Received().SetH5pActiveStateToCompletable();
+    }
 
 
 

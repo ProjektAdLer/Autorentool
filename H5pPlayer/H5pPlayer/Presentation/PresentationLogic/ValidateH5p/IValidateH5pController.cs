@@ -9,4 +9,5 @@ public interface IValidateH5pController
     IValidateH5pPresenter ValidateH5pPresenter { get; }
     void SetActiveH5pStateToNotUsable();
     void SetActiveH5pStateToPrimitive();
+    void SetActiveH5pStateToCompletable();
 }
